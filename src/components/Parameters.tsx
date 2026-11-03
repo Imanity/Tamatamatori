@@ -360,21 +360,21 @@ export function Parameters({
         <NumberField
           label="相机离地高度"
           value={plan.cameraHeight}
-          min={0}
+          min={0.1}
           max={100}
           step={0.1}
           unit="m"
           onChange={(cameraHeight) => update({ cameraHeight })}
         />
         <p className="field-hint">
-          方位角以真北为
-          0°，顺时针递增；俯仰角向上为正。离地高度已记录，待地形接入后用于预览。
+          方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM
+          高程加离地高度定位。
         </p>
       </fieldset>
       <div className="parameter-note">
         <Icon name="info" size={16} />
         <span>
-          当前为工作区原型。参数已联动，真实地形与天空模型将在后续接入。
+          山体与静态水体已接入。水面高程按 DEM 近似，时间天空模型尚未接入。
         </span>
       </div>
     </div>

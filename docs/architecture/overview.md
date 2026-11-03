@@ -1,6 +1,6 @@
 # 全局架构
 
-状态：P1 地图接入；拍摄预览引擎未选定。更新：2026-11-04。
+状态：P2 山体与静态水体预览采用 MapLibre；时间天空待实现。更新：2026-11-04。
 
 本文定义职责与约定，不是完整技术规格。产品范围见[全局规划](../plan/overview.md)，交互含义见[全局设计](../design/overview.md)。
 
@@ -11,12 +11,12 @@
 | 状态 | 内容 |
 | --- | --- |
 | 已确定 | React 界面；地图、预览、参数与图层侧栏；开源地图引擎；统一拍摄计划；按阶段增量实现 |
-| 当前采用 | TypeScript + Vite；React 内置状态；Temporal polyfill；地图采用 MapLibre GL JS 与 OpenFreeMap Liberty 底图 |
-| 候选，未选定 | 涉及全球地形与三维拍摄预览时评估 CesiumJS，或独立预览渲染方案；不因地图选型提前锁定预览引擎 |
-| 待验证 | 地图和预览能否复用引擎；近地摄影视角、全球覆盖及性能；地形/地表/星表/轨道数据源；天文算法与精度 |
+| 当前采用 | TypeScript + Vite；React 内置状态；Temporal polyfill；地图和独立三维预览均采用 MapLibre GL JS；预览使用 Mapterhorn DEM 与 OpenFreeMap 水体边界 |
+| 后续可选 | 极区、独立水平水面或更高精度三维需求出现时，再评估 CesiumJS 或其他渲染器，不在本轮增加第二套引擎 |
+| 待验证 | 近地与长焦构图精度、极区覆盖、实际 GPU 性能和水面高程；星表/轨道数据源与天文算法 |
 | 暂不引入 | 专用后端、数据库、账户服务、通用插件系统、云端渲染 |
 
-地图选型采用 MapLibre GL JS 的浏览器地图能力；三维拍摄预览继续评估 MapLibre 地形能力与 CesiumJS 等方案。地图选型不代表其默认相机或数据服务已经满足摄影预览需求。参见 [MapLibre 文档](https://maplibre.org/maplibre-gl-js/docs/)、[MapLibre 地形示例](https://maplibre.org/maplibre-gl-js/docs/examples/3d-terrain/)、[CesiumJS 地形文档](https://cesium.com/learn/cesiumjs-learn/cesiumjs-terrain/)（查阅：2026-11-04）。
+P2 首步采用 MapLibre 地形与第一人称相机能力，复用已有引擎、Worker 和参数模型。以自动检查验证几何与状态流，实际视觉与精度仍需浏览器验收。参见 [MapLibre 文档](https://maplibre.org/maplibre-gl-js/docs/)、[地形示例](https://maplibre.org/maplibre-gl-js/docs/examples/3d-terrain/)、[第一人称示例](https://maplibre.org/maplibre-gl-js/docs/examples/walk-around-a-map-in-first-person/)（查阅：2026-11-04）。
 
 ## 2. 概念模块与数据流
 
@@ -49,6 +49,8 @@ P1 首步仅建立工作区组件与少量可测试的领域函数。布局状�
 P1 第二步替换示意地图，接入真实底图、可拖动机位、方向把手与 GeoJSON 水平视场。地图实例按需加载，浏览范围在工作区单独保留；详见[地图接入设计](map-integration.md)。预览区继续保留示意标记。
 
 P1 交互完善阶段增加地图与预览的连续手势联动。地图几何更新合并到动画帧，浏览状态增加地图旋转角；默认空白点击不改计划，放置机位使用一次性明确操作。参数扩展至 8—1000 mm 焦距、横竖幅和当地日期内的时间滑杆。
+
+P2 首步以 DEM 三维场景替换预览平面，独立获取机位高程，再按摄影视场定位相机。水体边界贴附 DEM 表面，明确显示高度近似与无独立水位校准的限制。模块与数据流详见[山体与水体预览](terrain-preview.md)。
 
 本轮使用 [React 内置状态](https://react.dev/reference/react/useState)、[Vite](https://vite.dev/guide/) 与 [Temporal polyfill](https://github.com/js-temporal/temporal-polyfill)（查阅：2026-11-04）；依赖版本记录于 `package.json`，可复现安装记录于 `package-lock.json`。
 

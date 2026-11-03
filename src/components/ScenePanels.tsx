@@ -9,6 +9,7 @@ import {
 } from "../domain/plan";
 import type { ShootingPlan } from "../domain/plan";
 import { Icon } from "./Icon";
+import { TerrainScene } from "./TerrainScene";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -30,9 +31,6 @@ export function PreviewPanel({
     plan: ShootingPlan;
   } | null>(null);
   const fov = fieldOfView(plan);
-  const horizon =
-    200 +
-    (Math.tan(radians(plan.pitch)) / Math.tan(radians(fov.vertical / 2))) * 200;
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return (
     <div className="preview-content">
@@ -145,48 +143,13 @@ export function PreviewPanel({
             } as CSSProperties
           }
         >
+          <TerrainScene plan={plan} />
           <svg
             viewBox="0 0 600 400"
             preserveAspectRatio="none"
             role="img"
-            aria-label={`示意取景框，水平视场 ${fov.horizontal.toFixed(1)} 度，垂直视场 ${fov.vertical.toFixed(1)} 度。未接入真实地形或天空模型。`}
+            aria-label={`取景辅助线，水平视场 ${fov.horizontal.toFixed(1)} 度，垂直视场 ${fov.vertical.toFixed(1)} 度。`}
           >
-            <defs>
-              <linearGradient id="sky-tone" x2="0" y2="1">
-                <stop stopColor="#c7d6d2" />
-                <stop offset="1" stopColor="#eef0e4" />
-              </linearGradient>
-              <linearGradient id="ground-tone" x2="0" y2="1">
-                <stop stopColor="#9aa995" />
-                <stop offset="1" stopColor="#667d68" />
-              </linearGradient>
-            </defs>
-            <rect width="600" height="400" fill="url(#sky-tone)" />
-            <rect
-              y={Math.max(0, Math.min(400, horizon))}
-              width="600"
-              height={Math.max(0, 400 - horizon)}
-              fill="url(#ground-tone)"
-            />
-            {horizon > 0 && horizon < 400 && (
-              <>
-                <path
-                  d={`M0 ${horizon}H600`}
-                  stroke="#647e71"
-                  strokeWidth="1"
-                  strokeDasharray="5 5"
-                  opacity="0.6"
-                />
-                {[0, 100, 200, 300, 400, 500, 600].map((x) => (
-                  <path
-                    key={x}
-                    d={`M300 ${horizon}L${x} 400`}
-                    stroke="#e2e6d9"
-                    opacity="0.16"
-                  />
-                ))}
-              </>
-            )}
             {grid && (
               <path
                 d="M200 0V400M400 0V400M0 133.33H600M0 266.67H600"
@@ -225,7 +188,7 @@ export function PreviewPanel({
               );
             })}
           </svg>
-          <span className="viewfinder-label">示意取景 · 拖动调整视角</span>
+          <span className="viewfinder-label">地形模拟 · 拖动调整视角</span>
           <span className="viewfinder-focal">{plan.focalLength} mm</span>
         </div>
       </div>
@@ -247,7 +210,29 @@ export function PreviewPanel({
           </strong>
         </span>
       </div>
-      <p className="preview-note">示意地平面 · 地形、时间天空模型尚未接入</p>
+      <p className="preview-note">水面高程按 DEM 近似 · 天空为固定配色</p>
+      <div className="preview-attribution">
+        <a
+          href="https://mapterhorn.com/attribution/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          © Mapterhorn
+        </a>
+        <a href="https://openfreemap.org/" target="_blank" rel="noreferrer">
+          OpenFreeMap
+        </a>
+        <a href="https://openmaptiles.org/" target="_blank" rel="noreferrer">
+          © OpenMapTiles
+        </a>
+        <a
+          href="https://www.openstreetmap.org/copyright"
+          target="_blank"
+          rel="noreferrer"
+        >
+          © OpenStreetMap
+        </a>
+      </div>
     </div>
   );
 }

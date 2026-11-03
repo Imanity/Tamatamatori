@@ -1,6 +1,7 @@
 import test, { before, after } from "node:test";
 import assert from "node:assert/strict";
 import { setTimeout as delay } from "node:timers/promises";
+import { readFileSync } from "node:fs";
 import { createElement, act } from "react";
 import { JSDOM } from "jsdom";
 import { createServer } from "vite";
@@ -25,12 +26,19 @@ class TestMap extends Events {
   static instances = [];
   sources = new Map();
   transitions = [];
+  cameraSolutions = [];
+  cameraViews = [];
+  renderedHeight = 0;
   constructor(options) {
     super();
     this.options = options;
+    options.container.classList.add("maplibregl-map");
     this.center = { lng: options.center[0], lat: options.center[1] };
     this.zoom = options.zoom;
     this.bearing = options.bearing;
+    if (typeof options.style === "object")
+      for (const [id, source] of Object.entries(options.style.sources))
+        this.addSource(id, source);
     TestMap.instances.push(this);
     queueMicrotask(() => {
       this.emit("style.load");
@@ -66,6 +74,29 @@ class TestMap extends Events {
   getBounds() {
     return { contains: () => true };
   }
+  areTilesLoaded() {
+    return true;
+  }
+  isSourceLoaded(id) {
+    return this.sources.has(id);
+  }
+  queryTerrainElevation() {
+    return this.renderedHeight;
+  }
+  setVerticalFieldOfView(value) {
+    this.verticalFov = value;
+  }
+  calculateCameraOptionsFromTo(eye, altitude, target, targetAltitude) {
+    this.cameraSolutions.push({ eye, altitude, target, targetAltitude });
+    return {
+      center: [target.lng, target.lat],
+      elevation: targetAltitude,
+      zoom: 18,
+    };
+  }
+  jumpTo(options) {
+    this.cameraViews.push(options);
+  }
   easeTo(options) {
     this.transitions.push(options);
     if (options.center)
@@ -76,6 +107,7 @@ class TestMap extends Events {
   }
   resize() {}
   remove() {
+    this.removed = true;
     this.handlers.clear();
   }
 }
@@ -115,6 +147,10 @@ class TestMarker extends Events {
 
 let server, App, createRoot, dom;
 let sequence = 0;
+let groundResponse;
+const terrainSize = { width: 600, height: 400 };
+const resizeObservers = [];
+const groundRequests = [];
 const frames = new Map();
 const nativeCapture = new WeakMap();
 const originalGlobals = new Map();
@@ -145,6 +181,22 @@ before(async () => {
   ])
     installGlobal(name, name === "window" ? dom.window : dom.window[name]);
   installGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+  Object.defineProperty(dom.window.HTMLElement.prototype, "clientWidth", {
+    configurable: true,
+    get() {
+      return this.classList.contains("terrain-canvas") ? terrainSize.width : 0;
+    },
+  });
+  Object.defineProperty(dom.window.HTMLElement.prototype, "clientHeight", {
+    configurable: true,
+    get() {
+      return this.classList.contains("terrain-canvas") ? terrainSize.height : 0;
+    },
+  });
+  installGlobal("__testGroundLoader", (point, _url, signal) => {
+    groundRequests.push({ point, signal });
+    return groundResponse(point, signal);
+  });
   installGlobal("requestAnimationFrame", (callback) => {
     frames.set(++sequence, callback);
     return sequence;
@@ -153,7 +205,13 @@ before(async () => {
   installGlobal(
     "ResizeObserver",
     class {
-      observe() {}
+      constructor(callback) {
+        this.callback = callback;
+        resizeObservers.push(this);
+      }
+      observe(target) {
+        this.target = target;
+      }
       disconnect() {}
     },
   );
@@ -183,6 +241,8 @@ before(async () => {
         name: "test-map-sdk",
         enforce: "pre",
         load(id) {
+          if (id.replaceAll("\\", "/").endsWith("/src/preview/elevation.ts"))
+            return "export const groundElevation = (...args) => globalThis.__testGroundLoader(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/map/sdk.ts"))
             return "export const {Map, Marker, NavigationControl, ScaleControl} = globalThis.__testMapSDK;";
         },
@@ -217,9 +277,15 @@ async function settle(action = () => {}) {
 
 async function waitForMap() {
   for (let index = 0; index < 200; index++) {
-    if (TestMap.instances.at(-1)?.getSource("tamatamatori-view")) {
+    const map = TestMap.instances
+      .filter(
+        (instance) =>
+          !instance.removed && instance.getSource("tamatamatori-view"),
+      )
+      .at(-1);
+    if (map) {
       await settle();
-      return TestMap.instances.at(-1);
+      return map;
     }
     await act(async () => {
       await delay(5);
@@ -228,7 +294,12 @@ async function waitForMap() {
   throw new Error("Map test double did not initialize");
 }
 
-async function workspace(t) {
+async function workspace(
+  t,
+  elevation = async () => ({ height: 1000, zoom: 12 }),
+) {
+  groundResponse = elevation;
+  groundRequests.length = 0;
   TestMap.instances.length = 0;
   TestMarker.instances.length = 0;
   const host = document.createElement("div");
@@ -492,4 +563,190 @@ test("时间滑杆遇到夏令时跳过的钟点时显示错误并保留原时�
   assert.ok(
     document.getElementById("time-error").textContent.includes("夏令时"),
   );
+});
+
+async function waitUntil(predicate) {
+  for (let index = 0; index < 200; index++) {
+    await act(async () => {
+      await delay(5);
+    });
+    await settle();
+    const result = predicate();
+    if (result) return result;
+  }
+  throw new Error("Terrain state did not settle");
+}
+function terrainMap() {
+  return TestMap.instances
+    .filter((map) => !map.removed && typeof map.options.style === "object")
+    .at(-1);
+}
+async function readyTerrain() {
+  return waitUntil(() => {
+    const map = terrainMap();
+    return map?.cameraSolutions.length &&
+      document.querySelector(".terrain-canvas")?.dataset.ready === "true"
+      ? map
+      : null;
+  });
+}
+
+test("三维预览启用真实地形与水体；缺失 DEM 返回的零值不覆盖独立高程", async (t) => {
+  await workspace(t);
+  const map = await readyTerrain();
+  assert.equal(map.options.style.terrain.exaggeration, 1);
+  assert.equal(
+    map.options.style.layers.find((layer) => layer.id === "preview-water")[
+      "source-layer"
+    ],
+    "water",
+  );
+  assert.equal(map.options.interactive, false);
+  assert.equal(map.options.centerClampedToGround, false);
+  const pose = map.cameraSolutions.at(-1);
+  assert.equal(pose.altitude, 1001.6);
+  assert.equal(pose.eye.lng, value("经度"));
+  assert.equal(pose.eye.lat, value("纬度"));
+  assert.equal(map.cameraViews.at(-1).pitch, 94);
+  assert.ok(
+    document.querySelector(".terrain-height").textContent.includes("1000.0"),
+  );
+  assert.ok(
+    document
+      .querySelector(".preview-attribution")
+      .textContent.includes("Mapterhorn"),
+  );
+  await settle(() => {
+    map.renderedHeight = 1012;
+    map.emit("sourcedata");
+  });
+  assert.equal(map.cameraSolutions.at(-1).altitude, 1013.6);
+});
+
+test("SDK 样式后加载时，预览容器仍显式填满取景框", async (t) => {
+  const style = document.createElement("style");
+  // jsdom does not calculate layout. Verify the explicit fill dimensions with
+  // the real SDK stylesheet; actual pixel sizes still need browser verification.
+  style.textContent = [
+    "../src/preview/terrain.css",
+    "../node_modules/maplibre-gl/dist/maplibre-gl.css",
+  ].map((path) => readFileSync(new URL(path, import.meta.url), "utf8")).join("\n");
+  document.head.append(style);
+  t.after(() => style.remove());
+  await workspace(t);
+  await readyTerrain();
+  const canvas = document.querySelector(".terrain-canvas");
+  assert.ok(canvas.classList.contains("maplibregl-map"));
+  const computed = dom.window.getComputedStyle(canvas);
+  assert.equal(computed.width, "100%");
+  assert.equal(computed.height, "100%");
+});
+
+test("隐藏面板有高程后保持等待，恢复有效尺寸即可建立相机", async (t) => {
+  terrainSize.width = 0;
+  terrainSize.height = 0;
+  t.after(() => {
+    terrainSize.width = 600;
+    terrainSize.height = 400;
+  });
+  await workspace(t);
+  await waitUntil(() => groundRequests.length);
+  const map = terrainMap();
+  assert.equal(map.cameraSolutions.length, 0);
+  await settle(() => {
+    terrainSize.width = 600;
+    terrainSize.height = 400;
+    for (const observer of resizeObservers)
+      if (observer.target === document.querySelector(".terrain-canvas"))
+        observer.callback([{ contentRect: terrainSize }]);
+  });
+  assert.equal(await readyTerrain(), map);
+});
+
+test("地形相机随高度、方向和横竖幅更新，镜头或时间编辑不重复请求机位高程", async (t) => {
+  await workspace(t);
+  const map = await readyTerrain(),
+    requests = groundRequests.length;
+  await settle(() => setControl(input("相机离地高度"), 5));
+  assert.equal(map.cameraSolutions.at(-1).altitude, 1005);
+  await settle(() => setControl(input("方位角"), 123.4));
+  await settle(() => setControl(input("俯仰角"), 30));
+  assert.equal(map.cameraViews.at(-1).bearing, 123.4);
+  assert.equal(map.cameraViews.at(-1).pitch, 120);
+  await settle(() =>
+    setControl(document.querySelector('input[aria-label="焦距滑块"]'), 1000),
+  );
+  const landscapeFov = map.verticalFov;
+  await settle(() =>
+    setControl(
+      document.querySelector('select[aria-label="拍摄画幅方向"]'),
+      "portrait",
+    ),
+  );
+  assert.ok(map.verticalFov > landscapeFov);
+  assert.equal(terrainMap(), map);
+  const cameraUpdates = map.cameraSolutions.length;
+  await settle(() =>
+    setControl(
+      document.querySelector('input[aria-label="24 小时时间滑杆"]'),
+      700,
+    ),
+  );
+  assert.equal(map.cameraSolutions.length, cameraUpdates);
+  assert.equal(groundRequests.length, requests);
+});
+
+test("地形高程失败允许重试，并释放旧预览实例、保留拍摄计划", async (t) => {
+  await workspace(t, async () => {
+    throw new Error("test elevation offline");
+  });
+  const old = await waitUntil(() =>
+    document.querySelector(".terrain-feedback-error") ? terrainMap() : null,
+  );
+  const longitude = value("经度"),
+    focal = value("焦距");
+  assert.equal(
+    document.querySelector(".terrain-canvas").dataset.ready,
+    "false",
+  );
+  groundResponse = async () => ({ height: 2500, zoom: 12 });
+  await settle(() => button("重试预览").click());
+  const restored = await readyTerrain();
+  assert.notEqual(restored, old);
+  assert.equal(old.removed, true);
+  assert.equal(restored.cameraSolutions.at(-1).altitude, 2501.6);
+  assert.equal(value("经度"), longitude);
+  assert.equal(value("焦距"), focal);
+});
+
+test("切换机位取消过期高程请求；等待新高程时隐藏旧位置画面", async (t) => {
+  const pending = [];
+  await workspace(
+    t,
+    (point, signal) =>
+      new Promise((resolve) => pending.push({ point, signal, resolve })),
+  );
+  await waitUntil(() => pending.length === 1);
+  await settle(() => setControl(input("经度"), 139));
+  await waitUntil(() => pending.length === 2);
+  assert.equal(pending[0].signal.aborted, true);
+  await settle(() => pending[0].resolve({ height: 9000, zoom: 12 }));
+  assert.equal(
+    document.querySelector(".terrain-canvas").dataset.ready,
+    "false",
+  );
+  await settle(() => pending[1].resolve({ height: 1100, zoom: 12 }));
+  const map = await readyTerrain();
+  assert.equal(map.cameraSolutions.at(-1).eye.lng, 139);
+  assert.equal(map.cameraSolutions.at(-1).altitude, 1101.6);
+  await settle(() => setControl(input("经度"), 140));
+  assert.equal(
+    document.querySelector(".terrain-canvas").dataset.ready,
+    "false",
+  );
+  await waitUntil(() => pending.length === 3);
+  await settle(() => pending[2].resolve({ height: 1200, zoom: 12 }));
+  await readyTerrain();
+  assert.equal(map.cameraSolutions.at(-1).eye.lng, 140);
+  assert.equal(map.cameraSolutions.at(-1).altitude, 1201.6);
 });

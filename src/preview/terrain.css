@@ -1,0 +1,79 @@
+.terrain-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #dce5dc;
+}
+/* Keep the host sized even when MapLibre's stylesheet is loaded after ours. */
+.terrain-scene > .terrain-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.terrain-canvas[data-ready="false"] {
+  visibility: hidden;
+}
+.terrain-feedback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 35px 15px;
+  color: #63765c;
+  background: #e1e9de;
+  font-size: 10px;
+  line-height: 1.8;
+  text-align: center;
+}
+.terrain-feedback-partial {
+  inset: auto 8px 29px;
+  border-radius: 4px;
+  padding: 5px 8px;
+  background: #f4f7ece8;
+  font-size: 8px;
+}
+.terrain-feedback-error {
+  color: #8c6245;
+  background: #fff8ecee;
+}
+.terrain-feedback button {
+  pointer-events: auto;
+  padding: 4px 9px;
+  border: 1px solid #c9b69a;
+  border-radius: 3px;
+  background: #fffdf6;
+  color: #8c6245;
+  font-size: 10px;
+  cursor: pointer;
+}
+.terrain-height {
+  position: absolute;
+  bottom: 9px;
+  left: 8px;
+  max-width: calc(100% - 80px);
+  padding: 3px 5px;
+  border-radius: 3px;
+  background: #f7faeee0;
+  color: #4e6946;
+  font-size: 8px;
+  line-height: 1.5;
+}
+.preview-attribution {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 3px 7px;
+  margin-top: 6px;
+  flex-shrink: 0;
+  color: #84967c;
+  font-size: 8px;
+  line-height: 1.5;
+}
+.preview-attribution a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

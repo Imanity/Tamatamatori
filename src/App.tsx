@@ -16,7 +16,7 @@ const panelInfo: Record<
   { title: string; icon: IconName; tag: string }
 > = {
   map: { title: "地图", icon: "map", tag: "交互底图" },
-  preview: { title: "拍摄预览", icon: "camera", tag: "示意" },
+  preview: { title: "拍摄预览", icon: "camera", tag: "地形模拟" },
   parameters: { title: "拍摄参数", icon: "settings", tag: "实时联动" },
 };
 const slotNames = ["主栏", "右上", "右下"];
@@ -280,7 +280,7 @@ export default function App() {
           <span className="prototype-badge">
             <span className="status-dot" /> 工作区原型
           </span>
-          <span className="version-label">P1 / STEP 02</span>
+          <span className="version-label">P2 / TERRAIN</span>
         </div>
       </header>
       <div className="app-layout">
@@ -301,9 +301,12 @@ export default function App() {
             </span>
             <div>
               <strong>基础场景</strong>
-              <small>地面与天空示意</small>
+              <small>山体与静态水体</small>
             </div>
-            <span className="base-layer-dot" title="基础示意已显示" />
+            <span
+              className="base-layer-dot"
+              title="地形预览已接入，状态见预览区"
+            />
           </div>
           <div className="sidebar-section-label">
             天文参考 <span>后续逐项接入</span>
@@ -329,7 +332,7 @@ export default function App() {
               <br />
               WITH A PLACE.
             </span>
-            <p>下一步 · 验证地形预览</p>
+            <p>下一步 · 验证时间天空</p>
           </div>
         </aside>
         <main className="main-content">
@@ -427,7 +430,7 @@ export default function App() {
               <Icon name="grip" size={13} />{" "}
               拖动分隔条调整大小，拖动把手交换面板
             </span>
-            <span>示例计划 · 拍摄预览仍为示意</span>
+            <span>地形模拟 · 水面高程按 DEM 近似</span>
           </footer>
         </main>
       </div>
