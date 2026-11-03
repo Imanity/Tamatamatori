@@ -28,6 +28,7 @@ class TestMap extends Events {
   transitions = [];
   cameraSolutions = [];
   cameraViews = [];
+  resizes = 0;
   renderedHeight = 0;
   constructor(options) {
     super();
@@ -105,7 +106,7 @@ class TestMap extends Events {
     this.emit("move");
     this.emit("moveend");
   }
-  resize() {}
+  resize() { this.resizes++; }
   remove() {
     this.removed = true;
     this.handlers.clear();
@@ -300,6 +301,7 @@ async function workspace(
 ) {
   groundResponse = elevation;
   groundRequests.length = 0;
+  resizeObservers.length = 0;
   TestMap.instances.length = 0;
   TestMarker.instances.length = 0;
   const host = document.createElement("div");
@@ -661,6 +663,38 @@ test("隐藏面板有高程后保持等待，恢复有效尺寸即可建立相�
         observer.callback([{ contentRect: terrainSize }]);
   });
   assert.equal(await readyTerrain(), map);
+});
+
+test("预览尺寸变化只同步相机，面板换位后保留拍摄参数并释放旧实例", async (t) => {
+  await workspace(t);
+  const old = await readyTerrain();
+  const fields = ["经度", "纬度", "方位角", "俯仰角", "焦距", "相机离地高度"];
+  const before = fields.map(value);
+  const requests = groundRequests.length;
+  const updates = old.cameraSolutions.length;
+  t.after(() => {
+    terrainSize.width = 600;
+    terrainSize.height = 400;
+  });
+  await settle(() => {
+    terrainSize.width = 450;
+    terrainSize.height = 300;
+    for (const observer of resizeObservers)
+      if (observer.target === document.querySelector(".terrain-canvas"))
+        observer.callback([{ contentRect: terrainSize }]);
+  });
+  assert.equal(terrainMap(), old);
+  assert.ok(old.resizes > 0);
+  assert.equal(old.cameraSolutions.length, updates + 1);
+  assert.equal(groundRequests.length, requests);
+  assert.deepEqual(fields.map(value), before);
+  await settle(() => setControl(document.querySelector('select[aria-label="拍摄预览面板位置"]'), 0));
+  const moved = await readyTerrain();
+  assert.notEqual(moved, old);
+  assert.equal(old.removed, true);
+  assert.deepEqual(fields.map(value), before);
+  assert.equal(moved.cameraViews.at(-1).bearing, before[2]);
+  assert.equal(moved.cameraSolutions.at(-1).altitude, 1000 + before[5]);
 });
 
 test("地形相机随高度、方向和横竖幅更新，镜头或时间编辑不重复请求机位高程", async (t) => {

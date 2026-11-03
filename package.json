@@ -10,7 +10,8 @@
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/plan.test.mjs tests/map.test.mjs tests/terrain.test.mjs tests/elevation.test.mjs tests/interactions.test.mjs",
+    "test": "node --experimental-strip-types --test tests/plan.test.mjs tests/map.test.mjs tests/terrain.test.mjs tests/elevation.test.mjs tests/interactions.test.mjs tests/camera-calibration.test.mjs",
+    "test:terrain": "node --experimental-strip-types --test tests/terrain.test.mjs tests/camera-calibration.test.mjs",
     "preview": "vite preview --host 127.0.0.1"
   },
   "dependencies": {

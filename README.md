@@ -58,10 +58,11 @@ npm run dev
 
 ```sh
 npm test
+npm run test:terrain
 npm run build
 ```
 
-45 项自动检查覆盖既有交互，以及 DEM 解码、双线性采样、地形瓦片坐标、相机眼点与视场、高程缓存、过期请求取消、加载失败重试和机位切换，并检查 SDK 样式后加载时的容器尺寸与隐藏面板恢复。组件测试使用 JSDOM 与地图 SDK 测试替身，数据加载测试使用合成像素；不模拟 WebGL 或浏览器图像解码。构建包含 TypeScript 检查，并独立打包地图 Worker。
+50 项自动检查覆盖既有交互，以及 DEM 解码、双线性采样、地形瓦片坐标、高程缓存、过期请求取消、加载失败重试和机位切换。新增 SDK 相机 CPU 校准覆盖三组固定场景、132 组相机配置与 276 个合成投影采样。组件测试使用 JSDOM 与地图 SDK 测试替身，数据加载测试使用合成像素；这些检查不模拟 WebGL 或浏览器图像解码。构建包含 TypeScript 检查，并独立打包地图 Worker。
 
 示例地形 WebP 和水体瓦片端点已做实际连通性检查。浏览器连接当前不可用，真实山脊、水岸接缝、长焦精度、动画及触屏效果仍需视觉复核；自动检查不代替 WebGL 验收。
 
@@ -72,4 +73,5 @@ npm run build
 - [全局架构](docs/architecture/overview.md)：模块职责、统一约定与技术决策边界。
 - [地图接入设计](docs/architecture/map-integration.md)：引擎、底图、交互边界与失败处理。
 - [山体与水体预览](docs/architecture/terrain-preview.md)：地形数据、摄影相机、静态水体与已知限制。
+- [地形预览验收](docs/plan/terrain-validation.md)：固定场景、相机数值校准结果与真实画面待验项。
 - [协作规则](AGENTS.md)：小步推进、文档维护与验证要求。
