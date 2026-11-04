@@ -12,6 +12,7 @@ import { Icon } from "./Icon";
 import { TerrainScene } from "./TerrainScene";
 import { solarPosition, daylightPhase } from "../domain/solar";
 import { CelestialDiscs, CelestialReadout, useCelestialScene } from "./CelestialScene";
+import { emptyVisibility } from "../domain/visibility";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -24,6 +25,7 @@ export function PreviewPanel({
 }) {
   const [grid, setGrid] = useState(true);
   const [dragging, setDragging] = useState(false);
+  const [visibility, setVisibility] = useState(emptyVisibility);
   const drag = useRef<{
     pointerId: number;
     x: number;
@@ -34,7 +36,7 @@ export function PreviewPanel({
   } | null>(null);
   const fov = fieldOfView(plan);
   const sun = solarPosition(plan);
-  const celestialScene = useCelestialScene(plan);
+  const celestialScene = useCelestialScene(plan, visibility);
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return (
     <div className="preview-content">
@@ -147,7 +149,7 @@ export function PreviewPanel({
             } as CSSProperties
           }
         >
-          <TerrainScene plan={plan} />
+          <TerrainScene plan={plan} onVisibilityChange={setVisibility} />
           <CelestialDiscs scene={celestialScene} />
           <svg
             viewBox="0 0 600 400"

@@ -9,6 +9,7 @@ const common = {
   instant: "2026-11-04T03:00:00Z",
   timeZone: "Asia/Tokyo",
   layers: { sun: true, moon: true },
+  refraction: "none",
 };
 
 export const terrainScenes = [

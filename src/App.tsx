@@ -328,7 +328,7 @@ export default function App() {
             ))}
           </div>
           <p className="layer-hint">
-            日月圆盘按角尺寸绘制，地形遮挡未校验。其他图层后续逐项接入。
+            日月按当前 DEM 深度遮挡，折射为参考大气近似。其他图层后续逐项接入。
           </p>
           <div className="sidebar-bottom">
             <div className="small-compass">

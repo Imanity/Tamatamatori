@@ -32,6 +32,7 @@ class TestMap extends Events {
   paint = new Map();
   resizes = 0;
   renderedHeight = 0;
+  customLayers = [];
   constructor(options) {
     super();
     this.options = options;
@@ -64,7 +65,8 @@ class TestMap extends Events {
   getSource(id) {
     return this.sources.get(id);
   }
-  addLayer() {}
+  addLayer(layer) { if (layer.type === "custom") this.customLayers.push(layer); }
+  triggerRepaint() {}
   getCenter() {
     return this.center;
   }
@@ -116,9 +118,22 @@ class TestMap extends Events {
   }
   resize() { this.resizes++; }
   remove() {
+    this.customLayers.forEach((layer) => layer.onRemove?.());
     this.removed = true;
     this.handlers.clear();
   }
+}
+
+// GPU state is a component test double; actual depth clipping is browser-tested.
+class TestCelestialLayer {
+  type = "custom";
+  constructor(report) { this.report = report; }
+  setScene(frame) {
+    this.frame = frame;
+    this.report({ planKey: frame.planKey, states: { sun: frame.ready ? "clear" : "waiting", moon: frame.ready ? "clear" : "waiting" } });
+  }
+  invalidate() { if (this.frame) this.report({ planKey: this.frame.planKey, states: { sun: "waiting", moon: "waiting" } }); }
+  onRemove() { this.removed = true; }
 }
 
 class TestMarker extends Events {
@@ -174,6 +189,7 @@ function installGlobal(name, value) {
 }
 
 before(async () => {
+  installGlobal("__testCelestialLayer", TestCelestialLayer);
   dom = new JSDOM("<!doctype html><html><body></body></html>", {
     url: "http://localhost/",
   });
@@ -250,6 +266,8 @@ before(async () => {
         name: "test-map-sdk",
         enforce: "pre",
         load(id) {
+          if (id.replaceAll("\\", "/").endsWith("/src/preview/celestial-layer.ts"))
+            return "export const CelestialLayer = globalThis.__testCelestialLayer;";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/elevation.ts"))
             return "export const groundElevation = (...args) => globalThis.__testGroundLoader(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/map/sdk.ts"))
@@ -784,7 +802,7 @@ test("日月开关、主动朝向与状态联动，关闭太阳不改变光照�
   const time = document.querySelector('input[type="datetime-local"]').value;
   assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes("视场外"));
   await settle(() => document.querySelector('button[aria-label="朝向太阳"]').click());
-  assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes("画面内"));
+  assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes("当前 DEM 未遮挡"));
   assert.ok(document.querySelector('[data-celestial-body="sun"]'));
   const poses = map.cameraSolutions.length, environments = map.environments.length, requests = groundRequests.length;
   await settle(() => document.querySelector('input[aria-label="显示太阳"]').click());
@@ -805,6 +823,30 @@ test("日月开关、主动朝向与状态联动，关闭太阳不改变光照�
   assert.equal(document.querySelector('button[aria-label="朝向月亮"]').disabled, true);
 });
 
+test("折射修改只更新日月轮廓，地形更新使遮挡失效，重建释放旧深度图层", async (t) => {
+  await workspace(t);const map=await readyTerrain();
+  await settle(()=>setControl(document.querySelector('input[aria-label="24 小时时间滑杆"]'),720));
+  await settle(()=>document.querySelector('button[aria-label="朝向太阳"]').click());
+  const layer=map.customLayers[0], outline=structuredClone(layer.frame.bodies.find(body=>body.id==='sun').outline);
+  const poses=map.cameraSolutions.length, requests=groundRequests.length;
+  const before=["经度","纬度","方位角","俯仰角","焦距"].map(value);
+  await settle(()=>setControl(document.querySelector('select[aria-label="大气折射模型"]'),'none'));
+  assert.equal(map.cameraSolutions.length,poses);assert.equal(groundRequests.length,requests);
+  assert.deepEqual(["经度","纬度","方位角","俯仰角","焦距"].map(value),before);
+  assert.notDeepEqual(layer.frame.bodies.find(body=>body.id==='sun').outline,outline);
+  await settle(()=>map.emit('dataloading'));
+  assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes('遮挡待测'));
+  await settle(()=>map.emit('sourcedata'));
+  assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes('当前 DEM 未遮挡'));
+  await settle(()=>setControl(document.querySelector('select[aria-label="拍摄预览面板位置"]'),0));
+  const restored = await readyTerrain();assert.equal(layer.removed,true);
+  assert.equal(document.querySelector('select[aria-label="大气折射模型"]').value,'none');
+  await settle(()=>restored.emit('error',{sourceId:'terrain-dem'}));
+  assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes('遮挡未知'));
+  await settle(()=>setControl(document.querySelector('select[aria-label="大气折射模型"]'),'standard'));
+  assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes('遮挡未知'));
+});
+
 test("地形高程失败允许重试，并释放旧预览实例、保留拍摄计划", async (t) => {
   await workspace(t, async () => {
     throw new Error("test elevation offline");
@@ -818,6 +860,9 @@ test("地形高程失败允许重试，并释放旧预览实例、保留拍摄�
     document.querySelector(".terrain-canvas").dataset.ready,
     "false",
   );
+  await settle(()=>setControl(document.querySelector('input[aria-label="24 小时时间滑杆"]'),720));
+  await settle(()=>document.querySelector('button[aria-label="朝向太阳"]').click());
+  assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes('遮挡未知'));
   groundResponse = async () => ({ height: 2500, zoom: 12 });
   await settle(() => button("重试预览").click());
   const restored = await readyTerrain();
@@ -826,6 +871,7 @@ test("地形高程失败允许重试，并释放旧预览实例、保留拍摄�
   assert.equal(restored.cameraSolutions.at(-1).altitude, 2501.6);
   assert.equal(value("经度"), longitude);
   assert.equal(value("焦距"), focal);
+  assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes('当前 DEM 未遮挡'));
 });
 
 test("切换机位取消过期高程请求；等待新高程时隐藏旧位置画面", async (t) => {

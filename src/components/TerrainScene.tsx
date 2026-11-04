@@ -12,6 +12,11 @@ import {
 import type { terrainCamera } from "../preview/camera";
 import { solarPosition } from "../domain/solar";
 import { applyEnvironment, environmentForSun } from "../preview/environment";
+import type { CelestialLayer } from "../preview/celestial-layer";
+import { celestialBodies } from "../domain/ephemeris";
+import { bodyPolygons } from "../domain/celestial-projection";
+import { celestialPlanKey } from "../domain/visibility";
+import type { VisibilitySnapshot } from "../domain/visibility";
 
 const terrainUrl =
   import.meta.env.VITE_TERRAIN_TILEJSON_URL?.trim() || DEFAULT_TERRAIN_URL;
@@ -28,7 +33,7 @@ interface SceneState {
   message: string;
 }
 
-export function TerrainScene({ plan }: { plan: ShootingPlan }) {
+export function TerrainScene({ plan, onVisibilityChange }: { plan: ShootingPlan; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void }) {
   const container = useRef<HTMLDivElement>(null);
   const synchronize = useRef<(() => void) | null>(null);
   const key = `${plan.longitude}/${plan.latitude}`;
@@ -44,12 +49,19 @@ export function TerrainScene({ plan }: { plan: ShootingPlan }) {
     ground: number;
     altitude: number;
   } | null>(null);
-  const latest = useRef({ plan, ground, key });
+  const latest = useRef({ plan, ground, key, onVisibilityChange });
 
   useEffect(() => {
-    latest.current = { plan, ground, key };
+    latest.current = { plan, ground, key, onVisibilityChange };
     synchronize.current?.();
-  }, [plan, ground, key]);
+  }, [plan, ground, key, onVisibilityChange]);
+
+  useEffect(() => {
+    // Unavailable ground has no render/query callback; keep its status explicit
+    // even when the user changes time or lens after a loading failure.
+    if (!covered || (ground.key === key && ground.phase === "error") || scene.phase === "error")
+      onVisibilityChange?.({ planKey: celestialPlanKey(plan), states: { sun: "error", moon: "error" } });
+  }, [covered, ground, key, scene.phase, plan, onVisibilityChange]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -97,6 +109,9 @@ export function TerrainScene({ plan }: { plan: ShootingPlan }) {
     if (!covered || !container.current) return;
     let disposed = false;
     let map: MapLibreMap | undefined;
+    let celestialLayer: CelestialLayer | undefined;
+    let sourceRevision = 0;
+    let lastCelestialFrame = "";
     let createCamera: typeof terrainCamera | undefined;
     let observer: ResizeObserver | undefined;
     let frame = 0;
@@ -119,6 +134,8 @@ export function TerrainScene({ plan }: { plan: ShootingPlan }) {
       clearTimeout(timeout);
       timeout = undefined;
       setScene({ phase: "error", message });
+      celestialLayer?.setScene({ key: `failed/${sourceRevision++}`, planKey: celestialPlanKey(latest.current.plan), ready: false, bodies: [] });
+      latest.current.onVisibilityChange?.({ planKey: celestialPlanKey(latest.current.plan), states: { sun: "error", moon: "error" }, message });
     };
     const watchLoading = () => {
       if (!timeout && !disposed && !failed && hasSize())
@@ -233,6 +250,17 @@ export function TerrainScene({ plan }: { plan: ShootingPlan }) {
               : { key: current.key, ground: height, altitude: pose.altitude },
           );
         }
+        const planKey = celestialPlanKey(current.plan);
+        const ready = map.areTilesLoaded() && map.isSourceLoaded(TERRAIN_SOURCE) && map.isSourceLoaded(WATER_SOURCE);
+        const frameKey = `${poseKey}/${planKey}/${sourceRevision}/${ready}`;
+        if (celestialLayer && frameKey !== lastCelestialFrame) {
+          lastCelestialFrame = frameKey;
+          const bodies = Object.values(celestialBodies(current.plan))
+            .filter((body) => current.plan.layers[body.id])
+            .map((body) => ({ id: body.id, ...bodyPolygons(current.plan, body) }))
+            .filter((body) => body.state === "画面内");
+          celestialLayer.setScene({ key: frameKey, planKey, ready, bodies });
+        }
         markReady();
       } catch {
         fail("无法更新拍摄预览，请检查机位、时间、镜头和大于 0 的离地高度。");
@@ -248,9 +276,10 @@ export function TerrainScene({ plan }: { plan: ShootingPlan }) {
 
     void (async () => {
       try {
-        const [sdk, cameraModule] = await Promise.all([
+        const [sdk, cameraModule, celestialModule] = await Promise.all([
           import("../map/sdk"),
           import("../preview/camera"),
+          import("../preview/celestial-layer"),
         ]);
         createCamera = cameraModule.terrainCamera;
         if (disposed || !container.current) return;
@@ -279,16 +308,25 @@ export function TerrainScene({ plan }: { plan: ShootingPlan }) {
           return;
         }
         map.on("style.load", () => {
+          if (disposed || !map) return;
+          celestialLayer = new celestialModule.CelestialLayer((snapshot) => {
+            if (disposed) return;
+            latest.current.onVisibilityChange?.(snapshot);
+            if (snapshot.message) fail(snapshot.message);
+          });
+          try { map.addLayer(celestialLayer); }
+          catch { fail("日月深度图层无法启动，请重试预览。"); return; }
           styleReady = true;
           schedule();
         });
-        map.on("sourcedata", () => schedule());
+        map.on("sourcedata", () => { if (!disposed && !failed) { sourceRevision++; celestialLayer?.invalidate(); schedule(); } });
         map.on("render", () => schedule());
         map.on("idle", () => {
           schedule();
           markReady();
         });
         map.on("dataloading", () => {
+          if (!disposed && !failed) celestialLayer?.invalidate();
           if (!disposed && !failed) watchLoading();
           if (!disposed && !failed)
             setScene((current) =>
@@ -311,6 +349,8 @@ export function TerrainScene({ plan }: { plan: ShootingPlan }) {
           if (bounds.width <= 0 || bounds.height <= 0) {
             clearTimeout(timeout);
             timeout = undefined;
+            celestialLayer?.invalidate();
+            latest.current.onVisibilityChange?.({ planKey: "", states: { sun: "waiting", moon: "waiting" } });
             return;
           }
           map.resize();
@@ -356,7 +396,7 @@ export function TerrainScene({ plan }: { plan: ShootingPlan }) {
       className="terrain-scene"
       aria-label="真实 DEM 山体与静态水体预览，水面高程按 DEM 近似"
     >
-      <div className="terrain-canvas" ref={container} data-ready={!!visible} />
+      <div className="terrain-canvas" ref={container} data-ready={!!visible} data-celestial-renderer="webgl-depth" />
       {message && (
         <div
           className={`terrain-feedback ${visible ? "terrain-feedback-partial" : ""} ${error ? "terrain-feedback-error" : ""}`}

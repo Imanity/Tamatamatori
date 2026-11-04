@@ -220,6 +220,15 @@ export function Parameters({
           <span className="section-number">01</span> 拍摄时间
         </legend>
         <TimeField plan={plan} update={update} />
+        <label className="field">
+          <span className="field-label">大气折射</span>
+          <select aria-label="大气折射模型" value={plan.refraction}
+            onChange={(event) => update({ refraction: event.target.value as ShootingPlan["refraction"] })}>
+            <option value="standard">标准折射 · 海平面近似</option>
+            <option value="none">无折射 · 几何位置</option>
+          </select>
+        </label>
+        <p className="field-hint">标准折射使用固定参考大气，不含实测气象；近地平线结果仅供构图参考。</p>
       </fieldset>
       <fieldset>
         <legend>

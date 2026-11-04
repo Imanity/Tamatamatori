@@ -2,8 +2,9 @@ import type { ShootingPlan } from "./plan.ts";
 import { fieldOfView } from "./plan.ts";
 import type { SkyBody, Vector3 } from "./ephemeris.ts";
 import { add, degrees, direction, dot, scale, unit } from "./ephemeris.ts";
+import { apparentElevation, refractDirection } from "./refraction.ts";
 
-type View = Pick<ShootingPlan, "azimuth" | "pitch" | "focalLength" | "sensor" | "aspectRatio" | "orientation">;
+type View = Pick<ShootingPlan, "azimuth" | "pitch" | "focalLength" | "sensor" | "aspectRatio" | "orientation"> & Partial<Pick<ShootingPlan, "refraction">>;
 const cross = (a: Vector3, b: Vector3): Vector3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
 
 function cameraBasis(plan: View) {
@@ -36,6 +37,7 @@ function clipPolygon(points: Vector3[], plane: (point: Vector3) => number) {
 }
 
 function projectedPolygon(plan: View, points: Vector3[]) {
+  points = points.map((point) => refractDirection(point, plan.refraction));
   const basis = cameraBasis(plan);
   const planes = [
     (p: Vector3) => p[2],
@@ -82,10 +84,11 @@ export function bodyPolygons(plan: View, body: SkyBody) {
     }
     illuminated = projectedPolygon(plan, [...limb, ...terminator]);
   }
-  const state = body.elevation + body.angularRadius <= 0
+  const visualElevation = apparentElevation(body.elevation, plan.refraction);
+  const state = apparentElevation(Math.min(90, body.elevation + body.angularRadius), plan.refraction) <= 0
     ? "地平线下"
     : outline.length < 3 ? "视场外" : "画面内";
-  return { outline, illuminated, centre: projectDirection(plan, body.direction), state };
+  return { outline, illuminated, centre: projectDirection(plan, refractDirection(body.direction, plan.refraction)), state, visualElevation };
 }
 
 export function polygonPath(points: { x: number; y: number }[]) {

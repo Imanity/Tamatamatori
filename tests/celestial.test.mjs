@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { celestialBodies, direction, moonPhaseLabel, sunPosition } from "../src/domain/ephemeris.ts";
 import { bodyPolygons, projectDirection } from "../src/domain/celestial-projection.ts";
-import { initialPlan, fieldOfView, signedAngle } from "../src/domain/plan.ts";
+import { initialPlan as defaultPlan, fieldOfView, signedAngle } from "../src/domain/plan.ts";
+const initialPlan = { ...defaultPlan, refraction: "none" };
 
 const close = (actual, expected, tolerance = 1e-8) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} vs ${expected}`);
 const area = (points) => Math.abs(points.reduce((sum, a, index) => {

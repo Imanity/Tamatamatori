@@ -1,6 +1,6 @@
 # 全局架构
 
-状态：P2 地形与晴空环境采用 MapLibre，P3 日月构图辅助采用本地星历与 SVG 投影。更新：2026-11-04。
+状态：P2 地形与晴空环境采用 MapLibre；P3 日月采用本地星历、标准折射与共享地形深度的三维图层。更新：2026-11-04。
 
 本文定义职责与约定，不是完整技术规格。产品范围见[全局规划](../plan/overview.md)，交互含义见[全局设计](../design/overview.md)。
 
@@ -54,7 +54,7 @@ P2 首步以 DEM 三维场景替换预览平面，独立获取机位高程，再
 
 P2 时间天空由机位与 UTC 驱动天空、雾、地表配色与坡面阴影。通过现有实例的样式接口更新环境，时间修改不重建预览、不重新取高程或移动相机；算法、误差与范围见[时间天空设计](time-sky.md)。
 
-P3 日月接入 Astronomy Engine 后，太阳位置与基础环境统一算法。日月开关属于拍摄计划；SVG 按同一摄影相机的三维针孔模型投影圆盘及月相。叠加尚不参与地形深度遮挡，持续显示限制；不新增通用图层框架。详见[日月设计](sun-moon.md)。
+P3 日月接入 Astronomy Engine 后，太阳位置与基础环境统一算法。日月开关和折射模型属于拍摄计划；圆盘及月相按同一摄影相机的三维针孔模型投影，再由公开的 MapLibre 自定义三维图层共享地形深度。异步 GPU 查询区分当前 DEM 的无遮挡、部分遮挡和完全遮挡，数据更新使旧结果失效；不新增通用图层框架。详见[日月设计](sun-moon.md)与[遮挡和折射设计](occlusion-refraction.md)。
 
 本轮使用 [React 内置状态](https://react.dev/reference/react/useState)、[Vite](https://vite.dev/guide/) 与 [Temporal polyfill](https://github.com/js-temporal/temporal-polyfill)（查阅：2026-11-04）；依赖版本记录于 `package.json`，可复现安装记录于 `package-lock.json`。
 
