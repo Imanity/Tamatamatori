@@ -8,6 +8,8 @@ export type PhotoTile = { z: number; x: number; y: number };
 const rad = Math.PI / 180;
 const e2 = 0.0066943799901413165;
 export const photoFragmentDepth = (distance: number) => Math.max(0,Math.min(0.9999999,Math.log1p(Math.max(0,distance))/Math.log1p(1e7)));
+/** Reference for the shared fragment kernel, after homogeneous interpolation. */
+export const photoFogDepth = (z: number, w: number) => w <= 0 ? 0 : Math.max(0,Math.min(1,z/w*0.5+0.5));
 const axes = (lat: number, lon: number): Vec3[] => {
   const a = lat * rad, b = lon * rad, s = Math.sin(a), c = Math.cos(a), t = Math.sin(b), u = Math.cos(b);
   return [[-t,u,0],[-s*u,-s*t,c],[c*u,c*t,s]];

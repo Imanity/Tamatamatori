@@ -1,0 +1,44 @@
+[
+  {
+    "file": "dist\\maplibre-gl.mjs",
+    "sha256": "06B868E3E319FF28B54DB7503C735AE74196DD29CF9AD822102643344DE754B7",
+    "idempotent": true,
+    "matchesUpgrade": true
+  },
+  {
+    "file": "src\\shaders\\glsl\\terrain.vertex.glsl",
+    "sha256": "A0EE2DD2FA7B806E97B74AACCD03951178B8382BB592362C32A219922B37F5B1",
+    "idempotent": true,
+    "matchesUpgrade": true
+  },
+  {
+    "file": "src\\shaders\\glsl\\terrain.vertex.glsl.g.ts",
+    "sha256": "80CFA45E0372B47AFB073B3838ACFF343C3ECF733E93F1CC01297A9D05D4C285",
+    "idempotent": true,
+    "matchesUpgrade": true
+  },
+  {
+    "file": "src\\shaders\\glsl\\terrain.fragment.glsl",
+    "sha256": "D8CC43E7D148F3729501D5FE856072366309D6BEB9B9F9B3E516304A07F63C2C",
+    "idempotent": true,
+    "matchesUpgrade": true
+  },
+  {
+    "file": "src\\shaders\\glsl\\terrain.fragment.glsl.g.ts",
+    "sha256": "41222316DEBC7EB981DA7F53AAF73DDF9EAEBC82C8FEB57E4306119DE3C47E4F",
+    "idempotent": true,
+    "matchesUpgrade": true
+  },
+  {
+    "file": "src\\webgl\\draw\\draw_terrain.ts",
+    "sha256": "40F20E562DA19199A5FE8E239B567DEAAD9F537A9C58224A50A588CD69BE5669",
+    "idempotent": true,
+    "matchesUpgrade": true
+  },
+  {
+    "file": "src\\tile\\terrain_tile_manager.ts",
+    "sha256": "49039162D5F082FB5C307E7B2AA180F34B5218B949BE86D3DA979B6E0F52ED6B",
+    "idempotent": true,
+    "matchesUpgrade": true
+  }
+]

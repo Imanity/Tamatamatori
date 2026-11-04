@@ -21,7 +21,7 @@ npm run dev
 
 打开终端输出的 Local 地址；默认端口为 5173，已占用时 Vite 会自动选择其他端口。
 
-MapLibre 固定为 6.16.0，`npm ci` 会自动应用地形 LOD 的最小兼容修正。升级 SDK 时必须重新验证补丁与覆盖回归，详见[远山地形细节](docs/architecture/terrain-detail.md)。
+MapLibre 固定为 6.16.0，`npm ci` 自动应用地形 LOD、空间投影与深度补丁。Vite 启动和构建时会再次校验并同步补丁；开发期间修改补丁或共享着色器会自动重启服务、切换预构建缓存，避免继续使用旧版 SDK。升级 SDK 时必须重新验证补丁与覆盖回归，详见[远山地形细节](docs/architecture/terrain-detail.md)和[空间投影](docs/architecture/terrain-perspective.md)。
 
 桌面拖动分隔条调整大小；聚焦分隔条后可用方向键、Shift + 方向键、Home/End 操作。面板位置下拉框提供拖拽的键盘替代路径。
 

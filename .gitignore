@@ -6,3 +6,4 @@ dist/
 !.env.example
 .sites-runtime/
 
+tests/.dev-config-*/

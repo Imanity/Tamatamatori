@@ -5,6 +5,7 @@ uniform vec3 u_photo_base;
 uniform mat3 u_photo_basis;
 uniform mat4 u_photo_camera;
 out highp float v_photo_depth;
+out highp vec2 v_photo_fog;
 
 // Some GPU transcendental implementations have absolute error near zero.
 // A local polynomial avoids magnifying that error by the Earth radius.

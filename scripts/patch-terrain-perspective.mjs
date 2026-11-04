@@ -15,12 +15,19 @@ const sourceDepth = "const depthMode = frameRenderContext.getDepthModeFor3D();";
 const fixedSourceDepth = `const depthMode = (gl as any)[Symbol.for('${hook}')] ? {...frameRenderContext.getDepthModeFor3D(), range: [0, 1] as [number, number]} : frameRenderContext.getDepthModeFor3D();`;
 const esmDepth = "l=r.getDepthModeFor3D(),u=r.useProgram(`terrain`)";
 const fixedEsmDepth = `l=o[Symbol.for('${hook}')]?{...r.getDepthModeFor3D(),range:[0,1]}:r.getDepthModeFor3D(),u=r.useProgram(\`terrain\`)`;
+const withFog = (shader, raw = false) => {
+  const assignment = "v_photo_fog=pos.zw;";
+  if (shader.split(assignment).length === 2) return shader;
+  const anchor = raw ? "v_fog_depth = pos.z / pos.w * 0.5 + 0.5;" : "v_fog_depth=pos.z/pos.w*0.5+0.5;";
+  if (shader.split(anchor).length !== 2) throw new Error("摄影地形雾坐标顶点签名不匹配");
+  return shader.replace(anchor, anchor + assignment);
+};
 if (contents.every(text => text.includes(marker))) {
   const oldShader = JSON.parse(contents[1].slice(contents[1].indexOf("export default ")+15).trim().replace(/;$/,""));
   const offset = oldShader.indexOf("layout(location=0)");
   if (offset < 0 || contents[3].split(JSON.stringify(oldShader)).length !== 2)
     throw new Error("摄影地形已安装补丁的签名不匹配");
-  const shader = glsl + oldShader.slice(offset);
+  const shader = glsl + withFog(oldShader.slice(offset));
   let draw = contents[2], esm = contents[3];
   if(draw.includes(sourceDepth))draw=draw.replace(sourceDepth,fixedSourceDepth);
   else if(!draw.includes(fixedSourceDepth))throw new Error("摄影地形深度桥接源码不匹配");
@@ -30,7 +37,7 @@ if (contents.every(text => text.includes(marker))) {
   if (shader !== oldShader) {
     const rawOffset = contents[0].indexOf("layout(location = 0)");
     if(rawOffset<0)throw new Error("摄影地形源着色器签名不匹配");
-    writeFileSync(join(root,files[0]),glsl+contents[0].slice(rawOffset));
+    writeFileSync(join(root,files[0]),glsl+withFog(contents[0].slice(rawOffset),true));
     writeFileSync(join(root,files[1]),`// ${marker}: generated for the fixed SDK.\nexport default ${JSON.stringify(shader)};\n`);
   }
   if(draw!==contents[2])writeFileSync(join(root,files[2]),draw);
@@ -45,9 +52,9 @@ if (contents.every(text => text.includes(marker))) {
   const original = contents[1].match(/export default '([^\n]*)';/)[1];
   const projected = once(original,"gl_Position=projectTileFor3D(a_pos3d.xy,ele-ele_delta);",
     "gl_Position=u_photo_enabled>0.5?photoProject(a_pos3d.xy,ele-ele_delta):projectTileFor3D(a_pos3d.xy,ele-ele_delta);",files[1]);
-  const shader = glsl + projected;
-  const raw = glsl + once(contents[0],"gl_Position = projectTileFor3D(a_pos3d.xy, ele - ele_delta);",
-    "gl_Position = u_photo_enabled > 0.5 ? photoProject(a_pos3d.xy, ele - ele_delta) : projectTileFor3D(a_pos3d.xy, ele - ele_delta);",files[0]);
+  const shader = glsl + withFog(projected);
+  const raw = glsl + withFog(once(contents[0],"gl_Position = projectTileFor3D(a_pos3d.xy, ele - ele_delta);",
+    "gl_Position = u_photo_enabled > 0.5 ? photoProject(a_pos3d.xy, ele - ele_delta) : projectTileFor3D(a_pos3d.xy, ele - ele_delta);",files[0]),true);
   const sourceAnchor = "        const projectionData = frameRenderContext.getProjectionDataForTile(tile.tileID, {applyTerrainMatrix: false});\n";
   const sourceHook = `        // ${marker}: application-owned, per-context bridge; no SDK runtime fields exposed.\n` +
     `        context.program.set(program.program);\n        const photoHook = (gl as any)[Symbol.for('${hook}')];\n` +

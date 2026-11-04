@@ -13,7 +13,7 @@ import { matrixEye } from "../src/preview/rendered-camera.ts";
 import { terrainTileZoom, TERRAIN_MAX_MESH_ZOOM } from "../src/preview/terrain-detail.ts";
 import { TERRAIN_VISUAL_TILE_SIZE } from "../src/domain/terrain.ts";
 import { readFileSync } from "node:fs";
-import { photoCameraMatrix, photoFragmentDepth, photoTileFrame, photoTileRay } from "../src/preview/terrain-perspective-math.ts";
+import { photoCameraMatrix, photoFragmentDepth, photoFogDepth, photoTileFrame, photoTileRay } from "../src/preview/terrain-perspective-math.ts";
 
 // Exercise the installed SDK's real CPU camera/transform, not the interaction
 // test double. No browser, GL context, image decoder or real DEM is simulated.
@@ -274,6 +274,32 @@ test("远山对数深度在近裁剪很小时仍能区分相距一米的表面�
   }
 });
 
+test("跨近裁剪面的面片在片元阶段计算雾深度，不把相机后顶点的雾混入近景",()=>{
+  // Fog uses a different near distance from geometry. Clip an edge from behind
+  // the eye to 10 m in front at the photographic near plane (0.4 m).
+  const fogNear=100,fogFar=10000,near=0.4;
+  const clip = w => [(fogFar+fogNear)/(fogFar-fogNear)*w-2*fogFar*fogNear/(fogFar-fogNear),w];
+  const a=clip(-1),b=clip(10),t=(near-a[1])/(b[1]-a[1]);
+  const lerp = (a,b,t) => a+(b-a)*t;
+  const clipped=a.map((v,i)=>lerp(v,b[i],t));
+  const legacyVertex=p=>p[0]/p[1]*0.5+0.5;
+  const contaminated=lerp(legacyVertex(a),legacyVertex(b),t);
+  assert.ok(contaminated>80,'legacy division before clipping produces unbounded fog');
+  for(const weight of [0,0.1,0.5,0.9,1]){
+    const divisor=(1-weight)/clipped[1]+weight/b[1];
+    const fragment=clipped.map((v,i)=>((1-weight)*v/clipped[1]+weight*b[i]/b[1])/divisor);
+    const expected=clip(1/divisor);
+    for(let i=0;i<2;i++)close(fragment[i],expected[i],1e-10,'homogeneous interpolation');
+    assert.equal(photoFogDepth(...fragment),0,'near surface must keep its colour');
+  }
+  for(const distance of [0.005,1,100,500,10000,100000,1e7]) {
+    const depth=photoFogDepth(...clip(distance));
+    assert.ok(Number.isFinite(depth)&&depth>=0&&depth<=1,'blend weight stays bounded');
+    if(distance>=fogNear&&distance<=fogFar)close(depth,legacyVertex(clip(distance)),1e-12,'fog range preserved');
+  }
+  assert.equal(photoFogDepth(1,0),0);assert.equal(photoFogDepth(1,-1),0);
+});
+
 test("摄影地形桥接按上下文安装、使用公开眼点并完整卸载，缺补丁明确失败", () => {
   const scene=terrainScenes[0],camera=createCamera(600,400,scene.syntheticGround);
   apply(camera,scene.plan,scene.syntheticGround);
@@ -306,6 +332,18 @@ test("实际地形源码、生成着色器与 ESM 均安装同版本 ENU 桥接"
     const source=readFileSync(new URL(`../node_modules/maplibre-gl/src/shaders/glsl/terrain.${stage}.glsl`,import.meta.url),'utf8');
     assert.match(source,/uniform highp float u_photo_enabled;/,`${stage} uniform precision must match`);
     assert.match(source,new RegExp(`${stage==='vertex'?'out':'in'} highp float v_photo_depth;`));
+    assert.match(source,new RegExp(`${stage==='vertex'?'out':'in'} highp vec2 v_photo_fog;`));
+    const generated=readFileSync(new URL(`../node_modules/maplibre-gl/src/shaders/glsl/terrain.${stage}.glsl.g.ts`,import.meta.url),'utf8');
+    const shared=readFileSync(new URL(`../src/preview/terrain-${stage==='vertex'?'projection':'depth'}.glsl`,import.meta.url),'utf8').replaceAll('\r\n','\n');
+    const shader=JSON.parse(generated.slice(generated.indexOf('export default ')+15).trim().replace(/;$/,''));
+    assert.ok(shader.includes(shared),'generated module contains the current shared kernel');
+    const esm=readFileSync(new URL('../node_modules/maplibre-gl/dist/maplibre-gl.mjs',import.meta.url),'utf8');
+    assert.ok(esm.includes(JSON.stringify(shader)),'ESM contains exactly the generated shader');
+    if(stage==='vertex')assert.match(shader,/v_photo_fog=pos.zw;/);
+    else {
+      assert.match(shader,/float photo_fog_depth=photoFogDepth\(v_fog_depth\);/);
+      assert.equal(shader.slice(shader.indexOf('void main()')).split('v_fog_depth').length-1,1,'old varying is only a fallback, never blended directly');
+    }
   }
 });
 

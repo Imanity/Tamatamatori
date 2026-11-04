@@ -1,0 +1,15 @@
+{
+  "recordedAt": "2026-11-04T20:25:47.383Z",
+  "url": "http://127.0.0.1:5173/",
+  "drag": {
+    "adjustment": "引擎避让：实际离地 ≈ 2.13 m，俯仰 -20.67°（计划 -19.26°）",
+    "canvas": {
+      "height": 712,
+      "ready": "true",
+      "width": 1068
+    },
+    "feedback": null,
+    "readout": "方位 237.7°H 132.1°V 112.6°俯仰 -20.7°"
+  },
+  "consoleErrors": []
+}
