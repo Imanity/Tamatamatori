@@ -8,6 +8,7 @@ const common = {
   orientation: "landscape",
   instant: "2026-11-04T03:00:00Z",
   timeZone: "Asia/Tokyo",
+  layers: { sun: true, moon: true },
 };
 
 export const terrainScenes = [

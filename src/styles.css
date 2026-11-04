@@ -245,6 +245,36 @@ p {
 .layer-row > svg {
   color: #969f91;
 }
+.layer-toggle { cursor: pointer; color: #63765c; }
+.layer-toggle > span { white-space: nowrap; }
+.layer-toggle input[type="checkbox"] {
+  appearance: none;
+  width: 27px;
+  height: 16px;
+  padding: 0;
+  min-width: 27px;
+  min-height: 16px;
+  flex-shrink: 0;
+  margin-left: auto;
+  border-radius: 10px;
+  background: #d5ddce;
+  border: 1px solid #c6d0be;
+  position: relative;
+  cursor: pointer;
+}
+.layer-toggle input::before {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  left: 2px;
+  top: 2px;
+  border-radius: 50%;
+  background: #fffef7;
+}
+.layer-toggle input:checked { background: #799570; border-color: #6f8965; }
+.layer-toggle input:checked::before { transform: translateX(10px); }
+.layer-toggle input:focus-visible { outline: 2px solid #7b906e; outline-offset: 3px; }
 .planned-badge {
   margin-left: auto;
   font-size: 8px;
@@ -707,7 +737,7 @@ p {
   color: #6c7e61;
   line-height: 1.4;
 }
-input:not([type="range"]),
+input:not([type="range"]):not([type="checkbox"]),
 select {
   width: 100%;
   min-width: 0;
@@ -958,7 +988,7 @@ input[aria-invalid="true"] {
   .field-label {
     font-size: 11px;
   }
-  input:not([type="range"]),
+  input:not([type="range"]):not([type="checkbox"]),
   select {
     min-height: 37px;
     font-size: 12px;
@@ -1165,7 +1195,7 @@ input[aria-invalid="true"] {
   .field {
     margin-bottom: 17px;
   }
-  input:not([type="range"]),
+  input:not([type="range"]):not([type="checkbox"]),
   select {
     font-size: 12px;
     min-height: 40px;

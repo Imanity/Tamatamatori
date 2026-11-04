@@ -11,6 +11,7 @@ import type { ShootingPlan } from "../domain/plan";
 import { Icon } from "./Icon";
 import { TerrainScene } from "./TerrainScene";
 import { solarPosition, daylightPhase } from "../domain/solar";
+import { CelestialDiscs, CelestialReadout, useCelestialScene } from "./CelestialScene";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -33,6 +34,7 @@ export function PreviewPanel({
   } | null>(null);
   const fov = fieldOfView(plan);
   const sun = solarPosition(plan);
+  const celestialScene = useCelestialScene(plan);
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return (
     <div className="preview-content">
@@ -146,6 +148,7 @@ export function PreviewPanel({
           }
         >
           <TerrainScene plan={plan} />
+          <CelestialDiscs scene={celestialScene} />
           <svg
             viewBox="0 0 600 400"
             preserveAspectRatio="none"
@@ -211,15 +214,18 @@ export function PreviewPanel({
           俯仰{" "}
           <strong>
             {plan.pitch > 0 ? "+" : ""}
-            {plan.pitch}°
+            {plan.pitch.toFixed(1)}°
           </strong>
         </span>
       </div>
       <p className="preview-lighting" aria-label="预览光照状态">
         {daylightPhase(sun.elevation)} · 太阳几何高度 {sun.elevation > 0 ? "+" : ""}{sun.elevation.toFixed(1)}°
       </p>
+      <CelestialReadout scene={celestialScene} plan={plan} update={update} />
       <p className="preview-note">晴空近似 · 不含天气与曝光 · 水面高程按 DEM 近似</p>
       <div className="preview-attribution">
+        <a href="https://github.com/cosinekitty/astronomy" target="_blank" rel="noreferrer">Astronomy Engine</a>
+        <a href={`${import.meta.env.BASE_URL}third-party-notices.txt`} target="_blank" rel="noreferrer">第三方许可</a>
         <a
           href="https://mapterhorn.com/attribution/"
           target="_blank"

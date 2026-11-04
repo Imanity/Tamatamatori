@@ -20,6 +20,7 @@ export interface ShootingPlan {
   orientation: "landscape" | "portrait";
   instant: string;
   timeZone: string;
+  layers: { sun: boolean; moon: boolean };
 }
 
 export const initialPlan: ShootingPlan = {
@@ -34,6 +35,7 @@ export const initialPlan: ShootingPlan = {
   orientation: "landscape",
   instant: "2026-11-04T08:00:00Z",
   timeZone: "Asia/Tokyo",
+  layers: { sun: true, moon: true },
 };
 
 export function normalizeLongitude(longitude: number) {

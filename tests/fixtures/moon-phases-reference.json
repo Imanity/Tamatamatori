@@ -1,0 +1,11 @@
+{
+  "source": "USNO Moon Phases API",
+  "url": "https://aa.usno.navy.mil/api/moon/phases/date?date=2026-11-01&nump=4",
+  "retrieved": "2026-11-04",
+  "records": [
+    { "instant": "2026-11-01T20:28:00Z", "phase": 270, "label": "下弦附近", "fraction": 0.5 },
+    { "instant": "2026-11-09T07:02:00Z", "phase": 0, "label": "新月附近", "fraction": 0 },
+    { "instant": "2026-11-17T11:48:00Z", "phase": 90, "label": "上弦附近", "fraction": 0.5 },
+    { "instant": "2026-11-24T14:53:00Z", "phase": 180, "label": "满月附近", "fraction": 1 }
+  ]
+}

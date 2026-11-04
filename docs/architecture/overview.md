@@ -1,6 +1,6 @@
 # 全局架构
 
-状态：P2 山体、静态水体与时间驱动的晴空近似采用 MapLibre。更新：2026-11-04。
+状态：P2 地形与晴空环境采用 MapLibre，P3 日月构图辅助采用本地星历与 SVG 投影。更新：2026-11-04。
 
 本文定义职责与约定，不是完整技术规格。产品范围见[全局规划](../plan/overview.md)，交互含义见[全局设计](../design/overview.md)。
 
@@ -11,7 +11,7 @@
 | 状态 | 内容 |
 | --- | --- |
 | 已确定 | React 界面；地图、预览、参数与图层侧栏；开源地图引擎；统一拍摄计划；按阶段增量实现 |
-| 当前采用 | TypeScript + Vite；React 内置状态；Temporal polyfill；地图和独立三维预览均采用 MapLibre GL JS；预览使用 Mapterhorn DEM 与 OpenFreeMap 水体边界 |
+| 当前采用 | TypeScript + Vite；React 内置状态；Temporal polyfill；地图和独立三维预览采用 MapLibre GL JS；Mapterhorn DEM 与 OpenFreeMap 水体边界；Astronomy Engine 本地计算日月 |
 | 后续可选 | 极区、独立水平水面或更高精度三维需求出现时，再评估 CesiumJS 或其他渲染器，不在本轮增加第二套引擎 |
 | 待验证 | 近地与长焦构图精度、极区覆盖、实际 GPU 性能和水面高程；星表/轨道数据源与天文算法 |
 | 暂不引入 | 专用后端、数据库、账户服务、通用插件系统、云端渲染 |
@@ -52,7 +52,9 @@ P1 交互完善阶段增加地图与预览的连续手势联动。地图几何�
 
 P2 首步以 DEM 三维场景替换预览平面，独立获取机位高程，再按摄影视场定位相机。水体边界贴附 DEM 表面，明确显示高度近似与无独立水位校准的限制。模块与数据流详见[山体与水体预览](terrain-preview.md)。
 
-P2 时间天空使用本地 NOAA/Meeus 简化太阳位置计算，由机位与 UTC 驱动天空、雾、地表配色与坡面阴影。通过现有实例的样式接口更新环境，时间修改不重建预览、不重新取高程或移动相机；不新增运行时依赖。算法、误差与范围见[时间天空设计](time-sky.md)。
+P2 时间天空由机位与 UTC 驱动天空、雾、地表配色与坡面阴影。通过现有实例的样式接口更新环境，时间修改不重建预览、不重新取高程或移动相机；算法、误差与范围见[时间天空设计](time-sky.md)。
+
+P3 日月接入 Astronomy Engine 后，太阳位置与基础环境统一算法。日月开关属于拍摄计划；SVG 按同一摄影相机的三维针孔模型投影圆盘及月相。叠加尚不参与地形深度遮挡，持续显示限制；不新增通用图层框架。详见[日月设计](sun-moon.md)。
 
 本轮使用 [React 内置状态](https://react.dev/reference/react/useState)、[Vite](https://vite.dev/guide/) 与 [Temporal polyfill](https://github.com/js-temporal/temporal-polyfill)（查阅：2026-11-04）；依赖版本记录于 `package.json`，可复现安装记录于 `package-lock.json`。
 

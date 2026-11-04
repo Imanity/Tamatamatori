@@ -5,6 +5,8 @@ import { MercatorCoordinate } from "maplibre-gl";
 import { terrainCamera, terrainRenderOptions } from "../src/preview/camera.ts";
 import { signedAngle } from "../src/domain/plan.ts";
 import { terrainScenes } from "./fixtures/terrain-scenes.mjs";
+import { projectDirection } from "../src/domain/celestial-projection.ts";
+import { direction } from "../src/domain/ephemeris.ts";
 
 // Exercise the installed SDK's real CPU camera/transform, not the interaction
 // test double. No browser, GL context, image decoder or real DEM is simulated.
@@ -157,4 +159,30 @@ test("真实 SDK 水平与长焦视角的瓦片覆盖保持有效", () => {
       assert.ok(tiles.every((tile) => tile.canonical.z <= sourceMaxZoom));
       assertEye(camera, next, syntheticGround);
     }
+});
+
+test("日月方向投影与真实 SDK 相机在广角、长焦、竖幅及天顶一致", () => {
+  const { plan, syntheticGround } = terrainScenes[0];
+  let probes = 0;
+  for (const focalLength of [8, 35, 200, 1000])
+    for (const orientation of ["landscape", "portrait"])
+      for (const pitch of [0, 35, 90])
+        for (const azimuth of [0, 247, 359.8]) {
+          const next = { ...plan, focalLength, orientation, pitch, azimuth };
+          const [width, height] = orientation === "portrait" ? [400, 600] : [600, 400];
+          const camera = createCamera(width, height, syntheticGround);
+          apply(camera, next, syntheticGround);
+          const eye = MercatorCoordinate.fromLngLat([next.longitude, next.latitude], syntheticGround + next.cameraHeight);
+          for (const ray of [direction(azimuth, pitch), direction(azimuth + 0.2, Math.min(89.9, pitch + 0.2)), direction(0, 20), direction(247, 4)]) {
+            const projected = projectDirection(next, ray);
+            if (!projected || Math.max(Math.abs(projected.x), Math.abs(projected.y)) > 3) continue;
+            const distance = 1000, scale = distance * eye.meterInMercatorCoordinateUnits();
+            const point = new MercatorCoordinate(eye.x + ray[0] * scale, eye.y - ray[1] * scale).toLngLat();
+            const pixel = camera.transform.locationToScreenPoint(point, flatTerrain(syntheticGround + next.cameraHeight + ray[2] * distance));
+            close(pixel.x, (projected.x + 1) * width / 2, 0.1, "celestial x / CSS px");
+            close(pixel.y, (projected.y + 1) * height / 2, 0.1, "celestial y / CSS px");
+            probes++;
+          }
+        }
+  assert.ok(probes >= 144);
 });

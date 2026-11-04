@@ -1,0 +1,527 @@
+{
+  "date": "2026-11-04",
+  "browser": "Chrome",
+  "installedExecutableVersion": "156.0.8078.80",
+  "desktopViewport": {
+    "height": 1271,
+    "width": 2560
+  },
+  "mobileViewport": {
+    "width": 390,
+    "height": 844
+  },
+  "records": [
+    {
+      "phase": "initial-below-horizon",
+      "bodies": [],
+      "canvas": {
+        "height": 168,
+        "ready": "true",
+        "width": 252
+      },
+      "fields": [
+        "2026-11-04T17:00",
+        "1020",
+        "Asia/Tokyo",
+        "35",
+        "35",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "35.4172",
+        "138.8729",
+        "247",
+        "4",
+        "1.6"
+      ],
+      "layers": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        }
+      ],
+      "lighting": "民用暮光 · 太阳几何高度 -3.3°",
+      "statuses": [
+        {
+          "body": "sun",
+          "text": "太阳地平线下253.4° / -3.3°朝向"
+        },
+        {
+          "body": "moon",
+          "text": "月亮地平线下307.6° / -34.5°残月 · 亮面 24%朝向"
+        }
+      ]
+    },
+    {
+      "phase": "moon-1000-landscape",
+      "bodies": [
+        {
+          "body": "moon",
+          "outline": {
+            "x": -0.256397,
+            "y": -0.3845955,
+            "width": 0.512794,
+            "height": 0.769191
+          }
+        }
+      ],
+      "canvas": {
+        "height": 772,
+        "ready": "true",
+        "width": 1158
+      },
+      "fields": [
+        "2026-11-04T03:00",
+        "180",
+        "Asia/Tokyo",
+        "1000",
+        "1000",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "35.4172",
+        "138.8729",
+        "97.40019183106206",
+        "24.545165844171663",
+        "1.6"
+      ],
+      "layers": [
+        {
+          "checked": false,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        }
+      ],
+      "lighting": "夜间 · 太阳几何高度 -38.7°",
+      "statuses": [
+        {
+          "body": "sun",
+          "text": "太阳已关闭"
+        },
+        {
+          "body": "moon",
+          "text": "月亮画面内97.4° / +24.5°残月 · 亮面 29%朝向"
+        }
+      ]
+    },
+    {
+      "phase": "moon-same-instant-UTC",
+      "bodies": [
+        {
+          "body": "moon",
+          "outline": {
+            "x": -0.256397,
+            "y": -0.3845955,
+            "width": 0.512794,
+            "height": 0.769191
+          }
+        }
+      ],
+      "canvas": {
+        "height": 772,
+        "ready": "true",
+        "width": 1158
+      },
+      "fields": [
+        "2026-11-03T18:00",
+        "1080",
+        "UTC",
+        "1000",
+        "1000",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "35.4172",
+        "138.8729",
+        "97.40019183106206",
+        "24.545165844171663",
+        "1.6"
+      ],
+      "layers": [
+        {
+          "checked": false,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        }
+      ],
+      "lighting": "夜间 · 太阳几何高度 -38.7°",
+      "statuses": [
+        {
+          "body": "sun",
+          "text": "太阳已关闭"
+        },
+        {
+          "body": "moon",
+          "text": "月亮画面内97.4° / +24.5°残月 · 亮面 29%朝向"
+        }
+      ]
+    },
+    {
+      "phase": "moon-1000-portrait",
+      "bodies": [
+        {
+          "body": "moon",
+          "outline": {
+            "x": -0.3845955,
+            "y": -0.256397,
+            "width": 0.769191,
+            "height": 0.512794
+          }
+        }
+      ],
+      "canvas": {
+        "height": 772,
+        "ready": "true",
+        "width": 515
+      },
+      "fields": [
+        "2026-11-03T18:00",
+        "1080",
+        "UTC",
+        "1000",
+        "1000",
+        "full-frame",
+        "3:2",
+        "portrait",
+        "35.4172",
+        "138.8729",
+        "97.40019183106206",
+        "24.545165844171663",
+        "1.6"
+      ],
+      "layers": [
+        {
+          "checked": false,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        }
+      ],
+      "lighting": "夜间 · 太阳几何高度 -38.7°",
+      "statuses": [
+        {
+          "body": "sun",
+          "text": "太阳已关闭"
+        },
+        {
+          "body": "moon",
+          "text": "月亮画面内97.4° / +24.5°残月 · 亮面 29%朝向"
+        }
+      ]
+    },
+    {
+      "phase": "both-layers-off",
+      "bodies": [],
+      "canvas": {
+        "height": 794,
+        "ready": "true",
+        "width": 529
+      },
+      "fields": [
+        "2026-11-03T18:00",
+        "1080",
+        "UTC",
+        "1000",
+        "1000",
+        "full-frame",
+        "3:2",
+        "portrait",
+        "35.4172",
+        "138.8729",
+        "97.40019183106206",
+        "24.545165844171663",
+        "1.6"
+      ],
+      "layers": [
+        {
+          "checked": false,
+          "name": "显示太阳"
+        },
+        {
+          "checked": false,
+          "name": "显示月亮"
+        }
+      ],
+      "lighting": "夜间 · 太阳几何高度 -38.7°",
+      "statuses": [
+        {
+          "body": "sun",
+          "text": "太阳已关闭"
+        },
+        {
+          "body": "moon",
+          "text": "月亮已关闭"
+        }
+      ]
+    },
+    {
+      "phase": "moon-1000-mobile",
+      "bodies": [
+        {
+          "body": "moon",
+          "outline": {
+            "x": -0.256397,
+            "y": -0.3845955,
+            "width": 0.512794,
+            "height": 0.769191
+          }
+        }
+      ],
+      "canvas": {
+        "height": 221,
+        "ready": "true",
+        "width": 332
+      },
+      "fields": [
+        "2026-11-04T03:00",
+        "180",
+        "Asia/Tokyo",
+        "1000",
+        "1000",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "35.4172",
+        "138.8729",
+        "97.40019183106206",
+        "24.545165844171663",
+        "1.6"
+      ],
+      "layers": [
+        {
+          "checked": false,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        }
+      ],
+      "lighting": "夜间 · 太阳几何高度 -38.7°",
+      "statuses": [
+        {
+          "body": "sun",
+          "text": "太阳已关闭"
+        },
+        {
+          "body": "moon",
+          "text": "月亮画面内97.4° / +24.5°残月 · 亮面 29%朝向"
+        }
+      ]
+    },
+    {
+      "phase": "mobile-moon-off",
+      "bodies": [],
+      "canvas": {
+        "height": 221,
+        "ready": "true",
+        "width": 332
+      },
+      "fields": [
+        "2026-11-04T03:00",
+        "180",
+        "Asia/Tokyo",
+        "1000",
+        "1000",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "35.4172",
+        "138.8729",
+        "97.40019183106206",
+        "24.545165844171663",
+        "1.6"
+      ],
+      "layers": [
+        {
+          "checked": false,
+          "name": "显示太阳"
+        },
+        {
+          "checked": false,
+          "name": "显示月亮"
+        }
+      ],
+      "lighting": "夜间 · 太阳几何高度 -38.7°",
+      "statuses": [
+        {
+          "body": "sun",
+          "text": "太阳已关闭"
+        },
+        {
+          "body": "moon",
+          "text": "月亮已关闭"
+        }
+      ]
+    },
+    {
+      "phase": "both-below-horizon",
+      "bodies": [],
+      "canvas": {
+        "height": 768,
+        "ready": "true",
+        "width": 1152
+      },
+      "fields": [
+        "2026-11-04T17:00",
+        "1020",
+        "Asia/Tokyo",
+        "35",
+        "35",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "35.4172",
+        "138.8729",
+        "247",
+        "4",
+        "1.6"
+      ],
+      "layers": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        }
+      ],
+      "lighting": "民用暮光 · 太阳几何高度 -3.3°",
+      "statuses": [
+        {
+          "body": "sun",
+          "text": "太阳地平线下253.4° / -3.3°朝向"
+        },
+        {
+          "body": "moon",
+          "text": "月亮地平线下307.6° / -34.5°残月 · 亮面 24%朝向"
+        }
+      ]
+    },
+    {
+      "phase": "sun-35-landscape",
+      "bodies": [
+        {
+          "body": "sun",
+          "outline": {
+            "x": -0.43775178,
+            "y": -0.79934618,
+            "width": 0.019762489999999966,
+            "height": 0.02997291000000002
+          }
+        }
+      ],
+      "canvas": {
+        "height": 768,
+        "ready": "true",
+        "width": 1152
+      },
+      "fields": [
+        "2026-11-04T15:00",
+        "900",
+        "Asia/Tokyo",
+        "35",
+        "35",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "35.4172",
+        "138.8729",
+        "247",
+        "4",
+        "1.6"
+      ],
+      "layers": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        }
+      ],
+      "lighting": "白昼 · 太阳几何高度 +18.6°",
+      "statuses": [
+        {
+          "body": "sun",
+          "text": "太阳画面内234.3° / +18.6°朝向"
+        },
+        {
+          "body": "moon",
+          "text": "月亮地平线下286.3° / -13.1°残月 · 亮面 25%朝向"
+        }
+      ]
+    },
+    {
+      "phase": "sun-1000-landscape",
+      "bodies": [
+        {
+          "body": "sun",
+          "outline": {
+            "x": -0.26048263,
+            "y": -0.39072394,
+            "width": 0.52096526,
+            "height": 0.78144788
+          }
+        }
+      ],
+      "canvas": {
+        "height": 768,
+        "ready": "true",
+        "width": 1152
+      },
+      "fields": [
+        "2026-11-04T15:00",
+        "900",
+        "Asia/Tokyo",
+        "1000",
+        "1000",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "35.4172",
+        "138.8729",
+        "234.330148706281",
+        "18.620129673648563",
+        "1.6"
+      ],
+      "layers": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        }
+      ],
+      "lighting": "白昼 · 太阳几何高度 +18.6°",
+      "statuses": [
+        {
+          "body": "sun",
+          "text": "太阳画面内234.3° / +18.6°朝向"
+        },
+        {
+          "body": "moon",
+          "text": "月亮地平线下286.3° / -13.1°残月 · 亮面 25%朝向"
+        }
+      ]
+    }
+  ],
+  "reportedBrowserLogs": [],
+  "logCaptureLimit": "日志接口的空集合不代表整个页面无警告；本地服务仍有既有道路盾牌过滤器警告。"
+}

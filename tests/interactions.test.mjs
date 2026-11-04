@@ -768,6 +768,43 @@ test("时间驱动环境并合并连续更新，切换时区不重绘，布局�
   assert.deepEqual(moved.environments.at(-1), night);
 });
 
+test("日月开关、主动朝向与状态联动，关闭太阳不改变光照、机位或镜头", async (t) => {
+  const style = document.createElement("style");
+  style.textContent = readFileSync(new URL("../src/styles.css", import.meta.url), "utf8");
+  document.head.append(style);
+  t.after(() => style.remove());
+  await workspace(t);
+  const map = await readyTerrain();
+  const toggleStyle = dom.window.getComputedStyle(document.querySelector('input[aria-label="显示太阳"]'));
+  assert.ok(parseFloat(toggleStyle.width) <= 40);
+  assert.ok(parseFloat(toggleStyle.minHeight) <= 20, "layer switches must not inherit text-field sizing");
+  const slider = document.querySelector('input[aria-label="24 小时时间滑杆"]');
+  await settle(() => setControl(slider, 720));
+  const fields = ["经度", "纬度", "焦距", "相机离地高度"].map(value);
+  const time = document.querySelector('input[type="datetime-local"]').value;
+  assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes("视场外"));
+  await settle(() => document.querySelector('button[aria-label="朝向太阳"]').click());
+  assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes("画面内"));
+  assert.ok(document.querySelector('[data-celestial-body="sun"]'));
+  const poses = map.cameraSolutions.length, environments = map.environments.length, requests = groundRequests.length;
+  await settle(() => document.querySelector('input[aria-label="显示太阳"]').click());
+  assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes("已关闭"));
+  assert.equal(document.querySelector('[data-celestial-body="sun"]'), null);
+  assert.equal(document.querySelector('input[aria-label="显示月亮"]').checked, true);
+  assert.equal(map.cameraSolutions.length, poses);
+  assert.equal(map.environments.length, environments);
+  assert.equal(groundRequests.length, requests);
+  assert.deepEqual(["经度", "纬度", "焦距", "相机离地高度"].map(value), fields);
+  assert.equal(document.querySelector('input[type="datetime-local"]').value, time);
+  await settle(() => setControl(document.querySelector('select[aria-label="拍摄预览面板位置"]'), 0));
+  await readyTerrain();
+  assert.equal(document.querySelector('input[aria-label="显示太阳"]').checked, false);
+  assert.equal(document.querySelector('input[aria-label="显示月亮"]').checked, true);
+  await settle(() => setControl(slider, 1020));
+  assert.ok(document.querySelector('[data-body-status="moon"]').textContent.includes("地平线下"));
+  assert.equal(document.querySelector('button[aria-label="朝向月亮"]').disabled, true);
+});
+
 test("地形高程失败允许重试，并释放旧预览实例、保留拍摄计划", async (t) => {
   await workspace(t, async () => {
     throw new Error("test elevation offline");

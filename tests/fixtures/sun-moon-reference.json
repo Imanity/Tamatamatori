@@ -1,0 +1,112 @@
+{
+  "retrieved": "2026-11-04",
+  "source": "JPL Horizons API",
+  "observerHeightKm": 0,
+  "refraction": "AIRLESS",
+  "records": [
+    {
+      "site": "fuji",
+      "id": "sun",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-04T03:00:00.000Z",
+      "azimuth": 189.87848761,
+      "elevation": 38.675094615,
+      "illuminatedFraction": 1,
+      "angularDiameter": 0.5372702777777778,
+      "distanceKm": 148382733.33,
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=10&OBJ_DATA=NO&MAKE_EPHEM=YES&EPHEM_TYPE=OBSERVER&CENTER=coord%40399&COORD_TYPE=GEODETIC&SITE_COORD=%27138.8729%2C35.4172%2C0%27&START_TIME=%272026-11-04+03%3A00%27&STOP_TIME=%272026-11-04+03%3A01%27&STEP_SIZE=%271+m%27&QUANTITIES=%274%2C10%2C13%2C20%27&APPARENT=AIRLESS&CSV_FORMAT=YES&RANGE_UNITS=KM&SUPPRESS_RANGE_RATE=YES&TIME_DIGITS=SECONDS&EXTRA_PREC=YES"
+    },
+    {
+      "site": "fuji",
+      "id": "sun",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-04T03:01:00.000Z",
+      "azimuth": 190.183822213,
+      "elevation": 38.639393942,
+      "illuminatedFraction": 1,
+      "angularDiameter": 0.5372702777777778,
+      "distanceKm": 148382710.81,
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=10&OBJ_DATA=NO&MAKE_EPHEM=YES&EPHEM_TYPE=OBSERVER&CENTER=coord%40399&COORD_TYPE=GEODETIC&SITE_COORD=%27138.8729%2C35.4172%2C0%27&START_TIME=%272026-11-04+03%3A00%27&STOP_TIME=%272026-11-04+03%3A01%27&STEP_SIZE=%271+m%27&QUANTITIES=%274%2C10%2C13%2C20%27&APPARENT=AIRLESS&CSV_FORMAT=YES&RANGE_UNITS=KM&SUPPRESS_RANGE_RATE=YES&TIME_DIGITS=SECONDS&EXTRA_PREC=YES"
+    },
+    {
+      "site": "fuji",
+      "id": "moon",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-04T03:00:00.000Z",
+      "azimuth": 261.065204032,
+      "elevation": 22.581567443,
+      "illuminatedFraction": 0.2647588,
+      "angularDiameter": 0.5267533333333333,
+      "distanceKm": 377960.67188,
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=301&OBJ_DATA=NO&MAKE_EPHEM=YES&EPHEM_TYPE=OBSERVER&CENTER=coord%40399&COORD_TYPE=GEODETIC&SITE_COORD=%27138.8729%2C35.4172%2C0%27&START_TIME=%272026-11-04+03%3A00%27&STOP_TIME=%272026-11-04+03%3A01%27&STEP_SIZE=%271+m%27&QUANTITIES=%274%2C10%2C13%2C20%27&APPARENT=AIRLESS&CSV_FORMAT=YES&RANGE_UNITS=KM&SUPPRESS_RANGE_RATE=YES&TIME_DIGITS=SECONDS&EXTRA_PREC=YES"
+    },
+    {
+      "site": "fuji",
+      "id": "moon",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-04T03:01:00.000Z",
+      "azimuth": 261.215049454,
+      "elevation": 22.382677404,
+      "illuminatedFraction": 0.26470109999999997,
+      "angularDiameter": 0.5267216666666666,
+      "distanceKm": 377983.47728,
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=301&OBJ_DATA=NO&MAKE_EPHEM=YES&EPHEM_TYPE=OBSERVER&CENTER=coord%40399&COORD_TYPE=GEODETIC&SITE_COORD=%27138.8729%2C35.4172%2C0%27&START_TIME=%272026-11-04+03%3A00%27&STOP_TIME=%272026-11-04+03%3A01%27&STEP_SIZE=%271+m%27&QUANTITIES=%274%2C10%2C13%2C20%27&APPARENT=AIRLESS&CSV_FORMAT=YES&RANGE_UNITS=KM&SUPPRESS_RANGE_RATE=YES&TIME_DIGITS=SECONDS&EXTRA_PREC=YES"
+    },
+    {
+      "site": "sydney",
+      "id": "sun",
+      "latitude": -33.86,
+      "longitude": 151.21,
+      "instant": "2026-11-04T12:00:00.000Z",
+      "azimuth": 209.570082158,
+      "elevation": -35.36259578,
+      "illuminatedFraction": 1,
+      "angularDiameter": 0.5372925,
+      "distanceKm": 148376609.14,
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=10&OBJ_DATA=NO&MAKE_EPHEM=YES&EPHEM_TYPE=OBSERVER&CENTER=coord%40399&COORD_TYPE=GEODETIC&SITE_COORD=%27151.21%2C-33.86%2C0%27&START_TIME=%272026-11-04+12%3A00%27&STOP_TIME=%272026-11-04+12%3A01%27&STEP_SIZE=%271+m%27&QUANTITIES=%274%2C10%2C13%2C20%27&APPARENT=AIRLESS&CSV_FORMAT=YES&RANGE_UNITS=KM&SUPPRESS_RANGE_RATE=YES&TIME_DIGITS=SECONDS&EXTRA_PREC=YES"
+    },
+    {
+      "site": "sydney",
+      "id": "sun",
+      "latitude": -33.86,
+      "longitude": 151.21,
+      "instant": "2026-11-04T12:01:00.000Z",
+      "azimuth": 209.302140135,
+      "elevation": -35.464424997,
+      "illuminatedFraction": 1,
+      "angularDiameter": 0.5372925,
+      "distanceKm": 148376592.82,
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=10&OBJ_DATA=NO&MAKE_EPHEM=YES&EPHEM_TYPE=OBSERVER&CENTER=coord%40399&COORD_TYPE=GEODETIC&SITE_COORD=%27151.21%2C-33.86%2C0%27&START_TIME=%272026-11-04+12%3A00%27&STOP_TIME=%272026-11-04+12%3A01%27&STEP_SIZE=%271+m%27&QUANTITIES=%274%2C10%2C13%2C20%27&APPARENT=AIRLESS&CSV_FORMAT=YES&RANGE_UNITS=KM&SUPPRESS_RANGE_RATE=YES&TIME_DIGITS=SECONDS&EXTRA_PREC=YES"
+    },
+    {
+      "site": "sydney",
+      "id": "moon",
+      "latitude": -33.86,
+      "longitude": 151.21,
+      "instant": "2026-11-04T12:00:00.000Z",
+      "azimuth": 131.202067512,
+      "elevation": -50.567503957,
+      "illuminatedFraction": 0.2251627,
+      "angularDiameter": 0.5148613888888889,
+      "distanceKm": 386690.49187,
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=301&OBJ_DATA=NO&MAKE_EPHEM=YES&EPHEM_TYPE=OBSERVER&CENTER=coord%40399&COORD_TYPE=GEODETIC&SITE_COORD=%27151.21%2C-33.86%2C0%27&START_TIME=%272026-11-04+12%3A00%27&STOP_TIME=%272026-11-04+12%3A01%27&STEP_SIZE=%271+m%27&QUANTITIES=%274%2C10%2C13%2C20%27&APPARENT=AIRLESS&CSV_FORMAT=YES&RANGE_UNITS=KM&SUPPRESS_RANGE_RATE=YES&TIME_DIGITS=SECONDS&EXTRA_PREC=YES"
+    },
+    {
+      "site": "sydney",
+      "id": "moon",
+      "latitude": -33.86,
+      "longitude": 151.21,
+      "instant": "2026-11-04T12:01:00.000Z",
+      "azimuth": 130.914203748,
+      "elevation": -50.414338295,
+      "illuminatedFraction": 0.22508140000000001,
+      "angularDiameter": 0.5148727777777777,
+      "distanceKm": 386681.95228,
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=301&OBJ_DATA=NO&MAKE_EPHEM=YES&EPHEM_TYPE=OBSERVER&CENTER=coord%40399&COORD_TYPE=GEODETIC&SITE_COORD=%27151.21%2C-33.86%2C0%27&START_TIME=%272026-11-04+12%3A00%27&STOP_TIME=%272026-11-04+12%3A01%27&STEP_SIZE=%271+m%27&QUANTITIES=%274%2C10%2C13%2C20%27&APPARENT=AIRLESS&CSV_FORMAT=YES&RANGE_UNITS=KM&SUPPRESS_RANGE_RATE=YES&TIME_DIGITS=SECONDS&EXTRA_PREC=YES"
+    }
+  ]
+}

@@ -21,8 +21,6 @@ const panelInfo: Record<
 };
 const slotNames = ["主栏", "右上", "右下"];
 const layers: { name: string; icon: IconName; hint: string }[] = [
-  { name: "太阳", icon: "sun", hint: "太阳位置与光线方向" },
-  { name: "月亮", icon: "moon", hint: "月亮位置与月相" },
   { name: "银河", icon: "stars", hint: "银河位置与轮廓" },
   { name: "深空天体", icon: "orbit", hint: "天体位置与构图参考" },
   { name: "空间站", icon: "satellite", hint: "空间站位置与轨迹" },
@@ -228,6 +226,9 @@ export default function App() {
       setPlan((current) => ({ ...current, ...patch })),
     [],
   );
+  const toggleLayer = (id: "sun" | "moon") => setPlan((current) => ({
+    ...current, layers: { ...current.layers, [id]: !current.layers[id] },
+  }));
   const movePanel = (id: PanelId, destination: number) => {
     const next = [...panels];
     const source = next.indexOf(id);
@@ -280,7 +281,7 @@ export default function App() {
           <span className="prototype-badge">
             <span className="status-dot" /> 工作区原型
           </span>
-          <span className="version-label">P2 / TERRAIN</span>
+          <span className="version-label">P3 / SUN & MOON</span>
         </div>
       </header>
       <div className="app-layout">
@@ -309,9 +310,15 @@ export default function App() {
             />
           </div>
           <div className="sidebar-section-label">
-            天文参考 <span>后续逐项接入</span>
+            天文参考 <span>构图辅助</span>
           </div>
           <div className="layer-list">
+            {(["sun", "moon"] as const).map((id) => <label className="layer-row layer-toggle" key={id}>
+              <Icon name={id === "sun" ? "sun" : "moon"} size={19} />
+              <span>{id === "sun" ? "太阳" : "月亮"}</span>
+              <input type="checkbox" role="switch" aria-label={`显示${id === "sun" ? "太阳" : "月亮"}`}
+                checked={plan.layers[id]} onChange={() => toggleLayer(id)} />
+            </label>)}
             {layers.map((layer) => (
               <div className="layer-row" key={layer.name} title={layer.hint}>
                 <Icon name={layer.icon} size={19} />
@@ -321,7 +328,7 @@ export default function App() {
             ))}
           </div>
           <p className="layer-hint">
-            图层接入后，可独立控制其在取景画面中的显示。
+            日月圆盘按角尺寸绘制，地形遮挡未校验。其他图层后续逐项接入。
           </p>
           <div className="sidebar-bottom">
             <div className="small-compass">
