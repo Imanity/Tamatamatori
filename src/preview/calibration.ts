@@ -2,7 +2,7 @@ import { MercatorCoordinate } from "maplibre-gl";
 import type { CustomLayerInterface, Map as MapLibreMap } from "maplibre-gl";
 import type { ShootingPlan } from "../domain/plan.ts";
 import { groundElevation } from "./elevation.ts";
-import { matrixPixel, mercatorMeter, mercatorXY, referencePixel } from "./calibration-math.ts";
+import { compareEarthModels, matrixPixel, mercatorMeter, mercatorXY, referencePixel } from "./calibration-math.ts";
 import { matrixEye } from "./rendered-camera.ts";
 import { TERRAIN_CELL_PIXELS, TERRAIN_MAX_MESH_ZOOM } from "./terrain-detail.ts";
 
@@ -19,11 +19,19 @@ export interface CalibrationSnapshot {
   eye: { longitude: number; latitude: number; altitude: number; horizontalError: number; altitudeError: number; heightAboveDem: number; pitch: number; bearing: number };
   target: typeof calibrationTarget & { independentDem: number | null; renderedDem: number | null; demLevels: Record<number, number>; error: string };
   detail: { cellPixels: number; viewportHeight: number; maxMeshZoom: number };
-  pixels: { sdkDem: Pixel; matrixDem: Pixel; requestedDem: Pixel; actualDem: Pixel; publishedPlanar: Pixel; publishedSpherical: Pixel };
+  curvature: {
+    heightAssumption: string;
+    dem: ReturnType<typeof compareEarthModels> | null;
+    published: ReturnType<typeof compareEarthModels>;
+    gpuResidual: number | null;
+    gpuRay: number[] | null;
+  };
+  pixels: { sdkDem: Pixel; matrixDem: Pixel; requestedDem: Pixel; actualDem: Pixel; publishedPlanar: Pixel; publishedSpherical: Pixel; demEllipsoidal: Pixel; gpuDem: Pixel };
 }
 
-/** Development-only, read-only instrument: no GL calls or private SDK fields. */
-export function calibrationLayer(map: MapLibreMap, current: () => { plan: ShootingPlan; ground: number | null }, url: string, report: (snapshot: CalibrationSnapshot) => void): CustomLayerInterface {
+/** Development-only instrument; no private SDK fields. Optional GPU probe restores GL state. */
+export function calibrationLayer(map: MapLibreMap, current: () => { plan: ShootingPlan; ground: number | null }, url: string, report: (snapshot: CalibrationSnapshot) => void,
+  probe?: (point: {latitude:number;longitude:number;altitude:number},width:number,height:number) => {x:number;y:number;ray:number[]}|null): CustomLayerInterface {
   const controller = new AbortController();
   let dem: number | null = null, error = "", previous = "";
   const demLevels: Record<number, number> = {};
@@ -51,6 +59,12 @@ export function calibrationLayer(map: MapLibreMap, current: () => { plan: Shooti
       const renderedDem = rawDem !== null && rawDem !== 0 && Number.isFinite(rawDem) ? rawDem : null;
       const target = { ...calibrationTarget, altitude: renderedDem ?? 0 };
       const sdkPixel = renderedDem === null ? null : map.project([target.longitude, target.latitude]);
+      const actualPlan = { ...plan, azimuth: (map.getBearing() % 360 + 360) % 360, pitch: map.getPitch() - 90 };
+      const actualEye = { longitude: location.lng, latitude: location.lat, altitude: point.altitude };
+      const compare = (reference: typeof target) => compareEarthModels(actualPlan, actualEye, reference, width, height, map.getCenter().lat);
+      const demModels = renderedDem === null ? null : compare(target);
+      const gpu = renderedDem === null ? null : probe?.(target,width,height);
+      const expected = demModels?.ellipsoid.pixel;
       const snapshot: CalibrationSnapshot = {
         ready: map.areTilesLoaded(), width, height, plan, ground,
         eye: { longitude: location.lng, latitude: location.lat, altitude: point.altitude,
@@ -59,6 +73,12 @@ export function calibrationLayer(map: MapLibreMap, current: () => { plan: Shooti
           heightAboveDem: point.altitude - ground, pitch: map.getPitch() - 90, bearing: map.getBearing() },
         target: { ...calibrationTarget, independentDem: dem, renderedDem, demLevels: { ...demLevels }, error },
         detail: { cellPixels: TERRAIN_CELL_PIXELS, viewportHeight: height, maxMeshZoom: TERRAIN_MAX_MESH_ZOOM },
+        curvature: {
+          heightAssumption: "同一实际眼点；同源高程作为椭球参考曲面，未作垂直基准转换或地面大气折射；真实网格使用 ENU 投影，不代表实景精度",
+          dem: demModels, published: compare(calibrationTarget),
+          gpuResidual: gpu && expected ? Math.hypot(gpu.x-expected.x,gpu.y-expected.y):null,
+          gpuRay: gpu?.ray ?? null,
+        },
         pixels: {
           sdkDem: sdkPixel && { x: sdkPixel.x, y: sdkPixel.y },
           matrixDem: renderedDem === null ? null : matrixPixel(input.modelViewProjectionMatrix, target, worldSize, width, height),
@@ -67,6 +87,8 @@ export function calibrationLayer(map: MapLibreMap, current: () => { plan: Shooti
             azimuth: (map.getBearing() % 360 + 360) % 360, pitch: map.getPitch() - 90 }, point.altitude - plan.cameraHeight, target, width, height, false, map.getCenter().lat),
           publishedPlanar: referencePixel(plan, ground, calibrationTarget, width, height, false, map.getCenter().lat),
           publishedSpherical: referencePixel(plan, ground, calibrationTarget, width, height, true),
+          demEllipsoidal: demModels?.ellipsoid.pixel ?? null,
+          gpuDem: gpu ? {x:gpu.x,y:gpu.y}:null,
         },
       };
       // Round only the comparison key; retain full precision in the evidence.

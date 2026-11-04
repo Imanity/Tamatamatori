@@ -58,6 +58,10 @@ P3 日月接入 Astronomy Engine 后，太阳位置与基础环境统一算法�
 
 近地相机校准已发现引擎避让可能改变实际眼点和俯仰。预览读取公开绘制矩阵和相机角度，按实际姿态同步日月及读数，计划参数独立保留。开发校准器及模型精度边界见[相机校准设计](camera-calibration.md)。
 
+独立 WGS84 ECEF → ENU 对照后，默认预览已对实际地形与水体网格应用机位局部投影，使用对数主深度与日月共享遮挡。固定 SDK 的本地桥接、数值稳定性和后续天体接口见[摄影空间投影](terrain-perspective.md)；[初始曲率对照](curvature-reference.md)保留历史模型差异。
+
+现用高程尚无可证明的统一垂直基准，不自动转换为椭球高；正式转换准入与条件原型边界见[高度基准决策](elevation-datum.md)。
+
 远山 DEM 下载和网格覆盖采用同一屏幕细节策略，SDK 固定为 6.16.0 并在安装时应用签名校验的最小兼容修正；最高原生 DEM 仍为 z12。策略、资源限制和升级边界见[远山地形细节](terrain-detail.md)。
 
 本轮使用 [React 内置状态](https://react.dev/reference/react/useState)、[Vite](https://vite.dev/guide/) 与 [Temporal polyfill](https://github.com/js-temporal/temporal-polyfill)（查阅：2026-11-04）；依赖版本记录于 `package.json`，可复现安装记录于 `package-lock.json`。

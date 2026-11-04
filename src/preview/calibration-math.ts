@@ -1,5 +1,6 @@
 import type { ShootingPlan } from "../domain/plan.ts";
 import { projectDirection } from "../domain/celestial-projection.ts";
+import { ellipsoidalRay } from "../domain/geodesy.ts";
 
 type Point = { longitude: number; latitude: number; altitude: number };
 const radians = Math.PI / 180;
@@ -30,6 +31,30 @@ export function referencePixel(plan: ShootingPlan, ground: number, target: Point
   const ray = referenceRay({ ...plan, altitude: ground + plan.cameraHeight }, target, spherical, scaleLatitude);
   const point = projectDirection(plan, ray);
   return point ? { x: (point.x + 1) * width / 2, y: (point.y + 1) * height / 2 } : null;
+}
+
+/** Conditional model comparison: the caller must disclose the height assumption. */
+export function compareEarthModels(plan: ShootingPlan, eye: Point, target: Point, width: number, height: number, scaleLatitude = eye.latitude) {
+  const ellipsoid = ellipsoidalRay(
+    { ...eye, ellipsoidalHeight: eye.altitude }, { ...target, ellipsoidalHeight: target.altitude });
+  const rays = {
+    mercator: referenceRay(eye, target, false, scaleLatitude),
+    sphere: referenceRay(eye, target, true),
+    ellipsoid,
+    // Hold the ellipsoidal horizontal components fixed to isolate the change
+    // in Up from curvature. This control is not another geographic projection.
+    tangentControl: [ellipsoid[0], ellipsoid[1], target.altitude - eye.altitude] as [number, number, number],
+  };
+  const model = (ray: [number, number, number]) => {
+    const point = projectDirection(plan, ray);
+    return { ray, ...rayAngles(ray), distance: Math.hypot(...ray),
+      pixel: point ? { x: (point.x + 1) * width / 2, y: (point.y + 1) * height / 2 } : null };
+  };
+  return {
+    verticalDrop: target.altitude - eye.altitude - ellipsoid[2],
+    mercator: model(rays.mercator), sphere: model(rays.sphere),
+    ellipsoid: model(rays.ellipsoid), tangentControl: model(rays.tangentControl),
+  };
 }
 
 export function matrixPixel(matrix: ArrayLike<number>, target: Point, worldSize: number, width: number, height: number) {

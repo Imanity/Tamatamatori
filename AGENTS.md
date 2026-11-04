@@ -12,7 +12,7 @@ Tamatamatori 是摄影规划 Web App。用户通过地图确定机位与拍摄�
 
 地形预览验收与相机校准的固定场景和既有执行结果见 [验收记录](docs/plan/terrain-validation.md)。合成高程、SDK CPU 数值验证和真实 GPU 画面验收分别记录；浏览器连接不可用时不得把画面待验项标记为通过。
 
-地形、时间天空、日月与实际相机姿态已有基础验收；既有校准见[相机校准](docs/plan/camera-calibration.md)。本轮处理远山 DEM 的细节与采样一致性，范围见[远山 DEM 验收](docs/plan/terrain-detail.md)。固定当前 SDK，验证下载与绘制层级的兼容修正和资源边界；不切换数据源、不增加原生 DEM 分辨率、不改地球曲率或其他天体。独立采样、SDK 数值与真实 GPU 分开记录，不用经验高程偏移匹配截图；开发校准信息不进入正常流程。
+地形、时间天空、日月与实际相机姿态已有基础验收；既有校准见[相机校准](docs/plan/camera-calibration.md)、[远山 DEM 验收](docs/plan/terrain-detail.md)及[曲率对照](docs/plan/curvature-validation.md)。按用户要求，本轮直接修正实际地形的空间投影，使地形、水体、相机和日月共享一致的方向与深度，达到能继续接入其他天体的基础，见[空间投影修正](docs/plan/terrain-perspective.md)。允许扩展已固定 SDK 的安装补丁，必须校验源码与 ESM 签名、保持幂等、测试原始地图未受影响；应用不读取 SDK 运行时私有字段。高程数据仍沿用同源数值，未知基准见[核查记录](docs/plan/elevation-datum-audit.md)，不自动套 geoid 常数，不把几何误差修正宣称为实景精度校准。独立计算、SDK 数值和真实 GPU 分开验收；开发诊断不进入正常流程。
 
 ## 小步推进
 

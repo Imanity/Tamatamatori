@@ -1,6 +1,7 @@
 import type { FeatureCollection, LineString, Polygon, Position } from "geojson";
 import { fieldOfView, normalizeLongitude, signedAngle } from "./plan.ts";
 import type { ShootingPlan } from "./plan.ts";
+import { ellipsoidalRay } from "./geodesy.ts";
 
 export const MAX_MAP_LATITUDE = 85.0511287798066;
 const EARTH_RADIUS = 6_371_008.8;
@@ -43,18 +44,15 @@ export function initialBearing(from: MapPoint, to: MapPoint): number | null {
     Math.abs(to.latitude) > 90
   )
     return null;
-  const start = radians(from.latitude);
-  const end = radians(to.latitude);
-  const delta = radians(signedAngle(to.longitude - from.longitude));
-  const y = Math.sin(delta) * Math.cos(end);
-  const x =
-    Math.cos(start) * Math.sin(end) -
-    Math.sin(start) * Math.cos(end) * Math.cos(delta);
-  if (Math.hypot(x, y) < 1e-12) return null;
-  return (degrees(Math.atan2(y, x)) + 360) % 360;
+  if(Math.abs(from.latitude+to.latitude)<1e-10 && Math.abs(Math.abs(signedAngle(to.longitude-from.longitude))-180)<1e-10)return null;
+  const [east,north] = ellipsoidalRay(
+    { ...from, longitude:normalizeLongitude(from.longitude), ellipsoidalHeight:0 },
+    { ...to, longitude:normalizeLongitude(to.longitude), ellipsoidalHeight:0 });
+  if (Math.hypot(east,north) < 1e-6) return null;
+  return (degrees(Math.atan2(east,north)) + 360) % 360;
 }
 
-export function destination(
+function sphericalDestination(
   from: MapPoint,
   bearing: number,
   meters: number,
@@ -84,6 +82,18 @@ export function destination(
   };
 }
 
+// The radius is schematic. Keep each ray's actual local ENU azimuth exact so
+// the map handle/cone agrees with the photographic camera, even at long focal lengths.
+export function destination(from:MapPoint,bearing:number,meters:number):MapPoint {
+  let heading=bearing,point=sphericalDestination(from,heading,meters);
+  for(let i=0;i<4;i++){
+    const actual=initialBearing(from,point);if(actual===null)break;
+    const correction=signedAngle(bearing-actual);if(Math.abs(correction)<1e-10)break;
+    heading+=correction;point=sphericalDestination(from,heading,meters);
+  }
+  return point;
+}
+
 export function mapSelection(
   plan: ShootingPlan,
   point: MapPoint,
@@ -100,7 +110,7 @@ export function mapSelection(
   const azimuth = initialBearing(plan, point);
   return azimuth === null
     ? null
-    : { azimuth: (Math.round(azimuth * 10) / 10) % 360 };
+    : { azimuth };
 }
 
 export function viewRadiusMeters(point: MapPoint, zoom: number) {

@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { initialPlan, fieldOfView } from "../src/domain/plan.ts";
 import {
   MAX_MAP_LATITUDE,
@@ -28,6 +29,15 @@ test("赤道与本初子午线上的四个方向符合真北顺时针约定", ()
   ]) {
     close(initialBearing(origin, { latitude, longitude }), expected);
   }
+});
+
+test("地图定向采用独立 PROJ 椭球局部方位，并保留长焦所需的小数精度",()=>{
+  const fixture=JSON.parse(readFileSync(new URL('./fixtures/geodetic-reference.json',import.meta.url),'utf8')).mapSurfaceBearing;
+  const expected=(Math.atan2(fixture.enu[0],fixture.enu[1])*180/Math.PI+360)%360;
+  const actual=initialBearing(fixture.eye,fixture.target);
+  close(actual,expected,1e-9);
+  assert.ok(Math.abs(actual*10-Math.round(actual*10))>1e-3,'direction must not be truncated to 0.1 degree');
+  close(mapSelection({...initialPlan,...fixture.eye},fixture.target,'direction').azimuth,expected,1e-9);
 });
 
 test("日期变更线两侧的邻近点使用短弧方向", () => {
@@ -61,7 +71,7 @@ test("同点、对跖点、极点与无效输入不会产生虚假的朝向", ()
   assert.equal(initialBearing({ latitude: 90, longitude: 0 }, origin), null);
 });
 
-test("球面目的点可以往返恢复方向，并正确跨日期变更线", () => {
+test("示意目的点保持椭球局部方向，并正确跨日期变更线", () => {
   const origin = { latitude: 0, longitude: 179.99 };
   const target = destination(origin, 90, 10_000);
   close(target.latitude, 0);
@@ -89,7 +99,7 @@ test("地图选点只更新机位，方向模式只更新方位角，不改变�
     destination(initialPlan, 90, 1000),
     "direction",
   );
-  assert.deepEqual(directionPatch, { azimuth: 90 });
+  close(directionPatch.azimuth, 90);
   const directed = { ...initialPlan, ...directionPatch };
   assert.equal(directed.latitude, initialPlan.latitude);
   assert.equal(directed.longitude, initialPlan.longitude);

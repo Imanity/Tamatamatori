@@ -7,15 +7,17 @@ import { signedAngle } from "../src/domain/plan.ts";
 import { terrainScenes } from "./fixtures/terrain-scenes.mjs";
 import { projectDirection } from "../src/domain/celestial-projection.ts";
 import { direction } from "../src/domain/ephemeris.ts";
-import { matrixPixel, mercatorXY, mercatorMeter, referencePixel, referenceRay, rayAngles } from "../src/preview/calibration-math.ts";
+import { compareEarthModels, matrixPixel, mercatorXY, mercatorMeter, referencePixel, referenceRay, rayAngles } from "../src/preview/calibration-math.ts";
+import { ellipsoidalRay, geodeticEcef } from "../src/domain/geodesy.ts";
 import { matrixEye } from "../src/preview/rendered-camera.ts";
 import { terrainTileZoom, TERRAIN_MAX_MESH_ZOOM } from "../src/preview/terrain-detail.ts";
 import { TERRAIN_VISUAL_TILE_SIZE } from "../src/domain/terrain.ts";
 import { readFileSync } from "node:fs";
+import { photoCameraMatrix, photoFragmentDepth, photoTileFrame, photoTileRay } from "../src/preview/terrain-perspective-math.ts";
 
 // Exercise the installed SDK's real CPU camera/transform, not the interaction
 // test double. No browser, GL context, image decoder or real DEM is simulated.
-let server, Camera, coveringTiles, TerrainTileManager;
+let server, Camera, coveringTiles, TerrainTileManager, TerrainPerspective;
 before(async () => {
   server = await createServer({
     configFile: false,
@@ -35,6 +37,7 @@ before(async () => {
   ({ Camera } = await server.ssrLoadModule("/node_modules/maplibre-gl/src/ui/camera.ts"));
   ({ coveringTiles } = await server.ssrLoadModule("/node_modules/maplibre-gl/src/geo/projection/covering_tiles.ts"));
   ({ TerrainTileManager } = await server.ssrLoadModule("/node_modules/maplibre-gl/src/tile/terrain_tile_manager.ts"));
+  ({ TerrainPerspective } = await server.ssrLoadModule("/src/preview/terrain-perspective.ts"));
 });
 after(async () => { await server?.close(); });
 
@@ -229,6 +232,140 @@ test("平面与球面对照分离曲率影响，并正确处理日期变更线",
   close(spherical.azimuth, 90, 1e-9, "east");
   const across = referenceRay({ ...eye, longitude: 179.9 }, { ...target, longitude: -179.9 });
   close(Math.hypot(...across), 22239.0160467, 0.001, "nearest antimeridian world copy / m");
+});
+
+const geodeticFixtures = JSON.parse(readFileSync(new URL("./fixtures/geodetic-reference.json", import.meta.url), "utf8"));
+
+test("地形顶点稳定局部计算与独立 ECEF/ENU 样本一致，跨世界副本不偏移", () => {
+  for(const fixture of geodeticFixtures.cases) for(const z of [4,9,12,14]) {
+    const p=mercatorXY(fixture.target),n=2**z,tile={z,x:Math.floor(p[0]*n),y:Math.floor(p[1]*n)};
+    const position=[(p[0]*n-tile.x)*8192,(p[1]*n-tile.y)*8192];
+    for(const wrap of [-1,0,1]) {
+      const ray=photoTileRay(photoTileFrame(fixture.eye,tile,wrap),position,fixture.target.ellipsoidalHeight);
+      for(let i=0;i<3;i++)close(ray[i],fixture.enu[i],2e-6,`${fixture.name} z${z} wrap${wrap} ENU ${i}`);
+    }
+  }
+  const tile={z:14,x:16383,y:8192},p=[8000,100];
+  const base=photoTileRay(photoTileFrame({latitude:0,longitude:-179.99999999,ellipsoidalHeight:2},tile),p,0);
+  const wrapped=photoTileRay(photoTileFrame({latitude:0,longitude:180.00000001,ellipsoidalHeight:2},tile),p,0);
+  for(let i=0;i<3;i++)close(base[i],wrapped[i],1e-7,'actual camera near antimeridian');
+});
+
+test("实际地形相机矩阵与日月针孔投影在镜头、画幅和上下观察中一致", () => {
+  for(const focalLength of [8,35,200,1000]) for(const orientation of ['landscape','portrait'])
+    for(const pitch of [-45,0,10,90]) for(const sensor of ['full-frame','aps-c','micro-four-thirds']) {
+      const plan={...terrainScenes[0].plan,focalLength,orientation,pitch,sensor};
+      const matrix=photoCameraMatrix(plan);
+      for(const ray of [direction(plan.azimuth,pitch),direction(plan.azimuth+0.2,Math.min(90,pitch+0.2))]) {
+        const expected=projectDirection(plan,ray),v=[...ray.map(x=>x*15000),1];
+        const clip=[0,1,2,3].map(r=>v.reduce((s,x,c)=>s+x*matrix[c*4+r],0));
+        close(clip[0]/clip[3],expected.x,1e-4,'terrain/sky clip x');
+        close(-clip[1]/clip[3],expected.y,1e-4,'terrain/sky clip y');
+        assert.ok(clip[2]/clip[3]<1,'finite terrain is before celestial background');
+      }
+    }
+});
+
+test("远山对数深度在近裁剪很小时仍能区分相距一米的表面，天空保留在最远处",()=>{
+  assert.equal(Math.fround(1-0.025/15000),Math.fround(1-0.025/15001),'ordinary low-near depth loses the metre');
+  for(const distance of [0.005,1,100,15000,100000,200000]){
+    const a=Math.fround(photoFragmentDepth(distance)),b=Math.fround(photoFragmentDepth(distance+1));
+    assert.ok(a<b&&b<1,`logarithmic range at ${distance} m`);
+  }
+});
+
+test("摄影地形桥接按上下文安装、使用公开眼点并完整卸载，缺补丁明确失败", () => {
+  const scene=terrainScenes[0],camera=createCamera(600,400,scene.syntheticGround);
+  apply(camera,scene.plan,scene.syntheticGround);
+  const map={getZoom:()=>camera.getZoom(),getBearing:()=>camera.getBearing(),getPitch:()=>camera.getPitch(),areTilesLoaded:()=>true};
+  const calls=[],errors=[],gl={CURRENT_PROGRAM:1,getParameter:()=>null,useProgram:p=>calls.push(['program',p]),
+    getUniformLocation:(_p,name)=>name,uniform1f:(u,v)=>calls.push([u,v]),uniform3fv(){},uniform4fv(){},uniformMatrix3fv(){},uniformMatrix4fv(){}};
+  const bridgeKey=Symbol.for('tamatamatori.terrain-enu.v1'),layer=new TerrainPerspective(e=>errors.push(e));
+  layer.onAdd(map,gl);layer.setView(scene.plan);layer.prerender(gl,{modelViewProjectionMatrix:camera.transform.modelViewProjectionMatrix});
+  assert.equal(typeof gl[bridgeKey],'function');assert.equal({}[bridgeKey],undefined,'unrelated map context has no bridge');
+  assert.throws(()=>new TerrainPerspective(()=>{}).onAdd(map,gl));
+  gl[bridgeKey](gl,{}, {z:14,x:14510,y:6465},0);layer.render();
+  assert.deepEqual(errors,[]);assert.ok(calls.some(([u,v])=>u==='u_photo_enabled'&&v===1));
+  layer.onRemove();assert.equal(gl[bridgeKey],undefined);assert.ok(calls.some(([u,v])=>u==='u_photo_enabled'&&v===0));
+  const missing=new TerrainPerspective(e=>errors.push(e));missing.onAdd(map,gl);missing.setView(scene.plan);
+  missing.prerender(gl,{modelViewProjectionMatrix:camera.transform.modelViewProjectionMatrix});missing.render();
+  assert.match(errors[0],/缺少地形坐标桥接/);missing.onRemove();
+  const skyErrors=[],skyPlan={...scene.plan,pitch:90},sky=new TerrainPerspective(e=>skyErrors.push(e));
+  apply(camera,skyPlan,scene.syntheticGround);sky.onAdd(map,gl);sky.setView(skyPlan);
+  sky.prerender(gl,{modelViewProjectionMatrix:camera.transform.modelViewProjectionMatrix});sky.render();
+  assert.deepEqual(skyErrors,[],'cold all-sky frame needs no terrain draw');sky.onRemove();
+});
+
+test("实际地形源码、生成着色器与 ESM 均安装同版本 ENU 桥接", () => {
+  for(const file of ['src/shaders/glsl/terrain.vertex.glsl','src/shaders/glsl/terrain.vertex.glsl.g.ts','src/webgl/draw/draw_terrain.ts','dist/maplibre-gl.mjs']) {
+    const text=readFileSync(new URL(`../node_modules/maplibre-gl/${file}`,import.meta.url),'utf8');
+    assert.ok(text.includes('TAMATAMATORI_TERRAIN_ENU_V1'),file);
+    assert.ok(text.includes(file.includes('draw_terrain')?'tamatamatori.terrain-enu.v1':'photoProject'),file);
+  }
+  for(const stage of ['vertex','fragment']){
+    const source=readFileSync(new URL(`../node_modules/maplibre-gl/src/shaders/glsl/terrain.${stage}.glsl`,import.meta.url),'utf8');
+    assert.match(source,/uniform highp float u_photo_enabled;/,`${stage} uniform precision must match`);
+    assert.match(source,new RegExp(`${stage==='vertex'?'out':'in'} highp float v_photo_depth;`));
+  }
+});
+
+test("WGS84 ECEF 与局部 ENU 对照独立 PROJ 固定样本", () => {
+  for (const fixture of geodeticFixtures.cases) {
+    const ecef = geodeticEcef(fixture.target), enu = ellipsoidalRay(fixture.eye, fixture.target);
+    for (let axis = 0; axis < 3; axis++) {
+      close(ecef[axis], fixture.ecef[axis], 1e-6, `${fixture.name} ECEF ${axis} / m`);
+      close(enu[axis], fixture.enu[axis], 1e-6, `${fixture.name} ENU ${axis} / m`);
+    }
+  }
+  const example = geodeticFixtures.cases.find(f => f.name === "proj-documentation");
+  for (const [axis, expected] of [-189013.869, -128642.040, -4220.171].entries())
+    close(ellipsoidalRay(example.eye, example.target)[axis], expected, 0.001, "PROJ published example / m");
+});
+
+test("椭球轴、极点、垂直方向和无效坐标的边界", () => {
+  const point = { latitude: 0, longitude: 0, ellipsoidalHeight: 0 };
+  assert.deepEqual(geodeticEcef(point), [6378137, 0, 0]);
+  close(geodeticEcef({ ...point, latitude: 90 })[2], 6356752.314245179, 1e-8, "WGS84 polar radius");
+  for (const latitude of [-90, -43, 0, 35, 85, 90]) {
+    const eye = { ...point, latitude, longitude: -179.9 };
+    const ray = ellipsoidalRay(eye, { ...eye, ellipsoidalHeight: 10 });
+    close(ray[0], 0, 1e-8, "vertical east");
+    close(ray[1], 0, 1e-8, "vertical north");
+    close(ray[2], 10, 1e-8, "vertical up");
+    close(Math.hypot(...ellipsoidalRay(eye, eye)), 0, 0, "coincident points");
+  }
+  for (const invalid of [{ latitude: 91 }, { longitude: 181 }, { ellipsoidalHeight: NaN }, { latitude: Infinity }])
+    assert.throws(() => ellipsoidalRay(point, { ...point, ...invalid }), RangeError);
+});
+
+test("近中远同高点的曲率分量独立于 Mercator 水平差异", () => {
+  const plan = { ...terrainScenes[0].plan, focalLength: 1000, azimuth: 247, pitch: 0 };
+  let previous = 0;
+  for (const fixture of geodeticFixtures.cases.filter(f => f.name.startsWith("same-height"))) {
+    const eye = { ...fixture.eye, altitude: fixture.eye.ellipsoidalHeight };
+    const target = { ...fixture.target, altitude: fixture.target.ellipsoidalHeight };
+    const models = compareEarthModels(plan, eye, target, 1152, 768);
+    close(models.tangentControl.pitch, 0, 1e-10, "same-height tangent control");
+    close(models.tangentControl.azimuth, models.ellipsoid.azimuth, 1e-10, "same horizontal components");
+    assert.ok(models.verticalDrop > previous);
+    previous = models.verticalDrop;
+    assert.ok(models.ellipsoid.pitch < 0 && models.ellipsoid.pixel.y > models.tangentControl.pixel.y);
+  }
+});
+
+test("同一眼点下的模型像素比较随焦距和横竖幅正确变化", () => {
+  const fixture = geodeticFixtures.cases.find(f => f.name === "fuji-conditional-heights");
+  const eye = { ...fixture.eye, altitude: fixture.eye.ellipsoidalHeight };
+  const target = { ...fixture.target, altitude: fixture.target.ellipsoidalHeight };
+  const angles = rayAngles(referenceRay(eye, target));
+  const plan = { ...terrainScenes[0].plan, azimuth: angles.azimuth, pitch: angles.pitch };
+  const compare = (focalLength, orientation = "landscape") => compareEarthModels(
+    { ...plan, focalLength, orientation }, eye, target, ...(orientation === "portrait" ? [512, 768] : [1152, 768]));
+  const wide = compare(200), tele = compare(1000), portrait = compare(1000, "portrait");
+  const delta = m => m.ellipsoid.pixel.y - m.mercator.pixel.y;
+  close(delta(tele), delta(wide) * 5, 1e-8, "pixel difference scales with focal length");
+  close(delta(portrait), delta(tele) * 2 / 3, 1e-8, "vertical sensor dimension changes pixel scale");
+  assert.equal(compareEarthModels({ ...plan, azimuth: plan.azimuth + 180 }, eye, target, 1152, 768).ellipsoid.pixel, null);
 });
 
 test("固定 SDK 的 ESM 与源代码都包含地形 LOD 兼容修正", () => {

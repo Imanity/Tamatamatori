@@ -43,7 +43,7 @@ TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 THIS SOFTWARE.
 
 MapLibre GL JS 6.16.0
-本项目修改地形 LOD 策略向绘制网格的传递；原版权与 BSD 许可如下。
+本项目修改地形 LOD 策略向绘制网格的传递，并增加摄影地形 ENU 顶点投影与对数主深度的本地桥接；原版权与 BSD 许可如下。
 
 Copyright (c) 2023, MapLibre contributors
 

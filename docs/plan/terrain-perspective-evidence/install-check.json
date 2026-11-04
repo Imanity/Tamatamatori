@@ -1,0 +1,25 @@
+{
+  "validatedAt": "2026-11-04T15:08:14.1362876Z",
+  "node": "v24.17.0",
+  "sdk": "6.16.0",
+  "isolatedFreshInstall": true,
+  "repeatPatchUnchanged": true,
+  "files": [
+    {
+      "path": "node_modules/maplibre-gl/dist/maplibre-gl.mjs",
+      "sha256": "f12951b00108a04a4afa9e4f8c80c4c722a3f7769a12d3fa40059e98ffe8ff11"
+    },
+    {
+      "path": "node_modules/maplibre-gl/src/webgl/draw/draw_terrain.ts",
+      "sha256": "40f20e562da19199a5fe8e239b567deaad9f537a9c58224a50a588cd69be5669"
+    },
+    {
+      "path": "node_modules/maplibre-gl/src/shaders/glsl/terrain.vertex.glsl.g.ts",
+      "sha256": "5eb3de8161704ec60615b6eefa77bee989e88891bdc0af8d7c8c8ba5104dd559"
+    },
+    {
+      "path": "node_modules/maplibre-gl/src/shaders/glsl/terrain.fragment.glsl.g.ts",
+      "sha256": "cc03027c44076f5a41adfffc7158599fd057eeaa3286d8054134d6faaf17192b"
+    }
+  ]
+}

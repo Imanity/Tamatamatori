@@ -20,6 +20,7 @@ import type { VisibilitySnapshot } from "../domain/visibility";
 import type { CalibrationSnapshot } from "../preview/calibration";
 import type { RenderedCamera } from "../preview/rendered-camera";
 import { applyTerrainDetail } from "../preview/terrain-detail";
+import type { TerrainPerspective } from "../preview/terrain-perspective";
 
 const calibrationEnabled = import.meta.env.DEV && new URLSearchParams(window.location.search).get("calibration") === "fuji";
 
@@ -117,6 +118,7 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
     let disposed = false;
     let map: MapLibreMap | undefined;
     let celestialLayer: CelestialLayer | undefined;
+    let perspective: TerrainPerspective | undefined;
     let sourceRevision = 0;
     let lastCelestialFrame = "";
     let createCamera: typeof terrainCamera | undefined;
@@ -270,6 +272,7 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
               : { key: current.key, ground: height, altitude: pose.altitude },
           );
         }
+        perspective?.setView(current.plan);
         const planKey = celestialPlanKey(current.plan);
         const ready = map.areTilesLoaded() && map.isSourceLoaded(TERRAIN_SOURCE) && map.isSourceLoaded(WATER_SOURCE);
         const renderView = { azimuth: (map.getBearing() % 360 + 360) % 360, pitch: map.getPitch() - 90 };
@@ -297,10 +300,11 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
 
     void (async () => {
       try {
-        const [sdk, cameraModule, celestialModule] = await Promise.all([
+        const [sdk, cameraModule, celestialModule, perspectiveModule] = await Promise.all([
           import("../map/sdk"),
           import("../preview/camera"),
           import("../preview/celestial-layer"),
+          import("../preview/terrain-perspective"),
         ]);
         createCamera = cameraModule.terrainCamera;
         if (disposed || !container.current) return;
@@ -330,6 +334,9 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
         }
         map.on("style.load", () => {
           if (disposed || !map) return;
+          perspective = new perspectiveModule.TerrainPerspective(fail);
+          try { map.addLayer(perspective); }
+          catch { fail("地形坐标桥接无法启动，请重新安装依赖后重试。"); return; }
           celestialLayer = new celestialModule.CelestialLayer((snapshot) => {
             if (disposed) return;
             latest.current.onVisibilityChange?.(snapshot);
@@ -346,7 +353,8 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
             map.addLayer(calibrationLayer(map, () => ({ plan: latest.current.plan,
               ground: currentPoseKey === latest.current.key && latest.current.ground.key === latest.current.key && latest.current.ground.phase === "ready"
                 ? currentPoseGround : null }), terrainUrl,
-            (snapshot) => { if (!disposed) setCalibration(snapshot); }));
+            (snapshot) => { if (!disposed) setCalibration(snapshot); },
+            (point,width,height) => perspective?.projectProbe(point,width,height) ?? null));
           });
           styleReady = true;
           schedule();
@@ -430,7 +438,7 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
       className="terrain-scene"
       aria-label="真实 DEM 山体与静态水体预览，水面高程按 DEM 近似"
     >
-      <div className="terrain-canvas" ref={container} data-ready={!!visible} data-celestial-renderer="webgl-depth" />
+      <div className="terrain-canvas" ref={container} data-ready={!!visible} data-celestial-renderer="webgl-depth" data-terrain-projection="wgs84-enu" />
       {calibrationEnabled && calibration && visible && <>
         {Object.entries(calibration.pixels).filter(([name]) => name !== "matrixDem" && name !== "actualDem").map(([name, pixel]) => pixel &&
           pixel.x >= 0 && pixel.y >= 0 && pixel.x <= calibration.width && pixel.y <= calibration.height &&
@@ -438,7 +446,14 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
             style={{ left: pixel.x, top: pixel.y }} title={name}>{name === "sdkDem" ? "○" : "+"}</span>)}
         <details className="camera-calibration" open onPointerDown={(event) => event.stopPropagation()}>
           <summary>开发校准 · 参考点与实际眼点</summary>
-          <span>紫圈 SDK DEM · 青十字 计划 DEM · 黄十字公布高程 · 红十字球面参考</span>
+          <span>紫圈旧平面参考 · 绿十字椭球参考 · 白圈实际顶点程序</span>
+          <p>地形、水体与日月按机位 ENU 绘制；同源高程作为参考曲面，未核定垂直基准，不验证实景精度。</p>
+          {calibration.curvature.gpuResidual !== null && <p data-gpu-residual>GPU − 独立椭球参考：{calibration.curvature.gpuResidual.toFixed(5)} CSS px</p>}
+          {calibration.curvature.dem?.ellipsoid.pixel && calibration.curvature.dem.mercator.pixel && <p data-curvature-summary>
+            椭球 − 平面：Δx {(calibration.curvature.dem.ellipsoid.pixel.x - calibration.curvature.dem.mercator.pixel.x).toFixed(2)} px，
+            Δy {(calibration.curvature.dem.ellipsoid.pixel.y - calibration.curvature.dem.mercator.pixel.y).toFixed(2)} px；
+            垂直曲率分量 {calibration.curvature.dem.verticalDrop.toFixed(2)} m（修正前模型差，向右/下为正）。
+          </p>}
           <pre data-camera-calibration data-focal={calibration.plan.focalLength} data-height={calibration.plan.cameraHeight}
             data-ready={calibration.ready}>{JSON.stringify(calibration, null, 2)}</pre>
         </details>
@@ -466,6 +481,7 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
       {visible && applied && (
         <span className="terrain-height">
           机位高程 ≈ {applied.ground.toFixed(1)} m · 计划离地 {plan.cameraHeight} m
+          <br />曲面构图 · 高程基准未核定
         </span>
       )}
       {adjusted && currentCamera && applied && <span className="camera-adjustment" role="status">

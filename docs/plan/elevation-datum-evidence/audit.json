@@ -1,0 +1,277 @@
+{
+  "accessedAt": "2026-11-04T14:01:02.814Z",
+  "node": "v24.17.0",
+  "upstreamCommit": "2c4195dd90b91a8dde5cfa3e27a1167f64808a41",
+  "tilejson": {
+    "tilejson": "3.0.0",
+    "scheme": "xyz",
+    "tiles": [
+      "https://tiles.mapterhorn.com/{z}/{x}/{y}.webp"
+    ],
+    "attribution": "<a href='https://mapterhorn.com/attribution'>© Mapterhorn</a>",
+    "bounds": [
+      -180,
+      -85.0511287,
+      180,
+      85.0511287
+    ],
+    "center": [
+      0,
+      0,
+      6
+    ],
+    "encoding": "terrarium",
+    "tileSize": 512
+  },
+  "coverageTilejson": {
+    "tilejson": "3.0.0",
+    "scheme": "xyz",
+    "tiles": [
+      "https://single-archive-tiles.mapterhorn.com/coverage/{z}/{x}/{y}.mvt"
+    ],
+    "vector_layers": [
+      {
+        "id": "coverage",
+        "fields": {
+          "source": "String"
+        },
+        "minzoom": 0,
+        "maxzoom": 14
+      }
+    ],
+    "name": "Coverage",
+    "bounds": [
+      -180,
+      -85.0511287,
+      180,
+      85.0511287
+    ],
+    "center": [
+      0,
+      0,
+      0
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+  },
+  "records": [
+    {
+      "point": {
+        "name": "山中湖眼点",
+        "latitude": 35.4172,
+        "longitude": 138.8729
+      },
+      "tile": {
+        "z": 12,
+        "x": 3628,
+        "y": 1616
+      },
+      "extent": 4096,
+      "tileListedSources": [
+        "glo30",
+        "jpdem1a",
+        "jpdem5a",
+        "jpdem5b",
+        "jpdem10a",
+        "jpdem10b"
+      ],
+      "features": [
+        {
+          "properties": {
+            "source": "glo30"
+          },
+          "bounds": [
+            -64,
+            -64,
+            4160,
+            4160
+          ]
+        },
+        {
+          "properties": {
+            "source": "jpdem1a"
+          },
+          "bounds": [
+            -64,
+            2816,
+            4160,
+            4160
+          ]
+        },
+        {
+          "properties": {
+            "source": "jpdem5a"
+          },
+          "bounds": [
+            -64,
+            -64,
+            4160,
+            4160
+          ]
+        },
+        {
+          "properties": {
+            "source": "jpdem5b"
+          },
+          "bounds": [
+            2112,
+            2994,
+            2694,
+            3470
+          ]
+        },
+        {
+          "properties": {
+            "source": "jpdem10a"
+          },
+          "bounds": [
+            -64,
+            -64,
+            1224,
+            4160
+          ]
+        },
+        {
+          "properties": {
+            "source": "jpdem10b"
+          },
+          "bounds": [
+            -64,
+            -64,
+            4160,
+            4160
+          ]
+        }
+      ]
+    },
+    {
+      "point": {
+        "name": "剣ヶ峰参考点",
+        "latitude": 35.36083333333333,
+        "longitude": 138.7275
+      },
+      "tile": {
+        "z": 12,
+        "x": 3626,
+        "y": 1617
+      },
+      "extent": 4096,
+      "tileListedSources": [
+        "glo30",
+        "jpdem1a",
+        "jpdem5a",
+        "jpdem10a",
+        "jpdem10b"
+      ],
+      "features": [
+        {
+          "properties": {
+            "source": "glo30"
+          },
+          "bounds": [
+            -64,
+            -64,
+            4160,
+            4160
+          ]
+        },
+        {
+          "properties": {
+            "source": "jpdem1a"
+          },
+          "bounds": [
+            -64,
+            -64,
+            4160,
+            4160
+          ]
+        },
+        {
+          "properties": {
+            "source": "jpdem5a"
+          },
+          "bounds": [
+            -64,
+            -64,
+            4160,
+            4160
+          ]
+        },
+        {
+          "properties": {
+            "source": "jpdem10a"
+          },
+          "bounds": [
+            -64,
+            -64,
+            4160,
+            4160
+          ]
+        },
+        {
+          "properties": {
+            "source": "jpdem10b"
+          },
+          "bounds": [
+            -64,
+            -64,
+            4160,
+            4160
+          ]
+        }
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "url": "https://tiles.mapterhorn.com/tilejson.json",
+      "bytes": 270,
+      "sha256": "d28ade7b57a0c28f8f5d3f3f1b3f07e0c20306ea9e223c4f3dcffc5854f11543",
+      "etag": null,
+      "lastModified": null
+    },
+    {
+      "url": "https://single-archive-tiles.mapterhorn.com/coverage.json",
+      "bytes": 309,
+      "sha256": "27ed4c9fe177ced5afc0421c11cb1530be5b8770ac6715c31cef8ec575af337f",
+      "etag": null,
+      "lastModified": "Sun, 01 Nov 2026 07:29:12 GMT"
+    },
+    {
+      "url": "https://single-archive-tiles.mapterhorn.com/coverage/12/3628/1616.mvt",
+      "bytes": 671,
+      "sha256": "5710434323d49227cbea229b1069f9ef54635d6ce3131d8ec39e3c886870e9aa",
+      "etag": null,
+      "lastModified": "Wed, 04 Nov 2026 13:59:34 GMT"
+    },
+    {
+      "url": "https://single-archive-tiles.mapterhorn.com/coverage/12/3626/1617.mvt",
+      "bytes": 211,
+      "sha256": "6052cc66d61a8ba64608aff94bf80daba1d5634c74d8fe586e50df0a55b36741",
+      "etag": null,
+      "lastModified": "Wed, 04 Nov 2026 13:59:34 GMT"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/mapterhorn/mapterhorn/2c4195dd90b91a8dde5cfa3e27a1167f64808a41/pipelines/aggregation_reproject.py",
+      "bytes": 6154,
+      "sha256": "09c8db2e2cc4c11189e1c837d89a99f5b9f4aaf0e25d8b40e0a5b063e118cc9e",
+      "etag": "W/\"40b47494fd0ff89023185380590759c270508bdd69217ef92195dffb51ba550b\"",
+      "lastModified": null
+    },
+    {
+      "url": "https://raw.githubusercontent.com/mapterhorn/mapterhorn/2c4195dd90b91a8dde5cfa3e27a1167f64808a41/pipelines/aggregation_merge.py",
+      "bytes": 6300,
+      "sha256": "a2b1c40676f5bb8d3909d47157dc85fb4902445c1d8364888ec5f59b29229552",
+      "etag": "W/\"382e388abc177120a9321986eaf7e6caac7d5eb2a47a045d1d59fb2a2615a954\"",
+      "lastModified": null
+    },
+    {
+      "url": "https://raw.githubusercontent.com/mapterhorn/mapterhorn/2c4195dd90b91a8dde5cfa3e27a1167f64808a41/pipelines/create_coverage_index.py",
+      "bytes": 5762,
+      "sha256": "92eacb22c2fe553e41cfd0116a1eb5b575a26c90d40e17c92158a953e2bc7aa1",
+      "etag": "W/\"27bb834dadb3e1ca33511687289992a8d9d3727fa19b4c17cd872e98d885eecc\"",
+      "lastModified": null
+    }
+  ],
+  "limitation": "来源仅列于所在覆盖瓦片中；并不证明覆盖当前点、选中像素、混合权重或垂直基准。代码快照与在线瓦片未建立版本绑定。"
+}

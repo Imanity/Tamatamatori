@@ -22,3 +22,5 @@ const edits = changes.map(([file, before, after]) => {
 });
 for (const edit of edits) if (edit) writeFileSync(edit.filename, edit.content);
 console.log("MapLibre 6.16.0：地形绘制沿用公开 LOD 策略");
+await import("./patch-terrain-perspective.mjs");
+await import("./patch-terrain-depth.mjs");

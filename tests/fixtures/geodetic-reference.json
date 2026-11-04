@@ -1,0 +1,237 @@
+{
+  "generator": "pyproj 3.7.2 / PROJ 9.5.1",
+  "source": "https://proj.org/en/stable/operations/conversions/topocentric.html",
+  "convention": "WGS84 geographic degrees; ellipsoidal heights and ECEF/ENU in metres; ENU origin at eye; no refraction",
+  "cases": [
+    {
+      "name": "same-height-1000m",
+      "eye": {
+        "latitude": 35.4172,
+        "longitude": 138.8729,
+        "ellipsoidalHeight": 1000
+      },
+      "target": {
+        "latitude": 35.41367783108844,
+        "longitude": 138.86276522322157,
+        "ellipsoidalHeight": 1000
+      },
+      "enu": [
+        -920.6490092822633,
+        -390.7925929395799,
+        -0.07837042777089209
+      ],
+      "ecef": [
+        -3919908.765367684,
+        3424042.9445130564,
+        3675946.1941628233
+      ]
+    },
+    {
+      "name": "same-height-10000m",
+      "eye": {
+        "latitude": 35.4172,
+        "longitude": 138.8729,
+        "ellipsoidalHeight": 1000
+      },
+      "target": {
+        "latitude": 35.381939974711514,
+        "longitude": 138.7715919284415,
+        "ellipsoidalHeight": 1000
+      },
+      "enu": [
+        -9206.486367064319,
+        -3907.9243443269274,
+        -7.837054893875802
+      ],
+      "ecef": [
+        -3915989.4763339004,
+        3431620.7461627075,
+        3673075.3977051084
+      ]
+    },
+    {
+      "name": "same-height-100000m",
+      "eye": {
+        "latitude": 35.4172,
+        "longitude": 138.8729,
+        "ellipsoidalHeight": 1000
+      },
+      "target": {
+        "latitude": 35.06079332407706,
+        "longitude": 137.8637915545241,
+        "ellipsoidalHeight": 1000
+      },
+      "enu": [
+        -92061.13553644146,
+        -39077.65416041352,
+        -783.7034259592838
+      ],
+      "ecef": [
+        -3876369.6925662463,
+        3507021.0596304764,
+        3643964.055995916
+      ]
+    },
+    {
+      "name": "fuji-conditional-heights",
+      "eye": {
+        "latitude": 35.4172,
+        "longitude": 138.8729,
+        "ellipsoidalHeight": 982.1
+      },
+      "target": {
+        "latitude": 35.36083333333333,
+        "longitude": 138.7275,
+        "ellipsoidalHeight": 3756.8253984306566
+      },
+      "enu": [
+        -13222.529255732457,
+        -6247.724818421537,
+        2757.9745483274323
+      ],
+      "ecef": [
+        -3916056.2386419107,
+        3437010.645586061,
+        3672761.0540688154
+      ]
+    },
+    {
+      "name": "antimeridian",
+      "eye": {
+        "latitude": 35,
+        "longitude": 179.9,
+        "ellipsoidalHeight": 10
+      },
+      "target": {
+        "latitude": 35.02,
+        "longitude": -179.9,
+        "ellipsoidalHeight": 210
+      },
+      "enu": [
+        18253.75365379952,
+        2237.1618927806794,
+        173.5154946863954
+      ],
+      "ecef": [
+        -5229317.878072842,
+        -9126.89072794575,
+        3639804.7452794295
+      ]
+    },
+    {
+      "name": "high-latitude",
+      "eye": {
+        "latitude": 85,
+        "longitude": 30,
+        "ellipsoidalHeight": 100
+      },
+      "target": {
+        "latitude": 85.05,
+        "longitude": 31,
+        "ellipsoidalHeight": 100
+      },
+      "enu": [
+        9637.087098132582,
+        5668.142524110192,
+        -9.766574017918572
+      ],
+      "ecef": [
+        473321.3132654492,
+        284400.1372876156,
+        6332984.765218416
+      ]
+    },
+    {
+      "name": "southern-hemisphere",
+      "eye": {
+        "latitude": -43,
+        "longitude": 172,
+        "ellipsoidalHeight": -20
+      },
+      "target": {
+        "latitude": -43.3,
+        "longitude": 172.5,
+        "ellipsoidalHeight": 1500
+      },
+      "enu": [
+        40580.58166208671,
+        -33457.15910829879,
+        1303.2257096737085
+      ],
+      "ecef": [
+        -4610467.598273519,
+        606979.5743584712,
+        -4352845.934186077
+      ]
+    },
+    {
+      "name": "vertical",
+      "eye": {
+        "latitude": 35.4172,
+        "longitude": 138.8729,
+        "ellipsoidalHeight": 1000
+      },
+      "target": {
+        "latitude": 35.4172,
+        "longitude": 138.8729,
+        "ellipsoidalHeight": 1010
+      },
+      "enu": [
+        1.0035794417717625e-10,
+        -6.610294533970773e-10,
+        10.000000000763237
+      ],
+      "ecef": [
+        -3920349.8996915617,
+        3423205.906299464,
+        3676270.512771327
+      ]
+    },
+    {
+      "name": "proj-documentation",
+      "eye": {
+        "latitude": 55,
+        "longitude": 5,
+        "ellipsoidalHeight": 200
+      },
+      "target": {
+        "latitude": 53.80939444,
+        "longitude": 2.12955,
+        "ellipsoidalHeight": 73
+      },
+      "enu": [
+        -189013.86917090553,
+        -128642.04029972007,
+        -4220.1707689674
+      ],
+      "ecef": [
+        3771793.968040742,
+        140253.3419144483,
+        5124304.349058442
+      ]
+    }
+  ],
+  "mapSurfaceBearing": {
+    "name": "fuji-map-surface-direction",
+    "eye": {
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "ellipsoidalHeight": 0
+    },
+    "target": {
+      "latitude": 35.36083333333333,
+      "longitude": 138.7275,
+      "ellipsoidalHeight": 0
+    },
+    "enu": [
+      -13214.754283444305,
+      -6244.034631797756,
+      -16.74099234252344
+    ],
+    "ecef": [
+      -3913753.560527619,
+      3434989.6508122664,
+      3670586.8897004784
+    ]
+  }
+}

@@ -138,6 +138,8 @@
 .calibration-requestedDem { color: #3dffff; }
 .calibration-publishedPlanar { color: #ffdb45; }
 .calibration-publishedSpherical { color: #ff725f; }
+.calibration-demEllipsoidal { color: #65ff73; }
+.calibration-gpuDem { color: #fff; }
 .camera-adjustment {
   position: absolute; bottom: 31px; left: 8px; max-width: calc(100% - 16px);
   padding: 4px 6px; border-radius: 3px; background: #fff3d9eb; color: #785534;

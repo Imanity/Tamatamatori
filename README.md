@@ -77,7 +77,7 @@ npm run build
 
 [GitHub Actions CI](.github/workflows/ci.yml) 在推送到 `main`、创建或更新 PR 时运行，也可手动触发。使用 Node.js 22.18.0 和 24 分别执行 `npm ci`、`npm test` 和 `npm run build`；构建已包含类型检查。CI 不执行真实浏览器或 GPU 画面验收。
 
-85 项自动检查覆盖既有交互、地形加载、日月位置、完整三维投影与昼夜配色，以及逐点折射、异步遮挡查询、过期结果、超时和资源释放。日月对照离线 JPL Horizons 样本与 USNO 月相时刻；真实 SDK 相机覆盖广角、长焦、竖幅和天顶投影，组件检查开关与朝向不改变其他计划参数。既有相机校准保留 132 组配置、276 个投影采样及 12 组瓦片覆盖回归，日月方向另有 72 组相机配置。组件测试使用 JSDOM 与地图 SDK 测试替身，数据加载测试使用合成像素，GL 查询测试使用替身；这些检查不代替真实 WebGL 画面。构建包含 TypeScript 检查，并独立打包地图 Worker。
+95 项自动检查覆盖既有交互、地形加载、日月位置、完整三维投影与昼夜配色，以及逐点折射、异步遮挡查询、过期结果、超时和资源释放。日月对照离线 JPL Horizons 样本与 USNO 月相时刻；真实 SDK 相机覆盖广角、长焦、竖幅和天顶投影，组件检查开关与朝向不改变其他计划参数。既有相机校准保留 132 组配置、276 个投影采样及 12 组瓦片覆盖回归，日月方向另有 72 组相机配置。组件测试使用 JSDOM 与地图 SDK 测试替身，数据加载测试使用合成像素，GL 查询测试使用替身；这些检查不代替真实 WebGL 画面。构建包含 TypeScript 检查，并独立打包地图 Worker。
 
 Chrome 连接已恢复，三组固定场景完成基础 GPU 画面检查，覆盖镜头、画幅、布局、窄屏恢复和覆盖提示，并修复长焦及水平视角引发的瓦片越界。山峰投影精度、网格防碰撞后的相机高度、真实网络失败恢复及触屏设备仍有待验项；湖岸长焦存在岸线锯齿与接缝限制，详见验收记录。
 
@@ -88,6 +88,10 @@ Chrome 连接已恢复，三组固定场景完成基础 GPU 画面检查，覆�
 当前三维日月图层另在 Chrome 验证太阳的完整露出、部分山体裁切与完全遮挡，并检查标准/无折射对照、长焦月相和横竖幅、窄屏恢复；截图与精度边界见[遮挡与折射验收](docs/plan/occlusion-refraction-validation.md)。
 
 相机校准已保存 13 组真实 DEM 与公开绘制矩阵测量，覆盖 8—1000 mm 和 0.1/1.6/10 m；修复了引擎避让后地形与日月姿态不一致的问题。新增 24 组 SDK 数值配置，测量与仍未通过的实景精度边界见[相机校准](docs/plan/camera-calibration.md)。
+
+[曲率对照](docs/plan/curvature-validation.md)建立独立 PROJ 基准后，[空间投影修正](docs/plan/terrain-perspective.md)已将实际网格的 WGS84/ENU 投影与对数深度接入默认预览，地形、水体和日月共用方向与深度；真实 GPU 固定点投影残差小于 0.001 CSS px。可继续接入其他天体，但不将该数值称为实景精度。
+
+[高程基准核查](docs/plan/elevation-datum-audit.md)已确认现有上游声明与覆盖索引不足以启用统一自动转换，保存了有界联网审计与合成高度敏感度结果。当前默认曲面构图沿用明确的同源高度假设，正式实景精度能力仍需满足[高度基准准入条件](docs/architecture/elevation-datum.md)。
 
 ## 项目文档
 
@@ -101,5 +105,6 @@ Chrome 连接已恢复，三组固定场景完成基础 GPU 画面检查，覆�
 - [山体遮挡与标准折射](docs/architecture/occlusion-refraction.md)：共享地形深度、视位置与精度边界。
 - [实际相机与校准](docs/architecture/camera-calibration.md)：实际眼点、避让反馈、参考点与模型差异。
 - [远山 DEM 验收](docs/plan/terrain-detail.md)：层级对照、SDK 兼容修正及资源验证。
+- [曲率参考设计](docs/architecture/curvature-reference.md)：独立椭球方向、高程假设与复现方式。
 - [地形预览验收](docs/plan/terrain-validation.md)：固定场景、数值校准、真实画面截图与待验项。
 - [协作规则](AGENTS.md)：小步推进、文档维护与验证要求。

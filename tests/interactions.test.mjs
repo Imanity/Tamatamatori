@@ -835,7 +835,7 @@ test("折射修改只更新日月轮廓，地形更新使遮挡失效，重建�
   await workspace(t);const map=await readyTerrain();
   await settle(()=>setControl(document.querySelector('input[aria-label="24 小时时间滑杆"]'),720));
   await settle(()=>document.querySelector('button[aria-label="朝向太阳"]').click());
-  const layer=map.customLayers[0], outline=structuredClone(layer.frame.bodies.find(body=>body.id==='sun').outline);
+  const layer=map.customLayers.find(layer=>layer instanceof TestCelestialLayer), outline=structuredClone(layer.frame.bodies.find(body=>body.id==='sun').outline);
   const poses=map.cameraSolutions.length, requests=groundRequests.length;
   const before=["经度","纬度","方位角","俯仰角","焦距"].map(value);
   await settle(()=>setControl(document.querySelector('select[aria-label="大气折射模型"]'),'none'));
@@ -886,7 +886,7 @@ test("引擎避让反馈实际高度和俯仰，日月随实际姿态投影，�
   await workspace(t); const map = await readyTerrain();
   await settle(() => setControl(document.querySelector('input[aria-label="24 小时时间滑杆"]'),720));
   await settle(() => document.querySelector('button[aria-label="朝向太阳"]').click());
-  const layer = map.customLayers[0], outline = structuredClone(layer.frame.bodies.find(b => b.id === 'sun').outline);
+  const layer = map.customLayers.find(layer=>layer instanceof TestCelestialLayer), outline = structuredClone(layer.frame.bodies.find(b => b.id === 'sun').outline);
   const before = ["经度", "纬度", "俯仰角", "方位角", "相机离地高度", "焦距"].map(value);
   const labelTop = document.querySelector('[data-celestial-body="sun"]').style.top;
   const expected = map.cameraSolutions.at(-1), pitch = value("俯仰角") - 5;
