@@ -127,3 +127,19 @@
 .celestial-row button:disabled { opacity: 0.45; cursor: default; }
 .celestial-limit { text-align: center; margin-top: 4px; color: #8d805f; font-size: 9px; }
 .celestial-error { color: #985e3c; font-size: 10px; text-align: center; }
+.camera-calibration {
+  position: absolute; top: 30px; right: 8px; width: min(340px, 85%); max-height: 220px;
+  z-index: 3; overflow: auto; background: #fffef5e8; color: #263324; padding: 8px; font-size: 10px;
+  pointer-events: auto; user-select: text;
+}
+.camera-calibration pre { font-size: 9px; white-space: pre-wrap; }
+.calibration-marker { position: absolute; transform: translate(-50%, -50%); font: bold 24px monospace; z-index: 2; text-shadow: 0 0 2px #000; pointer-events: none; }
+.calibration-sdkDem { color: #fa48ef; }
+.calibration-requestedDem { color: #3dffff; }
+.calibration-publishedPlanar { color: #ffdb45; }
+.calibration-publishedSpherical { color: #ff725f; }
+.camera-adjustment {
+  position: absolute; bottom: 31px; left: 8px; max-width: calc(100% - 16px);
+  padding: 4px 6px; border-radius: 3px; background: #fff3d9eb; color: #785534;
+  font-size: 9px; line-height: 1.5; pointer-events: none;
+}

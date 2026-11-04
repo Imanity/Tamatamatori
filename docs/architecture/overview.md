@@ -56,6 +56,10 @@ P2 时间天空由机位与 UTC 驱动天空、雾、地表配色与坡面阴影
 
 P3 日月接入 Astronomy Engine 后，太阳位置与基础环境统一算法。日月开关和折射模型属于拍摄计划；圆盘及月相按同一摄影相机的三维针孔模型投影，再由公开的 MapLibre 自定义三维图层共享地形深度。异步 GPU 查询区分当前 DEM 的无遮挡、部分遮挡和完全遮挡，数据更新使旧结果失效；不新增通用图层框架。详见[日月设计](sun-moon.md)与[遮挡和折射设计](occlusion-refraction.md)。
 
+近地相机校准已发现引擎避让可能改变实际眼点和俯仰。预览读取公开绘制矩阵和相机角度，按实际姿态同步日月及读数，计划参数独立保留。开发校准器及模型精度边界见[相机校准设计](camera-calibration.md)。
+
+远山 DEM 下载和网格覆盖采用同一屏幕细节策略，SDK 固定为 6.16.0 并在安装时应用签名校验的最小兼容修正；最高原生 DEM 仍为 z12。策略、资源限制和升级边界见[远山地形细节](terrain-detail.md)。
+
 本轮使用 [React 内置状态](https://react.dev/reference/react/useState)、[Vite](https://vite.dev/guide/) 与 [Temporal polyfill](https://github.com/js-temporal/temporal-polyfill)（查阅：2026-11-04）；依赖版本记录于 `package.json`，可复现安装记录于 `package-lock.json`。
 
 ## 3. 统一领域约定

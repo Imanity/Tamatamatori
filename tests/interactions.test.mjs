@@ -76,6 +76,12 @@ class TestMap extends Events {
   getBearing() {
     return this.bearing;
   }
+  getPitch() { return this.pitch ?? 90; }
+  setSourceTileLodParams(levels, ratio, id) {
+    this.detail = { levels, ratio, id };
+    this.detailWrites = (this.detailWrites ?? 0) + 1;
+    this.sources.get(id).calculateTileZoom = () => 12;
+  }
   getBounds() {
     return { contains: () => true };
   }
@@ -107,6 +113,8 @@ class TestMap extends Events {
   }
   jumpTo(options) {
     this.cameraViews.push(options);
+    if (options.pitch !== undefined) this.pitch = options.pitch;
+    if (options.bearing !== undefined) this.bearing = options.bearing;
   }
   easeTo(options) {
     this.transitions.push(options);
@@ -127,7 +135,7 @@ class TestMap extends Events {
 // GPU state is a component test double; actual depth clipping is browser-tested.
 class TestCelestialLayer {
   type = "custom";
-  constructor(report) { this.report = report; }
+  constructor(report, onCamera) { this.report = report; this.onCamera = onCamera; }
   setScene(frame) {
     this.frame = frame;
     this.report({ planKey: frame.planKey, states: { sun: frame.ready ? "clear" : "waiting", moon: frame.ready ? "clear" : "waiting" } });
@@ -872,6 +880,49 @@ test("地形高程失败允许重试，并释放旧预览实例、保留拍摄�
   assert.equal(value("经度"), longitude);
   assert.equal(value("焦距"), focal);
   assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes('当前 DEM 未遮挡'));
+});
+
+test("引擎避让反馈实际高度和俯仰，日月随实际姿态投影，计划保持不变", async (t) => {
+  await workspace(t); const map = await readyTerrain();
+  await settle(() => setControl(document.querySelector('input[aria-label="24 小时时间滑杆"]'),720));
+  await settle(() => document.querySelector('button[aria-label="朝向太阳"]').click());
+  const layer = map.customLayers[0], outline = structuredClone(layer.frame.bodies.find(b => b.id === 'sun').outline);
+  const before = ["经度", "纬度", "俯仰角", "方位角", "相机离地高度", "焦距"].map(value);
+  const labelTop = document.querySelector('[data-celestial-body="sun"]').style.top;
+  const expected = map.cameraSolutions.at(-1), pitch = value("俯仰角") - 5;
+  await settle(() => {
+    map.pitch = 90 + pitch;
+    layer.onCamera({ planKey: layer.frame.planKey, longitude: value("经度"), latitude: value("纬度"),
+      altitude: expected.altitude + 1.7, azimuth: value("方位角"), pitch });
+    map.emit('render');
+  });
+  assert.deepEqual(["经度", "纬度", "俯仰角", "方位角", "相机离地高度", "焦距"].map(value), before);
+  assert.ok(document.querySelector('.camera-adjustment').textContent.includes('引擎避让'));
+  assert.ok(document.querySelector('.camera-adjustment').textContent.includes(pitch.toFixed(2)));
+  assert.ok(document.querySelector('.preview-readout').textContent.includes(pitch.toFixed(1)));
+  assert.notDeepEqual(layer.frame.bodies.find(b => b.id === 'sun').outline, outline);
+  assert.notEqual(document.querySelector('[data-celestial-body="sun"]').style.top, labelTop);
+  await settle(() => {
+    map.pitch = 90 + value("俯仰角");
+    layer.onCamera({ planKey: layer.frame.planKey, longitude: value("经度"), latitude: value("纬度"),
+      altitude: expected.altitude, azimuth: value("方位角"), pitch: value("俯仰角") });
+    map.emit('render');
+  });
+  assert.equal(document.querySelector('.camera-adjustment'), null);
+});
+
+test("镜头与画幅变化复用地形屏幕细节函数，不重建预览或重复加载机位高程", async(t)=>{
+  await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
+  const before=['经度','纬度','方位角','俯仰角','相机离地高度'].map(value);
+  const calculate=map.sources.get('preview-terrain').calculateTileZoom,writes=map.detailWrites;
+  await settle(()=>button('200 mm').click());
+  await settle(()=>setControl(document.querySelector('select[aria-label="拍摄画幅方向"]'),'portrait'));
+  assert.equal(map.detailWrites,writes);
+  await settle(()=>button('1000 mm').click());
+  await settle(()=>button('8 mm').click());
+  assert.equal(map.sources.get('preview-terrain').calculateTileZoom,calculate);
+  assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
+  assert.deepEqual(['经度','纬度','方位角','俯仰角','相机离地高度'].map(value),before);
 });
 
 test("切换机位取消过期高程请求；等待新高程时隐藏旧位置画面", async (t) => {

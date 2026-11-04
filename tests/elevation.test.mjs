@@ -77,6 +77,16 @@ test("机位高程读取并缓存解码瓦片，释放位图资源", async (t) =
   assert.equal(image.closed(), 1);
 });
 
+test("逐级 DEM 采样按层级缓存，不请求超出基础来源的级别", async (t) => {
+  imageEnvironment(t);const urls=[];
+  t.mock.method(globalThis,'fetch',async(url)=>{urls.push(url);return url.endsWith('.json')?Response.json(metadata('levels')):new Response(new Blob([new Uint8Array([1])]));});
+  const signal=new AbortController().signal,url='https://terrain.test/levels.json';
+  for(const zoom of [9,12,9])assert.equal((await groundElevation(initialPlan,url,signal,zoom)).zoom,zoom);
+  assert.equal(urls.length,3);assert.ok(urls[1].includes('/9/'));assert.ok(urls[2].includes('/12/'));
+  await assert.rejects(groundElevation(initialPlan,url,signal,13),RangeError);
+  assert.equal(urls.length,3);
+});
+
 test("地形请求已取消时不发出请求，覆盖外和编码错误不会伪造高程", async (t) => {
   const controller = new AbortController();
   controller.abort();

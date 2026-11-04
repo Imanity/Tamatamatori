@@ -12,7 +12,8 @@ import { Icon } from "./Icon";
 import { TerrainScene } from "./TerrainScene";
 import { solarPosition, daylightPhase } from "../domain/solar";
 import { CelestialDiscs, CelestialReadout, useCelestialScene } from "./CelestialScene";
-import { emptyVisibility } from "../domain/visibility";
+import { celestialPlanKey, emptyVisibility } from "../domain/visibility";
+import type { RenderedCamera } from "../preview/rendered-camera";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -26,6 +27,7 @@ export function PreviewPanel({
   const [grid, setGrid] = useState(true);
   const [dragging, setDragging] = useState(false);
   const [visibility, setVisibility] = useState(emptyVisibility);
+  const [camera, setCamera] = useState<RenderedCamera | null>(null);
   const drag = useRef<{
     pointerId: number;
     x: number;
@@ -36,7 +38,8 @@ export function PreviewPanel({
   } | null>(null);
   const fov = fieldOfView(plan);
   const sun = solarPosition(plan);
-  const celestialScene = useCelestialScene(plan, visibility);
+  const view = camera?.planKey === celestialPlanKey(plan) ? { ...plan, azimuth: camera.azimuth, pitch: camera.pitch } : plan;
+  const celestialScene = useCelestialScene(plan, visibility, view);
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return (
     <div className="preview-content">
@@ -149,7 +152,7 @@ export function PreviewPanel({
             } as CSSProperties
           }
         >
-          <TerrainScene plan={plan} onVisibilityChange={setVisibility} />
+          <TerrainScene plan={plan} onVisibilityChange={setVisibility} onCameraChange={setCamera} />
           <CelestialDiscs scene={celestialScene} />
           <svg
             viewBox="0 0 600 400"
@@ -172,7 +175,7 @@ export function PreviewPanel({
               strokeWidth="1"
             />
             {directions.map((label, index) => {
-              const delta = signedAngle(index * 45 - plan.azimuth);
+              const delta = signedAngle(index * 45 - view.azimuth);
               if (Math.abs(delta) > fov.horizontal / 2) return null;
               const x =
                 300 +
@@ -204,7 +207,7 @@ export function PreviewPanel({
       </div>
       <div className="preview-readout">
         <span>
-          方位 <strong>{plan.azimuth.toFixed(1)}°</strong>
+          方位 <strong>{view.azimuth.toFixed(1)}°</strong>
         </span>
         <span>
           H <strong>{fov.horizontal.toFixed(1)}°</strong>
@@ -215,8 +218,8 @@ export function PreviewPanel({
         <span>
           俯仰{" "}
           <strong>
-            {plan.pitch > 0 ? "+" : ""}
-            {plan.pitch.toFixed(1)}°
+            {view.pitch > 0 ? "+" : ""}
+            {view.pitch.toFixed(1)}°
           </strong>
         </span>
       </div>

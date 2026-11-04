@@ -6,6 +6,9 @@ import { normalizeLongitude } from "./plan.ts";
 export const TERRAIN_SOURCE = "preview-terrain";
 export const WATER_SOURCE = "preview-surface";
 export const TERRAIN_ZOOM = 12;
+// Style tileSize is a minimum visual size, not the 512px image dimensions.
+// Smaller RTT textures bound memory while screen-space LOD retains geometry.
+export const TERRAIN_VISUAL_TILE_SIZE = 128;
 export const DEFAULT_TERRAIN_URL = "https://tiles.mapterhorn.com/tilejson.json";
 export const DEFAULT_WATER_URL = "https://tiles.openfreemap.org/planet";
 export const terrainColors = {
@@ -105,7 +108,7 @@ export function terrainStyle(
         type: "raster-dem",
         url: terrainUrl,
         encoding: "terrarium",
-        tileSize: 512,
+        tileSize: TERRAIN_VISUAL_TILE_SIZE,
         maxzoom: TERRAIN_ZOOM,
       },
       "preview-shade": {

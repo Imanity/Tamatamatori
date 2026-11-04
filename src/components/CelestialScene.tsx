@@ -5,13 +5,13 @@ import { bodyPolygons } from "../domain/celestial-projection";
 import { celestialPlanKey, occlusionLabels } from "../domain/visibility";
 import type { VisibilitySnapshot } from "../domain/visibility";
 
-export function useCelestialScene(plan: ShootingPlan, visibility: VisibilitySnapshot) {
+export function useCelestialScene(plan: ShootingPlan, visibility: VisibilitySnapshot, renderView?: { azimuth: number; pitch: number }) {
   const result = useMemo(() => {
     try { return { bodies: celestialBodies(plan), error: "" }; }
     catch { return { bodies: null, error: "日月计算失败，请检查机位与拍摄时刻。" }; }
   }, [plan.latitude, plan.longitude, plan.instant]);
   const views = result.bodies ? [result.bodies.sun, result.bodies.moon].map((body) => ({
-    body, ...bodyPolygons(plan, body), enabled: plan.layers[body.id],
+    body, ...bodyPolygons({ ...plan, ...renderView }, body), enabled: plan.layers[body.id],
     occlusion: visibility.planKey === celestialPlanKey(plan) ? visibility.states[body.id] : "waiting" as const,
   })) : [];
   return { ...result, views };

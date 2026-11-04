@@ -1,4 +1,4 @@
-import { sampleElevationTile, terrainTile } from "../domain/terrain.ts";
+import { sampleElevationTile, terrainTile, TERRAIN_ZOOM } from "../domain/terrain.ts";
 import type { ElevationTile } from "../domain/terrain.ts";
 import type { MapPoint } from "../domain/map.ts";
 
@@ -100,8 +100,11 @@ export async function groundElevation(
   point: MapPoint,
   url: string,
   signal: AbortSignal,
+  zoom = TERRAIN_ZOOM,
 ) {
   checkAbort(signal);
+  if (!Number.isInteger(zoom) || zoom < 0 || zoom > TERRAIN_ZOOM)
+    throw new RangeError("地形采样级别超出当前来源范围");
   const info = await metadata(url);
   checkAbort(signal);
   if (
@@ -109,7 +112,7 @@ export async function groundElevation(
     (point.latitude < info.bounds[1] || point.latitude > info.bounds[3])
   )
     throw new RangeError("当前机位超出地形数据覆盖范围");
-  const position = terrainTile(point);
+  const position = terrainTile(point, zoom);
   const tileUrl = info.tiles[0]
     .replace("{z}", String(position.z))
     .replace("{x}", String(position.x))

@@ -17,6 +17,11 @@ import { celestialBodies } from "../domain/ephemeris";
 import { bodyPolygons } from "../domain/celestial-projection";
 import { celestialPlanKey } from "../domain/visibility";
 import type { VisibilitySnapshot } from "../domain/visibility";
+import type { CalibrationSnapshot } from "../preview/calibration";
+import type { RenderedCamera } from "../preview/rendered-camera";
+import { applyTerrainDetail } from "../preview/terrain-detail";
+
+const calibrationEnabled = import.meta.env.DEV && new URLSearchParams(window.location.search).get("calibration") === "fuji";
 
 const terrainUrl =
   import.meta.env.VITE_TERRAIN_TILEJSON_URL?.trim() || DEFAULT_TERRAIN_URL;
@@ -33,12 +38,14 @@ interface SceneState {
   message: string;
 }
 
-export function TerrainScene({ plan, onVisibilityChange }: { plan: ShootingPlan; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void }) {
+export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { plan: ShootingPlan; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void; onCameraChange?: (camera: RenderedCamera | null) => void }) {
   const container = useRef<HTMLDivElement>(null);
   const synchronize = useRef<(() => void) | null>(null);
   const key = `${plan.longitude}/${plan.latitude}`;
   const covered = isMapPosition(plan);
   const [attempt, setAttempt] = useState(0);
+  const [calibration, setCalibration] = useState<CalibrationSnapshot | null>(null);
+  const [camera, setCamera] = useState<RenderedCamera | null>(null);
   const [ground, setGround] = useState<GroundState>({ key, phase: "loading" });
   const [scene, setScene] = useState<SceneState>({
     phase: "loading",
@@ -49,12 +56,12 @@ export function TerrainScene({ plan, onVisibilityChange }: { plan: ShootingPlan;
     ground: number;
     altitude: number;
   } | null>(null);
-  const latest = useRef({ plan, ground, key, onVisibilityChange });
+  const latest = useRef({ plan, ground, key, onVisibilityChange, onCameraChange });
 
   useEffect(() => {
-    latest.current = { plan, ground, key, onVisibilityChange };
+    latest.current = { plan, ground, key, onVisibilityChange, onCameraChange };
     synchronize.current?.();
-  }, [plan, ground, key, onVisibilityChange]);
+  }, [plan, ground, key, onVisibilityChange, onCameraChange]);
 
   useEffect(() => {
     // Unavailable ground has no render/query callback; keep its status explicit
@@ -119,7 +126,9 @@ export function TerrainScene({ plan, onVisibilityChange }: { plan: ShootingPlan;
     let failed = false;
     let lastPose = "";
     let lastEnvironment = "";
+    let lastDetail = 0;
     let currentPoseKey = "";
+    let currentPoseGround: number | null = null;
     let timeout: ReturnType<typeof setTimeout> | undefined;
     setApplied(null);
     setScene({ phase: "loading", message: "正在加载地形与水体…" });
@@ -134,6 +143,9 @@ export function TerrainScene({ plan, onVisibilityChange }: { plan: ShootingPlan;
       clearTimeout(timeout);
       timeout = undefined;
       setScene({ phase: "error", message });
+      setCalibration(null);
+      setCamera(null);
+      latest.current.onCameraChange?.(null);
       celestialLayer?.setScene({ key: `failed/${sourceRevision++}`, planKey: celestialPlanKey(latest.current.plan), ready: false, bodies: [] });
       latest.current.onVisibilityChange?.({ planKey: celestialPlanKey(latest.current.plan), states: { sun: "error", moon: "error" }, message });
     };
@@ -195,6 +207,13 @@ export function TerrainScene({ plan, onVisibilityChange }: { plan: ShootingPlan;
       )
         return;
       try {
+        const detailHeight = container.current.clientHeight;
+        if (detailHeight !== lastDetail) {
+          applyTerrainDetail(map, detailHeight);
+          lastDetail = detailHeight;
+          sourceRevision++;
+          celestialLayer?.invalidate();
+        }
         const environmentKey = `${current.key}/${current.plan.instant}`;
         if (environmentKey !== lastEnvironment) {
           applyEnvironment(map, environmentForSun(solarPosition(current.plan)));
@@ -242,6 +261,7 @@ export function TerrainScene({ plan, onVisibilityChange }: { plan: ShootingPlan;
             roll: 0,
           });
           currentPoseKey = current.key;
+          currentPoseGround = height;
           setApplied((previous) =>
             previous?.key === current.key &&
             previous.ground === height &&
@@ -252,12 +272,13 @@ export function TerrainScene({ plan, onVisibilityChange }: { plan: ShootingPlan;
         }
         const planKey = celestialPlanKey(current.plan);
         const ready = map.areTilesLoaded() && map.isSourceLoaded(TERRAIN_SOURCE) && map.isSourceLoaded(WATER_SOURCE);
-        const frameKey = `${poseKey}/${planKey}/${sourceRevision}/${ready}`;
+        const renderView = { azimuth: (map.getBearing() % 360 + 360) % 360, pitch: map.getPitch() - 90 };
+        const frameKey = `${poseKey}/${planKey}/${sourceRevision}/${ready}/${renderView.azimuth}/${renderView.pitch}`;
         if (celestialLayer && frameKey !== lastCelestialFrame) {
           lastCelestialFrame = frameKey;
           const bodies = Object.values(celestialBodies(current.plan))
             .filter((body) => current.plan.layers[body.id])
-            .map((body) => ({ id: body.id, ...bodyPolygons(current.plan, body) }))
+            .map((body) => ({ id: body.id, ...bodyPolygons({ ...current.plan, ...renderView }, body) }))
             .filter((body) => body.state === "画面内");
           celestialLayer.setScene({ key: frameKey, planKey, ready, bodies });
         }
@@ -313,9 +334,20 @@ export function TerrainScene({ plan, onVisibilityChange }: { plan: ShootingPlan;
             if (disposed) return;
             latest.current.onVisibilityChange?.(snapshot);
             if (snapshot.message) fail(snapshot.message);
+          }, (rendered) => {
+            if (disposed) return;
+            setCamera(rendered);
+            latest.current.onCameraChange?.(rendered);
           });
           try { map.addLayer(celestialLayer); }
           catch { fail("日月深度图层无法启动，请重试预览。"); return; }
+          if (calibrationEnabled) void import("../preview/calibration").then(({ calibrationLayer }) => {
+            if (disposed || !map) return;
+            map.addLayer(calibrationLayer(map, () => ({ plan: latest.current.plan,
+              ground: currentPoseKey === latest.current.key && latest.current.ground.key === latest.current.key && latest.current.ground.phase === "ready"
+                ? currentPoseGround : null }), terrainUrl,
+            (snapshot) => { if (!disposed) setCalibration(snapshot); }));
+          });
           styleReady = true;
           schedule();
         });
@@ -376,6 +408,8 @@ export function TerrainScene({ plan, onVisibilityChange }: { plan: ShootingPlan;
 
   const currentGround = ground.key === key && ground.phase === "ready";
   const visible = applied?.key === key && currentGround;
+  const currentCamera = visible && camera?.planKey === celestialPlanKey(plan) ? camera : null;
+  const adjusted = currentCamera && applied && (Math.abs(currentCamera.altitude - applied.altitude) > 0.02 || Math.abs(currentCamera.pitch - plan.pitch) > 1e-4);
   const message = !covered
     ? "当前机位超出地形约 ±85.05° 的覆盖范围。"
     : ground.key === key && ground.phase === "error"
@@ -397,6 +431,18 @@ export function TerrainScene({ plan, onVisibilityChange }: { plan: ShootingPlan;
       aria-label="真实 DEM 山体与静态水体预览，水面高程按 DEM 近似"
     >
       <div className="terrain-canvas" ref={container} data-ready={!!visible} data-celestial-renderer="webgl-depth" />
+      {calibrationEnabled && calibration && visible && <>
+        {Object.entries(calibration.pixels).filter(([name]) => name !== "matrixDem" && name !== "actualDem").map(([name, pixel]) => pixel &&
+          pixel.x >= 0 && pixel.y >= 0 && pixel.x <= calibration.width && pixel.y <= calibration.height &&
+          <span key={name} className={`calibration-marker calibration-${name}`} data-calibration-marker={name}
+            style={{ left: pixel.x, top: pixel.y }} title={name}>{name === "sdkDem" ? "○" : "+"}</span>)}
+        <details className="camera-calibration" open onPointerDown={(event) => event.stopPropagation()}>
+          <summary>开发校准 · 参考点与实际眼点</summary>
+          <span>紫圈 SDK DEM · 青十字 计划 DEM · 黄十字公布高程 · 红十字球面参考</span>
+          <pre data-camera-calibration data-focal={calibration.plan.focalLength} data-height={calibration.plan.cameraHeight}
+            data-ready={calibration.ready}>{JSON.stringify(calibration, null, 2)}</pre>
+        </details>
+      </>}
       {message && (
         <div
           className={`terrain-feedback ${visible ? "terrain-feedback-partial" : ""} ${error ? "terrain-feedback-error" : ""}`}
@@ -419,9 +465,12 @@ export function TerrainScene({ plan, onVisibilityChange }: { plan: ShootingPlan;
       )}
       {visible && applied && (
         <span className="terrain-height">
-          机位高程 ≈ {applied.ground.toFixed(1)} m · 离地 {plan.cameraHeight} m
+          机位高程 ≈ {applied.ground.toFixed(1)} m · 计划离地 {plan.cameraHeight} m
         </span>
       )}
+      {adjusted && currentCamera && applied && <span className="camera-adjustment" role="status">
+        引擎避让：实际离地 ≈ {(currentCamera.altitude - applied.ground).toFixed(2)} m，俯仰 {currentCamera.pitch.toFixed(2)}°（计划 {plan.pitch.toFixed(2)}°）
+      </span>}
     </div>
   );
 }

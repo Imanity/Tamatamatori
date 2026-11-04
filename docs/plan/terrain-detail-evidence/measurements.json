@@ -1,0 +1,662 @@
+{
+  "browser": "Chrome 156.0.8078.80",
+  "sdk": "6.16.0 with terrain LOD hand-off patch",
+  "records": [
+    {
+      "name": "fuji-200-native",
+      "detail": {
+        "cellPixels": 8,
+        "maxMeshZoom": 14,
+        "viewportHeight": 768
+      },
+      "eye": {
+        "altitude": 982.1009249268368,
+        "altitudeError": 0.0009249268366828822,
+        "bearing": -115.4322442752063,
+        "heightAboveDem": 1.600924926836683,
+        "horizontalError": 3.6218572114345445e-9,
+        "latitude": 35.41719999999998,
+        "longitude": 138.87289999999996,
+        "pitch": 10.768041897334442
+      },
+      "ground": 980.5,
+      "height": 768,
+      "pixels": {
+        "actualDem": {
+          "x": 576.0000000021146,
+          "y": 384.0014978609505
+        },
+        "matrixDem": {
+          "x": 576,
+          "y": 384.0014978610504
+        },
+        "publishedPlanar": {
+          "x": 576.0000000007046,
+          "y": 375.88551201496176
+        },
+        "publishedSpherical": {
+          "x": 580.6216879966338,
+          "y": 384.0694818655496
+        },
+        "requestedDem": {
+          "x": 576.0000000007047,
+          "y": 384.0011062940498
+        },
+        "sdkDem": {
+          "x": 575.999999999679,
+          "y": 384.00149786117896
+        }
+      },
+      "plan": {
+        "aspectRatio": "3:2",
+        "azimuth": 244.5677557247937,
+        "cameraHeight": 1.6,
+        "focalLength": 200,
+        "instant": "2026-11-04T08:00:00Z",
+        "latitude": 35.4172,
+        "layers": {
+          "moon": true,
+          "sun": true
+        },
+        "longitude": 138.8729,
+        "orientation": "landscape",
+        "pitch": 10.768041897334443,
+        "refraction": "standard",
+        "sensor": "full-frame",
+        "timeZone": "Asia/Tokyo"
+      },
+      "ready": true,
+      "target": {
+        "altitude": 3776,
+        "demLevels": {
+          "9": 3728.853585366016,
+          "10": 3755.023846590732,
+          "11": 3756.169347119231,
+          "12": 3756.8253984306566
+        },
+        "error": "",
+        "independentDem": 3756.8253984306566,
+        "latitude": 35.36083333333333,
+        "longitude": 138.7275,
+        "name": "富士山剣ヶ峰参考点",
+        "renderedDem": 3756.8253984313383,
+        "source": "https://www.data.jma.go.jp/vois/data/tokyo/314_Fujisan/314_index.html"
+      },
+      "width": 1152
+    },
+    {
+      "name": "fuji-1000-native",
+      "detail": {
+        "cellPixels": 8,
+        "maxMeshZoom": 14,
+        "viewportHeight": 768
+      },
+      "eye": {
+        "altitude": 982.1009249272828,
+        "altitudeError": 0.0009249272827900334,
+        "bearing": -115.4322442752063,
+        "heightAboveDem": 1.60092492728279,
+        "horizontalError": 3.6218572114345445e-9,
+        "latitude": 35.41720000000004,
+        "longitude": 138.87290000000002,
+        "pitch": 10.768041897334442
+      },
+      "ground": 980.5,
+      "height": 768,
+      "pixels": {
+        "actualDem": {
+          "x": 576.000000006704,
+          "y": 384.0074893092692
+        },
+        "matrixDem": {
+          "x": 576.000000011836,
+          "y": 384.00748930956775
+        },
+        "publishedPlanar": {
+          "x": 576.0000000035227,
+          "y": 343.42756007480887
+        },
+        "publishedSpherical": {
+          "x": 599.1084399831688,
+          "y": 384.34740932774776
+        },
+        "requestedDem": {
+          "x": 576.0000000035235,
+          "y": 384.0055314702487
+        },
+        "sdkDem": {
+          "x": 575.9999999956642,
+          "y": 384.00748930788274
+        }
+      },
+      "plan": {
+        "aspectRatio": "3:2",
+        "azimuth": 244.5677557247937,
+        "cameraHeight": 1.6,
+        "focalLength": 1000,
+        "instant": "2026-11-04T08:00:00Z",
+        "latitude": 35.4172,
+        "layers": {
+          "moon": true,
+          "sun": true
+        },
+        "longitude": 138.8729,
+        "orientation": "landscape",
+        "pitch": 10.768041897334443,
+        "refraction": "standard",
+        "sensor": "full-frame",
+        "timeZone": "Asia/Tokyo"
+      },
+      "ready": true,
+      "target": {
+        "altitude": 3776,
+        "demLevels": {
+          "9": 3728.853585366016,
+          "10": 3755.023846590732,
+          "11": 3756.169347119231,
+          "12": 3756.8253984306566
+        },
+        "error": "",
+        "independentDem": 3756.8253984306566,
+        "latitude": 35.36083333333333,
+        "longitude": 138.7275,
+        "name": "富士山剣ヶ峰参考点",
+        "renderedDem": 3756.8253984313383,
+        "source": "https://www.data.jma.go.jp/vois/data/tokyo/314_Fujisan/314_index.html"
+      },
+      "width": 1152
+    },
+    {
+      "name": "fuji-1000-portrait",
+      "detail": {
+        "cellPixels": 8,
+        "maxMeshZoom": 14,
+        "viewportHeight": 768
+      },
+      "eye": {
+        "altitude": 982.100924927504,
+        "altitudeError": 0.0009249275039109328,
+        "bearing": -115.4322442752063,
+        "heightAboveDem": 1.600924927503911,
+        "horizontalError": 4.049359464782735e-9,
+        "latitude": 35.41720000000001,
+        "longitude": 138.8728999999999,
+        "pitch": 10.768041897334442
+      },
+      "ground": 980.5,
+      "height": 768,
+      "pixels": {
+        "actualDem": {
+          "x": 256.000000000115,
+          "y": 384.0049928703162
+        },
+        "matrixDem": {
+          "x": 256.00000000394533,
+          "y": 384.0049928705793
+        },
+        "publishedPlanar": {
+          "x": 256.00000000234843,
+          "y": 356.9517067165392
+        },
+        "publishedSpherical": {
+          "x": 271.4056266554458,
+          "y": 384.2316062184984
+        },
+        "requestedDem": {
+          "x": 256.000000002349,
+          "y": 384.00368764683253
+        },
+        "sdkDem": {
+          "x": 256.0000000004932,
+          "y": 384.00499287181225
+        }
+      },
+      "plan": {
+        "aspectRatio": "3:2",
+        "azimuth": 244.5677557247937,
+        "cameraHeight": 1.6,
+        "focalLength": 1000,
+        "instant": "2026-11-04T08:00:00Z",
+        "latitude": 35.4172,
+        "layers": {
+          "moon": true,
+          "sun": true
+        },
+        "longitude": 138.8729,
+        "orientation": "portrait",
+        "pitch": 10.768041897334443,
+        "refraction": "standard",
+        "sensor": "full-frame",
+        "timeZone": "Asia/Tokyo"
+      },
+      "ready": true,
+      "target": {
+        "altitude": 3776,
+        "demLevels": {
+          "9": 3728.853585366016,
+          "10": 3755.023846590732,
+          "11": 3756.169347119231,
+          "12": 3756.8253984306566
+        },
+        "error": "",
+        "independentDem": 3756.8253984306566,
+        "latitude": 35.36083333333333,
+        "longitude": 138.7275,
+        "name": "富士山剣ヶ峰参考点",
+        "renderedDem": 3756.8253984313383,
+        "source": "https://www.data.jma.go.jp/vois/data/tokyo/314_Fujisan/314_index.html"
+      },
+      "width": 512
+    },
+    {
+      "name": "fuji-35-context",
+      "detail": {
+        "cellPixels": 8,
+        "maxMeshZoom": 14,
+        "viewportHeight": 768
+      },
+      "eye": {
+        "altitude": 982.1009249264782,
+        "altitudeError": 0.0009249264782282828,
+        "bearing": -115.4322442752063,
+        "heightAboveDem": 1.6009249264782284,
+        "horizontalError": 3.6218572114345445e-9,
+        "latitude": 35.41720000000004,
+        "longitude": 138.87290000000002,
+        "pitch": 10.768041897334442
+      },
+      "ground": 980.5,
+      "height": 768,
+      "pixels": {
+        "actualDem": {
+          "x": 576.0000000002346,
+          "y": 384.0488668158577
+        },
+        "matrixDem": {
+          "x": 576,
+          "y": 384.0488668157621
+        },
+        "publishedPlanar": {
+          "x": 576.0000000001232,
+          "y": 382.5799646026183
+        },
+        "publishedSpherical": {
+          "x": 576.8087953994109,
+          "y": 384.01215932647114
+        },
+        "requestedDem": {
+          "x": 576.0000000001232,
+          "y": 384.0487982904205
+        },
+        "sdkDem": {
+          "x": 575.9999999997248,
+          "y": 384.0488668157436
+        }
+      },
+      "plan": {
+        "aspectRatio": "3:2",
+        "azimuth": 244.5677557247937,
+        "cameraHeight": 1.6,
+        "focalLength": 35,
+        "instant": "2026-11-04T08:00:00Z",
+        "latitude": 35.4172,
+        "layers": {
+          "moon": true,
+          "sun": true
+        },
+        "longitude": 138.8729,
+        "orientation": "landscape",
+        "pitch": 10.768041897334443,
+        "refraction": "standard",
+        "sensor": "full-frame",
+        "timeZone": "Asia/Tokyo"
+      },
+      "ready": true,
+      "target": {
+        "altitude": 3776,
+        "demLevels": {
+          "9": 3728.853585366016,
+          "10": 3755.023846590732,
+          "11": 3756.169347119231,
+          "12": 3756.8253984306566
+        },
+        "error": "",
+        "independentDem": 3756.8253984306566,
+        "latitude": 35.36083333333333,
+        "longitude": 138.7275,
+        "name": "富士山剣ヶ峰参考点",
+        "renderedDem": 3756.169347119748,
+        "source": "https://www.data.jma.go.jp/vois/data/tokyo/314_Fujisan/314_index.html"
+      },
+      "width": 1152
+    },
+    {
+      "name": "fuji-8-context",
+      "detail": {
+        "cellPixels": 8,
+        "maxMeshZoom": 14,
+        "viewportHeight": 768
+      },
+      "eye": {
+        "altitude": 982.1009249275278,
+        "altitudeError": 0.0009249275277851688,
+        "bearing": -115.4322442752063,
+        "heightAboveDem": 1.6009249275277853,
+        "horizontalError": 1.8109286057172723e-9,
+        "latitude": 35.41720000000001,
+        "longitude": 138.87289999999996,
+        "pitch": 10.768041897334442
+      },
+      "ground": 980.5,
+      "height": 768,
+      "pixels": {
+        "actualDem": {
+          "x": 576.0000000000282,
+          "y": 384.0111695579045
+        },
+        "matrixDem": {
+          "x": 576,
+          "y": 384.0111695578926
+        },
+        "publishedPlanar": {
+          "x": 576.0000000000282,
+          "y": 383.67542048059846
+        },
+        "publishedSpherical": {
+          "x": 576.1848675198654,
+          "y": 384.0027792746219
+        },
+        "requestedDem": {
+          "x": 576.0000000000282,
+          "y": 384.0111538949533
+        },
+        "sdkDem": {
+          "x": 575.9999999998796,
+          "y": 384.0111695578725
+        }
+      },
+      "plan": {
+        "aspectRatio": "3:2",
+        "azimuth": 244.5677557247937,
+        "cameraHeight": 1.6,
+        "focalLength": 8,
+        "instant": "2026-11-04T08:00:00Z",
+        "latitude": 35.4172,
+        "layers": {
+          "moon": true,
+          "sun": true
+        },
+        "longitude": 138.8729,
+        "orientation": "landscape",
+        "pitch": 10.768041897334443,
+        "refraction": "standard",
+        "sensor": "full-frame",
+        "timeZone": "Asia/Tokyo"
+      },
+      "ready": true,
+      "target": {
+        "altitude": 3776,
+        "demLevels": {
+          "9": 3728.853585366016,
+          "10": 3755.023846590732,
+          "11": 3756.169347119231,
+          "12": 3756.8253984306566
+        },
+        "error": "",
+        "independentDem": 3756.8253984306566,
+        "latitude": 35.36083333333333,
+        "longitude": 138.7275,
+        "name": "富士山剣ヶ峰参考点",
+        "renderedDem": 3756.169347119748,
+        "source": "https://www.data.jma.go.jp/vois/data/tokyo/314_Fujisan/314_index.html"
+      },
+      "width": 1152
+    },
+    {
+      "name": "fuji-600-native",
+      "detail": {
+        "cellPixels": 8,
+        "maxMeshZoom": 14,
+        "viewportHeight": 768
+      },
+      "eye": {
+        "altitude": 982.1009249275802,
+        "altitudeError": 0.0009249275801948008,
+        "bearing": -115.4322442752063,
+        "heightAboveDem": 1.600924927580195,
+        "horizontalError": 1.8109286057172723e-9,
+        "latitude": 35.41720000000001,
+        "longitude": 138.87289999999996,
+        "pitch": 10.768041897334442
+      },
+      "ground": 980.5,
+      "height": 768,
+      "pixels": {
+        "actualDem": {
+          "x": 576.0000000021141,
+          "y": 384.00449358417166
+        },
+        "matrixDem": {
+          "x": 576.0000000049317,
+          "y": 384.0044935845899
+        },
+        "publishedPlanar": {
+          "x": 576.0000000021137,
+          "y": 359.6565360448853
+        },
+        "publishedSpherical": {
+          "x": 589.8650639899013,
+          "y": 384.20844559664863
+        },
+        "requestedDem": {
+          "x": 576.0000000021141,
+          "y": 384.0033188821493
+        },
+        "sdkDem": {
+          "x": 576.0000000060619,
+          "y": 384.00449358397344
+        }
+      },
+      "plan": {
+        "aspectRatio": "3:2",
+        "azimuth": 244.5677557247937,
+        "cameraHeight": 1.6,
+        "focalLength": 600,
+        "instant": "2026-11-04T08:00:00Z",
+        "latitude": 35.4172,
+        "layers": {
+          "moon": true,
+          "sun": true
+        },
+        "longitude": 138.8729,
+        "orientation": "landscape",
+        "pitch": 10.768041897334443,
+        "refraction": "standard",
+        "sensor": "full-frame",
+        "timeZone": "Asia/Tokyo"
+      },
+      "ready": true,
+      "target": {
+        "altitude": 3776,
+        "demLevels": {
+          "9": 3728.853585366016,
+          "10": 3755.023846590732,
+          "11": 3756.169347119231,
+          "12": 3756.8253984306566
+        },
+        "error": "",
+        "independentDem": 3756.8253984306566,
+        "latitude": 35.36083333333333,
+        "longitude": 138.7275,
+        "name": "富士山剣ヶ峰参考点",
+        "renderedDem": 3756.8253984313383,
+        "source": "https://www.data.jma.go.jp/vois/data/tokyo/314_Fujisan/314_index.html"
+      },
+      "width": 1152
+    },
+    {
+      "name": "fuji-1000-roundtrip",
+      "detail": {
+        "cellPixels": 8,
+        "maxMeshZoom": 14,
+        "viewportHeight": 768
+      },
+      "eye": {
+        "altitude": 982.1009249272828,
+        "altitudeError": 0.0009249272827900334,
+        "bearing": -115.4322442752063,
+        "heightAboveDem": 1.60092492728279,
+        "horizontalError": 3.6218572114345445e-9,
+        "latitude": 35.41720000000004,
+        "longitude": 138.87290000000002,
+        "pitch": 10.768041897334442
+      },
+      "ground": 980.5,
+      "height": 768,
+      "pixels": {
+        "actualDem": {
+          "x": 576.000000006704,
+          "y": 384.0074893092692
+        },
+        "matrixDem": {
+          "x": 576.000000011836,
+          "y": 384.00748930956775
+        },
+        "publishedPlanar": {
+          "x": 576.0000000035227,
+          "y": 343.42756007480887
+        },
+        "publishedSpherical": {
+          "x": 599.1084399831688,
+          "y": 384.34740932774776
+        },
+        "requestedDem": {
+          "x": 576.0000000035235,
+          "y": 384.0055314702487
+        },
+        "sdkDem": {
+          "x": 575.9999999956642,
+          "y": 384.00748930788274
+        }
+      },
+      "plan": {
+        "aspectRatio": "3:2",
+        "azimuth": 244.5677557247937,
+        "cameraHeight": 1.6,
+        "focalLength": 1000,
+        "instant": "2026-11-04T08:00:00Z",
+        "latitude": 35.4172,
+        "layers": {
+          "moon": true,
+          "sun": true
+        },
+        "longitude": 138.8729,
+        "orientation": "landscape",
+        "pitch": 10.768041897334443,
+        "refraction": "standard",
+        "sensor": "full-frame",
+        "timeZone": "Asia/Tokyo"
+      },
+      "ready": true,
+      "target": {
+        "altitude": 3776,
+        "demLevels": {
+          "9": 3728.853585366016,
+          "10": 3755.023846590732,
+          "11": 3756.169347119231,
+          "12": 3756.8253984306566
+        },
+        "error": "",
+        "independentDem": 3756.8253984306566,
+        "latitude": 35.36083333333333,
+        "longitude": 138.7275,
+        "name": "富士山剣ヶ峰参考点",
+        "renderedDem": 3756.8253984313383,
+        "source": "https://www.data.jma.go.jp/vois/data/tokyo/314_Fujisan/314_index.html"
+      },
+      "width": 1152
+    },
+    {
+      "name": "fuji-1000-mobile",
+      "detail": {
+        "cellPixels": 8,
+        "maxMeshZoom": 14,
+        "viewportHeight": 221
+      },
+      "eye": {
+        "altitude": 982.1009249276048,
+        "altitudeError": 0.000924927604751158,
+        "bearing": -115.4322442752063,
+        "heightAboveDem": 1.6009249276047512,
+        "horizontalError": 4.049359464782735e-9,
+        "latitude": 35.41720000000004,
+        "longitude": 138.87290000000002,
+        "pitch": 10.768041897334442
+      },
+      "ground": 980.5,
+      "height": 221,
+      "pixels": {
+        "actualDem": {
+          "x": 166.00000000193205,
+          "y": 110.50215512695208
+        },
+        "matrixDem": {
+          "x": 166,
+          "y": 110.50215512605963
+        },
+        "publishedPlanar": {
+          "x": 166.00000000101522,
+          "y": 98.82485778194368
+        },
+        "publishedSpherical": {
+          "x": 172.65972402292712,
+          "y": 110.59997065290658
+        },
+        "requestedDem": {
+          "x": 166.00000000101545,
+          "y": 110.50159173818356
+        },
+        "sdkDem": {
+          "x": 166.00000000345776,
+          "y": 110.50215512568612
+        }
+      },
+      "plan": {
+        "aspectRatio": "3:2",
+        "azimuth": 244.5677557247937,
+        "cameraHeight": 1.6,
+        "focalLength": 1000,
+        "instant": "2026-11-04T08:00:00Z",
+        "latitude": 35.4172,
+        "layers": {
+          "moon": true,
+          "sun": true
+        },
+        "longitude": 138.8729,
+        "orientation": "landscape",
+        "pitch": 10.768041897334443,
+        "refraction": "standard",
+        "sensor": "full-frame",
+        "timeZone": "Asia/Tokyo"
+      },
+      "ready": true,
+      "target": {
+        "altitude": 3776,
+        "demLevels": {
+          "9": 3728.853585366016,
+          "10": 3755.023846590732,
+          "11": 3756.169347119231,
+          "12": 3756.8253984306566
+        },
+        "error": "",
+        "independentDem": 3756.8253984306566,
+        "latitude": 35.36083333333333,
+        "longitude": 138.7275,
+        "name": "富士山剣ヶ峰参考点",
+        "renderedDem": 3756.8253984313383,
+        "source": "https://www.data.jma.go.jp/vois/data/tokyo/314_Fujisan/314_index.html"
+      },
+      "width": 332
+    }
+  ]
+}

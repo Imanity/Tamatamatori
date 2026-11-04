@@ -7,10 +7,15 @@ import { signedAngle } from "../src/domain/plan.ts";
 import { terrainScenes } from "./fixtures/terrain-scenes.mjs";
 import { projectDirection } from "../src/domain/celestial-projection.ts";
 import { direction } from "../src/domain/ephemeris.ts";
+import { matrixPixel, mercatorXY, mercatorMeter, referencePixel, referenceRay, rayAngles } from "../src/preview/calibration-math.ts";
+import { matrixEye } from "../src/preview/rendered-camera.ts";
+import { terrainTileZoom, TERRAIN_MAX_MESH_ZOOM } from "../src/preview/terrain-detail.ts";
+import { TERRAIN_VISUAL_TILE_SIZE } from "../src/domain/terrain.ts";
+import { readFileSync } from "node:fs";
 
 // Exercise the installed SDK's real CPU camera/transform, not the interaction
 // test double. No browser, GL context, image decoder or real DEM is simulated.
-let server, Camera, coveringTiles;
+let server, Camera, coveringTiles, TerrainTileManager;
 before(async () => {
   server = await createServer({
     configFile: false,
@@ -18,7 +23,7 @@ before(async () => {
     optimizeDeps: { noDiscovery: true, include: [] },
     server: { middlewareMode: true },
     appType: "custom",
-    ssr: { noExternal: ["maplibre-gl"] },
+    ssr: { noExternal: ["maplibre-gl", "@maplibre/mlt"] },
     // Match the SDK build's assignment semantics: its derived event classes
     // narrow `type` without initializing it. Emitting an undefined field would
     // erase the parent constructor's event type and break moveend cleanup.
@@ -29,6 +34,7 @@ before(async () => {
   });
   ({ Camera } = await server.ssrLoadModule("/node_modules/maplibre-gl/src/ui/camera.ts"));
   ({ coveringTiles } = await server.ssrLoadModule("/node_modules/maplibre-gl/src/geo/projection/covering_tiles.ts"));
+  ({ TerrainTileManager } = await server.ssrLoadModule("/node_modules/maplibre-gl/src/tile/terrain_tile_manager.ts"));
 });
 after(async () => { await server?.close(); });
 
@@ -185,4 +191,94 @@ test("日月方向投影与真实 SDK 相机在广角、长焦、竖幅及天顶
           }
         }
   assert.ok(probes >= 144);
+});
+
+test("公开绘制矩阵反算眼点，并与独立山峰投影及 SDK 投影一致", () => {
+  const scene = terrainScenes[0];
+  for (const focalLength of [8, 35, 200, 1000])
+    for (const cameraHeight of [0.1, 1.6, 10])
+      for (const orientation of ["landscape", "portrait"]) {
+        const plan = { ...scene.plan, focalLength, cameraHeight, orientation, pitch: 10 };
+        const [width, height] = orientation === "portrait" ? [400, 600] : [600, 400];
+        const camera = createCamera(width, height, scene.syntheticGround);
+        apply(camera, plan, scene.syntheticGround);
+        // Exactly the matrix supplied through CustomRenderMethodInput.
+        const matrix = camera.transform.modelViewProjectionMatrix, worldSize = 512 * 2 ** camera.getZoom();
+        const actual = matrixEye(matrix), xy = mercatorXY(plan), scale = mercatorMeter(plan.latitude);
+        close(Math.hypot(actual.x / worldSize - xy[0], actual.y / worldSize - xy[1]) / scale, 0, 0.02, "matrix eye horizontal / m");
+        close(actual.altitude, scene.syntheticGround + cameraHeight, 0.02, "matrix eye altitude / m");
+        const a = matrixPixel(matrix, scene.target, worldSize, width, height);
+        const b = referencePixel(plan, scene.syntheticGround, scene.target, width, height, false, camera.getCenter().lat);
+        const location = MercatorCoordinate.fromLngLat([scene.target.longitude, scene.target.latitude]).toLngLat();
+        const c = camera.transform.locationToScreenPoint(location, flatTerrain(scene.target.altitude));
+        for (const axis of ["x", "y"]) {
+          close(a[axis], b[axis], 0.1, `independent peak ${axis} / CSS px`);
+          close(a[axis], c[axis], 0.1, `SDK peak ${axis} / CSS px`);
+        }
+      }
+  assert.throws(() => matrixEye(new Float64Array(16)));
+});
+
+test("平面与球面对照分离曲率影响，并正确处理日期变更线", () => {
+  const eye = { latitude: 0, longitude: 0, altitude: 0 };
+  const target = { latitude: 0, longitude: 1, altitude: 0 };
+  const planar = rayAngles(referenceRay(eye, target));
+  const spherical = rayAngles(referenceRay(eye, target, true));
+  close(planar.pitch, 0, 1e-9, "flat ground horizon");
+  close(spherical.pitch, -0.5, 1e-9, "sphere chord depression");
+  close(spherical.azimuth, 90, 1e-9, "east");
+  const across = referenceRay({ ...eye, longitude: 179.9 }, { ...target, longitude: -179.9 });
+  close(Math.hypot(...across), 22239.0160467, 0.001, "nearest antimeridian world copy / m");
+});
+
+test("固定 SDK 的 ESM 与源代码都包含地形 LOD 兼容修正", () => {
+  const esm = readFileSync(new URL('../node_modules/maplibre-gl/dist/maplibre-gl.mjs', import.meta.url), 'utf8');
+  const source = readFileSync(new URL('../node_modules/maplibre-gl/src/tile/terrain_tile_manager.ts', import.meta.url), 'utf8');
+  assert.equal(esm.split('calculateTileZoom:this.getSource().calculateTileZoom').length, 2);
+  assert.equal(source.split('calculateTileZoom: this.getSource().calculateTileZoom').length, 2);
+});
+
+test("地形细节随实际视场、尺寸与距离变化，并受原生 DEM 网格上限约束", () => {
+  const calculate=terrainTileZoom(768);
+  assert.ok(calculate(20,0.01,0.001,1,3)>calculate(20,0.01,0.001,1,35));
+  assert.ok(calculate(20,0.01,0.001,1,35)>calculate(20,0.1,0.001,1,35));
+  assert.ok(terrainTileZoom(1536)(20,0.01,0.001,1,35)>calculate(20,0.01,0.001,1,35));
+  assert.equal(calculate(20,0,0,1,3),TERRAIN_MAX_MESH_ZOOM);
+  assert.throws(()=>terrainTileZoom(0),RangeError);
+});
+
+test("真实 SDK 地形网格采用公共 LOD 策略，长焦参考点使用 z12 DEM 且覆盖有界", (t) => {
+  const scene = terrainScenes[0], reference = MercatorCoordinate.fromLngLat([scene.target.longitude,scene.target.latitude]);
+  let maxMeshes=0,maxDem=0;
+  for (const focalLength of [8,35,200,600,1000])
+    for (const orientation of ['landscape','portrait'])
+      for (const pitch of [0,4,10.768041897334445]) {
+        const plan={...scene.plan,focalLength,orientation,pitch,azimuth:244.5677557247937};
+        const camera=createCamera(...(orientation==='portrait'?[512,768]:[1152,768]),scene.syntheticGround);
+        apply(camera,plan,scene.syntheticGround);
+        const calculateTileZoom=terrainTileZoom(768);
+        const source={tileSize:TERRAIN_VISUAL_TILE_SIZE,minzoom:0,maxzoom:12,calculateTileZoom};
+        let requestedSource;
+        // Only I/O is replaced. Coverage traversal, mesh manager and tile IDs
+        // below are the installed SDK implementations, not component doubles.
+        const tiles={_source:source,usedForTerrain:false,update(){},getTileByID(key){requestedSource=key;return {key};}};
+        const manager=new TerrainTileManager(tiles);
+        manager.update(camera.transform,flatTerrain(scene.syntheticGround));
+        const meshes=manager.getRenderableTiles().map(tile=>tile.tileID);
+        const dem=coveringTiles(camera.transform,{tileSize:manager.tileSize,minzoom:0,maxzoom:12,terrain:flatTerrain(scene.syntheticGround),calculateTileZoom});
+        maxMeshes=Math.max(maxMeshes,meshes.length);maxDem=Math.max(maxDem,dem.length);
+        assert.ok(meshes.every(tile=>tile.canonical.z<=14));
+        assert.ok(dem.every(tile=>tile.canonical.z<=12));
+        assert.ok(meshes.length<128,`mesh budget ${focalLength}/${orientation}/${pitch}: ${meshes.length}`);
+        assert.ok(dem.length<64,`DEM budget: ${dem.length}`);
+        if(focalLength>=200&&pitch===10.768041897334445){
+          const tile=meshes.find(tile=>{const c=tile.canonical;return c.x===Math.floor(reference.x*2**c.z)&&c.y===Math.floor(reference.y*2**c.z);});
+          assert.ok(tile,'reference peak must have a mesh');
+          assert.ok(tile.canonical.z>=13,'reference mesh must use the native DEM');
+          manager.getSourceTile(tile);
+          assert.equal(requestedSource,tile.scaledTo(12).key);
+        }
+        assertEye(camera,plan,scene.syntheticGround);
+      }
+  t.diagnostic(`30 组覆盖，最大 ${maxMeshes} 个网格、${maxDem} 个理想 DEM 瓦片（不含加载父瓦片）`);
 });

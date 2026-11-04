@@ -7,6 +7,7 @@
     "node": ">=22.18.0"
   },
   "scripts": {
+    "postinstall": "node scripts/patch-maplibre.mjs",
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
@@ -18,7 +19,7 @@
     "@js-temporal/polyfill": "^0.5.1",
     "astronomy-engine": "2.1.19",
     "earcut": "3.2.4",
-    "maplibre-gl": "^6.16.0",
+    "maplibre-gl": "6.16.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },

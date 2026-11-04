@@ -1,7 +1,9 @@
 import earcut from "earcut";
-import type { CustomLayerInterface, Map as MapLibreMap } from "maplibre-gl";
+import type { CustomLayerInterface, CustomRenderMethodInput, Map as MapLibreMap } from "maplibre-gl";
 import { classifyOcclusion } from "../domain/visibility.ts";
 import type { VisibilitySnapshot } from "../domain/visibility.ts";
+import { renderedCamera } from "./rendered-camera.ts";
+import type { RenderedCamera } from "./rendered-camera.ts";
 
 type Point = { x: number; y: number };
 export interface CelestialFrame {
@@ -61,9 +63,11 @@ export class CelestialLayer implements CustomLayerInterface {
   private pendingAt = 0;
   private resolvedKey = "";
   private failed = false;
+  private cameraKey = "";
+  private onCamera?: (camera: RenderedCamera) => void;
 
   private report: (snapshot: VisibilitySnapshot) => void;
-  constructor(report: (snapshot: VisibilitySnapshot) => void) { this.report = report; }
+  constructor(report: (snapshot: VisibilitySnapshot) => void, onCamera?: (camera: RenderedCamera) => void) { this.report = report; this.onCamera = onCamera; }
 
   onAdd(map: MapLibreMap, gl: WebGL2RenderingContext) {
     this.map = map; this.gl = gl;
@@ -125,9 +129,16 @@ export class CelestialLayer implements CustomLayerInterface {
     this.report(snapshot);
   }
 
-  render(gl: WebGL2RenderingContext) {
+  render(gl: WebGL2RenderingContext, input?: CustomRenderMethodInput) {
     if (this.failed || !this.frame || !this.program || !this.buffer || !this.vao) return;
     if (gl.isContextLost()) { this.fail(); return; }
+    if (input && this.map && this.onCamera) {
+      try {
+        const camera = renderedCamera(this.map, input.modelViewProjectionMatrix, this.frame.planKey);
+        const key = JSON.stringify(camera, (_key, value) => typeof value === "number" ? +value.toFixed(7) : value);
+        if (key !== this.cameraKey) { this.cameraKey = key; this.onCamera(camera); }
+      } catch { this.fail("无法读取实际拍摄相机，请重试预览。"); return; }
+    }
     try { this.readQueries(gl); } catch { this.fail(); return; }
     if (this.failed) return;
     // Custom layers share the context. Restore every state changed here; never clear buffers.
