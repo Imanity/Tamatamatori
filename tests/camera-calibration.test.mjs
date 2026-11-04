@@ -2,13 +2,13 @@ import test, { before, after } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "vite";
 import { MercatorCoordinate } from "maplibre-gl";
-import { terrainCamera } from "../src/preview/camera.ts";
+import { terrainCamera, terrainRenderOptions } from "../src/preview/camera.ts";
 import { signedAngle } from "../src/domain/plan.ts";
 import { terrainScenes } from "./fixtures/terrain-scenes.mjs";
 
 // Exercise the installed SDK's real CPU camera/transform, not the interaction
 // test double. No browser, GL context, image decoder or real DEM is simulated.
-let server, Camera;
+let server, Camera, coveringTiles;
 before(async () => {
   server = await createServer({
     configFile: false,
@@ -26,6 +26,7 @@ before(async () => {
     },
   });
   ({ Camera } = await server.ssrLoadModule("/node_modules/maplibre-gl/src/ui/camera.ts"));
+  ({ coveringTiles } = await server.ssrLoadModule("/node_modules/maplibre-gl/src/geo/projection/covering_tiles.ts"));
 });
 after(async () => { await server?.close(); });
 
@@ -38,6 +39,7 @@ function flatTerrain(height) {
   return {
     exaggeration: 1,
     getCoverageIndex: () => null,
+    getMinMaxElevation: () => ({ minElevation: 0, maxElevation: 4000 }),
     getMinTileElevationForLngLatZoom: () => height,
     getElevationForLngLat: () => height,
     getElevationAndDEMStateForLngLat: () => ({ elevation: height, demState: "loaded" }),
@@ -46,7 +48,7 @@ function flatTerrain(height) {
 
 function createCamera(width, height, ground) {
   const camera = new Camera({
-    minZoom: 0, maxZoom: 32, minPitch: 0, maxPitch: 180,
+    minZoom: 0, maxZoom: terrainRenderOptions.maxZoom, minPitch: 0, maxPitch: 180,
     bearingSnap: 0, zoomSnap: 0, terrain: null,
     centerClampedToGround: false, transformConstrain: null,
     requestRenderFrame: () => 0, cancelRenderFrame: () => {},
@@ -132,4 +134,27 @@ test("真实 SDK 在尺寸调整、旋转和向上/下观察后仍保持机位",
         close(pixel.x, width * 0.8, 0.1, "resized projection x / CSS px");
         close(pixel.y, height * 0.25, 0.1, "resized projection y / CSS px");
       }
+});
+
+test("真实 SDK 水平与长焦视角的瓦片覆盖保持有效", () => {
+  const { plan, syntheticGround } = terrainScenes[0];
+  for (const focalLength of [8, 35, 200, 1000])
+    for (const pitch of [-4, 0, 4]) {
+      const next = { ...plan, focalLength, pitch };
+      const camera = createCamera(1205, 803, syntheticGround);
+      apply(camera, next, syntheticGround);
+      // Match the installed TileManager's vector-source coverage policy. The
+      // real coverage traversal constructs the same canonical IDs as rendering.
+      const sourceMaxZoom = 14;
+      const maxzoom = terrainRenderOptions.zoomLevelsToOverscale === undefined
+        ? sourceMaxZoom
+        : Math.max(sourceMaxZoom, camera.transform.maxZoom - terrainRenderOptions.zoomLevelsToOverscale);
+      const tiles = coveringTiles(camera.transform, {
+        minzoom: 0, maxzoom, tileSize: 512, reparseOverscaled: true,
+        terrain: flatTerrain(syntheticGround),
+      });
+      assert.ok(tiles.length > 0);
+      assert.ok(tiles.every((tile) => tile.canonical.z <= sourceMaxZoom));
+      assertEye(camera, next, syntheticGround);
+    }
 });

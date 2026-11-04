@@ -107,7 +107,7 @@ test("相机支持水平、仰视和俯视，俯仰角转换与实际向量一�
       pitch,
       0.0001,
     );
-    assert.equal(pose.pitch, 90 + pitch);
+    close(pose.pitch, 90 + pitch, 1e-6);
     assert.equal(pose.bearing, initialPlan.azimuth);
   }
 });

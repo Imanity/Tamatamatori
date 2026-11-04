@@ -62,9 +62,11 @@ npm run test:terrain
 npm run build
 ```
 
-50 项自动检查覆盖既有交互，以及 DEM 解码、双线性采样、地形瓦片坐标、高程缓存、过期请求取消、加载失败重试和机位切换。新增 SDK 相机 CPU 校准覆盖三组固定场景、132 组相机配置与 276 个合成投影采样。组件测试使用 JSDOM 与地图 SDK 测试替身，数据加载测试使用合成像素；这些检查不模拟 WebGL 或浏览器图像解码。构建包含 TypeScript 检查，并独立打包地图 Worker。
+[GitHub Actions CI](.github/workflows/ci.yml) 在推送到 `main`、创建或更新 PR 时运行，也可手动触发。使用 Node.js 22.18.0 和 24 分别执行 `npm ci`、`npm test` 和 `npm run build`；构建已包含类型检查。CI 不执行真实浏览器或 GPU 画面验收。
 
-示例地形 WebP 和水体瓦片端点已做实际连通性检查。浏览器连接当前不可用，真实山脊、水岸接缝、长焦精度、动画及触屏效果仍需视觉复核；自动检查不代替 WebGL 验收。
+51 项自动检查覆盖既有交互，以及 DEM 解码、双线性采样、地形瓦片坐标、高程缓存、过期请求取消、加载失败重试和机位切换。SDK 相机 CPU 校准覆盖三组固定场景、132 组相机配置与 276 个合成投影采样，另有 12 组水平及长焦瓦片覆盖回归。组件测试使用 JSDOM 与地图 SDK 测试替身，数据加载测试使用合成像素；这些检查不模拟 WebGL 或浏览器图像解码。构建包含 TypeScript 检查，并独立打包地图 Worker。
+
+Chrome 连接已恢复，三组固定场景完成基础 GPU 画面检查，覆盖镜头、画幅、布局、窄屏恢复和覆盖提示，并修复长焦及水平视角引发的瓦片越界。山峰投影精度、网格防碰撞后的相机高度、真实网络失败恢复及触屏设备仍有待验项；湖岸长焦存在岸线锯齿与接缝限制，详见验收记录。
 
 ## 项目文档
 
@@ -73,5 +75,5 @@ npm run build
 - [全局架构](docs/architecture/overview.md)：模块职责、统一约定与技术决策边界。
 - [地图接入设计](docs/architecture/map-integration.md)：引擎、底图、交互边界与失败处理。
 - [山体与水体预览](docs/architecture/terrain-preview.md)：地形数据、摄影相机、静态水体与已知限制。
-- [地形预览验收](docs/plan/terrain-validation.md)：固定场景、相机数值校准结果与真实画面待验项。
+- [地形预览验收](docs/plan/terrain-validation.md)：固定场景、数值校准、真实画面截图与待验项。
 - [协作规则](AGENTS.md)：小步推进、文档维护与验证要求。

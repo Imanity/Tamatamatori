@@ -32,7 +32,7 @@ export const terrainScenes = [
   },
   {
     id: "plain",
-    name: "霞浦西岸附近向东",
+    name: "霞浦西南侧内陆低起伏区向东",
     plan: { ...common, latitude: 36.0248, longitude: 140.1854, azimuth: 90, pitch: 0 },
     syntheticGround: 4,
   },

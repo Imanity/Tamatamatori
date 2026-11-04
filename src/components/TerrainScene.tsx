@@ -248,6 +248,7 @@ export function TerrainScene({ plan }: { plan: ShootingPlan }) {
         if (disposed || !container.current) return;
         try {
           map = new sdk.Map({
+            ...cameraModule.terrainRenderOptions,
             container: container.current,
             style: terrainStyle(terrainUrl, waterUrl),
             center: [
@@ -255,7 +256,6 @@ export function TerrainScene({ plan }: { plan: ShootingPlan }) {
               latest.current.plan.latitude,
             ],
             zoom: 12,
-            maxZoom: 32,
             maxPitch: 180,
             centerClampedToGround: false,
             interactive: false,

@@ -1,0 +1,471 @@
+{
+  "date": "2026-11-04",
+  "browser": "Chrome",
+  "installedExecutableVersion": "156.0.8078.80",
+  "desktopViewport": {
+    "height": 1215,
+    "width": 2560
+  },
+  "mobileViewport": {
+    "width": 390,
+    "height": 844
+  },
+  "cameraConfigurations": 132,
+  "syntheticProjectionProbes": 276,
+  "tileCoverageCombinations": 12,
+  "records": [
+    {
+      "scene": "fuji",
+      "phase": "35-landscape",
+      "canvas": {
+        "height": 803,
+        "position": "absolute",
+        "ready": "true",
+        "width": 1205
+      },
+      "frame": {
+        "height": 803,
+        "width": 1205
+      },
+      "height": "机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "panels": [
+        {
+          "label": "拍摄预览",
+          "slot": "0"
+        },
+        {
+          "label": "地图",
+          "slot": "1"
+        },
+        {
+          "label": "拍摄参数",
+          "slot": "2"
+        }
+      ],
+      "readout": "方位 247.0°H 54.4°V 37.8°俯仰 +4°",
+      "values": [
+        "2026-11-04T12:00",
+        "720",
+        "Asia/Tokyo",
+        "35",
+        "35",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "35.4172",
+        "138.8729",
+        "247",
+        "4",
+        "1.6"
+      ]
+    },
+    {
+      "scene": "fuji",
+      "phase": "1000-landscape",
+      "canvas": {
+        "height": 803,
+        "position": "absolute",
+        "ready": "true",
+        "width": 1205
+      },
+      "frame": {
+        "height": 803,
+        "width": 1205
+      },
+      "height": "机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "panels": [
+        {
+          "label": "拍摄预览",
+          "slot": "0"
+        },
+        {
+          "label": "地图",
+          "slot": "1"
+        },
+        {
+          "label": "拍摄参数",
+          "slot": "2"
+        }
+      ],
+      "readout": "方位 247.0°H 2.1°V 1.4°俯仰 +4°",
+      "values": [
+        "2026-11-04T12:00",
+        "720",
+        "Asia/Tokyo",
+        "1000",
+        "1000",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "35.4172",
+        "138.8729",
+        "247",
+        "4",
+        "1.6"
+      ]
+    },
+    {
+      "scene": "lake",
+      "phase": "35-landscape",
+      "canvas": {
+        "height": 803,
+        "position": "absolute",
+        "ready": "true",
+        "width": 1205
+      },
+      "frame": {
+        "height": 803,
+        "width": 1205
+      },
+      "height": "机位高程 ≈ 831.5 m · 离地 1.6 m",
+      "panels": [
+        {
+          "label": "拍摄预览",
+          "slot": "0"
+        },
+        {
+          "label": "地图",
+          "slot": "1"
+        },
+        {
+          "label": "拍摄参数",
+          "slot": "2"
+        }
+      ],
+      "readout": "方位 180.0°H 54.4°V 37.8°俯仰 0°",
+      "values": [
+        "2026-11-04T12:00",
+        "720",
+        "Asia/Tokyo",
+        "35",
+        "35",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "35.5222",
+        "138.764",
+        "180",
+        "0",
+        "1.6"
+      ]
+    },
+    {
+      "scene": "lake",
+      "phase": "height-0.1",
+      "canvas": {
+        "height": 803,
+        "position": "absolute",
+        "ready": "true",
+        "width": 1205
+      },
+      "frame": {
+        "height": 803,
+        "width": 1205
+      },
+      "height": "机位高程 ≈ 831.5 m · 离地 0.1 m",
+      "panels": [
+        {
+          "label": "拍摄预览",
+          "slot": "0"
+        },
+        {
+          "label": "地图",
+          "slot": "1"
+        },
+        {
+          "label": "拍摄参数",
+          "slot": "2"
+        }
+      ],
+      "readout": "方位 180.0°H 54.4°V 37.8°俯仰 0°",
+      "values": [
+        "2026-11-04T12:00",
+        "720",
+        "Asia/Tokyo",
+        "35",
+        "35",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "35.5222",
+        "138.764",
+        "180",
+        "0",
+        "0.1"
+      ]
+    },
+    {
+      "scene": "lake",
+      "phase": "height-10",
+      "canvas": {
+        "height": 803,
+        "position": "absolute",
+        "ready": "true",
+        "width": 1205
+      },
+      "frame": {
+        "height": 803,
+        "width": 1205
+      },
+      "height": "机位高程 ≈ 831.5 m · 离地 10 m",
+      "panels": [
+        {
+          "label": "拍摄预览",
+          "slot": "0"
+        },
+        {
+          "label": "地图",
+          "slot": "1"
+        },
+        {
+          "label": "拍摄参数",
+          "slot": "2"
+        }
+      ],
+      "readout": "方位 180.0°H 54.4°V 37.8°俯仰 0°",
+      "values": [
+        "2026-11-04T12:00",
+        "720",
+        "Asia/Tokyo",
+        "35",
+        "35",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "35.5222",
+        "138.764",
+        "180",
+        "0",
+        "10"
+      ]
+    },
+    {
+      "scene": "lake",
+      "phase": "1000-landscape",
+      "canvas": {
+        "height": 803,
+        "position": "absolute",
+        "ready": "true",
+        "width": 1205
+      },
+      "frame": {
+        "height": 803,
+        "width": 1205
+      },
+      "height": "机位高程 ≈ 831.5 m · 离地 1.6 m",
+      "panels": [
+        {
+          "label": "拍摄预览",
+          "slot": "0"
+        },
+        {
+          "label": "地图",
+          "slot": "1"
+        },
+        {
+          "label": "拍摄参数",
+          "slot": "2"
+        }
+      ],
+      "readout": "方位 180.0°H 2.1°V 1.4°俯仰 0°",
+      "values": [
+        "2026-11-04T12:00",
+        "720",
+        "Asia/Tokyo",
+        "1000",
+        "1000",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "35.5222",
+        "138.764",
+        "180",
+        "0",
+        "1.6"
+      ]
+    },
+    {
+      "scene": "plain",
+      "phase": "35-landscape",
+      "canvas": {
+        "height": 803,
+        "position": "absolute",
+        "ready": "true",
+        "width": 1205
+      },
+      "frame": {
+        "height": 803,
+        "width": 1205
+      },
+      "height": "机位高程 ≈ 24.8 m · 离地 1.6 m",
+      "panels": [
+        {
+          "label": "拍摄预览",
+          "slot": "0"
+        },
+        {
+          "label": "地图",
+          "slot": "1"
+        },
+        {
+          "label": "拍摄参数",
+          "slot": "2"
+        }
+      ],
+      "readout": "方位 90.0°H 54.4°V 37.8°俯仰 0°",
+      "values": [
+        "2026-11-04T12:00",
+        "720",
+        "Asia/Tokyo",
+        "35",
+        "35",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "36.0248",
+        "140.1854",
+        "90",
+        "0",
+        "1.6"
+      ]
+    },
+    {
+      "scene": "plain",
+      "phase": "preview-drag",
+      "canvas": {
+        "height": 803,
+        "position": "absolute",
+        "ready": "true",
+        "width": 1205
+      },
+      "frame": {
+        "height": 803,
+        "width": 1205
+      },
+      "height": "机位高程 ≈ 24.8 m · 离地 1.6 m",
+      "panels": [
+        {
+          "label": "拍摄预览",
+          "slot": "0"
+        },
+        {
+          "label": "地图",
+          "slot": "1"
+        },
+        {
+          "label": "拍摄参数",
+          "slot": "2"
+        }
+      ],
+      "readout": "方位 87.1°H 54.4°V 37.8°俯仰 +1.4674947562364744°",
+      "values": [
+        "2026-11-04T12:00",
+        "720",
+        "Asia/Tokyo",
+        "35",
+        "35",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "36.0248",
+        "140.1854",
+        "87.06693333623872",
+        "1.4674947562364744",
+        "1.6"
+      ]
+    },
+    {
+      "scene": "plain",
+      "phase": "mobile-390x844",
+      "canvas": {
+        "height": 221,
+        "position": "absolute",
+        "ready": "true",
+        "width": 332
+      },
+      "frame": {
+        "height": 221,
+        "width": 332
+      },
+      "height": "机位高程 ≈ 24.8 m · 离地 1.6 m",
+      "panels": [
+        {
+          "label": "地图",
+          "slot": "0"
+        },
+        {
+          "label": "拍摄预览",
+          "slot": "1"
+        },
+        {
+          "label": "拍摄参数",
+          "slot": "2"
+        }
+      ],
+      "readout": "方位 87.1°H 54.4°V 37.8°俯仰 +1.4674947562364744°",
+      "values": [
+        "2026-11-04T12:00",
+        "720",
+        "Asia/Tokyo",
+        "35",
+        "35",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "36.0248",
+        "140.1854",
+        "87.06693333623872",
+        "1.4674947562364744",
+        "1.6"
+      ]
+    },
+    {
+      "scene": "coverage",
+      "phase": "latitude-89",
+      "canvas": {
+        "height": 235,
+        "position": "absolute",
+        "ready": "false",
+        "width": 353
+      },
+      "frame": {
+        "height": 235,
+        "width": 353
+      },
+      "panels": [
+        {
+          "label": "地图",
+          "slot": "0"
+        },
+        {
+          "label": "拍摄预览",
+          "slot": "1"
+        },
+        {
+          "label": "拍摄参数",
+          "slot": "2"
+        }
+      ],
+      "readout": "方位 87.1°H 54.4°V 37.8°俯仰 +1.4674947562364744°",
+      "status": "当前机位超出地形约 ±85.05° 的覆盖范围。",
+      "values": [
+        "2026-11-04T12:00",
+        "720",
+        "Asia/Tokyo",
+        "35",
+        "35",
+        "full-frame",
+        "3:2",
+        "landscape",
+        "89",
+        "140.1854",
+        "87.06693333623872",
+        "1.4674947562364744",
+        "1.6"
+      ]
+    }
+  ],
+  "errorsAfterFinalFix": [],
+  "warningsAfterFinalFix": [],
+  "logCaptureLimit": "浏览器日志接口在最终修复后返回空集合；本轮 Vite 输出仍记录到 OpenFreeMap 道路盾牌过滤器的 null/number 类型警告，空集合不代表底图完全无警告。"
+}

@@ -3,6 +3,14 @@ import type { ShootingPlan } from "../domain/plan.ts";
 import { fieldOfView } from "../domain/plan.ts";
 import { isMapPosition } from "../domain/map.ts";
 
+export const terrainRenderOptions = {
+  maxZoom: 32,
+  // Photographic FOV needs a high virtual zoom at a fixed eye point. Keep
+  // vector tile IDs at the source's native limit instead of splitting towards
+  // maxZoom - 4, which can exceed MapLibre's canonical tile limit (z25).
+  zoomLevelsToOverscale: 32,
+};
+
 export function terrainCamera(plan: ShootingPlan, ground: number) {
   if (
     !isMapPosition(plan) ||
@@ -17,8 +25,14 @@ export function terrainCamera(plan: ShootingPlan, ground: number) {
     altitude,
   );
   const scale = eye.meterInMercatorCoordinateUnits() * 20;
+  // At exactly horizontal pitch the SDK's terrain LOD heuristic can divide
+  // 0 by 0 for the tile containing the eye and recurse beyond its tile limit.
+  // Stay within 1e-7 degree of the requested horizon, below calibration tolerance.
+  const renderPitch = Math.abs(plan.pitch) < 1e-7
+    ? (plan.pitch < 0 ? -1e-7 : 1e-7)
+    : plan.pitch;
   const heading = (plan.azimuth * Math.PI) / 180,
-    pitch = (plan.pitch * Math.PI) / 180;
+    pitch = (renderPitch * Math.PI) / 180;
   const target = new MercatorCoordinate(
     eye.x + Math.sin(heading) * Math.cos(pitch) * scale,
     eye.y - Math.cos(heading) * Math.cos(pitch) * scale,
@@ -31,7 +45,7 @@ export function terrainCamera(plan: ShootingPlan, ground: number) {
     target: targetPoint,
     targetAltitude: target.toAltitude(),
     bearing: plan.azimuth,
-    pitch: 90 + plan.pitch,
+    pitch: 90 + renderPitch,
     verticalFov: fieldOfView(plan).vertical,
   };
 }
