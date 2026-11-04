@@ -794,6 +794,25 @@ test("时间驱动环境并合并连续更新，切换时区不重绘，布局�
   assert.deepEqual(moved.environments.at(-1), night);
 });
 
+test("月光随日期变化，隐藏月亮保留环境及夜间参考，不重建相机或读取 DEM", async (t) => {
+  await workspace(t);const map=await readyTerrain();
+  const time=document.querySelector('input[type="datetime-local"]');
+  await settle(()=>setControl(time,'2026-11-09T00:00'));
+  const dark=structuredClone(map.environments.at(-1));
+  const poses=map.cameraSolutions.length,requests=groundRequests.length;
+  await settle(()=>setControl(time,'2026-11-25T00:00'));
+  const lit=structuredClone(map.environments.at(-1));
+  assert.notDeepEqual(lit,dark);
+  const writes=map.environments.length;
+  assert.ok(document.querySelector('.preview-moonlight').textContent.includes('100%'));
+  await settle(()=>document.querySelector('input[aria-label="显示月亮"]').click());
+  assert.equal(map.environments.length,writes);
+  assert.deepEqual(map.environments.at(-1),lit);
+  assert.ok(document.querySelector('[data-body-status="moon"]').textContent.includes('已关闭'));
+  assert.ok(document.querySelector('.preview-moonlight').textContent.includes('100%'));
+  assert.equal(map.cameraSolutions.length,poses);assert.equal(groundRequests.length,requests);
+});
+
 test("日月开关、主动朝向与状态联动，关闭太阳不改变光照、机位或镜头", async (t) => {
   const style = document.createElement("style");
   style.textContent = readFileSync(new URL("../src/styles.css", import.meta.url), "utf8");
@@ -829,6 +848,39 @@ test("日月开关、主动朝向与状态联动，关闭太阳不改变光照�
   await settle(() => setControl(slider, 1020));
   assert.ok(document.querySelector('[data-body-status="moon"]').textContent.includes("地平线下"));
   assert.equal(document.querySelector('button[aria-label="朝向月亮"]').disabled, true);
+});
+
+test("画外日月显示各自箭头，关闭或朝向入画后消失，地平线下不显示",async(t)=>{
+  await workspace(t);const map=await readyTerrain();
+  const slider=document.querySelector('input[aria-label="24 小时时间滑杆"]');
+  await settle(()=>setControl(slider,720));
+  assert.equal(document.querySelectorAll('[data-body-direction]').length,2);
+  assert.ok(document.querySelector('[data-body-direction="sun"]').getAttribute('aria-label').includes('左上方'));
+  const fields=['经度','纬度','焦距','相机离地高度'].map(value),requests=groundRequests.length;
+  const environment=structuredClone(map.environments.at(-1));
+  await settle(()=>document.querySelector('input[aria-label="显示月亮"]').click());
+  assert.equal(document.querySelector('[data-body-direction="moon"]'),null);
+  await settle(()=>document.querySelector('button[aria-label="朝向太阳"]').click());
+  assert.equal(document.querySelector('[data-body-direction="sun"]'),null);
+  assert.ok(document.querySelector('[data-celestial-body="sun"]'));
+  assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);
+  assert.equal(groundRequests.length,requests);assert.deepEqual(map.environments.at(-1),environment);
+  await settle(()=>setControl(slider,1020));
+  assert.equal(document.querySelectorAll('[data-body-direction]').length,0);
+});
+
+test("靠近日月的箭头并排，实际相机反馈决定画外方向而不改计划",async(t)=>{
+  await workspace(t);const map=await readyTerrain();
+  await settle(()=>setControl(document.querySelector('input[type="datetime-local"]'),'2026-11-09T12:00'));
+  const groups=document.querySelectorAll('.celestial-direction-group');
+  assert.equal(groups.length,1);assert.equal(groups[0].querySelectorAll('[data-body-direction]').length,2);
+  const layer=map.customLayers.find(layer=>layer instanceof TestCelestialLayer);
+  const before=['方位角','俯仰角'].map(value);
+  const previous=document.querySelector('[data-body-direction="sun"] svg').style.transform;
+  await settle(()=>layer.onCamera({planKey:layer.frame.planKey,longitude:value('经度'),latitude:value('纬度'),altitude:982.1,azimuth:0,pitch:0}));
+  assert.deepEqual(['方位角','俯仰角'].map(value),before);
+  assert.ok(document.querySelector('[data-body-direction="sun"]').getAttribute('aria-label').includes('后方'));
+  assert.notEqual(document.querySelector('[data-body-direction="sun"] svg').style.transform,previous);
 });
 
 test("折射修改只更新日月轮廓，地形更新使遮挡失效，重建释放旧深度图层", async (t) => {

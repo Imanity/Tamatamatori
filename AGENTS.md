@@ -12,9 +12,11 @@ Tamatamatori 是摄影规划 Web App。用户通过地图确定机位与拍摄�
 
 地形预览验收与相机校准的固定场景和既有执行结果见 [验收记录](docs/plan/terrain-validation.md)。合成高程、SDK CPU 数值验证和真实 GPU 画面验收分别记录；浏览器连接不可用时不得把画面待验项标记为通过。
 
-地形、时间天空、日月与实际相机姿态已有基础验收；既有校准见[相机校准](docs/plan/camera-calibration.md)、[远山 DEM 验收](docs/plan/terrain-detail.md)及[曲率对照](docs/plan/curvature-validation.md)。按用户要求，本轮直接修正实际地形的空间投影，使地形、水体、相机和日月共享一致的方向与深度，达到能继续接入其他天体的基础，见[空间投影修正](docs/plan/terrain-perspective.md)。允许扩展已固定 SDK 的安装补丁，必须校验源码与 ESM 签名、保持幂等、测试原始地图未受影响；应用不读取 SDK 运行时私有字段。高程数据仍沿用同源数值，未知基准见[核查记录](docs/plan/elevation-datum-audit.md)，不自动套 geoid 常数，不把几何误差修正宣称为实景精度校准。独立计算、SDK 数值和真实 GPU 分开验收；开发诊断不进入正常流程。
+地形、时间天空、日月与实际相机姿态已有基础验收；既有校准见[相机校准](docs/plan/camera-calibration.md)、[远山 DEM 验收](docs/plan/terrain-detail.md)及[曲率对照](docs/plan/curvature-validation.md)。既有空间投影修正已使地形、水体、相机和日月共享一致的方向与深度，提供继续接入其他天体的基础，见[空间投影修正](docs/plan/terrain-perspective.md)。允许扩展已固定 SDK 的安装补丁，必须校验源码与 ESM 签名、保持幂等、测试原始地图未受影响；应用不读取 SDK 运行时私有字段。高程数据仍沿用同源数值，未知基准见[核查记录](docs/plan/elevation-datum-audit.md)，不自动套 geoid 常数，不把几何误差修正宣称为实景精度校准。独立计算、SDK 数值和真实 GPU 分开验收；开发诊断不进入正常流程。
 
 ## 小步推进
+
+夜间构图明度与月光环境已加入，验证见[时间天空验收](docs/plan/time-sky-validation.md)。当前小目标为日月画外方向提示：图层开启、圆盘仍在参考地平线上且完全位于视场外时，在取景框边缘显示方向箭头；使用实际相机与现有折射约定，处理背后方向、双目标重合和横竖幅。不扩展星历、天气或真实可见性计算；验证见[日月验收](docs/plan/sun-moon-validation.md)。
 
 1. 每轮只围绕一个主要目标，优先形成一个可演示或可验证的闭环；阶段不是一次实现的任务包。
 2. 开始前明确本轮范围、暂不处理的内容和验收方式；直接执行已经授权的工作，不为常规可逆操作反复请求确认。

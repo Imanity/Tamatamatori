@@ -1,0 +1,241 @@
+{
+  "url": "http://127.0.0.1:5173/",
+  "recordedAt": "2026-11-04T21:00:34.865Z",
+  "checks": [
+    {
+      "arrows": [
+        {
+          "angle": "rotate(-137.81deg)",
+          "behind": "false",
+          "id": "sun",
+          "inside": true,
+          "label": "太阳在画面左上方，视场外方向参考",
+          "rect": {
+            "height": 24,
+            "width": 52,
+            "x": 126.3125,
+            "y": 72.453125
+          },
+          "visible": "visible"
+        },
+        {
+          "angle": "rotate(-55.075deg)",
+          "behind": "false",
+          "id": "moon",
+          "inside": true,
+          "label": "月亮在画面右上方，视场外方向参考",
+          "rect": {
+            "height": 24,
+            "width": 52,
+            "x": 817.921875,
+            "y": 72.453125
+          },
+          "visible": "visible"
+        }
+      ],
+      "date": "2026-11-04T12:00",
+      "frame": {
+        "height": 767.8125,
+        "width": 1151.734375
+      },
+      "overlap": false,
+      "readout": "方位 247.0°H 54.4°V 37.8°俯仰 +4.0°",
+      "ready": "true"
+    },
+    {
+      "arrows": [
+        {
+          "angle": "rotate(-7.43916deg)",
+          "behind": "false",
+          "id": "moon",
+          "inside": true,
+          "label": "月亮在画面右方，视场外方向参考",
+          "rect": {
+            "height": 24,
+            "width": 52,
+            "x": 1069.734375,
+            "y": 296.703125
+          },
+          "visible": "visible"
+        }
+      ],
+      "date": "2026-11-04T12:00",
+      "frame": {
+        "height": 767.8125,
+        "width": 1151.734375
+      },
+      "overlap": false,
+      "readout": "方位 189.9°H 54.4°V 37.8°俯仰 +38.7°",
+      "ready": "true"
+    },
+    {
+      "arrows": [
+        {
+          "angle": "rotate(-102.089deg)",
+          "behind": "true",
+          "id": "sun",
+          "inside": true,
+          "label": "太阳在画面上方（相机后方），视场外方向参考",
+          "rect": {
+            "height": 31.59375,
+            "width": 52,
+            "x": 467.625,
+            "y": 68.65625
+          },
+          "visible": "visible"
+        },
+        {
+          "angle": "rotate(-157.129deg)",
+          "behind": "true",
+          "id": "moon",
+          "inside": true,
+          "label": "月亮在画面左上方（相机后方），视场外方向参考",
+          "rect": {
+            "height": 31.59375,
+            "width": 52,
+            "x": 30,
+            "y": 125.1875
+          },
+          "visible": "visible"
+        }
+      ],
+      "date": "2026-11-04T12:00",
+      "frame": {
+        "height": 767.8125,
+        "width": 1151.734375
+      },
+      "overlap": false,
+      "readout": "方位 0.0°H 54.4°V 37.8°俯仰 +0.0°",
+      "ready": "true"
+    },
+    {
+      "arrows": [
+        {
+          "angle": "rotate(-139.478deg)",
+          "behind": "false",
+          "id": "sun",
+          "inside": true,
+          "label": "太阳在画面左上方，视场外方向参考",
+          "rect": {
+            "height": 24,
+            "width": 52,
+            "x": 27.9375,
+            "y": 72.453125
+          },
+          "visible": "visible"
+        },
+        {
+          "angle": "rotate(-144.524deg)",
+          "behind": "false",
+          "id": "moon",
+          "inside": true,
+          "label": "月亮在画面左上方，视场外方向参考",
+          "rect": {
+            "height": 24,
+            "width": 52,
+            "x": 83.9375,
+            "y": 72.453125
+          },
+          "visible": "visible"
+        }
+      ],
+      "date": "2026-11-09T12:00",
+      "frame": {
+        "height": 767.8125,
+        "width": 1151.734375
+      },
+      "overlap": false,
+      "readout": "方位 247.0°H 54.4°V 37.8°俯仰 +4.0°",
+      "ready": "true"
+    },
+    {
+      "arrows": [],
+      "date": "2026-11-09T12:00",
+      "frame": {
+        "height": 767.8125,
+        "width": 1151.734375
+      },
+      "overlap": false,
+      "readout": "方位 247.0°H 132.1°V 112.6°俯仰 +3.7°",
+      "ready": "true"
+    },
+    {
+      "arrows": [
+        {
+          "angle": "rotate(-139.478deg)",
+          "behind": "false",
+          "id": "sun",
+          "inside": true,
+          "label": "太阳在画面左上方，视场外方向参考",
+          "rect": {
+            "height": 20,
+            "width": 43,
+            "x": 11.046875,
+            "y": 32
+          },
+          "visible": "visible"
+        },
+        {
+          "angle": "rotate(-144.524deg)",
+          "behind": "false",
+          "id": "moon",
+          "inside": true,
+          "label": "月亮在画面左上方，视场外方向参考",
+          "rect": {
+            "height": 20,
+            "width": 43,
+            "x": 58.046875,
+            "y": 32
+          },
+          "visible": "visible"
+        }
+      ],
+      "date": "2026-11-09T12:00",
+      "frame": {
+        "height": 168.140625,
+        "width": 112.09375
+      },
+      "overlap": false,
+      "readout": "方位 247.0°H 1.4°V 2.1°俯仰 +4.0°",
+      "ready": "true"
+    },
+    {
+      "arrows": [
+        {
+          "angle": "rotate(-139.478deg)",
+          "behind": "false",
+          "id": "sun",
+          "inside": true,
+          "label": "太阳在画面左上方，视场外方向参考",
+          "rect": {
+            "height": 20,
+            "width": 43,
+            "x": 35.875,
+            "y": 32
+          },
+          "visible": "visible"
+        }
+      ],
+      "date": "2026-11-09T12:00",
+      "frame": {
+        "height": 172.140625,
+        "width": 114.765625
+      },
+      "overlap": false,
+      "readout": "方位 247.0°H 1.4°V 2.1°俯仰 +4.0°",
+      "ready": "true"
+    },
+    {
+      "arrows": [],
+      "date": "2026-11-09T17:00",
+      "frame": {
+        "height": 168.140625,
+        "width": 112.09375
+      },
+      "overlap": false,
+      "readout": "方位 247.0°H 1.4°V 2.1°俯仰 +4.0°",
+      "ready": "true"
+    }
+  ],
+  "consoleErrors": []
+}

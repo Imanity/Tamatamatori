@@ -85,9 +85,11 @@
   line-height: 1.6;
   text-align: center;
 }
+.preview-moonlight { display: block; color: #748196; }
 .celestial-discs { overflow: hidden; }
 .viewfinder:has(.terrain-canvas[data-ready="false"]) .celestial-discs,
-.viewfinder:has(.terrain-canvas[data-ready="false"]) .celestial-label { visibility: hidden; }
+.viewfinder:has(.terrain-canvas[data-ready="false"]) .celestial-label,
+.viewfinder:has(.terrain-canvas[data-ready="false"]) .celestial-direction-group { visibility: hidden; }
 .celestial-label {
   position: absolute;
   transform: translate(-50%, -100%);
@@ -98,6 +100,25 @@
   line-height: 1.3;
 }
 .celestial-label small { display: block; font-size: 7px; color: #f1eed9; }
+.celestial-directions { position: absolute; inset: 0; pointer-events: none; }
+.celestial-direction-group {
+  position: absolute; transform: translate(-50%,-50%); z-index: 2;
+  display: flex; gap: 4px; pointer-events: none;
+}
+.celestial-direction {
+  display: flex; align-items: center; gap: 4px; padding: 4px 6px;
+  border: 1px solid #e3d6b56b; border-radius: 5px; background: #172633d9;
+  color: #ffe0a4; font-size: 10px; line-height: 1.2; white-space: nowrap;
+}
+.celestial-direction-moon { color: #dbe7ff; border-color: #b7ccea70; }
+.celestial-direction small { display: block; font-size: 8px; opacity: 0.8; }
+.celestial-direction-arrow { flex: 0 0 14px; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+@container (max-width: 440px) or (max-height: 330px) {
+  .celestial-directions { display: flex; justify-content: center; align-items: flex-start; gap: 4px; padding: 32px 6px 0; }
+  .celestial-direction-group { position: static; transform: none; flex-wrap: wrap; justify-content: center; }
+  .celestial-direction { gap: 3px; padding: 3px 4px; font-size: 9px; }
+  .celestial-direction-arrow { flex-basis: 12px; width: 12px; height: 12px; }
+}
 .celestial-readout {
   flex-shrink: 0;
   margin-top: 7px;

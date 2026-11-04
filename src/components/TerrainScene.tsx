@@ -10,8 +10,7 @@ import {
   terrainStyle,
 } from "../domain/terrain";
 import type { terrainCamera } from "../preview/camera";
-import { solarPosition } from "../domain/solar";
-import { applyEnvironment, environmentForSun } from "../preview/environment";
+import { applyEnvironment, environmentForSky } from "../preview/environment";
 import type { CelestialLayer } from "../preview/celestial-layer";
 import { celestialBodies } from "../domain/ephemeris";
 import { bodyPolygons } from "../domain/celestial-projection";
@@ -218,7 +217,8 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
         }
         const environmentKey = `${current.key}/${current.plan.instant}`;
         if (environmentKey !== lastEnvironment) {
-          applyEnvironment(map, environmentForSun(solarPosition(current.plan)));
+          const { sun, moon } = celestialBodies(current.plan);
+          applyEnvironment(map, environmentForSky(sun, moon));
           lastEnvironment = environmentKey;
         }
         const rendered = map.queryTerrainElevation([

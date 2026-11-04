@@ -11,6 +11,7 @@ import type { MapViewport } from "./domain/map";
 
 type PanelId = "map" | "preview" | "parameters";
 const defaultPanels: PanelId[] = ["map", "preview", "parameters"];
+const defaultUpperHeight = (100 * 2) / 3;
 const panelInfo: Record<
   PanelId,
   { title: string; icon: IconName; tag: string }
@@ -207,7 +208,7 @@ export default function App() {
   const [plan, setPlan] = useState<ShootingPlan>(initialPlan);
   const [panels, setPanels] = useState(defaultPanels);
   const [mainWidth, setMainWidth] = useState(65);
-  const [upperHeight, setUpperHeight] = useState(43);
+  const [upperHeight, setUpperHeight] = useState(defaultUpperHeight);
   const [resizing, setResizing] = useState(false);
   const [dragging, setDragging] = useState<PanelId | null>(null);
   const [mobilePanel, setMobilePanel] = useState<PanelId>("map");
@@ -363,7 +364,7 @@ export default function App() {
                 onClick={() => {
                   setPanels(defaultPanels);
                   setMainWidth(65);
-                  setUpperHeight(43);
+                  setUpperHeight(defaultUpperHeight);
                   setAnnouncement("已恢复默认布局，拍摄参数保持不变。");
                 }}
               >

@@ -1,0 +1,73 @@
+{
+  "url": "http://127.0.0.1:4173/",
+  "recordedAt": "2026-11-04T20:44:42.303Z",
+  "checks": [
+    {
+      "canvas": {
+        "height": 752,
+        "ready": "true",
+        "width": 1128
+      },
+      "date": "2026-11-25T00:00",
+      "feedback": null,
+      "lighting": "夜间 · 太阳几何高度 -73.9°月光参考 · 亮面 100% · 几何高度 +77.6°",
+      "readout": "方位 247.0°H 54.4°V 37.8°俯仰 +4.0°"
+    },
+    {
+      "canvas": {
+        "height": 752,
+        "ready": "true",
+        "width": 1128
+      },
+      "date": "2026-11-09T00:00",
+      "feedback": null,
+      "lighting": "夜间 · 太阳几何高度 -70.0°月光参考 · 亮面 1% · 几何高度 -67.9°"
+    },
+    {
+      "canvas": {
+        "height": 752,
+        "ready": "true",
+        "width": 1128
+      },
+      "date": "2026-11-17T19:00",
+      "feedback": null,
+      "lighting": "夜间 · 太阳几何高度 -29.0°月光参考 · 亮面 49% · 几何高度 +37.2°"
+    },
+    {
+      "canvas": {
+        "height": 752,
+        "ready": "true",
+        "width": 1128
+      },
+      "date": "2026-11-25T04:30",
+      "feedback": null,
+      "lighting": "夜间 · 太阳几何高度 -24.0°月光参考 · 亮面 100% · 几何高度 +27.2°"
+    },
+    {
+      "canvas": {
+        "height": 756,
+        "ready": "true",
+        "width": 1134
+      },
+      "date": "2026-11-25T00:00",
+      "lighting": "夜间 · 太阳几何高度 -73.9°月光参考 · 亮面 100% · 几何高度 +77.6°",
+      "moon": "月亮已关闭"
+    },
+    {
+      "date": "2026-11-24T15:00",
+      "lighting": "夜间 · 太阳几何高度 -73.9°月光参考 · 亮面 100% · 几何高度 +77.6°",
+      "moon": "月亮已关闭"
+    },
+    {
+      "canvas": {
+        "height": 156,
+        "ready": "true",
+        "width": 234
+      },
+      "feedback": null,
+      "layout": "default",
+      "lighting": "夜间 · 太阳几何高度 -73.9°月光参考 · 亮面 100% · 几何高度 +77.6°"
+    }
+  ],
+  "consoleErrors": []
+}

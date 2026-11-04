@@ -40,9 +40,11 @@ P2 才是基础最小可用版本；P1 用于验证操作和技术路线，不�
 
 P1 已建立工作区、可调布局、地图手势和统一参数。P2 沿用独立 MapLibre 实例，接入 Mapterhorn DEM、OpenFreeMap 水体边界与固定机位相机；离地高度、焦距和横竖幅参与实际渲染。水面高度暂按 DEM 近似，尚未校准独立水位。既有 Chrome 地形与昼夜检查见[地形验收](terrain-validation.md)与[时间天空验收](time-sky-validation.md)。
 
-日月圆盘、月相近似、独立开关和主动朝向已接入，基础星历见[日月验收](sun-moon-validation.md)，遮挡与折射见[相关验收](occlusion-refraction-validation.md)。[相机校准](camera-calibration.md)修复近地避让后的日月及读数联动；[远山 DEM 验收](terrain-detail.md)统一下载和网格细节策略，在固定长焦场景中恢复原生 z12 采样一致性。后续[曲率对照](curvature-validation.md)建立独立椭球方向基准并完成 Chrome 模型差异检查；当前 95 项自动检查及构建通过，本轮隔离全新安装与补丁幂等检查通过，尚未完成实景山脊精度验收。[高程基准核查](elevation-datum-audit.md)已结束，现有证据不足以启用正式转换；[空间投影修正](terrain-perspective.md)已将实际网格修正和水体/日月共享深度接入默认预览；下一小步可以接入银河，真实网络恢复仍保留待办；不将 P2 或 P3 整体标记完成。
+日月圆盘、月相近似、独立开关和主动朝向已接入，基础星历见[日月验收](sun-moon-validation.md)，遮挡与折射见[相关验收](occlusion-refraction-validation.md)。[相机校准](camera-calibration.md)修复近地避让后的日月及读数联动；[远山 DEM 验收](terrain-detail.md)统一下载和网格细节策略，在固定长焦场景中恢复原生 z12 采样一致性。后续[曲率对照](curvature-validation.md)建立独立椭球方向基准并完成 Chrome 模型差异检查；既有自动检查及构建通过，本轮隔离全新安装与补丁幂等检查通过，尚未完成实景山脊精度验收。[高程基准核查](elevation-datum-audit.md)已结束，现有证据不足以启用正式转换；[空间投影修正](terrain-perspective.md)已将实际网格修正和水体/日月共享深度接入默认预览；下一小步可以接入银河，真实网络恢复仍保留待办；不将 P2 或 P3 整体标记完成。
 
 ## 4. 基础版验收场景
+
+夜间构图明度与月相/高度驱动的环境效果已验证，见[时间天空验收](time-sky-validation.md#2026-11-05夜间构图明度与月光)。当前先补齐日月画外方向提示，验证见[日月验收](sun-moon-validation.md#2026-11-05日月画外方向提示)，再继续银河位置与轮廓的小目标。
 
 这些是完整基础版的验收方向，当前已接入基础地形、静态水体及随时间变化的晴空近似：
 

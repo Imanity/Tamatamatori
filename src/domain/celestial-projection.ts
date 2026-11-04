@@ -24,6 +24,22 @@ export function projectDirection(plan: View, ray: Vector3) {
   return { x: dot(ray, basis.right) / (depth * basis.tx), y: -dot(ray, basis.up) / (depth * basis.ty) };
 }
 
+/** Camera-plane bearing to an off-screen target, including targets behind us. */
+export function frameEdgeDirection(plan: View, ray: Vector3) {
+  const basis = cameraBasis(plan), depth = dot(ray,basis.forward);
+  let right = dot(ray,basis.right), down = -dot(ray,basis.up);
+  if (![depth,right,down].every(Number.isFinite) || Math.hypot(...ray)<1e-12) return null;
+  // At the exact antipode every turning plane is valid; choose a stable side.
+  const antipode = Math.hypot(right,down)<1e-9;
+  if (antipode) { right=1; down=0; }
+  const x=right/basis.tx,y=down/basis.ty,extent=Math.max(Math.abs(x),Math.abs(y));
+  const angle=Math.atan2(down,right)/degrees;
+  const labels=["右方","右下方","下方","左下方","左方","左上方","上方","右上方"];
+  const behind=depth < -1e-9;
+  return {x:x/extent,y:y/extent,angle,behind,
+    label:antipode&&behind?"后方":labels[(Math.round(angle/45)+8)%8]};
+}
+
 // Clip in 3D before dividing by depth: safe at the horizon and camera plane.
 function clipPolygon(points: Vector3[], plane: (point: Vector3) => number) {
   const output: Vector3[] = [];
@@ -88,7 +104,9 @@ export function bodyPolygons(plan: View, body: SkyBody) {
   const state = apparentElevation(Math.min(90, body.elevation + body.angularRadius), plan.refraction) <= 0
     ? "地平线下"
     : outline.length < 3 ? "视场外" : "画面内";
-  return { outline, illuminated, centre: projectDirection(plan, refractDirection(body.direction, plan.refraction)), state, visualElevation };
+  const ray = refractDirection(body.direction, plan.refraction);
+  return { outline, illuminated, centre: projectDirection(plan, ray), state, visualElevation,
+    indicator: state === "视场外" ? frameEdgeDirection(plan,ray) : null };
 }
 
 export function polygonPath(points: { x: number; y: number }[]) {

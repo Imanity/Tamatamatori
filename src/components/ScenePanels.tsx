@@ -225,9 +225,13 @@ export function PreviewPanel({
       </div>
       <p className="preview-lighting" aria-label="预览光照状态">
         {daylightPhase(sun.elevation)} · 太阳几何高度 {sun.elevation > 0 ? "+" : ""}{sun.elevation.toFixed(1)}°
+        {sun.elevation < -6 && celestialScene.bodies && <span className="preview-moonlight">
+          月光参考 · 亮面 {(celestialScene.bodies.moon.illuminatedFraction * 100).toFixed(0)}% · 几何高度{" "}
+          {celestialScene.bodies.moon.elevation > 0 ? "+" : ""}{celestialScene.bodies.moon.elevation.toFixed(1)}°
+        </span>}
       </p>
       <CelestialReadout scene={celestialScene} plan={plan} update={update} />
-      <p className="preview-note">晴空近似 · 不含天气与曝光 · 水面高程按 DEM 近似</p>
+      <p className="preview-note">晴空与月光近似 · 不含天气与曝光 · 水面高程按 DEM 近似</p>
       <div className="preview-attribution">
         <a href="https://github.com/cosinekitty/astronomy" target="_blank" rel="noreferrer">Astronomy Engine</a>
         <a href={`${import.meta.env.BASE_URL}third-party-notices.txt`} target="_blank" rel="noreferrer">第三方许可</a>

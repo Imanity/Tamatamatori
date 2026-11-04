@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { celestialBodies, direction, moonPhaseLabel, sunPosition } from "../src/domain/ephemeris.ts";
-import { bodyPolygons, projectDirection } from "../src/domain/celestial-projection.ts";
+import { bodyPolygons, projectDirection, frameEdgeDirection } from "../src/domain/celestial-projection.ts";
 import { initialPlan as defaultPlan, fieldOfView, signedAngle } from "../src/domain/plan.ts";
 const initialPlan = { ...defaultPlan, refraction: "none" };
 
@@ -70,6 +70,53 @@ test("针孔投影处理正前方、真北接缝、背面与天顶，不分离�
   assert.equal(projectDirection(plan, direction(179, -20)), null);
   const tilted = projectDirection({ ...plan, pitch: 70 }, direction(30, 70));
   assert.ok(tilted.y < 0, "same geographic altitude is not a straight image row at large pitch");
+});
+
+test("画外方向覆盖四边与后方，经过相机侧面不反向，精确反向保持确定",()=>{
+  const plan={...initialPlan,azimuth:0,pitch:0};
+  const right=frameEdgeDirection(plan,direction(60,10)),left=frameEdgeDirection(plan,direction(300,10));
+  assert.equal(right.x,1);assert.ok(right.y<0);assert.equal(left.x,-1);assert.ok(left.y<0);
+  const up=frameEdgeDirection({...plan,pitch:45},direction(0,85));
+  const down=frameEdgeDirection({...plan,pitch:45},direction(0,5));
+  close(up.x,0);assert.equal(up.y,-1);close(down.x,0);assert.equal(down.y,1);
+  for(const azimuth of [89.99,90,90.01,130]){
+    const edge=frameEdgeDirection(plan,direction(azimuth,10));
+    assert.ok(edge.x>0,'target stays on the right after passing camera plane');
+    assert.equal(edge.behind,azimuth>90);
+    close(Math.max(Math.abs(edge.x),Math.abs(edge.y)),1);
+  }
+  const antipode=frameEdgeDirection(plan,direction(180,0));
+  assert.equal(antipode.x,1);assert.equal(antipode.y,0);assert.equal(antipode.label,'后方');assert.equal(antipode.behind,true);
+  assert.equal(frameEdgeDirection(plan,[0,0,0]),null);assert.equal(frameEdgeDirection(plan,[NaN,0,1]),null);
+});
+
+test("画外箭头在横竖幅与焦距变化中保持相机平面角度，跨真北和天顶有效",()=>{
+  const angle=Math.atan2(-Math.sin(Math.PI/3),Math.sin(Math.PI/3)*Math.cos(Math.PI/3))*180/Math.PI;
+  for(const orientation of ['landscape','portrait'])for(const focalLength of [8,35,200,1000]){
+    const plan={...initialPlan,azimuth:0,pitch:0,orientation,focalLength};
+    const edge=frameEdgeDirection(plan,direction(60,60));
+    close(edge.angle,angle);assert.ok(edge.x>0&&edge.y<0);
+    const fov=fieldOfView(plan);
+    const physical=Math.atan2(edge.y*Math.tan(fov.vertical*Math.PI/360),edge.x*Math.tan(fov.horizontal*Math.PI/360))*180/Math.PI;
+    close(physical,angle);
+  }
+  assert.ok(frameEdgeDirection({...initialPlan,azimuth:359,pitch:20},direction(1,20)).x>0);
+  for(const pitch of [-90,90]){
+    const edge=frameEdgeDirection({...initialPlan,pitch},direction(20,50));
+    assert.ok([edge.x,edge.y,edge.angle].every(Number.isFinite));
+  }
+});
+
+test("仅完全出画且地平线上圆盘提供方向，部分入画与参考折射沿用原判据",()=>{
+  const plan={...initialPlan,azimuth:0,pitch:0};
+  const edge=fieldOfView(plan).horizontal/2;
+  assert.equal(bodyPolygons(plan,disc(edge+0.1,2)).indicator,null);
+  assert.ok(bodyPolygons(plan,disc(edge+1,2)).indicator);
+  assert.equal(bodyPolygons(plan,disc(180,-2)).indicator,null);
+  const below=disc(180,-0.4);
+  assert.equal(bodyPolygons(plan,below).state,'地平线下');
+  const refracted=bodyPolygons({...plan,refraction:'standard'},below);
+  assert.equal(refracted.state,'视场外');assert.equal(refracted.indicator.behind,true);
 });
 
 test("圆盘角尺寸随焦距和画幅投影，像素圆盘不被最小显示尺寸放大", () => {

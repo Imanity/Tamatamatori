@@ -21,12 +21,31 @@ const name = (id: "sun" | "moon") => id === "sun" ? "太阳" : "月亮";
 
 export function CelestialDiscs({ scene }: { scene: CelestialScene }) {
   const visible = scene.views.filter((view) => view.enabled && view.state === "画面内" && (view.occlusion === "clear" || view.occlusion === "partial"));
+  const outside = scene.views.filter(view=>view.enabled&&view.indicator);
+  // At conjunction keep both names readable instead of drawing overlapping pills.
+  const close = outside.length===2 && Math.hypot(outside[0].indicator!.x-outside[1].indicator!.x,
+    outside[0].indicator!.y-outside[1].indicator!.y)<0.6;
+  const groups = close ? [outside] : outside.map(view=>[view]);
   return <>
     {visible.map(({ body, centre, outline }) => centre && <span key={body.id} className="celestial-label"
       data-celestial-body={body.id}
       style={{ left: `${Math.max(5, Math.min(95, (centre.x + 1) * 50))}%`, top: `calc(${Math.max(7, Math.min(90, (Math.min(...outline.map((p) => p.y)) + 1) * 50))}% - 4px)` }}>
       {name(body.id)}<small>构图辅助</small>
     </span>)}
+    <div className="celestial-directions">{groups.map(group=>{
+      const x=group.reduce((sum,v)=>sum+v.indicator!.x,0)/group.length;
+      const y=group.reduce((sum,v)=>sum+v.indicator!.y,0)/group.length;
+      return <div className="celestial-direction-group" key={group.map(v=>v.body.id).join('-')}
+        style={{left:`clamp(56px, ${(x+1)*50}%, calc(100% - 56px))`,top:`clamp(max(48px, 11%), ${(y+1)*50}%, calc(100% - 52px))`}}>
+        {group.map(({body,indicator})=><span key={body.id} className={`celestial-direction celestial-direction-${body.id}`}
+          data-body-direction={body.id} data-behind={indicator!.behind}
+          role="img" aria-label={`${name(body.id)}在画面${indicator!.label}${indicator!.behind&&indicator!.label!=="后方"?"（相机后方）":""}，视场外方向参考`}>
+          <svg className="celestial-direction-arrow" viewBox="0 0 16 16" aria-hidden="true"
+            style={{transform:`rotate(${indicator!.angle}deg)`}}><path d="M2 8h11M8 3l5 5-5 5" /></svg>
+          <span>{name(body.id)}{indicator!.behind&&<small>后方</small>}</span>
+        </span>)}
+      </div>;
+    })}</div>
   </>;
 }
 
