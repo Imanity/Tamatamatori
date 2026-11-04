@@ -332,7 +332,7 @@ export default function App() {
               <br />
               WITH A PLACE.
             </span>
-            <p>下一步 · 验证时间天空</p>
+            <p>随时间 · 观察光线变化</p>
           </div>
         </aside>
         <main className="main-content">

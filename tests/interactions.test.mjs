@@ -28,6 +28,8 @@ class TestMap extends Events {
   transitions = [];
   cameraSolutions = [];
   cameraViews = [];
+  environments = [];
+  paint = new Map();
   resizes = 0;
   renderedHeight = 0;
   constructor(options) {
@@ -86,6 +88,12 @@ class TestMap extends Events {
   }
   setVerticalFieldOfView(value) {
     this.verticalFov = value;
+  }
+  setSky(value) {
+    this.environments.push(structuredClone(value));
+  }
+  setPaintProperty(layer, property, value) {
+    this.paint.set(`${layer}/${property}`, structuredClone(value));
   }
   calculateCameraOptionsFromTo(eye, altitude, target, targetAltitude) {
     this.cameraSolutions.push({ eye, altitude, target, targetAltitude });
@@ -728,6 +736,36 @@ test("地形相机随高度、方向和横竖幅更新，镜头或时间编辑�
   );
   assert.equal(map.cameraSolutions.length, cameraUpdates);
   assert.equal(groundRequests.length, requests);
+});
+
+test("时间驱动环境并合并连续更新，切换时区不重绘，布局重建保留最新夜景", async (t) => {
+  await workspace(t);
+  const map = await readyTerrain();
+  const slider = document.querySelector('input[aria-label="24 小时时间滑杆"]');
+  await settle(() => setControl(slider, 720));
+  const day = map.environments.at(-1);
+  const poses = map.cameraSolutions.length, requests = groundRequests.length;
+  const fields = ["经度", "纬度", "方位角", "俯仰角", "焦距", "相机离地高度"].map(value);
+  const writes = map.environments.length;
+  await settle(() => {
+    setControl(slider, 1020);
+    setControl(slider, 0);
+  });
+  const night = map.environments.at(-1);
+  assert.notDeepEqual(night, day);
+  assert.equal(map.environments.length, writes + 1);
+  assert.equal(map.paint.get("preview-shading/hillshade-exaggeration"), 0);
+  assert.ok(document.querySelector(".preview-lighting").textContent.includes("夜间"));
+  assert.equal(map.cameraSolutions.length, poses);
+  assert.equal(groundRequests.length, requests);
+  const zone = [...document.querySelectorAll("select")].find((element) => element.value === "Asia/Tokyo");
+  await settle(() => setControl(zone, "America/New_York"));
+  assert.equal(map.environments.length, writes + 1);
+  assert.deepEqual(["经度", "纬度", "方位角", "俯仰角", "焦距", "相机离地高度"].map(value), fields);
+  await settle(() => setControl(document.querySelector('select[aria-label="拍摄预览面板位置"]'), 0));
+  const moved = await readyTerrain();
+  assert.equal(map.removed, true);
+  assert.deepEqual(moved.environments.at(-1), night);
 });
 
 test("地形高程失败允许重试，并释放旧预览实例、保留拍摄计划", async (t) => {

@@ -77,3 +77,11 @@
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+.preview-lighting {
+  margin-top: 7px;
+  flex-shrink: 0;
+  color: #63785b;
+  font-size: 10px;
+  line-height: 1.6;
+  text-align: center;
+}

@@ -1,0 +1,477 @@
+{
+  "date": "2026-11-04",
+  "desktopViewport": {
+    "width": 2560,
+    "height": 1271
+  },
+  "mobileViewport": {
+    "width": 390,
+    "height": 844
+  },
+  "records": [
+    {
+      "phase": "noon",
+      "canvas": {
+        "height": 836,
+        "ready": "true",
+        "width": 1254
+      },
+      "fields": [
+        {
+          "name": "",
+          "value": "2026-11-04T12:00"
+        },
+        {
+          "name": "24 小时时间滑杆",
+          "value": "720"
+        },
+        {
+          "name": "",
+          "value": "Asia/Tokyo"
+        },
+        {
+          "name": "_r_0_",
+          "value": "35"
+        },
+        {
+          "name": "焦距滑块",
+          "value": "35"
+        },
+        {
+          "name": "",
+          "value": "full-frame"
+        },
+        {
+          "name": "",
+          "value": "3:2"
+        },
+        {
+          "name": "拍摄画幅方向",
+          "value": "landscape"
+        },
+        {
+          "name": "_r_1_",
+          "value": "35.4172"
+        },
+        {
+          "name": "_r_2_",
+          "value": "138.8729"
+        },
+        {
+          "name": "_r_3_",
+          "value": "247"
+        },
+        {
+          "name": "_r_4_",
+          "value": "4"
+        },
+        {
+          "name": "_r_5_",
+          "value": "1.6"
+        }
+      ],
+      "height": "机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "lighting": "白昼 · 太阳几何高度 +38.7°",
+      "note": "晴空近似 · 不含天气与曝光 · 水面高程按 DEM 近似",
+      "readout": "方位 247.0°H 54.4°V 37.8°俯仰 +4°"
+    },
+    {
+      "phase": "dusk",
+      "canvas": {
+        "height": 836,
+        "ready": "true",
+        "width": 1254
+      },
+      "fields": [
+        {
+          "name": "",
+          "value": "2026-11-04T17:00"
+        },
+        {
+          "name": "24 小时时间滑杆",
+          "value": "1020"
+        },
+        {
+          "name": "",
+          "value": "Asia/Tokyo"
+        },
+        {
+          "name": "_r_0_",
+          "value": "35"
+        },
+        {
+          "name": "焦距滑块",
+          "value": "35"
+        },
+        {
+          "name": "",
+          "value": "full-frame"
+        },
+        {
+          "name": "",
+          "value": "3:2"
+        },
+        {
+          "name": "拍摄画幅方向",
+          "value": "landscape"
+        },
+        {
+          "name": "_r_1_",
+          "value": "35.4172"
+        },
+        {
+          "name": "_r_2_",
+          "value": "138.8729"
+        },
+        {
+          "name": "_r_3_",
+          "value": "247"
+        },
+        {
+          "name": "_r_4_",
+          "value": "4"
+        },
+        {
+          "name": "_r_5_",
+          "value": "1.6"
+        }
+      ],
+      "height": "机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "lighting": "民用暮光 · 太阳几何高度 -3.3°",
+      "note": "晴空近似 · 不含天气与曝光 · 水面高程按 DEM 近似",
+      "readout": "方位 247.0°H 54.4°V 37.8°俯仰 +4°"
+    },
+    {
+      "phase": "night",
+      "canvas": {
+        "height": 836,
+        "ready": "true",
+        "width": 1254
+      },
+      "fields": [
+        {
+          "name": "",
+          "value": "2026-11-04T00:00"
+        },
+        {
+          "name": "24 小时时间滑杆",
+          "value": "0"
+        },
+        {
+          "name": "",
+          "value": "Asia/Tokyo"
+        },
+        {
+          "name": "_r_0_",
+          "value": "35"
+        },
+        {
+          "name": "焦距滑块",
+          "value": "35"
+        },
+        {
+          "name": "",
+          "value": "full-frame"
+        },
+        {
+          "name": "",
+          "value": "3:2"
+        },
+        {
+          "name": "拍摄画幅方向",
+          "value": "landscape"
+        },
+        {
+          "name": "_r_1_",
+          "value": "35.4172"
+        },
+        {
+          "name": "_r_2_",
+          "value": "138.8729"
+        },
+        {
+          "name": "_r_3_",
+          "value": "247"
+        },
+        {
+          "name": "_r_4_",
+          "value": "4"
+        },
+        {
+          "name": "_r_5_",
+          "value": "1.6"
+        }
+      ],
+      "height": "机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "lighting": "夜间 · 太阳几何高度 -68.5°",
+      "note": "晴空近似 · 不含天气与曝光 · 水面高程按 DEM 近似",
+      "readout": "方位 247.0°H 54.4°V 37.8°俯仰 +4°"
+    },
+    {
+      "phase": "timezone-UTC",
+      "canvas": {
+        "height": 836,
+        "ready": "true",
+        "width": 1254
+      },
+      "fields": [
+        {
+          "name": "",
+          "value": "2026-11-03T15:00"
+        },
+        {
+          "name": "24 小时时间滑杆",
+          "value": "900"
+        },
+        {
+          "name": "",
+          "value": "UTC"
+        },
+        {
+          "name": "_r_0_",
+          "value": "35"
+        },
+        {
+          "name": "焦距滑块",
+          "value": "35"
+        },
+        {
+          "name": "",
+          "value": "full-frame"
+        },
+        {
+          "name": "",
+          "value": "3:2"
+        },
+        {
+          "name": "拍摄画幅方向",
+          "value": "landscape"
+        },
+        {
+          "name": "_r_1_",
+          "value": "35.4172"
+        },
+        {
+          "name": "_r_2_",
+          "value": "138.8729"
+        },
+        {
+          "name": "_r_3_",
+          "value": "247"
+        },
+        {
+          "name": "_r_4_",
+          "value": "4"
+        },
+        {
+          "name": "_r_5_",
+          "value": "1.6"
+        }
+      ],
+      "height": "机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "lighting": "夜间 · 太阳几何高度 -68.5°",
+      "note": "晴空近似 · 不含天气与曝光 · 水面高程按 DEM 近似",
+      "readout": "方位 247.0°H 54.4°V 37.8°俯仰 +4°"
+    },
+    {
+      "phase": "rapid-final-dusk",
+      "canvas": {
+        "height": 836,
+        "ready": "true",
+        "width": 1254
+      },
+      "fields": [
+        {
+          "name": "",
+          "value": "2026-11-04T17:00"
+        },
+        {
+          "name": "24 小时时间滑杆",
+          "value": "1020"
+        },
+        {
+          "name": "",
+          "value": "Asia/Tokyo"
+        },
+        {
+          "name": "_r_0_",
+          "value": "35"
+        },
+        {
+          "name": "焦距滑块",
+          "value": "35"
+        },
+        {
+          "name": "",
+          "value": "full-frame"
+        },
+        {
+          "name": "",
+          "value": "3:2"
+        },
+        {
+          "name": "拍摄画幅方向",
+          "value": "landscape"
+        },
+        {
+          "name": "_r_1_",
+          "value": "35.4172"
+        },
+        {
+          "name": "_r_2_",
+          "value": "138.8729"
+        },
+        {
+          "name": "_r_3_",
+          "value": "247"
+        },
+        {
+          "name": "_r_4_",
+          "value": "4"
+        },
+        {
+          "name": "_r_5_",
+          "value": "1.6"
+        }
+      ],
+      "height": "机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "lighting": "民用暮光 · 太阳几何高度 -3.3°",
+      "note": "晴空近似 · 不含天气与曝光 · 水面高程按 DEM 近似",
+      "readout": "方位 247.0°H 54.4°V 37.8°俯仰 +4°"
+    },
+    {
+      "phase": "portrait-dusk",
+      "canvas": {
+        "height": 836,
+        "ready": "true",
+        "width": 557
+      },
+      "fields": [
+        {
+          "name": "",
+          "value": "2026-11-04T17:00"
+        },
+        {
+          "name": "24 小时时间滑杆",
+          "value": "1020"
+        },
+        {
+          "name": "",
+          "value": "Asia/Tokyo"
+        },
+        {
+          "name": "_r_0_",
+          "value": "35"
+        },
+        {
+          "name": "焦距滑块",
+          "value": "35"
+        },
+        {
+          "name": "",
+          "value": "full-frame"
+        },
+        {
+          "name": "",
+          "value": "3:2"
+        },
+        {
+          "name": "拍摄画幅方向",
+          "value": "portrait"
+        },
+        {
+          "name": "_r_1_",
+          "value": "35.4172"
+        },
+        {
+          "name": "_r_2_",
+          "value": "138.8729"
+        },
+        {
+          "name": "_r_3_",
+          "value": "247"
+        },
+        {
+          "name": "_r_4_",
+          "value": "4"
+        },
+        {
+          "name": "_r_5_",
+          "value": "1.6"
+        }
+      ],
+      "height": "机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "lighting": "民用暮光 · 太阳几何高度 -3.3°",
+      "note": "晴空近似 · 不含天气与曝光 · 水面高程按 DEM 近似",
+      "readout": "方位 247.0°H 37.8°V 54.4°俯仰 +4°"
+    },
+    {
+      "phase": "mobile-dusk",
+      "canvas": {
+        "height": 221,
+        "ready": "true",
+        "width": 332
+      },
+      "fields": [
+        {
+          "name": "",
+          "value": "2026-11-04T17:00"
+        },
+        {
+          "name": "24 小时时间滑杆",
+          "value": "1020"
+        },
+        {
+          "name": "",
+          "value": "Asia/Tokyo"
+        },
+        {
+          "name": "_r_0_",
+          "value": "35"
+        },
+        {
+          "name": "焦距滑块",
+          "value": "35"
+        },
+        {
+          "name": "",
+          "value": "full-frame"
+        },
+        {
+          "name": "",
+          "value": "3:2"
+        },
+        {
+          "name": "拍摄画幅方向",
+          "value": "landscape"
+        },
+        {
+          "name": "_r_1_",
+          "value": "35.4172"
+        },
+        {
+          "name": "_r_2_",
+          "value": "138.8729"
+        },
+        {
+          "name": "_r_3_",
+          "value": "247"
+        },
+        {
+          "name": "_r_4_",
+          "value": "4"
+        },
+        {
+          "name": "_r_5_",
+          "value": "1.6"
+        }
+      ],
+      "height": "机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "lighting": "民用暮光 · 太阳几何高度 -3.3°",
+      "note": "晴空近似 · 不含天气与曝光 · 水面高程按 DEM 近似",
+      "readout": "方位 247.0°H 54.4°V 37.8°俯仰 +4°"
+    }
+  ],
+  "reportedBrowserLogs": [],
+  "logCaptureLimit": "浏览器日志接口空集合不等于整个页面无警告；本地服务仍可能记录既有底图道路盾牌过滤器类型警告。"
+}

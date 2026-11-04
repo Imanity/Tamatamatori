@@ -8,6 +8,10 @@ export const WATER_SOURCE = "preview-surface";
 export const TERRAIN_ZOOM = 12;
 export const DEFAULT_TERRAIN_URL = "https://tiles.mapterhorn.com/tilejson.json";
 export const DEFAULT_WATER_URL = "https://tiles.openfreemap.org/planet";
+export const terrainColors = {
+  ground: "#c2cdb2", wood: "#9caf92", grass: "#b5c6a3", sand: "#d8cfb4",
+  ice: "#edf0e8", land: "#bfcbb0", water: "#739faa",
+};
 
 export interface ElevationTile {
   width: number;
@@ -95,6 +99,7 @@ export function terrainStyle(
 ): StyleSpecification {
   return {
     version: 8,
+    transition: { duration: 0, delay: 0 },
     sources: {
       [TERRAIN_SOURCE]: {
         type: "raster-dem",
@@ -125,7 +130,7 @@ export function terrainStyle(
       {
         id: "preview-ground",
         type: "background",
-        paint: { "background-color": "#c2cdb2" },
+        paint: { "background-color": terrainColors.ground },
       },
       {
         id: "preview-landcover",
@@ -137,14 +142,14 @@ export function terrainStyle(
             "match",
             ["get", "class"],
             "wood",
-            "#9caf92",
+            terrainColors.wood,
             "grass",
-            "#b5c6a3",
+            terrainColors.grass,
             "sand",
-            "#d8cfb4",
+            terrainColors.sand,
             "ice",
-            "#edf0e8",
-            "#bfcbb0",
+            terrainColors.ice,
+            terrainColors.land,
           ],
           "fill-opacity": 0.8,
         },
@@ -166,7 +171,7 @@ export function terrainStyle(
         source: WATER_SOURCE,
         "source-layer": "water",
         filter: ["!=", ["get", "brunnel"], "tunnel"],
-        paint: { "fill-color": "#739faa", "fill-opacity": 1 },
+        paint: { "fill-color": terrainColors.water, "fill-opacity": 1 },
       },
       {
         id: "preview-waterways",
@@ -175,7 +180,7 @@ export function terrainStyle(
         "source-layer": "waterway",
         filter: ["!=", ["get", "brunnel"], "tunnel"],
         paint: {
-          "line-color": "#739faa",
+          "line-color": terrainColors.water,
           "line-width": ["interpolate", ["linear"], ["zoom"], 9, 0.4, 16, 1.8],
         },
       },

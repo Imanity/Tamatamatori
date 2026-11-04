@@ -10,6 +10,8 @@ import {
   terrainStyle,
 } from "../domain/terrain";
 import type { terrainCamera } from "../preview/camera";
+import { solarPosition } from "../domain/solar";
+import { applyEnvironment, environmentForSun } from "../preview/environment";
 
 const terrainUrl =
   import.meta.env.VITE_TERRAIN_TILEJSON_URL?.trim() || DEFAULT_TERRAIN_URL;
@@ -101,6 +103,7 @@ export function TerrainScene({ plan }: { plan: ShootingPlan }) {
     let styleReady = false;
     let failed = false;
     let lastPose = "";
+    let lastEnvironment = "";
     let currentPoseKey = "";
     let timeout: ReturnType<typeof setTimeout> | undefined;
     setApplied(null);
@@ -175,6 +178,11 @@ export function TerrainScene({ plan }: { plan: ShootingPlan }) {
       )
         return;
       try {
+        const environmentKey = `${current.key}/${current.plan.instant}`;
+        if (environmentKey !== lastEnvironment) {
+          applyEnvironment(map, environmentForSun(solarPosition(current.plan)));
+          lastEnvironment = environmentKey;
+        }
         const rendered = map.queryTerrainElevation([
           current.plan.longitude,
           current.plan.latitude,
@@ -227,7 +235,7 @@ export function TerrainScene({ plan }: { plan: ShootingPlan }) {
         }
         markReady();
       } catch {
-        fail("无法建立拍摄相机，请检查机位、镜头和大于 0 的离地高度。");
+        fail("无法更新拍摄预览，请检查机位、时间、镜头和大于 0 的离地高度。");
       }
     };
     const schedule = () => {

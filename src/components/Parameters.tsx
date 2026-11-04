@@ -374,7 +374,7 @@ export function Parameters({
       <div className="parameter-note">
         <Icon name="info" size={16} />
         <span>
-          山体与静态水体已接入。水面高程按 DEM 近似，时间天空模型尚未接入。
+          天空与地表明暗随时间变化，仅为晴空近似，不含天气与曝光。水面高程按 DEM 近似。
         </span>
       </div>
     </div>

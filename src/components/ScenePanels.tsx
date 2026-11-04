@@ -10,6 +10,7 @@ import {
 import type { ShootingPlan } from "../domain/plan";
 import { Icon } from "./Icon";
 import { TerrainScene } from "./TerrainScene";
+import { solarPosition, daylightPhase } from "../domain/solar";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -31,6 +32,7 @@ export function PreviewPanel({
     plan: ShootingPlan;
   } | null>(null);
   const fov = fieldOfView(plan);
+  const sun = solarPosition(plan);
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return (
     <div className="preview-content">
@@ -173,12 +175,15 @@ export function PreviewPanel({
                   Math.tan(radians(fov.horizontal / 2));
               return (
                 <g key={label}>
-                  <path d={`M${x} 0v13`} stroke="#4c6659" opacity="0.7" />
+                  <path d={`M${x} 0v13`} stroke="white" opacity="0.8" />
                   <text
                     x={Math.max(16, Math.min(584, x))}
                     y="32"
                     textAnchor="middle"
-                    fill="#3f5c4f"
+                    fill="white"
+                    stroke="#182535"
+                    strokeWidth="0.4"
+                    paintOrder="stroke"
                     fontSize="15"
                     fontFamily="monospace"
                   >
@@ -210,7 +215,10 @@ export function PreviewPanel({
           </strong>
         </span>
       </div>
-      <p className="preview-note">水面高程按 DEM 近似 · 天空为固定配色</p>
+      <p className="preview-lighting" aria-label="预览光照状态">
+        {daylightPhase(sun.elevation)} · 太阳几何高度 {sun.elevation > 0 ? "+" : ""}{sun.elevation.toFixed(1)}°
+      </p>
+      <p className="preview-note">晴空近似 · 不含天气与曝光 · 水面高程按 DEM 近似</p>
       <div className="preview-attribution">
         <a
           href="https://mapterhorn.com/attribution/"
