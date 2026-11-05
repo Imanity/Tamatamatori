@@ -1051,6 +1051,25 @@ test('星空与银河独立开关、朝向及实际相机反馈联动，不重�
   assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);assert.equal(input('当地日期与时间').value,time);
 });
 
+test('银河纹理状态与遮挡分开，搜索时也显示失败，地形与星点保持可用',async t=>{
+  await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
+  await settle(()=>document.querySelector('[aria-label="显示星空"]').click());
+  await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
+  const layer=map.customLayers.find(l=>l instanceof TestStarfieldLayer);
+  await settle(()=>setControl(document.querySelector('#target-search'),'银心'));
+  await settle(()=>layer.report({planKey:layer.frame.planKey,ready:true,view:null,states:{},milkyWay:{phase:'loading'}}));
+  assert.match(document.querySelector('.sky-texture-feedback').textContent,/加载银河/);
+  await settle(()=>layer.report({planKey:layer.frame.planKey,ready:true,view:null,states:{},milkyWay:{phase:'error',message:'银河纹理加载失败，请关闭再开启银河重试。'}}));
+  assert.match(document.querySelector('.sky-texture-feedback').textContent,/加载失败/);
+  assert.equal(document.querySelector('.terrain-feedback-error'),null);assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
+  assert.equal(document.querySelector('[aria-label="显示星空"]').checked,true);assert.ok(document.querySelector('[data-search-target="galactic-center"]'));
+  assert.ok(document.querySelector('.preview-attribution a[href="https://www.eso.org/public/images/eso0932a/"]'));
+  await settle(()=>document.querySelector('[aria-label="显示银河"]').click());assert.equal(document.querySelector('.sky-texture-feedback'),null);
+  await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
+  await settle(()=>layer.report({planKey:layer.frame.planKey,ready:true,view:null,states:{},milkyWay:{phase:'ready'}}));
+  assert.equal(document.querySelector('.sky-texture-feedback'),null);assert.equal(groundRequests.length,requests);
+});
+
 test('星空名称等待实际遮挡结果，山体遮挡或失败不沿用旧名称，重试保留开关',async t=>{
   await workspace(t);const map=await readyTerrain();
   await settle(()=>setControl(document.querySelector('input[aria-label="24 小时时间滑杆"]'),1320));

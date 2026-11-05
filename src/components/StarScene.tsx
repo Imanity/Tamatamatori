@@ -86,6 +86,11 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility) {
   };
   return {
     appearance: result.appearance,
+    milkyWay: !plan.layers.milkyWay
+      ? { phase: "off" as const }
+      : current && visibility.milkyWay
+        ? visibility.milkyWay
+        : { phase: "loading" as const },
     error: result.error || (current ? (visibility.message ?? "") : ""),
     targets: points.map((point) => project(point)),
     figures: result.figures.map((point) => project(point, true)),
@@ -97,6 +102,14 @@ export function StarLabels({ scene }: { scene: Scene }) {
   const placedFigures: { x: number; y: number }[] = [];
   return (
     <>
+      {(scene.milkyWay.phase === "loading" ||
+        scene.milkyWay.phase === "error") && (
+        <p className="sky-texture-feedback" role="status">
+          {scene.milkyWay.phase === "error"
+            ? scene.milkyWay.message
+            : "正在加载银河细节…"}
+        </p>
+      )}
       {[...scene.targets, ...scene.figures].map(
         ({ point, pixel, state, occlusion, opacity }) => {
           const figure = point.id.startsWith("constellation-"),
@@ -167,7 +180,7 @@ export function StarReadout({
       )}
       {plan.layers.milkyWay && (
         <p>
-          银河轮廓示意 · 银心
+          银河细节 · 全景衍生 · 银心
           {core?.state === "画面内"
             ? occlusionLabels[core.occlusion]
             : (core?.state ?? "计算中")}

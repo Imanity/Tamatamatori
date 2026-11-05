@@ -53,19 +53,27 @@ test("三角化保留凹月相轮廓面积，空和退化轮廓不产生三角�
 function fakeGL() {
   const gl = {}, names = ['VERTEX_SHADER','FRAGMENT_SHADER','COMPILE_STATUS','LINK_STATUS','CURRENT_PROGRAM','VERTEX_ARRAY_BINDING','ARRAY_BUFFER_BINDING','DEPTH_TEST','CULL_FACE','BLEND','STENCIL_TEST','DEPTH_FUNC','DEPTH_RANGE','DEPTH_WRITEMASK','COLOR_WRITEMASK','BLEND_SRC_RGB','BLEND_DST_RGB','BLEND_SRC_ALPHA','BLEND_DST_ALPHA','ARRAY_BUFFER','FLOAT','ONE','ONE_MINUS_SRC_ALPHA','LEQUAL','GREATER','LESS','STREAM_DRAW','TRIANGLES','LINE_LOOP','ANY_SAMPLES_PASSED','QUERY_RESULT_AVAILABLE','QUERY_RESULT'];
   names.forEach((name, i) => gl[name] = i + 1);
-  for(const name of ['POINTS','LINES','ELEMENT_ARRAY_BUFFER','STATIC_DRAW','UNSIGNED_SHORT'])gl[name]=names.length+Object.keys(gl).length+1;
+  for(const name of ['POINTS','LINES','ELEMENT_ARRAY_BUFFER','STATIC_DRAW','UNSIGNED_SHORT','ACTIVE_TEXTURE','TEXTURE0','TEXTURE_2D','TEXTURE_BINDING_2D','MAX_TEXTURE_SIZE','UNPACK_FLIP_Y_WEBGL','UNPACK_PREMULTIPLY_ALPHA_WEBGL','UNPACK_COLORSPACE_CONVERSION_WEBGL','UNPACK_ALIGNMENT','NONE','RGBA','UNSIGNED_BYTE','TEXTURE_MIN_FILTER','TEXTURE_MAG_FILTER','TEXTURE_WRAP_S','TEXTURE_WRAP_T','LINEAR_MIPMAP_LINEAR','LINEAR','REPEAT','CLAMP_TO_EDGE','SAMPLER_BINDING'])gl[name]=names.length+Object.keys(gl).length+1;
   const state = new Map([[gl.CURRENT_PROGRAM,{}],[gl.VERTEX_ARRAY_BINDING,{}],[gl.ARRAY_BUFFER_BINDING,{}],[gl.DEPTH_FUNC,gl.LESS],[gl.DEPTH_RANGE,[0,0.8]],[gl.DEPTH_WRITEMASK,true],[gl.COLOR_WRITEMASK,[false,true,false,true]],...['BLEND_SRC_RGB','BLEND_DST_RGB','BLEND_SRC_ALPHA','BLEND_DST_ALPHA'].map(name=>[gl[name],gl.ONE])]);
   const enabled = new Set([gl.CULL_FACE, gl.STENCIL_TEST]);
+  for (const [key,value] of [[gl.ACTIVE_TEXTURE,gl.TEXTURE0+7],[gl.MAX_TEXTURE_SIZE,2048],[gl.UNPACK_FLIP_Y_WEBGL,true],[gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true],[gl.UNPACK_COLORSPACE_CONVERSION_WEBGL,999],[gl.UNPACK_ALIGNMENT,8],[`texture${gl.TEXTURE0}`,{}],[`texture${gl.TEXTURE0+7}`,{}],[`sampler${gl.TEXTURE0}`,{}]]) state.set(key,value);
   const queries = new Set(), resources = new Set();
   gl.results = []; gl.draws = []; gl.uploads=[]; gl.compile = true;
   const uniforms=new Map();
   const allocate = () => { const object={}; resources.add(object); return object; };
-  for (const type of ['Shader','Program','Buffer','VertexArray']) { gl[`create${type}`]=allocate; gl[`delete${type}`]=(object)=>resources.delete(object); }
+  for (const type of ['Shader','Program','Buffer','VertexArray','Texture']) { gl[`create${type}`]=allocate; gl[`delete${type}`]=(object)=>resources.delete(object); }
+  gl.activeTexture=value=>state.set(gl.ACTIVE_TEXTURE,value);
+  gl.bindTexture=(_,value)=>state.set(`texture${state.get(gl.ACTIVE_TEXTURE)}`,value);
+  gl.bindSampler=(unit,value)=>state.set(`sampler${gl.TEXTURE0+unit}`,value);
+  gl.pixelStorei=(key,value)=>state.set(key,value);
+  gl.textureUploads=0;gl.texImage2D=()=>{gl.textureUploads++;if(gl.textureFailure)throw new Error('texture upload');};
+  gl.texParameteri=()=>{};gl.generateMipmap=()=>{};
   for (const name of ['shaderSource','compileShader','attachShader','linkProgram','enableVertexAttribArray','vertexAttribPointer','uniform4fv','bufferData']) gl[name]=()=>{};
   gl.bufferData=(_,data)=>gl.uploads.push(data.slice());
   gl.getShaderParameter=()=>gl.compile; gl.getProgramParameter=()=>true; gl.getUniformLocation=(_,name)=>name;
   gl.uniform1f=(name,value)=>uniforms.set(name,value);gl.uniformMatrix4fv=()=>{};
-  gl.isContextLost=()=>false; gl.getParameter=(key)=>state.get(key); gl.isEnabled=(cap)=>enabled.has(cap);
+  gl.uniform1i=gl.uniform1f;
+  gl.isContextLost=()=>false; gl.getParameter=(key)=>key===gl.TEXTURE_BINDING_2D?state.get(`texture${state.get(gl.ACTIVE_TEXTURE)}`):key===gl.SAMPLER_BINDING?state.get(`sampler${state.get(gl.ACTIVE_TEXTURE)}`):state.get(key); gl.isEnabled=(cap)=>enabled.has(cap);
   gl.enable=(cap)=>enabled.add(cap); gl.disable=(cap)=>enabled.delete(cap);
   gl.useProgram=(value)=>state.set(gl.CURRENT_PROGRAM,value); gl.bindVertexArray=(value)=>state.set(gl.VERTEX_ARRAY_BINDING,value);
   gl.bindBuffer=(_,value)=>state.set(gl.ARRAY_BUFFER_BINDING,value); gl.depthFunc=(value)=>state.set(gl.DEPTH_FUNC,value);
@@ -133,19 +141,20 @@ function starFrame(key,ready=true){
   const point=skyReference(plan).points.find(p=>p.name==='北极星');
   return {key,planKey:key,ready,plan:{...plan,azimuth:point.azimuth,pitch:point.elevation}};
 }
-function prepareStars(gl,reports){
-  const layer=new StarfieldLayer(s=>reports.push(s));
+async function prepareStars(gl,reports){
+  const layer=new StarfieldLayer(s=>reports.push(s),async()=>({width:2048,height:256,close(){}}));
   layer.onAdd({triggerRepaint(){},getContainer:()=>({clientWidth:600,clientHeight:400}),getCanvas:()=>({width:1200})},gl);
   const frame=starFrame('a');layer.setScene(frame);
   layer.camera={azimuth:frame.plan.azimuth,pitch:frame.plan.pitch};layer.matrix=photoCameraMatrix(frame.plan);
+  await Promise.resolve();
   return layer;
 }
-test('星空与银河共享天空深度、恢复宿主状态，异步查询区分清晰与山体遮挡',()=>{
+test('星空与银河共享天空深度、恢复宿主状态，异步查询区分清晰与山体遮挡',async()=>{
   for(const clear of [true,false]){
     const {gl,state,enabled,queries,resources}=fakeGL(),reports=[],before=new Map(state),previousEnabled=new Set(enabled);
-    const layer=prepareStars(gl,reports);gl.results=[clear];layer.render(gl);
+    const layer=await prepareStars(gl,reports);gl.results=[clear];layer.render(gl);
     assert.equal(queries.size,1);assert.equal(reports.at(-1).ready,false);
-    assert.ok(gl.draws.some(d=>d.mode===gl.TRIANGLES&&d.count===38880));
+    assert.ok(gl.draws.some(d=>d.mode===gl.TRIANGLES&&d.count===103680));
     assert.ok(gl.draws.some(d=>d.mode===gl.POINTS&&d.count===928));
     assert.ok(gl.draws.every(d=>d.depth===gl.LEQUAL&&d.write===false));
     assert.deepEqual(state,before);assert.deepEqual(enabled,previousEnabled);
@@ -154,8 +163,8 @@ test('星空与银河共享天空深度、恢复宿主状态，异步查询区�
     layer.onRemove();assert.equal(resources.size,0);
   }
 });
-test('星空查询在计划/地形失效后废弃，失败明确反馈并释放资源',t=>{
-  const {gl,queries,resources}=fakeGL(),reports=[],layer=prepareStars(gl,reports);
+test('星空查询在计划/地形失效后废弃，失败明确反馈并释放资源',async t=>{
+  const {gl,queries,resources}=fakeGL(),reports=[],layer=await prepareStars(gl,reports);
   gl.results=[true];layer.render(gl);assert.equal(queries.size,1);
   layer.setScene(starFrame('b'));assert.equal(queries.size,0);assert.equal(reports.at(-1).planKey,'b');
   gl.results=[false];layer.render(gl);layer.invalidate();assert.equal(queries.size,0);
@@ -167,8 +176,8 @@ test('星空查询在计划/地形失效后废弃，失败明确反馈并释放�
   broken.onAdd({triggerRepaint(){}},gl);assert.match(reports.at(-1).message,/无法启动/);broken.onRemove();assert.equal(resources.size,0);
 });
 
-test('白昼透明星点仍独立测试几何遮挡，下一帧恢复正常明暗',()=>{
-  const {gl,queries,resources}=fakeGL(),reports=[],layer=prepareStars(gl,reports);
+test('白昼透明星点仍独立测试几何遮挡，下一帧恢复正常明暗',async()=>{
+  const {gl,queries,resources}=fakeGL(),reports=[],layer=await prepareStars(gl,reports);
   const frame=starFrame('day');frame.plan.instant='2026-07-02T03:00:00Z';
   const target=skyReference(frame.plan).points.find(p=>p.name==='北极星');
   frame.plan.azimuth=target.azimuth;frame.plan.pitch=target.elevation;
@@ -183,8 +192,8 @@ test('白昼透明星点仍独立测试几何遮挡，下一帧恢复正常明�
   assert.equal(gl.draws.at(-1).probe,0);layer.onRemove();assert.equal(resources.size,0);
 });
 
-test('星座单独开启绘制球面连线并查询名称遮挡，关闭清空，卸载释放新增资源',()=>{
-  const {gl,queries,resources,state}=fakeGL(),reports=[],before=new Map(state),layer=prepareStars(gl,reports);
+test('星座单独开启绘制球面连线并查询名称遮挡，关闭清空，卸载释放新增资源',async()=>{
+  const {gl,queries,resources,state}=fakeGL(),reports=[],before=new Map(state),layer=await prepareStars(gl,reports);
   const frame=starFrame('constellations');frame.plan={...frame.plan,instant:'2026-11-08T16:00:00Z',focalLength:35,layers:{sun:false,moon:false,stars:false,milkyWay:false,constellations:true}};
   const figure=constellationScene(frame.plan),orion=figure.anchors.find(p=>p.name==='猎户座');
   frame.plan.azimuth=orion.azimuth;frame.plan.pitch=orion.elevation;
@@ -197,4 +206,56 @@ test('星座单独开启绘制球面连线并查询名称遮挡，关闭清空�
   const draws=gl.draws.length;
   layer.setScene({...frame,key:'off',plan:{...frame.plan,layers:{...frame.plan.layers,constellations:false}}});layer.render(gl);assert.equal(gl.draws.length,draws);
   layer.onRemove();assert.equal(resources.size,0);assert.equal(queries.size,0);
+});
+
+test('银河按需加载，关闭后的迟到图片释放；纹理复用并恢复宿主纹理、采样器及解包状态',async()=>{
+  const {gl,resources,state}=fakeGL(), reports=[], requests=[];
+  const layer=new StarfieldLayer(s=>reports.push(s),(signal,maxSize)=>new Promise((resolve,reject)=>requests.push({signal,maxSize,resolve,reject})));
+  layer.onAdd({triggerRepaint(){},getContainer:()=>({clientWidth:600,clientHeight:400}),getCanvas:()=>({width:600})},gl);
+  const frame=starFrame('off');frame.plan.layers={...frame.plan.layers,milkyWay:false};
+  layer.setScene(frame);assert.equal(requests.length,0);assert.equal(reports.at(-1).milkyWay.phase,'off');
+  const active={...frame,key:'on',plan:{...frame.plan,layers:{...frame.plan.layers,milkyWay:true}}};
+  layer.setScene(active);assert.equal(requests.length,1);assert.equal(requests[0].maxSize,2048);assert.equal(reports.at(-1).milkyWay.phase,'loading');
+  layer.camera={azimuth:active.plan.azimuth,pitch:active.plan.pitch};layer.matrix=photoCameraMatrix(active.plan);
+  layer.render(gl);assert.ok(!gl.draws.some(d=>d.mode===gl.TRIANGLES));assert.equal(gl.textureUploads,0);
+  layer.setScene({...frame,key:'cancel'});assert.equal(requests[0].signal.aborted,true);
+  let closed=0;requests[0].resolve({width:2048,height:256,close(){closed++;}});await Promise.resolve();assert.equal(closed,1);assert.equal(gl.textureUploads,0);
+  layer.setScene({...active,key:'retry'});assert.equal(requests.length,2);
+  requests[1].resolve({width:2048,height:256,close(){closed++;}});await Promise.resolve();
+  const before=new Map(state);layer.render(gl);
+  assert.equal(reports.at(-1).milkyWay.phase,'ready');assert.equal(closed,2);assert.equal(gl.textureUploads,1);
+  assert.ok(gl.draws.some(d=>d.mode===gl.TRIANGLES&&d.count===103680));assert.deepEqual(state,before);
+  layer.setScene({...frame,key:'hide'});layer.setScene({...active,key:'show'});layer.render(gl);
+  assert.equal(requests.length,2);assert.equal(gl.textureUploads,1);
+  layer.onRemove();assert.equal(resources.size,0);
+});
+
+test('银河下载/上传失败单独反馈，星点继续绘制；关闭重开可恢复，卸载不接收迟到资源',async()=>{
+  const {gl,resources}=fakeGL(),reports=[];let attempts=0,closed=0;
+  const layer=new StarfieldLayer(s=>reports.push(s),async()=>{attempts++;if(attempts===1)throw new Error('decode');return {width:2048,height:256,close(){closed++;}};});
+  layer.onAdd({triggerRepaint(){},getContainer:()=>({clientWidth:600,clientHeight:400}),getCanvas:()=>({width:600})},gl);
+  const active=starFrame('failure');layer.setScene(active);await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(reports.at(-1).milkyWay.phase,'error');assert.match(reports.at(-1).milkyWay.message,/加载失败/);assert.equal(reports.at(-1).message,undefined);
+  layer.camera={azimuth:active.plan.azimuth,pitch:active.plan.pitch};layer.matrix=photoCameraMatrix(active.plan);layer.render(gl);
+  assert.ok(gl.draws.some(d=>d.mode===gl.POINTS&&d.count===928));
+  const off={...active,key:'off',plan:{...active.plan,layers:{...active.plan.layers,milkyWay:false}}};
+  layer.setScene(off);layer.setScene({...active,key:'upload'});await Promise.resolve();gl.textureFailure=true;layer.render(gl);
+  assert.equal(reports.at(-1).milkyWay.phase,'error');assert.match(reports.at(-1).milkyWay.message,/无法上传/);assert.equal(reports.at(-1).message,undefined);
+  layer.setScene({...off,key:'off2'});layer.setScene({...active,key:'recovered'});await Promise.resolve();gl.textureFailure=false;layer.render(gl);
+  assert.equal(reports.at(-1).milkyWay.phase,'ready');assert.equal(attempts,3);assert.equal(closed,2);
+  layer.onRemove();assert.equal(resources.size,0);
+  const later=[],after=[];const pending=new StarfieldLayer(s=>after.push(s),(signal)=>new Promise(resolve=>later.push({signal,resolve})));
+  pending.onAdd({triggerRepaint(){}},gl);pending.setScene(active);pending.onRemove();const count=after.length;
+  assert.equal(later[0].signal.aborted,true);later[0].resolve({width:2048,height:256,close(){closed++;}});await Promise.resolve();
+  assert.equal(closed,3);assert.equal(after.length,count);assert.equal(resources.size,0);
+});
+
+test('银河加载有明确超时，迟到结果不上传或覆盖错误状态',async t=>{
+  t.mock.timers.enable({apis:['setTimeout']});
+  const {gl,resources}=fakeGL(),reports=[];let finish,signal,closed=0;
+  const layer=new StarfieldLayer(s=>reports.push(s),(s)=>{signal=s;return new Promise(resolve=>finish=resolve);});
+  layer.onAdd({triggerRepaint(){}},gl);layer.setScene(starFrame('timeout'));
+  t.mock.timers.tick(12000);assert.equal(signal.aborted,true);assert.match(reports.at(-1).milkyWay.message,/超时/);
+  finish({width:2048,height:256,close(){closed++;}});await Promise.resolve();assert.equal(closed,1);assert.equal(gl.textureUploads,0);
+  assert.equal(reports.at(-1).milkyWay.phase,'error');layer.onRemove();assert.equal(resources.size,0);
 });

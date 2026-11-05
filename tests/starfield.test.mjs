@@ -78,7 +78,7 @@ test("恒星、银心及银河坐标对照独立 ERFA：南北半球、J2000 至
         : ref.id.startsWith("galactic-")
           ? (() => {
               const mesh = milkyWayMesh({ ...plan, ...ref }),
-                i = (Number(ref.id.split("-")[1]) * 19 + 9) * 5;
+                i = (Number(ref.id.split("-")[1]) * 49 + 24) * 5;
               return Array.from(mesh.vertices.slice(i, i + 3));
             })()
           : sky.points.find((p) => p.id === ref.id).direction;
@@ -179,22 +179,22 @@ test("星点沿用摄影矩阵、折射与地平线判定，焦距和横竖幅�
 
 test("银河网格有界、闭合、单位方向有限，姿态变化复用，折射变化更新", () => {
   const mesh = milkyWayMesh(plan);
-  assert.equal(mesh.vertices.length, 6859 * 5);
-  assert.equal(mesh.indices.length, 38880);
+  assert.equal(mesh.vertices.length, 17689 * 5);
+  assert.equal(mesh.indices.length, 103680);
   assert.equal(
     milkyWayMesh({ ...plan, azimuth: 1, pitch: 80, focalLength: 1000 }),
     mesh,
   );
   for (let i = 0; i < mesh.vertices.length; i += 5)
     close(Math.hypot(...mesh.vertices.slice(i, i + 3)), 1, 1e-6);
-  for (let b = 0; b < 19; b++)
+  for (let b = 0; b < 49; b++)
     for (let i = 0; i < 3; i++)
       close(
         mesh.vertices[b * 5 + i],
-        mesh.vertices[(360 * 19 + b) * 5 + i],
+        mesh.vertices[(360 * 49 + b) * 5 + i],
         1e-6,
       );
-  assert.ok(mesh.indices.every((i) => i < 6859));
+  assert.ok(mesh.indices.every((i) => i < 17689));
   assert.ok(mesh.vertices.every(Number.isFinite));
   assert.notEqual(milkyWayMesh({ ...plan, refraction: "standard" }), mesh);
 });

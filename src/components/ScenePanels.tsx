@@ -318,6 +318,15 @@ export function PreviewPanel({
           infoHost,
         )}
       <div className="preview-attribution">
+        {plan.layers.milkyWay && (
+          <a
+            href="https://www.eso.org/public/images/eso0932a/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            ESO/S. Brunier · CC BY 4.0 · 全景衍生
+          </a>
+        )}
         {(plan.layers.stars ||
           plan.layers.milkyWay ||
           plan.layers.constellations) && (

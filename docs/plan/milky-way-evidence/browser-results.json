@@ -1,0 +1,122 @@
+{
+  "date": "2026-11-05",
+  "site": {
+    "latitude": 35.4172,
+    "longitude": 138.8729
+  },
+  "records": [
+    {
+      "name": "Controlled first image HTTP 503, production subpath",
+      "message": "银河纹理加载失败，请关闭再开启银河重试。",
+      "terrainReady": "true",
+      "terrainError": 0,
+      "starLabels": [
+        "心宿二",
+        "尾宿八",
+        "萁宿三",
+        "尾宿五",
+        "斗宿四",
+        "尾宿二",
+        "宋",
+        "银心方向参考"
+      ],
+      "search": "找到 1 个目标\n\n银心\n银河\n当前 DEM 未遮挡\n208.1° / 几何 19.4°\n朝向"
+    },
+    {
+      "name": "Production subpath recovered by off/on",
+      "terrainReady": "true",
+      "textureFeedback": 0,
+      "labels": [
+        "心宿二",
+        "尾宿八",
+        "萁宿三",
+        "尾宿五",
+        "斗宿四",
+        "尾宿二",
+        "宋",
+        "银心方向参考"
+      ]
+    },
+    {
+      "name": "Moonlit 2026-07-02 00:00 Asia/Tokyo, same azimuth 200 pitch 20",
+      "readout": "星空 · 亮星目录 925 颗及金星、木星 · 星点为定位符号\n\n明暗近似 · 月光减弱\n\n银河细节 · 全景衍生 · 银心当前 DEM 未遮挡\n\n星空目标与朝向\n\n按当前 DEM 遮挡 · 银心环仅作定位 · 不含天气、曝光与光污染",
+      "lighting": "夜间 · 太阳几何高度 -31.4°\n月光参考 · 亮面 97% · 几何高度 +28.3°",
+      "ready": "true"
+    },
+    {
+      "name": "Cygnus / Deneb 2026-07-16 00:00 Asia/Tokyo, 24 mm",
+      "readout": "星空 · 亮星目录 925 颗及金星、木星 · 星点为定位符号\n\n明暗近似 · 暗夜参考\n\n银河细节 · 全景衍生 · 银心视场外\n\n星空目标与朝向\n\n按当前 DEM 遮挡 · 银心环仅作定位 · 不含天气、曝光与光污染",
+      "labels": [
+        "织女星",
+        "天津四",
+        "天津一",
+        "天棓四",
+        "室宿二",
+        "天钩五",
+        "天津九"
+      ],
+      "pose": [
+        {
+          "label": "焦距mm",
+          "value": "24"
+        },
+        {
+          "label": "纬度°",
+          "value": "35.4172"
+        },
+        {
+          "label": "经度°",
+          "value": "138.8729"
+        },
+        {
+          "label": "方位角°",
+          "value": "41.20389839524239"
+        },
+        {
+          "label": "俯仰角°",
+          "value": "75.86920424191337"
+        },
+        {
+          "label": "相机离地高度m",
+          "value": "1.6"
+        }
+      ]
+    },
+    {
+      "name": "8 mm wide field near Cygnus",
+      "ready": "true",
+      "feedback": 0
+    },
+    {
+      "name": "Sydney -33.8688,151.2093; same UTC 2026-07-15T15:00Z; 24mm azimuth265.6 pitch53.4",
+      "readout": "星空 · 亮星目录 925 颗及金星、木星 · 星点为定位符号\n\n明暗近似 · 暗夜参考\n\n银河细节 · 全景衍生 · 银心当前 DEM 未遮挡\n\n星空目标与朝向\n\n按当前 DEM 遮挡 · 银心环仅作定位 · 不含天气、曝光与光污染",
+      "ready": "true"
+    },
+    {
+      "name": "1000mm portrait, settled dark core view",
+      "ready": "true",
+      "feedback": 0,
+      "canvas": {
+        "height": 858,
+        "width": 572
+      },
+      "target": "找到 1 个目标\n\n银心\n银河\n当前 DEM 未遮挡\n208.1° / 几何 19.4°\n朝向"
+    },
+    {
+      "name": "Terrain occlusion, Yamanakako 2026-07-16 02:15 Asia/Tokyo",
+      "target": "找到 1 个目标\n\n银心\n银河\n山体遮挡\n232.1° / 几何 1.6°\n朝向",
+      "labels": [
+        "萁宿三",
+        "斗宿四"
+      ],
+      "ready": "true"
+    },
+    {
+      "name": "Daylight 2026-07-16 12:00 Asia/Tokyo",
+      "readout": "星空 · 亮星目录 925 颗及金星、木星 · 星点为定位符号\n\n明暗近似 · 白昼 · 星点与银河淡出\n\n银河细节 · 全景衍生 · 银心地平线下\n\n星空目标与朝向\n\n按当前 DEM 遮挡 · 银心环仅作定位 · 不含天气、曝光与光污染",
+      "ready": "true",
+      "labels": []
+    }
+  ],
+  "console": []
+}

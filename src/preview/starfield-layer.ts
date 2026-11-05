@@ -17,6 +17,7 @@ import type { RenderedCamera } from "./rendered-camera.ts";
 import { photoCameraMatrix } from "./terrain-perspective-math.ts";
 import { skyAppearance, starOpacity } from "../domain/sky-appearance.ts";
 import { constellationScene } from "../domain/constellations.ts";
+import { loadMilkyWayImage } from "./milky-way-texture.ts";
 
 interface Frame {
   key: string;
@@ -47,15 +48,17 @@ uniform mat4 u_camera;out vec2 v_gal;out float v_height;
 void main(){gl_Position=u_camera*vec4(a_ray,0.0);gl_Position.z=gl_Position.w;v_gal=a_gal;v_height=a_ray.z;}`;
 const bandFragment = `#version 300 es
 precision highp float;
-in vec2 v_gal;in float v_height;uniform float u_strength;out vec4 color;
+in vec2 v_gal;in float v_height;uniform float u_strength;uniform sampler2D u_atlas;out vec4 color;
 void main(){if(v_height<=0.0)discard;
-float l=v_gal.x,b=degrees(v_gal.y),core=pow(max(cos(l),0.0),12.0);
-float band=exp(-pow(b/(4.0+4.0*core),2.0));
-float dust=1.0-0.65*exp(-pow((b+0.5*sin(l*3.0))/1.2,2.0));
-float glow=0.18*exp(-pow(b/11.0,2.0));
-float edge=1.0-smoothstep(15.0,18.0,abs(b));
-float a=(band*dust*(0.25+0.65*core)+glow)*0.42*u_strength*edge;
-vec3 tint=mix(vec3(0.64,0.72,0.90),vec3(0.95,0.80,0.70),core);
+// ESO panorama: Galactic north at the top, l increases to the left.
+// Keep longitude unwrapped so mip gradients remain continuous at l=180.
+vec2 uv=vec2(0.5-v_gal.x/6.28318530718,0.5-degrees(v_gal.y)/45.0);
+vec3 diffuse=texture(u_atlas,uv).rgb;
+float luminance=dot(diffuse,vec3(0.2126,0.7152,0.0722));
+float edge=1.0-smoothstep(17.0,22.5,abs(degrees(v_gal.y)));
+float horizon=smoothstep(0.0,0.10,v_height);
+float a=clamp(pow(luminance,1.2)*1.1,0.0,0.7)*u_strength*edge*horizon;
+vec3 tint=mix(vec3(0.70,0.75,0.86),diffuse/max(luminance,0.02)*0.78,0.65);
 color=vec4(tint*a,a);}`;
 const lineVertex = `#version 300 es
 precision highp float;
@@ -124,14 +127,139 @@ export class StarfieldLayer implements CustomLayerInterface {
   private pointData = new Float32Array();
   private band?: ReturnType<typeof milkyWayMesh>;
   private strength = 1;
+  private texture?: WebGLTexture;
+  private bitmap?: ImageBitmap;
+  private textureRequest?: AbortController;
+  private textureTimeout?: ReturnType<typeof setTimeout>;
+  private textureState: NonNullable<SkyVisibility["milkyWay"]> = {
+    phase: "loading",
+  };
+  private snapshot?: SkyVisibility;
   private pending: Pending[] = [];
   private pendingKey = "";
   private pendingAt = 0;
   private resolvedKey = "";
   private failed = false;
   private report: (snapshot: SkyVisibility) => void;
-  constructor(report: (snapshot: SkyVisibility) => void) {
+  private loadImage: typeof loadMilkyWayImage;
+  constructor(
+    report: (snapshot: SkyVisibility) => void,
+    loadImage = loadMilkyWayImage,
+  ) {
     this.report = report;
+    this.loadImage = loadImage;
+  }
+  private publish(snapshot: SkyVisibility) {
+    this.snapshot = snapshot;
+    this.report({
+      ...snapshot,
+      milkyWay: this.frame?.plan.layers.milkyWay
+        ? this.textureState
+        : { phase: "off" },
+    });
+  }
+  private textureChanged() {
+    if (this.snapshot) this.publish(this.snapshot);
+    this.map?.triggerRepaint();
+  }
+  private requestTexture() {
+    if (
+      !this.gl ||
+      this.texture ||
+      this.bitmap ||
+      this.textureRequest ||
+      this.textureState.phase === "error"
+    )
+      return;
+    const request = new AbortController();
+    this.textureRequest = request;
+    this.textureTimeout = setTimeout(() => {
+      if (this.textureRequest !== request) return;
+      this.cancelTextureRequest();
+      this.textureState = {
+        phase: "error",
+        message: "银河纹理加载超时，请关闭再开启银河重试。",
+      };
+      this.textureChanged();
+    }, 12000);
+    const maxSize = Math.max(
+      1,
+      Number(this.gl.getParameter(this.gl.MAX_TEXTURE_SIZE)) || 2048,
+    );
+    void this.loadImage(request.signal, maxSize)
+      .then((image) => {
+        if (
+          request !== this.textureRequest ||
+          request.signal.aborted ||
+          !this.gl ||
+          !this.frame?.plan.layers.milkyWay
+        ) {
+          image.close();
+          return;
+        }
+        this.textureRequest = undefined;
+        clearTimeout(this.textureTimeout);
+        this.bitmap = image;
+        this.map?.triggerRepaint();
+      })
+      .catch(() => {
+        if (request !== this.textureRequest || request.signal.aborted) return;
+        this.textureRequest = undefined;
+        clearTimeout(this.textureTimeout);
+        this.textureState = {
+          phase: "error",
+          message: "银河纹理加载失败，请关闭再开启银河重试。",
+        };
+        this.textureChanged();
+      });
+  }
+  private cancelTextureRequest() {
+    this.textureRequest?.abort();
+    this.textureRequest = undefined;
+    clearTimeout(this.textureTimeout);
+    this.textureTimeout = undefined;
+  }
+  private uploadTexture(gl: WebGL2RenderingContext) {
+    if (!this.bitmap) return;
+    try {
+      const texture = gl.createTexture();
+      if (!texture) throw new Error("texture allocation");
+      this.texture = texture;
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+      gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL, gl.NONE);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        this.bitmap,
+      );
+      gl.texParameteri(
+        gl.TEXTURE_2D,
+        gl.TEXTURE_MIN_FILTER,
+        gl.LINEAR_MIPMAP_LINEAR,
+      );
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.generateMipmap(gl.TEXTURE_2D);
+      this.textureState = { phase: "ready" };
+    } catch {
+      gl.deleteTexture(this.texture ?? null);
+      this.texture = undefined;
+      this.textureState = {
+        phase: "error",
+        message: "银河纹理无法上传，请关闭再开启银河重试。",
+      };
+    } finally {
+      this.bitmap.close();
+      this.bitmap = undefined;
+    }
+    this.textureChanged();
   }
   onAdd(map: MapLibreMap, gl: WebGL2RenderingContext) {
     this.map = map;
@@ -166,6 +294,12 @@ export class StarfieldLayer implements CustomLayerInterface {
     this.clearQueries();
     this.frame = frame;
     this.resolvedKey = "";
+    if (!frame.plan.layers.milkyWay) {
+      this.cancelTextureRequest();
+      this.bitmap?.close();
+      this.bitmap = undefined;
+      this.textureState = { phase: this.texture ? "ready" : "loading" };
+    } else this.requestTexture();
     this.waiting();
     const p = frame.plan,
       key = [
@@ -223,7 +357,7 @@ export class StarfieldLayer implements CustomLayerInterface {
   }
   private waiting() {
     if (this.frame)
-      this.report({
+      this.publish({
         planKey: this.frame.planKey,
         ready: false,
         view: null,
@@ -239,7 +373,7 @@ export class StarfieldLayer implements CustomLayerInterface {
     if (this.failed) return;
     this.failed = true;
     this.clearQueries();
-    this.report({
+    this.publish({
       planKey: this.frame?.planKey ?? "",
       ready: false,
       view: null,
@@ -309,7 +443,7 @@ export class StarfieldLayer implements CustomLayerInterface {
             : "blocked";
         this.clearQueries();
         this.resolvedKey = queryKey;
-        this.report({
+        this.publish({
           planKey: f.planKey,
           ready: true,
           view: { azimuth: c.azimuth, pitch: c.pitch },
@@ -336,8 +470,20 @@ export class StarfieldLayer implements CustomLayerInterface {
       dstRGB: gl.getParameter(gl.BLEND_DST_RGB),
       srcAlpha: gl.getParameter(gl.BLEND_SRC_ALPHA),
       dstAlpha: gl.getParameter(gl.BLEND_DST_ALPHA),
+      activeTexture: gl.getParameter(gl.ACTIVE_TEXTURE),
+      unpack: [
+        gl.UNPACK_FLIP_Y_WEBGL,
+        gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,
+        gl.UNPACK_COLORSPACE_CONVERSION_WEBGL,
+        gl.UNPACK_ALIGNMENT,
+      ].map((key) => [key, gl.getParameter(key)] as const),
     };
+    gl.activeTexture(gl.TEXTURE0);
+    const previousTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
+    const previousSampler = gl.getParameter(gl.SAMPLER_BINDING);
     try {
+      gl.bindSampler(0, null);
+      if (f.plan.layers.milkyWay) this.uploadTexture(gl);
       gl.enable(gl.DEPTH_TEST);
       gl.depthRange(0, 1);
       gl.depthMask(false);
@@ -382,8 +528,10 @@ export class StarfieldLayer implements CustomLayerInterface {
         }
         this.dirty = false;
       }
-      if (this.band) {
+      if (this.band && this.texture && this.strength > 0) {
         gl.useProgram(b);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        gl.uniform1i(gl.getUniformLocation(b, "u_atlas"), 0);
         gl.uniformMatrix4fv(
           gl.getUniformLocation(b, "u_camera"),
           false,
@@ -445,7 +593,7 @@ export class StarfieldLayer implements CustomLayerInterface {
         }
         if (!this.pending.length) {
           this.resolvedKey = queryKey;
-          this.report({
+          this.publish({
             planKey: f.planKey,
             ready: true,
             view: { azimuth: c.azimuth, pitch: c.pitch },
@@ -478,16 +626,25 @@ export class StarfieldLayer implements CustomLayerInterface {
       gl.bindVertexArray(previous.vao);
       gl.bindBuffer(gl.ARRAY_BUFFER, previous.buffer);
       gl.useProgram(previous.program);
+      gl.bindTexture(gl.TEXTURE_2D, previousTexture);
+      gl.bindSampler(0, previousSampler);
+      gl.activeTexture(previous.activeTexture);
+      for (const [key, value] of previous.unpack) gl.pixelStorei(key, value);
     }
     if (this.pending.length) this.map?.triggerRepaint();
   }
   onRemove() {
+    this.cancelTextureRequest();
+    this.bitmap?.close();
+    this.bitmap = undefined;
     this.clearQueries();
     const gl = this.gl;
     if (gl) {
       gl.deleteProgram(this.pointsProgram ?? null);
       gl.deleteProgram(this.bandProgram ?? null);
       gl.deleteProgram(this.lineProgram ?? null);
+      gl.deleteTexture(this.texture ?? null);
+      this.texture = undefined;
       gl.deleteBuffer(this.pointsBuffer ?? null);
       gl.deleteBuffer(this.bandBuffer ?? null);
       gl.deleteBuffer(this.indicesBuffer ?? null);

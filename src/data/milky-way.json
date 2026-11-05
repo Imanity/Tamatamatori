@@ -1,0 +1,14 @@
+{
+  "source": "https://www.eso.org/public/images/eso0932a/",
+  "download": "https://cdn.eso.org/images/large/eso0932a.jpg",
+  "credit": "ESO/S. Brunier",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "sourceSha256": "60400c92c54b7c1bd12299c69e83b16e5b6256e7dabacc478c021758ecd28179",
+  "outputSha256": "40c738c6ee6fb479296b46817fb1cbf8f442bb798d4c5d3dd5e89e67e641aa9c",
+  "width": 4096,
+  "height": 512,
+  "coordinates": "Galactic plate carree; l=0 at u=0.5, longitude increases left; b=+22.5 at v=0, b=-22.5 at v=1",
+  "modifications": "Crop Galactic latitude +/-22.5 deg, Lanczos resize, 5x5 median star suppression, cap channels at 1.6*11x11 median+4 to suppress halos, 0.55px Gaussian, subtract RGB(12,12,14), blend 16px longitude seam, WebP quality 88. No AI processing.",
+  "limitation": "Photographic panorama, not an astrometric/photometric map. Residual photographic stars are possible; no target positions are derived from this texture."
+}

@@ -43,6 +43,7 @@ export interface SkyVisibility {
   view: { azimuth: number; pitch: number } | null;
   states: Record<string, Occlusion>;
   message?: string;
+  milkyWay?: { phase: "off" | "loading" | "ready" | "error"; message?: string };
 }
 export const emptySkyVisibility: SkyVisibility = {
   planKey: "",
@@ -210,7 +211,7 @@ export function milkyWayMesh(plan: ShootingPlan) {
   const vertices: number[] = [],
     indices: number[] = [];
   for (let l = 0; l <= 360; l++)
-    for (let b = -18; b <= 18; b += 2) {
+    for (let b = -24; b <= 24; b++) {
       const latitude = b * degrees,
         longitude = l * degrees;
       const p = RotateVector(
@@ -229,9 +230,9 @@ export function milkyWayMesh(plan: ShootingPlan) {
       vertices.push(...ray, longitude, latitude);
     }
   for (let l = 0; l < 360; l++)
-    for (let b = 0; b < 18; b++) {
-      const a = l * 19 + b,
-        c = a + 19;
+    for (let b = 0; b < 48; b++) {
+      const a = l * 49 + b,
+        c = a + 49;
       indices.push(a, c, a + 1, a + 1, c, c + 1);
     }
   bandKey = key;
