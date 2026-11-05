@@ -22,7 +22,6 @@ const panelInfo: Record<
 };
 const slotNames = ["主栏", "右上", "右下"];
 const layers: { name: string; icon: IconName; hint: string }[] = [
-  { name: "深空天体", icon: "orbit", hint: "天体位置与构图参考" },
   { name: "空间站", icon: "satellite", hint: "空间站位置与轨迹" },
 ];
 const skyLayers = [
@@ -31,6 +30,7 @@ const skyLayers = [
   { id: "stars", name: "星空", icon: "stars" },
   { id: "milkyWay", name: "银河", icon: "orbit" },
   { id: "constellations", name: "星座名称与连线", icon: "compass" },
+  { id: "deepSky", name: "深空天体", icon: "orbit" },
 ] as const;
 
 function Divider({
@@ -332,17 +332,60 @@ export default function App() {
           </div>
           <div className="layer-list">
             {skyLayers.map(({ id, name, icon }) => (
-              <label className="layer-row layer-toggle" key={id}>
-                <Icon name={icon} size={19} />
-                <span>{name}</span>
-                <input
-                  type="checkbox"
-                  role="switch"
-                  aria-label={`显示${name}`}
-                  checked={plan.layers[id]}
-                  onChange={() => toggleLayer(id)}
-                />
-              </label>
+              <div key={id}>
+                <label className="layer-row layer-toggle">
+                  <Icon name={icon} size={19} />
+                  <span>{name}</span>
+                  <input
+                    type="checkbox"
+                    role="switch"
+                    aria-label={`显示${name}`}
+                    checked={plan.layers[id]}
+                    onChange={() => toggleLayer(id)}
+                  />
+                </label>
+                {id === "milkyWay" && plan.layers.milkyWay && (
+                  <div
+                    className="galaxy-contrast"
+                    role="group"
+                    aria-label="银河显示对比度"
+                  >
+                    <div className="galaxy-contrast-heading">
+                      <label htmlFor="galaxy-contrast">对比度</label>
+                      <output htmlFor="galaxy-contrast">
+                        {plan.milkyWayContrast}%
+                      </output>
+                    </div>
+                    <input
+                      id="galaxy-contrast"
+                      type="range"
+                      min="25"
+                      max="200"
+                      step="5"
+                      aria-label="银河对比度"
+                      aria-valuetext={`${plan.milkyWayContrast}%`}
+                      aria-describedby="galaxy-contrast-hint"
+                      value={plan.milkyWayContrast}
+                      onChange={(event) =>
+                        updatePlan({
+                          milkyWayContrast: Number(event.target.value),
+                        })
+                      }
+                    />
+                    <div className="galaxy-contrast-footer">
+                      <small id="galaxy-contrast-hint">银河显示强度</small>
+                      <button
+                        type="button"
+                        aria-label="重置银河对比度"
+                        disabled={plan.milkyWayContrast === 100}
+                        onClick={() => updatePlan({ milkyWayContrast: 100 })}
+                      >
+                        重置
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
             {layers.map((layer) => (
               <div className="layer-row" key={layer.name} title={layer.hint}>

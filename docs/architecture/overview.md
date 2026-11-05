@@ -1,6 +1,6 @@
 # 全局架构
 
-状态：P2 地形与晴空环境采用 MapLibre；P3 日月、亮星、金木星及银河采用本地星历/星表、参考折射与共享地形深度。更新：2026-11-05。
+状态：P2 地形与晴空环境采用 MapLibre；P3 日月、亮星、金木星、银河与深空采用本地星历/星表、参考折射与共享地形深度。更新：2026-11-05。
 
 本文定义职责与约定，不是完整技术规格。产品范围见[全局规划](../plan/overview.md)，交互含义见[全局设计](../design/overview.md)。
 
@@ -11,9 +11,9 @@
 | 状态 | 内容 |
 | --- | --- |
 | 已确定 | React 界面；地图、预览、参数与图层侧栏；开源地图引擎；统一拍摄计划；按阶段增量实现 |
-| 当前采用 | TypeScript + Vite；React 内置状态；Temporal polyfill；地图和独立三维预览采用 MapLibre GL JS；Mapterhorn DEM 与 OpenFreeMap 水体边界；Astronomy Engine 本地计算天体方向，HYG 亮星子集 |
+| 当前采用 | TypeScript + Vite；React 内置状态；Temporal polyfill；地图和独立三维预览采用 MapLibre GL JS；Mapterhorn DEM 与 OpenFreeMap 水体边界；Astronomy Engine 本地计算天体方向，HYG 亮星子集、OpenNGC 深空子集与轮廓 |
 | 后续可选 | 极区、独立水平水面或更高精度三维需求出现时，再评估 CesiumJS 或其他渲染器，不在本轮增加第二套引擎 |
-| 待验证 | 近地与长焦实景构图精度、极区覆盖、实际 GPU 性能和水面高程；深空/轨道数据源与真实星空可见度 |
+| 待验证 | 近地与长焦实景构图精度、极区覆盖、实际 GPU 性能和水面高程；轨道数据源、深空外观光度与真实星空可见度 |
 | 暂不引入 | 专用后端、数据库、账户服务、通用插件系统、云端渲染 |
 
 P2 首步采用 MapLibre 地形与第一人称相机能力，复用已有引擎、Worker 和参数模型。以自动检查验证几何与状态流，实际视觉与精度仍需浏览器验收。参见 [MapLibre 文档](https://maplibre.org/maplibre-gl-js/docs/)、[地形示例](https://maplibre.org/maplibre-gl-js/docs/examples/3d-terrain/)、[第一人称示例](https://maplibre.org/maplibre-gl-js/docs/examples/walk-around-a-map-in-first-person/)（查阅：2026-11-04）。
@@ -112,3 +112,5 @@ OpenStreetMap 公共标准瓦片服务有署名、缓存和访问限制，也不
 进入某项实现前，只补充本轮所需的决策：引擎选型验证全球选点与近地视角；地形接入验证覆盖、高程基准和许可；天文接入验证坐标、时间及误差；空间站接入验证轨道新鲜度与预测限制。结论记录于本目录，避免同时锁定整套未来依赖。
 
 实现阶段优先验证跨模块的一致性：同一机位、时间和镜头得到一致视场；跨时区或日期变更线不会错误改变时刻；焦距变化影响取景范围；缺数据、过期请求与图层关闭都得到正确反馈。精度阈值和性能预算在对应阶段建立基准后确定，本轮不作未经验证的数值承诺。
+
+深空首步采用固定 OpenNGC 位置/角尺寸/轮廓和三分量示意 atlas，未改机与 Hα 改机仅切换发射分量响应，扩展形状共享地形深度。数据、资源边界和遮挡查询见[深空架构](deep-sky.md)。

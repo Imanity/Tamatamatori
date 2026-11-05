@@ -1,0 +1,123 @@
+{
+  "date": "2026-11-05",
+  "url": "http://127.0.0.1:4177/Tamatamatori/",
+  "site": {
+    "latitude": 35.4172,
+    "longitude": 138.8729
+  },
+  "records": [
+    {
+      "name": "Controlled first atlas HTTP503",
+      "target": "找到 1 个目标\n\n猎户座大星云\n深空 · 混合星云\n深空轮廓加载失败\n154.6° / 几何 46.0°\n朝向",
+      "ready": "true",
+      "terrainError": 0,
+      "stars": [
+        "天狼星",
+        "参宿七",
+        "参宿四",
+        "参宿五",
+        "参宿二",
+        "井宿三",
+        "军市一",
+        "参宿六"
+      ]
+    },
+    {
+      "name": "M42 stock, 2026-11-09 01:00 Asia/Tokyo, 200mm",
+      "target": "找到 1 个目标\n\n猎户座大星云\n深空 · 混合星云\n当前 DEM 未遮挡\n154.6° / 几何 46.0°\n朝向",
+      "response": "stock"
+    },
+    {
+      "name": "M42 Hα modified, fixed 200mm",
+      "target": "找到 1 个目标\n\n猎户座大星云\n深空 · 混合星云\n当前 DEM 未遮挡\n154.6° / 几何 46.0°\n朝向",
+      "response": "ha-modified"
+    },
+    {
+      "name": "M31 stock/modified fixed view, 200mm",
+      "target": "找到 1 个目标\n\n仙女座星系\n深空 · 星系\n遮挡待测\n295.4° / 几何 46.7°\n朝向",
+      "clip": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 301.171875
+      }
+    },
+    {
+      "name": "M8 2026-07-16 02:22 Asia/Tokyo, Ha, 200mm",
+      "target": "找到 1 个目标\n\n礁湖星云\n深空 · 发射星云\n部分山体遮挡\n233.8° / 几何 6.5°\n朝向",
+      "labelCount": 0
+    },
+    {
+      "name": "Final M42 after readiness fix, local dev build",
+      "target": "找到 1 个目标\n\n猎户座大星云\n深空 · 混合星云\n当前 DEM 未遮挡\n154.6° / 几何 46.0°\n朝向",
+      "labels": [
+        "猎户座大星云"
+      ],
+      "terrainErrors": 0
+    },
+    {
+      "name": "M8 2026-11-09 12:00 Asia/Tokyo, Ha, 200mm",
+      "target": "找到 1 个目标\n\n礁湖星云\n深空 · 发射星云\n天空较亮 · 轮廓隐藏\n142.4° / 几何 19.7°\n朝向",
+      "labels": [],
+      "errors": []
+    },
+    {
+      "name": "M31 stock vs Hα modified, stable full-page screenshots after readiness fix",
+      "time": "2026-11-09T01:00 Asia/Tokyo",
+      "focalLengthMm": 200,
+      "comparison": {
+        "region": {
+          "x": 265,
+          "y": 301,
+          "width": 1238,
+          "height": 826
+        },
+        "changedPixels": 0,
+        "maxChannelDifference": 0
+      },
+      "files": [
+        "m31-stock-full.jpg",
+        "m31-ha-full.jpg"
+      ]
+    },
+    {
+      "name": "M8 actual GPU terrain series",
+      "timeZone": "Asia/Tokyo",
+      "date": "2026-07-16",
+      "focalLengthMm": 200,
+      "response": "ha-modified",
+      "samples": [
+        {
+          "time": "02:15",
+          "azimuthDeg": 232.6,
+          "geometricElevationDeg": 7.7,
+          "status": "当前 DEM 未遮挡",
+          "file": "m8-clear.jpg"
+        },
+        {
+          "time": "02:22",
+          "azimuthDeg": 233.8,
+          "geometricElevationDeg": 6.5,
+          "status": "部分山体遮挡",
+          "centreLabelVisible": false,
+          "file": "m8-partial.jpg"
+        },
+        {
+          "time": "02:30",
+          "azimuthDeg": 235,
+          "geometricElevationDeg": 5.2,
+          "status": "山体遮挡",
+          "file": "m8-blocked.jpg"
+        }
+      ]
+    }
+  ],
+  "finalLocalUrl": "http://127.0.0.1:5173/",
+  "automation": {
+    "tests": 151,
+    "passed": 151,
+    "buildBase": "/Tamatamatori/",
+    "coordinateReference": "32 ERFA atco13 directions; max difference ~0.000094 deg; not photometric validation"
+  },
+  "model": "OpenNGC contour/component illustration; stock vs qualitative Hα-enhanced response, no photographic/spectral flux model"
+}

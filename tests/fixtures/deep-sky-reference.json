@@ -1,0 +1,261 @@
+{
+  "source": "ERFA atco13; fixed OpenNGC ICRS/J2000 coordinates; zero PM/parallax/radial velocity, DUT1=0, polar motion=0, pressure=0, observer ellipsoidal height=0.",
+  "records": [
+    {
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-08T16:00:00Z",
+      "id": "dso-ngc0224",
+      "azimuth": 295.4027290637105,
+      "elevation": 46.72326501598796
+    },
+    {
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-08T16:00:00Z",
+      "id": "dso-ngc1976",
+      "azimuth": 154.55903217573126,
+      "elevation": 46.046405178944134
+    },
+    {
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-08T16:00:00Z",
+      "id": "dso-mel022",
+      "azimuth": 218.61843279749064,
+      "elevation": 76.11282782929983
+    },
+    {
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-08T16:00:00Z",
+      "id": "dso-ngc6523",
+      "azimuth": 290.7331569709534,
+      "elevation": -66.08041522930444
+    },
+    {
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-08T16:00:00Z",
+      "id": "dso-ngc7000",
+      "azimuth": 317.6271123768765,
+      "elevation": 11.1324609698746
+    },
+    {
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-08T16:00:00Z",
+      "id": "dso-ngc1499",
+      "azimuth": 284.63227655489453,
+      "elevation": 85.45432949766655
+    },
+    {
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-08T16:00:00Z",
+      "id": "dso-ic1805",
+      "azimuth": 334.70307677903855,
+      "elevation": 58.437073195017504
+    },
+    {
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-08T16:00:00Z",
+      "id": "dso-ic1848",
+      "azimuth": 336.41010775426304,
+      "elevation": 60.76180670149059
+    },
+    {
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-15T15:00:00Z",
+      "id": "dso-ngc0224",
+      "azimuth": 41.287978067494144,
+      "elevation": -4.024559916419193
+    },
+    {
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-15T15:00:00Z",
+      "id": "dso-ngc1976",
+      "azimuth": 123.26870709056621,
+      "elevation": -31.787268122283464
+    },
+    {
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-15T15:00:00Z",
+      "id": "dso-mel022",
+      "azimuth": 77.88336828593896,
+      "elevation": -27.195051459154968
+    },
+    {
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-15T15:00:00Z",
+      "id": "dso-ngc6523",
+      "azimuth": 275.5915355301536,
+      "elevation": 55.398253819095714
+    },
+    {
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-15T15:00:00Z",
+      "id": "dso-ngc7000",
+      "azimuth": 3.899353592686128,
+      "elevation": 11.347858041286642
+    },
+    {
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-15T15:00:00Z",
+      "id": "dso-ngc1499",
+      "azimuth": 66.29796658904272,
+      "elevation": -35.19850798044946
+    },
+    {
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-15T15:00:00Z",
+      "id": "dso-ic1805",
+      "azimuth": 32.93300783309924,
+      "elevation": -28.888942981639417
+    },
+    {
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-15T15:00:00Z",
+      "id": "dso-ic1848",
+      "azimuth": 34.85678503068736,
+      "elevation": -30.72280532355596
+    },
+    {
+      "latitude": 0,
+      "longitude": 179.9,
+      "instant": "2000-01-01T12:00:00Z",
+      "id": "dso-ngc0224",
+      "azimuth": 311.27125212156375,
+      "elevation": 0.24461112009097974
+    },
+    {
+      "latitude": 0,
+      "longitude": 179.9,
+      "instant": "2000-01-01T12:00:00Z",
+      "id": "dso-ngc1976",
+      "azimuth": 251.65326188526888,
+      "elevation": 72.63031786045302
+    },
+    {
+      "latitude": 0,
+      "longitude": 179.9,
+      "instant": "2000-01-01T12:00:00Z",
+      "id": "dso-mel022",
+      "azimuth": 303.0291099573969,
+      "elevation": 41.47303755933059
+    },
+    {
+      "latitude": 0,
+      "longitude": 179.9,
+      "instant": "2000-01-01T12:00:00Z",
+      "id": "dso-ngc6523",
+      "azimuth": 160.09234930868985,
+      "elevation": -63.96005628615663
+    },
+    {
+      "latitude": 0,
+      "longitude": 179.9,
+      "instant": "2000-01-01T12:00:00Z",
+      "id": "dso-ngc7000",
+      "azimuth": 330.0960113914119,
+      "elevation": -36.00137948517316
+    },
+    {
+      "latitude": 0,
+      "longitude": 179.9,
+      "instant": "2000-01-01T12:00:00Z",
+      "id": "dso-ngc1499",
+      "azimuth": 319.15267062860096,
+      "elevation": 38.384317053649546
+    },
+    {
+      "latitude": 0,
+      "longitude": 179.9,
+      "instant": "2000-01-01T12:00:00Z",
+      "id": "dso-ic1805",
+      "azimuth": 334.3112854742645,
+      "elevation": 12.883661276569242
+    },
+    {
+      "latitude": 0,
+      "longitude": 179.9,
+      "instant": "2000-01-01T12:00:00Z",
+      "id": "dso-ic1848",
+      "azimuth": 334.3893995737159,
+      "elevation": 15.362496045888903
+    },
+    {
+      "latitude": 64,
+      "longitude": -21,
+      "instant": "2099-01-01T00:00:00Z",
+      "id": "dso-ngc0224",
+      "azimuth": 273.3595579721695,
+      "elevation": 46.21966344676579
+    },
+    {
+      "latitude": 64,
+      "longitude": -21,
+      "instant": "2099-01-01T00:00:00Z",
+      "id": "dso-ngc1976",
+      "azimuth": 174.6131876709355,
+      "elevation": 20.561273398933253
+    },
+    {
+      "latitude": 64,
+      "longitude": -21,
+      "instant": "2099-01-01T00:00:00Z",
+      "id": "dso-mel022",
+      "azimuth": 210.06522788729265,
+      "elevation": 47.94085600422159
+    },
+    {
+      "latitude": 64,
+      "longitude": -21,
+      "instant": "2099-01-01T00:00:00Z",
+      "id": "dso-ngc6523",
+      "azimuth": 342.37814162047306,
+      "elevation": -49.52941589813017
+    },
+    {
+      "latitude": 64,
+      "longitude": -21,
+      "instant": "2099-01-01T00:00:00Z",
+      "id": "dso-ngc7000",
+      "azimuth": 318.78481928577753,
+      "elevation": 27.376309302898115
+    },
+    {
+      "latitude": 64,
+      "longitude": -21,
+      "instant": "2099-01-01T00:00:00Z",
+      "id": "dso-ngc1499",
+      "azimuth": 209.56643162330775,
+      "elevation": 60.6609224831767
+    },
+    {
+      "latitude": 64,
+      "longitude": -21,
+      "instant": "2099-01-01T00:00:00Z",
+      "id": "dso-ic1805",
+      "azimuth": 281.54526380784824,
+      "elevation": 72.03759188286088
+    },
+    {
+      "latitude": 64,
+      "longitude": -21,
+      "instant": "2099-01-01T00:00:00Z",
+      "id": "dso-ic1848",
+      "azimuth": 274.99496038582964,
+      "elevation": 73.59189107196133
+    }
+  ]
+}

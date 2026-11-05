@@ -20,8 +20,17 @@ export interface ShootingPlan {
   orientation: "landscape" | "portrait";
   instant: string;
   timeZone: string;
-  layers: { sun: boolean; moon: boolean; stars: boolean; milkyWay: boolean; constellations: boolean };
+  layers: {
+    sun: boolean;
+    moon: boolean;
+    stars: boolean;
+    milkyWay: boolean;
+    constellations: boolean;
+    deepSky: boolean;
+  };
   refraction: "standard" | "none";
+  milkyWayContrast: number;
+  cameraResponse: "stock" | "ha-modified";
 }
 
 export const initialPlan: ShootingPlan = {
@@ -36,8 +45,17 @@ export const initialPlan: ShootingPlan = {
   orientation: "landscape",
   instant: "2026-11-04T08:00:00Z",
   timeZone: "Asia/Tokyo",
-  layers: { sun: true, moon: true, stars: false, milkyWay: false, constellations: false },
+  layers: {
+    sun: true,
+    moon: true,
+    stars: false,
+    milkyWay: false,
+    constellations: false,
+    deepSky: false,
+  },
   refraction: "standard",
+  milkyWayContrast: 100,
+  cameraResponse: "stock",
 };
 
 export function normalizeLongitude(longitude: number) {

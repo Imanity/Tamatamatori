@@ -7,6 +7,15 @@ import {
   starCount,
 } from "../domain/starfield";
 import type { SkyVisibility } from "../domain/starfield";
+import type { SkyPoint } from "../domain/starfield";
+import {
+  deepSkyScene,
+  deepSkyView,
+  deepSkyCount,
+  deepSkyKinds,
+  deepSkyResponseLabel,
+} from "../domain/deep-sky";
+import type { DeepSkyTarget } from "../domain/deep-sky";
 import {
   constellationScene,
   constellationCount,
@@ -25,9 +34,16 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility) {
     if (
       !plan.layers.stars &&
       !plan.layers.milkyWay &&
-      !plan.layers.constellations
+      !plan.layers.constellations &&
+      !plan.layers.deepSky
     )
-      return { model: null, appearance: null, figures: [], error: "" };
+      return {
+        model: null,
+        appearance: null,
+        figures: [],
+        deep: [],
+        error: "",
+      };
     try {
       const model = skyReference(plan);
       return {
@@ -36,6 +52,7 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility) {
         figures: plan.layers.constellations
           ? constellationScene(plan).anchors
           : [],
+        deep: plan.layers.deepSky ? deepSkyScene(plan).objects : [],
         error: "",
       };
     } catch {
@@ -43,6 +60,7 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility) {
         model: null,
         appearance: null,
         figures: [],
+        deep: [],
         error: "星空计算失败，请检查机位与拍摄时刻。",
       };
     }
@@ -53,6 +71,7 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility) {
     plan.layers.stars,
     plan.layers.milkyWay,
     plan.layers.constellations,
+    plan.layers.deepSky,
     plan.refraction,
   ]);
   const current = visibility.planKey === celestialPlanKey(plan),
@@ -65,23 +84,38 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility) {
         ...(plan.layers.milkyWay ? [result.model.core] : []),
       ]
     : [];
-  const project = (point: (typeof points)[number], reference = false) => {
-    const projected = skyPointView(view, point),
+  const project = (point: SkyPoint, reference = false) => {
+    const isDeep = point.id.startsWith("dso-");
+    const projected = isDeep
+        ? deepSkyView(view, point as DeepSkyTarget)
+        : skyPointView(view, point),
       occlusion =
-        current && visibility.message
+        current &&
+        (visibility.message ||
+          (isDeep && visibility.deepSky?.phase === "error"))
           ? "error"
-          : current && visibility.ready
+          : current &&
+              visibility.ready &&
+              (!isDeep || visibility.deepSky?.phase === "ready")
             ? (visibility.states[point.id] ?? "waiting")
             : "waiting";
     return {
       point,
       ...projected,
       occlusion,
+      labelOcclusion: isDeep
+        ? current && visibility.ready
+          ? (visibility.states[`${point.id}:label`] ?? "waiting")
+          : "waiting"
+        : occlusion,
+      partialFrame: "partialFrame" in projected && projected.partialFrame,
       opacity: reference
         ? 1
-        : result.appearance
-          ? starOpacity(point, result.appearance)
-          : 0,
+        : isDeep
+          ? (result.appearance?.galaxyStrength ?? 0)
+          : result.appearance
+            ? starOpacity(point, result.appearance)
+            : 0,
     };
   };
   return {
@@ -91,9 +125,18 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility) {
       : current && visibility.milkyWay
         ? visibility.milkyWay
         : { phase: "loading" as const },
+    deepSky: !plan.layers.deepSky
+      ? { phase: "off" as const }
+      : current && visibility.deepSky
+        ? visibility.deepSky
+        : { phase: "loading" as const },
     error: result.error || (current ? (visibility.message ?? "") : ""),
     targets: points.map((point) => project(point)),
     figures: result.figures.map((point) => project(point, true)),
+    deep: result.deep.map((point) => ({
+      ...project(point),
+      entry: point.entry,
+    })),
   };
 }
 type Scene = ReturnType<typeof useStarScene>;
@@ -102,22 +145,35 @@ export function StarLabels({ scene }: { scene: Scene }) {
   const placedFigures: { x: number; y: number }[] = [];
   return (
     <>
-      {(scene.milkyWay.phase === "loading" ||
-        scene.milkyWay.phase === "error") && (
-        <p className="sky-texture-feedback" role="status">
-          {scene.milkyWay.phase === "error"
-            ? scene.milkyWay.message
-            : "正在加载银河细节…"}
-        </p>
-      )}
-      {[...scene.targets, ...scene.figures].map(
-        ({ point, pixel, state, occlusion, opacity }) => {
+      <div className="sky-feedback-stack">
+        {(scene.milkyWay.phase === "loading" ||
+          scene.milkyWay.phase === "error") && (
+          <p className="sky-texture-feedback" role="status">
+            {scene.milkyWay.phase === "error"
+              ? scene.milkyWay.message
+              : "正在加载银河细节…"}
+          </p>
+        )}
+        {(scene.deepSky.phase === "loading" ||
+          scene.deepSky.phase === "error") && (
+          <p className="deep-sky-feedback" role="status">
+            {scene.deepSky.phase === "error"
+              ? scene.deepSky.message
+              : "正在加载深空轮廓…"}
+          </p>
+        )}
+      </div>
+      {[...scene.targets, ...scene.figures, ...scene.deep].map(
+        ({ point, pixel, state, labelOcclusion, occlusion, opacity }) => {
           const figure = point.id.startsWith("constellation-"),
             occupied = figure ? placedFigures : placed;
           if (
             !pixel ||
             state !== "画面内" ||
-            occlusion !== "clear" ||
+            labelOcclusion !== "clear" ||
+            (occlusion !== "clear" && occlusion !== "partial") ||
+            Math.abs(pixel.x) > 1 ||
+            Math.abs(pixel.y) > 1 ||
             opacity < STAR_LABEL_ALPHA ||
             occupied.some(
               (p) =>
@@ -131,6 +187,9 @@ export function StarLabels({ scene }: { scene: Scene }) {
               className={`sky-label ${point.id === "galactic-center" ? "sky-core-label" : ""} ${figure ? "constellation-label" : ""}`}
               key={point.id}
               data-sky-label={point.name}
+              data-dso-label={
+                point.id.startsWith("dso-") ? point.name : undefined
+              }
               data-constellation-label={figure ? point.name : undefined}
               style={{
                 opacity: Math.min(1, opacity / 0.35),
@@ -159,7 +218,8 @@ export function StarReadout({
   if (
     !plan.layers.stars &&
     !plan.layers.milkyWay &&
-    !plan.layers.constellations
+    !plan.layers.constellations &&
+    !plan.layers.deepSky
   )
     return null;
   const core = scene.targets.find((t) => t.point.id === "galactic-center");
@@ -180,7 +240,7 @@ export function StarReadout({
       )}
       {plan.layers.milkyWay && (
         <p>
-          银河细节 · 全景衍生 · 银心
+          银河细节 · 对比度 {plan.milkyWayContrast ?? 100}% · 全景衍生 · 银心
           {core?.state === "画面内"
             ? occlusionLabels[core.occlusion]
             : (core?.state ?? "计算中")}
@@ -188,6 +248,65 @@ export function StarReadout({
       )}
       {plan.layers.constellations && (
         <p>星座参考 · {constellationCount} 座 · 名称与连线仅作定位</p>
+      )}
+      {plan.layers.deepSky && (
+        <>
+          <p>
+            深空轮廓 · {deepSkyCount} 个目标 ·{" "}
+            {deepSkyResponseLabel(plan.cameraResponse)}
+          </p>
+          <p>连续谱与发射分量示意 · 改机仅增强 Hα · 非曝光预测</p>
+          <p>M31/M42 使用局部影像结构，其余为目录轮廓；颜色未作光度定标。</p>
+          <details open>
+            <summary>深空目标与朝向</summary>
+            {scene.deep.map(
+              ({ point, entry, state, occlusion, partialFrame, opacity }) => (
+                <div
+                  className="celestial-row"
+                  key={point.id}
+                  data-dso-status={point.name}
+                >
+                  <span>
+                    {point.name}
+                    <small>
+                      {entry.aliases[0]} · {deepSkyKinds[entry.model]}
+                    </small>
+                  </span>
+                  <span>
+                    {state === "画面内"
+                      ? occlusion === "clear" && opacity < STAR_LABEL_ALPHA
+                        ? "天空较亮 · 轮廓隐藏"
+                        : `${partialFrame ? "部分入画 · " : ""}${occlusionLabels[occlusion]}`
+                      : state}
+                  </span>
+                  <span>
+                    {point.azimuth.toFixed(1)}° / 几何{" "}
+                    {point.elevation.toFixed(1)}° · 目录 {entry.majorArcmin}′ ×{" "}
+                    {entry.minorArcmin}′
+                  </span>
+                  <button
+                    aria-label={`朝向${point.name}`}
+                    disabled={state === "地平线下"}
+                    onClick={() => {
+                      const ray = skyPointView(plan, point).ray;
+                      update({
+                        azimuth: point.azimuth,
+                        pitch:
+                          (Math.asin(Math.max(-1, Math.min(1, ray[2]))) * 180) /
+                          Math.PI,
+                      });
+                    }}
+                  >
+                    朝向
+                  </button>
+                </div>
+              ),
+            )}
+          </details>
+          <p className="sky-limit">
+            遮挡按画面内发光轮廓；外轮廓可包含周边云气，目录尺寸为参考。
+          </p>
+        </>
       )}
       {scene.targets.length > 0 && (
         <details>

@@ -174,8 +174,9 @@
   padding: 4px 6px; border-radius: 3px; background: #fff3d9eb; color: #785534;
   font-size: 9px; line-height: 1.5; pointer-events: none;
 }
-.sky-texture-feedback {
-  position: absolute; top: 35px; left: 10px; right: 10px; width: fit-content;
+.sky-feedback-stack { position: absolute; top: 35px; left: 10px; right: 10px; display: flex; flex-direction: column; gap: 4px; pointer-events: none; z-index: 3; }
+.sky-texture-feedback, .deep-sky-feedback {
+  width: fit-content;
   margin: 0; padding: 5px 8px; border-radius: 4px; background: #f5f4e9ed;
   color: #574b33; font-size: 11px; line-height: 1.6; pointer-events: none;
 }

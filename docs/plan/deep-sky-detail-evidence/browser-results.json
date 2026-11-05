@@ -1,0 +1,95 @@
+{
+  "date": "2026-11-05",
+  "url": "http://127.0.0.1:5173/",
+  "site": {
+    "latitude": 35.4172,
+    "longitude": 138.8729
+  },
+  "atlasSha256": "178447ba9d6fb457269668bba0b968b52a1299526e161c9ac34bc8e7749974eb",
+  "records": [
+    {
+      "name": "M42 stock/Ha comparison",
+      "time": "2026-11-09T01:00 Asia/Tokyo",
+      "focalLength": 600,
+      "target": "找到 1 个目标\n\n猎户座大星云\n深空 · 混合星云\n当前 DEM 未遮挡\n154.6° / 几何 46.0°\n朝向",
+      "files": [
+        "m42-stock.jpg",
+        "m42-ha.jpg"
+      ]
+    },
+    {
+      "name": "M31 detailed continuum comparison",
+      "time": "2026-11-09T01:00 Asia/Tokyo",
+      "focalLength": 600,
+      "target": "找到 1 个目标\n\n仙女座星系\n深空 · 星系\n当前 DEM 未遮挡\n295.4° / 几何 46.7°\n朝向",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 301.171875
+      },
+      "files": [
+        "m31-stock.jpg",
+        "m31-ha.jpg"
+      ],
+      "comparison": {
+        "region": {
+          "x": 265,
+          "y": 301,
+          "width": 1238,
+          "height": 826
+        },
+        "changedPixels": 0,
+        "maxChannelDifference": 0
+      }
+    },
+    {
+      "name": "M31 centre outside frame, structure partly visible",
+      "focalLength": 1000,
+      "azimuth": 297.4,
+      "labelCount": 0,
+      "target": "找到 1 个目标\n\n仙女座星系\n深空 · 星系\n当前 DEM 未遮挡\n295.4° / 几何 46.7°\n朝向",
+      "file": "m31-partial.jpg"
+    },
+    {
+      "name": "M42 daylight, Hα modified still fades",
+      "time": "2026-11-09T07:00 Asia/Tokyo",
+      "focalLength": 1000,
+      "target": "找到 1 个目标\n\n猎户座大星云\n深空 · 混合星云\n天空较亮 · 轮廓隐藏\n255.5° / 几何 10.7°\n朝向",
+      "labels": [],
+      "file": "m42-daylight.jpg"
+    },
+    {
+      "name": "M42 new component mask and DEM",
+      "time": "2026-01-19T02:50 Asia/Tokyo",
+      "focalLength": 200,
+      "target": "找到 1 个目标\n\n猎户座大星云\n深空 · 混合星云\n部分山体遮挡\n260.0° / 几何 4.7°\n朝向",
+      "labels": [],
+      "file": "m42-ridge.jpg"
+    },
+    {
+      "name": "M42 fully behind DEM",
+      "time": "2026-01-19T03:05 Asia/Tokyo",
+      "focalLength": 200,
+      "target": "找到 1 个目标\n\n猎户座大星云\n深空 · 混合星云\n山体遮挡\n262.2° / 几何 1.6°\n朝向",
+      "labels": [],
+      "file": "m42-blocked.jpg"
+    }
+  ],
+  "checks": {
+    "automatic": {
+      "passed": 153,
+      "total": 153
+    },
+    "buildBase": "/Tamatamatori/",
+    "independentRegistration": {
+      "reference": "PyAVM 0.9.9 + Astropy 7.1.1 / WCSLIB",
+      "samples": 50,
+      "maxReferencePixelDifference": 2.8e-11,
+      "scope": "transformation implementation only; no source astrometric/photometric precision claim"
+    },
+    "repeatAtlasGenerationSha256": "178447ba9d6fb457269668bba0b968b52a1299526e161c9ac34bc8e7749974eb",
+    "browserConsoleErrorsObserved": 0
+  },
+  "limits": "Only M31/M42 have local photographic structure; display-colour component proxies, partial coverage, residual stars/nearby objects possible; no spectral/camera/exposure calibration."
+}

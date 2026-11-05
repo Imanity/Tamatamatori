@@ -7,3 +7,4 @@ dist/
 .sites-runtime/
 
 tests/.dev-config-*/
+scripts/__pycache__/

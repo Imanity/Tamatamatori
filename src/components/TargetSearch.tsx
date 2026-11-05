@@ -6,6 +6,7 @@ import type { SkyVisibility } from "../domain/starfield";
 import { bodyPolygons } from "../domain/celestial-projection";
 import { celestialPlanKey, occlusionLabels } from "../domain/visibility";
 import type { VisibilitySnapshot } from "../domain/visibility";
+import { deepSkyView } from "../domain/deep-sky";
 import {
   skyAppearance,
   starOpacity,
@@ -47,25 +48,43 @@ export function TargetSearchResults({
         <p className="info-empty">试试“织女星”“Vega”或“Ori”。</p>
       )}
       {result.targets.map((target) => {
-        const projected = skyPointView(view, target),
+        const projected = target.deep
+            ? deepSkyView(view, target.deep)
+            : skyPointView(view, target),
           bodyView = target.body ? bodyPolygons(view, target.body) : null;
         const state = bodyView?.state ?? projected.state,
           enabled = plan.layers[target.layer],
           below = state === "地平线下";
-        const occlusion = target.body
-          ? visibility.planKey === key
-            ? visibility.states[target.body.id]
-            : "waiting"
-          : skyVisibility.planKey !== key
-            ? "waiting"
-            : skyVisibility.message
-              ? "error"
-              : skyVisibility.ready
-                ? (skyVisibility.states[target.id] ?? "waiting")
-                : "waiting";
+        const occlusion =
+          target.deep && skyVisibility.deepSky?.phase === "error"
+            ? "error"
+            : target.deep && skyVisibility.deepSky?.phase !== "ready"
+              ? "waiting"
+              : target.body
+                ? visibility.planKey === key
+                  ? visibility.states[target.body.id]
+                  : "waiting"
+                : skyVisibility.planKey !== key
+                  ? "waiting"
+                  : skyVisibility.message
+                    ? "error"
+                    : skyVisibility.ready
+                      ? (skyVisibility.states[target.id] ?? "waiting")
+                      : "waiting";
         let status = state === "画面内" ? occlusionLabels[occlusion] : state;
         if (!enabled) status = `图层已关闭 · ${state}`;
-        else if (
+        else if (target.deep && state === "画面内") {
+          if (skyVisibility.deepSky?.phase === "error")
+            status = "深空轮廓加载失败";
+          else if (occlusion === "clear" || occlusion === "partial") {
+            const sky = skyReference(plan);
+            if (
+              skyAppearance(sky.sunElevation, sky.moon).galaxyStrength <
+              STAR_LABEL_ALPHA
+            )
+              status = "天空较亮 · 轮廓隐藏";
+          }
+        } else if (
           target.layer === "stars" &&
           state === "画面内" &&
           occlusion === "clear"

@@ -194,6 +194,39 @@ Redistribution and use in source and binary forms, with or without modification,
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+OpenNGC deep-sky subset, contours and derived component atlas
+Copyright: Mattia Verga / OpenNGC contributors
+Source: https://github.com/mattiaverga/OpenNGC/tree/be3cd6c5498806a2fbb2f7e0452ef802dbb02be0
+License: Creative Commons Attribution-ShareAlike 4.0 International
+https://creativecommons.org/licenses/by-sa/4.0/
+Original outlines traced with Aladin Sky Atlas (CDS, Strasbourg Observatory)
+from DSS2 Color. The contour source distributes no original DSS photographic pixels.
+Changes: eight-object selection, Chinese labels/aliases, tangent-plane bounds;
+component masks and smooth display profiles are qualitative derived models,
+not measured spectroscopy or calibrated exposure. The JSON and derived atlas
+remain CC BY-SA 4.0 and are available from the preview attribution.
+M45 associated stars use the separately credited HYG subset above.
+Input and derived file hashes and coordinate conventions: src/data/deep-sky.json.
+
+Deep-sky photographic structure references (M42/M31 only)
+M42 credit: ESO/Igor Chekalin
+Source: https://www.eso.org/public/images/eso1103a/
+Usage: https://www.eso.org/public/outreach/copyright/
+M31 credit: ÷ 2002 R. Gendler, Photo by R. Gendler
+(credit string preserved from the ESA/Hubble/AstroPix publication)
+Source: https://esahubble.org/images/heic0512d/
+Downloaded from publisher archive: https://www.astropix.org/image/esahubble/heic0512d
+Usage: https://esahubble.org/copyright/
+Original images: Creative Commons Attribution 4.0 International
+https://creativecommons.org/licenses/by/4.0/
+Modified: AVM/TAN reprojection, resizing, median/morphological star suppression,
+black-level and display-tone changes, qualitative colour-component proxies,
+elliptical feathering over a faint OpenNGC envelope. No AI processing.
+Combined component atlas: CC BY-SA 4.0; original images remain CC BY 4.0.
+Original photographs are not bundled. This is structure reference, not measured
+spectral flux, validated source astrometry or a camera/exposure simulation.
+Full attribution and input/derived hashes: src/data/deep-sky.json.
+
 ESO Milky Way panorama (eso0932a)
 Credit: ESO/S. Brunier
 Source: https://www.eso.org/public/images/eso0932a/

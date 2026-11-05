@@ -8,6 +8,7 @@ import { createServer } from "vite";
 import { initialBearing } from "../src/domain/map.ts";
 import { skyReference } from "../src/domain/starfield.ts";
 import { constellationScene } from "../src/domain/constellations.ts";
+import {deepSkyScene} from '../src/domain/deep-sky.ts';
 
 // Exercise real React handlers and state with an SDK test double; no WebGL is
 // simulated, and these checks do not claim browser rendering verification.
@@ -88,7 +89,7 @@ class TestMap extends Events {
     return { contains: () => true };
   }
   areTilesLoaded() {
-    return true;
+    return this.tilesLoaded ?? true;
   }
   isSourceLoaded(id) {
     return this.sources.has(id);
@@ -149,11 +150,14 @@ class TestCelestialLayer {
 class TestStarfieldLayer {
   type = "custom";
   constructor(report) { this.report=report; }
+  setContrast(percent=100) { this.contrast=percent; }
+  setCameraResponse(response='stock') { this.cameraResponse=response; }
   setScene(frame) {
     this.frame=frame;
     const sky=skyReference(frame.plan);
     const figures=frame.plan.layers.constellations?constellationScene(frame.plan).anchors:[];
-    this.report({planKey:frame.planKey,ready:frame.ready,view:{azimuth:frame.plan.azimuth,pitch:frame.plan.pitch},states:Object.fromEntries([...sky.points,sky.core,...figures].map(p=>[p.id,frame.ready?'clear':'waiting']))});
+    const deep=frame.plan.layers.deepSky?deepSkyScene(frame.plan).objects:[];
+    this.report({planKey:frame.planKey,ready:frame.ready,view:{azimuth:frame.plan.azimuth,pitch:frame.plan.pitch},states:Object.fromEntries([...sky.points,sky.core,...figures,...deep,...deep.map(p=>({...p,id:p.id+':label'}))].map(p=>[p.id,frame.ready?'clear':'waiting'])),deepSky:{phase:frame.plan.layers.deepSky?'ready':'off'}});
   }
   invalidate() { if(this.frame)this.report({planKey:this.frame.planKey,ready:false,view:null,states:{}}); }
   onRemove() { this.removed=true; }
@@ -912,9 +916,9 @@ test("折射修改只更新日月轮廓，地形更新使遮挡失效，重建�
   assert.equal(map.cameraSolutions.length,poses);assert.equal(groundRequests.length,requests);
   assert.deepEqual(["经度","纬度","方位角","俯仰角","焦距"].map(value),before);
   assert.notDeepEqual(layer.frame.bodies.find(body=>body.id==='sun').outline,outline);
-  await settle(()=>map.emit('dataloading'));
+  await settle(()=>{map.tilesLoaded=false;map.emit('dataloading');});
   assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes('遮挡待测'));
-  await settle(()=>map.emit('sourcedata'));
+  await settle(()=>{map.tilesLoaded=true;map.emit('sourcedata');});
   assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes('当前 DEM 未遮挡'));
   await settle(()=>setControl(document.querySelector('select[aria-label="拍摄预览面板位置"]'),0));
   const restored = await readyTerrain();assert.equal(layer.removed,true);
@@ -1051,6 +1055,63 @@ test('星空与银河独立开关、朝向及实际相机反馈联动，不重�
   assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);assert.equal(input('当地日期与时间').value,time);
 });
 
+test('银河对比度滑杆即时联动，重置/关闭重开/布局保留正确，未重载地形或作废几何状态',async t=>{
+  await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
+  assert.equal(document.querySelector('#galaxy-contrast'),null);
+  await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
+  const slider=()=>document.querySelector('#galaxy-contrast'),layer=map.customLayers.find(l=>l instanceof TestStarfieldLayer);
+  assert.equal(slider().value,'100');assert.equal(document.querySelector('[aria-label="重置银河对比度"]').disabled,true);
+  const fields=['经度','纬度','焦距','相机离地高度','方位角','俯仰角'].map(value),time=input('当地日期与时间').value;
+  const originalFrame=layer.frame,poses=map.cameraSolutions.length,environments=map.environments.length;
+  for (const percent of [25,200]) {
+    await settle(()=>setControl(slider(),percent));assert.equal(layer.contrast,percent);
+    assert.equal(slider().getAttribute('aria-valuetext'),`${percent}%`);
+    assert.match(document.querySelector('.sky-readout').textContent,new RegExp(`对比度 ${percent}%`));
+    assert.equal(layer.frame,originalFrame);assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
+    assert.equal(map.cameraSolutions.length,poses);assert.equal(map.environments.length,environments);
+    assert.deepEqual(['经度','纬度','焦距','相机离地高度','方位角','俯仰角'].map(value),fields);assert.equal(input('当地日期与时间').value,time);
+  }
+  await settle(()=>document.querySelector('[aria-label="重置银河对比度"]').click());assert.equal(slider().value,'100');assert.equal(layer.contrast,100);
+  await settle(()=>setControl(slider(),150));await settle(()=>document.querySelector('[aria-label="显示银河"]').click());assert.equal(slider(),null);
+  await settle(()=>document.querySelector('[aria-label="显示银河"]').click());assert.equal(slider().value,'150');
+  await settle(()=>setControl(document.querySelector('[aria-label="拍摄预览面板位置"]'),'0'));assert.equal(slider().value,'150');
+  await settle(()=>button('重置布局').click());assert.equal(slider().value,'150');
+});
+
+test('深空搜索开启与朝向，未改机/改机响应切换保留几何、时刻与 DEM',async t=>{
+  await workspace(t);const map=await readyTerrain();
+  await settle(()=>setControl(input('当地日期与时间'),'2026-11-09T01:00'));
+  await settle(()=>setControl(document.querySelector('#target-search'),'M42'));
+  assert.equal(document.querySelector('[aria-label="显示深空天体"]').checked,false);
+  assert.match(document.querySelector('[data-search-target="dso-ngc1976"]').textContent,/图层已关闭/);
+  const time=input('当地日期与时间').value,fields=['经度','纬度','焦距','相机离地高度'].map(value);
+  await settle(()=>document.querySelector('[aria-label="开启并朝向猎户座大星云"]').click());
+  assert.equal(document.querySelector('[aria-label="显示深空天体"]').checked,true);
+  assert.ok(document.querySelector('[data-dso-label="猎户座大星云"]'));
+  const layer=map.customLayers.find(l=>l instanceof TestStarfieldLayer),originalFrame=layer.frame,requests=groundRequests.length,poses=map.cameraSolutions.length;
+  await settle(()=>setControl(document.querySelector('[aria-label="深空相机响应"]'),'ha-modified'));
+  assert.equal(layer.cameraResponse,'ha-modified');assert.equal(layer.frame,originalFrame);assert.equal(groundRequests.length,requests);assert.equal(terrainMap(),map);assert.equal(map.cameraSolutions.length,poses);
+  assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);assert.equal(input('当地日期与时间').value,time);
+  await settle(()=>document.querySelector('[aria-label="清除目标搜索"]').click());
+  assert.equal(document.querySelectorAll('[data-dso-status]').length,8);assert.match(document.querySelector('.sky-readout').textContent,/天文改机/);
+  await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());assert.equal(document.querySelector('[data-dso-label]'),null);
+  await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());assert.equal(document.querySelector('[aria-label="深空相机响应"]').value,'ha-modified');
+});
+
+test('深空部分遮挡不等于中心名称可见，轮廓加载失败单独反馈',async t=>{
+  await workspace(t);const map=await readyTerrain();
+  await settle(()=>setControl(input('当地日期与时间'),'2026-11-09T01:00'));
+  await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());
+  await settle(()=>document.querySelector('[aria-label="朝向猎户座大星云"]').click());
+  const layer=map.customLayers.find(l=>l instanceof TestStarfieldLayer),id='dso-ngc1976',key=layer.frame.planKey;
+  const report=(label,phase='ready')=>layer.report({planKey:key,ready:true,view:null,states:{[id]:'partial',[id+':label']:label},deepSky:{phase,message:phase==='error'?'深空结构加载失败，请关闭再开启深空天体重试。':undefined}});
+  await settle(()=>report('blocked'));assert.match(document.querySelector('[data-dso-status="猎户座大星云"]').textContent,/部分山体遮挡/);assert.equal(document.querySelector('[data-dso-label="猎户座大星云"]'),null);
+  await settle(()=>report('clear'));assert.ok(document.querySelector('[data-dso-label="猎户座大星云"]'));
+  await settle(()=>setControl(document.querySelector('#target-search'),'M42'));await settle(()=>report('clear','error'));
+  assert.match(document.querySelector('.deep-sky-feedback').textContent,/加载失败/);assert.equal(document.querySelector('.terrain-feedback-error'),null);assert.equal(document.querySelector('[data-dso-label]'),null);
+  assert.match(document.querySelector('[data-search-target="dso-ngc1976"]').textContent,/深空轮廓加载失败/);
+});
+
 test('银河纹理状态与遮挡分开，搜索时也显示失败，地形与星点保持可用',async t=>{
   await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
   await settle(()=>document.querySelector('[aria-label="显示星空"]').click());
@@ -1079,7 +1140,7 @@ test('星空名称等待实际遮挡结果，山体遮挡或失败不沿用旧�
   await settle(()=>layer.report({planKey:layer.frame.planKey,ready:true,view:null,states:{[id]:'blocked'}}));
   assert.equal(document.querySelector('[data-sky-label="北极星"]'),null);
   assert.match(document.querySelector('[data-sky-status="北极星"]').textContent,/山体遮挡/);
-  await settle(()=>map.emit('dataloading'));
+  await settle(()=>{map.tilesLoaded=false;map.emit('dataloading');});
   assert.match(document.querySelector('[data-sky-status="北极星"]').textContent,/待测/);
   await settle(()=>layer.report({planKey:layer.frame.planKey,ready:false,view:null,states:{},message:'测试星空图形失败'}));
   assert.ok(document.querySelector('.terrain-feedback-error'));assert.equal(document.querySelector('[data-sky-label="北极星"]'),null);
@@ -1165,6 +1226,20 @@ test('侧栏搜索发现未开启目标，输入不改变构图，明确选择�
   await settle(()=>document.querySelector('[aria-label="清除目标搜索"]').click());
   assert.equal(document.querySelector('.target-search-results'),null);assert.ok(document.querySelector('.info-body .preview-readout'));
   assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
+});
+
+test('缓存视野的加载事件在没有后续 sourcedata 时恢复深空图层',async t=>{
+  await workspace(t);const map=await readyTerrain();
+  await settle(()=>setControl(input('当地日期与时间'),'2026-11-09T01:00'));
+  await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());
+  await settle(()=>setControl(document.querySelector('#target-search'),'M31'));
+  await settle(()=>document.querySelector('[aria-label="朝向仙女座星系"]').click());
+  const layer=map.customLayers.find(l=>l instanceof TestStarfieldLayer),oldKey=layer.frame.key;
+  await settle(()=>map.emit('dataloading'));
+  assert.notEqual(layer.frame.key,oldKey);assert.equal(layer.frame.ready,true);
+  assert.match(document.querySelector('.target-search-results').textContent,/当前 DEM 未遮挡/);
+  await settle(()=>setControl(document.querySelector('[aria-label="深空相机响应"]'),'ha-modified'));
+  assert.equal(layer.frame.ready,true);assert.ok(document.querySelector('[data-dso-label="仙女座星系"]'));
 });
 
 test('侧栏收起、面板交换保留搜索，地平线下的未开启目标只启用图层',async t=>{

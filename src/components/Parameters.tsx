@@ -222,18 +222,46 @@ export function Parameters({
         <TimeField plan={plan} update={update} />
         <label className="field">
           <span className="field-label">大气折射</span>
-          <select aria-label="大气折射模型" value={plan.refraction}
-            onChange={(event) => update({ refraction: event.target.value as ShootingPlan["refraction"] })}>
+          <select
+            aria-label="大气折射模型"
+            value={plan.refraction}
+            onChange={(event) =>
+              update({
+                refraction: event.target.value as ShootingPlan["refraction"],
+              })
+            }
+          >
             <option value="standard">标准折射 · 海平面近似</option>
             <option value="none">无折射 · 几何位置</option>
           </select>
         </label>
-        <p className="field-hint">标准折射使用固定参考大气，不含实测气象；近地平线结果仅供构图参考。</p>
+        <p className="field-hint">
+          标准折射使用固定参考大气，不含实测气象；近地平线结果仅供构图参考。
+        </p>
       </fieldset>
       <fieldset>
         <legend>
           <span className="section-number">02</span> 相机与镜头
         </legend>
+        <label className="field">
+          <span className="field-label">深空相机响应</span>
+          <select
+            aria-label="深空相机响应"
+            value={plan.cameraResponse}
+            onChange={(event) =>
+              update({
+                cameraResponse: event.target
+                  .value as ShootingPlan["cameraResponse"],
+              })
+            }
+          >
+            <option value="stock">未改机 · 普通相机</option>
+            <option value="ha-modified">天文改机 · Hα 增强</option>
+          </select>
+        </label>
+        <p className="field-hint">
+          改机模式增强星云 Hα 红光分量，用于构图外观对比。
+        </p>
         <NumberField
           label="焦距"
           value={plan.focalLength}
@@ -383,7 +411,8 @@ export function Parameters({
       <div className="parameter-note">
         <Icon name="info" size={16} />
         <span>
-          天空与地表明暗随时间变化，仅为晴空近似，不含天气与曝光。水面高程按 DEM 近似。
+          天空与地表明暗随时间变化，仅为晴空近似，不含天气与曝光。水面高程按 DEM
+          近似。
         </span>
       </div>
     </div>

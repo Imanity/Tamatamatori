@@ -29,6 +29,9 @@ import starCatalogUrl from "../data/bright-stars.json?url";
 import constellationCatalogUrl from "../data/constellations.json?url";
 import constellationStarsUrl from "../data/constellation-stars.json?url";
 import { TargetSearchResults } from "./TargetSearch";
+import deepSkyCatalogUrl from "../data/deep-sky.json?url";
+import deepSkyAtlasUrl from "../data/deep-sky-atlas.png?url";
+import { deepSkyImageCredits } from "../domain/deep-sky";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -297,13 +300,14 @@ export function PreviewPanel({
                 />
               </section>
               <section className="info-section">
-                <h3>星空与星座</h3>
+                <h3>星空、星座与深空</h3>
                 <StarReadout scene={starScene} plan={plan} update={update} />
                 {!plan.layers.stars &&
                   !plan.layers.milkyWay &&
-                  !plan.layers.constellations && (
+                  !plan.layers.constellations &&
+                  !plan.layers.deepSky && (
                     <p className="info-empty">
-                      在左侧图层中开启星空、银河或星座，查看目标方向。
+                      在左侧图层中开启星空、银河、星座或深空天体，查看目标方向。
                     </p>
                   )}
               </section>
@@ -318,6 +322,36 @@ export function PreviewPanel({
           infoHost,
         )}
       <div className="preview-attribution">
+        {plan.layers.deepSky && (
+          <>
+            <a
+              href="https://github.com/mattiaverga/OpenNGC"
+              target="_blank"
+              rel="noreferrer"
+            >
+              OpenNGC · Mattia Verga · CC BY-SA 4.0
+            </a>
+            <a href={deepSkyCatalogUrl} download="tamatamatori-deep-sky.json">
+              深空数据及轮廓
+            </a>
+            <a
+              href={deepSkyAtlasUrl}
+              download="tamatamatori-deep-sky-components.png"
+            >
+              深空分量示意图
+            </a>
+            {deepSkyImageCredits.map((source) => (
+              <a
+                href={source.page}
+                key={source.catalogId}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {source.credit} · CC BY 4.0 · 结构衍生
+              </a>
+            ))}
+          </>
+        )}
         {plan.layers.milkyWay && (
           <a
             href="https://www.eso.org/public/images/eso0932a/"
@@ -329,7 +363,8 @@ export function PreviewPanel({
         )}
         {(plan.layers.stars ||
           plan.layers.milkyWay ||
-          plan.layers.constellations) && (
+          plan.layers.constellations ||
+          plan.layers.deepSky) && (
           <a href={starCatalogUrl} download="tamatamatori-bright-stars.json">
             HYG 4.1 · CC BY-SA 4.0 · 目录
           </a>

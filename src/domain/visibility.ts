@@ -11,7 +11,7 @@ export const emptyVisibility: VisibilitySnapshot = { planKey: "", states: { sun:
 export function celestialPlanKey(plan: ShootingPlan) {
   return [plan.longitude, plan.latitude, plan.instant, plan.azimuth, plan.pitch, plan.focalLength,
     plan.sensor, plan.aspectRatio, plan.orientation, plan.cameraHeight, plan.refraction,
-    plan.layers.sun, plan.layers.moon, !!plan.layers.stars, !!plan.layers.milkyWay, !!plan.layers.constellations].join("/");
+    plan.layers.sun, plan.layers.moon, !!plan.layers.stars, !!plan.layers.milkyWay, !!plan.layers.constellations, !!plan.layers.deepSky].join("/");
 }
 
 export function classifyOcclusion(clear: boolean, blocked: boolean): Occlusion {

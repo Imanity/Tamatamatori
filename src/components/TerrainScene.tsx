@@ -280,6 +280,8 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange, onSkyCh
           );
         }
         perspective?.setView(current.plan);
+        starfield?.setContrast(current.plan.milkyWayContrast);
+        starfield?.setCameraResponse(current.plan.cameraResponse);
         const planKey = celestialPlanKey(current.plan);
         const ready = map.areTilesLoaded() && map.isSourceLoaded(TERRAIN_SOURCE) && map.isSourceLoaded(WATER_SOURCE);
         const renderView = { azimuth: (map.getBearing() % 360 + 360) % 360, pitch: map.getPitch() - 90 };
@@ -381,6 +383,9 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange, onSkyCh
           markReady();
         });
         map.on("dataloading", () => {
+          // A cached/sky-only view may finish without another sourcedata event.
+          // Re-evaluate readiness even when its pose and visible tiles are unchanged.
+          if (!disposed && !failed) { sourceRevision++; schedule(); }
           if (!disposed && !failed) celestialLayer?.invalidate();
           if (!disposed && !failed) starfield?.invalidate();
           if (!disposed && !failed) watchLoading();

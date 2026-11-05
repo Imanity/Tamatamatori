@@ -1,0 +1,80 @@
+[
+  {
+    "catalogId": "NGC0224",
+    "file": "heic0512d.jpg",
+    "page": "https://esahubble.org/images/heic0512d/",
+    "url": "https://www.astropix.org/archive/esahubble/heic0512d/esahubble_heic0512d_original.jpg",
+    "credit": "÷ 2002 R. Gendler, Photo by R. Gendler",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "sha256": "7093348e87d7491ab38d7c870d2f941f9a8f3895ecd9ecb51027ae5c31ddb72f",
+    "bytes": 1667180,
+    "dimensions": [
+      1955,
+      2700
+    ],
+    "wcs": {
+      "ReferenceDimension": [
+        1955.0,
+        2700.0
+      ],
+      "ReferencePixel": [
+        977.5,
+        1350.0
+      ],
+      "ReferenceValue": [
+        10.6251469072,
+        41.3265685818
+      ],
+      "Scale": [
+        -0.000868877774835,
+        0.000868877774835
+      ],
+      "Rotation": -180.44000000000003,
+      "CoordinateFrame": "ICRS",
+      "Equinox": "J2000",
+      "CoordsystemProjection": "TAN",
+      "Quality": "Full"
+    },
+    "role": "Registered structure reference only; display-colour channels do not recover spectral line fluxes."
+  },
+  {
+    "catalogId": "NGC1976",
+    "file": "eso1103a.jpg",
+    "page": "https://www.eso.org/public/images/eso1103a/",
+    "url": "https://cdn.eso.org/images/publicationjpg/eso1103a.jpg",
+    "credit": "ESO/Igor Chekalin",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "sha256": "d9f24a114bd25e938006b3781c34aea86baf4e94a4074a333908dacc932b95ad",
+    "bytes": 2337958,
+    "dimensions": [
+      4000,
+      3843
+    ],
+    "wcs": {
+      "ReferenceDimension": [
+        1280.0,
+        1230.0
+      ],
+      "ReferencePixel": [
+        483.704385997,
+        737.916183289
+      ],
+      "ReferenceValue": [
+        83.822156,
+        -5.390986
+      ],
+      "Scale": [
+        -0.00046210205,
+        0.00046210205
+      ],
+      "Rotation": 0.02345274615,
+      "CoordinateFrame": "ICRS",
+      "Equinox": "J2000",
+      "CoordsystemProjection": "TAN",
+      "Quality": "Full"
+    },
+    "role": "Registered structure reference only; display-colour channels do not recover spectral line fluxes."
+  }
+]

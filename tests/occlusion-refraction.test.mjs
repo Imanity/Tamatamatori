@@ -10,6 +10,7 @@ import { skyReference } from "../src/domain/starfield.ts";
 import { photoCameraMatrix } from "../src/preview/terrain-perspective-math.ts";
 import {constellationScene} from '../src/domain/constellations.ts';
 import {skyPointView} from '../src/domain/starfield.ts';
+import {deepSkyScene} from '../src/domain/deep-sky.ts';
 
 const close = (a, b, tolerance = 1e-6) => assert.ok(Math.abs(a - b) <= tolerance, `${a} vs ${b}`);
 const disc = (elevation) => ({ id: "sun", elevation, azimuth: 0, angularRadius: 0.25, distanceKm: 1.5e8, direction: direction(0, elevation) });
@@ -83,8 +84,8 @@ function fakeGL() {
   gl.blendFuncSeparate=(...values)=>['BLEND_SRC_RGB','BLEND_DST_RGB','BLEND_SRC_ALPHA','BLEND_DST_ALPHA'].forEach((name,i)=>state.set(gl[name],values[i]));
   gl.createQuery=()=>{const query={available:false}; queries.add(query);return query;};gl.deleteQuery=(query)=>queries.delete(query);
   gl.beginQuery=(_,query)=>{query.result=gl.results.shift();};gl.endQuery=()=>{};
-  gl.drawArrays=(mode,_,count)=>gl.draws.push({mode,count,probe:uniforms.get('u_probe'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK)});
-  gl.drawElements=(mode,count)=>gl.draws.push({mode,count,depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK)});
+  gl.drawArrays=(mode,_,count)=>gl.draws.push({mode,count,probe:uniforms.get('u_probe'),haGain:uniforms.get('u_ha_gain'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK),colorMask:[...state.get(gl.COLOR_WRITEMASK)]});
+  gl.drawElements=(mode,count)=>gl.draws.push({mode,count,strength:uniforms.get('u_strength'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK)});
   gl.getQueryParameter=(query,key)=>key===gl.QUERY_RESULT_AVAILABLE?query.available:query.result;
   gl.complete=()=>queries.forEach(query=>query.available=true);
   return {gl,queries,resources,state,enabled};
@@ -181,15 +182,31 @@ test('白昼透明星点仍独立测试几何遮挡，下一帧恢复正常明�
   const frame=starFrame('day');frame.plan.instant='2026-07-02T03:00:00Z';
   const target=skyReference(frame.plan).points.find(p=>p.name==='北极星');
   frame.plan.azimuth=target.azimuth;frame.plan.pitch=target.elevation;
-  layer.setScene(frame);layer.camera={azimuth:frame.plan.azimuth,pitch:frame.plan.pitch};layer.matrix=photoCameraMatrix(frame.plan);
+  layer.setScene(frame);layer.setContrast(200);layer.camera={azimuth:frame.plan.azimuth,pitch:frame.plan.pitch};layer.matrix=photoCameraMatrix(frame.plan);
   gl.results=[true];layer.render(gl);
   const points=gl.uploads.find(data=>data.length===928*9);
   assert.ok(points);for(let i=8;i<927*9;i+=9)assert.equal(points[i],0,'daytime visual stars must be transparent');
   assert.equal(points[928*9-1],1,'core remains a direction ring');
   assert.ok(gl.draws.some(draw=>draw.count===928&&draw.probe===0));
   assert.ok(gl.draws.some(draw=>draw.count===1&&draw.probe===1));assert.equal(queries.size,1);
+  assert.ok(!gl.draws.some(draw=>draw.mode===gl.TRIANGLES),'maximum display contrast cannot reveal the daytime galaxy');
   gl.complete();layer.render(gl);assert.equal(reports.at(-1).states[target.id],'clear');
   assert.equal(gl.draws.at(-1).probe,0);layer.onRemove();assert.equal(resources.size,0);
+});
+
+test('银河对比度只更新显示 uniform，不重传纹理/网格或作废遮挡查询',async()=>{
+  const {gl,queries,resources}=fakeGL(),reports=[],layer=await prepareStars(gl,reports);
+  gl.results=[true];layer.render(gl);gl.complete();layer.render(gl);
+  const base=gl.draws.filter(d=>d.mode===gl.TRIANGLES).at(-1).strength;
+  const uploads=gl.uploads.length,textureUploads=gl.textureUploads,reportCount=reports.length;
+  for (const percent of [25,100,200,100]) {
+    layer.setContrast(percent);layer.render(gl);
+    close(gl.draws.filter(d=>d.mode===gl.TRIANGLES).at(-1).strength,base*percent/100);
+    assert.equal(gl.uploads.length,uploads);assert.equal(gl.textureUploads,textureUploads);
+    assert.equal(queries.size,0);assert.equal(reports.length,reportCount);
+  }
+  for (const percent of [NaN,Infinity,-1,0,24,201]) assert.throws(()=>layer.setContrast(percent),RangeError);
+  layer.onRemove();assert.equal(resources.size,0);
 });
 
 test('星座单独开启绘制球面连线并查询名称遮挡，关闭清空，卸载释放新增资源',async()=>{
@@ -258,4 +275,45 @@ test('银河加载有明确超时，迟到结果不上传或覆盖错误状态',
   t.mock.timers.tick(12000);assert.equal(signal.aborted,true);assert.match(reports.at(-1).milkyWay.message,/超时/);
   finish({width:2048,height:256,close(){closed++;}});await Promise.resolve();assert.equal(closed,1);assert.equal(gl.textureUploads,0);
   assert.equal(reports.at(-1).milkyWay.phase,'error');layer.onRemove();assert.equal(resources.size,0);
+});
+
+async function prepareDeep(gl,reports,load=async()=>({width:2048,height:1024,close(){}})){
+  const layer=new StarfieldLayer(s=>reports.push(s),async()=>({width:2048,height:256,close(){}}),load);
+  layer.onAdd({triggerRepaint(){},getContainer:()=>({clientWidth:900,clientHeight:600}),getCanvas:()=>({width:900})},gl);
+  const plan={...initialPlan,instant:'2026-11-08T16:00:00Z',refraction:'none',focalLength:200,layers:{...initialPlan.layers,sun:false,moon:false,stars:false,milkyWay:false,constellations:false,deepSky:true}};
+  const target=deepSkyScene(plan).objects.find(p=>p.entry.catalogId==='NGC1976');plan.azimuth=target.azimuth;plan.pitch=target.elevation;
+  layer.setScene({key:'deep',planKey:'deep',ready:true,plan});layer.camera={azimuth:plan.azimuth,pitch:plan.pitch};layer.matrix=photoCameraMatrix(plan);
+  await new Promise(resolve=>setImmediate(resolve));return {layer,target};
+}
+
+test('深空轮廓分别查询清晰和被遮挡像素，中心名称独立查询；GL 状态与资源恢复',async()=>{
+  for(const [clear,blocked,expected] of [[true,false,'clear'],[true,true,'partial'],[false,true,'blocked'],[false,false,'subpixel']]){
+    const {gl,state,enabled,queries,resources}=fakeGL(),reports=[],before=new Map(state),previousEnabled=new Set(enabled);
+    const {layer,target}=await prepareDeep(gl,reports);gl.results=[false,clear,blocked];layer.render(gl);
+    assert.equal(queries.size,3);assert.ok(gl.draws.some(d=>d.mode===gl.TRIANGLES&&d.depth===gl.GREATER&&d.probe===1));
+    assert.deepEqual(state,before);assert.deepEqual(enabled,previousEnabled);gl.complete();layer.render(gl);
+    assert.equal(reports.at(-1).states[target.id],expected);assert.equal(reports.at(-1).states[target.id+':label'],'blocked');
+    assert.equal(reports.at(-1).deepSky.phase,'ready');layer.onRemove();assert.equal(resources.size,0);assert.equal(queries.size,0);
+  }
+});
+
+test('改机仅更新 Hα uniform，不重建几何、纹理或遮挡；深空失败不关闭其他图层',async()=>{
+  const {gl,queries,resources}=fakeGL(),reports=[];let requests=0;
+  const {layer}=await prepareDeep(gl,reports,async()=>{requests++;return {width:2048,height:1024,close(){}};});
+  gl.results=[true,true,false];layer.render(gl);gl.complete();layer.render(gl);
+  const uploads=gl.uploads.length,textureUploads=gl.textureUploads,count=reports.length;
+  for(const [response,gain] of [['ha-modified',1],['stock',0.25]]){
+    layer.setCameraResponse(response);layer.render(gl);
+    assert.equal(gl.draws.filter(d=>d.mode===gl.TRIANGLES&&d.probe===0).at(-1).haGain,gain);
+    assert.deepEqual(gl.draws.filter(d=>d.mode===gl.TRIANGLES&&d.probe===0).at(-1).colorMask,[true,true,true,true]);
+    assert.equal(gl.uploads.length,uploads);assert.equal(gl.textureUploads,textureUploads);assert.equal(reports.length,count);assert.equal(queries.size,0);assert.equal(requests,1);
+  }
+  const frame=layer.frame;
+  layer.invalidate();layer.setScene(frame);gl.results=[true,true,false];layer.render(gl);
+  assert.equal(queries.size,3,'an invalidated cached frame must resume queries even with the same key');
+  gl.complete();layer.render(gl);assert.equal(reports.at(-1).ready,true);
+  assert.throws(()=>layer.setCameraResponse('full-spectrum'),RangeError);layer.onRemove();assert.equal(resources.size,0);
+  const failedReports=[];const failed=await prepareDeep(gl,failedReports,async()=>{throw new Error('atlas unavailable');});
+  assert.equal(failedReports.at(-1).deepSky.phase,'error');assert.equal(failedReports.at(-1).message,undefined);
+  gl.results=[true];failed.layer.render(gl);assert.ok(gl.draws.some(d=>d.mode===gl.POINTS));failed.layer.onRemove();assert.equal(resources.size,0);
 });

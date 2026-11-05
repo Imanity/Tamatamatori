@@ -6,6 +6,8 @@ import type { SkyPoint } from "./starfield.ts";
 import { constellationScene } from "./constellations.ts";
 import { celestialBodies } from "./ephemeris.ts";
 import type { SkyBody } from "./ephemeris.ts";
+import { deepSkyCatalog, deepSkyScene, deepSkyKinds } from "./deep-sky.ts";
+import type { DeepSkyTarget } from "./deep-sky.ts";
 
 interface Descriptor {
   id: string;
@@ -14,7 +16,8 @@ interface Descriptor {
   layer: keyof ShootingPlan["layers"];
   aliases: string[];
 }
-export type SearchTarget = SkyPoint & Descriptor & { body?: SkyBody };
+export type SearchTarget = SkyPoint &
+  Descriptor & { body?: SkyBody; deep?: DeepSkyTarget };
 const names: Record<string, string> = catalog.names,
   aliases: Record<string, string[]> = catalog.aliases;
 const index: Descriptor[] = [
@@ -61,6 +64,13 @@ const index: Descriptor[] = [
     layer: "constellations" as const,
     aliases: [f.id, f.latin],
   })),
+  ...deepSkyCatalog.map((entry) => ({
+    id: entry.id,
+    name: entry.name,
+    kind: `深空 · ${deepSkyKinds[entry.model]}`,
+    layer: "deepSky" as const,
+    aliases: [entry.catalogId, ...entry.aliases],
+  })),
 ];
 const normalized = (text: string) =>
   text.normalize("NFKC").toLowerCase().replace(/\s+/g, "");
@@ -103,6 +113,10 @@ export function searchTargets(
     ),
     sky = needsSky ? skyReference(plan) : null;
   const points = new Map(sky?.points.map((p) => [p.id, p]) ?? []);
+  const deep = matches.some((t) => t.layer === "deepSky")
+    ? deepSkyScene(plan).objects
+    : [];
+  for (const target of deep) points.set(target.id, target);
   if (sky) points.set(sky.core.id, sky.core);
   if (matches.some((t) => t.layer === "constellations"))
     for (const p of constellationScene(plan).anchors) points.set(p.id, p);
@@ -122,6 +136,10 @@ export function searchTargets(
     }
     const point = points.get(target.id);
     if (!point) throw new Error("搜索目标的星历不可用");
-    return { ...point, ...target };
+    return {
+      ...point,
+      ...target,
+      deep: deep.find((object) => object.id === target.id),
+    };
   });
 }
