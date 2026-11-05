@@ -338,7 +338,7 @@ export function PreviewPanel({
               href={deepSkyAtlasUrl}
               download="tamatamatori-deep-sky-components.png"
             >
-              深空分量示意图
+              深空色彩与增强数据
             </a>
             {deepSkyImageCredits.map((source) => (
               <a

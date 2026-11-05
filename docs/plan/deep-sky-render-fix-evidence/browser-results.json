@@ -1,0 +1,184 @@
+{
+  "date": "2026-11-05",
+  "browser": "Chrome, actual WebGL, local Vite",
+  "url": "http://127.0.0.1:5173/",
+  "atlasSha256": "8a6907b0af4663ca704cac3a3c787953e8ccfd56d31994a6b08b06272b76c912",
+  "camera": {
+    "latitude": 35.4172,
+    "longitude": 138.8729,
+    "heightAboveGroundMeters": 1.6,
+    "sensor": "full-frame",
+    "aspect": "3:2",
+    "orientation": "landscape",
+    "refraction": "standard",
+    "timeZone": "Asia/Tokyo"
+  },
+  "scope": "定性结构、色彩、模式独立性和 DEM 深度检查；不是光度或特定相机定标",
+  "consoleErrors": [],
+  "comparisons": {
+    "m31": {
+      "frameCropPixels": [
+        265,
+        294,
+        1503,
+        1119
+      ],
+      "changedPixels": 0,
+      "maxChannelDifference": 0,
+      "stockAndModifiedFrameIdentical": true
+    },
+    "m42": {
+      "frameCropPixels": [
+        265,
+        294,
+        1503,
+        1119
+      ],
+      "changedPixels": 70483,
+      "maxChannelDifference": 39,
+      "stockAndModifiedFrameIdentical": false
+    }
+  },
+  "records": [
+    {
+      "file": "m31-stock.jpg",
+      "name": "M31 未改机完整来源结构",
+      "focalLengthMm": 600,
+      "response": "stock",
+      "localTime": "2026-11-09T01:00",
+      "status": "当前 DEM 未遮挡",
+      "bytes": 164267,
+      "sha256": "11640e64745ddd9e199db2b5f72a04808a7636c4ef00e11e8e6bb07f5afd6cd3",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m31-ha.jpg",
+      "name": "M31 同构图切换响应",
+      "focalLengthMm": 600,
+      "response": "ha-modified",
+      "localTime": "2026-11-09T01:00",
+      "status": "当前 DEM 未遮挡",
+      "bytes": 164296,
+      "sha256": "6d37d04419494ac39232db4ef306fe3f606e49dbdddfcc071b2ce88ccf58e47d",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m31-400mm.jpg",
+      "name": "M31 较宽构图，外缘无椭圆裁切",
+      "focalLengthMm": 400,
+      "response": "ha-modified",
+      "localTime": "2026-11-09T01:00",
+      "status": "当前 DEM 未遮挡",
+      "bytes": 160968,
+      "sha256": "a9b99dafe429e4c0d54711d1a759deeef8811361e35d0ae4b52c3ecf1a444e66",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m31-partial-frame.jpg",
+      "name": "M31 中心在框外仍绘制入画结构，中心标签隐藏",
+      "focalLengthMm": 1000,
+      "response": "ha-modified",
+      "localTime": "2026-11-09T01:00",
+      "status": "当前 DEM 未遮挡",
+      "bytes": 158053,
+      "sha256": "7dfb0c2281d3c92737e7ddd6d89486f2d11008b41058ec3c917e2463676a7617",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m42-stock.jpg",
+      "name": "M42 普通模式保留粉红云气与青蓝核心",
+      "focalLengthMm": 600,
+      "response": "stock",
+      "localTime": "2026-11-09T01:00",
+      "status": "当前 DEM 未遮挡",
+      "bytes": 161744,
+      "sha256": "5c519de43d11657cf57ab62e9af553985f7d3c529b7c17eae0ff54f751e33692",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m42-ha.jpg",
+      "name": "M42 同构图额外红色增强，南侧和 M43 结构未被椭圆截断",
+      "focalLengthMm": 600,
+      "response": "ha-modified",
+      "localTime": "2026-11-09T01:00",
+      "status": "当前 DEM 未遮挡",
+      "bytes": 162064,
+      "sha256": "50a90d4174cd91315d21b6eb9ac9f7de97c1d3f095908995320a14b167570145",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m42-1000mm.jpg",
+      "name": "M42 长焦结构边缘检查",
+      "focalLengthMm": 1000,
+      "response": "ha-modified",
+      "localTime": "2026-11-09T01:00",
+      "status": "当前 DEM 未遮挡",
+      "bytes": 169801,
+      "sha256": "5f8b67e36cb631fc83c8f15f50d501d50730e7a93c7beab44539ad6ec1cf47df",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m42-daylight.jpg",
+      "name": "M42 几何高度 10.7 度，白昼轮廓和名称隐藏",
+      "focalLengthMm": 1000,
+      "response": "ha-modified",
+      "localTime": "2026-11-09T07:00",
+      "status": "天空较亮 · 轮廓隐藏",
+      "bytes": 150470,
+      "sha256": "bb96344dfb90f8f0f497fd03aabb673418e45448ceed2931d0d34cbe7d46be44",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m42-terrain-partial.jpg",
+      "name": "M42 几何高度 4.7 度，亮核心/中心标签被山体挡住",
+      "focalLengthMm": 200,
+      "response": "ha-modified",
+      "localTime": "2026-01-19T02:50",
+      "status": "部分山体遮挡",
+      "bytes": 157035,
+      "sha256": "273316363d8fa5140e8254971f4b15129153e8cbf5647aaa1236ea2046a0daa3",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m42-terrain-blocked.jpg",
+      "name": "M42 几何高度 1.6 度，山体完整遮挡",
+      "focalLengthMm": 200,
+      "response": "ha-modified",
+      "localTime": "2026-01-19T03:05",
+      "status": "山体遮挡",
+      "bytes": 154251,
+      "sha256": "950eaf7e6bd0eef26cf0f5826cf6837502963eb8afc003bd21780b2f35bdf99d",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    }
+  ]
+}

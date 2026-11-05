@@ -1,80 +1,81 @@
 [
   {
     "catalogId": "NGC0224",
-    "file": "heic0512d.jpg",
-    "page": "https://esahubble.org/images/heic0512d/",
-    "url": "https://www.astropix.org/archive/esahubble/heic0512d/esahubble_heic0512d_original.jpg",
-    "credit": "÷ 2002 R. Gendler, Photo by R. Gendler",
+    "file": "heic1112f.jpg",
+    "page": "https://esahubble.org/images/heic1112f/",
+    "url": "https://www.astropix.org/archive/esahubble/heic1112f/esahubble_heic1112f_3000.jpg",
+    "credit": "ESA/Hubble & Digitized Sky Survey 2. Acknowledgment: Davide De Martin (ESA/Hubble)",
     "license": "CC-BY-4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
-    "sha256": "7093348e87d7491ab38d7c870d2f941f9a8f3895ecd9ecb51027ae5c31ddb72f",
-    "bytes": 1667180,
+    "sha256": "c6a9b242dc4095bb8fd5de26df9572eea122fc59cf316739bcfef6683316b5d4",
+    "bytes": 2054075,
     "dimensions": [
-      1955,
-      2700
+      3000,
+      1941
     ],
     "wcs": {
       "ReferenceDimension": [
-        1955.0,
-        2700.0
+        21299.0,
+        13775.0
       ],
       "ReferencePixel": [
-        977.5,
-        1350.0
+        10649.5,
+        6887.5
       ],
       "ReferenceValue": [
-        10.6251469072,
-        41.3265685818
+        10.7523331482,
+        41.2596417071
       ],
       "Scale": [
-        -0.000868877774835,
-        0.000868877774835
+        -0.000283216970837,
+        0.000283216970837
       ],
-      "Rotation": -180.44000000000003,
+      "Rotation": 1.9200000000000017,
       "CoordinateFrame": "ICRS",
       "Equinox": "J2000",
       "CoordsystemProjection": "TAN",
       "Quality": "Full"
     },
-    "role": "Registered structure reference only; display-colour channels do not recover spectral line fluxes."
+    "role": "Broad-field display RGB reference with qualitative additive red enhancement; not a calibrated stock-camera image or spectral line flux."
   },
   {
     "catalogId": "NGC1976",
-    "file": "eso1103a.jpg",
-    "page": "https://www.eso.org/public/images/eso1103a/",
-    "url": "https://cdn.eso.org/images/publicationjpg/eso1103a.jpg",
-    "credit": "ESO/Igor Chekalin",
+    "file": "noao-m42steinberg.jpg",
+    "page": "https://www.astropix.org/image/noirlab/noao-m42steinberg",
+    "publisherPage": "https://noirlab.edu/public/images/noao-m42steinberg/",
+    "url": "https://www.astropix.org/archive/noirlab/noao-m42steinberg/noirlab_noao-m42steinberg_1280.jpg",
+    "credit": "KPNO/NOIRLab/NSF/AURA/Ryan Steinberg and Family/Adam Block",
     "license": "CC-BY-4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
-    "sha256": "d9f24a114bd25e938006b3781c34aea86baf4e94a4074a333908dacc932b95ad",
-    "bytes": 2337958,
+    "sha256": "b24c2911ad5311e38734f2117d14b053e92c8ac94c12914c9ec3ea98ee96c536",
+    "bytes": 192731,
     "dimensions": [
-      4000,
-      3843
+      1280,
+      715
     ],
     "wcs": {
       "ReferenceDimension": [
-        1280.0,
-        1230.0
+        1526.0,
+        853.0
       ],
       "ReferencePixel": [
-        483.704385997,
-        737.916183289
+        355.136615753,
+        407.128433228
       ],
       "ReferenceValue": [
-        83.822156,
-        -5.390986
+        83.8529785947,
+        -4.69782723876
       ],
       "Scale": [
-        -0.00046210205,
-        0.00046210205
+        -0.00142959609611,
+        0.00143061595391
       ],
-      "Rotation": 0.02345274615,
+      "Rotation": 79.039724066386,
       "CoordinateFrame": "ICRS",
       "Equinox": "J2000",
       "CoordsystemProjection": "TAN",
       "Quality": "Full"
     },
-    "role": "Registered structure reference only; display-colour channels do not recover spectral line fluxes."
+    "role": "Wide-field LRGB display reference with qualitative additive red enhancement; not calibrated stock-camera or H-alpha data."
   }
 ]

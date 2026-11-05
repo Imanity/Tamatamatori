@@ -117,7 +117,8 @@ export function deepSkyScene(plan: ShootingPlan) {
         const i = y * (nx + 1) + x,
           j = i + nx + 1;
         for (const index of [i, j, i + 1, i + 1, j, j + 1])
-          vertices.push(...grid[index].ray, ...grid[index].uv, ...color);
+          // RGB is already coloured in the atlas; the mesh must not tint it.
+          vertices.push(...grid[index].ray, ...grid[index].uv, 1, 1, 1);
       }
     return {
       id: entry.id,
@@ -173,4 +174,4 @@ export function deepSkyView(plan: ShootingPlan, target: DeepSkyTarget) {
 }
 export const deepSkyResponseLabel = (
   response: ShootingPlan["cameraResponse"],
-) => (response === "ha-modified" ? "天文改机 · Hα 增强" : "未改机 · 普通相机");
+) => (response === "ha-modified" ? "天文改机 · Hα 增强" : "未改机 · 色彩参考");

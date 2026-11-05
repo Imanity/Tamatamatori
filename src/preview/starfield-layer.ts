@@ -81,13 +81,13 @@ const deepFragment = `#version 300 es
 precision highp float;
 in vec2 v_uv;in vec3 v_tint;in float v_height;
 uniform sampler2D u_atlas;uniform float u_strength;uniform float u_ha_gain;uniform float u_probe;out vec4 color;
-void main(){if(v_height<=0.0)discard;vec3 components=texture(u_atlas,v_uv).rgb;
-if(max(components.r,max(components.g,components.b))<0.012)discard;
-if(u_probe>0.5){color=vec4(1.0);return;}
-vec3 signal=components.r*v_tint+components.g*u_ha_gain*vec3(1.0,0.10,0.18)+components.b*vec3(0.12,0.75,0.85);
+void main(){if(v_height<=0.0)discard;vec4 components=texture(u_atlas,v_uv);
+float extra=1.0-components.a;
+if(u_probe>0.5){if(max(max(components.r,components.g),max(components.b,extra))<0.008)discard;color=vec4(1.0);return;}
+vec3 signal=components.rgb*v_tint+extra*u_ha_gain*vec3(1.0,0.10,0.18);
 float peak=max(signal.r,max(signal.g,signal.b));
 float a=(1.0-exp(-2.1*peak))*u_strength*smoothstep(0.0,0.04,v_height);
-if(a<0.004)discard;color=vec4(signal/max(peak,0.001)*a,a);}`;
+if(a<0.0005)discard;color=vec4(signal/max(peak,0.0001)*a,a);}`;
 
 function program(gl: WebGL2RenderingContext, vertex: string, fragment: string) {
   const shaders: WebGLShader[] = [];
@@ -156,7 +156,7 @@ export class StarfieldLayer implements CustomLayerInterface {
   private deepBuffer?: WebGLBuffer;
   private deepData: Float32Array = new Float32Array();
   private deepObjects: DeepSkyTarget[] = [];
-  private haGain = 0.25;
+  private haGain = 0;
   private snapshot?: SkyVisibility;
   private pending: Pending[] = [];
   private pendingKey = "";
@@ -237,7 +237,7 @@ export class StarfieldLayer implements CustomLayerInterface {
   setCameraResponse(response: ShootingPlan["cameraResponse"] = "stock") {
     if (response !== "stock" && response !== "ha-modified")
       throw new RangeError("未知深空相机响应");
-    const gain = response === "ha-modified" ? 1 : 0.25;
+    const gain = response === "ha-modified" ? 1 : 0;
     if (this.haGain === gain) return;
     this.haGain = gain;
     this.map?.triggerRepaint();

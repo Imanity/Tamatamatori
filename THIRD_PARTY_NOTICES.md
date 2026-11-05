@@ -14,12 +14,14 @@ David Nash / Astronexus 的亮星目录，使用 [CC BY-SA 4.0](https://creative
 
 使用 [Mattia Verga / OpenNGC 固定提交](https://github.com/mattiaverga/OpenNGC/tree/be3cd6c5498806a2fbb2f7e0452ef802dbb02be0)，按 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 分发 8 个目标的衍生子集及组合分量图。轮廓由原项目使用 CDS 的 Aladin Sky Atlas 从 DSS2 Color 描绘；此项不分发原始 DSS 摄影像素。已增加中文名、搜索别名、切平面边界与定性显示分量；组合图中另有下述两幅 CC BY 4.0 影像的衍生结构。来源哈希、字段/历元、修改声明见 [deep-sky.json](src/data/deep-sky.json)。数据与分量图在预览署名区可下载；此许可不改变无关应用代码的许可。
 
-## 深空局部影像结构
+## 深空宽幅影像与色彩参考
 
-- M42：[eso1103a](https://www.eso.org/public/images/eso1103a/)，完整署名 **ESO/Igor Chekalin**。按 [ESO 使用政策](https://www.eso.org/public/outreach/copyright/)与 CC BY 4.0 使用。
-- M31：[heic0512d](https://esahubble.org/images/heic0512d/)，完整署名 **÷ 2002 R. Gendler, Photo by R. Gendler**（保留发布方/AstroPix 原署名）。按 [ESA/Hubble 使用政策](https://esahubble.org/copyright/)与 CC BY 4.0 使用；输入来自 [AstroPix 的发布方存档](https://www.astropix.org/image/esahubble/heic0512d)。
+- M31：[heic1112f](https://www.astropix.org/image/esahubble/heic1112f)，完整署名 **ESA/Hubble & Digitized Sky Survey 2. Acknowledgment: Davide De Martin (ESA/Hubble)**。这是 ESA/Hubble 已发布并按 CC BY 4.0 提供的成品合成图，不是原始 DSS 数据服务；[ESA/Hubble 使用政策](https://esahubble.org/copyright/)。
+- M42：[noao-m42steinberg](https://www.astropix.org/image/noirlab/noao-m42steinberg)，完整署名 **KPNO/NOIRLab/NSF/AURA/Ryan Steinberg and Family/Adam Block**，发布方 NOIRLab 的 AstroPix 存档明确标为 CC BY 4.0，使用可见光 LRGB。
 
-修改：按原 AVM/TAN 坐标重投影，缩放、中值/形态滤波抑制前景星点，调整黑位与显示层次，转为定性分量并在局部椭圆覆盖中羽化叠加到目录轮廓。未使用 AI 生成或扩展；不分发原始照片，组合 atlas 按 CC BY-SA 4.0 提供，原图保留 CC BY 4.0。不是实测谱线、精密天球配准或相机曝光模型。完整署名随深空图层持续显示。
+修改：完整 AVM/TAN 覆盖重投影、缩放、部分星点抑制、线性化及背景扣除；保留基础 RGB，并将定性的额外红色结构单独打包。不用椭圆截断或目录外壳，不使用 AI 生成/扩展。原图保留 CC BY 4.0，组合 atlas 继续按 CC BY-SA 4.0 提供。不是实测谱线、相机曝光或原始天球精度承诺。完整来源和输入/输出哈希见 [deep-sky.json](src/data/deep-sky.json)。
+
+历史验收截图仍包含上一版 eso1103a（ESO/Igor Chekalin）与 heic0512d（÷ 2002 R. Gendler, Photo by R. Gendler）的结构衍生外观，按当时发布方 CC BY 4.0 保留署名；它们不再用于当前运行时图集。
 
 ## ESO 银河全景
 

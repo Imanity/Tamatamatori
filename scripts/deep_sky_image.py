@@ -38,6 +38,14 @@ def basis(ra, dec):
     return np.array([np.cos(d)*np.cos(a), np.cos(d)*np.sin(a), np.sin(d)]), np.array([-np.sin(a), np.cos(a), 0]), np.array([-np.sin(d)*np.cos(a), -np.sin(d)*np.sin(a), np.cos(d)])
 
 
+def pixel_matrix(wcs):
+    # AVM Rotation is FITS CROTA2. Unlike a plain rotation of scaled axes,
+    # this also handles the NOIRLab source's unequal X/Y pixel scales.
+    sx, sy = wcs["Scale"]
+    c, s = np.cos(np.radians(wcs["Rotation"])), np.sin(np.radians(wcs["Rotation"]))
+    return np.array([[sx*c, -sy*s], [sx*s, sy*c]])
+
+
 def reference_pixels(rays, wcs):
     """AVM pixels: 1-based, lower-left; preserve the signed scales/rotation."""
     if wcs["CoordsystemProjection"] != "TAN" or wcs["CoordinateFrame"] != "ICRS" or wcs["Equinox"] != "J2000":
@@ -45,9 +53,22 @@ def reference_pixels(rays, wcs):
     center, east, north = basis(*wcs["ReferenceValue"])
     z = rays @ center
     tangent = np.stack([rays @ east / z, rays @ north / z], axis=-1)*180/np.pi
-    q = tangent/np.array(wcs["Scale"])
-    c, s = np.cos(np.radians(wcs["Rotation"])), np.sin(np.radians(wcs["Rotation"]))
-    return q @ np.array([[c, s], [-s, c]]) + np.array(wcs["ReferencePixel"])
+    return tangent @ np.linalg.inv(pixel_matrix(wcs)).T + np.array(wcs["ReferencePixel"])
+
+
+def image_bounds(spec, obj):
+    """Full source footprint in the target TAN plane; no inscribed ellipse."""
+    wcs = spec["wcs"]
+    w, h = wcs["ReferenceDimension"]
+    pixels = np.array([[1, 1], [w, 1], [w, h], [1, h]])
+    xy = np.radians((pixels-np.array(wcs["ReferencePixel"])) @ pixel_matrix(wcs).T)
+    center, east, north = basis(*wcs["ReferenceValue"])
+    rays = center+xy[:, :1]*east+xy[:, 1:]*north
+    center, east, north = basis(obj["ra"], obj["dec"])
+    xy = np.stack([rays @ east, rays @ north], axis=-1)/(rays @ center)[:, None]
+    low, high = xy.min(axis=0), xy.max(axis=0)
+    pad = (high-low)*0.03
+    return [float(low[0]-pad[0]), float(low[1]-pad[1]), float(high[0]+pad[0]), float(high[1]+pad[1])]
 
 
 def sample_image(source, pixels, wcs):
@@ -56,14 +77,9 @@ def sample_image(source, pixels, wcs):
     px = pixels[..., 0]*w/wcs["ReferenceDimension"][0]-1
     py = h-pixels[..., 1]*h/wcs["ReferenceDimension"][1]
     valid = (px >= 0) & (py >= 0) & (px <= w-1) & (py <= h-1)
-    edge = np.minimum.reduce([px/(w-1), 1-px/(w-1), py/(h-1), 1-py/(h-1)])
-    fade = np.clip(edge/0.18, 0, 1)
+    edge = np.minimum.reduce([px, w-1-px, py, h-1-py])
+    fade = np.clip(edge/3, 0, 1)
     fade = fade*fade*(3-2*fade)*valid
-    # Only the inscribed ellipse is used for structure: rectangular publication
-    # crop boundaries must not turn into visible objects in the sky.
-    radius = np.hypot(2*px/(w-1)-1, 2*py/(h-1)-1)
-    radial = np.clip((1-radius)/0.38, 0, 1)
-    fade *= radial*radial*(3-2*radial)
     px, py = np.clip(px, 0, w-1), np.clip(py, 0, h-1)
     x0, y0 = np.floor(px).astype(int), np.floor(py).astype(int)
     x1, y1 = np.minimum(x0+1, w-1), np.minimum(y0+1, h-1)
@@ -85,9 +101,14 @@ def image_components(source_dir, spec, obj, size):
     image.thumbnail((1600, 1600), Image.Resampling.LANCZOS)
     # Local opening/median suppress foreground stars while retaining extended
     # dark lanes. Unresolved/large halos may remain; this is not star photometry.
-    image = image.filter(ImageFilter.MedianFilter(5)).filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(3))
+    image = image.filter(ImageFilter.MedianFilter(7)).filter(ImageFilter.MinFilter(5)).filter(ImageFilter.MaxFilter(5))
     rgb = np.asarray(image, dtype=float)/255
-    rgb = np.clip((rgb-0.018)/0.982, 0, 1)**1.15
+    # Preserve the source RGB relationship. Linearize display data before sky
+    # subtraction, rather than converting the whole red channel into Hα.
+    rgb = np.where(rgb <= 0.04045, rgb/12.92, ((rgb+0.055)/1.055)**2.4)
+    border = np.concatenate([rgb[:12].reshape(-1, 3), rgb[-12:].reshape(-1, 3), rgb[:, :12].reshape(-1, 3), rgb[:, -12:].reshape(-1, 3)])
+    background = np.percentile(border, 15, axis=0)
+    rgb = np.maximum(rgb-background, 0)
     x0, y0, x1, y1 = obj["bounds"]
     x, y = np.meshgrid(np.linspace(x0, x1, size), np.linspace(y1, y0, size))
     center, east, north = basis(obj["ra"], obj["dec"])
@@ -95,19 +116,23 @@ def image_components(source_dir, spec, obj, size):
     sampled, fade, valid = sample_image(rgb, reference_pixels(rays, wcs), wcs)
     r, g, b = sampled.transpose(2, 0, 1)
     if obj["model"] == "galaxy":
-        continuum = np.clip((0.2126*r+0.7152*g+0.0722*b)*1.35, 0, 1)
-        components = np.stack([continuum, np.zeros_like(r), np.zeros_like(r)], axis=-1)
+        enhancement = np.zeros_like(r)
     else:
-        # Display-colour proxies only. The released R channel mixes R/Hα and
-        # the purple channel includes U: no spectral inversion is claimed.
-        continuum = np.minimum.reduce([r, g, b])*0.28
-        hydrogen = np.clip(r-0.20*np.minimum(g, b), 0, 1)*0.95
-        other = (g+b)*0.44
-        components = np.stack([continuum, hydrogen, other], axis=-1)
-    return components, fade, {
+        # A conservative *additional* red structure proxy. Stock keeps all of
+        # the baseline red; this cannot recover a calibrated Hα exposure.
+        enhancement = np.clip(r-(g+b)*0.5, 0, 1)*0.6
+    # The host framebuffer uses display RGB. Restore display colour ratios
+    # after deriving a linear-light intensity, otherwise linear RGB displayed
+    # directly becomes too saturated (especially the unmodified red nebula).
+    intensity = sampled.max(axis=-1, keepdims=True)
+    display = np.where(sampled <= 0.0031308, sampled*12.92, 1.055*sampled**(1/2.4)-0.055)
+    display_signal = display/np.maximum(display.max(axis=-1, keepdims=True), 1e-9)*intensity
+    components = np.concatenate([display_signal, enhancement[..., None]], axis=-1)*fade[..., None]
+    return components, {
         "catalogId": obj["catalogId"], "sourceSha256": spec["sha256"],
         "coveredPixels": int(np.count_nonzero(valid)), "totalPixels": size*size,
-        "featherFraction": 0.18, "ellipticalFeatherWidth": 0.38,
+        "edgeFadePixels": 3, "usesEllipticalMask": False, "catalogueEnvelopeWeight": 0,
+        "backgroundLinearRgb": background.tolist(),
         "workingDimensions": list(image.size),
-        "componentModel": "Display-colour structure proxies, not measured spectral components",
+        "componentModel": "Baseline RGB plus additive red structure proxy; not measured spectral components",
     }

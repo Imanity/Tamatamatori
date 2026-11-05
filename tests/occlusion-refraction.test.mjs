@@ -302,7 +302,7 @@ test('改机仅更新 Hα uniform，不重建几何、纹理或遮挡；深空�
   const {layer}=await prepareDeep(gl,reports,async()=>{requests++;return {width:2048,height:1024,close(){}};});
   gl.results=[true,true,false];layer.render(gl);gl.complete();layer.render(gl);
   const uploads=gl.uploads.length,textureUploads=gl.textureUploads,count=reports.length;
-  for(const [response,gain] of [['ha-modified',1],['stock',0.25]]){
+  for(const [response,gain] of [['ha-modified',1],['stock',0]]){
     layer.setCameraResponse(response);layer.render(gl);
     assert.equal(gl.draws.filter(d=>d.mode===gl.TRIANGLES&&d.probe===0).at(-1).haGain,gain);
     assert.deepEqual(gl.draws.filter(d=>d.mode===gl.TRIANGLES&&d.probe===0).at(-1).colorMask,[true,true,true,true]);

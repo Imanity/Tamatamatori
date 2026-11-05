@@ -255,8 +255,8 @@ export function StarReadout({
             深空轮廓 · {deepSkyCount} 个目标 ·{" "}
             {deepSkyResponseLabel(plan.cameraResponse)}
           </p>
-          <p>连续谱与发射分量示意 · 改机仅增强 Hα · 非曝光预测</p>
-          <p>M31/M42 使用局部影像结构，其余为目录轮廓；颜色未作光度定标。</p>
+          <p>基础色彩参考 · 改机额外增强红光 · 非实测 Hα 或曝光预测</p>
+          <p>M31/M42 使用宽幅影像，其余为目录轮廓；未作具体相机定标。</p>
           <details open>
             <summary>深空目标与朝向</summary>
             {scene.deep.map(

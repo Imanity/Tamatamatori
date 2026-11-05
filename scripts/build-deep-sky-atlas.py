@@ -11,7 +11,7 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
-from deep_sky_image import image_components
+from deep_sky_image import image_components, image_bounds
 
 root = Path(__file__).resolve().parents[1]
 path = root / "src/data/deep-sky.json"
@@ -23,7 +23,7 @@ if len(sys.argv) != 2:
 source_dir = Path(sys.argv[1])
 size = 512
 tile_size = 1024
-atlas = Image.new("RGB", (4096, 2048))
+atlas = Image.new("RGBA", (4096, 2048), (0, 0, 0, 255))
 detail_stats = []
 
 
@@ -35,6 +35,9 @@ def tangent(points, obj):
 
 
 for obj in catalog["objects"]:
+    spec = next((source for source in sources if source["catalogId"] == obj["catalogId"]), None)
+    if spec:
+        obj["bounds"] = image_bounds(spec, obj)
     x0, y0, x1, y1 = obj["bounds"]
     x, y = np.meshgrid(np.linspace(x0, x1, size), np.linspace(y1, y0, size))
     if obj["outlines"]:
@@ -84,14 +87,20 @@ for obj in catalog["objects"]:
     components = np.stack([continuum, hydrogen, other], axis=2)
     # Preserve the other six first-step masks at their original angular scale.
     components = np.stack([np.asarray(Image.fromarray(channel.astype(np.float32)).resize((tile_size, tile_size), Image.Resampling.BILINEAR)) for channel in components.transpose(2, 0, 1)], axis=-1)
-    spec = next((source for source in sources if source["catalogId"] == obj["catalogId"]), None)
     if spec:
-        detailed, fade, stats = image_components(source_dir, spec, obj, tile_size)
-        # Source footprints are smaller than the catalogue's outer contours.
-        # Add reference structure over a faint contour envelope; replacing the
-        # envelope would cut a rectangular dark hole at the photographic edge.
-        components = components*0.16+detailed*fade[..., None]
+        components, stats = image_components(source_dir, spec, obj, tile_size)
         detail_stats.append(stats)
+    else:
+        # Preserve the six existing targets' stock/modified display through an
+        # equivalent RGB base + increment representation.
+        c, ha, other = components.transpose(2, 0, 1)
+        tint = np.array([0.36, 0.64, 1]) if obj["model"] == "reflection" else np.array([0.65, 0.76, 1])
+        rgb = c[..., None]*tint+ha[..., None]*0.25*np.array([1, 0.10, 0.18])+other[..., None]*np.array([0.12, 0.75, 0.85])
+        components = np.concatenate([rgb, (ha*0.75)[..., None]], axis=-1)
+    obj["redEnhancementMax"] = int(np.clip(components[..., 3].max(), 0, 1)*255+0.5)
+    # Inverse packing keeps no-enhancement RGB fully opaque in PNG decoders;
+    # alpha is data, never the final on-screen opacity.
+    components[..., 3] = 1-components[..., 3]
     components = np.uint8(np.clip(components, 0, 1)*255+0.5)
     obj["componentMax"] = [int(value) for value in components.max(axis=(0, 1))]
     tile = Image.fromarray(components)
@@ -101,7 +110,7 @@ output = root / "src/data/deep-sky-atlas.png"
 atlas.save(output, optimize=True)
 catalog["atlas"]["sha256"] = hashlib.sha256(output.read_bytes()).hexdigest()
 catalog["atlas"].update(width=4096, height=2048, tileSize=tile_size,
-    channels="R continuum; G qualitative H-alpha; B qualitative other emission. OpenNGC masks plus registered M31/M42 image structure; not spectral fluxes.",
+    channels="RGB baseline colour; A = 1 - additive red enhancement. Alpha is packed data, not display opacity. Not spectral fluxes.",
     detailStatistics=detail_stats)
 catalog["imageSources"] = sources
 path.write_text(json.dumps(catalog, ensure_ascii=False, separators=(",", ":"))+"\n", encoding="utf-8")

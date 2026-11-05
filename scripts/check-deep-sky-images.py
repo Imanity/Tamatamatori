@@ -45,6 +45,10 @@ for spec in catalog["imageSources"]:
     target.wcs.crpix = [1-x0/dx, 1+y1/dy]
     target.wcs.crval = [obj["ra"], obj["dec"]]
     target.wcs.cdelt = np.degrees([dx, -dy])
+    rw, rh = m["ReferenceDimension"]
+    corners = reference.all_pix2world([[1, 1], [rw, 1], [rw, rh], [1, rh]], 1)
+    projected_corners = target.all_world2pix(corners, 0)
+    assert np.all(projected_corners > 0) and np.all(projected_corners < size-1), "The complete source footprint must fit; no inscribed crop"
     # Include the reference point and all atlas regions, even outside the photo.
     mesh = np.array([[x, y] for y in np.linspace(0, size-1, 5) for x in np.linspace(0, size-1, 5)])
     world = target.all_pix2world(mesh, 0)
@@ -57,14 +61,14 @@ for spec in catalog["imageSources"]:
     tx, ty = (obj["tile"] % 4)*size, (obj["tile"]//4)*size
     tile = atlas[ty:ty+size, tx:tx+size]
     if obj["model"] == "galaxy":
-        assert not np.any(tile[..., 1:]), "Continuum reference must not acquire synthetic Hα"
+        assert np.all(tile[..., 3] == 255), "M31 must not acquire an additive red increment"
     else:
-        assert np.any(tile[..., 1] > 20)
+        assert np.any(tile[..., 3] < 255)
     border = np.concatenate([tile[0], tile[-1], tile[:, 0], tile[:, -1]])
-    assert border.max() == 0, "Neighbouring atlas targets must not bleed"
+    assert border[:, :3].max() == 0 and np.all(border[:, 3] == 255), "Neighbouring atlas targets must not bleed"
     result["records"].append({"catalogId": spec["catalogId"], "sourceSha256": spec["sha256"],
         "wcs": m, "sampleCount": len(mesh), "maxReferencePixelError": error,
-        "zeroAtlasBorder": True,
+        "zeroAtlasBorder": True, "fullSourceFootprintContained": True,
         "samples": [{"atlasPixel": p.tolist(), "icrsDegrees": q.tolist(), "sourceReferencePixel": r.tolist()}
                     for p, q, r in zip(mesh, world, expected)]})
 path = root/"tests/fixtures/deep-sky-image-registration.json"
