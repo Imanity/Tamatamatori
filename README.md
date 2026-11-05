@@ -90,7 +90,7 @@ MapLibre 固定为 6.16.0，`npm ci` 自动应用地形 LOD、空间投影与深
 
 CI 对 Node.js 22.18 / 24 执行测试及 `/Tamatamatori/` 子路径构建，`main` 的 Node.js 24 作业上传 `dist/` Pages 产物。两个验证作业通过后，且仓库变量 `PAGES_ENABLED=true` 时，发布到 `github-pages` 环境；PR 不发布，本地 `npm run dev` 仍使用根路径。
 
-首次需在仓库 Pages 设置中启用 GitHub Actions，再设置上述变量并手动运行 CI 或推送 `main`。当前仓库的启用请求被 GitHub 以 HTTP 422 拒绝：账号方案不支持这个私有仓库。仓库保持私有，Pages 发布尚未启用；不能将产物构建成功描述为已上线。范围及执行结果见[搜索与 Pages](docs/plan/search-and-pages.md)。
+在线访问：[Tamatamatori](https://imanity.github.io/Tamatamatori/)。用户已授权公开仓库，Pages 使用 GitHub Actions 发布，`PAGES_ENABLED=true`；之后推送 `main` 会在测试与构建通过后自动更新。首次私有仓库的套餐限制与实际上线验收见[搜索与 Pages](docs/plan/search-and-pages.md)。
 
 ## 验证
 

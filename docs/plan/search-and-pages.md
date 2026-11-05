@@ -10,13 +10,13 @@
 
 ## 部署范围
 
-按用户授权启用 GitHub Actions 构建及 Pages 发布，只部署 `dist/`，保留仓库可见性。`main` 推送或手动运行时，Node.js 22.18 / 24 测试与构建均通过后才部署；PR 只验证。依赖固定 SHA 的官方 Pages actions，并使用 `github-pages` 环境及最小发布权限。
+按用户授权启用 GitHub Actions 构建及 Pages 发布，只部署 `dist/`。初始保持私有；2026-11-05 用户明确选择“公开仓库并部署”，现按该授权公开上线。`main` 推送或手动运行时，Node.js 22.18 / 24 测试与构建均通过后才部署；PR 只验证。依赖固定 SHA 的官方 Pages actions，并使用 `github-pages` 环境及最小发布权限。
 
 构建使用 `/Tamatamatori/` 项目路径，检查入口、Worker、目录下载和第三方许可等资源；本地开发仍使用 `/`。GitHub Pages 对私有仓库的可用性受账号计划与仓库权限约束，实际启用结果单独记录；不自动改为公开仓库或升级付费计划。
 
-实际启用：GitHub 创建 Pages API 返回 HTTP 422，明确说明当前方案不支持这个私有仓库。保持私有设置，不擅自公开代码/文档/历史或升级付费。工作流继续测试并生成 Pages 产物，发布 job 需仓库变量 `PAGES_ENABLED=true`；该变量只在 Pages 成功启用后设置，避免此限制导致普通 CI 失败。之后可手动运行同一工作流发布。
+首次启用：GitHub 创建 Pages API 返回 HTTP 422，明确说明当前方案不支持这个私有仓库，当时保持私有并等待授权。用户随后明确授权公开仓库及代码/文档/提交历史；继续操作前 API 已显示仓库为公开，因此无需重复修改可见性。工作流发布 job 需仓库变量 `PAGES_ENABLED=true`；该变量只在 Pages 成功启用后设置，避免外部限制导致普通 CI 失败。之后可手动运行同一工作流发布。
 
-验收：搜索匹配、无结果、未开启图层的显式动作、查询保留与不重载 DEM；全量检查、子路径构建及 Chrome 画面；提交推送后核对 Actions。线上部署在 GitHub 的私有仓库 Pages 限制解除前保持待办，不能宣称已上线。完成后补齐结果。
+验收：搜索匹配、无结果、未开启图层的显式动作、查询保留与不重载 DEM；全量检查、子路径构建及 Chrome 画面；提交推送后核对 Actions。正式上线须发布成功并检查公开站点的资源和真实浏览器画面，完成后补齐结果。
 
 ## 本地验证及发布准备
 
@@ -24,4 +24,17 @@
 - Chrome 检查构建产物的 `/Tamatamatori/` 子路径：搜索 `Ori` 找到关闭的猎户座，点击“开启并朝向”后图形正确入画、状态为当前 DEM 未遮挡；`Vega` 找到织女星，显示关闭及地平线下；无结果和清除恢复正常信息。入口、JS/CSS、地图 Worker、三份目录下载与第三方许可均验证 HTTP 200，真实地形/水体预览就绪，无控制台错误。
 - 搜索[实际截图](search-pages-evidence/search-orion.jpg)。发布前保存 GitHub 的[限制响应](search-pages-evidence/github-pages.json)，并将仓库变量 `PAGES_ENABLED` 显式设为 `false`。仅上传 `dist`；未改变私有可见性、未发布失败站点，也未创建额外凭据或后端。
 
-远端验证：功能提交 [`ac52366`](https://github.com/Imanity/Tamatamatori/commit/ac523661e6b6b07f97b8a61d23b760fe62109435) 已推送 `main`；[CI #41960483975](https://github.com/Imanity/Tamatamatori/actions/runs/41960483975) 的 Node.js 22.18.0 / 24 测试与构建均通过，`github-pages` 静态产物上传成功（725068 字节）。发布 job 因 `PAGES_ENABLED=false` 按预期跳过；再次核对仓库仍为私有。正式上线仍需用户决定私有仓库 Pages 的可用方案，再启用发布；这是外部账号限制，不是已通过的部署验收。
+首次远端验证：功能提交 [`ac52366`](https://github.com/Imanity/Tamatamatori/commit/ac523661e6b6b07f97b8a61d23b760fe62109435) 已推送 `main`；[CI #41960483975](https://github.com/Imanity/Tamatamatori/actions/runs/41960483975) 的 Node.js 22.18.0 / 24 测试与构建均通过，`github-pages` 静态产物上传成功（725068 字节）。当时发布 job 因 `PAGES_ENABLED=false` 按预期跳过，仓库仍为私有；该次构建不作为上线验收。
+
+## 公开上线验收
+
+2026-11-05 用户明确批准公开仓库并部署。操作前 GitHub API 已返回 `PUBLIC`，因此未重复变更可见性；创建 Pages 成功后设置 `PAGES_ENABLED=true`，手动触发 [CI #41962803743](https://github.com/Imanity/Tamatamatori/actions/runs/41962803743)。Node.js 22.18.0 / 24 测试与构建、Pages 发布均成功，工作流针对 `5e0106b`。原始[工作流结果](search-pages-evidence/pages-ci.json)及 [Pages 设置](search-pages-evidence/pages-enabled.json)已保存；HTTPS 已启用。
+
+站点地址：<https://imanity.github.io/Tamatamatori/>。
+
+- 线上 HTTP 检查共 18 个资源：入口、第三方许可及 16 个静态资源（含地图 Worker、三个可下载目录、JS/CSS）均为 200，资源类型正确。
+- Chrome 实际加载地图、富士山 DEM 与水体；预览尺寸 648 × 432，`data-ready=true`，直接刷新后仍就绪。按 `Vega` 找到图层关闭的织女星，无结果提示与清除恢复信息正常。
+- 设置东京时间 `2026-11-09 01:00`，按 `Ori` 找到关闭的猎户座；点击“开启并朝向”后星座图层开启、目标入画，状态为“当前 DEM 未遮挡”。未发现控制台错误。
+- [线上实际截图](search-pages-evidence/pages-live.jpg)与[浏览器记录](search-pages-evidence/pages-browser-results.json)已保存。上线配置和验收记录随本次文档提交推送；后续 `main` 自动测试、构建、发布，PR 不发布。
+
+站点是晴空与地形构图模拟，公共瓦片网络可用性、DEM 覆盖/精度及月光近似的既有限制仍然适用。本轮未增加后端、账户、密钥或付费服务。

@@ -1,0 +1,25 @@
+{
+  "url": "https://imanity.github.io/Tamatamatori/",
+  "initialTerrain": {
+    "height": 432,
+    "ready": "true",
+    "width": 648
+  },
+  "aliasSearch": "找到 1 个目标\n\n织女星\n亮星\n图层已关闭 · 视场外\n287.3° / 几何 71.4°\n开启并朝向",
+  "noMatch": "没有找到匹配目标\n\n试试“织女星”“Vega”或“Ori”。",
+  "cleared": 1,
+  "orionBefore": "找到 1 个目标\n\n猎户座\n星座\n图层已关闭 · 视场外\n150.4° / 几何 58.4°\n开启并朝向",
+  "orionAfter": "找到 1 个目标\n\n猎户座\n星座\n当前 DEM 未遮挡\n150.4° / 几何 58.4°\n朝向",
+  "constellationsEnabled": true,
+  "finalTerrain": {
+    "height": 432,
+    "ready": "true",
+    "width": 648
+  },
+  "consoleErrors": [],
+  "afterReload": {
+    "height": 432,
+    "ready": "true",
+    "width": 648
+  }
+}
