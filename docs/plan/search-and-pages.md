@@ -24,4 +24,4 @@
 - Chrome 检查构建产物的 `/Tamatamatori/` 子路径：搜索 `Ori` 找到关闭的猎户座，点击“开启并朝向”后图形正确入画、状态为当前 DEM 未遮挡；`Vega` 找到织女星，显示关闭及地平线下；无结果和清除恢复正常信息。入口、JS/CSS、地图 Worker、三份目录下载与第三方许可均验证 HTTP 200，真实地形/水体预览就绪，无控制台错误。
 - 搜索[实际截图](search-pages-evidence/search-orion.jpg)。发布前保存 GitHub 的[限制响应](search-pages-evidence/github-pages.json)，并将仓库变量 `PAGES_ENABLED` 显式设为 `false`。仅上传 `dist`；未改变私有可见性、未发布失败站点，也未创建额外凭据或后端。
 
-待远端验证：提交推送后的两个 Node.js 作业与 Pages 产物。正式上线仍需用户决定私有仓库 Pages 的可用方案，再启用发布；这是外部账号限制，不是已通过的部署验收。
+远端验证：功能提交 [`ac52366`](https://github.com/Imanity/Tamatamatori/commit/ac523661e6b6b07f97b8a61d23b760fe62109435) 已推送 `main`；[CI #41960483975](https://github.com/Imanity/Tamatamatori/actions/runs/41960483975) 的 Node.js 22.18.0 / 24 测试与构建均通过，`github-pages` 静态产物上传成功（725068 字节）。发布 job 因 `PAGES_ENABLED=false` 按预期跳过；再次核对仓库仍为私有。正式上线仍需用户决定私有仓库 Pages 的可用方案，再启用发布；这是外部账号限制，不是已通过的部署验收。
