@@ -20,7 +20,7 @@ export interface ShootingPlan {
   orientation: "landscape" | "portrait";
   instant: string;
   timeZone: string;
-  layers: { sun: boolean; moon: boolean; stars: boolean; milkyWay: boolean };
+  layers: { sun: boolean; moon: boolean; stars: boolean; milkyWay: boolean; constellations: boolean };
   refraction: "standard" | "none";
 }
 
@@ -36,7 +36,7 @@ export const initialPlan: ShootingPlan = {
   orientation: "landscape",
   instant: "2026-11-04T08:00:00Z",
   timeZone: "Asia/Tokyo",
-  layers: { sun: true, moon: true, stars: false, milkyWay: false },
+  layers: { sun: true, moon: true, stars: false, milkyWay: false, constellations: false },
   refraction: "standard",
 };
 

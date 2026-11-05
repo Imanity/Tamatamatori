@@ -8,6 +8,8 @@ import { CelestialLayer, triangulate } from "../src/preview/celestial-layer.ts";
 import { StarfieldLayer } from "../src/preview/starfield-layer.ts";
 import { skyReference } from "../src/domain/starfield.ts";
 import { photoCameraMatrix } from "../src/preview/terrain-perspective-math.ts";
+import {constellationScene} from '../src/domain/constellations.ts';
+import {skyPointView} from '../src/domain/starfield.ts';
 
 const close = (a, b, tolerance = 1e-6) => assert.ok(Math.abs(a - b) <= tolerance, `${a} vs ${b}`);
 const disc = (elevation) => ({ id: "sun", elevation, azimuth: 0, angularRadius: 0.25, distanceKm: 1.5e8, direction: direction(0, elevation) });
@@ -51,16 +53,18 @@ test("三角化保留凹月相轮廓面积，空和退化轮廓不产生三角�
 function fakeGL() {
   const gl = {}, names = ['VERTEX_SHADER','FRAGMENT_SHADER','COMPILE_STATUS','LINK_STATUS','CURRENT_PROGRAM','VERTEX_ARRAY_BINDING','ARRAY_BUFFER_BINDING','DEPTH_TEST','CULL_FACE','BLEND','STENCIL_TEST','DEPTH_FUNC','DEPTH_RANGE','DEPTH_WRITEMASK','COLOR_WRITEMASK','BLEND_SRC_RGB','BLEND_DST_RGB','BLEND_SRC_ALPHA','BLEND_DST_ALPHA','ARRAY_BUFFER','FLOAT','ONE','ONE_MINUS_SRC_ALPHA','LEQUAL','GREATER','LESS','STREAM_DRAW','TRIANGLES','LINE_LOOP','ANY_SAMPLES_PASSED','QUERY_RESULT_AVAILABLE','QUERY_RESULT'];
   names.forEach((name, i) => gl[name] = i + 1);
-  for(const name of ['POINTS','ELEMENT_ARRAY_BUFFER','STATIC_DRAW','UNSIGNED_SHORT'])gl[name]=names.length+Object.keys(gl).length+1;
+  for(const name of ['POINTS','LINES','ELEMENT_ARRAY_BUFFER','STATIC_DRAW','UNSIGNED_SHORT'])gl[name]=names.length+Object.keys(gl).length+1;
   const state = new Map([[gl.CURRENT_PROGRAM,{}],[gl.VERTEX_ARRAY_BINDING,{}],[gl.ARRAY_BUFFER_BINDING,{}],[gl.DEPTH_FUNC,gl.LESS],[gl.DEPTH_RANGE,[0,0.8]],[gl.DEPTH_WRITEMASK,true],[gl.COLOR_WRITEMASK,[false,true,false,true]],...['BLEND_SRC_RGB','BLEND_DST_RGB','BLEND_SRC_ALPHA','BLEND_DST_ALPHA'].map(name=>[gl[name],gl.ONE])]);
   const enabled = new Set([gl.CULL_FACE, gl.STENCIL_TEST]);
   const queries = new Set(), resources = new Set();
-  gl.results = []; gl.draws = []; gl.compile = true;
+  gl.results = []; gl.draws = []; gl.uploads=[]; gl.compile = true;
+  const uniforms=new Map();
   const allocate = () => { const object={}; resources.add(object); return object; };
   for (const type of ['Shader','Program','Buffer','VertexArray']) { gl[`create${type}`]=allocate; gl[`delete${type}`]=(object)=>resources.delete(object); }
   for (const name of ['shaderSource','compileShader','attachShader','linkProgram','enableVertexAttribArray','vertexAttribPointer','uniform4fv','bufferData']) gl[name]=()=>{};
-  gl.getShaderParameter=()=>gl.compile; gl.getProgramParameter=()=>true; gl.getUniformLocation=()=>({});
-  gl.uniform1f=()=>{};gl.uniformMatrix4fv=()=>{};
+  gl.bufferData=(_,data)=>gl.uploads.push(data.slice());
+  gl.getShaderParameter=()=>gl.compile; gl.getProgramParameter=()=>true; gl.getUniformLocation=(_,name)=>name;
+  gl.uniform1f=(name,value)=>uniforms.set(name,value);gl.uniformMatrix4fv=()=>{};
   gl.isContextLost=()=>false; gl.getParameter=(key)=>state.get(key); gl.isEnabled=(cap)=>enabled.has(cap);
   gl.enable=(cap)=>enabled.add(cap); gl.disable=(cap)=>enabled.delete(cap);
   gl.useProgram=(value)=>state.set(gl.CURRENT_PROGRAM,value); gl.bindVertexArray=(value)=>state.set(gl.VERTEX_ARRAY_BINDING,value);
@@ -71,7 +75,7 @@ function fakeGL() {
   gl.blendFuncSeparate=(...values)=>['BLEND_SRC_RGB','BLEND_DST_RGB','BLEND_SRC_ALPHA','BLEND_DST_ALPHA'].forEach((name,i)=>state.set(gl[name],values[i]));
   gl.createQuery=()=>{const query={available:false}; queries.add(query);return query;};gl.deleteQuery=(query)=>queries.delete(query);
   gl.beginQuery=(_,query)=>{query.result=gl.results.shift();};gl.endQuery=()=>{};
-  gl.drawArrays=(mode,_,count)=>gl.draws.push({mode,count,depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK)});
+  gl.drawArrays=(mode,_,count)=>gl.draws.push({mode,count,probe:uniforms.get('u_probe'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK)});
   gl.drawElements=(mode,count)=>gl.draws.push({mode,count,depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK)});
   gl.getQueryParameter=(query,key)=>key===gl.QUERY_RESULT_AVAILABLE?query.available:query.result;
   gl.complete=()=>queries.forEach(query=>query.available=true);
@@ -125,7 +129,7 @@ test("GPU 查询未完成时保持未知，超时停止轮询并释放查询", (
 
 // Controlled camera feedback isolates query lifecycle; actual rasterization is Chrome-verified.
 function starFrame(key,ready=true){
-  const plan={...initialPlan,instant:'2026-07-01T13:00:00Z',refraction:'none',layers:{sun:false,moon:false,stars:true,milkyWay:true}};
+  const plan={...initialPlan,focalLength:1000,instant:'2026-07-01T13:00:00Z',refraction:'none',layers:{sun:false,moon:false,stars:true,milkyWay:true,constellations:false}};
   const point=skyReference(plan).points.find(p=>p.name==='北极星');
   return {key,planKey:key,ready,plan:{...plan,azimuth:point.azimuth,pitch:point.elevation}};
 }
@@ -161,4 +165,36 @@ test('星空查询在计划/地形失效后废弃，失败明确反馈并释放�
   assert.match(reports.at(-1).message,/超时/);assert.equal(queries.size,0);layer.onRemove();assert.equal(resources.size,0);
   const broken=new StarfieldLayer(s=>reports.push(s));gl.compile=false;
   broken.onAdd({triggerRepaint(){}},gl);assert.match(reports.at(-1).message,/无法启动/);broken.onRemove();assert.equal(resources.size,0);
+});
+
+test('白昼透明星点仍独立测试几何遮挡，下一帧恢复正常明暗',()=>{
+  const {gl,queries,resources}=fakeGL(),reports=[],layer=prepareStars(gl,reports);
+  const frame=starFrame('day');frame.plan.instant='2026-07-02T03:00:00Z';
+  const target=skyReference(frame.plan).points.find(p=>p.name==='北极星');
+  frame.plan.azimuth=target.azimuth;frame.plan.pitch=target.elevation;
+  layer.setScene(frame);layer.camera={azimuth:frame.plan.azimuth,pitch:frame.plan.pitch};layer.matrix=photoCameraMatrix(frame.plan);
+  gl.results=[true];layer.render(gl);
+  const points=gl.uploads.find(data=>data.length===928*9);
+  assert.ok(points);for(let i=8;i<927*9;i+=9)assert.equal(points[i],0,'daytime visual stars must be transparent');
+  assert.equal(points[928*9-1],1,'core remains a direction ring');
+  assert.ok(gl.draws.some(draw=>draw.count===928&&draw.probe===0));
+  assert.ok(gl.draws.some(draw=>draw.count===1&&draw.probe===1));assert.equal(queries.size,1);
+  gl.complete();layer.render(gl);assert.equal(reports.at(-1).states[target.id],'clear');
+  assert.equal(gl.draws.at(-1).probe,0);layer.onRemove();assert.equal(resources.size,0);
+});
+
+test('星座单独开启绘制球面连线并查询名称遮挡，关闭清空，卸载释放新增资源',()=>{
+  const {gl,queries,resources,state}=fakeGL(),reports=[],before=new Map(state),layer=prepareStars(gl,reports);
+  const frame=starFrame('constellations');frame.plan={...frame.plan,instant:'2026-11-08T16:00:00Z',focalLength:35,layers:{sun:false,moon:false,stars:false,milkyWay:false,constellations:true}};
+  const figure=constellationScene(frame.plan),orion=figure.anchors.find(p=>p.name==='猎户座');
+  frame.plan.azimuth=orion.azimuth;frame.plan.pitch=orion.elevation;
+  const visible=figure.anchors.filter(p=>skyPointView(frame.plan,p).state==='画面内');assert.ok(visible.length>0);
+  layer.setScene(frame);layer.camera={azimuth:frame.plan.azimuth,pitch:frame.plan.pitch};layer.matrix=photoCameraMatrix(frame.plan);
+  gl.results=visible.map(()=>true);layer.render(gl);
+  assert.ok(gl.draws.some(d=>d.mode===gl.LINES&&d.count===figure.vertices.length/3&&d.depth===gl.LEQUAL&&!d.write));
+  assert.equal(queries.size,visible.length);assert.deepEqual(state,before);
+  gl.complete();layer.render(gl);assert.equal(reports.at(-1).states[orion.id],'clear');
+  const draws=gl.draws.length;
+  layer.setScene({...frame,key:'off',plan:{...frame.plan,layers:{...frame.plan.layers,constellations:false}}});layer.render(gl);assert.equal(gl.draws.length,draws);
+  layer.onRemove();assert.equal(resources.size,0);assert.equal(queries.size,0);
 });

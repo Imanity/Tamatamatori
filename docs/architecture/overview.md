@@ -66,7 +66,7 @@ P3 日月接入 Astronomy Engine 后，太阳位置与基础环境统一算法�
 
 本轮使用 [React 内置状态](https://react.dev/reference/react/useState)、[Vite](https://vite.dev/guide/) 与 [Temporal polyfill](https://github.com/js-temporal/temporal-polyfill)（查阅：2026-11-04）；依赖版本记录于 `package.json`，可复现安装记录于 `package-lock.json`。
 
-P3 亮星、金木星与银河沿用实际摄影相机、参考折射与地形主深度。固定 HYG 子集本地计算位置，银河为有界解析轮廓；银心方向独立标识，数据许可和异步名称遮挡见[星空架构](starfield.md)。
+P3 亮星、金木星、银河与星座参考沿用实际摄影相机、参考折射与地形主深度。固定 HYG 子集本地计算位置，银河为有界解析轮廓；银心方向独立标识，数据许可和异步名称遮挡见[星空架构](starfield.md)。
 
 ## 3. 统一领域约定
 

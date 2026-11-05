@@ -52,7 +52,7 @@ test("固定亮星子集保留许可、来源和真实数值，不含太阳或�
     "d9f69fd86bbf90a4e4d52b4c5c53eacfa6dfc0bfdef85bfd94f095e0bebe4ebd",
   );
   assert.equal(new Set(catalog.stars.map((r) => r[0])).size, starCount);
-  assert.equal(Object.keys(catalog.names).length, 18);
+  assert.ok(Object.keys(catalog.names).length >= 87);
   for (const r of catalog.stars) {
     assert.ok(
       r[0] > 0 &&

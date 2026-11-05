@@ -6,7 +6,6 @@ import type {
 import type { ShootingPlan } from "../domain/plan.ts";
 import {
   milkyWayMesh,
-  primarySkyNames,
   skyPointSize,
   skyPointView,
   skyReference,
@@ -16,6 +15,8 @@ import { refractDirection } from "../domain/refraction.ts";
 import { renderedCamera } from "./rendered-camera.ts";
 import type { RenderedCamera } from "./rendered-camera.ts";
 import { photoCameraMatrix } from "./terrain-perspective-math.ts";
+import { skyAppearance, starOpacity } from "../domain/sky-appearance.ts";
+import { constellationScene } from "../domain/constellations.ts";
 
 interface Frame {
   key: string;
@@ -35,10 +36,10 @@ void main(){gl_Position=u_camera*vec4(a_ray,0.0);gl_Position.z=gl_Position.w;
 gl_PointSize=a_symbol.x*u_pixel_ratio;v_color=a_color;v_kind=a_symbol.y;v_height=a_ray.z;}`;
 const pointFragment = `#version 300 es
 precision highp float;
-in vec4 v_color; in float v_kind; in float v_height; out vec4 color;
+in vec4 v_color; in float v_kind; in float v_height; uniform float u_probe; out vec4 color;
 void main(){if(v_height<=0.0)discard;float d=length(gl_PointCoord-0.5);
 float coverage=v_kind>0.5?(1.0-smoothstep(0.40,0.5,d))*smoothstep(0.26,0.36,d):exp(-d*d*13.0)*(1.0-smoothstep(0.35,0.5,d));
-float a=coverage*v_color.a;if(a<0.01)discard;color=vec4(v_color.rgb*a,a);}`;
+float a=coverage*mix(v_color.a,1.0,u_probe);if(a<0.01)discard;color=vec4(v_color.rgb*a,a);}`;
 const bandVertex = `#version 300 es
 precision highp float;
 layout(location=0) in vec3 a_ray;layout(location=1) in vec2 a_gal;
@@ -56,6 +57,13 @@ float edge=1.0-smoothstep(15.0,18.0,abs(b));
 float a=(band*dust*(0.25+0.65*core)+glow)*0.42*u_strength*edge;
 vec3 tint=mix(vec3(0.64,0.72,0.90),vec3(0.95,0.80,0.70),core);
 color=vec4(tint*a,a);}`;
+const lineVertex = `#version 300 es
+precision highp float;
+layout(location=0) in vec3 a_ray;uniform mat4 u_camera;out float v_height;
+void main(){gl_Position=u_camera*vec4(a_ray,0.0);gl_Position.z=gl_Position.w;v_height=a_ray.z;}`;
+const lineFragment = `#version 300 es
+precision highp float;in float v_height;out vec4 color;
+void main(){if(v_height<=0.0)discard;float a=0.55;color=vec4(vec3(0.88,0.82,0.62)*a,a);}`;
 
 function program(gl: WebGL2RenderingContext, vertex: string, fragment: string) {
   const shaders: WebGLShader[] = [];
@@ -97,11 +105,15 @@ export class StarfieldLayer implements CustomLayerInterface {
   private frame?: Frame;
   private pointsProgram?: WebGLProgram;
   private bandProgram?: WebGLProgram;
+  private lineProgram?: WebGLProgram;
   private pointsVao?: WebGLVertexArrayObject;
   private bandVao?: WebGLVertexArrayObject;
+  private lineVao?: WebGLVertexArrayObject;
   private pointsBuffer?: WebGLBuffer;
   private bandBuffer?: WebGLBuffer;
   private indicesBuffer?: WebGLBuffer;
+  private lineBuffer?: WebGLBuffer;
+  private lineData: Float32Array = new Float32Array();
   private camera?: RenderedCamera;
   private matrix = new Float32Array(16);
   private points: SkyPoint[] = [];
@@ -127,17 +139,22 @@ export class StarfieldLayer implements CustomLayerInterface {
     try {
       this.pointsProgram = program(gl, pointVertex, pointFragment);
       this.bandProgram = program(gl, bandVertex, bandFragment);
+      this.lineProgram = program(gl, lineVertex, lineFragment);
       this.pointsVao = gl.createVertexArray() ?? undefined;
       this.bandVao = gl.createVertexArray() ?? undefined;
+      this.lineVao = gl.createVertexArray() ?? undefined;
       this.pointsBuffer = gl.createBuffer() ?? undefined;
       this.bandBuffer = gl.createBuffer() ?? undefined;
       this.indicesBuffer = gl.createBuffer() ?? undefined;
+      this.lineBuffer = gl.createBuffer() ?? undefined;
       if (
         !this.pointsVao ||
         !this.bandVao ||
         !this.pointsBuffer ||
         !this.bandBuffer ||
-        !this.indicesBuffer
+        !this.indicesBuffer ||
+        !this.lineVao ||
+        !this.lineBuffer
       )
         throw new Error("allocation");
     } catch {
@@ -158,36 +175,33 @@ export class StarfieldLayer implements CustomLayerInterface {
         p.refraction,
         !!p.layers.stars,
         !!p.layers.milkyWay,
+        !!p.layers.constellations,
       ].join("/");
     if (key !== this.dataKey) {
       this.dataKey = key;
       this.dirty = true;
-      const active = p.layers.stars || p.layers.milkyWay,
+      const active =
+          p.layers.stars || p.layers.milkyWay || p.layers.constellations,
         sky = active ? skyReference(p) : null;
+      const appearance = sky ? skyAppearance(sky.sunElevation, sky.moon) : null;
+      const figure = p.layers.constellations ? constellationScene(p) : null;
+      this.lineData = figure?.vertices ?? new Float32Array();
       this.points = [
         ...(p.layers.stars ? sky!.points : []),
         ...(p.layers.milkyWay ? [sky!.core] : []),
+        ...(figure?.anchors ?? []),
       ];
-      this.targets = this.points.filter(
-        (point) =>
-          point.id === "galactic-center" ||
-          primarySkyNames.includes(point.name ?? ""),
-      );
+      this.targets = this.points.filter((point) => !!point.name);
       this.offsets.clear();
       const data: number[] = [];
       this.points.forEach((point, i) => {
         this.offsets.set(point.id, i);
         const ray = refractDirection(point.direction, p.refraction);
-        const alpha =
-          point.id === "galactic-center"
-            ? 1
-            : Math.max(
-                0.45,
-                Math.min(1, 0.45 + (4.5 - point.magnitude) * 0.08),
-              );
+        const anchor = point.id.startsWith("constellation-");
+        const alpha = anchor ? 0 : starOpacity(point, appearance!);
         data.push(
           ...ray,
-          skyPointSize(point),
+          anchor ? 4 : skyPointSize(point),
           point.id === "galactic-center" ? 1 : 0,
           ...point.color,
           alpha,
@@ -195,9 +209,7 @@ export class StarfieldLayer implements CustomLayerInterface {
       });
       this.pointData = new Float32Array(data);
       this.band = p.layers.milkyWay ? milkyWayMesh(p) : undefined;
-      this.strength = sky
-        ? 0.25 + 0.75 * Math.max(0, Math.min(1, -sky.sunElevation / 12))
-        : 1;
+      this.strength = appearance?.galaxyStrength ?? 0;
     }
     this.map?.triggerRepaint();
   }
@@ -264,7 +276,9 @@ export class StarfieldLayer implements CustomLayerInterface {
       !p ||
       !b ||
       !f.ready ||
-      (!f.plan.layers.stars && !f.plan.layers.milkyWay)
+      (!f.plan.layers.stars &&
+        !f.plan.layers.milkyWay &&
+        !f.plan.layers.constellations)
     )
       return;
     if (gl.isContextLost()) {
@@ -359,6 +373,13 @@ export class StarfieldLayer implements CustomLayerInterface {
             gl.STATIC_DRAW,
           );
         }
+        if (this.lineData.length) {
+          gl.bindVertexArray(this.lineVao!);
+          gl.bindBuffer(gl.ARRAY_BUFFER, this.lineBuffer!);
+          gl.bufferData(gl.ARRAY_BUFFER, this.lineData, gl.STATIC_DRAW);
+          gl.enableVertexAttribArray(0);
+          gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 12, 0);
+        }
         this.dirty = false;
       }
       if (this.band) {
@@ -377,6 +398,16 @@ export class StarfieldLayer implements CustomLayerInterface {
           0,
         );
       }
+      if (this.lineData.length && this.lineProgram) {
+        gl.useProgram(this.lineProgram);
+        gl.uniformMatrix4fv(
+          gl.getUniformLocation(this.lineProgram, "u_camera"),
+          false,
+          this.matrix,
+        );
+        gl.bindVertexArray(this.lineVao!);
+        gl.drawArrays(gl.LINES, 0, this.lineData.length / 3);
+      }
       gl.useProgram(p);
       gl.uniformMatrix4fv(
         gl.getUniformLocation(p, "u_camera"),
@@ -390,12 +421,16 @@ export class StarfieldLayer implements CustomLayerInterface {
         canvas.width / Math.max(1, host.clientWidth),
       );
       gl.bindVertexArray(this.pointsVao!);
+      gl.uniform1f(gl.getUniformLocation(p, "u_probe"), 0);
       gl.drawArrays(gl.POINTS, 0, this.points.length);
       if (!this.pending.length && this.resolvedKey !== queryKey) {
         const view = { ...f.plan, azimuth: c.azimuth, pitch: c.pitch };
         this.pendingKey = queryKey;
         this.pendingAt = Date.now();
         gl.colorMask(false, false, false, false);
+        // Brightness is not geometry: invisible daytime stars must still test
+        // against terrain, or an empty alpha mask would look like a mountain.
+        gl.uniform1f(gl.getUniformLocation(p, "u_probe"), 1);
         for (const point of this.targets) {
           if (skyPointView(view, point).state !== "画面内") continue;
           const query = gl.createQuery();
@@ -452,15 +487,19 @@ export class StarfieldLayer implements CustomLayerInterface {
     if (gl) {
       gl.deleteProgram(this.pointsProgram ?? null);
       gl.deleteProgram(this.bandProgram ?? null);
+      gl.deleteProgram(this.lineProgram ?? null);
       gl.deleteBuffer(this.pointsBuffer ?? null);
       gl.deleteBuffer(this.bandBuffer ?? null);
       gl.deleteBuffer(this.indicesBuffer ?? null);
+      gl.deleteBuffer(this.lineBuffer ?? null);
       gl.deleteVertexArray(this.pointsVao ?? null);
       gl.deleteVertexArray(this.bandVao ?? null);
+      gl.deleteVertexArray(this.lineVao ?? null);
     }
     this.map = undefined;
     this.gl = undefined;
     this.pointsProgram = undefined;
     this.bandProgram = undefined;
+    this.lineProgram = undefined;
   }
 }

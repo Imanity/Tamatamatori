@@ -1,0 +1,617 @@
+{
+  "date": "2026-11-05",
+  "site": {
+    "latitude": 35.4172,
+    "longitude": 138.8729,
+    "cameraHeight": 1.6
+  },
+  "note": "UI-derived observations from actual Chrome. Intermediate layout/visibility snapshots may be waiting for new terrain or GPU queries; settled snapshots and screenshots are identified separately. Source-data names were finalized to simplified Chinese during this run.",
+  "records": [
+    {
+      "name": "Orion, named stars, right information rail",
+      "canvas": {
+        "height": 826,
+        "width": 1239
+      },
+      "constellationLabels": [
+        "麒麟座",
+        "猎户座",
+        "金牛座"
+      ],
+      "contentWidth": 2560,
+      "copyrightInPreview": true,
+      "infoDisplay": "flex",
+      "labels": [
+        "参宿七",
+        "参宿四",
+        "毕宿五",
+        "参宿五",
+        "参宿二",
+        "井宿三",
+        "参宿六",
+        "麒麟座",
+        "猎户座",
+        "金牛座"
+      ],
+      "readoutInInfo": true,
+      "readoutUnderPreview": false,
+      "ready": "true",
+      "switches": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        },
+        {
+          "checked": true,
+          "name": "显示星空"
+        },
+        {
+          "checked": false,
+          "name": "显示银河"
+        },
+        {
+          "checked": true,
+          "name": "显示星座名称与连线"
+        }
+      ],
+      "viewportWidth": 2560
+    },
+    {
+      "name": "Constellations off",
+      "canvas": {
+        "height": 826,
+        "width": 1239
+      },
+      "constellationLabels": [],
+      "contentWidth": 2560,
+      "copyrightInPreview": true,
+      "infoDisplay": "flex",
+      "labels": [],
+      "readoutInInfo": true,
+      "readoutUnderPreview": false,
+      "ready": "true",
+      "switches": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        },
+        {
+          "checked": true,
+          "name": "显示星空"
+        },
+        {
+          "checked": false,
+          "name": "显示银河"
+        },
+        {
+          "checked": false,
+          "name": "显示星座名称与连线"
+        }
+      ],
+      "viewportWidth": 2560
+    },
+    {
+      "name": "Constellation guides without star points",
+      "canvas": {
+        "height": 826,
+        "width": 1239
+      },
+      "constellationLabels": [
+        "麒麟座",
+        "猎户座",
+        "金牛座"
+      ],
+      "contentWidth": 2560,
+      "copyrightInPreview": true,
+      "infoDisplay": "flex",
+      "labels": [
+        "麒麟座",
+        "猎户座",
+        "金牛座"
+      ],
+      "readoutInInfo": true,
+      "readoutUnderPreview": false,
+      "ready": "true",
+      "switches": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        },
+        {
+          "checked": false,
+          "name": "显示星空"
+        },
+        {
+          "checked": false,
+          "name": "显示银河"
+        },
+        {
+          "checked": true,
+          "name": "显示星座名称与连线"
+        }
+      ],
+      "viewportWidth": 2560
+    },
+    {
+      "name": "1280px default layout",
+      "canvas": {
+        "height": 184,
+        "width": 276
+      },
+      "constellationLabels": [],
+      "contentWidth": 1265,
+      "copyrightInPreview": true,
+      "infoDisplay": "flex",
+      "labels": [],
+      "readoutInInfo": true,
+      "readoutUnderPreview": false,
+      "ready": "false",
+      "switches": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        },
+        {
+          "checked": true,
+          "name": "显示星空"
+        },
+        {
+          "checked": false,
+          "name": "显示银河"
+        },
+        {
+          "checked": true,
+          "name": "显示星座名称与连线"
+        }
+      ],
+      "viewportWidth": 1265
+    },
+    {
+      "name": "Information rail collapsed",
+      "canvas": {
+        "height": 219,
+        "width": 329
+      },
+      "constellationLabels": [],
+      "contentWidth": 1265,
+      "copyrightInPreview": true,
+      "infoDisplay": "none",
+      "labels": [],
+      "readoutInInfo": true,
+      "readoutUnderPreview": false,
+      "ready": "true",
+      "switches": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        },
+        {
+          "checked": true,
+          "name": "显示星空"
+        },
+        {
+          "checked": false,
+          "name": "显示银河"
+        },
+        {
+          "checked": true,
+          "name": "显示星座名称与连线"
+        }
+      ],
+      "viewportWidth": 1265
+    },
+    {
+      "name": "390px information drawer open",
+      "canvas": {
+        "height": 221,
+        "width": 332
+      },
+      "constellationLabels": [
+        "麒麟座",
+        "猎户座",
+        "金牛座"
+      ],
+      "contentWidth": 390,
+      "copyrightInPreview": true,
+      "infoDisplay": "flex",
+      "labels": [
+        "参宿七",
+        "参宿四",
+        "毕宿五",
+        "参宿五",
+        "参宿二",
+        "井宿三",
+        "参宿六",
+        "麒麟座",
+        "猎户座",
+        "金牛座"
+      ],
+      "readoutInInfo": true,
+      "readoutUnderPreview": false,
+      "ready": "true",
+      "switches": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        },
+        {
+          "checked": true,
+          "name": "显示星空"
+        },
+        {
+          "checked": false,
+          "name": "显示银河"
+        },
+        {
+          "checked": true,
+          "name": "显示星座名称与连线"
+        }
+      ],
+      "viewportWidth": 390
+    },
+    {
+      "name": "390px information drawer closed",
+      "canvas": {
+        "height": 221,
+        "width": 332
+      },
+      "constellationLabels": [
+        "麒麟座",
+        "猎户座",
+        "金牛座"
+      ],
+      "contentWidth": 390,
+      "copyrightInPreview": true,
+      "infoDisplay": "none",
+      "labels": [
+        "参宿七",
+        "参宿四",
+        "毕宿五",
+        "参宿五",
+        "参宿二",
+        "井宿三",
+        "参宿六",
+        "麒麟座",
+        "猎户座",
+        "金牛座"
+      ],
+      "readoutInInfo": true,
+      "readoutUnderPreview": false,
+      "ready": "true",
+      "switches": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        },
+        {
+          "checked": true,
+          "name": "显示星空"
+        },
+        {
+          "checked": false,
+          "name": "显示银河"
+        },
+        {
+          "checked": true,
+          "name": "显示星座名称与连线"
+        }
+      ],
+      "viewportWidth": 390
+    },
+    {
+      "name": "Scorpius centre hidden behind terrain",
+      "canvas": {
+        "height": 826,
+        "width": 1239
+      },
+      "constellationLabels": [
+        "南冕座",
+        "蛇夫座"
+      ],
+      "contentWidth": 2560,
+      "copyrightInPreview": true,
+      "infoDisplay": "flex",
+      "labels": [
+        "尾宿八",
+        "萁宿三",
+        "宋",
+        "南冕座",
+        "蛇夫座"
+      ],
+      "readoutInInfo": true,
+      "readoutUnderPreview": false,
+      "ready": "true",
+      "switches": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        },
+        {
+          "checked": true,
+          "name": "显示星空"
+        },
+        {
+          "checked": false,
+          "name": "显示银河"
+        },
+        {
+          "checked": true,
+          "name": "显示星座名称与连线"
+        }
+      ],
+      "viewportWidth": 2560
+    },
+    {
+      "name": "1280px default layout settled",
+      "canvas": {
+        "height": 184,
+        "width": 276
+      },
+      "constellationLabels": [
+        "南冕座",
+        "蛇夫座"
+      ],
+      "contentWidth": 1265,
+      "copyrightInPreview": true,
+      "infoDisplay": "flex",
+      "labels": [
+        "尾宿八",
+        "萁宿三",
+        "宋",
+        "南冕座",
+        "蛇夫座"
+      ],
+      "readoutInInfo": true,
+      "readoutUnderPreview": false,
+      "ready": "true",
+      "switches": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        },
+        {
+          "checked": true,
+          "name": "显示星空"
+        },
+        {
+          "checked": false,
+          "name": "显示银河"
+        },
+        {
+          "checked": true,
+          "name": "显示星座名称与连线"
+        }
+      ],
+      "viewportWidth": 1265
+    },
+    {
+      "name": "Desktop default layout restored",
+      "canvas": {
+        "height": 432,
+        "width": 648
+      },
+      "constellationLabels": [
+        "南冕座",
+        "蛇夫座"
+      ],
+      "contentWidth": 2560,
+      "copyrightInPreview": true,
+      "infoDisplay": "flex",
+      "labels": [
+        "尾宿八",
+        "萁宿三",
+        "宋",
+        "南冕座",
+        "蛇夫座"
+      ],
+      "readoutInInfo": true,
+      "readoutUnderPreview": false,
+      "ready": "true",
+      "switches": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        },
+        {
+          "checked": true,
+          "name": "显示星空"
+        },
+        {
+          "checked": false,
+          "name": "显示银河"
+        },
+        {
+          "checked": true,
+          "name": "显示星座名称与连线"
+        }
+      ],
+      "viewportWidth": 2560
+    },
+    {
+      "name": "8mm wide field settled",
+      "canvas": {
+        "height": 432,
+        "width": 648
+      },
+      "constellationLabels": [
+        "宝瓶座",
+        "天鹰座",
+        "摩羯座",
+        "仙王座",
+        "南冕座",
+        "北冕座",
+        "天鹅座",
+        "海豚座",
+        "天龙座",
+        "武仙座",
+        "蝎虎座",
+        "天琴座",
+        "显微鏡座",
+        "蛇夫座",
+        "飞马座",
+        "南鱼座",
+        "人马座",
+        "盾牌座",
+        "巨蛇座（蛇头）"
+      ],
+      "contentWidth": 2560,
+      "copyrightInPreview": true,
+      "infoDisplay": "flex",
+      "labels": [
+        "织女星",
+        "牛郎星",
+        "天津四",
+        "尾宿八",
+        "萁宿三",
+        "斗宿四",
+        "侯",
+        "贯索四",
+        "天棓四",
+        "危宿三",
+        "宋",
+        "室宿二",
+        "天钩五",
+        "天津九",
+        "室宿一",
+        "宝瓶座",
+        "天鹰座",
+        "摩羯座",
+        "仙王座",
+        "南冕座",
+        "北冕座",
+        "天鹅座",
+        "海豚座",
+        "天龙座",
+        "武仙座",
+        "蝎虎座",
+        "天琴座",
+        "显微鏡座",
+        "蛇夫座",
+        "飞马座",
+        "南鱼座",
+        "人马座",
+        "盾牌座",
+        "巨蛇座（蛇头）"
+      ],
+      "readoutInInfo": true,
+      "readoutUnderPreview": false,
+      "ready": "true",
+      "switches": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        },
+        {
+          "checked": true,
+          "name": "显示星空"
+        },
+        {
+          "checked": false,
+          "name": "显示银河"
+        },
+        {
+          "checked": true,
+          "name": "显示星座名称与连线"
+        }
+      ],
+      "viewportWidth": 2560
+    },
+    {
+      "name": "Final Orion, 90-name catalogue and information rail",
+      "canvas": {
+        "height": 826,
+        "width": 1239
+      },
+      "constellationLabels": [
+        "麒麟座",
+        "猎户座",
+        "金牛座"
+      ],
+      "contentWidth": 2560,
+      "copyrightInPreview": true,
+      "infoDisplay": "flex",
+      "labels": [
+        "参宿七",
+        "参宿四",
+        "毕宿五",
+        "参宿五",
+        "参宿二",
+        "井宿三",
+        "参宿六",
+        "麒麟座",
+        "猎户座",
+        "金牛座"
+      ],
+      "readoutInInfo": true,
+      "readoutUnderPreview": false,
+      "ready": "true",
+      "switches": [
+        {
+          "checked": true,
+          "name": "显示太阳"
+        },
+        {
+          "checked": true,
+          "name": "显示月亮"
+        },
+        {
+          "checked": true,
+          "name": "显示星空"
+        },
+        {
+          "checked": false,
+          "name": "显示银河"
+        },
+        {
+          "checked": true,
+          "name": "显示星座名称与连线"
+        }
+      ],
+      "viewportWidth": 2560
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-05",
+  "repository": "Imanity/Tamatamatori",
+  "visibility": "private",
+  "request": {
+    "method": "POST",
+    "path": "repos/Imanity/Tamatamatori/pages",
+    "build_type": "workflow"
+  },
+  "response": {
+    "status": 422,
+    "message": "Your current plan does not support GitHub Pages for this repository."
+  },
+  "deploymentEnabled": false,
+  "repositoryVisibilityChanged": false
+}

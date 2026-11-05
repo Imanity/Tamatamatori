@@ -18,7 +18,7 @@ import {
   direction,
   dot,
   observerContext,
-  sunPosition,
+  celestialBodies,
   unit,
 } from "./ephemeris.ts";
 import type { Vector3 } from "./ephemeris.ts";
@@ -50,7 +50,7 @@ export const emptySkyVisibility: SkyVisibility = {
   view: null,
   states: {},
 };
-type Row = [
+export type Row = [
   number,
   number,
   number,
@@ -121,21 +121,20 @@ function computeSky(plan: Input) {
       elevation: Math.asin(Math.max(-1, Math.min(1, ray[2]))) / degrees,
     };
   };
-  const points = (catalog.stars as Row[]).map(
-    ([id, ra, dec, dist, vx, vy, vz, mag, ci]) => {
-      const initial = equatorial(ra, dec),
-        years = time.ut / 365.25;
-      const pos = unit(
-        initial.map(
-          (x, i) =>
-            x * dist +
-            [vx, vy, vz][i] * years -
-            [earth.x, earth.y, earth.z][i] / AU_PER_PC,
-        ) as unknown as Vector3,
-      );
-      return point(`hyg-${id}`, pos, mag, colour(ci), names[`hyg-${id}`]);
-    },
-  );
+  const star = ([id, ra, dec, dist, vx, vy, vz, mag, ci]: Row) => {
+    const initial = equatorial(ra, dec),
+      years = time.ut / 365.25;
+    const pos = unit(
+      initial.map(
+        (x, i) =>
+          x * dist +
+          [vx, vy, vz][i] * years -
+          [earth.x, earth.y, earth.z][i] / AU_PER_PC,
+      ) as unknown as Vector3,
+    );
+    return point(`hyg-${id}`, pos, mag, colour(ci), names[`hyg-${id}`]);
+  };
+  const points = (catalog.stars as Row[]).map(star);
   for (const [body, id, name, color] of [
     [Body.Venus, "venus", "金星", [1, 0.96, 0.86]],
     [Body.Jupiter, "jupiter", "木星", [1, 0.87, 0.69]],
@@ -160,12 +159,15 @@ function computeSky(plan: Input) {
     [1, 0.77, 0.8],
     "银心",
   );
+  const bodies = celestialBodies(plan);
   return {
     points,
     core,
     horizontal,
     time,
-    sunElevation: sunPosition(plan).elevation,
+    sunElevation: bodies.sun.elevation,
+    moon: bodies.moon,
+    star,
   };
 }
 export function skyReference(plan: Input) {

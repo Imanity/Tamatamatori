@@ -26,8 +26,11 @@ const layers: { name: string; icon: IconName; hint: string }[] = [
   { name: "空间站", icon: "satellite", hint: "空间站位置与轨迹" },
 ];
 const skyLayers = [
-  {id:'sun',name:'太阳',icon:'sun'}, {id:'moon',name:'月亮',icon:'moon'},
-  {id:'stars',name:'星空',icon:'stars'}, {id:'milkyWay',name:'银河',icon:'orbit'},
+  { id: "sun", name: "太阳", icon: "sun" },
+  { id: "moon", name: "月亮", icon: "moon" },
+  { id: "stars", name: "星空", icon: "stars" },
+  { id: "milkyWay", name: "银河", icon: "orbit" },
+  { id: "constellations", name: "星座名称与连线", icon: "compass" },
 ] as const;
 
 function Divider({
@@ -216,6 +219,10 @@ export default function App() {
   const [dragging, setDragging] = useState<PanelId | null>(null);
   const [mobilePanel, setMobilePanel] = useState<PanelId>("map");
   const [layersOpen, setLayersOpen] = useState(false);
+  const [infoCollapsed, setInfoCollapsed] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [infoHost, setInfoHost] = useState<HTMLDivElement | null>(null);
+  const [infoQuery, setInfoQuery] = useState("");
   const [announcement, setAnnouncement] = useState("");
   const workspaceRef = useRef<HTMLDivElement>(null);
   const secondaryRef = useRef<HTMLDivElement>(null);
@@ -230,9 +237,11 @@ export default function App() {
       setPlan((current) => ({ ...current, ...patch })),
     [],
   );
-  const toggleLayer = (id: keyof ShootingPlan['layers']) => setPlan((current) => ({
-    ...current, layers: { ...current.layers, [id]: !current.layers[id] },
-  }));
+  const toggleLayer = (id: keyof ShootingPlan["layers"]) =>
+    setPlan((current) => ({
+      ...current,
+      layers: { ...current.layers, [id]: !current.layers[id] },
+    }));
   const movePanel = (id: PanelId, destination: number) => {
     const next = [...panels];
     const source = next.indexOf(id);
@@ -256,7 +265,12 @@ export default function App() {
         {id === "map" ? (
           <MapPanel plan={plan} update={updatePlan} viewport={mapViewport} />
         ) : id === "preview" ? (
-          <PreviewPanel plan={plan} update={updatePlan} />
+          <PreviewPanel
+            plan={plan}
+            update={updatePlan}
+            infoHost={infoHost}
+            infoQuery={infoQuery}
+          />
         ) : (
           <Parameters plan={plan} update={updatePlan} />
         )}
@@ -317,12 +331,19 @@ export default function App() {
             天文参考 <span>构图辅助</span>
           </div>
           <div className="layer-list">
-            {skyLayers.map(({id,name,icon}) => <label className="layer-row layer-toggle" key={id}>
-              <Icon name={icon} size={19} />
-              <span>{name}</span>
-              <input type="checkbox" role="switch" aria-label={`显示${name}`}
-                checked={plan.layers[id]} onChange={() => toggleLayer(id)} />
-            </label>)}
+            {skyLayers.map(({ id, name, icon }) => (
+              <label className="layer-row layer-toggle" key={id}>
+                <Icon name={icon} size={19} />
+                <span>{name}</span>
+                <input
+                  type="checkbox"
+                  role="switch"
+                  aria-label={`显示${name}`}
+                  checked={plan.layers[id]}
+                  onChange={() => toggleLayer(id)}
+                />
+              </label>
+            ))}
             {layers.map((layer) => (
               <div className="layer-row" key={layer.name} title={layer.hint}>
                 <Icon name={layer.icon} size={19} />
@@ -332,7 +353,8 @@ export default function App() {
             ))}
           </div>
           <p className="layer-hint">
-            天体按当前 DEM 深度遮挡。星点与银河轮廓为构图参考，不含真实曝光或天气。
+            天体按当前 DEM
+            深度遮挡。星空明暗随暮光、月光近似变化，不含真实曝光或天气。
           </p>
           <div className="sidebar-bottom">
             <div className="small-compass">
@@ -357,6 +379,14 @@ export default function App() {
               </h1>
             </div>
             <div className="heading-actions">
+              <button
+                className="reset-button desktop-info-toggle"
+                aria-expanded={!infoCollapsed}
+                onClick={() => setInfoCollapsed(!infoCollapsed)}
+              >
+                <Icon name="info" size={15} />
+                拍摄信息
+              </button>
               <div className="time-summary">
                 <span>拍摄时间</span>
                 <strong>{displayTime}</strong>
@@ -368,6 +398,8 @@ export default function App() {
                   setPanels(defaultPanels);
                   setMainWidth(65);
                   setUpperHeight(defaultUpperHeight);
+                  setInfoCollapsed(false);
+                  setInfoOpen(false);
                   setAnnouncement("已恢复默认布局，拍摄参数保持不变。");
                 }}
               >
@@ -380,7 +412,10 @@ export default function App() {
             <button
               className={`mobile-layer-button ${layersOpen ? "is-active" : ""}`}
               aria-expanded={layersOpen}
-              onClick={() => setLayersOpen(!layersOpen)}
+              onClick={() => {
+                setLayersOpen(!layersOpen);
+                setInfoOpen(false);
+              }}
             >
               <Icon name="layers" size={16} /> 图层
             </button>
@@ -393,12 +428,24 @@ export default function App() {
                   onClick={() => {
                     setMobilePanel(id);
                     setLayersOpen(false);
+                    setInfoOpen(false);
                   }}
                 >
                   {panelInfo[id].title}
                 </button>
               ))}
             </div>
+            <button
+              className="mobile-layer-button"
+              aria-expanded={infoOpen}
+              onClick={() => {
+                setInfoOpen(!infoOpen);
+                setLayersOpen(false);
+              }}
+            >
+              <Icon name="info" size={16} />
+              拍摄信息
+            </button>
           </div>
           <div
             className={`workgrid ${resizing ? "is-resizing" : ""} ${dragging ? "is-dragging" : ""}`}
@@ -444,6 +491,69 @@ export default function App() {
             <span>地形模拟 · 水面高程按 DEM 近似</span>
           </footer>
         </main>
+        <aside
+          className={`info-sidebar ${infoCollapsed ? "is-collapsed" : ""} ${infoOpen ? "is-open" : ""}`}
+          aria-label="拍摄信息"
+          onKeyDown={(event) => {
+            if (event.key === "Escape") {
+              setInfoOpen(false);
+              setInfoCollapsed(true);
+            }
+          }}
+        >
+          <header className="info-header">
+            <div>
+              <span className="eyebrow">当前预览</span>
+              <h2>
+                <Icon name="info" size={17} />
+                拍摄信息
+              </h2>
+            </div>
+            <button
+              className="icon-button info-close-desktop"
+              aria-label="收起拍摄信息"
+              onClick={() => setInfoCollapsed(true)}
+            >
+              <Icon name="arrow" size={17} />
+            </button>
+            <button
+              className="icon-button info-close-mobile"
+              aria-label="关闭拍摄信息"
+              onClick={() => setInfoOpen(false)}
+            >
+              <Icon name="arrow" size={17} />
+            </button>
+          </header>
+          <div className="info-search" role="search" aria-label="拍摄目标搜索">
+            <label htmlFor="target-search">搜索目标</label>
+            <div>
+              <input
+                id="target-search"
+                type="search"
+                aria-label="搜索拍摄目标"
+                placeholder="亮星、星座或日月"
+                maxLength={80}
+                value={infoQuery}
+                onChange={(event) => setInfoQuery(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Escape" && infoQuery) {
+                    event.stopPropagation();
+                    setInfoQuery("");
+                  }
+                }}
+              />
+              {infoQuery && (
+                <button
+                  aria-label="清除目标搜索"
+                  onClick={() => setInfoQuery("")}
+                >
+                  清除
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="info-body" ref={setInfoHost} />
+        </aside>
       </div>
       <div className="sr-only" aria-live="polite">
         {announcement}
