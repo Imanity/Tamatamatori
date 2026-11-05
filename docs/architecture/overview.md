@@ -1,6 +1,6 @@
 # 全局架构
 
-状态：P2 地形与晴空环境采用 MapLibre；P3 日月采用本地星历、标准折射与共享地形深度的三维图层。更新：2026-11-04。
+状态：P2 地形与晴空环境采用 MapLibre；P3 日月、亮星、金木星及银河采用本地星历/星表、参考折射与共享地形深度。更新：2026-11-05。
 
 本文定义职责与约定，不是完整技术规格。产品范围见[全局规划](../plan/overview.md)，交互含义见[全局设计](../design/overview.md)。
 
@@ -11,9 +11,9 @@
 | 状态 | 内容 |
 | --- | --- |
 | 已确定 | React 界面；地图、预览、参数与图层侧栏；开源地图引擎；统一拍摄计划；按阶段增量实现 |
-| 当前采用 | TypeScript + Vite；React 内置状态；Temporal polyfill；地图和独立三维预览采用 MapLibre GL JS；Mapterhorn DEM 与 OpenFreeMap 水体边界；Astronomy Engine 本地计算日月 |
+| 当前采用 | TypeScript + Vite；React 内置状态；Temporal polyfill；地图和独立三维预览采用 MapLibre GL JS；Mapterhorn DEM 与 OpenFreeMap 水体边界；Astronomy Engine 本地计算天体方向，HYG 亮星子集 |
 | 后续可选 | 极区、独立水平水面或更高精度三维需求出现时，再评估 CesiumJS 或其他渲染器，不在本轮增加第二套引擎 |
-| 待验证 | 近地与长焦构图精度、极区覆盖、实际 GPU 性能和水面高程；星表/轨道数据源与天文算法 |
+| 待验证 | 近地与长焦实景构图精度、极区覆盖、实际 GPU 性能和水面高程；深空/轨道数据源与真实星空可见度 |
 | 暂不引入 | 专用后端、数据库、账户服务、通用插件系统、云端渲染 |
 
 P2 首步采用 MapLibre 地形与第一人称相机能力，复用已有引擎、Worker 和参数模型。以自动检查验证几何与状态流，实际视觉与精度仍需浏览器验收。参见 [MapLibre 文档](https://maplibre.org/maplibre-gl-js/docs/)、[地形示例](https://maplibre.org/maplibre-gl-js/docs/examples/3d-terrain/)、[第一人称示例](https://maplibre.org/maplibre-gl-js/docs/examples/walk-around-a-map-in-first-person/)（查阅：2026-11-04）。
@@ -65,6 +65,8 @@ P3 日月接入 Astronomy Engine 后，太阳位置与基础环境统一算法�
 远山 DEM 下载和网格覆盖采用同一屏幕细节策略，SDK 固定为 6.16.0 并在安装时应用签名校验的最小兼容修正；最高原生 DEM 仍为 z12。策略、资源限制和升级边界见[远山地形细节](terrain-detail.md)。
 
 本轮使用 [React 内置状态](https://react.dev/reference/react/useState)、[Vite](https://vite.dev/guide/) 与 [Temporal polyfill](https://github.com/js-temporal/temporal-polyfill)（查阅：2026-11-04）；依赖版本记录于 `package.json`，可复现安装记录于 `package-lock.json`。
+
+P3 亮星、金木星与银河沿用实际摄影相机、参考折射与地形主深度。固定 HYG 子集本地计算位置，银河为有界解析轮廓；银心方向独立标识，数据许可和异步名称遮挡见[星空架构](starfield.md)。
 
 ## 3. 统一领域约定
 

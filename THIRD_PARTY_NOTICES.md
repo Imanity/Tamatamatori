@@ -2,9 +2,13 @@
 
 ## Astronomy Engine 2.1.19
 
-用于本地日月星历计算，使用 MIT 许可。[项目主页](https://github.com/cosinekitty/astronomy)
+用于本地日月、金木星星历及恒星/银河坐标旋转，使用 MIT 许可。[项目主页](https://github.com/cosinekitty/astronomy)
 
 完整版权与许可随应用发布，见 [third-party-notices.txt](public/third-party-notices.txt)。
+
+## HYG Database v4.1
+
+David Nash / Astronexus 的亮星目录，使用 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)。本项目提取 V 星等 ≤4.5 的 925 颗恒星，排除太阳、精简字段并加入中文名称。该衍生数据保留相同许可；[子集说明与来源](src/data/README.md)，应用内署名提供完整 JSON 下载。银河为解析轮廓示意，无第三方照片纹理。
 
 ## Earcut 3.2.4
 

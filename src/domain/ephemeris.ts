@@ -15,7 +15,7 @@ export function direction(azimuth: number, elevation: number): Vector3 {
   return [Math.sin(az) * Math.cos(el), Math.cos(az) * Math.cos(el), Math.sin(el)];
 }
 
-function context(plan: PositionInput) {
+export function observerContext(plan: PositionInput) {
   if (!Number.isFinite(plan.latitude) || Math.abs(plan.latitude) > 90 ||
     !Number.isFinite(plan.longitude) || Math.abs(plan.longitude) > 180)
     throw new RangeError("日月位置需要有效的经纬度");
@@ -26,7 +26,7 @@ function context(plan: PositionInput) {
   return { date: new Date(timestamp), observer: new Observer(plan.latitude, plan.longitude, 0) };
 }
 
-function position(body: Body.Sun | Body.Moon, ctx: ReturnType<typeof context>) {
+function position(body: Body.Sun | Body.Moon, ctx: ReturnType<typeof observerContext>) {
   const equator = Equator(body, ctx.date, ctx.observer, true, true);
   const horizon = Horizon(ctx.date, ctx.observer, equator.ra, equator.dec);
   const distanceKm = equator.dist * KM_PER_AU;
@@ -41,12 +41,12 @@ function position(body: Body.Sun | Body.Moon, ctx: ReturnType<typeof context>) {
 }
 
 export function sunPosition(plan: PositionInput) {
-  const sun = position(Body.Sun, context(plan));
+  const sun = position(Body.Sun, observerContext(plan));
   return { azimuth: sun.azimuth, elevation: sun.elevation };
 }
 
 export function celestialBodies(plan: PositionInput) {
-  const ctx = context(plan);
+  const ctx = observerContext(plan);
   const sun = { id: "sun" as const, ...position(Body.Sun, ctx) };
   const moon = position(Body.Moon, ctx);
   const lightDirection = unit(add(scale(sun.direction, sun.distanceKm), scale(moon.direction, -moon.distanceKm)));

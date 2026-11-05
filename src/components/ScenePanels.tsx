@@ -14,6 +14,8 @@ import { solarPosition, daylightPhase } from "../domain/solar";
 import { CelestialDiscs, CelestialReadout, useCelestialScene } from "./CelestialScene";
 import { celestialPlanKey, emptyVisibility } from "../domain/visibility";
 import type { RenderedCamera } from "../preview/rendered-camera";
+import { emptySkyVisibility, StarLabels, StarReadout, useStarScene } from "./StarScene";
+import starCatalogUrl from "../data/bright-stars.json?url";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -27,6 +29,7 @@ export function PreviewPanel({
   const [grid, setGrid] = useState(true);
   const [dragging, setDragging] = useState(false);
   const [visibility, setVisibility] = useState(emptyVisibility);
+  const [skyVisibility, setSkyVisibility] = useState(emptySkyVisibility);
   const [camera, setCamera] = useState<RenderedCamera | null>(null);
   const drag = useRef<{
     pointerId: number;
@@ -40,6 +43,7 @@ export function PreviewPanel({
   const sun = solarPosition(plan);
   const view = camera?.planKey === celestialPlanKey(plan) ? { ...plan, azimuth: camera.azimuth, pitch: camera.pitch } : plan;
   const celestialScene = useCelestialScene(plan, visibility, view);
+  const starScene = useStarScene(plan,skyVisibility);
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return (
     <div className="preview-content">
@@ -152,8 +156,9 @@ export function PreviewPanel({
             } as CSSProperties
           }
         >
-          <TerrainScene plan={plan} onVisibilityChange={setVisibility} onCameraChange={setCamera} />
+          <TerrainScene plan={plan} onVisibilityChange={setVisibility} onCameraChange={setCamera} onSkyChange={setSkyVisibility} />
           <CelestialDiscs scene={celestialScene} />
+          <StarLabels scene={starScene} />
           <svg
             viewBox="0 0 600 400"
             preserveAspectRatio="none"
@@ -231,8 +236,10 @@ export function PreviewPanel({
         </span>}
       </p>
       <CelestialReadout scene={celestialScene} plan={plan} update={update} />
+      <StarReadout scene={starScene} plan={plan} update={update} />
       <p className="preview-note">晴空与月光近似 · 不含天气与曝光 · 水面高程按 DEM 近似</p>
       <div className="preview-attribution">
+        {(plan.layers.stars||plan.layers.milkyWay)&&<a href={starCatalogUrl} download="tamatamatori-bright-stars.json">HYG 4.1 · CC BY-SA 4.0 · 目录</a>}
         <a href="https://github.com/cosinekitty/astronomy" target="_blank" rel="noreferrer">Astronomy Engine</a>
         <a href={`${import.meta.env.BASE_URL}third-party-notices.txt`} target="_blank" rel="noreferrer">第三方许可</a>
         <a

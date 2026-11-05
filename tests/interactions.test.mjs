@@ -6,6 +6,7 @@ import { createElement, act } from "react";
 import { JSDOM } from "jsdom";
 import { createServer } from "vite";
 import { initialBearing } from "../src/domain/map.ts";
+import { skyReference } from "../src/domain/starfield.ts";
 
 // Exercise real React handlers and state with an SDK test double; no WebGL is
 // simulated, and these checks do not claim browser rendering verification.
@@ -144,6 +145,18 @@ class TestCelestialLayer {
   onRemove() { this.removed = true; }
 }
 
+class TestStarfieldLayer {
+  type = "custom";
+  constructor(report) { this.report=report; }
+  setScene(frame) {
+    this.frame=frame;
+    const sky=skyReference(frame.plan);
+    this.report({planKey:frame.planKey,ready:frame.ready,view:{azimuth:frame.plan.azimuth,pitch:frame.plan.pitch},states:Object.fromEntries([...sky.points,sky.core].map(p=>[p.id,frame.ready?'clear':'waiting']))});
+  }
+  invalidate() { if(this.frame)this.report({planKey:this.frame.planKey,ready:false,view:null,states:{}}); }
+  onRemove() { this.removed=true; }
+}
+
 class TestMarker extends Events {
   static instances = [];
   constructor(options) {
@@ -198,6 +211,7 @@ function installGlobal(name, value) {
 
 before(async () => {
   installGlobal("__testCelestialLayer", TestCelestialLayer);
+  installGlobal("__testStarfieldLayer", TestStarfieldLayer);
   dom = new JSDOM("<!doctype html><html><body></body></html>", {
     url: "http://localhost/",
   });
@@ -274,6 +288,8 @@ before(async () => {
         name: "test-map-sdk",
         enforce: "pre",
         load(id) {
+          if (id.replaceAll("\\", "/").endsWith("/src/preview/starfield-layer.ts"))
+            return "export const StarfieldLayer = globalThis.__testStarfieldLayer;";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/celestial-layer.ts"))
             return "export const CelestialLayer = globalThis.__testCelestialLayer;";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/elevation.ts"))
@@ -1007,4 +1023,45 @@ test("切换机位取消过期高程请求；等待新高程时隐藏旧位置�
   await readyTerrain();
   assert.equal(map.cameraSolutions.at(-1).eye.lng, 140);
   assert.equal(map.cameraSolutions.at(-1).altitude, 1201.6);
+});
+
+test('星空与银河独立开关、朝向及实际相机反馈联动，不重载 DEM 或修改其他参数',async t=>{
+  await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
+  assert.equal(document.querySelector('.sky-readout'),null);
+  const fields=['经度','纬度','焦距','相机离地高度'].map(value),time=input('当地日期与时间').value;
+  const poses=map.cameraSolutions.length,environments=map.environments.length;
+  await settle(()=>document.querySelector('[aria-label="显示星空"]').click());
+  await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
+  assert.equal(map.cameraSolutions.length,poses);assert.equal(map.environments.length,environments);
+  assert.match(document.querySelector('.sky-readout').textContent,/925/);
+  assert.ok(document.querySelector('[data-sky-status="银心"]'));
+  await settle(()=>document.querySelector('[aria-label="朝向北极星"]').click());
+  assert.ok(document.querySelector('[data-sky-label="北极星"]'));
+  const layer=map.customLayers.find(l=>l instanceof TestStarfieldLayer),id=skyReference(layer.frame.plan).points.find(p=>p.name==='北极星').id;
+  await settle(()=>layer.report({planKey:layer.frame.planKey,ready:true,view:{azimuth:180,pitch:0},states:{[id]:'clear'}}));
+  assert.equal(document.querySelector('[data-sky-label="北极星"]'),null);
+  await settle(()=>document.querySelector('[aria-label="显示星空"]').click());
+  assert.equal(document.querySelector('[data-sky-status="北极星"]'),null);
+  assert.ok(document.querySelector('[data-sky-status="银心"]'));
+  assert.equal(document.querySelector('[aria-label="显示银河"]').checked,true);
+  assert.equal(groundRequests.length,requests);assert.equal(terrainMap(),map);
+  assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);assert.equal(input('当地日期与时间').value,time);
+});
+
+test('星空名称等待实际遮挡结果，山体遮挡或失败不沿用旧名称，重试保留开关',async t=>{
+  await workspace(t);const map=await readyTerrain();
+  await settle(()=>document.querySelector('[aria-label="显示星空"]').click());
+  await settle(()=>document.querySelector('[aria-label="朝向北极星"]').click());
+  const layer=map.customLayers.find(l=>l instanceof TestStarfieldLayer),id=skyReference(layer.frame.plan).points.find(p=>p.name==='北极星').id;
+  await settle(()=>layer.report({planKey:layer.frame.planKey,ready:true,view:null,states:{[id]:'blocked'}}));
+  assert.equal(document.querySelector('[data-sky-label="北极星"]'),null);
+  assert.match(document.querySelector('[data-sky-status="北极星"]').textContent,/山体遮挡/);
+  await settle(()=>map.emit('dataloading'));
+  assert.match(document.querySelector('[data-sky-status="北极星"]').textContent,/待测/);
+  await settle(()=>layer.report({planKey:layer.frame.planKey,ready:false,view:null,states:{},message:'测试星空图形失败'}));
+  assert.ok(document.querySelector('.terrain-feedback-error'));assert.equal(document.querySelector('[data-sky-label="北极星"]'),null);
+  assert.match(document.querySelector('[data-sky-status="北极星"]').textContent,/遮挡未知/);
+  await settle(()=>button('重试预览').click());await readyTerrain();
+  assert.equal(layer.removed,true);assert.equal(document.querySelector('[aria-label="显示星空"]').checked,true);
+  assert.ok(document.querySelector('[data-sky-label="北极星"]'));
 });

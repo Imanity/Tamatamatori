@@ -22,10 +22,13 @@ const panelInfo: Record<
 };
 const slotNames = ["主栏", "右上", "右下"];
 const layers: { name: string; icon: IconName; hint: string }[] = [
-  { name: "银河", icon: "stars", hint: "银河位置与轮廓" },
   { name: "深空天体", icon: "orbit", hint: "天体位置与构图参考" },
   { name: "空间站", icon: "satellite", hint: "空间站位置与轨迹" },
 ];
+const skyLayers = [
+  {id:'sun',name:'太阳',icon:'sun'}, {id:'moon',name:'月亮',icon:'moon'},
+  {id:'stars',name:'星空',icon:'stars'}, {id:'milkyWay',name:'银河',icon:'orbit'},
+] as const;
 
 function Divider({
   axis,
@@ -227,7 +230,7 @@ export default function App() {
       setPlan((current) => ({ ...current, ...patch })),
     [],
   );
-  const toggleLayer = (id: "sun" | "moon") => setPlan((current) => ({
+  const toggleLayer = (id: keyof ShootingPlan['layers']) => setPlan((current) => ({
     ...current, layers: { ...current.layers, [id]: !current.layers[id] },
   }));
   const movePanel = (id: PanelId, destination: number) => {
@@ -282,7 +285,7 @@ export default function App() {
           <span className="prototype-badge">
             <span className="status-dot" /> 工作区原型
           </span>
-          <span className="version-label">P3 / SUN & MOON</span>
+          <span className="version-label">P3 / 天文构图</span>
         </div>
       </header>
       <div className="app-layout">
@@ -314,10 +317,10 @@ export default function App() {
             天文参考 <span>构图辅助</span>
           </div>
           <div className="layer-list">
-            {(["sun", "moon"] as const).map((id) => <label className="layer-row layer-toggle" key={id}>
-              <Icon name={id === "sun" ? "sun" : "moon"} size={19} />
-              <span>{id === "sun" ? "太阳" : "月亮"}</span>
-              <input type="checkbox" role="switch" aria-label={`显示${id === "sun" ? "太阳" : "月亮"}`}
+            {skyLayers.map(({id,name,icon}) => <label className="layer-row layer-toggle" key={id}>
+              <Icon name={icon} size={19} />
+              <span>{name}</span>
+              <input type="checkbox" role="switch" aria-label={`显示${name}`}
                 checked={plan.layers[id]} onChange={() => toggleLayer(id)} />
             </label>)}
             {layers.map((layer) => (
@@ -329,7 +332,7 @@ export default function App() {
             ))}
           </div>
           <p className="layer-hint">
-            日月按当前 DEM 深度遮挡，折射为参考大气近似。其他图层后续逐项接入。
+            天体按当前 DEM 深度遮挡。星点与银河轮廓为构图参考，不含真实曝光或天气。
           </p>
           <div className="sidebar-bottom">
             <div className="small-compass">

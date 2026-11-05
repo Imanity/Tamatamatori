@@ -17,6 +17,8 @@ import { bodyPolygons } from "../domain/celestial-projection";
 import { celestialPlanKey } from "../domain/visibility";
 import type { VisibilitySnapshot } from "../domain/visibility";
 import type { CalibrationSnapshot } from "../preview/calibration";
+import type { StarfieldLayer } from "../preview/starfield-layer";
+import type { SkyVisibility } from "../domain/starfield";
 import type { RenderedCamera } from "../preview/rendered-camera";
 import { applyTerrainDetail } from "../preview/terrain-detail";
 import type { TerrainPerspective } from "../preview/terrain-perspective";
@@ -38,7 +40,7 @@ interface SceneState {
   message: string;
 }
 
-export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { plan: ShootingPlan; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void; onCameraChange?: (camera: RenderedCamera | null) => void }) {
+export function TerrainScene({ plan, onVisibilityChange, onCameraChange, onSkyChange }: { plan: ShootingPlan; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void; onCameraChange?: (camera: RenderedCamera | null) => void; onSkyChange?: (snapshot:SkyVisibility)=>void }) {
   const container = useRef<HTMLDivElement>(null);
   const synchronize = useRef<(() => void) | null>(null);
   const key = `${plan.longitude}/${plan.latitude}`;
@@ -56,19 +58,21 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
     ground: number;
     altitude: number;
   } | null>(null);
-  const latest = useRef({ plan, ground, key, onVisibilityChange, onCameraChange });
+  const latest = useRef({ plan, ground, key, onVisibilityChange, onCameraChange, onSkyChange });
 
   useEffect(() => {
-    latest.current = { plan, ground, key, onVisibilityChange, onCameraChange };
+    latest.current = { plan, ground, key, onVisibilityChange, onCameraChange, onSkyChange };
     synchronize.current?.();
-  }, [plan, ground, key, onVisibilityChange, onCameraChange]);
+  }, [plan, ground, key, onVisibilityChange, onCameraChange, onSkyChange]);
 
   useEffect(() => {
     // Unavailable ground has no render/query callback; keep its status explicit
     // even when the user changes time or lens after a loading failure.
-    if (!covered || (ground.key === key && ground.phase === "error") || scene.phase === "error")
+    if (!covered || (ground.key === key && ground.phase === "error") || scene.phase === "error") {
       onVisibilityChange?.({ planKey: celestialPlanKey(plan), states: { sun: "error", moon: "error" } });
-  }, [covered, ground, key, scene.phase, plan, onVisibilityChange]);
+      onSkyChange?.({planKey:celestialPlanKey(plan),ready:false,view:null,states:{},message:'地形不可用，无法评估星空遮挡。'});
+    }
+  }, [covered, ground, key, scene.phase, plan, onVisibilityChange, onSkyChange]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -117,6 +121,7 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
     let disposed = false;
     let map: MapLibreMap | undefined;
     let celestialLayer: CelestialLayer | undefined;
+    let starfield: StarfieldLayer | undefined;
     let perspective: TerrainPerspective | undefined;
     let sourceRevision = 0;
     let lastCelestialFrame = "";
@@ -148,6 +153,8 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
       setCamera(null);
       latest.current.onCameraChange?.(null);
       celestialLayer?.setScene({ key: `failed/${sourceRevision++}`, planKey: celestialPlanKey(latest.current.plan), ready: false, bodies: [] });
+      starfield?.invalidate();
+      latest.current.onSkyChange?.({planKey:celestialPlanKey(latest.current.plan),ready:false,view:null,states:{},message});
       latest.current.onVisibilityChange?.({ planKey: celestialPlanKey(latest.current.plan), states: { sun: "error", moon: "error" }, message });
     };
     const watchLoading = () => {
@@ -284,6 +291,7 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
             .map((body) => ({ id: body.id, ...bodyPolygons({ ...current.plan, ...renderView }, body) }))
             .filter((body) => body.state === "画面内");
           celestialLayer.setScene({ key: frameKey, planKey, ready, bodies });
+          starfield?.setScene({key:frameKey,planKey,ready,plan:current.plan});
         }
         markReady();
       } catch {
@@ -300,11 +308,12 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
 
     void (async () => {
       try {
-        const [sdk, cameraModule, celestialModule, perspectiveModule] = await Promise.all([
+        const [sdk, cameraModule, celestialModule, perspectiveModule, starfieldModule] = await Promise.all([
           import("../map/sdk"),
           import("../preview/camera"),
           import("../preview/celestial-layer"),
           import("../preview/terrain-perspective"),
+          import("../preview/starfield-layer"),
         ]);
         createCamera = cameraModule.terrainCamera;
         if (disposed || !container.current) return;
@@ -337,6 +346,12 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
           perspective = new perspectiveModule.TerrainPerspective(fail);
           try { map.addLayer(perspective); }
           catch { fail("地形坐标桥接无法启动，请重新安装依赖后重试。"); return; }
+          starfield = new starfieldModule.StarfieldLayer((snapshot)=>{
+            if(disposed)return;latest.current.onSkyChange?.(snapshot);
+            if(snapshot.message)fail(snapshot.message);
+          });
+          try { map.addLayer(starfield); }
+          catch { fail('星空与银河图层无法启动，请重试预览。');return; }
           celestialLayer = new celestialModule.CelestialLayer((snapshot) => {
             if (disposed) return;
             latest.current.onVisibilityChange?.(snapshot);
@@ -359,7 +374,7 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
           styleReady = true;
           schedule();
         });
-        map.on("sourcedata", () => { if (!disposed && !failed) { sourceRevision++; celestialLayer?.invalidate(); schedule(); } });
+        map.on("sourcedata", () => { if (!disposed && !failed) { sourceRevision++; celestialLayer?.invalidate(); starfield?.invalidate(); schedule(); } });
         map.on("render", () => schedule());
         map.on("idle", () => {
           schedule();
@@ -367,6 +382,7 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
         });
         map.on("dataloading", () => {
           if (!disposed && !failed) celestialLayer?.invalidate();
+          if (!disposed && !failed) starfield?.invalidate();
           if (!disposed && !failed) watchLoading();
           if (!disposed && !failed)
             setScene((current) =>
@@ -390,6 +406,7 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange }: { pla
             clearTimeout(timeout);
             timeout = undefined;
             celestialLayer?.invalidate();
+            starfield?.invalidate();
             latest.current.onVisibilityChange?.({ planKey: "", states: { sun: "waiting", moon: "waiting" } });
             return;
           }

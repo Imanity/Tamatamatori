@@ -1,0 +1,477 @@
+{
+  "source": "PyERFA 2.0.1.5 / ERFA atco13 and g2icrs; JPL Horizons",
+  "erfaUrl": "https://github.com/liberfa/erfa/blob/master/src/atco13.c",
+  "conventions": "ICRS J2000, zero observer height / pressure / DUT1 / polar motion; fixed Sgr A* direction; future leap seconds not predicted",
+  "records": [
+    {
+      "id": "hyg-32263",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 135.30251132091178,
+      "elevation": 24.436663922501552
+    },
+    {
+      "id": "hyg-69451",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 28.011580009676717,
+      "elevation": -30.315622141699066
+    },
+    {
+      "id": "hyg-90979",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 329.7433646771523,
+      "elevation": -7.144552272183816
+    },
+    {
+      "id": "hyg-97338",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 296.8620975739005,
+      "elevation": -19.456152228636725
+    },
+    {
+      "id": "hyg-11734",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 359.6727845402259,
+      "elevation": 36.100417169337916
+    },
+    {
+      "id": "galactic-center",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 278.024194020463,
+      "elevation": -66.29576303507403
+    },
+    {
+      "id": "galactic-0",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 278.1984569743942,
+      "elevation": -66.27757403092969
+    },
+    {
+      "id": "galactic-90",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 316.3993138533225,
+      "elevation": 19.052798016458567
+    },
+    {
+      "id": "galactic-180",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 98.18631916094586,
+      "elevation": 66.26728325564756
+    },
+    {
+      "id": "hyg-32263",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 64.5671537345627,
+      "elevation": 58.384628016741715
+    },
+    {
+      "id": "hyg-69451",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 103.91840002534052,
+      "elevation": -53.42942993484931
+    },
+    {
+      "id": "hyg-90979",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 290.5199996668076,
+      "elevation": -67.35154151094088
+    },
+    {
+      "id": "hyg-97338",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 250.31611203780687,
+      "elevation": -40.96495146183824
+    },
+    {
+      "id": "hyg-11734",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 359.5164679109105,
+      "elevation": -33.25648561441305
+    },
+    {
+      "id": "galactic-center",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 194.28402491439158,
+      "elevation": -25.59720116508693
+    },
+    {
+      "id": "galactic-0",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 194.29150440312722,
+      "elevation": -25.66929006812751
+    },
+    {
+      "id": "galactic-90",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 307.7537462381037,
+      "elevation": -39.636501623734176
+    },
+    {
+      "id": "galactic-180",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2000-01-01T12:00:00Z",
+      "azimuth": 14.303657221462247,
+      "elevation": 25.666111898639258
+    },
+    {
+      "id": "hyg-32263",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 299.4431636458634,
+      "elevation": -58.80423091058137
+    },
+    {
+      "id": "hyg-69451",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 255.17581020172653,
+      "elevation": 51.78242709936209
+    },
+    {
+      "id": "hyg-90979",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 72.93620905468795,
+      "elevation": 69.0672488787241
+    },
+    {
+      "id": "hyg-97338",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 112.09266589722483,
+      "elevation": 41.5841090931342
+    },
+    {
+      "id": "hyg-11734",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 0.3501837063630776,
+      "elevation": 34.85724860252493
+    },
+    {
+      "id": "galactic-center",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 167.17229256205914,
+      "elevation": 24.342405654755666
+    },
+    {
+      "id": "galactic-0",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 167.1673555404985,
+      "elevation": 24.41467264089239
+    },
+    {
+      "id": "galactic-90",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 53.39083742774637,
+      "elevation": 41.61351127562578
+    },
+    {
+      "id": "galactic-180",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 347.17915329232864,
+      "elevation": -24.417408145355267
+    },
+    {
+      "id": "hyg-32263",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 199.06434756255257,
+      "elevation": -37.19536529480078
+    },
+    {
+      "id": "hyg-69451",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 308.930060683375,
+      "elevation": 17.80730615096263
+    },
+    {
+      "id": "hyg-90979",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 11.04911286135503,
+      "elevation": 16.2279947642662
+    },
+    {
+      "id": "hyg-97338",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 41.524517571269996,
+      "elevation": 37.39790104065323
+    },
+    {
+      "id": "hyg-11734",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 0.4848101057593714,
+      "elevation": -34.35300091092405
+    },
+    {
+      "id": "galactic-center",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 10.62765421030039,
+      "elevation": 85.06992047111652
+    },
+    {
+      "id": "galactic-0",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 10.364433323043329,
+      "elevation": 85.00118978302038
+    },
+    {
+      "id": "galactic-90",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 31.843628832132552,
+      "elevation": -4.651756063072
+    },
+    {
+      "id": "galactic-180",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 190.2381536973942,
+      "elevation": -85.00260684324456
+    },
+    {
+      "id": "hyg-32263",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 284.91385985602113,
+      "elevation": -47.97042768556406
+    },
+    {
+      "id": "hyg-69451",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 239.14105438595743,
+      "elevation": 62.4180251937843
+    },
+    {
+      "id": "hyg-90979",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 71.61410105835692,
+      "elevation": 58.017692473231435
+    },
+    {
+      "id": "hyg-97338",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 101.01824828397417,
+      "elevation": 30.38926231525795
+    },
+    {
+      "id": "hyg-11734",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 359.7339010052076,
+      "elevation": 35.0151200660821
+    },
+    {
+      "id": "galactic-center",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 153.92193747436215,
+      "elevation": 20.306717271713424
+    },
+    {
+      "id": "galactic-0",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 153.9014865776137,
+      "elevation": 20.37653554342367
+    },
+    {
+      "id": "galactic-90",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 50.17938076354035,
+      "elevation": 32.560871125479416
+    },
+    {
+      "id": "galactic-180",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 333.89081198024013,
+      "elevation": -20.371563483337354
+    },
+    {
+      "id": "hyg-32263",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 214.44592523872473,
+      "elevation": -31.67847868152994
+    },
+    {
+      "id": "hyg-69451",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 320.20389409096924,
+      "elevation": 26.657022384141648
+    },
+    {
+      "id": "hyg-90979",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 21.91847226863423,
+      "elevation": 12.798300914262754
+    },
+    {
+      "id": "hyg-97338",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 54.68428691767918,
+      "elevation": 28.26843123760913
+    },
+    {
+      "id": "hyg-11734",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 359.84618072843597,
+      "elevation": -34.307792857260296
+    },
+    {
+      "id": "galactic-center",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 74.5408232508779,
+      "elevation": 75.70207206711035
+    },
+    {
+      "id": "galactic-0",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 74.25788587631894,
+      "elevation": 75.68327169580908
+    },
+    {
+      "id": "galactic-90",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 38.18883487634934,
+      "elevation": -11.657254152637236
+    },
+    {
+      "id": "galactic-180",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2099-01-01T00:00:00Z",
+      "azimuth": 254.27778079899318,
+      "elevation": -75.67325633550766
+    }
+  ],
+  "planets": [
+    {
+      "id": "venus",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 294.668145576,
+      "elevation": -5.837617605,
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=299&OBJ_DATA=NO&MAKE_EPHEM=YES&EPHEM_TYPE=OBSERVER&CENTER=coord%40399&COORD_TYPE=GEODETIC&SITE_COORD=%27138.8729%2C35.4172%2C0%27&START_TIME=%272026-07-01+13%3A00%27&STOP_TIME=%272026-07-01+13%3A01%27&STEP_SIZE=%271+m%27&QUANTITIES=%274%27&APPARENT=AIRLESS&CSV_FORMAT=YES&TIME_DIGITS=SECONDS&EXTRA_PREC=YES"
+    },
+    {
+      "id": "venus",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 266.364801902,
+      "elevation": -35.346536351,
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=299&OBJ_DATA=NO&MAKE_EPHEM=YES&EPHEM_TYPE=OBSERVER&CENTER=coord%40399&COORD_TYPE=GEODETIC&SITE_COORD=%27151.2093%2C-33.8688%2C0%27&START_TIME=%272026-07-01+13%3A00%27&STOP_TIME=%272026-07-01+13%3A01%27&STEP_SIZE=%271+m%27&QUANTITIES=%274%27&APPARENT=AIRLESS&CSV_FORMAT=YES&TIME_DIGITS=SECONDS&EXTRA_PREC=YES"
+    },
+    {
+      "id": "jupiter",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 312.163412388,
+      "elevation": -17.254356128,
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=599&OBJ_DATA=NO&MAKE_EPHEM=YES&EPHEM_TYPE=OBSERVER&CENTER=coord%40399&COORD_TYPE=GEODETIC&SITE_COORD=%27138.8729%2C35.4172%2C0%27&START_TIME=%272026-07-01+13%3A00%27&STOP_TIME=%272026-07-01+13%3A01%27&STEP_SIZE=%271+m%27&QUANTITIES=%274%27&APPARENT=AIRLESS&CSV_FORMAT=YES&TIME_DIGITS=SECONDS&EXTRA_PREC=YES"
+    },
+    {
+      "id": "jupiter",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-01T13:00:00Z",
+      "azimuth": 257.224877456,
+      "elevation": -54.918554891,
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=599&OBJ_DATA=NO&MAKE_EPHEM=YES&EPHEM_TYPE=OBSERVER&CENTER=coord%40399&COORD_TYPE=GEODETIC&SITE_COORD=%27151.2093%2C-33.8688%2C0%27&START_TIME=%272026-07-01+13%3A00%27&STOP_TIME=%272026-07-01+13%3A01%27&STEP_SIZE=%271+m%27&QUANTITIES=%274%27&APPARENT=AIRLESS&CSV_FORMAT=YES&TIME_DIGITS=SECONDS&EXTRA_PREC=YES"
+    }
+  ]
+}
