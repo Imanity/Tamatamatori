@@ -347,7 +347,8 @@ export function PreviewPanel({
                 target="_blank"
                 rel="noreferrer"
               >
-                {source.credit} · CC BY 4.0 · 结构衍生
+                {source.credit} · {source.license === "CC0-1.0" ? "CC0 1.0" : "CC BY 4.0"}
+                {" · 结构衍生"}
               </a>
             ))}
           </>

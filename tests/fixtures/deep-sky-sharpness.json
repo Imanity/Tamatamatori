@@ -1,0 +1,48 @@
+{
+  "reference": "Fixed blurred atlas cbf2351 before the long-lens repair. Same tangent-plane ROI; normalized second differences excluding dark background and saturated cores. A blur regression guard, not an astrometric/photometric or perceptual quality score.",
+  "baselineAtlasSha256": "cbf2351afb552dc0b4d3c626948fc3f9c1335a4349a61614feb81ad4a1e2ad69",
+  "gridSize": 1024,
+  "roi": [
+    160,
+    160,
+    864,
+    864
+  ],
+  "minimumRelativeDetailEnergy": 2,
+  "detail": [
+    {
+      "catalogId": "Mel022",
+      "baselineEnergy": 0.02583380434191534
+    },
+    {
+      "catalogId": "NGC6523",
+      "baselineEnergy": 0.06822628146056467
+    },
+    {
+      "catalogId": "NGC7000",
+      "baselineEnergy": 0.02769727189795969
+    }
+  ],
+  "unchangedTiles": [
+    {
+      "catalogId": "NGC0224",
+      "rgbaSha256": "1b3ab6b0f779c3034a056df6e7aa05847b65599e1b0ee030cb4bc77204e322b6"
+    },
+    {
+      "catalogId": "NGC1976",
+      "rgbaSha256": "7d0dea4e1705ebbf3c6dfabaa5b830bad988c4729f735f25eeb45f8dc0026be9"
+    },
+    {
+      "catalogId": "NGC1499",
+      "rgbaSha256": "187a888912fe13e15d1a5211af0e59ce7bd7c14c805a036eb90eedc441c02dd9"
+    },
+    {
+      "catalogId": "IC1805",
+      "rgbaSha256": "8d125c5ccfd0b5e860aab7ff80159099032bcea6076d644a37b617ce5c7a9beb"
+    },
+    {
+      "catalogId": "IC1848",
+      "rgbaSha256": "5f4d3de3c6f91ef8e2a9d04db45bbc9cd2b1997ded3b6ce27eda7b194e862ac2"
+    }
+  ]
+}

@@ -20,7 +20,7 @@ import { constellationScene } from "../domain/constellations.ts";
 import { loadMilkyWayImage } from "./milky-way-texture.ts";
 import { loadDeepSkyImage } from "./deep-sky-texture.ts";
 import { SkyTexture } from "./sky-texture.ts";
-import { deepSkyScene, deepSkyView } from "../domain/deep-sky.ts";
+import { deepSkyScene, deepSkyView, deepSkyRedEnhancementColor } from "../domain/deep-sky.ts";
 import type { DeepSkyTarget } from "../domain/deep-sky.ts";
 import { classifyOcclusion } from "../domain/visibility.ts";
 
@@ -84,7 +84,7 @@ uniform sampler2D u_atlas;uniform float u_strength;uniform float u_ha_gain;unifo
 void main(){if(v_height<=0.0)discard;vec4 components=texture(u_atlas,v_uv);
 float extra=1.0-components.a;
 if(u_probe>0.5){if(max(max(components.r,components.g),max(components.b,extra))<0.008)discard;color=vec4(1.0);return;}
-vec3 signal=components.rgb*v_tint+extra*u_ha_gain*vec3(1.0,0.10,0.18);
+vec3 signal=components.rgb*v_tint+extra*u_ha_gain*vec3(${deepSkyRedEnhancementColor.map(c => c.toFixed(2)).join(",")});
 float peak=max(signal.r,max(signal.g,signal.b));
 float a=(1.0-exp(-2.1*peak))*u_strength*smoothstep(0.0,0.04,v_height);
 if(a<0.0005)discard;color=vec4(signal/max(peak,0.0001)*a,a);}`;

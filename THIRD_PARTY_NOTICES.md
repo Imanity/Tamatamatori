@@ -12,14 +12,20 @@ David Nash / Astronexus 的亮星目录，使用 [CC BY-SA 4.0](https://creative
 
 ## OpenNGC 深空数据与轮廓
 
-使用 [Mattia Verga / OpenNGC 固定提交](https://github.com/mattiaverga/OpenNGC/tree/be3cd6c5498806a2fbb2f7e0452ef802dbb02be0)，按 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 分发 8 个目标的衍生子集及组合分量图。轮廓由原项目使用 CDS 的 Aladin Sky Atlas 从 DSS2 Color 描绘；此项不分发原始 DSS 摄影像素。已增加中文名、搜索别名、切平面边界与定性显示分量；组合图中另有下述两幅 CC BY 4.0 影像的衍生结构。来源哈希、字段/历元、修改声明见 [deep-sky.json](src/data/deep-sky.json)。数据与分量图在预览署名区可下载；此许可不改变无关应用代码的许可。
+使用 [Mattia Verga / OpenNGC 固定提交](https://github.com/mattiaverga/OpenNGC/tree/be3cd6c5498806a2fbb2f7e0452ef802dbb02be0)，按 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 分发 8 个目标的衍生子集及组合分量图。轮廓由原项目使用 CDS 的 Aladin Sky Atlas 从 DSS2 Color 描绘；此项不分发原始 DSS 摄影像素。已增加中文名、搜索别名、切平面边界与定性显示分量；组合图中另有下述六幅 CC BY 4.0 与两幅 CC0 1.0 影像的衍生结构。来源哈希、字段/历元、修改声明见 [deep-sky.json](src/data/deep-sky.json)。数据与分量图在预览署名区可下载；此许可不改变无关应用代码的许可。
 
 ## 深空宽幅影像与色彩参考
 
 - M31：[heic1112f](https://www.astropix.org/image/esahubble/heic1112f)，完整署名 **ESA/Hubble & Digitized Sky Survey 2. Acknowledgment: Davide De Martin (ESA/Hubble)**。这是 ESA/Hubble 已发布并按 CC BY 4.0 提供的成品合成图，不是原始 DSS 数据服务；[ESA/Hubble 使用政策](https://esahubble.org/copyright/)。
 - M42：[noao-m42steinberg](https://www.astropix.org/image/noirlab/noao-m42steinberg)，完整署名 **KPNO/NOIRLab/NSF/AURA/Ryan Steinberg and Family/Adam Block**，发布方 NOIRLab 的 AstroPix 存档明确标为 CC BY 4.0，使用可见光 LRGB。
+- M45：[noao-m45denton](https://www.astropix.org/image/noirlab/noao-m45denton)，完整署名 **KPNO/NOIRLab/NSF/AURA/Tad Denton/Adam Block**，可见光 RGB。
+- M8：[noao-m8wideblock](https://www.astropix.org/image/noirlab/noao-m8wideblock)；NGC7000：[noao-n7000mosblock](https://www.astropix.org/image/noirlab/noao-n7000mosblock)。两幅完整署名均为 **KPNO/NOIRLab/NSF/AURA/Adam Block**，可见光 LRGB。三份新增资料均按 NOIRLab/AstroPix 明示的 CC BY 4.0 使用。
+- NGC1499：[noao-n1499block](https://www.astropix.org/image/noirlab/noao-n1499block)，**KPNO/NOIRLab/NSF/AURA/Adam Block**，光学 LRGB、CC BY 4.0；完整 TIFF/AVM 重投影，保留 RGB 细节并加入扩散光支持和独立红色增量。
+- IC1805/IC1848：**Giuseppe Donatiello, post-processing: Sun Shuwei**；使用 [Stellarium 固定提交的纹理](https://github.com/Stellarium/stellarium/tree/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default)。[固定 CREDITS 的 4.63 项](https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md)及[作者原页](https://www.flickr.com/photos/133259498@N05/54332176110/)明确按 [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) 提供。保留上游去星外观、四角数值注册、重投影、线性化与独立红色增强；不把原图或处理宣称为实测去星/相机定标。未引入 Stellarium 程序代码。
 
-修改：完整 AVM/TAN 覆盖重投影、缩放、部分星点抑制、线性化及背景扣除；保留基础 RGB，并将定性的额外红色结构单独打包。不用椭圆截断或目录外壳，不使用 AI 生成/扩展。原图保留 CC BY 4.0，组合 atlas 继续按 CC BY-SA 4.0 提供。不是实测谱线、相机曝光或原始天球精度承诺。完整来源和输入/输出哈希见 [deep-sky.json](src/data/deep-sky.json)。
+修改：完整可用覆盖的 AVM/TAN 或四角数值注册重投影、缩放、部分星点抑制、线性化及背景扣除；保留基础 RGB，并将定性的额外红色结构单独打包。不用椭圆截断或目录外壳，本项目不生成或扩展资料外的影像；上游去星外观按发布资料保留。原图保留各自 CC BY 4.0 / CC0 1.0，组合 atlas 继续按 CC BY-SA 4.0 提供。不是实测谱线、相机曝光或原始天球精度承诺。完整来源和输入/输出哈希见 [deep-sky.json](src/data/deep-sky.json)。
+
+M45/M8/北美使用同一发布资料的原尺寸 TIFF，最终 RGB 保留高频结构；背景与扩散光支持分别滤波，不对最终 RGB 整体去星或模糊；颜色支持的形态重建抑制外围照片星场并填补白色星核支持孔洞。三图采样边缘为 40 工作像素，M31/M42 为 3 像素。照片星点与光刺保留为参考，不是新增星历或光度定标。
 
 历史验收截图仍包含上一版 eso1103a（ESO/Igor Chekalin）与 heic0512d（÷ 2002 R. Gendler, Photo by R. Gendler）的结构衍生外观，按当时发布方 CC BY 4.0 保留署名；它们不再用于当前运行时图集。
 

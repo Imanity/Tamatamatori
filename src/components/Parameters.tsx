@@ -255,12 +255,12 @@ export function Parameters({
               })
             }
           >
-            <option value="stock">未改机 · 色彩参考</option>
-            <option value="ha-modified">天文改机 · Hα 增强</option>
+            <option value="stock">未改机 · 近似参考</option>
+            <option value="ha-modified">天文改机 · Hα 增强示意</option>
           </select>
         </label>
         <p className="field-hint">
-          未改机保留红色；改机额外增强红光结构。仅作色彩参考，非具体机型定标。
+          未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。
         </p>
         <NumberField
           label="焦距"

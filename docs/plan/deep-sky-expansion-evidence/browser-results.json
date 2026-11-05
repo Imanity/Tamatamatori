@@ -1,0 +1,351 @@
+{
+  "date": "2026-11-05",
+  "url": "http://127.0.0.1:5173/",
+  "atlasSha256": "cbf2351afb552dc0b4d3c626948fc3f9c1335a4349a61614feb81ad4a1e2ad69",
+  "scope": "实际 Chrome WebGL 的结构、色彩和遮挡检查，非相机/光度定标",
+  "records": [
+    {
+      "file": "ngc7000-ha.jpg",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "localTime": "2026-07-15T22:00",
+      "response": "ha-modified",
+      "timeZone": "Asia/Tokyo",
+      "visibleDsoLabels": 1,
+      "focalLengthMm": 400,
+      "target": "找到 1 个目标\n\n北美星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n60.7° / 几何 52.8°\n朝向",
+      "bytes": 180611,
+      "sha256": "6624a78d5cd8a6f1d463c743655a77dd19a7e70fb74ac9840f7fbcbd79852e59",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "ngc7000-stock.jpg",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "localTime": "2026-07-15T22:00",
+      "response": "stock",
+      "timeZone": "Asia/Tokyo",
+      "visibleDsoLabels": 1,
+      "focalLengthMm": 400,
+      "target": "找到 1 个目标\n\n北美星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n60.7° / 几何 52.8°\n朝向",
+      "bytes": 179033,
+      "sha256": "408fd8a07693f6025e450f35fe899b5aed3ca22326a51510f9be66332b56912b",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "ngc7000-daylight.jpg",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "localTime": "2026-07-16T06:00",
+      "response": "stock",
+      "timeZone": "Asia/Tokyo",
+      "visibleDsoLabels": 0,
+      "focalLengthMm": 400,
+      "target": "找到 1 个目标\n\n北美星云\n深空 · 发射星云 · 影像结构参考\n天空较亮 · 轮廓隐藏\n303.5° / 几何 35.5°\n朝向",
+      "bytes": 153052,
+      "sha256": "8bb881eb9b3ce6783867f38767f737196436add32d39efa02f7324f559f0f07f",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m8-terrain.jpg",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "localTime": "2026-07-16T02:15",
+      "response": "stock",
+      "timeZone": "Asia/Tokyo",
+      "visibleDsoLabels": 1,
+      "focalLengthMm": 200,
+      "target": "找到 1 个目标\n\n礁湖星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n232.6° / 几何 7.7°\n朝向",
+      "bytes": 160855,
+      "sha256": "7db42b8455d9aed98636511e17eee9e7ba66ad9a2f3f17bb30d3307f4b383a02",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m8-stock.jpg",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "localTime": "2026-07-15T22:00",
+      "response": "stock",
+      "timeZone": "Asia/Tokyo",
+      "visibleDsoLabels": 1,
+      "focalLengthMm": 600,
+      "target": "找到 1 个目标\n\n礁湖星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n175.7° / 几何 30.1°\n朝向",
+      "bytes": 174023,
+      "sha256": "4bbcf5e93f98a29dd88c8939f6da7b52b5981352317247fc076eea1c6f4e72c1",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m8-ha.jpg",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "localTime": "2026-07-15T22:00",
+      "response": "ha-modified",
+      "timeZone": "Asia/Tokyo",
+      "visibleDsoLabels": 1,
+      "focalLengthMm": 600,
+      "target": "找到 1 个目标\n\n礁湖星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n175.7° / 几何 30.1°\n朝向",
+      "bytes": 175476,
+      "sha256": "ddb7949dd04fb82bb5384777f9c06c3b6d3b7a55516db46de6fab36130d4a041",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m8-1000mm.jpg",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "localTime": "2026-07-15T22:00",
+      "response": "ha-modified",
+      "timeZone": "Asia/Tokyo",
+      "visibleDsoLabels": 1,
+      "focalLengthMm": 1000,
+      "target": "找到 1 个目标\n\n礁湖星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n175.7° / 几何 30.1°\n朝向",
+      "bytes": 197121,
+      "sha256": "2ac3bbc8a52840e177fb0ca59c701624734e09cf1d7d3dd58004d04597501a29",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m8-partial-frame.jpg",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "localTime": "2026-07-15T22:00",
+      "response": "ha-modified",
+      "timeZone": "Asia/Tokyo",
+      "visibleDsoLabels": 0,
+      "focalLengthMm": 1000,
+      "target": "找到 1 个目标\n\n礁湖星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n175.7° / 几何 30.1°\n朝向",
+      "bytes": 158393,
+      "sha256": "c933d398436c8513badc9e8d489c6fb4a904acf58ceebe275729a251ae4c7803",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m8-terrain-blocked.jpg",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "localTime": "2026-07-16T02:45",
+      "response": "ha-modified",
+      "timeZone": "Asia/Tokyo",
+      "visibleDsoLabels": 0,
+      "focalLengthMm": 200,
+      "target": "找到 1 个目标\n\n礁湖星云\n深空 · 发射星云 · 影像结构参考\n山体遮挡\n237.3° / 几何 2.7°\n朝向",
+      "bytes": 158335,
+      "sha256": "5f16ae31553846df476200fc63d06b468851ae2900072bca1865d85b0e2efb5c",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m45-stock.jpg",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "localTime": "2026-11-09T01:00",
+      "response": "stock",
+      "timeZone": "Asia/Tokyo",
+      "visibleDsoLabels": 1,
+      "focalLengthMm": 600,
+      "target": "找到 1 个目标\n\n昴星团\n深空 · 星团与反射云 · 影像结构参考\n当前 DEM 未遮挡\n218.6° / 几何 76.1°\n朝向",
+      "bytes": 164652,
+      "sha256": "a950277fab392c35a9fae6d39c71cd1087bdd6de2cd6287a2e48a5ec5a4a29ea",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m45-ha.jpg",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "localTime": "2026-11-09T01:00",
+      "response": "ha-modified",
+      "timeZone": "Asia/Tokyo",
+      "visibleDsoLabels": 1,
+      "focalLengthMm": 600,
+      "target": "找到 1 个目标\n\n昴星团\n深空 · 星团与反射云 · 影像结构参考\n当前 DEM 未遮挡\n218.6° / 几何 76.1°\n朝向",
+      "bytes": 164676,
+      "sha256": "adace546ca446f3dea1e720eb5bb50fe971fba96515f2da6747c3d9ebcb450ee",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m45-layer-off.jpg",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 301.171875
+      },
+      "localTime": "2026-11-09T01:00",
+      "response": "ha-modified",
+      "timeZone": "Asia/Tokyo",
+      "visibleDsoLabels": 0,
+      "focalLengthMm": 600,
+      "target": "找到 1 个目标\n\n昴星团\n深空 · 星团与反射云 · 影像结构参考\n图层已关闭 · 画面内\n218.6° / 几何 76.1°\n开启并朝向",
+      "bytes": 151193,
+      "sha256": "90a18d1ffe57b5fa6348a76eba360b9fbba49303308f22bc83b4f46039136b1f",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "m45-400mm.jpg",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "localTime": "2026-11-09T01:00",
+      "response": "ha-modified",
+      "timeZone": "Asia/Tokyo",
+      "visibleDsoLabels": 1,
+      "focalLengthMm": 400,
+      "target": "找到 1 个目标\n\n昴星团\n深空 · 星团与反射云 · 影像结构参考\n当前 DEM 未遮挡\n218.6° / 几何 76.1°\n朝向",
+      "bytes": 163625,
+      "sha256": "0e77246427a515a70dc09794955e0917857aff861f3b1076a01eb8de5c52a20a",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    },
+    {
+      "file": "ngc7000-200mm.jpg",
+      "frame": {
+        "height": 825.65625,
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "localTime": "2026-07-15T22:00",
+      "response": "ha-modified",
+      "timeZone": "Asia/Tokyo",
+      "visibleDsoLabels": 1,
+      "focalLengthMm": 200,
+      "target": "找到 1 个目标\n\n北美星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n60.7° / 几何 52.8°\n朝向",
+      "bytes": 169228,
+      "sha256": "f4c65cc09eea6b36b2ce2107dacac556c09cd26ad9269ce23aef2a4723ca8010",
+      "imagePixels": [
+        2560,
+        1215
+      ]
+    }
+  ],
+  "consoleErrors": [],
+  "camera": {
+    "latitude": 35.4172,
+    "longitude": 138.8729,
+    "heightAboveGroundMeters": 1.6,
+    "sensor": "full-frame",
+    "aspect": "3:2",
+    "orientation": "landscape",
+    "refraction": "standard"
+  },
+  "comparisons": {
+    "m45": {
+      "frameCropPixels": [
+        265,
+        286,
+        1503,
+        1111
+      ],
+      "changedPixels": 0,
+      "maxChannelDifference": 0
+    },
+    "m8": {
+      "frameCropPixels": [
+        265,
+        286,
+        1503,
+        1111
+      ],
+      "changedPixels": 196100,
+      "maxChannelDifference": 49
+    },
+    "ngc7000": {
+      "frameCropPixels": [
+        265,
+        286,
+        1503,
+        1111
+      ],
+      "changedPixels": 363314,
+      "maxChannelDifference": 49
+    }
+  },
+  "unchangedRgbaTiles": {
+    "M31": true,
+    "M42": true,
+    "NGC1499": true,
+    "IC1805": true,
+    "IC1848": true
+  }
+}

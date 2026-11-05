@@ -208,7 +208,7 @@ remain CC BY-SA 4.0 and are available from the preview attribution.
 M45 associated stars use the separately credited HYG subset above.
 Input and derived file hashes and coordinate conventions: src/data/deep-sky.json.
 
-Deep-sky broad-field colour references (M31/M42)
+Deep-sky colour references (M31/M42/M45/M8/NGC7000/NGC1499/IC1805/IC1848)
 M31 credit: ESA/Hubble & Digitized Sky Survey 2. Acknowledgment: Davide De Martin (ESA/Hubble)
 Source and publisher-supplied archive: https://www.astropix.org/image/esahubble/heic1112f
 Publisher page: https://esahubble.org/images/heic1112f/
@@ -217,14 +217,43 @@ This is the CC BY 4.0 released colour composite, not the raw DSS service.
 M42 credit: KPNO/NOIRLab/NSF/AURA/Ryan Steinberg and Family/Adam Block
 Source and publisher-supplied archive: https://www.astropix.org/image/noirlab/noao-m42steinberg
 Publisher page: https://noirlab.edu/public/images/noao-m42steinberg/
+M45 credit: KPNO/NOIRLab/NSF/AURA/Tad Denton/Adam Block
+Source: https://www.astropix.org/image/noirlab/noao-m45denton
+M8 and NGC7000 credit: KPNO/NOIRLab/NSF/AURA/Adam Block
+Sources: https://www.astropix.org/image/noirlab/noao-m8wideblock
+https://www.astropix.org/image/noirlab/noao-n7000mosblock
+These NOIRLab optical RGB/LRGB references are explicitly CC BY 4.0 in AstroPix.
 Original images: Creative Commons Attribution 4.0 International
 https://creativecommons.org/licenses/by/4.0/
 Modified: full-field AVM/TAN reprojection, resizing, partial star suppression,
 sRGB linearization and background subtraction; baseline RGB plus a separate
 qualitative additive red increment. No elliptical mask or catalogue envelope.
-No AI processing. Combined atlas CC BY-SA 4.0; originals remain CC BY 4.0.
+M45/M8/NGC7000 additionally use smooth boundary-matched background subtraction.
+M45/M8/NGC7000 use native-resolution publisher TIFFs, preserving final RGB detail.
+Background and colour-derived diffuse support are filtered separately, not final RGB.
+Morphological support reconstruction suppresses exterior photographic star fields;
+small support holes at white stellar cores are closed without inpainting image RGB.
+These three have 40-pixel source-edge transitions; M31/M42 retain 3 pixels.
+Photographic stars and diffraction spikes are reference appearance, not new ephemerides.
+No generated extensions by this project. Combined atlas CC BY-SA 4.0;
+originals retain CC BY 4.0 or CC0 1.0 as individually listed.
 Not measured H-alpha, camera/exposure calibration or source astrometric accuracy.
 Full attribution and source/derived hashes: src/data/deep-sky.json.
+NGC1499 credit: KPNO/NOIRLab/NSF/AURA/Adam Block
+Source: https://www.astropix.org/image/noirlab/noao-n1499block
+Optical LRGB; CC BY 4.0. Native TIFF/AVM, reprojected with diffuse colour support.
+IC1805 and IC1848 credit: Giuseppe Donatiello, post-processing: Sun Shuwei
+Original photographer: https://www.flickr.com/photos/133259498@N05/54332176110/
+Published star-suppressed textures and sky-corner coordinates, fixed Stellarium commit:
+https://github.com/Stellarium/stellarium/tree/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default
+Image license: Creative Commons CC0 1.0 Universal Public Domain Dedication
+https://creativecommons.org/publicdomain/zero/1.0/
+License evidence, section 4.63:
+https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md
+Modified: TAN/CD registration fitted to published corners, reprojection, linearization,
+preserved published RGB detail and separate qualitative red enhancement.
+Upstream star removal and DSLR/filter response are not calibrated; no source AVM.
+No Stellarium program code is included. Input hashes and original corners are retained.
 Historical validation screenshots retain the previous CC BY 4.0 references:
 eso1103a - ESO/Igor Chekalin; heic0512d - ÷ 2002 R. Gendler, Photo by R. Gendler.
 

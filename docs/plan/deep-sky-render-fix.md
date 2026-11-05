@@ -21,7 +21,7 @@ M31 换用 ESA/Hubble 发布的 [heic1112f 广域图](https://www.astropix.org/i
 ## 执行结果
 
 - `npm test`：154/154 通过；最终 fixture 补充完整来源四角覆盖断言后，深空 8 项再验通过。新增实际 PNG 解码回归，核对 M42 基础 RGB 保留显著红色、M31/M45 无额外红色增量和 8 个图格中性边框。`npm run build -- --base /Tamatamatori/` 通过，含 TypeScript；既有大分块提示不影响构建。
-- PyAVM 0.9.9 + Astropy 7.1.1/WCSLIB 独立核对两图各 25 点，最大差分别约 4.37e−11 / 9.78e−12 个参考像素。M42 的 X/Y 尺度不等，按完整 CROTA2/CD 矩阵处理；原图四角均落入重投影网格。该检查验证转换实现，不是原图测量精度。见[独立记录](../../tests/fixtures/deep-sky-image-registration.json)。
+- PyAVM 0.9.9 + Astropy 7.1.1/WCSLIB 独立核对两图各 25 点，最大差分别约 4.37e−11 / 9.78e−12 个参考像素。M42 的 X/Y 尺度不等，按完整 CROTA2/CD 矩阵处理；原图四角均落入重投影网格。该检查验证转换实现，不是原图测量精度。见[独立记录](https://github.com/Imanity/Tamatamatori/blob/5a0fc3436eba9ca10fd0c74764ae2f8750665271/tests/fixtures/deep-sky-image-registration.json)。
 - 最终 atlas 为 RGBA 4096×2048、820044 bytes，SHA256 `8a6907b0af4663ca704cac3a3c787953e8ccfd56d31994a6b08b06272b76c912`。RGB 为基础色彩，A 为反向打包的额外红色增量；A 不是可见透明度。M31/M42 无椭圆遮罩和目录外壳，采样边缘仅过渡 3 个工作像素。
 
 Chrome 实际 WebGL 使用山中湖 35.4172°N、138.8729°E、离地 1.6 m、全画幅横幅 3:2、标准参考折射、Asia/Tokyo。最终图集对应的十张截图、场景和文件哈希见[浏览器记录](deep-sky-render-fix-evidence/browser-results.json)；本次控制台未发现 error。

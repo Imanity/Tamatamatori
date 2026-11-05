@@ -1,0 +1,542 @@
+{
+  "completedOn": "2026-11-06",
+  "atlasSha256": "2e93d7c91147be4010f7172605e7579c5e37aa16368266d0ba581f2beb4ed870",
+  "incrementRgb": [
+    1,
+    0,
+    0
+  ],
+  "scope": "Qualitative colour and rendering checks, not camera colour calibration",
+  "site": {
+    "latitude": 35.4172,
+    "longitude": 138.8729,
+    "heightAboveGround": 1.6
+  },
+  "sensor": "full-frame",
+  "aspect": "3:2",
+  "orientation": "landscape",
+  "timeZone": "Asia/Tokyo",
+  "refraction": "standard",
+  "records": [
+    {
+      "file": "fresh-m45-stock.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n昴星团\n深空 · 星团与反射云 · 影像结构参考\n当前 DEM 未遮挡\n218.6° / 几何 76.1°\n朝向",
+      "inputs": [
+        "2026-11-09T01:00",
+        "600",
+        "35.4172",
+        "138.8729",
+        "218.6186755054519",
+        "76.11694820116776",
+        "1.6"
+      ],
+      "response": "stock",
+      "labels": [
+        "昴星团"
+      ],
+      "errors": [],
+      "screenshotSha256": "96f526872a66f7d1db4d81b8b8773f130c93bd59c7b8ae098b1307c64fffd58c"
+    },
+    {
+      "file": "fresh-m45-ha.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n昴星团\n深空 · 星团与反射云 · 影像结构参考\n当前 DEM 未遮挡\n218.6° / 几何 76.1°\n朝向",
+      "inputs": [
+        "2026-11-09T01:00",
+        "600",
+        "35.4172",
+        "138.8729",
+        "218.6186755054519",
+        "76.11694820116776",
+        "1.6"
+      ],
+      "response": "ha-modified",
+      "labels": [
+        "昴星团"
+      ],
+      "errors": [],
+      "screenshotSha256": "b3bd85dd8410bfe3268679860dc9b72d8fa3343e8ec571dc36a205f2975fbe19"
+    },
+    {
+      "file": "fresh-m31-stock.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n仙女座星系\n深空 · 星系 · 影像结构参考\n当前 DEM 未遮挡\n295.4° / 几何 46.7°\n朝向",
+      "inputs": [
+        "2026-11-09T01:00",
+        "200",
+        "35.4172",
+        "138.8729",
+        "295.4026926469296",
+        "46.739111961962855",
+        "1.6"
+      ],
+      "response": "stock",
+      "labels": [
+        "仙女座星系"
+      ],
+      "errors": [],
+      "screenshotSha256": "0dbc98133460c3537cc313f09dec3faca5552bad669c882b927e89d52c009728"
+    },
+    {
+      "file": "fresh-m31-ha.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n仙女座星系\n深空 · 星系 · 影像结构参考\n当前 DEM 未遮挡\n295.4° / 几何 46.7°\n朝向",
+      "inputs": [
+        "2026-11-09T01:00",
+        "200",
+        "35.4172",
+        "138.8729",
+        "295.4026926469296",
+        "46.739111961962855",
+        "1.6"
+      ],
+      "response": "ha-modified",
+      "labels": [
+        "仙女座星系"
+      ],
+      "errors": [],
+      "screenshotSha256": "36d54b2bf03affffbe1a2adb5bb62aa6ef636cd55719a57be6040e29f3657df0"
+    },
+    {
+      "file": "fresh-m42-stock.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n猎户座大星云\n深空 · 混合星云 · 影像结构参考\n当前 DEM 未遮挡\n154.6° / 几何 46.0°\n朝向",
+      "inputs": [
+        "2026-11-09T01:00",
+        "600",
+        "35.4172",
+        "138.8729",
+        "154.55913071435907",
+        "46.06270218193011",
+        "1.6"
+      ],
+      "response": "stock",
+      "labels": [
+        "猎户座大星云"
+      ],
+      "errors": [],
+      "screenshotSha256": "8351766093ffe8ac0ea79ba413f4a0dea478e36be57122bbbf3d13c29a58b06c"
+    },
+    {
+      "file": "fresh-m42-ha.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n猎户座大星云\n深空 · 混合星云 · 影像结构参考\n当前 DEM 未遮挡\n154.6° / 几何 46.0°\n朝向",
+      "inputs": [
+        "2026-11-09T01:00",
+        "600",
+        "35.4172",
+        "138.8729",
+        "154.55913071435907",
+        "46.06270218193011",
+        "1.6"
+      ],
+      "response": "ha-modified",
+      "labels": [
+        "猎户座大星云"
+      ],
+      "errors": [],
+      "screenshotSha256": "8e646dbfad3ff21eac9d2cd8191b3f42d76d76c6dd5849b314fbb9f82d6a8944"
+    },
+    {
+      "file": "fresh-california-stock.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n加州星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n284.6° / 几何 85.5°\n朝向",
+      "inputs": [
+        "2026-11-09T01:00",
+        "400",
+        "35.4172",
+        "138.8729",
+        "284.63207181901475",
+        "84.7",
+        "1.6"
+      ],
+      "response": "stock",
+      "labels": [
+        "加州星云"
+      ],
+      "errors": [],
+      "screenshotSha256": "ff1fb71064a31fc436041a95befba1053ecf3ffcfaa46d71fb8836409e9eb2e9"
+    },
+    {
+      "file": "fresh-california-ha.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n加州星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n284.6° / 几何 85.5°\n朝向",
+      "inputs": [
+        "2026-11-09T01:00",
+        "400",
+        "35.4172",
+        "138.8729",
+        "284.63207181901475",
+        "84.7",
+        "1.6"
+      ],
+      "response": "ha-modified",
+      "labels": [
+        "加州星云"
+      ],
+      "errors": [],
+      "screenshotSha256": "082549dfc6f325c5aa05700db07ffd799367242757242cd002556f6861af3e41"
+    },
+    {
+      "file": "fresh-heart-stock.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n心脏星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n334.7° / 几何 58.4°\n朝向",
+      "inputs": [
+        "2026-11-09T01:00",
+        "400",
+        "35.4172",
+        "138.8729",
+        "334.70296126945226",
+        "58.44742212875682",
+        "1.6"
+      ],
+      "response": "stock",
+      "labels": [
+        "心脏星云"
+      ],
+      "errors": [],
+      "screenshotSha256": "c079d625960cf2cbf49d59258e793237f9e369c0676769111051963397c8c5e6"
+    },
+    {
+      "file": "fresh-heart-ha.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n心脏星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n334.7° / 几何 58.4°\n朝向",
+      "inputs": [
+        "2026-11-09T01:00",
+        "400",
+        "35.4172",
+        "138.8729",
+        "334.70296126945226",
+        "58.44742212875682",
+        "1.6"
+      ],
+      "response": "ha-modified",
+      "labels": [
+        "心脏星云"
+      ],
+      "errors": [],
+      "screenshotSha256": "c816480c293d622ac8185ce910f1b93a671f4ffe3315fa53546259a89bdb3635"
+    },
+    {
+      "file": "fresh-soul-stock.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n灵魂星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n336.4° / 几何 60.8°\n朝向",
+      "inputs": [
+        "2026-11-09T01:00",
+        "400",
+        "35.4172",
+        "138.8729",
+        "336.40998161088794",
+        "60.771234588223585",
+        "1.6"
+      ],
+      "response": "stock",
+      "labels": [
+        "灵魂星云"
+      ],
+      "errors": [],
+      "screenshotSha256": "d577d76fce689cea0c4560ac9b8e851910990258d1bd0cf9f486ab8613a55d6b"
+    },
+    {
+      "file": "fresh-soul-ha.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n灵魂星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n336.4° / 几何 60.8°\n朝向",
+      "inputs": [
+        "2026-11-09T01:00",
+        "400",
+        "35.4172",
+        "138.8729",
+        "336.40998161088794",
+        "60.771234588223585",
+        "1.6"
+      ],
+      "response": "ha-modified",
+      "labels": [
+        "灵魂星云"
+      ],
+      "errors": [],
+      "screenshotSha256": "695190e67ae3d8bf0dadfd93ed5cf0dd06f58351d6b29386e1c4a2f99526a124"
+    },
+    {
+      "file": "fresh-m8-stock.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n礁湖星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n175.7° / 几何 30.1°\n朝向",
+      "inputs": [
+        "2026-07-15T22:00",
+        "600",
+        "35.4172",
+        "138.8729",
+        "175.7196101849272",
+        "30.108667977604235",
+        "1.6"
+      ],
+      "response": "stock",
+      "labels": [
+        "礁湖星云"
+      ],
+      "errors": [],
+      "screenshotSha256": "ce32937f61dc2109ae519de8c0d573f448cfa6f46ad6fe2c64e167aaf934a525"
+    },
+    {
+      "file": "fresh-m8-ha.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n礁湖星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n175.7° / 几何 30.1°\n朝向",
+      "inputs": [
+        "2026-07-15T22:00",
+        "600",
+        "35.4172",
+        "138.8729",
+        "175.7196101849272",
+        "30.108667977604235",
+        "1.6"
+      ],
+      "response": "ha-modified",
+      "labels": [
+        "礁湖星云"
+      ],
+      "errors": [],
+      "screenshotSha256": "9903409e500f24fd33aca93e2a390bb9f0e202f7e02c62a4536d272bdff9ae4d"
+    },
+    {
+      "file": "fresh-ngc7000-stock.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n北美星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n60.7° / 几何 52.8°\n朝向",
+      "inputs": [
+        "2026-07-15T22:00",
+        "200",
+        "35.4172",
+        "138.8729",
+        "60.72761403116027",
+        "52.83378379409175",
+        "1.6"
+      ],
+      "response": "stock",
+      "labels": [
+        "北美星云"
+      ],
+      "errors": [],
+      "screenshotSha256": "2cc9d37e3e84be36cd6bdbf92315916399cc8701ee343eda95aaaa6a6d669c7c"
+    },
+    {
+      "file": "fresh-ngc7000-ha.png",
+      "frame": {
+        "height": 825.65625,
+        "ready": "true",
+        "width": 1238.5,
+        "x": 265,
+        "y": 286.171875
+      },
+      "status": "找到 1 个目标\n\n北美星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n60.7° / 几何 52.8°\n朝向",
+      "inputs": [
+        "2026-07-15T22:00",
+        "200",
+        "35.4172",
+        "138.8729",
+        "60.72761403116027",
+        "52.83378379409175",
+        "1.6"
+      ],
+      "response": "ha-modified",
+      "labels": [
+        "北美星云"
+      ],
+      "errors": [],
+      "screenshotSha256": "56f3b63ad41210289b473b49e6c9fb398f9e15c5748f0bbfd2b0a0e622447e3b"
+    }
+  ],
+  "modeComparisons": [
+    {
+      "target": "m31",
+      "changedPreviewPixels": 0,
+      "maximumChannelDifference": 0
+    },
+    {
+      "target": "m42",
+      "changedPreviewPixels": 71199,
+      "maximumChannelDifference": 47
+    },
+    {
+      "target": "m45",
+      "changedPreviewPixels": 0,
+      "maximumChannelDifference": 0
+    },
+    {
+      "target": "m8",
+      "changedPreviewPixels": 118284,
+      "maximumChannelDifference": 54
+    },
+    {
+      "target": "ngc7000",
+      "changedPreviewPixels": 77715,
+      "maximumChannelDifference": 58
+    },
+    {
+      "target": "california",
+      "changedPreviewPixels": 138644,
+      "maximumChannelDifference": 55
+    },
+    {
+      "target": "heart",
+      "changedPreviewPixels": 181109,
+      "maximumChannelDifference": 65
+    },
+    {
+      "target": "soul",
+      "changedPreviewPixels": 141956,
+      "maximumChannelDifference": 57
+    }
+  ],
+  "stockComparisonsToPrevious": [
+    {
+      "file": "fresh-california-stock.png",
+      "reference": "deep-sky-remaining-evidence/california-400-framing.png",
+      "changedPreviewPixels": 221668,
+      "maximumChannelDifference": 43
+    },
+    {
+      "file": "fresh-heart-stock.png",
+      "reference": "deep-sky-remaining-evidence/heart-400-stock.png",
+      "changedPreviewPixels": 270858,
+      "maximumChannelDifference": 43
+    },
+    {
+      "file": "fresh-soul-stock.png",
+      "reference": "deep-sky-remaining-evidence/soul-400-stock.png",
+      "changedPreviewPixels": 233476,
+      "maximumChannelDifference": 43
+    }
+  ],
+  "isolatedStockControl": {
+    "manifest": "baseline-manifest.json",
+    "records": "baseline-records.json",
+    "comparisons": [
+      {
+        "file": "fresh-m45-stock.png",
+        "control": "baseline-m45-stock.png",
+        "changedPreviewPixels": 0,
+        "maximumChannelDifference": 0
+      },
+      {
+        "file": "fresh-m8-stock.png",
+        "control": "baseline-m8-stock.png",
+        "changedPreviewPixels": 0,
+        "maximumChannelDifference": 0
+      },
+      {
+        "file": "fresh-ngc7000-stock.png",
+        "control": "baseline-ngc7000-stock.png",
+        "changedPreviewPixels": 0,
+        "maximumChannelDifference": 0
+      }
+    ]
+  },
+  "historicalComparisonNote": "The first development session differed from the static control for M45/M8/NGC7000. After a full page reload and rebuilding identical plans, all three match the isolated old-tint static control pixel-for-pixel. The preceding measurements/screenshots are preserved in pre-reload-browser-results.json and are superseded, not treated as passing evidence. The exact cause in that old live session was not instrumented.",
+  "validation": {
+    "automatedTests": {
+      "command": "npm test",
+      "passed": 158,
+      "failed": 0
+    },
+    "build": {
+      "command": "npm run build -- --base /Tamatamatori/",
+      "passed": true,
+      "includesTypeScript": true,
+      "warning": "Existing chunk size warning"
+    },
+    "acceptedGpuModeScreenshots": 16,
+    "acceptedGpuIsolatedControlScreenshots": 3,
+    "atlasUnchangedThisRound": true,
+    "cameraColourCalibration": false
+  }
+}

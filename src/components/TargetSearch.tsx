@@ -6,7 +6,7 @@ import type { SkyVisibility } from "../domain/starfield";
 import { bodyPolygons } from "../domain/celestial-projection";
 import { celestialPlanKey, occlusionLabels } from "../domain/visibility";
 import type { VisibilitySnapshot } from "../domain/visibility";
-import { deepSkyView } from "../domain/deep-sky";
+import { deepSkyView, deepSkyImageCredits } from "../domain/deep-sky";
 import {
   skyAppearance,
   starOpacity,
@@ -48,6 +48,14 @@ export function TargetSearchResults({
         <p className="info-empty">试试“织女星”“Vega”或“Ori”。</p>
       )}
       {result.targets.map((target) => {
+        const deepEntry = target.deep?.entry;
+        const structureLabel = deepEntry
+          ? deepSkyImageCredits.some(
+              (source) => source.catalogId === deepEntry.catalogId,
+            )
+            ? "影像结构参考"
+            : "目录轮廓"
+          : null;
         const projected = target.deep
             ? deepSkyView(view, target.deep)
             : skyPointView(view, target),
@@ -105,7 +113,10 @@ export function TargetSearchResults({
           >
             <span>
               {target.name}
-              <small>{target.kind}</small>
+              <small>
+                {target.kind}
+                {structureLabel && ` · ${structureLabel}`}
+              </small>
             </span>
             <span>{status}</span>
             <span>

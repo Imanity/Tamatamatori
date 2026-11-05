@@ -21,12 +21,16 @@ export interface DeepSkyEntry {
   positionAngle: number | null;
   magnitude: number | null;
   tile: number;
+  atlasRect: number[];
   bounds: number[];
   starIds?: string[];
 }
 export const deepSkyCatalog = catalog.objects as DeepSkyEntry[];
 export const deepSkyCount = deepSkyCatalog.length;
 export const deepSkyImageCredits = catalog.imageSources;
+// A qualitative red-only increment, not measured sensor/spectral response.
+// Adding arbitrary G/B here can make an already red cloud less red.
+export const deepSkyRedEnhancementColor = [1, 0, 0] as const;
 const atlas = catalog.atlas;
 export const deepSkyKinds = {
   galaxy: "星系",
@@ -75,6 +79,7 @@ export function deepSkyScene(plan: ShootingPlan) {
     const direction = sky.horizontal(center),
       offset = vertices.length / 8;
     const [x0, y0, x1, y1] = entry.bounds;
+    const [atlasX, atlasY, atlasWidth, atlasHeight] = entry.atlasRect;
     const nx = Math.max(4, Math.min(32, Math.ceil((x1 - x0) / degrees / 0.25))),
       ny = Math.max(4, Math.min(32, Math.ceil((y1 - y0) / degrees / 0.25)));
     const grid: { ray: Vector3; uv: number[] }[] = [],
@@ -94,14 +99,8 @@ export function deepSkyScene(plan: ShootingPlan) {
         grid.push({
           ray,
           uv: [
-            ((entry.tile % 4) * atlas.tileSize +
-              0.5 +
-              (atlas.tileSize - 1) * u) /
-              atlas.width,
-            (Math.floor(entry.tile / 4) * atlas.tileSize +
-              0.5 +
-              (atlas.tileSize - 1) * v) /
-              atlas.height,
+            (atlasX + 0.5 + (atlasWidth - 1) * u) / atlas.width,
+            (atlasY + 0.5 + (atlasHeight - 1) * v) / atlas.height,
           ],
         });
         if (x === 0 || x === nx || y === 0 || y === ny) boundary.push(ray);
@@ -174,4 +173,4 @@ export function deepSkyView(plan: ShootingPlan, target: DeepSkyTarget) {
 }
 export const deepSkyResponseLabel = (
   response: ShootingPlan["cameraResponse"],
-) => (response === "ha-modified" ? "天文改机 · Hα 增强" : "未改机 · 色彩参考");
+) => (response === "ha-modified" ? "天文改机 · Hα 增强示意" : "未改机 · 近似参考");

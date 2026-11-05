@@ -14,6 +14,7 @@ import {
   deepSkyCount,
   deepSkyKinds,
   deepSkyResponseLabel,
+  deepSkyImageCredits,
 } from "../domain/deep-sky";
 import type { DeepSkyTarget } from "../domain/deep-sky";
 import {
@@ -255,8 +256,10 @@ export function StarReadout({
             深空轮廓 · {deepSkyCount} 个目标 ·{" "}
             {deepSkyResponseLabel(plan.cameraResponse)}
           </p>
-          <p>基础色彩参考 · 改机额外增强红光 · 非实测 Hα 或曝光预测</p>
-          <p>M31/M42 使用宽幅影像，其余为目录轮廓；未作具体相机定标。</p>
+            <p>源图色彩与红光增强示意 · 非实测 Hα、器材色彩或曝光预测</p>
+          <p>
+              {deepSkyImageCredits.length} 个目标使用影像结构参考；未作具体相机定标。
+          </p>
           <details open>
             <summary>深空目标与朝向</summary>
             {scene.deep.map(
@@ -270,6 +273,12 @@ export function StarReadout({
                     {point.name}
                     <small>
                       {entry.aliases[0]} · {deepSkyKinds[entry.model]}
+                      {" · "}
+                      {deepSkyImageCredits.some(
+                        (source) => source.catalogId === entry.catalogId,
+                      )
+                        ? "影像结构参考"
+                        : "目录轮廓"}
                     </small>
                   </span>
                   <span>
@@ -304,7 +313,7 @@ export function StarReadout({
             )}
           </details>
           <p className="sky-limit">
-            遮挡按画面内发光轮廓；外轮廓可包含周边云气，目录尺寸为参考。
+            遮挡按画面内发光轮廓；影像覆盖有限，照片星点仅作外观参考。外轮廓可包含周边云气，目录尺寸为参考。
           </p>
         </>
       )}

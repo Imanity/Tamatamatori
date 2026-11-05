@@ -1,0 +1,113 @@
+{
+  "checkedOn": "2026-11-06",
+  "records": [
+    {
+      "id": "noao-m33hotelling",
+      "page": "https://www.astropix.org/image/noirlab/noao-m33hotelling",
+      "dimensions": [
+        1700,
+        1199
+      ],
+      "bytes": 2569690,
+      "sha256": "e6ac4937abfa9710d4d03e37c30f90561937f68eca0e489d9c29038823f0169b",
+      "wcs": {
+        "ReferenceDimension": [
+          1700.0,
+          1199.0
+        ],
+        "ReferencePixel": [
+          1132.9815979,
+          659.719230652
+        ],
+        "ReferenceValue": [
+          23.2778261991,
+          30.4854950049
+        ],
+        "Scale": [
+          -0.000812387678434,
+          0.000811945619393
+        ],
+        "Rotation": 60.939475204524,
+        "CoordinateFrame": "ICRS",
+        "Equinox": "J2000",
+        "CoordsystemProjection": "TAN",
+        "Quality": "Full"
+      },
+      "license": "CC-BY-4.0",
+      "bands": "LRGB",
+      "status": "Source preflight only; not added to catalogue or runtime textures"
+    },
+    {
+      "id": "noao-m20johnson",
+      "page": "https://www.astropix.org/image/noirlab/noao-m20johnson",
+      "dimensions": [
+        1773,
+        1388
+      ],
+      "bytes": 7766212,
+      "sha256": "43537825287d769b2c2fcfa21f50f2fcee9373be07c3bd88f4bfece4a5247edc",
+      "wcs": {
+        "ReferenceDimension": [
+          1773.0,
+          1388.0
+        ],
+        "ReferencePixel": [
+          959.00453186,
+          458.918273926
+        ],
+        "ReferenceValue": [
+          270.72131452,
+          -22.7577817741
+        ],
+        "Scale": [
+          -0.00100095111929,
+          0.00100101146702
+        ],
+        "Rotation": -149.75961923452,
+        "CoordinateFrame": "ICRS",
+        "Equinox": "J2000",
+        "CoordsystemProjection": "TAN",
+        "Quality": "Full"
+      },
+      "license": "CC-BY-4.0",
+      "bands": "LRGB",
+      "status": "Source preflight only; not added to catalogue or runtime textures"
+    },
+    {
+      "id": "noao-rosette_mulligan",
+      "page": "https://www.astropix.org/image/noirlab/noao-rosette_mulligan",
+      "dimensions": [
+        1800,
+        1299
+      ],
+      "bytes": 5358456,
+      "sha256": "b1e02458f7449798c0d6213b7aae7785132868424ed4a69265142ed52300e396",
+      "wcs": {
+        "ReferenceDimension": [
+          1800.0,
+          1299.0
+        ],
+        "ReferencePixel": [
+          654.276481628,
+          683.89793396
+        ],
+        "ReferenceValue": [
+          98.154941649,
+          4.94845964791
+        ],
+        "Scale": [
+          -0.000829918545672,
+          0.000830380960362
+        ],
+        "Rotation": 1.0675170627633,
+        "CoordinateFrame": "ICRS",
+        "Equinox": "J2000",
+        "CoordsystemProjection": "TAN",
+        "Quality": "Full"
+      },
+      "license": "CC-BY-4.0",
+      "bands": "LRGB",
+      "status": "Source preflight only; not added to catalogue or runtime textures"
+    }
+  ]
+}

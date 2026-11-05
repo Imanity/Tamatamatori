@@ -84,7 +84,7 @@ const data = {
   modifications:'Eight-object subset; Chinese names and search aliases added; original contour levels preserved; tangent bounds padded 12%. Rendering components/classification are qualitative author-created display models, not measured line fluxes.',
   clusterStarSource:{source:hyg.source,license:'CC-BY-SA-4.0',note:'M45 stars use existing HYG catalogue positions and magnitudes at runtime; IDs only are stored here.'},
   imageSources:JSON.parse(await readFile(new URL('./deep-sky-image-sources.json',import.meta.url),'utf8')),
-  atlas:{width:4096,height:2048,tileSize:1024,channels:'RGB baseline colour; A = 1 - additive red enhancement. Alpha is data, not display opacity; not spectral fluxes.'},objects
+  atlas:{width:4096,height:4096,layout:'atlasRect is assigned by build-deep-sky-atlas.py',channels:'RGB baseline colour; A = 1 - additive red enhancement. Alpha is data, not display opacity; not spectral fluxes.'},objects
 };
 await writeFile(new URL('../src/data/deep-sky.json',import.meta.url),JSON.stringify(data)+'\n');
 console.log(objects.map(o=>({id:o.catalogId,outlineRings:o.outlines.length,bounds:o.bounds,starIds:o.starIds})));

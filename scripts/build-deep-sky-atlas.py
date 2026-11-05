@@ -2,7 +2,7 @@
 
 Manual data preparation: Pillow==12.0.0, numpy==2.3.5.
 Run node scripts/build-deep-sky.mjs first, then pass a source-image directory.
-The two verified CC BY 4.0 images supply structure; components stay qualitative.
+Verified CC BY 4.0 images supply structure; components stay qualitative.
 """
 import hashlib
 import json
@@ -23,7 +23,18 @@ if len(sys.argv) != 2:
 source_dir = Path(sys.argv[1])
 size = 512
 tile_size = 1024
-atlas = Image.new("RGBA", (4096, 2048), (0, 0, 0, 255))
+atlas = Image.new("RGBA", (4096, 4096), (0, 0, 0, 255))
+# Fixed eight-object layout; preserve the five existing photographic rasters.
+regions = {
+    "NGC0224": [0, 2048, 1024, 1024],
+    "NGC1976": [1024, 2048, 1024, 1024],
+    "Mel022": [2048, 0, 2048, 1024],
+    "NGC6523": [2048, 1024, 2048, 1024],
+    "NGC7000": [0, 0, 2048, 2048],
+    "NGC1499": [2048, 2048, 2048, 2048],
+    "IC1805": [0, 3072, 1024, 1024],
+    "IC1848": [1024, 3072, 1024, 1024],
+}
 detail_stats = []
 
 
@@ -35,6 +46,8 @@ def tangent(points, obj):
 
 
 for obj in catalog["objects"]:
+    tx, ty, width, height = regions[obj["catalogId"]]
+    obj["atlasRect"] = [tx, ty, width, height]
     spec = next((source for source in sources if source["catalogId"] == obj["catalogId"]), None)
     if spec:
         obj["bounds"] = image_bounds(spec, obj)
@@ -85,13 +98,13 @@ for obj in catalog["objects"]:
             continuum += np.exp(-((x-sx)**2+(y-sy)**2)/(scale*0.17)**2)*0.24
         hydrogen, other = np.zeros_like(x), np.zeros_like(x)
     components = np.stack([continuum, hydrogen, other], axis=2)
-    # Preserve the other six first-step masks at their original angular scale.
+    # Preserve remaining catalogue masks at their original angular scale.
     components = np.stack([np.asarray(Image.fromarray(channel.astype(np.float32)).resize((tile_size, tile_size), Image.Resampling.BILINEAR)) for channel in components.transpose(2, 0, 1)], axis=-1)
     if spec:
-        components, stats = image_components(source_dir, spec, obj, tile_size)
+        components, stats = image_components(source_dir, spec, obj, width, height)
         detail_stats.append(stats)
     else:
-        # Preserve the six existing targets' stock/modified display through an
+        # Preserve remaining targets' stock/modified display through an
         # equivalent RGB base + increment representation.
         c, ha, other = components.transpose(2, 0, 1)
         tint = np.array([0.36, 0.64, 1]) if obj["model"] == "reflection" else np.array([0.65, 0.76, 1])
@@ -104,12 +117,14 @@ for obj in catalog["objects"]:
     components = np.uint8(np.clip(components, 0, 1)*255+0.5)
     obj["componentMax"] = [int(value) for value in components.max(axis=(0, 1))]
     tile = Image.fromarray(components)
-    atlas.paste(tile, ((obj["tile"] % 4)*tile_size, (obj["tile"]//4)*tile_size))
+    atlas.paste(tile, (tx, ty))
 
 output = root / "src/data/deep-sky-atlas.png"
 atlas.save(output, optimize=True)
 catalog["atlas"]["sha256"] = hashlib.sha256(output.read_bytes()).hexdigest()
-catalog["atlas"].update(width=4096, height=2048, tileSize=tile_size,
+catalog["atlas"].pop("tileSize", None)
+catalog["atlas"].update(width=4096, height=4096,
+    layout="Fixed per-object atlasRect in pixels; pixel centres define UVs",
     channels="RGB baseline colour; A = 1 - additive red enhancement. Alpha is packed data, not display opacity. Not spectral fluxes.",
     detailStatistics=detail_stats)
 catalog["imageSources"] = sources

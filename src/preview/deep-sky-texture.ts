@@ -1,3 +1,5 @@
+import catalog from "../data/deep-sky.json" with { type: "json" };
+
 export async function loadDeepSkyImage(
   signal: AbortSignal,
   maxSize: number,
@@ -7,10 +9,11 @@ export async function loadDeepSkyImage(
     { signal },
   );
   if (!response.ok) throw new Error(`Deep-sky atlas HTTP ${response.status}`);
-  const width = Math.min(4096, maxSize);
+  const { width, height } = catalog.atlas;
+  const scale = Math.min(1, maxSize / Math.max(width, height));
   const image = await createImageBitmap(await response.blob(), {
-    resizeWidth: width,
-    resizeHeight: width / 2,
+    resizeWidth: Math.max(1, Math.floor(width * scale)),
+    resizeHeight: Math.max(1, Math.floor(height * scale)),
     resizeQuality: "high",
     premultiplyAlpha: "none",
     colorSpaceConversion: "none",

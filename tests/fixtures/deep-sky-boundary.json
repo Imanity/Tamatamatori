@@ -1,0 +1,46 @@
+{
+  "baselineAtlasSha256": "5f9bebb65cf54325b6b5b33118099875a4baf2fcc1954d239ffb7eeb8f4fa31f",
+  "description": "Fixed outer 22% atlas band vs central area; checks finite-photo field suppression, not calibrated nebula flux. Sharpness checked separately.",
+  "rimFraction": 0.22,
+  "records": [
+    {
+      "catalogId": "Mel022",
+      "atlasRect": [
+        2048,
+        0,
+        2048,
+        1024
+      ],
+      "baselineRimRgbSum": 4887074,
+      "baselineCentreRgbSum": 61597258,
+      "maximumRimRetention": 0.35,
+      "minimumCentreRetention": 0.8
+    },
+    {
+      "catalogId": "NGC6523",
+      "atlasRect": [
+        2048,
+        1024,
+        2048,
+        1024
+      ],
+      "baselineRimRgbSum": 23418841,
+      "baselineCentreRgbSum": 106522691,
+      "maximumRimRetention": 0.35,
+      "minimumCentreRetention": 0.8
+    },
+    {
+      "catalogId": "NGC7000",
+      "atlasRect": [
+        0,
+        0,
+        2048,
+        2048
+      ],
+      "baselineRimRgbSum": 163491900,
+      "baselineCentreRgbSum": 186770548,
+      "maximumRimRetention": 0.6,
+      "minimumCentreRetention": 0.8
+    }
+  ]
+}

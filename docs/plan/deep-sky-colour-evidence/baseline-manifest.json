@@ -1,0 +1,9 @@
+{
+  "purpose": "Isolated same-build stock control; only deep-sky GLSL increment tint restored to [1,.1,.18]. No workspace/runtime assets edited.",
+  "patches": 1,
+  "atlasSha256": "2e93d7c91147be4010f7172605e7579c5e37aa16368266d0ba581f2beb4ed870",
+  "shaderAsset": "starfield-layer-BUz8axK7.js",
+  "patchedShaderSha256": "a782074595152ddba37717c094fb66de2bfa06239bb4b429d8d30dfe68d9f655",
+  "correctedShaderSha256": "4aa5196183ed2cc5b8501704a2665ab6b56d7d5f44576cf6579d44705a5f4f71",
+  "controlServerStopped": true
+}

@@ -36,7 +36,8 @@
       "CoordsystemProjection": "TAN",
       "Quality": "Full"
     },
-    "role": "Broad-field display RGB reference with qualitative additive red enhancement; not a calibrated stock-camera image or spectral line flux."
+    "role": "Broad-field display RGB reference with qualitative additive red enhancement; not a calibrated stock-camera image or spectral line flux.",
+    "bands": "Optical B/R published DSS2 colour composite; not camera-calibrated RGB"
   },
   {
     "catalogId": "NGC1976",
@@ -76,6 +77,339 @@
       "CoordsystemProjection": "TAN",
       "Quality": "Full"
     },
-    "role": "Wide-field LRGB display reference with qualitative additive red enhancement; not calibrated stock-camera or H-alpha data."
+    "role": "Wide-field LRGB display reference with qualitative additive red enhancement; not calibrated stock-camera or H-alpha data.",
+    "bands": "LRGB"
+  },
+  {
+    "catalogId": "Mel022",
+    "file": "noao-m45denton.tif",
+    "page": "https://www.astropix.org/image/noirlab/noao-m45denton",
+    "publisherPage": "https://noirlab.edu/public/images/noao-m45denton/",
+    "url": "https://noirlab.edu/public/media/archives/images/original/noao-m45denton.tif",
+    "credit": "KPNO/NOIRLab/NSF/AURA/Tad Denton/Adam Block",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "sha256": "0b816f3db61cd8ac856e1377583678f63b99391cfd539c668b19a229e66a182f",
+    "bytes": 3409496,
+    "dimensions": [
+      1438,
+      968
+    ],
+    "wcs": {
+      "ReferenceDimension": [
+        1438.0,
+        968.0
+      ],
+      "ReferencePixel": [
+        571.047954559,
+        289.452682495
+      ],
+      "ReferenceValue": [
+        57.1511747824,
+        23.9324875625
+      ],
+      "Scale": [
+        -0.00151697882217,
+        0.00151664990239
+      ],
+      "Rotation": 17.990027545062,
+      "CoordinateFrame": "ICRS",
+      "Equinox": "J2000",
+      "CoordsystemProjection": "TAN",
+      "Quality": "Full"
+    },
+    "bands": "RGB",
+    "role": "Wide-field optical display reference; qualitative additive red enhancement only for emission; not calibrated camera or spectral flux.",
+    "backgroundModel": "edge-harmonic",
+    "detailMode": "source-rgb",
+    "workingMaxSize": 3000,
+    "edgeFadePixels": 40,
+    "opacityModel": "diffuse-colour-reconstruction"
+  },
+  {
+    "catalogId": "NGC6523",
+    "file": "noao-m8wideblock.tif",
+    "page": "https://www.astropix.org/image/noirlab/noao-m8wideblock",
+    "publisherPage": "https://noirlab.edu/public/images/noao-m8wideblock/",
+    "url": "https://noirlab.edu/public/media/archives/images/original/noao-m8wideblock.tif",
+    "credit": "KPNO/NOIRLab/NSF/AURA/Adam Block",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "sha256": "7ae22960f4009b1ab96fb2faf7969021581fb0a2c6936cdae0d19e7966f88999",
+    "bytes": 8611342,
+    "dimensions": [
+      2179,
+      1469
+    ],
+    "wcs": {
+      "ReferenceDimension": [
+        2179.0,
+        1469.0
+      ],
+      "ReferencePixel": [
+        909.420501709,
+        794.112617493
+      ],
+      "ReferenceValue": [
+        271.128385357,
+        -24.2978788276
+      ],
+      "Scale": [
+        -0.000736085439522,
+        0.00073667992295
+      ],
+      "Rotation": -5.922071306572,
+      "CoordinateFrame": "ICRS",
+      "Equinox": "J2000",
+      "CoordsystemProjection": "TAN",
+      "Quality": "Full"
+    },
+    "bands": "LRGB",
+    "role": "Wide-field optical display reference; qualitative additive red enhancement only for emission; not calibrated camera or spectral flux.",
+    "backgroundModel": "edge-harmonic",
+    "detailMode": "source-rgb",
+    "workingMaxSize": 3000,
+    "edgeFadePixels": 40,
+    "opacityModel": "diffuse-colour-reconstruction"
+  },
+  {
+    "catalogId": "NGC7000",
+    "file": "noao-n7000mosblock.tif",
+    "page": "https://www.astropix.org/image/noirlab/noao-n7000mosblock",
+    "publisherPage": "https://noirlab.edu/public/images/noao-n7000mosblock/",
+    "url": "https://noirlab.edu/public/media/archives/images/original/noao-n7000mosblock.tif",
+    "credit": "KPNO/NOIRLab/NSF/AURA/Adam Block",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "sha256": "4184c727e7fde2e23b052d55d6c7aa317c22dcd9e4309e3c9abca61d5175ed5a",
+    "bytes": 15034566,
+    "dimensions": [
+      2758,
+      1890
+    ],
+    "wcs": {
+      "ReferenceDimension": [
+        2758.0,
+        1890.0
+      ],
+      "ReferencePixel": [
+        1272.44012451,
+        858.85194906
+      ],
+      "ReferenceValue": [
+        313.466145754,
+        44.3106732418
+      ],
+      "Scale": [
+        -0.00151447162437,
+        0.00151119199493
+      ],
+      "Rotation": -2.9581967669141,
+      "CoordinateFrame": "ICRS",
+      "Equinox": "J2000",
+      "CoordsystemProjection": "TAN",
+      "Quality": "Full"
+    },
+    "bands": "LRGB",
+    "role": "Wide-field optical display reference; qualitative additive red enhancement only for emission; not calibrated camera or spectral flux.",
+    "backgroundModel": "edge-harmonic",
+    "edgeFadePixels": 40,
+    "detailMode": "source-rgb",
+    "workingMaxSize": 3000,
+    "opacityModel": "diffuse-colour-reconstruction"
+  },
+  {
+    "catalogId": "NGC1499",
+    "file": "noao-n1499block.tif",
+    "sha256": "cfc8c37ede1f572f4b728c9755d76d37ca3783b699132bf8e4a4150d1cb1b0bf",
+    "bytes": 4252662,
+    "dimensions": [
+      1172,
+      1743
+    ],
+    "detailMode": "source-rgb",
+    "workingMaxSize": 3000,
+    "edgeFadePixels": 40,
+    "role": "Published optical appearance reference; qualitative additive red enhancement, not measured camera response or spectral flux.",
+    "page": "https://www.astropix.org/image/noirlab/noao-n1499block",
+    "publisherPage": "https://noirlab.edu/public/images/noao-n1499block/",
+    "url": "https://noirlab.edu/public/media/archives/images/original/noao-n1499block.tif",
+    "credit": "KPNO/NOIRLab/NSF/AURA/Adam Block",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "wcs": {
+      "ReferenceDimension": [
+        1172.0,
+        1743.0
+      ],
+      "ReferencePixel": [
+        648.011676788,
+        1275.08104801
+      ],
+      "ReferenceValue": [
+        59.5587542041,
+        36.6329681498
+      ],
+      "Scale": [
+        -0.00145219562751,
+        0.00145206339768
+      ],
+      "Rotation": 56.730374186886,
+      "CoordinateFrame": "ICRS",
+      "Equinox": "J2000",
+      "CoordsystemProjection": "TAN",
+      "Quality": "Full"
+    },
+    "bands": "LRGB",
+    "backgroundModel": "edge-harmonic",
+    "opacityModel": "diffuse-colour-reconstruction"
+  },
+  {
+    "catalogId": "IC1805",
+    "file": "stellarium-ic1805.png",
+    "sha256": "aa90e7231dcff3c81a6870227a10af14cc204401e563717bd3bdf5e3d657c54c",
+    "bytes": 1016565,
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "detailMode": "source-rgb",
+    "workingMaxSize": 3000,
+    "edgeFadePixels": 40,
+    "role": "Published optical appearance reference; qualitative additive red enhancement, not measured camera response or spectral flux.",
+    "page": "https://www.flickr.com/photos/133259498@N05/54332176110/",
+    "publisherPage": "https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/ic1805.png",
+    "url": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/ic1805.png",
+    "credit": "Giuseppe Donatiello, post-processing: Sun Shuwei",
+    "license": "CC0-1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "licenseEvidence": "https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md",
+    "upstreamCommit": "230f2bd84b7827fb16be2a54c2ebdae07edf17a6",
+    "registrationSource": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/textures.json",
+    "registrationSourceSha256": "75bbf1e0f0df37a600852f4923b2bb0b466a7ff5a5865d551d4e7b686baf6071",
+    "registrationModel": "stellarium-sky-corners",
+    "skyCorners": [
+      [
+        41.6553,
+        59.6183
+      ],
+      [
+        35.5205,
+        59.529
+      ],
+      [
+        35.0094,
+        62.6256
+      ],
+      [
+        41.7777,
+        62.7246
+      ]
+    ],
+    "wcs": {
+      "ReferenceDimension": [
+        1024.0,
+        1024.0
+      ],
+      "ReferencePixel": [
+        512.5000263854557,
+        512.4999992600723
+      ],
+      "ReferenceValue": [
+        38.49068008443732,
+        61.16272074616857
+      ],
+      "CDMatrix": [
+        [
+          -0.0030346810193043697,
+          -9.206850143841709e-05
+        ],
+        [
+          -9.186651463972875e-05,
+          0.0030342932546022373
+        ]
+      ],
+      "CoordinateFrame": "ICRS",
+      "Equinox": "J2000",
+      "CoordsystemProjection": "TAN",
+      "Quality": "Derived from published sky corners, not source AVM or an independent plate solution"
+    },
+    "bands": "Optical DSLR mosaic; detailed filter response not published",
+    "backgroundModel": "none",
+    "sourceProcessing": "Upstream star-suppressed display texture; do not infer calibrated flux or exact star removal"
+  },
+  {
+    "catalogId": "IC1848",
+    "file": "stellarium-ic1848.png",
+    "sha256": "5169b73c6eba203ab73ac99a330214516eaaa108241867b762b333605b857b15",
+    "bytes": 611939,
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "detailMode": "source-rgb",
+    "workingMaxSize": 3000,
+    "edgeFadePixels": 40,
+    "role": "Published optical appearance reference; qualitative additive red enhancement, not measured camera response or spectral flux.",
+    "page": "https://www.flickr.com/photos/133259498@N05/54332176110/",
+    "publisherPage": "https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/ic1848.png",
+    "url": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/ic1848.png",
+    "credit": "Giuseppe Donatiello, post-processing: Sun Shuwei",
+    "license": "CC0-1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "licenseEvidence": "https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md",
+    "upstreamCommit": "230f2bd84b7827fb16be2a54c2ebdae07edf17a6",
+    "registrationSource": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/textures.json",
+    "registrationSourceSha256": "75bbf1e0f0df37a600852f4923b2bb0b466a7ff5a5865d551d4e7b686baf6071",
+    "registrationModel": "stellarium-sky-corners",
+    "skyCorners": [
+      [
+        47.7714,
+        59.4179
+      ],
+      [
+        41.6553,
+        59.6183
+      ],
+      [
+        41.7777,
+        62.7246
+      ],
+      [
+        48.5162,
+        62.5005
+      ]
+    ],
+    "wcs": {
+      "ReferenceDimension": [
+        1024.0,
+        1024.0
+      ],
+      "ReferencePixel": [
+        512.4998071070817,
+        512.50008735086
+      ],
+      "ReferenceValue": [
+        44.93034859086992,
+        61.10357367215342
+      ],
+      "CDMatrix": [
+        [
+          -0.00302909115210674,
+          0.00020583840751575434
+        ],
+        [
+          0.00020711374524994518,
+          0.0030273565194848416
+        ]
+      ],
+      "CoordinateFrame": "ICRS",
+      "Equinox": "J2000",
+      "CoordsystemProjection": "TAN",
+      "Quality": "Derived from published sky corners, not source AVM or an independent plate solution"
+    },
+    "bands": "Optical DSLR mosaic; detailed filter response not published",
+    "backgroundModel": "none",
+    "sourceProcessing": "Upstream star-suppressed display texture; do not infer calibrated flux or exact star removal"
   }
 ]
