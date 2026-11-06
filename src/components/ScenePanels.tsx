@@ -161,7 +161,7 @@ export function PreviewPanel({
     pollution.phase === "ready" ? pollution.sample?.artificialMcd : undefined;
   const weatherFeed = useWeather(plan);
   const weather = weatherFeed.sample ?? undefined;
-  const starScene = useStarScene(plan, skyVisibility, artificialMcd, weather);
+  const starScene = useStarScene(plan, skyVisibility, artificialMcd, weather, view);
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return (
     <div className="preview-content">
@@ -203,24 +203,6 @@ export function PreviewPanel({
             onClick={() => setGrid(!grid)}
           >
             <Icon name="grid" size={15} />
-          </button>
-          <button
-            className={`icon-button ${plan.lightPollution ? "is-active" : ""}`}
-            aria-label="当地光污染"
-            aria-pressed={!!plan.lightPollution}
-            title="当地光污染"
-            onClick={() => update({ lightPollution: !plan.lightPollution })}
-          >
-            <Icon name="light" size={16} />
-          </button>
-          <button
-            className={`icon-button ${plan.weather ? "is-active" : ""}`}
-            aria-label="天气效果"
-            aria-pressed={!!plan.weather}
-            title="天气效果 · 云层与降水示意"
-            onClick={() => update({ weather: !plan.weather })}
-          >
-            <Icon name="cloud" size={16} />
           </button>
         </div>
       </div>

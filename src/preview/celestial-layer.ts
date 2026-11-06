@@ -1,6 +1,6 @@
 import earcut from "earcut";
 import type { CustomLayerInterface, CustomRenderMethodInput, Map as MapLibreMap } from "maplibre-gl";
-import { classifyOcclusion } from "../domain/visibility.ts";
+import { classifyOcclusion, skyLabelKey } from "../domain/visibility.ts";
 import type { VisibilitySnapshot } from "../domain/visibility.ts";
 import { renderedCamera } from "./rendered-camera.ts";
 import type { RenderedCamera } from "./rendered-camera.ts";
@@ -78,9 +78,20 @@ export class CelestialLayer implements CustomLayerInterface {
   private failed = false;
   private cameraKey = "";
   private onCamera?: (camera: RenderedCamera) => void;
+  private labelKey = "";
+  private labelStates: VisibilitySnapshot["labelStates"] = {};
 
   private report: (snapshot: VisibilitySnapshot) => void;
   constructor(report: (snapshot: VisibilitySnapshot) => void, onCamera?: (camera: RenderedCamera) => void) { this.report = report; this.onCamera = onCamera; }
+
+  private publish(snapshot: VisibilitySnapshot) {
+    const labelKey = this.frame?.plan ? skyLabelKey(this.frame.plan) : "";
+    if (labelKey !== this.labelKey || snapshot.message) this.labelStates = {};
+    this.labelKey = labelKey;
+    for (const id of ["sun", "moon"] as const)
+      if (snapshot.states[id] !== "waiting") this.labelStates = { ...this.labelStates, [id]: snapshot.states[id] };
+    this.report({ ...snapshot, labelKey, labelStates: this.labelStates });
+  }
 
   onAdd(map: MapLibreMap, gl: WebGL2RenderingContext) {
     this.map = map; this.gl = gl;
@@ -102,7 +113,7 @@ export class CelestialLayer implements CustomLayerInterface {
       id: body.id, outline: new Float32Array(body.outline.flatMap((p) => [p.x, p.y])),
       fill: triangulate(body.illuminated), silhouette: triangulate(body.outline),
     }));
-    this.report({ planKey: frame.planKey, states: { sun: this.failed ? "error" : "waiting", moon: this.failed ? "error" : "waiting" } });
+    this.publish({ planKey: frame.planKey, states: { sun: this.failed ? "error" : "waiting", moon: this.failed ? "error" : "waiting" } });
     this.map?.triggerRepaint();
   }
 
@@ -111,7 +122,7 @@ export class CelestialLayer implements CustomLayerInterface {
     this.clearQueries(); this.resolvedKey = "";
     if (this.frame) {
       this.frame = { ...this.frame, ready: false };
-      this.report({ planKey: this.frame.planKey, states: { sun: "waiting", moon: "waiting" } });
+      this.publish({ planKey: this.frame.planKey, states: { sun: "waiting", moon: "waiting" } });
     }
   }
 
@@ -126,7 +137,7 @@ export class CelestialLayer implements CustomLayerInterface {
   private fail(message = "日月深度渲染不可用，请重试预览。") {
     this.failed = true;
     this.clearQueries();
-    this.report({ planKey: this.frame?.planKey ?? "", states: { sun: "error", moon: "error" }, message });
+    this.publish({ planKey: this.frame?.planKey ?? "", states: { sun: "error", moon: "error" }, message });
   }
 
   private readQueries(gl: WebGL2RenderingContext) {
@@ -139,7 +150,7 @@ export class CelestialLayer implements CustomLayerInterface {
     for (const query of this.pending) snapshot.states[query.id] = classifyOcclusion(
       !!gl.getQueryParameter(query.clear, gl.QUERY_RESULT), !!gl.getQueryParameter(query.blocked, gl.QUERY_RESULT));
     this.clearQueries(); this.resolvedKey = this.frame.key;
-    this.report(snapshot);
+    this.publish(snapshot);
   }
 
   render(gl: WebGL2RenderingContext, input?: CustomRenderMethodInput) {
@@ -242,6 +253,8 @@ export class CelestialLayer implements CustomLayerInterface {
   }
 
   onRemove() {
+    this.labelStates = {};
+    this.labelKey = "";
     this.clearQueries();
     if (this.program) this.gl?.deleteProgram(this.program);
     if (this.weatherProgram) this.gl?.deleteProgram(this.weatherProgram);

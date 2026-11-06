@@ -12,7 +12,8 @@ interface WeatherState {
 }
 
 export function useWeather(plan: ShootingPlan) {
-  const enabled = !!plan.weather, key = weatherLocationKey(plan);
+  const enabled = !!plan.weather, model = plan.weatherModel ?? "best_match";
+  const key = `${weatherLocationKey(plan)}/${model}`;
   const [state, setState] = useState<WeatherState>({ key, phase: "off" });
   const [attempt, setAttempt] = useState(0);
   const [clock, setClock] = useState(Date.now);
@@ -36,7 +37,7 @@ export function useWeather(plan: ShootingPlan) {
     setState(previous => ({ key, phase: "loading", forecast: previous.key === key ? previous.forecast : undefined }));
     const timeout = setTimeout(() => controller.abort(), 20_000);
     const timer = setTimeout(() => {
-      void loadWeather(plan, controller.signal)
+      void loadWeather(plan, controller.signal, Date.now(), model)
         .then(forecast => {
           if (!disposed) setState({ key, phase: "ready", forecast });
         })

@@ -8,6 +8,7 @@ import { Parameters } from "./components/Parameters";
 import { PreviewPanel } from "./components/ScenePanels";
 import { MapPanel } from "./components/MapPanel";
 import { About } from "./components/About";
+import { EnvironmentSettings } from "./components/EnvironmentSettings";
 import type { MapViewport } from "./domain/map";
 import type { InfoGroupId, InfoNavigation } from "./components/InfoGroup";
 
@@ -359,6 +360,7 @@ export default function App() {
               </div>
             ))}
           </div>
+          <EnvironmentSettings plan={plan} update={updatePlan} />
         </aside>
         <main className="main-content">
           <div className="mobile-toolbar">

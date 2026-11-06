@@ -1,4 +1,5 @@
 import { Temporal } from "@js-temporal/polyfill";
+import type { WeatherModel } from "./weather.ts";
 
 export const sensors = {
   "full-frame": { label: "全画幅", width: 36, height: 24 },
@@ -34,6 +35,7 @@ export interface ShootingPlan {
   cameraResponse: "stock" | "ha-modified";
   lightPollution?: boolean;
   weather?: boolean;
+  weatherModel?: WeatherModel;
 }
 
 export const initialPlan: ShootingPlan = {

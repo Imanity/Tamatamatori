@@ -207,6 +207,27 @@ test('空间站独立显示、轨迹共享地形深度，轨道更新丢弃旧�
   layer.onRemove(); assert.equal(queries.size, 0); assert.equal(resources.size, 0);
 });
 
+test('转向时延续星空与深空标注遮挡，最新读数保持待测，新机位和故障清空', async () => {
+  for (const deep of [false, true]) {
+    const { gl } = fakeGL(), reports = [];
+    const prepared = deep ? await prepareDeep(gl, reports) : { layer: await prepareStars(gl, reports) };
+    const layer = prepared.layer;
+    gl.results = Array(30).fill(true); layer.render(gl); gl.complete(); layer.render(gl);
+    const confirmed = reports.at(-1).labelStates;
+    assert.ok(Object.keys(confirmed).length > 0);
+    const original = layer.frame;
+    layer.setScene({ ...original, key: 'turned', planKey: 'turned', plan: { ...original.plan, azimuth: original.plan.azimuth + 1 } });
+    assert.equal(reports.at(-1).ready, false);
+    assert.deepEqual(reports.at(-1).states, {});
+    assert.deepEqual(reports.at(-1).labelStates, confirmed);
+    layer.invalidate(); assert.deepEqual(reports.at(-1).labelStates, confirmed);
+    layer.setScene({ ...original, key: 'moved', planKey: 'moved', plan: { ...original.plan, latitude: original.plan.latitude + 0.01 } });
+    assert.deepEqual(reports.at(-1).labelStates, {});
+    layer.fail('测试失败'); assert.deepEqual(reports.at(-1).labelStates, {});
+    layer.onRemove();
+  }
+});
+
 test('星空查询在计划/地形失效后废弃，失败明确反馈并释放资源',async t=>{
   const {gl,queries,resources}=fakeGL(),reports=[],layer=await prepareStars(gl,reports);
   gl.results=[true];layer.render(gl);assert.equal(queries.size,1);

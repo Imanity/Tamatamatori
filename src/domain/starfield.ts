@@ -42,6 +42,8 @@ export interface SkyVisibility {
   ready: boolean;
   view: { azimuth: number; pitch: number } | null;
   states: Record<string, Occlusion>;
+  labelKey?: string;
+  labelStates?: Record<string, Occlusion>;
   message?: string;
   orbitKey?: string;
   milkyWay?: { phase: "off" | "loading" | "ready" | "error"; message?: string };

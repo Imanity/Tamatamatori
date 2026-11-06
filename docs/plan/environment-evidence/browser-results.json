@@ -1,0 +1,205 @@
+[
+  {
+    "name": "01-night-labels",
+    "frame": {
+      "height": 431.65625,
+      "width": 647.5,
+      "x": 1557.5,
+      "y": 213.421875
+    },
+    "labels": [
+      {
+        "left": "clamp(50px, 73.3738%, 100% - 50px)",
+        "name": "参宿七",
+        "top": "clamp(22px, 40.3372% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 37.2255%, 100% - 50px)",
+        "name": "参宿二",
+        "top": "clamp(22px, 32.4945% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 36.0182%, 100% - 50px)",
+        "name": "参宿一",
+        "top": "clamp(22px, 40.6918% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 53.2938%, 100% - 50px)",
+        "name": "参宿六",
+        "top": "clamp(22px, 82.3082% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 37.7177%, 100% - 50px)",
+        "name": "参宿三",
+        "top": "clamp(22px, 23.9256% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 50%, 100% - 50px)",
+        "name": "猎户座大星云",
+        "top": "clamp(22px, 50% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 51.6181%, 100% - 50px)",
+        "name": "巴纳德环",
+        "top": "clamp(22px, 35.3884% - 12px, 100% - 20px)"
+      }
+    ],
+    "model": "best_match",
+    "pose": "方位 121.6°俯仰 28.9°水平视场 23.9°垂直视场 16.1°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-BWP9toXS.js",
+    "weather": "天气天气效果已关闭"
+  },
+  {
+    "name": "02-after-drag",
+    "labels": [
+      {
+        "left": "clamp(50px, 73.3738%, 100% - 50px)",
+        "name": "参宿七",
+        "top": "clamp(22px, 40.3372% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 37.2255%, 100% - 50px)",
+        "name": "参宿二",
+        "top": "clamp(22px, 32.4945% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 36.0182%, 100% - 50px)",
+        "name": "参宿一",
+        "top": "clamp(22px, 40.6918% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 53.2938%, 100% - 50px)",
+        "name": "参宿六",
+        "top": "clamp(22px, 82.3082% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 37.7177%, 100% - 50px)",
+        "name": "参宿三",
+        "top": "clamp(22px, 23.9256% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 50%, 100% - 50px)",
+        "name": "猎户座大星云",
+        "top": "clamp(22px, 50% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 51.6181%, 100% - 50px)",
+        "name": "巴纳德环",
+        "top": "clamp(22px, 35.3884% - 12px, 100% - 20px)"
+      }
+    ],
+    "model": "best_match",
+    "pose": "方位 121.6°俯仰 28.9°水平视场 23.9°垂直视场 16.1°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-BWP9toXS.js",
+    "weather": "天气天气效果已关闭"
+  },
+  {
+    "name": "03-weather-auto",
+    "labels": [
+      {
+        "left": "clamp(50px, 73.3738%, 100% - 50px)",
+        "name": "参宿七",
+        "top": "clamp(22px, 40.3372% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 37.2255%, 100% - 50px)",
+        "name": "参宿二",
+        "top": "clamp(22px, 32.4945% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 36.0182%, 100% - 50px)",
+        "name": "参宿一",
+        "top": "clamp(22px, 40.6918% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 53.2938%, 100% - 50px)",
+        "name": "参宿六",
+        "top": "clamp(22px, 82.3082% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 37.7177%, 100% - 50px)",
+        "name": "参宿三",
+        "top": "clamp(22px, 23.9256% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 50%, 100% - 50px)",
+        "name": "猎户座大星云",
+        "top": "clamp(22px, 50% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 51.6181%, 100% - 50px)",
+        "name": "巴纳德环",
+        "top": "clamp(22px, 35.3884% - 12px, 100% - 20px)"
+      }
+    ],
+    "model": "best_match",
+    "pose": "方位 121.6°俯仰 28.9°水平视场 23.9°垂直视场 16.1°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-BWP9toXS.js",
+    "weather": "天气天气已应用 · 云层与降水示意模型 自动匹配总云量 2% · 低 2% / 中 0% / 高 0%降水 0.0 mm/小时 · 概率 0% · 能见度 0.9 km拍摄 11/07 23:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 08:27 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似"
+  },
+  {
+    "name": "04-weather-gfs",
+    "labels": [],
+    "model": "gfs_seamless",
+    "pose": "方位 121.6°俯仰 28.9°水平视场 23.9°垂直视场 16.1°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-BWP9toXS.js",
+    "weather": "天气天气已应用 · 云层与降水示意模型 NOAA GFS总云量 99% · 低 99% / 中 0% / 高 0%降水 0.0 mm/小时 · 概率 0% · 能见度 24.1 km拍摄 11/07 23:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 08:27 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似"
+  },
+  {
+    "name": "05-weather-icon",
+    "labels": [
+      {
+        "left": "clamp(50px, 73.3738%, 100% - 50px)",
+        "name": "参宿七",
+        "top": "clamp(22px, 40.3372% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 53.2938%, 100% - 50px)",
+        "name": "参宿六",
+        "top": "clamp(22px, 82.3082% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 37.7177%, 100% - 50px)",
+        "name": "参宿三",
+        "top": "clamp(22px, 23.9256% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 50%, 100% - 50px)",
+        "name": "猎户座大星云",
+        "top": "clamp(22px, 50% - 12px, 100% - 20px)"
+      },
+      {
+        "left": "clamp(50px, 51.6181%, 100% - 50px)",
+        "name": "巴纳德环",
+        "top": "clamp(22px, 35.3884% - 12px, 100% - 20px)"
+      }
+    ],
+    "model": "icon_seamless",
+    "pose": "方位 121.6°俯仰 28.9°水平视场 23.9°垂直视场 16.1°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-BWP9toXS.js",
+    "weather": "天气天气已应用 · 云层与降水示意模型 DWD ICON总云量 42% · 低 42% / 中 0% / 高 0%降水 0.0 mm/小时 · 概率 0% · 能见度 模型未提供拍摄 11/07 23:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 08:27 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似"
+  },
+  {
+    "name": "06-weather-ifs",
+    "labels": [],
+    "model": "ecmwf_ifs025",
+    "pose": "方位 121.6°俯仰 28.9°水平视场 23.9°垂直视场 16.1°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-BWP9toXS.js",
+    "weather": "天气天气已应用 · 云层与降水示意模型 ECMWF IFS 0.25°总云量 84% · 低 83% / 中 2% / 高 0%降水 0.0 mm/小时 · 概率 0% · 能见度 模型未提供拍摄 11/07 23:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 08:27 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似"
+  },
+  {
+    "name": "07-mobile-environment",
+    "labels": [],
+    "model": "ecmwf_ifs025",
+    "pose": "方位 121.6°俯仰 28.9°水平视场 23.9°垂直视场 16.1°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-BWP9toXS.js",
+    "weather": "天气天气已应用 · 云层与降水示意模型 ECMWF IFS 0.25°总云量 84% · 低 83% / 中 2% / 高 0%降水 0.0 mm/小时 · 概率 0% · 能见度 模型未提供拍摄 11/07 23:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 08:27 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似"
+  }
+]

@@ -1,0 +1,94 @@
+{
+  "tests": {
+    "count": 213,
+    "passed": 213,
+    "failed": 0,
+    "command": "npm test",
+    "logSha256": "af864a0e12508f5ede35261a78585890eada3852f27aab47b3031fdce70f5230"
+  },
+  "build": {
+    "command": "npm run build -- --base /Tamatamatori/",
+    "assets": [
+      {
+        "name": "index-BWP9toXS.js",
+        "sha256": "3d7aa64321ae439b9171cc86583987d357602571367aa5756844d6785a45a5ef"
+      },
+      {
+        "name": "index-db_hJWpU.css",
+        "sha256": "3037ac8c58ff87db8406e6da85e6bd72c60e2286950f9ed6d451d2a17505befd"
+      },
+      {
+        "name": "starfield-layer-DFkWWlpF.js",
+        "sha256": "71db9edac00c7891cce466aa3fb6c156c59d82bffea9d101c39a8b439f4f7fd2"
+      },
+      {
+        "name": "celestial-layer-DFda-0qf.js",
+        "sha256": "d05f101f2793a657c62347a3bd5c5c6cb5c14505933c31c8781a1db7163266ac"
+      }
+    ]
+  },
+  "browser": {
+    "records": 7,
+    "samples": 60,
+    "deepMissing": 0,
+    "starMissing": 0,
+    "distinctX": 3,
+    "consoleErrors": 0
+  },
+  "modelProbes": [
+    {
+      "model": "best_match",
+      "hours": 168,
+      "validVisibility": 168,
+      "responseSha256": "cecc677e5b0e7edbd2e569f7f69b26725aede7da2ffd1eb70349cbdfe542419c"
+    },
+    {
+      "model": "gfs_seamless",
+      "hours": 168,
+      "validVisibility": 168,
+      "responseSha256": "94be1ede004044b2890e0737feca083f3ec01d652a657f51426b5408cbc22a98"
+    },
+    {
+      "model": "icon_seamless",
+      "hours": 168,
+      "validVisibility": 0,
+      "responseSha256": "240ea5655b3869330c7f4cd1ac6a8b61a18dba21d66ea0734c06e8773da9b4fa"
+    },
+    {
+      "model": "ecmwf_ifs025",
+      "hours": 168,
+      "validVisibility": 0,
+      "responseSha256": "fd5566e8f93ac71d0396acf7e469eaad1014e5a6c349104e60de2c759ca769cb"
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "01-night-labels.jpg",
+      "sha256": "da17fb7c406ca5bc05f5a1ade8574db6907922abe2c8bb659a9cce8969d170a5"
+    },
+    {
+      "name": "02-after-drag.jpg",
+      "sha256": "f27260bae2286310e8eb482523c8ca8cf1c4affc8dc7bce7535d724cdc5ba6b5"
+    },
+    {
+      "name": "03-weather-auto.jpg",
+      "sha256": "620befe495719980f2f13ab1c447b31d851e97ceada4b0e35fc942534084c4b6"
+    },
+    {
+      "name": "04-weather-gfs.jpg",
+      "sha256": "eee07ba4e23f65c47797fb67bde3a16d5ba1f8150d558358e61bc054341084b5"
+    },
+    {
+      "name": "05-weather-icon.jpg",
+      "sha256": "8c383941c6a5db9aebb3b1227eb400af7c911872e02e1ae1c1d872b54b77f413"
+    },
+    {
+      "name": "06-weather-ifs.jpg",
+      "sha256": "2db9eea94f8b568e439034c89327082e3cb13747658abecb0b802b2b1ee0578c"
+    },
+    {
+      "name": "07-mobile-environment.jpg",
+      "sha256": "8c117426e3d39acc1cfaa132e62a3b5026ac8e560e8052243dca69f8025b6b2b"
+    }
+  ]
+}

@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import type { ShootingPlan } from "../domain/plan";
 import { celestialBodies, moonPhaseLabel } from "../domain/ephemeris";
 import { bodyPolygons } from "../domain/celestial-projection";
-import { celestialPlanKey, occlusionLabels } from "../domain/visibility";
+import { celestialPlanKey, skyLabelKey, occlusionLabels } from "../domain/visibility";
 import type { VisibilitySnapshot } from "../domain/visibility";
 import type { WeatherSample } from "../domain/weather";
 import { cloudOpacity, weatherClouds } from "../domain/weather-appearance";
@@ -16,6 +16,8 @@ export function useCelestialScene(plan: ShootingPlan, visibility: VisibilitySnap
   const views = result.bodies ? [result.bodies.sun, result.bodies.moon].map((body) => ({
     body, ...bodyPolygons({ ...plan, ...renderView }, body), enabled: plan.layers[body.id],
     occlusion: visibility.planKey === celestialPlanKey(plan) ? visibility.states[body.id] : "waiting" as const,
+    labelOcclusion: visibility.labelKey === skyLabelKey(plan) && !visibility.message
+      ? visibility.labelStates?.[body.id] : visibility.planKey === celestialPlanKey(plan) ? visibility.states[body.id] : "waiting",
   })) : [];
   return { ...result, views };
 }
@@ -24,7 +26,7 @@ const name = (id: "sun" | "moon") => id === "sun" ? "太阳" : "月亮";
 
 export function CelestialDiscs({ scene, weather, plan }: { scene: CelestialScene; weather?: WeatherSample; plan?: ShootingPlan }) {
   const clouds = weather && plan ? weatherClouds(weather, plan) : undefined;
-  const visible = scene.views.filter((view) => view.enabled && view.state === "画面内" && (view.occlusion === "clear" || view.occlusion === "partial"));
+  const visible = scene.views.filter((view) => view.enabled && view.state === "画面内" && (view.labelOcclusion === "clear" || view.labelOcclusion === "partial"));
   const outside = scene.views.filter(view=>view.enabled&&view.indicator);
   // At conjunction keep both names readable instead of drawing overlapping pills.
   const close = outside.length===2 && Math.hypot(outside[0].indicator!.x-outside[1].indicator!.x,

@@ -223,7 +223,7 @@ function installGlobal(name, value) {
 }
 
 before(async () => {
-  installGlobal("__testWeatherLoader", (point, signal) => { weatherRequests.push({ point, signal }); return weatherLoader(point, signal); });
+  installGlobal("__testWeatherLoader", (point, signal, now, model) => { weatherRequests.push({ point, signal, model }); return weatherLoader(point, signal, now, model); });
   installGlobal("__testCelestialLayer", TestCelestialLayer);
   installGlobal("__testStarfieldLayer", TestStarfieldLayer);
   dom = new JSDOM("<!doctype html><html><body></body></html>", {
@@ -1534,21 +1534,21 @@ test('画幅切换先同步画布尺寸再应用相机，无需等待 ResizeObse
 });
 
 
-test('光污染开关紧邻构图线，按当地数据更新天空和星点，镜头和方向复用数据', async t => {
+test('光污染位于左栏环境组，按当地数据更新天空和星点，镜头和方向复用数据', async t => {
   await workspace(t); const map = await readyTerrain();
   await setShootingDateTime('2026-11-09T01:00');
   await settle(() => document.querySelector('[aria-label="显示星空"]').click());
-  const button = document.querySelector('button[aria-label="当地光污染"]');
-  assert.deepEqual([...document.querySelectorAll('.preview-tools button')].map(e => e.getAttribute('aria-label')), ['显示构图线', '当地光污染', '天气效果']);
-  assert.equal(button.title, '当地光污染');
-  assert.equal(button.getAttribute('aria-pressed'), 'false'); assert.equal(pollutionRequests.length, 0);
+  const button = document.querySelector('input[aria-label="当地光污染"]');
+  assert.deepEqual([...document.querySelectorAll('.preview-tools button')].map(e => e.getAttribute('aria-label')), ['显示构图线']);
+  assert.ok(document.querySelector('.environment-settings').contains(button));
+  assert.equal(button.checked, false); assert.equal(pollutionRequests.length, 0);
   const sky = structuredClone(map.environments.at(-1)), requests = groundRequests.length;
   const layer = map.customLayers.find(l => l instanceof TestStarfieldLayer);
   const pose = map.cameraSolutions.length;
   const before = [...document.querySelectorAll('[data-sky-status]')].map(e => Number(e.dataset.skyOpacity));
   await settle(() => button.click());
   await waitUntil(() => layer.frame.artificialMcd === 6.5);
-  assert.equal(button.getAttribute('aria-pressed'), 'true');
+  assert.equal(button.checked, true);
   assert.equal(document.querySelector('.pollution-status'), null);
   assert.match(document.querySelector('.pollution-readout').textContent, /2015.*6.500/);
   assert.equal(layer.frame.artificialMcd, 6.5); assert.notDeepEqual(map.environments.at(-1), sky);
@@ -1568,7 +1568,7 @@ test('光污染取消过期位置与关闭请求，无覆盖、失败和重试�
   await workspace(t); await readyTerrain();
   const pending = [];
   pollutionResponse = (point, signal) => new Promise((resolve,reject) => pending.push({ point, signal, resolve, reject }));
-  const toggle = document.querySelector('button[aria-label="当地光污染"]');
+  const toggle = document.querySelector('input[aria-label="当地光污染"]');
   await settle(() => toggle.click()); await waitUntil(() => pending.length === 1);
   assert.equal(document.querySelector('.pollution-status'), null);
   assert.match(document.querySelector('.pollution-readout').textContent, /正在读取/);
@@ -1590,7 +1590,7 @@ test('光污染取消过期位置与关闭请求，无覆盖、失败和重试�
   assert.match(document.querySelector('.pollution-readout').textContent, /2015.*1\.000/);
   await settle(() => setControl(input('纬度'), 80));
   assert.match(document.querySelector('.pollution-unavailable').textContent, /超出.*覆盖/);
-  assert.equal(pending.length, 4); assert.equal(toggle.getAttribute('aria-pressed'), 'true');
+  assert.equal(pending.length, 4); assert.equal(toggle.checked, true);
   await settle(() => toggle.click()); assert.equal(document.querySelector('.pollution-status'), null);
 });
 
@@ -1614,7 +1614,7 @@ test('天气按需开启，数据与环境联动，时间和镜头复用机位�
   const button = document.querySelector('[aria-label="天气效果"]');
   const layer = map.customLayers.find(l => l instanceof TestCelestialLayer);
   const before = structuredClone(map.environments.at(-1)), ground = groundRequests.length;
-  assert.equal(button.getAttribute('aria-pressed'), 'false'); assert.equal(weatherRequests.length, 0);
+  assert.equal(button.checked, false); assert.equal(weatherRequests.length, 0);
   await settle(() => button.click());
   await waitUntil(() => document.querySelector('[data-weather-phase="ready"]'));
   assert.equal(layer.frame.weather.low, 1); assert.notDeepEqual(map.environments.at(-1), before);
@@ -1676,4 +1676,27 @@ test('天气返回页面核对缓存年龄，过期时暂停效果并自动刷�
   await settle(() => resolve(parseWeather(weatherResponse(), clock)));
   assert.ok(document.querySelector('[data-weather-phase="ready"]'));
   assert.equal(weatherRequests.length, 2);
+});
+
+test('环境分组保留关闭时的模型选择，切换模型取消旧数据且不改机位或重载 DEM', async t => {
+  await workspace(t); const map = await readyTerrain(), ground = groundRequests.length;
+  const select = document.querySelector('[aria-label="天气预测模型"]');
+  assert.ok(document.querySelector('.environment-settings').contains(select));
+  await settle(() => setControl(select, 'gfs_seamless'));
+  assert.equal(weatherRequests.length, 0);
+  const pending = [];
+  weatherLoader = (point, signal, now, model) => new Promise(resolve => pending.push({ signal, model, resolve }));
+  await settle(() => document.querySelector('[aria-label="天气效果"]').click());
+  await waitUntil(() => pending.length === 1);
+  assert.equal(pending[0].model, 'gfs_seamless');
+  await settle(() => setControl(select, 'ecmwf_ifs025'));
+  await waitUntil(() => pending.length === 2);
+  assert.ok(pending[0].signal.aborted);
+  await settle(() => pending[0].resolve(parseWeather(weatherResponse(), Date.now())));
+  assert.ok(document.querySelector('[data-weather-phase="loading"]'));
+  const raw = weatherResponse(); raw.hourly.visibility.fill(null);
+  await settle(() => pending[1].resolve(parseWeather(raw, Date.now())));
+  assert.ok(document.querySelector('[data-weather-phase="ready"]'));
+  assert.match(document.querySelector('.weather-readout').textContent, /ECMWF IFS.*模型未提供/);
+  assert.equal(terrainMap(), map); assert.equal(groundRequests.length, ground);
 });

@@ -343,6 +343,12 @@ p {
   display: grid;
   gap: 3px;
 }
+.sidebar { overflow-y: auto; }
+.sidebar-group { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 16px; }
+.sidebar-group summary { cursor: pointer; font-size: 14px; font-weight: 550; color: #63765c; margin-bottom: 8px; }
+.sidebar-group summary svg { vertical-align: middle; margin: 0 8px 2px 3px; }
+.environment-model { display: grid; gap: 6px; padding: 4px 7px 10px; font-size: 10px; color: #7b8874; }
+.environment-model select { width: 100%; min-width: 0; padding: 7px 4px; font-size: 10px; }
 .layer-row {
   display: flex;
   align-items: center;

@@ -116,3 +116,19 @@ test("阴天减弱坡面直射，能见度影响雾混合，天气关闭精确�
   assert.ok(cloudy.sky["horizon-fog-blend"] > clear.sky["horizon-fog-blend"]);
   assert.deepEqual(environmentForSky(sun, moon, 0, undefined), clear);
 });
+
+test("预报模型隔离缓存，缺失能见度单独表达且仍应用有效云雨", async t => {
+  const urls = [], point = { latitude: 31, longitude: 121 }, signal = new AbortController().signal;
+  t.mock.method(globalThis, "fetch", async url => { urls.push(new URL(url)); return Response.json(weatherResponse()); });
+  const auto = await loadWeather(point, signal, start);
+  const gfs = await loadWeather(point, signal, start, "gfs_seamless");
+  assert.notEqual(auto, gfs);
+  assert.equal(await loadWeather(point, signal, start, "gfs_seamless"), gfs);
+  assert.deepEqual(urls.map(url => url.searchParams.get("models")), ["best_match", "gfs_seamless"]);
+  await assert.rejects(loadWeather(point, signal, start, "unknown"), /未知/);
+  const response = weatherResponse();
+  response.hourly.visibility.fill(null); response.hourly_units.visibility = "undefined";
+  const result = sampleWeather(parseWeather(response, start), at(0.5));
+  assert.equal(result.visibility, null); assert.equal(result.low, 0.4);
+  assert.equal(environmentForSky({ elevation: 30, azimuth: 90 }, { elevation: -10, illuminatedFraction: 0 }, 0, result).sky["horizon-fog-blend"], 0.2);
+});

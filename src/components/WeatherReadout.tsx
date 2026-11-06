@@ -1,5 +1,6 @@
 import type { ShootingPlan } from "../domain/plan";
 import type { WeatherFeed } from "./useWeather";
+import { weatherModels } from "../domain/weather";
 
 export function weatherMessage(feed: WeatherFeed) {
   if (feed.phase === "off") return "天气效果已关闭";
@@ -28,9 +29,10 @@ export function WeatherReadout({ feed, plan, update }: {
   return <section className="weather-readout" aria-label="当地天气数据" data-weather-phase={feed.phase}>
     <h3>天气</h3>
     <p role="status">{weatherMessage(feed)}</p>
+    {feed.phase !== "off" && <p>模型 {weatherModels[plan.weatherModel ?? "best_match"]}</p>}
     {sample && <>
       <p>总云量 {(sample.cloud * 100).toFixed(0)}% · 低 {(sample.low * 100).toFixed(0)}% / 中 {(sample.mid * 100).toFixed(0)}% / 高 {(sample.high * 100).toFixed(0)}%</p>
-      <p>降水 {sample.precipitation.toFixed(1)} mm/小时 · 概率 {(sample.probability * 100).toFixed(0)}% · 能见度 {(sample.visibility / 1000).toFixed(1)} km</p>
+      <p>降水 {sample.precipitation.toFixed(1)} mm/小时 · 概率 {(sample.probability * 100).toFixed(0)}% · 能见度 {sample.visibility === null ? "模型未提供" : `${(sample.visibility / 1000).toFixed(1)} km`}</p>
       <p>拍摄 {time(sample.time, plan.timeZone)} · {plan.timeZone}</p>
     </>}
     {forecast && feed.phase !== "off" && <>

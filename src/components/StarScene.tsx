@@ -25,7 +25,7 @@ import {
   constellationScene,
   constellationCount,
 } from "../domain/constellations";
-import { celestialPlanKey, occlusionLabels } from "../domain/visibility";
+import { celestialPlanKey, skyLabelKey, occlusionLabels } from "../domain/visibility";
 import {
   skyAppearance,
   starOpacity,
@@ -33,7 +33,7 @@ import {
 } from "../domain/sky-appearance";
 
 export { emptySkyVisibility };
-export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, artificialMcd?: number, weather?: WeatherSample) {
+export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, artificialMcd?: number, weather?: WeatherSample, renderView?: { azimuth: number; pitch: number }) {
   const result = useMemo(() => {
     if (
       !plan.layers.stars &&
@@ -80,7 +80,9 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, arti
     artificialMcd,
   ]);
   const current = visibility.planKey === celestialPlanKey(plan),
-    view = current && visibility.view ? { ...plan, ...visibility.view } : plan;
+    view = { ...plan, ...((current && visibility.ready ? visibility.view : null) ?? renderView) };
+  const labelStates = visibility.labelKey === skyLabelKey(plan) && !visibility.message
+    ? visibility.labelStates : current && visibility.ready ? visibility.states : undefined;
   const clouds = weather ? weatherClouds(weather, plan) : undefined;
   const points = result.model
     ? [
@@ -114,11 +116,8 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, arti
       ...projected,
       occlusion,
       resource,
-      labelOcclusion: isDeep
-        ? current && visibility.ready
-          ? (visibility.states[`${point.id}:label`] ?? "waiting")
-          : "waiting"
-        : occlusion,
+      labelBodyOcclusion: !isDeep || resource?.phase === "ready" ? labelStates?.[point.id] ?? "waiting" : "waiting",
+      labelOcclusion: labelStates?.[isDeep ? `${point.id}:label` : point.id] ?? "waiting",
       partialFrame: "partialFrame" in projected && projected.partialFrame,
       opacity,
       cloudHidden: baseOpacity >= STAR_LABEL_ALPHA && opacity < STAR_LABEL_ALPHA,
@@ -183,14 +182,14 @@ export function StarLabels({ scene }: { scene: Scene }) {
         )}
       </div>
       {[...scene.targets, ...scene.figures, ...scene.deep].map(
-        ({ point, pixel, state, labelOcclusion, occlusion, opacity }) => {
+        ({ point, pixel, state, labelOcclusion, labelBodyOcclusion, opacity }) => {
           const figure = point.id.startsWith("constellation-"),
             occupied = figure ? placedFigures : placed;
           if (
             !pixel ||
             state !== "画面内" ||
             labelOcclusion !== "clear" ||
-            (occlusion !== "clear" && occlusion !== "partial") ||
+            (labelBodyOcclusion !== "clear" && labelBodyOcclusion !== "partial") ||
             Math.abs(pixel.x) > 1 ||
             Math.abs(pixel.y) > 1 ||
             opacity < STAR_LABEL_ALPHA ||

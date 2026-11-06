@@ -3,7 +3,7 @@ import type { StationScene } from "../domain/stations";
 import type { SkyVisibility } from "../domain/starfield";
 import type { OrbitFeed } from "./useOrbits";
 import { skyPointView } from "../domain/starfield";
-import { celestialPlanKey, occlusionLabels } from "../domain/visibility";
+import { celestialPlanKey, skyLabelKey, occlusionLabels } from "../domain/visibility";
 import { apparentElevation } from "../domain/refraction";
 import { matchingStations } from "../domain/orbit-data";
 import type { WeatherSample } from "../domain/weather";
@@ -28,7 +28,9 @@ export function StationLabels({ plan, scene, visibility, weather }: { plan: Shoo
   if (!plan.layers.stations) return null;
   return scene.points.map((point) => {
     const view = stationView(plan, scene, visibility, point);
-    if (view.state !== "画面内" || view.occlusion !== "clear" || !view.pixel) return null;
+    const labelOcclusion = visibility.labelKey === skyLabelKey(plan) && visibility.orbitKey === scene.key && !visibility.message
+      ? visibility.labelStates?.[point.id] : view.occlusion;
+    if (view.state !== "画面内" || labelOcclusion !== "clear" || !view.pixel) return null;
     const opacity = 1 - cloudOpacity(refractDirection(point.direction, plan.refraction), weather ? weatherClouds(weather, plan) : undefined);
     if (opacity < 0.05) return null;
     return (

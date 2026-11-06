@@ -1,6 +1,13 @@
 import type { MapPoint } from "./map.ts";
 
 export const WEATHER_TTL = 30 * 60_000;
+export const weatherModels = {
+  best_match: "自动匹配",
+  gfs_seamless: "NOAA GFS",
+  icon_seamless: "DWD ICON",
+  ecmwf_ifs025: "ECMWF IFS 0.25°",
+} as const;
+export type WeatherModel = keyof typeof weatherModels;
 export const weatherVariables = {
   cloud: "cloud_cover",
   low: "cloud_cover_low",
@@ -24,7 +31,7 @@ export interface WeatherForecast {
   fetchedAt: number;
   hours: WeatherHour[];
 }
-export type WeatherSample = WeatherValues & { time: number };
+export type WeatherSample = Omit<WeatherValues, "visibility"> & { time: number; visibility: number | null };
 const fractionFields = new Set<WeatherField>(["cloud", "low", "mid", "high", "probability"]);
 const continuousFields: WeatherField[] = ["cloud", "low", "mid", "high", "visibility", "windSpeed"];
 const intervalFields: WeatherField[] = ["precipitation", "probability", "rain", "showers", "snow"];
@@ -52,7 +59,9 @@ export function parseWeather(value: unknown, fetchedAt: number): WeatherForecast
     const expected = fractionFields.has(field as WeatherField) ? "%"
       : field === "windSpeed" ? "m/s" : field === "windDirection" ? "°"
         : field === "visibility" ? "m" : field === "snow" ? "cm" : "mm";
-    if (!Array.isArray(values) || values.length !== times.length || data.hourly_units?.[variable] !== expected)
+    const unavailableVisibility = field === "visibility" && Array.isArray(values) && values.every(value => value === null);
+    if (!Array.isArray(values) || values.length !== times.length ||
+        (!unavailableVisibility && data.hourly_units?.[variable] !== expected))
       throw new Error("天气数据字段或单位不完整");
   }
   const hours = times.map((time: unknown, index: number) => {
@@ -79,8 +88,10 @@ export function sampleWeather(forecast: WeatherForecast, instant: string): Weath
   const a = hours[Math.floor(position)], b = hours[Math.ceil(position)], weight = position % 1;
   const result = { time } as WeatherSample;
   for (const field of continuousFields) {
-    if (a[field] === null || b[field] === null) return null;
-    result[field] = a[field]! + (b[field]! - a[field]!) * weight;
+    if (a[field] === null || b[field] === null) {
+      if (field !== "visibility") return null;
+      result.visibility = null;
+    } else result[field] = a[field]! + (b[field]! - a[field]!) * weight;
   }
   for (const field of intervalFields) {
     if (b[field] === null) return null;

@@ -24,7 +24,7 @@ import { DeepSkyTextures } from "./deep-sky-textures.ts";
 import { deepSkyScene, deepSkyView, deepSkyRedEnhancementColor, deepSkyImageEntry } from "../domain/deep-sky.ts";
 import type { DeepSkyTarget } from "../domain/deep-sky.ts";
 import type { StationScene } from "../domain/stations.ts";
-import { classifyOcclusion } from "../domain/visibility.ts";
+import { classifyOcclusion, skyLabelKey } from "../domain/visibility.ts";
 
 interface Frame {
   key: string;
@@ -165,6 +165,8 @@ export class StarfieldLayer implements CustomLayerInterface {
   private deepObjects: DeepSkyTarget[] = [];
   private haGain = 0;
   private snapshot?: SkyVisibility;
+  private labelKey = "";
+  private labelStates: SkyVisibility["states"] = {};
   private pending: Pending[] = [];
   private pendingKey = "";
   private pendingAt = 0;
@@ -183,9 +185,16 @@ export class StarfieldLayer implements CustomLayerInterface {
     this.deep = new DeepSkyTextures(() => this.textureChanged(), loadDeep);
   }
   private publish(snapshot: SkyVisibility) {
+    const labelKey = this.frame ? skyLabelKey(this.frame.plan) : "";
+    const contextKey = `${labelKey}/${this.frame?.stations?.key ?? ""}`;
+    if (this.labelKey !== contextKey || snapshot.message) this.labelStates = {};
+    this.labelKey = contextKey;
+    if (snapshot.ready) this.labelStates = { ...this.labelStates, ...snapshot.states };
     this.snapshot = snapshot;
     this.report({
       ...snapshot,
+      labelKey,
+      labelStates: this.labelStates,
       orbitKey: this.frame?.stations?.key,
       milkyWay: this.frame?.plan.layers.milkyWay
         ? this.milky.state
@@ -708,6 +717,8 @@ export class StarfieldLayer implements CustomLayerInterface {
     if (this.pending.length) this.map?.triggerRepaint();
   }
   onRemove() {
+    this.labelStates = {};
+    this.labelKey = "";
     this.milky.dispose(this.gl);
     this.deep.dispose(this.gl);
     this.clearQueries();

@@ -58,7 +58,7 @@ export function environmentForSky(sun: Pick<Bodies["sun"], "elevation" | "azimut
       "horizon-color": skyColor(a.horizon, b.horizon, [30,35,35], [60,48,30]),
       "fog-color": skyColor(a.fog, b.fog, [30,32,32], [50,43,32]),
       "sky-horizon-blend": 0.65,
-      "horizon-fog-blend": weather ? 0.2 + 0.45 * (1 - clamp(weather.visibility / 30000, 0, 1)) : 0.2,
+      "horizon-fog-blend": weather?.visibility != null ? 0.2 + 0.45 * (1 - clamp(weather.visibility / 30000, 0, 1)) : 0.2,
       "fog-ground-blend": 0.06,
     } satisfies SkySpecification,
     ground: surface(terrainColors.ground),
