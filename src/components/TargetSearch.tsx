@@ -20,6 +20,7 @@ export function TargetSearchResults({
   skyVisibility,
   visibility,
   update,
+  additionalCount = 0,
 }: {
   plan: ShootingPlan;
   view: ShootingPlan;
@@ -27,6 +28,7 @@ export function TargetSearchResults({
   skyVisibility: SkyVisibility;
   visibility: VisibilitySnapshot;
   update: (patch: Partial<ShootingPlan>) => void;
+  additionalCount?: number;
 }) {
   const result = useMemo(() => {
     try {
@@ -40,11 +42,11 @@ export function TargetSearchResults({
     <section className="target-search-results" aria-label="目标搜索结果">
       <p className="search-result-count" role="status">
         {result.error ||
-          (!result.targets.length
+          (!(result.targets.length + additionalCount)
             ? "没有找到匹配目标"
-            : `找到 ${result.targets.length} 个目标`)}
+            : `找到 ${result.targets.length + additionalCount} 个目标`)}
       </p>
-      {!result.error && !result.targets.length && (
+      {!result.error && !result.targets.length && !additionalCount && (
         <p className="info-empty">试试“织女星”“Vega”或“Ori”。</p>
       )}
       {result.targets.map((target) => {

@@ -165,6 +165,31 @@ test('星空与银河共享天空深度、恢复宿主状态，异步查询区�
     layer.onRemove();assert.equal(resources.size,0);
   }
 });
+test('空间站独立显示、轨迹共享地形深度，轨道更新丢弃旧查询并释放资源', async () => {
+  const { gl, queries, resources } = fakeGL(), reports = [];
+  const layer = await prepareStars(gl, reports);
+  const point = { id: 'station-25544', name: 'ISS', azimuth: 0, elevation: 30, direction: direction(0, 30), magnitude: 0, color: [0.7, 0.9, 1] };
+  const plan = { ...initialPlan, azimuth: 0, pitch: 30, layers: { sun: false, moon: false, stars: false, milkyWay: false, constellations: false, deepSky: false, stations: true } };
+  const stations = { key: 'orbit-a', points: [point, { ...point, id: 'station-48274', elevation: -0.2, direction: direction(0, -0.2) }], trail: [{ ...point, id: 'station-25544-trail-10', name: undefined }] };
+  layer.setScene({ key: 'station-a', planKey: 'station-plan', ready: true, plan, stations });
+  layer.camera = { azimuth: 0, pitch: 30 };
+  layer.matrix = photoCameraMatrix(plan);
+  gl.results = [true]; layer.render(gl);
+  assert.equal(queries.size, 1);
+  const data = gl.uploads.at(-1);
+  assert.equal(data.length, 18);
+  close(data[8], 0.95); close(data[17], 0.45);
+  assert.ok(gl.draws.at(-1).depth === gl.LEQUAL);
+  layer.setScene({ key: 'station-b', planKey: 'station-plan', ready: true, plan, stations: { ...stations, key: 'orbit-b' } });
+  assert.equal(queries.size, 0);
+  assert.equal(reports.at(-1).orbitKey, 'orbit-b');
+  assert.equal(reports.at(-1).ready, false);
+  gl.results = [false]; layer.render(gl); gl.complete(); layer.render(gl);
+  assert.equal(reports.at(-1).states['station-25544'], 'blocked');
+  assert.equal(reports.at(-1).states['station-48274'], undefined);
+  layer.onRemove(); assert.equal(queries.size, 0); assert.equal(resources.size, 0);
+});
+
 test('星空查询在计划/地形失效后废弃，失败明确反馈并释放资源',async t=>{
   const {gl,queries,resources}=fakeGL(),reports=[],layer=await prepareStars(gl,reports);
   gl.results=[true];layer.render(gl);assert.equal(queries.size,1);

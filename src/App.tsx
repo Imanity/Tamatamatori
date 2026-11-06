@@ -22,9 +22,6 @@ const panelInfo: Record<
   parameters: { title: "拍摄参数", icon: "settings", tag: "实时联动" },
 };
 const slotNames = ["主栏", "右上", "右下"];
-const layers: { name: string; icon: IconName; hint: string }[] = [
-  { name: "空间站", icon: "satellite", hint: "空间站位置与轨迹" },
-];
 const skyLayers = [
   { id: "sun", name: "太阳", icon: "sun" },
   { id: "moon", name: "月亮", icon: "moon" },
@@ -32,6 +29,7 @@ const skyLayers = [
   { id: "milkyWay", name: "银河", icon: "orbit" },
   { id: "constellations", name: "星座名称与连线", icon: "compass" },
   { id: "deepSky", name: "深空天体", icon: "orbit" },
+  { id: "stations", name: "空间站", icon: "satellite" },
 ] as const;
 
 function Divider({
@@ -387,13 +385,6 @@ export default function App() {
                     </div>
                   </div>
                 )}
-              </div>
-            ))}
-            {layers.map((layer) => (
-              <div className="layer-row" key={layer.name} title={layer.hint}>
-                <Icon name={layer.icon} size={19} />
-                <span>{layer.name}</span>
-                <span className="planned-badge">规划中</span>
               </div>
             ))}
           </div>

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import {
@@ -26,6 +26,10 @@ import {
   useStarScene,
 } from "./StarScene";
 import { TargetSearchResults } from "./TargetSearch";
+import { useOrbits } from "./useOrbits";
+import { StationLabels, StationReadout } from "./StationScene";
+import { matchingStations } from "../domain/orbit-data";
+import { stationScene } from "../domain/stations";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -45,6 +49,11 @@ export function PreviewPanel({
   const [visibility, setVisibility] = useState(emptyVisibility);
   const [skyVisibility, setSkyVisibility] = useState(emptySkyVisibility);
   const [camera, setCamera] = useState<RenderedCamera | null>(null);
+  const stationMatches = matchingStations(infoQuery);
+  const orbits = useOrbits(!!plan.layers.stations || stationMatches.length > 0);
+  const observerAltitude = camera?.planKey === celestialPlanKey(plan) ? Math.round(camera.altitude * 1000) / 1000 : undefined;
+  const stations = useMemo(() => stationScene(plan, orbits.snapshot, observerAltitude),
+    [plan.latitude, plan.longitude, plan.instant, plan.cameraHeight, orbits.snapshot, observerAltitude]);
   const drag = useRef<{
     pointerId: number;
     x: number;
@@ -175,12 +184,14 @@ export function PreviewPanel({
         >
           <TerrainScene
             plan={plan}
+            stations={plan.layers.stations ? stations : undefined}
             onVisibilityChange={setVisibility}
             onCameraChange={setCamera}
             onSkyChange={setSkyVisibility}
           />
           <CelestialDiscs scene={celestialScene} />
           <StarLabels scene={starScene} />
+          <StationLabels plan={plan} scene={stations} visibility={skyVisibility} />
           <svg
             viewBox="0 0 600 400"
             preserveAspectRatio="none"
@@ -234,11 +245,13 @@ export function PreviewPanel({
       </div>
       {infoHost &&
         createPortal(
-          infoQuery.trim() ? (
+          <>
+          {infoQuery.trim() ? (
             <TargetSearchResults
               plan={plan}
               view={view}
               query={infoQuery}
+              additionalCount={stationMatches.length}
               skyVisibility={skyVisibility}
               visibility={visibility}
               update={update}
@@ -312,7 +325,9 @@ export function PreviewPanel({
                 </p>
               </section>
             </>
-          ),
+          )}
+          <StationReadout plan={plan} scene={stations} visibility={skyVisibility} feed={orbits} query={infoQuery} update={update} />
+          </>,
           infoHost,
         )}
     </div>

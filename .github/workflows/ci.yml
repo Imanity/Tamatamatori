@@ -5,13 +5,20 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      resume_orbits:
+        description: 排查上游异常后恢复轨道检查（仍遵守两小时冷却）
+        type: boolean
+        default: false
+  schedule:
+    - cron: '23 */3 * * *'
 
 permissions:
   contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   test-and-build:
@@ -38,6 +45,25 @@ jobs:
 
       - name: 安装锁定的依赖
         run: npm ci
+
+      - name: 恢复上次轨道检查与有效快照
+        if: matrix.node-version == '24' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.PAGES_ENABLED == 'true'
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: .cache/station-feed.json
+          key: stations-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: stations-v1-
+
+      - name: 检查空间站轨道（上游最短间隔两小时）
+        if: matrix.node-version == '24' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.PAGES_ENABLED == 'true'
+        run: node --experimental-strip-types scripts/update-stations.mjs ${{ inputs.resume_orbits && '--resume' || '' }}
+
+      - name: 保存轨道检查记录（含失败与中断）
+        if: always() && matrix.node-version == '24' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.PAGES_ENABLED == 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: .cache/station-feed.json
+          key: stations-v1-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: 运行全部测试
         run: npm test

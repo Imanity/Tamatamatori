@@ -1,5 +1,11 @@
 # 第三方许可
 
+## 空间站轨道与 satellite.js
+
+ISS（25544）与天宫天和核心舱（48274）的 GP JSON 由 CelesTrak 提供。保留原始轨道字段、UTC 历元及独立的检查状态，空间站白名单筛选和静态镜像均在本项目完成。遵守两小时最短请求间隔和错误暂停要求，署名与快照下载入口在 About。[数据说明](https://celestrak.org/NORAD/documentation/gp-data-formats.php)，[使用政策](https://celestrak.org/usage-policy.php)
+
+传播使用 satellite.js 7.1.0，MIT 许可，Copyright (C) 2013 Shashwat Kandadai, UCSC Jack Baskin School of Engineering。完整许可随应用分发。空间站标记和短轨迹由轨道计算生成，日照参考不构成观测可见性保证。[上游项目](https://github.com/shashwatak/satellite-js)
+
 ## 巴纳德环与蛇夫座区域
 
 巴纳德环采用 Sun Shuwei 的 `barnard_loop-1..4.png`。固定上游 CREDITS 4.29 声明这些影像为公有领域，保留原作者署名及声明。Sh2-276 的中心和角径事实引用同版本合并目录的 Sharpless 条目，源文件哈希与记录标识存于目标数据。[固定影像与声明](https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md)

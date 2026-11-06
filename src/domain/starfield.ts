@@ -43,6 +43,7 @@ export interface SkyVisibility {
   view: { azimuth: number; pitch: number } | null;
   states: Record<string, Occlusion>;
   message?: string;
+  orbitKey?: string;
   milkyWay?: { phase: "off" | "loading" | "ready" | "error"; message?: string };
   deepSky?: { phase: "off" | "loading" | "ready" | "error"; message?: string };
   deepSkyTargets?: Record<string, { phase: "off" | "loading" | "ready" | "error"; message?: string }>;

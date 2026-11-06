@@ -22,6 +22,7 @@ import type { SkyVisibility } from "../domain/starfield";
 import type { RenderedCamera } from "../preview/rendered-camera";
 import { applyTerrainDetail } from "../preview/terrain-detail";
 import type { TerrainPerspective } from "../preview/terrain-perspective";
+import type { StationScene } from "../domain/stations";
 
 const calibrationEnabled = import.meta.env.DEV && new URLSearchParams(window.location.search).get("calibration") === "fuji";
 
@@ -40,7 +41,7 @@ interface SceneState {
   message: string;
 }
 
-export function TerrainScene({ plan, onVisibilityChange, onCameraChange, onSkyChange }: { plan: ShootingPlan; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void; onCameraChange?: (camera: RenderedCamera | null) => void; onSkyChange?: (snapshot:SkyVisibility)=>void }) {
+export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChange, onSkyChange }: { plan: ShootingPlan; stations?: StationScene; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void; onCameraChange?: (camera: RenderedCamera | null) => void; onSkyChange?: (snapshot:SkyVisibility)=>void }) {
   const container = useRef<HTMLDivElement>(null);
   const synchronize = useRef<(() => void) | null>(null);
   const key = `${plan.longitude}/${plan.latitude}`;
@@ -58,12 +59,12 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange, onSkyCh
     ground: number;
     altitude: number;
   } | null>(null);
-  const latest = useRef({ plan, ground, key, onVisibilityChange, onCameraChange, onSkyChange });
+  const latest = useRef({ plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange });
 
   useEffect(() => {
-    latest.current = { plan, ground, key, onVisibilityChange, onCameraChange, onSkyChange };
+    latest.current = { plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange };
     synchronize.current?.();
-  }, [plan, ground, key, onVisibilityChange, onCameraChange, onSkyChange]);
+  }, [plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange]);
 
   useEffect(() => {
     // Unavailable ground has no render/query callback; keep its status explicit
@@ -285,7 +286,7 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange, onSkyCh
         const planKey = celestialPlanKey(current.plan);
         const ready = map.areTilesLoaded() && map.isSourceLoaded(TERRAIN_SOURCE) && map.isSourceLoaded(WATER_SOURCE);
         const renderView = { azimuth: (map.getBearing() % 360 + 360) % 360, pitch: map.getPitch() - 90 };
-        const frameKey = `${poseKey}/${planKey}/${sourceRevision}/${ready}/${renderView.azimuth}/${renderView.pitch}`;
+        const frameKey = `${poseKey}/${planKey}/${sourceRevision}/${ready}/${renderView.azimuth}/${renderView.pitch}/${current.stations?.key ?? ""}`;
         if (celestialLayer && frameKey !== lastCelestialFrame) {
           lastCelestialFrame = frameKey;
           const bodies = Object.values(celestialBodies(current.plan))
@@ -293,7 +294,7 @@ export function TerrainScene({ plan, onVisibilityChange, onCameraChange, onSkyCh
             .map((body) => ({ id: body.id, ...bodyPolygons({ ...current.plan, ...renderView }, body) }))
             .filter((body) => body.state === "画面内");
           celestialLayer.setScene({ key: frameKey, planKey, ready, bodies });
-          starfield?.setScene({key:frameKey,planKey,ready,plan:current.plan});
+          starfield?.setScene({key:frameKey,planKey,ready,plan:current.plan,stations:current.stations});
         }
         markReady();
       } catch {

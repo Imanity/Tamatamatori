@@ -1,0 +1,687 @@
+{
+  "reference": "python-sgp4 2.27 C++ accelerated=True; ERFA 2.0.1.5 GMST82 and WGS84",
+  "conventions": "TEME to PEF using GMST82 with UT1=UTC; polar motion omitted; full input epoch precision",
+  "sourceSha256": "ef6845cb855ac98678b15ffb340804f2c55ca0419cc7f8c831c8081e4993ceee",
+  "elements": [
+    {
+      "OBJECT_NAME": "ISS (ZARYA)",
+      "OBJECT_ID": "1998-067A",
+      "EPOCH": "2026-11-05T20:28:36.809184",
+      "MEAN_MOTION": 15.4919453,
+      "ECCENTRICITY": 0.00071954,
+      "INCLINATION": 51.6327,
+      "RA_OF_ASC_NODE": 319.056,
+      "ARG_OF_PERICENTER": 352.5747,
+      "MEAN_ANOMALY": 7.5134,
+      "EPHEMERIS_TYPE": 0,
+      "CLASSIFICATION_TYPE": "U",
+      "NORAD_CAT_ID": 25544,
+      "ELEMENT_SET_NO": 999,
+      "REV_AT_EPOCH": 59371,
+      "BSTAR": 0.0001274916,
+      "MEAN_MOTION_DOT": 6.629e-05,
+      "MEAN_MOTION_DDOT": 0
+    },
+    {
+      "OBJECT_NAME": "CSS (TIANHE)",
+      "OBJECT_ID": "2021-035A",
+      "EPOCH": "2026-11-05T22:20:18.972096",
+      "MEAN_MOTION": 15.61437978,
+      "ECCENTRICITY": 0.00045347,
+      "INCLINATION": 41.4683,
+      "RA_OF_ASC_NODE": 180.7545,
+      "ARG_OF_PERICENTER": 265.1608,
+      "MEAN_ANOMALY": 94.8714,
+      "EPHEMERIS_TYPE": 0,
+      "CLASSIFICATION_TYPE": "U",
+      "NORAD_CAT_ID": 48274,
+      "ELEMENT_SET_NO": 999,
+      "REV_AT_EPOCH": 31530,
+      "BSTAR": 0.00021609642,
+      "MEAN_MOTION_DOT": 0.00018706,
+      "MEAN_MOTION_DDOT": 0
+    }
+  ],
+  "rows": [
+    {
+      "noradId": 25544,
+      "instant": "2026-11-05T00:00:00Z",
+      "observer": {
+        "latitude": 35.4172,
+        "longitude": 138.8729,
+        "altitude": 982
+      },
+      "direction": [
+        0.37422911856294183,
+        -0.5232789184358185,
+        -0.7655924113653712
+      ],
+      "rangeKm": 10284.047344810087,
+      "subpoint": {
+        "latitude": -51.00795718276095,
+        "longitude": -157.483016571136,
+        "heightKm": 434.99092548610804
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-05T00:00:00Z",
+      "observer": {
+        "latitude": -33.45,
+        "longitude": -70.67,
+        "altitude": 800
+      },
+      "direction": [
+        -0.6226018404481384,
+        -0.6223956682761974,
+        -0.47433171977173993
+      ],
+      "rangeKm": 6887.871952673773,
+      "subpoint": {
+        "latitude": -51.00795718276095,
+        "longitude": -157.483016571136,
+        "heightKm": 434.99092548610804
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-05T00:00:00Z",
+      "observer": {
+        "latitude": 89.9,
+        "longitude": 179.99,
+        "altitude": 1.6
+      },
+      "direction": [
+        0.13277546359635015,
+        -0.32085778458492353,
+        -0.9377744709353253
+      ],
+      "rangeKm": 12393.185286065385,
+      "subpoint": {
+        "latitude": -51.00795718276095,
+        "longitude": -157.483016571136,
+        "heightKm": 434.99092548610804
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-05T00:00:00Z",
+      "observer": {
+        "latitude": 0,
+        "longitude": -179.99,
+        "altitude": -20
+      },
+      "direction": [
+        0.27285521005116653,
+        -0.8749602205603811,
+        -0.3999933084251073
+      ],
+      "rangeKm": 6025.635215693951,
+      "subpoint": {
+        "latitude": -51.00795718276095,
+        "longitude": -157.483016571136,
+        "heightKm": 434.99092548610804
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-06T00:00:00Z",
+      "observer": {
+        "latitude": 35.4172,
+        "longitude": 138.8729,
+        "altitude": 982
+      },
+      "direction": [
+        -0.43872646251896236,
+        0.6616797215467722,
+        -0.6080288127871767
+      ],
+      "rangeKm": 8430.578948020679,
+      "subpoint": {
+        "latitude": 50.82430374793747,
+        "longitude": 18.06310949082557,
+        "heightKm": 426.2778794850149
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-06T00:00:00Z",
+      "observer": {
+        "latitude": -33.45,
+        "longitude": -70.67,
+        "altitude": 800
+      },
+      "direction": [
+        0.3890924655130571,
+        0.3989633063787439,
+        -0.8303224274005315
+      ],
+      "rangeKm": 11065.310193768326,
+      "subpoint": {
+        "latitude": 50.82430374793747,
+        "longitude": 18.06310949082557,
+        "heightKm": 426.2778794850149
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-06T00:00:00Z",
+      "observer": {
+        "latitude": 89.9,
+        "longitude": 179.99,
+        "altitude": 1.6
+      },
+      "direction": [
+        -0.29980106193182393,
+        0.9207746064010043,
+        -0.2495865530665188
+      ],
+      "rangeKm": 4456.291829475308,
+      "subpoint": {
+        "latitude": 50.82430374793747,
+        "longitude": 18.06310949082557,
+        "heightKm": 426.2778794850149
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-06T00:00:00Z",
+      "observer": {
+        "latitude": 0,
+        "longitude": -179.99,
+        "altitude": -20
+      },
+      "direction": [
+        -0.11318212510421045,
+        0.4453832438057604,
+        -0.8881574031071031
+      ],
+      "rangeKm": 11791.366017415123,
+      "subpoint": {
+        "latitude": 50.82430374793747,
+        "longitude": 18.06310949082557,
+        "heightKm": 426.2778794850149
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-06T12:34:56Z",
+      "observer": {
+        "latitude": 35.4172,
+        "longitude": 138.8729,
+        "altitude": 982
+      },
+      "direction": [
+        0.6959823442876502,
+        0.3536824753402079,
+        -0.62491382052015
+      ],
+      "rangeKm": 8628.641865148958,
+      "subpoint": {
+        "latitude": 26.69257739800242,
+        "longitude": -122.05957577929449,
+        "heightKm": 424.33184638012256
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-06T12:34:56Z",
+      "observer": {
+        "latitude": -33.45,
+        "longitude": -70.67,
+        "altitude": 800
+      },
+      "direction": [
+        -0.5778327876894869,
+        0.5602342841890584,
+        -0.5935038469042723
+      ],
+      "rangeKm": 8223.888311164666,
+      "subpoint": {
+        "latitude": 26.69257739800242,
+        "longitude": -122.05957577929449,
+        "heightKm": 424.33184638012256
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-06T12:34:56Z",
+      "observer": {
+        "latitude": 89.9,
+        "longitude": 179.99,
+        "altitude": 1.6
+      },
+      "direction": [
+        0.7445919548856665,
+        -0.46539144182229825,
+        -0.47853278529073007
+      ],
+      "rangeKm": 6922.599702723529,
+      "subpoint": {
+        "latitude": 26.69257739800242,
+        "longitude": -122.05957577929449,
+        "heightKm": 424.33184638012256
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-06T12:34:56Z",
+      "observer": {
+        "latitude": 0,
+        "longitude": -179.99,
+        "altitude": -20
+      },
+      "direction": [
+        0.7622564230558866,
+        0.4494262966282916,
+        -0.46581235428981943
+      ],
+      "rangeKm": 6760.697718984745,
+      "subpoint": {
+        "latitude": 26.69257739800242,
+        "longitude": -122.05957577929449,
+        "heightKm": 424.33184638012256
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-07T23:59:50Z",
+      "observer": {
+        "latitude": 35.4172,
+        "longitude": 138.8729,
+        "altitude": 982
+      },
+      "direction": [
+        -0.37003263474561554,
+        0.6725338110391038,
+        -0.6409166265844856
+      ],
+      "rangeKm": 8820.299158503636,
+      "subpoint": {
+        "latitude": 50.601374068408525,
+        "longitude": 7.842947699957996,
+        "heightKm": 425.6204539546839
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-07T23:59:50Z",
+      "observer": {
+        "latitude": -33.45,
+        "longitude": -70.67,
+        "altitude": 800
+      },
+      "direction": [
+        0.3968469393555688,
+        0.4513978281804475,
+        -0.7992199368372218
+      ],
+      "rangeKm": 10683.918585026377,
+      "subpoint": {
+        "latitude": 50.601374068408525,
+        "longitude": 7.842947699957996,
+        "heightKm": 425.6204539546839
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-07T23:59:50Z",
+      "observer": {
+        "latitude": 89.9,
+        "longitude": 179.99,
+        "altitude": 1.6
+      },
+      "direction": [
+        -0.13193758410395615,
+        0.9586468411667493,
+        -0.25216801506500575
+      ],
+      "rangeKm": 4480.452772249413,
+      "subpoint": {
+        "latitude": 50.601374068408525,
+        "longitude": 7.842947699957996,
+        "heightKm": 425.6204539546839
+      }
+    },
+    {
+      "noradId": 25544,
+      "instant": "2026-11-07T23:59:50Z",
+      "observer": {
+        "latitude": 0,
+        "longitude": -179.99,
+        "altitude": -20
+      },
+      "direction": [
+        -0.04957374578098114,
+        0.4400783960290173,
+        -0.8965899001649361
+      ],
+      "rangeKm": 11894.279606408703,
+      "subpoint": {
+        "latitude": 50.601374068408525,
+        "longitude": 7.842947699957996,
+        "heightKm": 425.6204539546839
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-05T00:00:00Z",
+      "observer": {
+        "latitude": 35.4172,
+        "longitude": 138.8729,
+        "altitude": 982
+      },
+      "direction": [
+        0.1050922379327591,
+        0.4137356426698067,
+        -0.9043110302937184
+      ],
+      "rangeKm": 11966.926417551434,
+      "subpoint": {
+        "latitude": 12.372279703621274,
+        "longitude": -52.10374317788226,
+        "heightKm": 382.8209882679188
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-05T00:00:00Z",
+      "observer": {
+        "latitude": -33.45,
+        "longitude": -70.67,
+        "altitude": 800
+      },
+      "direction": [
+        0.3861737904763124,
+        0.8507126843401926,
+        -0.3565918286386564
+      ],
+      "rangeKm": 5445.753173147759,
+      "subpoint": {
+        "latitude": 12.372279703621274,
+        "longitude": -52.10374317788226,
+        "heightKm": 382.8209882679188
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-05T00:00:00Z",
+      "observer": {
+        "latitude": 89.9,
+        "longitude": 179.99,
+        "altitude": 1.6
+      },
+      "direction": [
+        0.6324703341928083,
+        0.49278893122877804,
+        -0.5976122033764336
+      ],
+      "rangeKm": 8239.719147837213,
+      "subpoint": {
+        "latitude": 12.372279703621274,
+        "longitude": -52.10374317788226,
+        "heightKm": 382.8209882679188
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-05T00:00:00Z",
+      "observer": {
+        "latitude": 0,
+        "longitude": -179.99,
+        "altitude": -20
+      },
+      "direction": [
+        0.44355358920905114,
+        0.12250167618166552,
+        -0.8878364448660859
+      ],
+      "rangeKm": 11752.343331476235,
+      "subpoint": {
+        "latitude": 12.372279703621274,
+        "longitude": -52.10374317788226,
+        "heightKm": 382.8209882679188
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-06T00:00:00Z",
+      "observer": {
+        "latitude": 35.4172,
+        "longitude": 138.8729,
+        "altitude": 982
+      },
+      "direction": [
+        0.7831571835333322,
+        -0.6183460693487232,
+        -0.06567316347735136
+      ],
+      "rangeKm": 2699.9680171621912,
+      "subpoint": {
+        "latitude": 19.22038842459031,
+        "longitude": 158.204024318538,
+        "heightKm": 384.3147917696763
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-06T00:00:00Z",
+      "observer": {
+        "latitude": -33.45,
+        "longitude": -70.67,
+        "altitude": 800
+      },
+      "direction": [
+        -0.3974668971832238,
+        -0.040399218877733366,
+        -0.9167267688671525
+      ],
+      "rangeKm": 12105.732633896534,
+      "subpoint": {
+        "latitude": 19.22038842459031,
+        "longitude": 158.204024318538,
+        "heightKm": 384.3147917696763
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-06T00:00:00Z",
+      "observer": {
+        "latitude": 89.9,
+        "longitude": 179.99,
+        "altitude": 1.6
+      },
+      "direction": [
+        -0.3117184760208342,
+        -0.77938651283747,
+        -0.5434963250237271
+      ],
+      "rangeKm": 7605.363238492253,
+      "subpoint": {
+        "latitude": 19.22038842459031,
+        "longitude": 158.204024318538,
+        "heightKm": 384.3147917696763
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-06T00:00:00Z",
+      "observer": {
+        "latitude": 0,
+        "longitude": -179.99,
+        "altitude": -20
+      },
+      "direction": [
+        -0.7244586500496568,
+        0.6756430688835059,
+        -0.13662396509363578
+      ],
+      "rangeKm": 3275.276739449792,
+      "subpoint": {
+        "latitude": 19.22038842459031,
+        "longitude": 158.204024318538,
+        "heightKm": 384.3147917696763
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-06T12:34:56Z",
+      "observer": {
+        "latitude": 35.4172,
+        "longitude": 138.8729,
+        "altitude": 982
+      },
+      "direction": [
+        -0.6844362892143014,
+        0.49738553319337575,
+        -0.5330615324486455
+      ],
+      "rangeKm": 7489.949046486257,
+      "subpoint": {
+        "latitude": 40.7856597587647,
+        "longitude": 46.54711324993321,
+        "heightKm": 388.8827407681757
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-06T12:34:56Z",
+      "observer": {
+        "latitude": -33.45,
+        "longitude": -70.67,
+        "altitude": 800
+      },
+      "direction": [
+        0.3828306749743271,
+        0.19775461497563016,
+        -0.902404447326442
+      ],
+      "rangeKm": 11917.948325260073,
+      "subpoint": {
+        "latitude": 40.7856597587647,
+        "longitude": 46.54711324993321,
+        "heightKm": 388.8827407681757
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-06T12:34:56Z",
+      "observer": {
+        "latitude": 89.9,
+        "longitude": 179.99,
+        "altitude": 1.6
+      },
+      "direction": [
+        -0.6774427182107562,
+        0.642995640038118,
+        -0.3572505709375324
+      ],
+      "rangeKm": 5498.824157577467,
+      "subpoint": {
+        "latitude": 40.7856597587647,
+        "longitude": 46.54711324993321,
+        "heightKm": 388.8827407681757
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-06T12:34:56Z",
+      "observer": {
+        "latitude": 0,
+        "longitude": -179.99,
+        "altitude": -20
+      },
+      "direction": [
+        -0.3249003262507721,
+        0.3837532046823568,
+        -0.864391841642529
+      ],
+      "rangeKm": 11461.689513044359,
+      "subpoint": {
+        "latitude": 40.7856597587647,
+        "longitude": 46.54711324993321,
+        "heightKm": 388.8827407681757
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-07T23:59:50Z",
+      "observer": {
+        "latitude": 35.4172,
+        "longitude": 138.8729,
+        "altitude": 982
+      },
+      "direction": [
+        0.549866135572683,
+        0.47755638224003205,
+        -0.6852642809399715
+      ],
+      "rangeKm": 9298.528477438402,
+      "subpoint": {
+        "latitude": 32.37161838361564,
+        "longitude": -104.51493934469512,
+        "heightKm": 386.80464317188586
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-07T23:59:50Z",
+      "observer": {
+        "latitude": -33.45,
+        "longitude": -70.67,
+        "altitude": 800
+      },
+      "direction": [
+        -0.4082473244744195,
+        0.7183162876770849,
+        -0.5633434413546407
+      ],
+      "rangeKm": 7801.814553906465,
+      "subpoint": {
+        "latitude": 32.37161838361564,
+        "longitude": -104.51493934469512,
+        "heightKm": 386.80464317188586
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-07T23:59:50Z",
+      "observer": {
+        "latitude": 89.9,
+        "longitude": 179.99,
+        "altitude": 1.6
+      },
+      "direction": [
+        0.872578191581879,
+        -0.2247412748030292,
+        -0.4337034228313252
+      ],
+      "rangeKm": 6345.012525016039,
+      "subpoint": {
+        "latitude": 32.37161838361564,
+        "longitude": -104.51493934469512,
+        "heightKm": 386.80464317188586
+      }
+    },
+    {
+      "noradId": 48274,
+      "instant": "2026-11-07T23:59:50Z",
+      "observer": {
+        "latitude": 0,
+        "longitude": -179.99,
+        "altitude": -20
+      },
+      "direction": [
+        0.6710137490937431,
+        0.4366429709236185,
+        -0.5992357336392377
+      ],
+      "rangeKm": 8250.232189976818,
+      "subpoint": {
+        "latitude": 32.37161838361564,
+        "longitude": -104.51493934469512,
+        "heightKm": 386.80464317188586
+      }
+    }
+  ]
+}

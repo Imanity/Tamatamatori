@@ -1,0 +1,187 @@
+{
+  "date": "2026-11-06",
+  "verifiedAtUtc": "2026-11-06T12:35:07.450495+00:00",
+  "baseCommit": "925bdbdc628315ae4a8cdf7281dcbbbde41d96df",
+  "tests": {
+    "command": "npm test",
+    "passed": 182,
+    "failed": 0,
+    "independentPositions": 32,
+    "fixtureReproducedByteForByte": true
+  },
+  "build": {
+    "command": "npm run build -- --base /Tamatamatori/",
+    "passed": true,
+    "wasmFiles": 0,
+    "entries": [
+      "index-Bke27xMR.js"
+    ],
+    "workers": [
+      "maplibre-gl-worker-BslLc_p7.js"
+    ],
+    "warnings": [
+      "Dependency Node module externalization analysis",
+      "Existing large-chunk warning"
+    ]
+  },
+  "liveUpstream": {
+    "status": "ready",
+    "checkedAtUtc": "2026-11-06T12:18:31.486Z",
+    "objects": 2,
+    "orbitalElementsUnchangedFromSeed": true,
+    "warmCacheKeptTimestampAndFileBytes": true
+  },
+  "browser": {
+    "acceptedScenes": 15,
+    "viewports": [
+      [
+        2560,
+        1271
+      ],
+      [
+        390,
+        700
+      ]
+    ],
+    "temporaryViewportReset": true,
+    "faultInjection": "Only disposable dist feed metadata/content changed. Real GP fields retained. Original feed restored.",
+    "errorLogs": [],
+    "stableRecaptures": [
+      "iss-35mm",
+      "tiangong-daylight"
+    ],
+    "remoteScheduledWorkflow": "Configured locally; first remote execution remains to be validated after deployment"
+  },
+  "sources": {
+    "src/domain/orbit-data.ts": "64261f451ee5a7318dc18c1bc313179ca5b6c40cae5f1b4528c31f6ebf65cbc1",
+    "src/domain/stations.ts": "aaaf6d1d5d4719c6859945edbef6022ea990feb21631da4415d19464f73ec585",
+    "src/domain/visibility.ts": "28a6be549ae076ac54d340cda4348c6d2b64311304021ee9bb2bd09e01a58ae2",
+    "src/components/StationScene.tsx": "1a1bdbf191a3ba3314fd68fc7a87230d8bf864e2bb28e2ffc82e9e07eae2065e",
+    "src/components/useOrbits.ts": "7156434ace597391f73bb6b09da7b9a32e367e99a5a0d4a5d0700a0e1a6bae10",
+    "src/components/ScenePanels.tsx": "b47e9d9f36c038b1dbe1dcbe4535f4ba7a62f33e864ee3640900cfb28cd4aae3",
+    "src/components/TerrainScene.tsx": "5d475a8713a5d5cc5a571cc91c9ee7e1c05feb0fd4315c6f6b635022b5db6448",
+    "src/components/About.tsx": "da15a59b2c3c12624f8a9e4faca20ae08e3f913142d93afa88e12bb4642abbce",
+    "src/preview/orbit-feed.ts": "94410069737f39b7b7c9656b631844bca8eb94537b5d69e4dd1eb8e49e8438e7",
+    "src/preview/starfield-layer.ts": "d942ded17fa4257d1e5aad297c0551633054c8b2101c292df9545bf12057f57b",
+    "src/styles.css": "92665a13553009a4b0242692acc6c0b807b838e238dc1aef37dbe96bb75c9f25",
+    "scripts/update-stations.mjs": "6318c1fc64b74e604f5ad7a42ee77e2375bdf7c405d5c0add1d849171dac9d5a",
+    "scripts/check-stations.py": "6410a1d5cf25a80e9d5bf0c56454f8d4c2eb3012c2257b5bf70411fcfc24ddc9",
+    ".github/workflows/ci.yml": "b74ee80e57b3c8fce682cdd3e849862878117fa00084de92a80dde49e3050570",
+    "vite.config.ts": "fd211d1027af55d0bf5f5b7bb1fec1882e7bc234879dcedd8099817a9fc6011c",
+    "package-lock.json": "d0104cf995759c782cbb93aee2135f5254a126476adf08c556520f55f2edcaed",
+    "public/orbits/stations.json": "437d4b0a85433956991e416c8df612c1a159a938d40a23697a17244aad240106",
+    "tests/fixtures/stations-reference.json": "742f144f8a1d93b65548bf1d6e5d25ebbd0487eff22cdedfe483c50f845ad0ae"
+  },
+  "snapshots": {
+    "seed": "ef6845cb855ac98678b15ffb340804f2c55ca0419cc7f8c831c8081e4993ceee",
+    "live": "437d4b0a85433956991e416c8df612c1a159a938d40a23697a17244aad240106"
+  },
+  "browserRecordsSha256": "04e78401685302584b79aa1399e2ae2a413256af3256a941c595a39c04df9475",
+  "screenshots": {
+    "iss-1000mm.png": {
+      "sha256": "7a0b02e36e3433f7ac07394c6a418c9e5973557fd4f8b563d9ecbd9a36e9340e",
+      "size": [
+        2560,
+        1271
+      ]
+    },
+    "iss-35mm.png": {
+      "sha256": "7efb848f4892415b97646f09f911f7dc8d2d1d734749ad252f1da5336ea58423",
+      "size": [
+        2560,
+        1271
+      ]
+    },
+    "iss-plus-10s.png": {
+      "sha256": "cb685b08007a2341b24c2fe18b96dccd1e294bf3522a6297d3968697b7b0a0cd",
+      "size": [
+        2560,
+        1271
+      ]
+    },
+    "iss-plus-1s.png": {
+      "sha256": "7fe93816a3d75b7075343f36e9f02315b4d312bfd8d34e9bfe379cc091d4a1bf",
+      "size": [
+        2560,
+        1271
+      ]
+    },
+    "iss-terrain.png": {
+      "sha256": "fd5694a396515b2ee03a7c4586e79e3d7cbc040deb9b77dcf5b54b399610119f",
+      "size": [
+        2560,
+        1271
+      ]
+    },
+    "station-below-horizon.png": {
+      "sha256": "75b7b0c52aae491f1ee4a1b18b40ff33b847fbe6eeb6d311e18ac1621a3e4e26",
+      "size": [
+        2560,
+        1271
+      ]
+    },
+    "station-expired.png": {
+      "sha256": "e035ed09024637ce88af6dc25c2da7773b9bcec7a4169bbfededca18d4f8c184",
+      "size": [
+        2560,
+        1271
+      ]
+    },
+    "station-feed-invalid.png": {
+      "sha256": "4d6d473732b75ca1d3ec27eacfd62ce9c4ab7778cfe1eff34d547fb021cb0ebe",
+      "size": [
+        2560,
+        1271
+      ]
+    },
+    "station-feed-recovered.png": {
+      "sha256": "4b1f419f08d281ec5e94dd9f0dd2d787dc0ea0be598d7846cfbcd07bc181ee06",
+      "size": [
+        2560,
+        1271
+      ]
+    },
+    "station-layer-off.png": {
+      "sha256": "e7ec1a8c5f2ca9bc4f5884aebb2e5a780002b1a860264355593098c839a245e2",
+      "size": [
+        2560,
+        1271
+      ]
+    },
+    "station-live-update.png": {
+      "sha256": "a8fbe075eca9fb6cf9a752ce64700b0331a1befa71ef0a68f6ccc6671d336876",
+      "size": [
+        2560,
+        1271
+      ]
+    },
+    "station-mobile-info.png": {
+      "sha256": "c782983b13378c9f704677c77a7d236d33b23ac2028b76a255c29b9c3994c2a3",
+      "size": [
+        390,
+        700
+      ]
+    },
+    "station-source-paused.png": {
+      "sha256": "c6c6de2a4a0b71abb4c03858717c73c1d63fcde8e0e1a81df0cc0a6ea866fe40",
+      "size": [
+        2560,
+        1271
+      ]
+    },
+    "tiangong-daylight.png": {
+      "sha256": "41962eeb389832e16101ef369b3569030a06cbeb7c470edc50c9cd50568c0985",
+      "size": [
+        2560,
+        1271
+      ]
+    },
+    "tiangong-mobile.png": {
+      "sha256": "d17c06ebd913bcce1ecb6f692825f4815ccdef0c57dc2405c1d579844ed7cd44",
+      "size": [
+        390,
+        700
+      ]
+    }
+  }
+}

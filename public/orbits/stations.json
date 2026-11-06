@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "source": "https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=json",
+  "status": "ready",
+  "fetchedAt": "2026-11-06T12:18:31.486Z",
+  "attemptedAt": "2026-11-06T12:18:31.486Z",
+  "error": null,
+  "blocked": false,
+  "objects": [
+    {
+      "OBJECT_NAME": "ISS (ZARYA)",
+      "OBJECT_ID": "1998-067A",
+      "EPOCH": "2026-11-05T20:28:36.809184",
+      "MEAN_MOTION": 15.4919453,
+      "ECCENTRICITY": 0.00071954,
+      "INCLINATION": 51.6327,
+      "RA_OF_ASC_NODE": 319.056,
+      "ARG_OF_PERICENTER": 352.5747,
+      "MEAN_ANOMALY": 7.5134,
+      "EPHEMERIS_TYPE": 0,
+      "CLASSIFICATION_TYPE": "U",
+      "NORAD_CAT_ID": 25544,
+      "ELEMENT_SET_NO": 999,
+      "REV_AT_EPOCH": 59371,
+      "BSTAR": 0.0001274916,
+      "MEAN_MOTION_DOT": 0.00006629,
+      "MEAN_MOTION_DDOT": 0
+    },
+    {
+      "OBJECT_NAME": "CSS (TIANHE)",
+      "OBJECT_ID": "2021-035A",
+      "EPOCH": "2026-11-05T22:20:18.972096",
+      "MEAN_MOTION": 15.61437978,
+      "ECCENTRICITY": 0.00045347,
+      "INCLINATION": 41.4683,
+      "RA_OF_ASC_NODE": 180.7545,
+      "ARG_OF_PERICENTER": 265.1608,
+      "MEAN_ANOMALY": 94.8714,
+      "EPHEMERIS_TYPE": 0,
+      "CLASSIFICATION_TYPE": "U",
+      "NORAD_CAT_ID": 48274,
+      "ELEMENT_SET_NO": 999,
+      "REV_AT_EPOCH": 31530,
+      "BSTAR": 0.00021609642,
+      "MEAN_MOTION_DOT": 0.00018706,
+      "MEAN_MOTION_DDOT": 0
+    }
+  ]
+}

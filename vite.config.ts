@@ -15,6 +15,7 @@ execFileSync(process.execPath, [inputs[0]], { stdio: "inherit" });
 const signature = createHash("sha256");
 for (const path of inputs) signature.update(readFileSync(path));
 export default defineConfig({
+  worker: { format: "es" },
   plugins: [react(), {
     name: "terrain-sdk-inputs",
     configResolved(config) {

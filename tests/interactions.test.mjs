@@ -157,7 +157,8 @@ class TestStarfieldLayer {
     const sky=skyReference(frame.plan);
     const figures=frame.plan.layers.constellations?constellationScene(frame.plan).anchors:[];
     const deep=frame.plan.layers.deepSky?deepSkyScene(frame.plan).objects:[];
-    this.report({planKey:frame.planKey,ready:frame.ready,view:{azimuth:frame.plan.azimuth,pitch:frame.plan.pitch},states:Object.fromEntries([...sky.points,sky.core,...figures,...deep,...deep.map(p=>({...p,id:p.id+':label'}))].map(p=>[p.id,frame.ready?'clear':'waiting'])),deepSky:{phase:frame.plan.layers.deepSky?'ready':'off'}});
+    const stations=frame.plan.layers.stations?(frame.stations?.points??[]):[];
+    this.report({planKey:frame.planKey,orbitKey:frame.stations?.key,ready:frame.ready,view:{azimuth:frame.plan.azimuth,pitch:frame.plan.pitch},states:Object.fromEntries([...sky.points,sky.core,...figures,...deep,...stations,...deep.map(p=>({...p,id:p.id+':label'}))].map(p=>[p.id,frame.ready?'clear':'waiting'])),deepSky:{phase:frame.plan.layers.deepSky?'ready':'off'}});
   }
   invalidate() { if(this.frame)this.report({planKey:this.frame.planKey,ready:false,view:null,states:{}}); }
   onRemove() { this.removed=true; }
@@ -1222,7 +1223,7 @@ test('About 汇集所有署名与下载，开关图层和弹窗不重建地图�
   }
   assert.match(dialog.querySelector('[data-credit-source="IC0434"]').textContent, /火树/);
   const downloads = [...dialog.querySelectorAll('a[download]')];
-  assert.equal(downloads.length, catalog.imageSources.length + 4);
+  assert.equal(downloads.length, catalog.imageSources.length + 5);
   assert.equal(new Set(downloads.map((link) => link.getAttribute('href'))).size, downloads.length);
   const fields = ['经度', '纬度', '焦距', '相机离地高度', '方位角', '俯仰角'];
   const before = fields.map(value), time = input('当地日期与时间').value;
@@ -1242,6 +1243,83 @@ test('About 汇集所有署名与下载，开关图层和弹窗不重建地图�
   assert.equal(groundRequests.length, requests);
   assert.deepEqual(fields.map(value), before);
   assert.equal(input('当地日期与时间').value, time);
+});
+
+test('空间站按需读取同源轨道、搜索开启与朝向、秒级时间联动，地形和机位保留', async (t) => {
+  const fixture = JSON.parse(readFileSync(new URL('./fixtures/stations-reference.json', import.meta.url), 'utf8'));
+  const feed = { version: 1, source: 'https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=json', fetchedAt: null, attemptedAt: null, status: 'seed', error: null, blocked: false, objects: fixture.elements };
+  const calls = [];
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    calls.push({ url, signal: options.signal });
+    return new Response(JSON.stringify(feed));
+  });
+  await workspace(t);
+  const map = await readyTerrain(), requests = groundRequests.length;
+  const fields = ['经度', '纬度', '焦距', '相机离地高度'];
+  const before = fields.map(value);
+  assert.equal(calls.length, 0);
+  assert.equal(document.querySelector('[aria-label="显示空间站"]').checked, false);
+  await settle(() => setControl(input('当地日期与时间'), '2026-11-06T19:35'));
+  await settle(() => setControl(document.querySelector('#target-search'), 'ISS'));
+  await waitUntil(() => document.querySelector('[aria-label="开启并朝向国际空间站 ISS"]'));
+  assert.equal(calls.length, 1); assert.equal(calls[0].url, '/orbits/stations.json');
+  assert.equal(document.querySelector('[aria-label="显示空间站"]').checked, false);
+  await settle(() => document.querySelector('[aria-label="开启并朝向国际空间站 ISS"]').click());
+  assert.equal(document.querySelector('[aria-label="显示空间站"]').checked, true);
+  assert.ok(document.querySelector('[data-station-label="25544"]'));
+  assert.match(document.querySelector('.station-readout').textContent, /地影中/);
+  const layer = map.customLayers.find((entry) => entry instanceof TestStarfieldLayer);
+  const oldKey = layer.frame.stations.key;
+  await settle(() => button('+10 秒').click());
+  assert.notEqual(layer.frame.stations.key, oldKey);
+  assert.match(document.querySelector('.station-instant').textContent, /10:35:10 UTC/);
+  await settle(() => layer.report({ planKey: layer.frame.planKey, orbitKey: 'old', ready: true, view: null, states: { 'station-25544': 'clear' } }));
+  assert.equal(document.querySelector('[data-station-label="25544"]'), null);
+  await settle(() => setControl(input('当地日期与时间'), '2027-01-01T00:00'));
+  assert.equal(layer.frame.stations.points.length, 0);
+  assert.match(document.querySelector('.station-readout').textContent, /停止绘制/);
+  await settle(() => setControl(input('当地日期与时间'), '2026-11-06T19:35'));
+  await settle(() => layer.report({ planKey: layer.frame.planKey, ready: false, view: null, states: {}, message: '地形不可用' }));
+  assert.match(document.querySelector('.station-readout').textContent, /遮挡未知/);
+  await settle(() => document.querySelector('[aria-label="显示空间站"]').click());
+  await settle(() => setControl(document.querySelector('#target-search'), ''));
+  assert.equal(document.querySelector('.station-readout'), null);
+  assert.equal(calls.length, 1);
+  assert.equal(terrainMap(), map); assert.equal(groundRequests.length, requests);
+  assert.deepEqual(fields.map(value), before);
+});
+
+test('空间站加载取消忽略迟到响应，后台恢复按到期检查，网页失败与上游暂停分别显示', async (t) => {
+  t.after(() => { delete document.visibilityState; });
+  const fixture = JSON.parse(readFileSync(new URL('./fixtures/stations-reference.json', import.meta.url), 'utf8'));
+  const feed = { version: 1, source: 'https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=json', fetchedAt: null, attemptedAt: '2026-11-06T10:00:00Z', status: 'error', error: '上游 HTTP 403，自动更新已暂停', blocked: true, objects: fixture.elements };
+  const pending = [];
+  t.mock.method(globalThis, 'fetch', (url, options) => new Promise((resolve, reject) => pending.push({ url, options, resolve, reject })));
+  let now = Date.parse('2026-11-06T10:00:00Z');
+  t.mock.method(Date, 'now', () => now);
+  await workspace(t); await readyTerrain();
+  await settle(() => document.querySelector('[aria-label="显示空间站"]').click());
+  await waitUntil(() => pending.length === 1);
+  await settle(() => document.querySelector('[aria-label="显示空间站"]').click());
+  assert.equal(pending[0].options.signal.aborted, true);
+  await settle(() => pending[0].resolve(new Response(JSON.stringify(feed))));
+  assert.equal(document.querySelector('.station-readout'), null);
+  await settle(() => document.querySelector('[aria-label="显示空间站"]').click());
+  await waitUntil(() => pending.length === 2);
+  await settle(() => pending[1].resolve(new Response(JSON.stringify(feed))));
+  assert.match(document.querySelector('.station-feed-status').textContent, /上游 HTTP 403/);
+  Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'hidden' });
+  now += 301000;
+  await settle(() => document.dispatchEvent(new Event('visibilitychange')));
+  assert.equal(pending.length, 2);
+  Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'visible' });
+  await settle(() => document.dispatchEvent(new Event('visibilitychange')));
+  await waitUntil(() => pending.length === 3);
+  await settle(() => pending[2].reject(new Error('已发布快照不可用')));
+  assert.match(document.querySelector('.station-feed-status').textContent, /已发布快照不可用/);
+  assert.match(document.querySelector('.station-feed-status').textContent, /上游 HTTP 403/);
+  assert.equal(document.querySelectorAll('[data-station-status]').length, 2);
+  delete document.visibilityState;
 });
 
 test('星座默认关闭且独立于星空；主要亮星名称、星座定位与开关联动',async t=>{

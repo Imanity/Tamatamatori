@@ -1,0 +1,1838 @@
+[
+  {
+    "name": "iss-35mm",
+    "scenario": "stable recapture after label paint",
+    "sourceSnapshotSha256": "437d4b0a85433956991e416c8df612c1a159a938d40a23697a17244aad240106",
+    "feed": "上游成功检查 2026-11-06 12:18:31 UTC网页成功检查 2026-11-06 12:29:38 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-11-06T19:35"
+      },
+      {
+        "id": "",
+        "value": "1175"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "173.51497649912653"
+      },
+      {
+        "id": "_r_4_",
+        "value": "34.61972640249986"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-11-06 10:35:00 UTC",
+    "labels": [
+      {
+        "id": "25544",
+        "style": "left: 50%; top: 50.1699%;",
+        "text": "国际空间站 ISS位置参考"
+      }
+    ],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        true
+      ]
+    ],
+    "preview": {
+      "bottom": 1163.828125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 338.171875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 338.171875
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-25544",
+        "text": "国际空间站 ISSSGP4 位置参考轨道历元 2026-11-05 20:28:36 UTC当前 DEM 未遮挡方位 173.5° · 几何高度 34.5° · 距离 692 km地影中 · 日照与可拍摄性分别判断朝向"
+      }
+    ],
+    "terrainErrors": []
+  },
+  {
+    "name": "iss-plus-1s",
+    "scenario": "normal",
+    "feed": "随版本附带快照 · 上游检查时间未记录上游成功检查 未记录网页成功检查 2026-11-06 10:24:39 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-11-06T19:35"
+      },
+      {
+        "id": "",
+        "value": "1175"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "173.51497649912653"
+      },
+      {
+        "id": "_r_4_",
+        "value": "34.61972640249986"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-11-06 10:35:01 UTC",
+    "labels": [
+      {
+        "id": "25544",
+        "name": "国际空间站 ISS位置参考",
+        "style": "left: 49.2045%; top: 49.5318%;"
+      }
+    ],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        true
+      ]
+    ],
+    "preview": {
+      "bottom": 1163.828125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 338.171875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 338.171875
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-25544",
+        "text": "国际空间站 ISSSGP4 位置参考轨道历元 2026-11-05 20:28:36 UTC当前 DEM 未遮挡方位 172.9° · 几何高度 34.8° · 距离 688 km地影中 · 日照与可拍摄性分别判断朝向"
+      }
+    ],
+    "terrainErrors": [],
+    "sourceSnapshotSha256": "ef6845cb855ac98678b15ffb340804f2c55ca0419cc7f8c831c8081e4993ceee"
+  },
+  {
+    "name": "iss-plus-10s",
+    "scenario": "normal",
+    "feed": "随版本附带快照 · 上游检查时间未记录上游成功检查 未记录网页成功检查 2026-11-06 10:24:39 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-11-06T19:35"
+      },
+      {
+        "id": "",
+        "value": "1175"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "173.51497649912653"
+      },
+      {
+        "id": "_r_4_",
+        "value": "34.61972640249986"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-11-06 10:35:10 UTC",
+    "labels": [
+      {
+        "id": "25544",
+        "name": "国际空间站 ISS位置参考",
+        "style": "left: 41.6408%; top: 43.5295%;"
+      }
+    ],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        true
+      ]
+    ],
+    "preview": {
+      "bottom": 1163.828125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 338.171875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 338.171875
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-25544",
+        "text": "国际空间站 ISSSGP4 位置参考轨道历元 2026-11-05 20:28:36 UTC当前 DEM 未遮挡方位 167.4° · 几何高度 37.0° · 距离 658 km地影中 · 日照与可拍摄性分别判断朝向"
+      }
+    ],
+    "terrainErrors": [],
+    "sourceSnapshotSha256": "ef6845cb855ac98678b15ffb340804f2c55ca0419cc7f8c831c8081e4993ceee"
+  },
+  {
+    "name": "iss-1000mm",
+    "scenario": "normal",
+    "feed": "随版本附带快照 · 上游检查时间未记录上游成功检查 未记录网页成功检查 2026-11-06 10:24:39 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-11-06T19:35"
+      },
+      {
+        "id": "",
+        "value": "1175"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "1000"
+      },
+      {
+        "id": "",
+        "value": "1000"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "167.36335026419704"
+      },
+      {
+        "id": "_r_4_",
+        "value": "37.001056306072705"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-11-06 10:35:10 UTC",
+    "labels": [
+      {
+        "id": "25544",
+        "name": "国际空间站 ISS位置参考",
+        "style": "left: 50%; top: 50%;"
+      }
+    ],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        true
+      ]
+    ],
+    "preview": {
+      "bottom": 1163.828125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 338.171875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 338.171875
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-25544",
+        "text": "国际空间站 ISSSGP4 位置参考轨道历元 2026-11-05 20:28:36 UTC当前 DEM 未遮挡方位 167.4° · 几何高度 37.0° · 距离 658 km地影中 · 日照与可拍摄性分别判断朝向"
+      }
+    ],
+    "terrainErrors": [],
+    "sourceSnapshotSha256": "ef6845cb855ac98678b15ffb340804f2c55ca0419cc7f8c831c8081e4993ceee"
+  },
+  {
+    "name": "iss-terrain",
+    "scenario": "normal",
+    "feed": "随版本附带快照 · 上游检查时间未记录上游成功检查 未记录网页成功检查 2026-11-06 10:24:39 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-11-06T19:31"
+      },
+      {
+        "id": "",
+        "value": "1171"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "211.78467104394747"
+      },
+      {
+        "id": "_r_4_",
+        "value": "2.0838506651887467"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-11-06 10:31:00 UTC",
+    "labels": [],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        true
+      ]
+    ],
+    "preview": {
+      "bottom": 1163.828125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 338.171875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 338.171875
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-25544",
+        "text": "国际空间站 ISSSGP4 位置参考轨道历元 2026-11-05 20:28:36 UTC山体遮挡方位 211.8° · 几何高度 1.8° · 距离 2145 km地影中 · 日照与可拍摄性分别判断朝向"
+      }
+    ],
+    "terrainErrors": [],
+    "sourceSnapshotSha256": "ef6845cb855ac98678b15ffb340804f2c55ca0419cc7f8c831c8081e4993ceee"
+  },
+  {
+    "name": "tiangong-daylight",
+    "scenario": "stable recapture after label paint",
+    "sourceSnapshotSha256": "437d4b0a85433956991e416c8df612c1a159a938d40a23697a17244aad240106",
+    "feed": "上游成功检查 2026-11-06 12:18:31 UTC网页成功检查 2026-11-06 12:29:38 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-11-06T15:26"
+      },
+      {
+        "id": "",
+        "value": "926"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "352.54719720718435"
+      },
+      {
+        "id": "_r_4_",
+        "value": "27.891061055468008"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-11-06 06:26:00 UTC",
+    "labels": [
+      {
+        "id": "48274",
+        "style": "left: 50%; top: 50.1661%;",
+        "text": "天宫空间站位置参考"
+      }
+    ],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        true
+      ]
+    ],
+    "preview": {
+      "bottom": 1163.828125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 338.171875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 338.171875
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-48274",
+        "text": "天宫空间站SGP4 位置参考轨道历元 2026-11-05 22:20:18 UTC当前 DEM 未遮挡方位 352.5° · 几何高度 27.8° · 距离 760 km太阳照明中 · 日照与可拍摄性分别判断朝向"
+      }
+    ],
+    "terrainErrors": []
+  },
+  {
+    "name": "station-layer-off",
+    "scenario": "normal",
+    "feed": "随版本附带快照 · 上游检查时间未记录上游成功检查 未记录网页成功检查 2026-11-06 10:24:39 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-11-06T15:26"
+      },
+      {
+        "id": "",
+        "value": "926"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "352.54719720718435"
+      },
+      {
+        "id": "_r_4_",
+        "value": "27.891061055468008"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-11-06 06:26:00 UTC",
+    "labels": [],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        false
+      ]
+    ],
+    "preview": {
+      "bottom": 1163.828125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 338.171875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 338.171875
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-48274",
+        "text": "天宫空间站SGP4 位置参考轨道历元 2026-11-05 22:20:18 UTC图层已关闭 · 遮挡待测方位 352.5° · 几何高度 27.8° · 距离 760 km太阳照明中 · 日照与可拍摄性分别判断开启并朝向"
+      }
+    ],
+    "terrainErrors": [],
+    "sourceSnapshotSha256": "ef6845cb855ac98678b15ffb340804f2c55ca0419cc7f8c831c8081e4993ceee"
+  },
+  {
+    "name": "station-expired",
+    "scenario": "normal",
+    "feed": "随版本附带快照 · 上游检查时间未记录上游成功检查 未记录网页成功检查 2026-11-06 10:24:39 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2027-01-01T00:00"
+      },
+      {
+        "id": "",
+        "value": "0"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "352.54719720718435"
+      },
+      {
+        "id": "_r_4_",
+        "value": "27.891061055468008"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-12-31 15:00:00 UTC",
+    "labels": [],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        true
+      ]
+    ],
+    "preview": {
+      "bottom": 1163.828125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 338.171875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 338.171875
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-48274",
+        "text": "天宫空间站超出轨道历元 ±72 小时，停止绘制轨道历元 2026-11-05 22:20:18 UTC开启图层"
+      }
+    ],
+    "terrainErrors": [],
+    "sourceSnapshotSha256": "ef6845cb855ac98678b15ffb340804f2c55ca0419cc7f8c831c8081e4993ceee"
+  },
+  {
+    "name": "station-below-horizon",
+    "scenario": "normal",
+    "feed": "随版本附带快照 · 上游检查时间未记录上游成功检查 未记录网页成功检查 2026-11-06 10:24:39 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-11-06T09:00"
+      },
+      {
+        "id": "",
+        "value": "540"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "352.54719720718435"
+      },
+      {
+        "id": "_r_4_",
+        "value": "27.891061055468008"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-11-06 00:00:00 UTC",
+    "labels": [],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        true
+      ]
+    ],
+    "preview": {
+      "bottom": 1163.828125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 338.171875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 338.171875
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-48274",
+        "text": "天宫空间站SGP4 位置参考轨道历元 2026-11-05 22:20:18 UTC地平线下方位 128.3° · 几何高度 -3.8° · 距离 2700 km太阳照明中 · 日照与可拍摄性分别判断开启图层"
+      }
+    ],
+    "terrainErrors": [],
+    "sourceSnapshotSha256": "ef6845cb855ac98678b15ffb340804f2c55ca0419cc7f8c831c8081e4993ceee"
+  },
+  {
+    "name": "station-live-update",
+    "scenario": "real upstream refresh",
+    "sourceSnapshotSha256": "437d4b0a85433956991e416c8df612c1a159a938d40a23697a17244aad240106",
+    "feed": "上游成功检查 2026-11-06 12:18:31 UTC网页成功检查 2026-11-06 12:19:09 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-11-06T15:26"
+      },
+      {
+        "id": "",
+        "value": "926"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "352.54719720718435"
+      },
+      {
+        "id": "_r_4_",
+        "value": "27.891061055468008"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-11-06 06:26:00 UTC",
+    "labels": [
+      {
+        "id": "48274",
+        "style": "left: 50%; top: 50.1661%;",
+        "text": "天宫空间站位置参考"
+      }
+    ],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        true
+      ]
+    ],
+    "preview": {
+      "bottom": 1163.828125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 338.171875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 338.171875
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-48274",
+        "text": "天宫空间站SGP4 位置参考轨道历元 2026-11-05 22:20:18 UTC当前 DEM 未遮挡方位 352.5° · 几何高度 27.8° · 距离 760 km太阳照明中 · 日照与可拍摄性分别判断朝向"
+      }
+    ],
+    "terrainErrors": []
+  },
+  {
+    "name": "tiangong-mobile",
+    "scenario": "normal",
+    "sourceSnapshotSha256": "437d4b0a85433956991e416c8df612c1a159a938d40a23697a17244aad240106",
+    "feed": "上游成功检查 2026-11-06 12:18:31 UTC网页成功检查 2026-11-06 12:19:09 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-11-06T15:26"
+      },
+      {
+        "id": "",
+        "value": "926"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "352.54719720718435"
+      },
+      {
+        "id": "_r_4_",
+        "value": "27.891061055468008"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-11-06 06:26:00 UTC",
+    "labels": [
+      {
+        "id": "48274",
+        "style": "left: 50%; top: 50.1665%;",
+        "text": "天宫空间站位置参考"
+      }
+    ],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        true
+      ]
+    ],
+    "preview": {
+      "bottom": 579.65625,
+      "height": 221.328125,
+      "left": 29,
+      "right": 361,
+      "top": 358.328125,
+      "width": 332,
+      "x": 29,
+      "y": 358.328125
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-48274",
+        "text": "天宫空间站SGP4 位置参考轨道历元 2026-11-05 22:20:18 UTC当前 DEM 未遮挡方位 352.5° · 几何高度 27.8° · 距离 760 km太阳照明中 · 日照与可拍摄性分别判断朝向"
+      }
+    ],
+    "terrainErrors": []
+  },
+  {
+    "name": "station-mobile-info",
+    "scenario": "normal",
+    "sourceSnapshotSha256": "437d4b0a85433956991e416c8df612c1a159a938d40a23697a17244aad240106",
+    "feed": "上游成功检查 2026-11-06 12:18:31 UTC网页成功检查 2026-11-06 12:19:09 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-11-06T15:26"
+      },
+      {
+        "id": "",
+        "value": "926"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "352.54719720718435"
+      },
+      {
+        "id": "_r_4_",
+        "value": "27.891061055468008"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-11-06 06:26:00 UTC",
+    "labels": [
+      {
+        "id": "48274",
+        "style": "left: 50%; top: 50.1665%;",
+        "text": "天宫空间站位置参考"
+      }
+    ],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        true
+      ]
+    ],
+    "preview": {
+      "bottom": 579.65625,
+      "height": 221.328125,
+      "left": 29,
+      "right": 361,
+      "top": 358.328125,
+      "width": 332,
+      "x": 29,
+      "y": 358.328125
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-48274",
+        "text": "天宫空间站SGP4 位置参考轨道历元 2026-11-05 22:20:18 UTC当前 DEM 未遮挡方位 352.5° · 几何高度 27.8° · 距离 760 km太阳照明中 · 日照与可拍摄性分别判断朝向"
+      }
+    ],
+    "terrainErrors": []
+  },
+  {
+    "name": "station-source-paused",
+    "scenario": "injected source HTTP 403 metadata, real GP elements retained",
+    "sourceSnapshotSha256": "1824f5acd7f1a688435e23f59357edbfb4f4874addc9ef62513129841906c416",
+    "feed": "验收注入 · 上游 HTTP 403，自动更新已暂停，需维护者检查后手动恢复上游成功检查 2026-11-06 12:18:31 UTC上游最近尝试 2026-11-06 12:20:36 UTC网页成功检查 2026-11-06 12:20:42 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-11-06T15:26"
+      },
+      {
+        "id": "",
+        "value": "926"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "352.54719720718435"
+      },
+      {
+        "id": "_r_4_",
+        "value": "27.891061055468008"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-11-06 06:26:00 UTC",
+    "labels": [
+      {
+        "id": "48274",
+        "style": "left: 50%; top: 50.1661%;",
+        "text": "天宫空间站位置参考"
+      }
+    ],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        true
+      ]
+    ],
+    "preview": {
+      "bottom": 1163.828125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 338.171875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 338.171875
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-48274",
+        "text": "天宫空间站SGP4 位置参考轨道历元 2026-11-05 22:20:18 UTC当前 DEM 未遮挡方位 352.5° · 几何高度 27.8° · 距离 760 km太阳照明中 · 日照与可拍摄性分别判断朝向"
+      }
+    ],
+    "terrainErrors": []
+  },
+  {
+    "name": "station-feed-invalid",
+    "scenario": "injected invalid published JSON; cached orbit remains visible",
+    "sourceSnapshotSha256": "fdda64eeacbd6c0e450d1824f21d756d96bf8a8641018643a679add8490f11d0",
+    "feed": "轨道快照检查失败 · 已发布轨道快照格式无效 · 使用本地有效快照验收注入 · 上游 HTTP 403，自动更新已暂停，需维护者检查后手动恢复上游成功检查 2026-11-06 12:18:31 UTC上游最近尝试 2026-11-06 12:20:36 UTC网页成功检查 2026-11-06 12:20:42 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-11-06T15:26"
+      },
+      {
+        "id": "",
+        "value": "926"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "352.54719720718435"
+      },
+      {
+        "id": "_r_4_",
+        "value": "27.891061055468008"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-11-06 06:26:00 UTC",
+    "labels": [
+      {
+        "id": "48274",
+        "style": "left: 50%; top: 50.1661%;",
+        "text": "天宫空间站位置参考"
+      }
+    ],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        true
+      ]
+    ],
+    "preview": {
+      "bottom": 1163.828125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 338.171875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 338.171875
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-48274",
+        "text": "天宫空间站SGP4 位置参考轨道历元 2026-11-05 22:20:18 UTC当前 DEM 未遮挡方位 352.5° · 几何高度 27.8° · 距离 760 km太阳照明中 · 日照与可拍摄性分别判断朝向"
+      }
+    ],
+    "terrainErrors": []
+  },
+  {
+    "name": "station-feed-recovered",
+    "scenario": "injected publication recovery; original real GP elements and source success time retained",
+    "sourceSnapshotSha256": "b60ef88ffb3ac4dd25a57e3a60a1abe8497f9bb30d523b48cbbc5c4cc22ae4b4",
+    "feed": "上游成功检查 2026-11-06 12:18:31 UTC网页成功检查 2026-11-06 12:25:24 UTC",
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-11-06T15:26"
+      },
+      {
+        "id": "",
+        "value": "926"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "35"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "352.54719720718435"
+      },
+      {
+        "id": "_r_4_",
+        "value": "27.891061055468008"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "instant": "拍摄参考 2026-11-06 06:26:00 UTC",
+    "labels": [
+      {
+        "id": "48274",
+        "style": "left: 50%; top: 50.1661%;",
+        "text": "天宫空间站位置参考"
+      }
+    ],
+    "layers": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        false
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        false
+      ],
+      [
+        "显示空间站",
+        true
+      ]
+    ],
+    "preview": {
+      "bottom": 1163.828125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 338.171875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 338.171875
+    },
+    "ready": "true",
+    "rows": [
+      {
+        "id": "station-48274",
+        "text": "天宫空间站SGP4 位置参考轨道历元 2026-11-05 22:20:18 UTC当前 DEM 未遮挡方位 352.5° · 几何高度 27.8° · 距离 760 km太阳照明中 · 日照与可拍摄性分别判断朝向"
+      }
+    ],
+    "terrainErrors": []
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "reference": "python-sgp4 2.27 C++ accelerated=True; ERFA 2.0.1.5 GMST82 and WGS84",
+  "cases": 32,
+  "maxAngularDifferenceDegrees": 0.00001823161606110081,
+  "maxRangeDifferenceKm": 0.0011151068993058288,
+  "scope": "Independent implementation agreement, not real-world ephemeris accuracy"
+}

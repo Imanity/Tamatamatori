@@ -23,6 +23,7 @@ import { SkyTexture } from "./sky-texture.ts";
 import { DeepSkyTextures } from "./deep-sky-textures.ts";
 import { deepSkyScene, deepSkyView, deepSkyRedEnhancementColor, deepSkyImageEntry } from "../domain/deep-sky.ts";
 import type { DeepSkyTarget } from "../domain/deep-sky.ts";
+import type { StationScene } from "../domain/stations.ts";
 import { classifyOcclusion } from "../domain/visibility.ts";
 
 interface Frame {
@@ -30,6 +31,7 @@ interface Frame {
   planKey: string;
   ready: boolean;
   plan: ShootingPlan;
+  stations?: StationScene;
 }
 type Pending = { id: string; query: WebGLQuery; blocked?: WebGLQuery };
 const pointVertex = `#version 300 es
@@ -183,6 +185,7 @@ export class StarfieldLayer implements CustomLayerInterface {
     this.snapshot = snapshot;
     this.report({
       ...snapshot,
+      orbitKey: this.frame?.stations?.key,
       milkyWay: this.frame?.plan.layers.milkyWay
         ? this.milky.state
         : { phase: "off" },
@@ -263,6 +266,7 @@ export class StarfieldLayer implements CustomLayerInterface {
         !!p.layers.milkyWay,
         !!p.layers.constellations,
         !!p.layers.deepSky,
+        frame.stations?.key,
       ].join("/");
     if (key !== this.dataKey) {
       this.dataKey = key;
@@ -285,6 +289,8 @@ export class StarfieldLayer implements CustomLayerInterface {
         ...(figure?.anchors ?? []),
         ...this.deepObjects,
         ...(!p.layers.stars ? (deep?.clusterStars ?? []) : []),
+        ...(p.layers.stations ? (frame.stations?.points ?? []).filter((point) => point.elevation > 0) : []),
+        ...(p.layers.stations ? (frame.stations?.trail ?? []).filter((point) => point.elevation > 0) : []),
       ];
       this.targets = this.points.filter((point) => !!point.name);
       this.offsets.clear();
@@ -294,11 +300,13 @@ export class StarfieldLayer implements CustomLayerInterface {
         const ray = refractDirection(point.direction, p.refraction);
         const anchor =
           point.id.startsWith("constellation-") || point.id.startsWith("dso-");
-        const alpha = anchor ? 0 : starOpacity(point, appearance!);
+        const station = point.id.startsWith("station-");
+        const trail = station && point.id.includes("-trail-");
+        const alpha = station ? (trail ? 0.45 : 0.95) : anchor ? 0 : starOpacity(point, appearance!);
         data.push(
           ...ray,
-          anchor ? 4 : skyPointSize(point),
-          point.id === "galactic-center" ? 1 : 0,
+          station ? (trail ? 2 : 9) : anchor ? 4 : skyPointSize(point),
+          (station && !trail) || point.id === "galactic-center" ? 1 : 0,
           ...point.color,
           alpha,
         );
@@ -378,7 +386,8 @@ export class StarfieldLayer implements CustomLayerInterface {
       (!f.plan.layers.stars &&
         !f.plan.layers.milkyWay &&
         !f.plan.layers.constellations &&
-        !f.plan.layers.deepSky)
+        !f.plan.layers.deepSky &&
+        !f.plan.layers.stations)
     )
       return;
     if (gl.isContextLost()) {

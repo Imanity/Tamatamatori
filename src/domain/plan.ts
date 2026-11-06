@@ -27,6 +27,7 @@ export interface ShootingPlan {
     milkyWay: boolean;
     constellations: boolean;
     deepSky: boolean;
+    stations: boolean;
   };
   refraction: "standard" | "none";
   milkyWayContrast: number;
@@ -52,6 +53,7 @@ export const initialPlan: ShootingPlan = {
     milkyWay: false,
     constellations: false,
     deepSky: false,
+    stations: false,
   },
   refraction: "standard",
   milkyWayContrast: 100,

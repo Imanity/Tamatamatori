@@ -20,6 +20,7 @@ const libraries = [
   { name: "Astronomy Engine", license: "MIT", url: "https://github.com/cosinekitty/astronomy" },
   { name: "Earcut", license: "ISC", url: "https://github.com/mapbox/earcut" },
   { name: "Temporal polyfill", license: "ISC", url: "https://github.com/js-temporal/temporal-polyfill" },
+  { name: "satellite.js 7.1.0", license: "MIT", url: "https://github.com/shashwatak/satellite-js" },
 ];
 
 export function About() {
@@ -116,6 +117,13 @@ export function About() {
                 <a href={deepSkyCatalogUrl} download="tamatamatori-deep-sky.json">下载深空数据及来源清单</a>
               </li>
             </ul>
+          </section>
+
+          <section aria-labelledby="about-stations-title">
+            <h3 id="about-stations-title">空间站轨道</h3>
+            <a href="https://celestrak.org/NORAD/documentation/gp-data-formats.php" target="_blank" rel="noreferrer">CelesTrak · GP 轨道数据 · T.S. Kelso</a>
+            <p>选取 ISS 与天宫目录条目，使用 SGP4 推算并生成构图轨迹。快照保留上游历元及检查时间。变轨后的新解发布存在延迟。</p>
+            <a href={`${import.meta.env.BASE_URL}orbits/stations.json`} download="tamatamatori-space-stations.json">下载已发布轨道快照及状态</a>
           </section>
 
           <section aria-labelledby="about-milky-way-title">
