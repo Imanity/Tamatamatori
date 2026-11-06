@@ -4,6 +4,13 @@ import { classifyOcclusion } from "../domain/visibility.ts";
 import type { VisibilitySnapshot } from "../domain/visibility.ts";
 import { renderedCamera } from "./rendered-camera.ts";
 import type { RenderedCamera } from "./rendered-camera.ts";
+import type { ShootingPlan } from "../domain/plan.ts";
+import { fieldOfView } from "../domain/plan.ts";
+import type { WeatherSample } from "../domain/weather.ts";
+import { weatherClouds } from "../domain/weather-appearance.ts";
+import { celestialBodies } from "../domain/ephemeris.ts";
+import { skyAppearance } from "../domain/sky-appearance.ts";
+import { weatherVertex, weatherFragment } from "./weather-shaders.ts";
 
 type Point = { x: number; y: number };
 export interface CelestialFrame {
@@ -11,22 +18,26 @@ export interface CelestialFrame {
   planKey: string;
   ready: boolean;
   bodies: { id: "sun" | "moon"; outline: Point[]; illuminated: Point[] }[];
+  plan?: ShootingPlan;
+  weather?: WeatherSample;
+  artificialMcd?: number;
 }
 type Mesh = { id: "sun" | "moon"; outline: Float32Array; fill: Float32Array; silhouette: Float32Array };
 type Pending = { id: "sun" | "moon"; clear: WebGLQuery; blocked: WebGLQuery };
+const weatherQuad = new Float32Array([-1,-1, 1,-1, 1,1, -1,-1, 1,1, -1,1]);
 
 export function triangulate(points: Point[]) {
   const coordinates = points.flatMap((point) => [point.x, point.y]);
   return new Float32Array(earcut(coordinates).flatMap((index) => [coordinates[index * 2], coordinates[index * 2 + 1]]));
 }
 
-function makeProgram(gl: WebGL2RenderingContext) {
+function makeProgram(gl: WebGL2RenderingContext, vertex?: string, fragment?: string) {
   const shaders: WebGLShader[] = [];
   let program: WebGLProgram | null = null;
   try {
     for (const [type, source] of [
-      [gl.VERTEX_SHADER, "#version 300 es\nlayout(location=0) in vec2 a_pos; void main(){gl_Position=vec4(a_pos.x,-a_pos.y,1.0,1.0);}"],
-      [gl.FRAGMENT_SHADER, "#version 300 es\nprecision highp float; uniform vec4 u_color; out vec4 color; void main(){color=u_color;}"],
+      [gl.VERTEX_SHADER, vertex ?? "#version 300 es\nlayout(location=0) in vec2 a_pos; void main(){gl_Position=vec4(a_pos.x,-a_pos.y,1.0,1.0);}"],
+      [gl.FRAGMENT_SHADER, fragment ?? "#version 300 es\nprecision highp float; uniform vec4 u_color; out vec4 color; void main(){color=u_color;}"],
     ] as const) {
       const shader = gl.createShader(type);
       if (!shader) throw new Error("shader allocation");
@@ -54,6 +65,8 @@ export class CelestialLayer implements CustomLayerInterface {
   private map?: MapLibreMap;
   private gl?: WebGL2RenderingContext;
   private program?: WebGLProgram;
+  private weatherProgram?: WebGLProgram;
+  private rendered?: RenderedCamera;
   private buffer?: WebGLBuffer;
   private vao?: WebGLVertexArrayObject;
   private color: WebGLUniformLocation | null = null;
@@ -135,6 +148,7 @@ export class CelestialLayer implements CustomLayerInterface {
     if (input && this.map && this.onCamera) {
       try {
         const camera = renderedCamera(this.map, input.modelViewProjectionMatrix, this.frame.planKey);
+        this.rendered = camera;
         const key = JSON.stringify(camera, (_key, value) => typeof value === "number" ? +value.toFixed(7) : value);
         if (key !== this.cameraKey) { this.cameraKey = key; this.onCamera(camera); }
       } catch { this.fail("无法读取实际拍摄相机，请重试预览。"); return; }
@@ -183,6 +197,38 @@ export class CelestialLayer implements CustomLayerInterface {
         gl.uniform4fv(this.color, mesh.id === "sun" ? [0.86, 0.71, 0.36, 0.9] : [0.435, 0.435, 0.43, 0.5]);
         draw(mesh.outline, gl.LINE_LOOP);
       }
+      if (this.frame.weather && this.frame.plan) {
+        this.weatherProgram ??= makeProgram(gl, weatherVertex, weatherFragment);
+        const p = this.weatherProgram, plan = this.frame.plan, weather = this.frame.weather;
+        const camera = this.rendered ?? plan, fov = fieldOfView(plan);
+        const az = camera.azimuth * Math.PI / 180, pitch = camera.pitch * Math.PI / 180;
+        const horizontal = Math.tan(fov.horizontal * Math.PI / 360), vertical = Math.tan(fov.vertical * Math.PI / 360);
+        const clouds = weatherClouds(weather, plan), bodies = celestialBodies(plan);
+        const appearance = skyAppearance(bodies.sun.elevation, bodies.moon, this.frame.artificialMcd);
+        const day = Math.max(0, Math.min(1, (bodies.sun.elevation + 6) / 14));
+        const lift = appearance.moonlight * 0.08 + appearance.pollutionGlow * 0.18;
+        gl.useProgram(p);
+        gl.uniform3fv(gl.getUniformLocation(p, "u_forward"), [Math.sin(az) * Math.cos(pitch), Math.cos(az) * Math.cos(pitch), Math.sin(pitch)]);
+        gl.uniform3fv(gl.getUniformLocation(p, "u_right"), [Math.cos(az) * horizontal, -Math.sin(az) * horizontal, 0]);
+        gl.uniform3fv(gl.getUniformLocation(p, "u_up"), [-Math.sin(az) * Math.sin(pitch) * vertical, -Math.cos(az) * Math.sin(pitch) * vertical, Math.cos(pitch) * vertical]);
+        gl.uniform3fv(gl.getUniformLocation(p, "u_layers"), clouds.layers);
+        gl.uniform2fv(gl.getUniformLocation(p, "u_drift"), clouds.drift);
+        gl.uniform3fv(gl.getUniformLocation(p, "u_color"), [0.06 + day * 0.66 + lift, 0.08 + day * 0.67 + lift, 0.12 + day * 0.66 + lift]);
+        gl.colorMask(true, true, true, true); gl.depthFunc(gl.LEQUAL);
+        gl.uniform1f(gl.getUniformLocation(p, "u_mode"), 0);
+        draw(weatherQuad, gl.TRIANGLES);
+        if (weather.rain + weather.showers + weather.snow > 0) {
+          gl.disable(gl.DEPTH_TEST);
+          gl.uniform1f(gl.getUniformLocation(p, "u_mode"), 1);
+          gl.uniform2fv(gl.getUniformLocation(p, "u_precipitation"), [weather.rain + weather.showers, weather.snow]);
+          gl.uniform1f(gl.getUniformLocation(p, "u_time"), (weather.time / 1000) % 3600);
+          // Near-surface wind gives the precipitation illustration a screen
+          // direction. Cloud advection retains its separate display model.
+          gl.uniform1f(gl.getUniformLocation(p, "u_slant"), Math.max(-0.45, Math.min(0.45,
+            Math.sin(weather.windDirection * Math.PI / 180 - az) * weather.windSpeed / 40)));
+          gl.drawArrays(gl.TRIANGLES, 0, 6);
+        }
+      }
     } catch { this.fail(); }
     finally {
       for (const [cap, enabled] of [[gl.DEPTH_TEST, previous.depth], [gl.CULL_FACE, previous.cull], [gl.BLEND, previous.blend], [gl.STENCIL_TEST, previous.stencil]] as const)
@@ -198,9 +244,11 @@ export class CelestialLayer implements CustomLayerInterface {
   onRemove() {
     this.clearQueries();
     if (this.program) this.gl?.deleteProgram(this.program);
+    if (this.weatherProgram) this.gl?.deleteProgram(this.weatherProgram);
     if (this.buffer) this.gl?.deleteBuffer(this.buffer);
     if (this.vao) this.gl?.deleteVertexArray(this.vao);
     this.program = undefined; this.buffer = undefined; this.vao = undefined;
+    this.weatherProgram = undefined; this.rendered = undefined;
     this.map = undefined; this.gl = undefined;
   }
 }

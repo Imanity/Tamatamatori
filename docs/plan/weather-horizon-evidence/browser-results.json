@@ -1,0 +1,442 @@
+[
+  {
+    "name": "01-before-high-view",
+    "bounds": {
+      "height": 1271,
+      "width": 2560,
+      "x": 0,
+      "y": 0
+    },
+    "elevation": "机位高程 ≈ 941.6 m · 离地 1.6 m",
+    "frame": {
+      "height": 431.65625,
+      "width": 647.5,
+      "x": 1557.5,
+      "y": 213.421875
+    },
+    "parameters": [
+      {
+        "label": "当地日期",
+        "value": "2026-11-07"
+      },
+      {
+        "label": "当地时间",
+        "value": "06:29:00"
+      },
+      {
+        "label": "焦距mm",
+        "value": "35"
+      },
+      {
+        "label": "纬度°",
+        "value": "39.8206"
+      },
+      {
+        "label": "经度°",
+        "value": "141.5275"
+      },
+      {
+        "label": "方位角°",
+        "value": "46.4"
+      },
+      {
+        "label": "俯仰角°",
+        "value": "4"
+      },
+      {
+        "label": "相机离地高度m",
+        "value": "1.6"
+      }
+    ],
+    "phase": "ready",
+    "pose": "方位 46.4°俯仰 4.0°水平视场 54.4°垂直视场 37.8°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CRu2ydH1.js",
+    "weather": "天气天气已应用 · 云层与降水示意总云量 55% · 低 55% / 中 18% / 高 0%降水 0.1 mm/小时 · 概率 74% · 能见度 5.7 km拍摄 11/07 06:29 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:55 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似"
+  },
+  {
+    "name": "02-after-high-view",
+    "bounds": {
+      "height": 1271,
+      "width": 2560,
+      "x": 0,
+      "y": 0
+    },
+    "elevation": "机位高程 ≈ 941.6 m · 离地 1.6 m",
+    "frame": {
+      "height": 431.65625,
+      "width": 647.5,
+      "x": 1557.5,
+      "y": 213.421875
+    },
+    "parameters": [
+      {
+        "label": "当地日期",
+        "value": "2026-11-07"
+      },
+      {
+        "label": "当地时间",
+        "value": "06:29:00"
+      },
+      {
+        "label": "焦距mm",
+        "value": "35"
+      },
+      {
+        "label": "纬度°",
+        "value": "39.8206"
+      },
+      {
+        "label": "经度°",
+        "value": "141.5275"
+      },
+      {
+        "label": "方位角°",
+        "value": "46.4"
+      },
+      {
+        "label": "俯仰角°",
+        "value": "4"
+      },
+      {
+        "label": "相机离地高度m",
+        "value": "1.6"
+      }
+    ],
+    "phase": "ready",
+    "pose": "方位 46.4°俯仰 4.0°水平视场 54.4°垂直视场 37.8°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CTRBXZWS.js",
+    "weather": "天气天气已应用 · 云层与降水示意总云量 55% · 低 55% / 中 18% / 高 0%降水 0.1 mm/小时 · 概率 74% · 能见度 5.7 km拍摄 11/07 06:29 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:59 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似"
+  },
+  {
+    "name": "03-after-level-view",
+    "bounds": {
+      "height": 1271,
+      "width": 2560,
+      "x": 0,
+      "y": 0
+    },
+    "elevation": "机位高程 ≈ 941.6 m · 离地 1.6 m",
+    "frame": {
+      "height": 431.65625,
+      "width": 647.5,
+      "x": 1557.5,
+      "y": 213.421875
+    },
+    "parameters": [
+      {
+        "label": "当地日期",
+        "value": "2026-11-07"
+      },
+      {
+        "label": "当地时间",
+        "value": "06:29:00"
+      },
+      {
+        "label": "焦距mm",
+        "value": "35"
+      },
+      {
+        "label": "纬度°",
+        "value": "39.8206"
+      },
+      {
+        "label": "经度°",
+        "value": "141.5275"
+      },
+      {
+        "label": "方位角°",
+        "value": "46.4"
+      },
+      {
+        "label": "俯仰角°",
+        "value": "0"
+      },
+      {
+        "label": "相机离地高度m",
+        "value": "1.6"
+      }
+    ],
+    "phase": "ready",
+    "pose": "方位 46.4°俯仰 0.0°水平视场 54.4°垂直视场 37.8°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CTRBXZWS.js",
+    "weather": "天气天气已应用 · 云层与降水示意总云量 55% · 低 55% / 中 18% / 高 0%降水 0.1 mm/小时 · 概率 74% · 能见度 5.7 km拍摄 11/07 06:29 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:59 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似"
+  },
+  {
+    "name": "04-after-telephoto",
+    "bounds": {
+      "height": 1271,
+      "width": 2560,
+      "x": 0,
+      "y": 0
+    },
+    "elevation": "机位高程 ≈ 941.6 m · 离地 1.6 m",
+    "frame": {
+      "height": 431.65625,
+      "width": 647.5,
+      "x": 1557.5,
+      "y": 213.421875
+    },
+    "parameters": [
+      {
+        "label": "当地日期",
+        "value": "2026-11-07"
+      },
+      {
+        "label": "当地时间",
+        "value": "06:29:00"
+      },
+      {
+        "label": "焦距mm",
+        "value": "1000"
+      },
+      {
+        "label": "纬度°",
+        "value": "39.8206"
+      },
+      {
+        "label": "经度°",
+        "value": "141.5275"
+      },
+      {
+        "label": "方位角°",
+        "value": "46.4"
+      },
+      {
+        "label": "俯仰角°",
+        "value": "0"
+      },
+      {
+        "label": "相机离地高度m",
+        "value": "1.6"
+      }
+    ],
+    "phase": "ready",
+    "pose": "方位 46.4°俯仰 0.0°水平视场 2.1°垂直视场 1.4°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CTRBXZWS.js",
+    "weather": "天气天气已应用 · 云层与降水示意总云量 55% · 低 55% / 中 18% / 高 0%降水 0.1 mm/小时 · 概率 74% · 能见度 5.7 km拍摄 11/07 06:29 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:59 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似"
+  },
+  {
+    "name": "05-after-ultrawide",
+    "bounds": {
+      "height": 1271,
+      "width": 2560,
+      "x": 0,
+      "y": 0
+    },
+    "elevation": "机位高程 ≈ 941.6 m · 离地 1.6 m",
+    "frame": {
+      "height": 431.65625,
+      "width": 647.5,
+      "x": 1557.5,
+      "y": 213.421875
+    },
+    "parameters": [
+      {
+        "label": "当地日期",
+        "value": "2026-11-07"
+      },
+      {
+        "label": "当地时间",
+        "value": "06:29:00"
+      },
+      {
+        "label": "焦距mm",
+        "value": "8"
+      },
+      {
+        "label": "纬度°",
+        "value": "39.8206"
+      },
+      {
+        "label": "经度°",
+        "value": "141.5275"
+      },
+      {
+        "label": "方位角°",
+        "value": "46.4"
+      },
+      {
+        "label": "俯仰角°",
+        "value": "0"
+      },
+      {
+        "label": "相机离地高度m",
+        "value": "1.6"
+      }
+    ],
+    "phase": "ready",
+    "pose": "方位 46.4°俯仰 0.0°水平视场 132.1°垂直视场 112.6°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CTRBXZWS.js",
+    "weather": "天气天气已应用 · 云层与降水示意总云量 55% · 低 55% / 中 18% / 高 0%降水 0.1 mm/小时 · 概率 74% · 能见度 5.7 km拍摄 11/07 06:29 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:59 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似"
+  },
+  {
+    "name": "06-low-sun",
+    "bounds": {
+      "height": 1271,
+      "width": 2560,
+      "x": 0,
+      "y": 0
+    },
+    "elevation": "机位高程 ≈ 941.6 m · 离地 1.6 m",
+    "frame": {
+      "height": 431.65625,
+      "width": 647.5,
+      "x": 1557.5,
+      "y": 213.421875
+    },
+    "parameters": [
+      {
+        "label": "当地日期",
+        "value": "2026-11-07"
+      },
+      {
+        "label": "当地时间",
+        "value": "06:29:00"
+      },
+      {
+        "label": "焦距mm",
+        "value": "200"
+      },
+      {
+        "label": "纬度°",
+        "value": "39.8206"
+      },
+      {
+        "label": "经度°",
+        "value": "141.5275"
+      },
+      {
+        "label": "方位角°",
+        "value": "113.7791741432324"
+      },
+      {
+        "label": "俯仰角°",
+        "value": "2.979495481782428"
+      },
+      {
+        "label": "相机离地高度m",
+        "value": "1.6"
+      }
+    ],
+    "phase": "ready",
+    "pose": "方位 113.8°俯仰 3.0°水平视场 10.3°垂直视场 6.9°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CTRBXZWS.js",
+    "weather": "天气天气已应用 · 云层与降水示意总云量 55% · 低 55% / 中 18% / 高 0%降水 0.1 mm/小时 · 概率 74% · 能见度 5.7 km拍摄 11/07 06:29 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:59 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似"
+  },
+  {
+    "name": "07-mobile-after",
+    "bounds": {
+      "height": 844,
+      "width": 390,
+      "x": 0,
+      "y": 0
+    },
+    "elevation": "机位高程 ≈ 941.6 m · 离地 1.6 m",
+    "frame": {
+      "height": 229.328125,
+      "width": 344,
+      "x": 23,
+      "y": 413.828125
+    },
+    "parameters": [
+      {
+        "label": "当地日期",
+        "value": "2026-11-07"
+      },
+      {
+        "label": "当地时间",
+        "value": "06:29:00"
+      },
+      {
+        "label": "焦距mm",
+        "value": "35"
+      },
+      {
+        "label": "纬度°",
+        "value": "39.8206"
+      },
+      {
+        "label": "经度°",
+        "value": "141.5275"
+      },
+      {
+        "label": "方位角°",
+        "value": "46.4"
+      },
+      {
+        "label": "俯仰角°",
+        "value": "4"
+      },
+      {
+        "label": "相机离地高度m",
+        "value": "1.6"
+      }
+    ],
+    "phase": "ready",
+    "pose": "方位 46.4°俯仰 4.0°水平视场 54.4°垂直视场 37.8°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CTRBXZWS.js",
+    "weather": "天气天气已应用 · 云层与降水示意总云量 55% · 低 55% / 中 18% / 高 0%降水 0.1 mm/小时 · 概率 74% · 能见度 5.7 km拍摄 11/07 06:29 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:59 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似"
+  },
+  {
+    "name": "08-mobile-weather-off",
+    "bounds": {
+      "height": 844,
+      "width": 390,
+      "x": 0,
+      "y": 0
+    },
+    "elevation": "机位高程 ≈ 941.6 m · 离地 1.6 m",
+    "frame": {
+      "height": 229.328125,
+      "width": 344,
+      "x": 23,
+      "y": 413.828125
+    },
+    "parameters": [
+      {
+        "label": "当地日期",
+        "value": "2026-11-07"
+      },
+      {
+        "label": "当地时间",
+        "value": "06:29:00"
+      },
+      {
+        "label": "焦距mm",
+        "value": "35"
+      },
+      {
+        "label": "纬度°",
+        "value": "39.8206"
+      },
+      {
+        "label": "经度°",
+        "value": "141.5275"
+      },
+      {
+        "label": "方位角°",
+        "value": "46.4"
+      },
+      {
+        "label": "俯仰角°",
+        "value": "4"
+      },
+      {
+        "label": "相机离地高度m",
+        "value": "1.6"
+      }
+    ],
+    "phase": "off",
+    "pose": "方位 46.4°俯仰 4.0°水平视场 54.4°垂直视场 37.8°",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CTRBXZWS.js",
+    "weather": "天气天气效果已关闭"
+  }
+]

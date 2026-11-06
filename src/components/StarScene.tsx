@@ -8,6 +8,9 @@ import {
 } from "../domain/starfield";
 import type { SkyVisibility } from "../domain/starfield";
 import type { SkyPoint } from "../domain/starfield";
+import type { WeatherSample } from "../domain/weather";
+import { cloudOpacity, weatherClouds } from "../domain/weather-appearance";
+import { refractDirection } from "../domain/refraction";
 import {
   deepSkyScene,
   deepSkyView,
@@ -30,7 +33,7 @@ import {
 } from "../domain/sky-appearance";
 
 export { emptySkyVisibility };
-export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, artificialMcd?: number) {
+export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, artificialMcd?: number, weather?: WeatherSample) {
   const result = useMemo(() => {
     if (
       !plan.layers.stars &&
@@ -78,6 +81,7 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, arti
   ]);
   const current = visibility.planKey === celestialPlanKey(plan),
     view = current && visibility.view ? { ...plan, ...visibility.view } : plan;
+  const clouds = weather ? weatherClouds(weather, plan) : undefined;
   const points = result.model
     ? [
         ...(plan.layers.stars
@@ -102,6 +106,9 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, arti
               (!isDeep || resource?.phase === "ready")
             ? (visibility.states[point.id] ?? "waiting")
             : "waiting";
+    const baseOpacity = reference ? 1 : isDeep ? (result.appearance?.galaxyStrength ?? 0)
+      : result.appearance ? starOpacity(point, result.appearance) : 0;
+    const opacity = baseOpacity * (1 - cloudOpacity(refractDirection(point.direction, plan.refraction), clouds));
     return {
       point,
       ...projected,
@@ -113,13 +120,8 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, arti
           : "waiting"
         : occlusion,
       partialFrame: "partialFrame" in projected && projected.partialFrame,
-      opacity: reference
-        ? 1
-        : isDeep
-          ? (result.appearance?.galaxyStrength ?? 0)
-          : result.appearance
-            ? starOpacity(point, result.appearance)
-            : 0,
+      opacity,
+      cloudHidden: baseOpacity >= STAR_LABEL_ALPHA && opacity < STAR_LABEL_ALPHA,
     };
   };
   return {
@@ -259,7 +261,7 @@ export function StarReadout({
         <p>
           银河细节 · 对比度 {plan.milkyWayContrast ?? 100}% · 全景衍生 · 银心
           {core?.state === "画面内"
-            ? occlusionLabels[core.occlusion]
+            ? core.occlusion === "clear" && core.cloudHidden ? "云层遮蔽 · 显示近似" : occlusionLabels[core.occlusion]
             : (core?.state ?? "计算中")}
         </p>
       )}
@@ -279,7 +281,7 @@ export function StarReadout({
           <details open>
             <summary>深空目标与朝向</summary>
             {scene.deep.map(
-              ({ point, entry, state, occlusion, partialFrame, opacity, resource }) => (
+              ({ point, entry, state, occlusion, partialFrame, opacity, cloudHidden, resource }) => (
                 <div
                   className="celestial-row"
                   key={point.id}
@@ -301,7 +303,7 @@ export function StarReadout({
                       ? resource?.phase === "error" ? "深空轮廓加载失败"
                         : resource?.phase === "loading" ? "正在加载影像"
                         : occlusion === "clear" && opacity < STAR_LABEL_ALPHA
-                        ? "天空较亮 · 轮廓隐藏"
+                        ? cloudHidden ? "云层遮蔽 · 显示近似" : "天空较亮 · 轮廓隐藏"
                         : `${partialFrame ? "部分入画 · " : ""}${occlusionLabels[occlusion]}`
                       : state}
                   </span>
@@ -337,7 +339,7 @@ export function StarReadout({
       {scene.targets.some(t => t.point.id === "galactic-center" ? galaxy : stars) && (
         <details>
           <summary>星空目标与朝向</summary>
-          {scene.targets.filter(t => t.point.id === "galactic-center" ? galaxy : stars).map(({ point, state, occlusion, opacity }) => (
+          {scene.targets.filter(t => t.point.id === "galactic-center" ? galaxy : stars).map(({ point, state, occlusion, opacity, cloudHidden }) => (
             <div
               className="celestial-row"
               key={point.id}
@@ -351,7 +353,7 @@ export function StarReadout({
                   : occlusion !== "clear"
                     ? occlusionLabels[occlusion]
                     : opacity < STAR_LABEL_ALPHA
-                      ? "天空较亮 · 星点隐藏"
+                      ? cloudHidden ? "云层遮蔽 · 显示近似" : "天空较亮 · 星点隐藏"
                       : occlusionLabels[occlusion]}
               </span>
               <span>

@@ -9,6 +9,8 @@ import { initialBearing } from "../src/domain/map.ts";
 import { skyReference } from "../src/domain/starfield.ts";
 import { constellationScene } from "../src/domain/constellations.ts";
 import {deepSkyScene} from '../src/domain/deep-sky.ts';
+import { weatherResponse } from './fixtures/weather.mjs';
+import { parseWeather, WEATHER_TTL } from '../src/domain/weather.ts';
 
 // Exercise real React handlers and state with an SDK test double; no WebGL is
 // simulated, and these checks do not claim browser rendering verification.
@@ -201,6 +203,8 @@ let server, App, createRoot, dom;
 let sequence = 0;
 let groundResponse;
 let pollutionResponse;
+let weatherLoader;
+const weatherRequests = [];
 const pollutionRequests = [];
 const terrainSize = { width: 600, height: 400 };
 const resizeObservers = [];
@@ -219,6 +223,7 @@ function installGlobal(name, value) {
 }
 
 before(async () => {
+  installGlobal("__testWeatherLoader", (point, signal) => { weatherRequests.push({ point, signal }); return weatherLoader(point, signal); });
   installGlobal("__testCelestialLayer", TestCelestialLayer);
   installGlobal("__testStarfieldLayer", TestStarfieldLayer);
   dom = new JSDOM("<!doctype html><html><body></body></html>", {
@@ -316,6 +321,8 @@ before(async () => {
             return "export const CelestialLayer = globalThis.__testCelestialLayer;";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/light-pollution.ts"))
             return "export const sampleLightPollution = (...args) => globalThis.__testPollutionLoader(...args);";
+          if (id.replaceAll("\\", "/").endsWith("/src/preview/weather.ts"))
+            return "export const loadWeather = (...args) => globalThis.__testWeatherLoader(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/elevation.ts"))
             return "export const groundElevation = (...args) => globalThis.__testGroundLoader(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/map/sdk.ts"))
@@ -375,6 +382,8 @@ async function workspace(
 ) {
   groundResponse = elevation;
   pollutionRequests.length = 0;
+  weatherRequests.length = 0;
+  weatherLoader = async () => parseWeather(weatherResponse(), Date.now());
   pollutionResponse = async () => ({ artificialMcd: 6.5 });
   groundRequests.length = 0;
   resizeObservers.length = 0;
@@ -1530,7 +1539,7 @@ test('光污染开关紧邻构图线，按当地数据更新天空和星点，�
   await setShootingDateTime('2026-11-09T01:00');
   await settle(() => document.querySelector('[aria-label="显示星空"]').click());
   const button = document.querySelector('button[aria-label="当地光污染"]');
-  assert.deepEqual([...document.querySelectorAll('.preview-tools button')].map(e => e.getAttribute('aria-label')), ['显示构图线', '当地光污染']);
+  assert.deepEqual([...document.querySelectorAll('.preview-tools button')].map(e => e.getAttribute('aria-label')), ['显示构图线', '当地光污染', '天气效果']);
   assert.equal(button.title, '当地光污染');
   assert.equal(button.getAttribute('aria-pressed'), 'false'); assert.equal(pollutionRequests.length, 0);
   const sky = structuredClone(map.environments.at(-1)), requests = groundRequests.length;
@@ -1594,4 +1603,77 @@ test('已加载预览隐藏后恢复同一尺寸时重新提交星空帧', async
   await settle(() => observer.callback([{ contentRect: { width: 0, height: 0 } }]));
   await settle(() => observer.callback([{ contentRect: terrainSize }]));
   assert.notEqual(layer.frame.key, old); assert.equal(layer.frame.ready, true);
+});
+
+test('天气按需开启，数据与环境联动，时间和镜头复用机位序列，关闭恢复晴空', async t => {
+  await workspace(t); const map = await readyTerrain();
+  weatherLoader = async () => {
+    const raw = weatherResponse(); raw.hourly.cloud_cover.fill(100); raw.hourly.cloud_cover_low.fill(100);
+    return parseWeather(raw, Date.now());
+  };
+  const button = document.querySelector('[aria-label="天气效果"]');
+  const layer = map.customLayers.find(l => l instanceof TestCelestialLayer);
+  const before = structuredClone(map.environments.at(-1)), ground = groundRequests.length;
+  assert.equal(button.getAttribute('aria-pressed'), 'false'); assert.equal(weatherRequests.length, 0);
+  await settle(() => button.click());
+  await waitUntil(() => document.querySelector('[data-weather-phase="ready"]'));
+  assert.equal(layer.frame.weather.low, 1); assert.notDeepEqual(map.environments.at(-1), before);
+  assert.match(document.querySelector('.weather-readout').textContent, /云层与降水示意/);
+  assert.equal(document.querySelector('.weather-status'), null);
+  await setShootingDateTime('2026-11-05T01:00');
+  await settle(() => document.querySelector('[aria-label="显示星空"]').click());
+  await settle(() => setControl(input('方位角'), 0));
+  await settle(() => setControl(input('俯仰角'), 35)); await readyTerrain();
+  assert.match(document.querySelector('[data-sky-status="北极星"]').textContent, /云层遮蔽/);
+  await settle(() => setControl(input('焦距'), 85));
+  await setShootingDateTime('2026-11-04T18:30');
+  assert.equal(weatherRequests.length, 1); assert.equal(groundRequests.length, ground);
+  assert.equal(layer.frame.weather.time, Date.parse('2026-11-04T09:30Z'));
+  await settle(() => button.click());
+  assert.equal(layer.frame.weather, undefined); assert.equal(terrainMap(), map);
+  await setShootingDateTime('2026-11-04T17:00');
+  assert.deepEqual(map.environments.at(-1), before);
+});
+
+test('天气机位请求取消、错误重试、超范围与缺值分别反馈，迟到数据不覆盖', async t => {
+  await workspace(t); await readyTerrain();
+  const pending = [];
+  weatherLoader = (point, signal) => new Promise((resolve, reject) => pending.push({ point, signal, resolve, reject }));
+  const button = document.querySelector('[aria-label="天气效果"]');
+  await settle(() => button.click()); await waitUntil(() => pending.length === 1);
+  assert.equal(document.querySelector('.weather-status'), null);
+  await settle(() => setControl(input('经度'), 139));
+  await waitUntil(() => pending.length === 2); assert.ok(pending[0].signal.aborted);
+  await settle(() => pending[0].resolve(parseWeather(weatherResponse(), Date.now())));
+  assert.ok(document.querySelector('[data-weather-phase="loading"]'));
+  await settle(() => pending[1].reject(new Error('测试天气下载失败')));
+  assert.match(document.querySelector('.weather-status').textContent, /天气未应用.*失败/);
+  await settle(() => document.querySelector('.weather-status button').click());
+  await waitUntil(() => pending.length === 3);
+  const response = weatherResponse(); response.hourly.cloud_cover_low[8] = null;
+  await settle(() => pending[2].resolve(parseWeather(response, Date.now())));
+  assert.ok(document.querySelector('[data-weather-phase="missing"]'));
+  await setShootingDateTime('2026-11-20T17:00');
+  assert.ok(document.querySelector('[data-weather-phase="outside"]'));
+  assert.equal(document.querySelector('.weather-status button').textContent, '使用当前时间');
+  assert.equal(weatherRequests.length, 3);
+  await settle(() => button.click()); assert.equal(document.querySelector('.weather-status'), null);
+});
+
+test('天气返回页面核对缓存年龄，过期时暂停效果并自动刷新', async t => {
+  let clock = Date.UTC(2026, 10, 4, 8);
+  t.mock.method(Date, 'now', () => clock);
+  await workspace(t); const map = await readyTerrain();
+  await settle(() => document.querySelector('[aria-label="天气效果"]').click());
+  await waitUntil(() => document.querySelector('[data-weather-phase="ready"]'));
+  clock += WEATHER_TTL;
+  let resolve;
+  weatherLoader = () => new Promise(done => { resolve = done; });
+  await settle(() => dom.window.dispatchEvent(new dom.window.Event('focus')));
+  await waitUntil(() => weatherRequests.length === 2);
+  assert.ok(document.querySelector('[data-weather-phase="stale"]'));
+  assert.equal(map.customLayers.find(l => l instanceof TestCelestialLayer).frame.weather, undefined);
+  await settle(() => resolve(parseWeather(weatherResponse(), clock)));
+  assert.ok(document.querySelector('[data-weather-phase="ready"]'));
+  assert.equal(weatherRequests.length, 2);
 });

@@ -1,0 +1,73 @@
+{
+  "provider": "Open-Meteo",
+  "sourceUrl": "https://api.open-meteo.com/v1/forecast",
+  "sourceParameters": {
+    "latitude": 35.4172,
+    "longitude": 138.8729,
+    "forecast_days": 7,
+    "timezone": "GMT",
+    "timeformat": "unixtime",
+    "wind_speed_unit": "ms",
+    "hourly": "cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,precipitation,precipitation_probability,rain,showers,snowfall,visibility,wind_speed_10m,wind_direction_10m"
+  },
+  "snapshotSavedAt": "2026-11-06T19:19:53.679977+00:00",
+  "snapshotSha256": "b4018abb19298056da42721ac64be0d3ee0f4124473f6cf8480136ae191c02e4",
+  "hours": 168,
+  "batchInitialization": "not supplied",
+  "snapshotRole": "separate public API probe; browser uses its own live request",
+  "finalAssetsSha256": {
+    "index-CRu2ydH1.js": "092b4dd64e8a144211997539d7b3f367fb0a8c4980fd72d89ff0120fed856291",
+    "index-rWz4kx0n.css": "da0d7bb2435694b59f3e50ea4e35665358e22858f64dbed52e10d00c371c3e65",
+    "celestial-layer-BZWArtNq.js": "dbe6872dac2cdebe8d2e5d15cad6c88c5347cc37a9c520df083340faf2fc8b24",
+    "weather-appearance-Bdx2_-6V.js": "be7bb1c68cffc4ec7fb2cf3fda189571df918f0db3019074fdcc1424b2a1f891"
+  },
+  "screenshotRecords": 22,
+  "pixelChecks": [
+    {
+      "first": "04-live-rain",
+      "second": "05-rain-weather-off",
+      "meanAbsoluteDifference": 21.801220375500154,
+      "medianRgbFirst": [
+        138.0,
+        156.0,
+        143.0
+      ],
+      "medianRgbSecond": [
+        160.0,
+        183.0,
+        172.0
+      ]
+    },
+    {
+      "first": "04-live-rain",
+      "second": "06-rain-restored",
+      "meanAbsoluteDifference": 0.2487226839027393,
+      "medianRgbFirst": [
+        138.0,
+        156.0,
+        143.0
+      ],
+      "medianRgbSecond": [
+        139.0,
+        156.0,
+        143.0
+      ]
+    },
+    {
+      "first": "08-overcast-night",
+      "second": "09-night-weather-off",
+      "meanAbsoluteDifference": 27.685072329947676,
+      "medianRgbFirst": [
+        14.0,
+        21.0,
+        31.0
+      ],
+      "medianRgbSecond": [
+        28.0,
+        44.0,
+        70.0
+      ]
+    }
+  ],
+  "pngVerified": 27
+}

@@ -2,6 +2,7 @@ import type { Map as MapLibreMap, SkySpecification, ExpressionSpecification } fr
 import type { celestialBodies } from "../domain/ephemeris.ts";
 import { terrainColors } from "../domain/terrain.ts";
 import { skyAppearance } from "../domain/sky-appearance.ts";
+import type { WeatherSample } from "../domain/weather.ts";
 
 // Artistic clear-sky colours, not radiance, exposure or a weather forecast.
 const stops = [
@@ -24,7 +25,7 @@ const smoothstep = (low: number, high: number, value: number) => {
 type Bodies = ReturnType<typeof celestialBodies>;
 
 export function environmentForSky(sun: Pick<Bodies["sun"], "elevation" | "azimuth">,
-  moon: Pick<Bodies["moon"], "elevation" | "illuminatedFraction">, artificialMcd = 0) {
+  moon: Pick<Bodies["moon"], "elevation" | "illuminatedFraction">, artificialMcd = 0, weather?: WeatherSample) {
   if (!Number.isFinite(sun.elevation) || !Number.isFinite(sun.azimuth))
     throw new RangeError("光照需要有效的太阳位置");
   if (!Number.isFinite(moon.elevation) || Math.abs(moon.elevation) > 90 ||
@@ -46,17 +47,18 @@ export function environmentForSky(sun: Pick<Bodies["sun"], "elevation" | "azimut
     // Round only once, after solar interpolation and lunar lift are combined.
     return hex(channels(first).map((value,i)=>mix(value,to[i],weight)+lift[i]*moonlight+artificialLift[i]*pollutionGlow));
   };
-  const brightness = mix(a.brightness, b.brightness, weight) + 0.12 * moonlight;
+  const cloud = weather?.cloud ?? 0;
+  const brightness = (mix(a.brightness, b.brightness, weight) + 0.12 * moonlight) * (1 - cloud * 0.25);
   const warmth = mix(a.warmth, b.warmth, weight);
   const surface = (color: string) => hex(channels(mixColor(color, "#ffb87d", warmth * 0.15)).map((value) => value * brightness));
-  const direct = clamp(sun.elevation / 6, 0, 1);
+  const direct = clamp(sun.elevation / 6, 0, 1) * (1 - cloud * 0.85);
   return {
     sky: {
       "sky-color": skyColor(a.sky, b.sky, [21,25,29], [45,40,30]),
       "horizon-color": skyColor(a.horizon, b.horizon, [30,35,35], [60,48,30]),
       "fog-color": skyColor(a.fog, b.fog, [30,32,32], [50,43,32]),
       "sky-horizon-blend": 0.65,
-      "horizon-fog-blend": 0.2,
+      "horizon-fog-blend": weather ? 0.2 + 0.45 * (1 - clamp(weather.visibility / 30000, 0, 1)) : 0.2,
       "fog-ground-blend": 0.06,
     } satisfies SkySpecification,
     ground: surface(terrainColors.ground),

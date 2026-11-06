@@ -1,0 +1,2802 @@
+[
+  {
+    "name": "01-live-outside",
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 193.875,
+      "width": 290.8125,
+      "x": 842.1875,
+      "y": 253.5625
+    },
+    "inputs": [
+      {
+        "label": "当地日期",
+        "value": "2026-11-04"
+      },
+      {
+        "label": "当地时间",
+        "value": "17:00:00"
+      }
+    ],
+    "phase": "outside",
+    "readout": "天气拍摄时间超出天气预报范围预报 11/06 09:00 — 11/13 08:00获取 11/07 04:17 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似使用当前时间",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-DAc1zJ7i.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "02-live-current",
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 379.453125,
+      "width": 569.1875,
+      "x": 227,
+      "y": 348.265625
+    },
+    "inputs": [
+      {
+        "label": "当地日期",
+        "value": "2026-11-07"
+      },
+      {
+        "label": "当地时间",
+        "value": "04:18:25"
+      }
+    ],
+    "phase": "loading",
+    "readout": "天气正在读取天气数据Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "false",
+    "resource": "/Tamatamatori/assets/index-DAc1zJ7i.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "03-live-current-ready",
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 379.453125,
+      "width": 569.1875,
+      "x": 227,
+      "y": 348.265625
+    },
+    "inputs": [
+      {
+        "label": "当地日期",
+        "value": "2026-11-07"
+      },
+      {
+        "label": "当地时间",
+        "value": "04:19:18"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 0% · 低 0% / 中 0% / 高 0%降水 0.0 mm/小时 · 概率 0% · 能见度 0.5 km拍摄 11/07 04:19 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:19 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-B2161DD2.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "04-live-rain",
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 379.453125,
+      "width": 569.1875,
+      "x": 227,
+      "y": 348.265625
+    },
+    "inputs": [
+      {
+        "label": "当地日期",
+        "value": "2026-11-09"
+      },
+      {
+        "label": "当地时间",
+        "value": "09:00:00"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 68% · 低 68% / 中 68% / 高 24%降水 2.3 mm/小时 · 概率 88% · 能见度 2.1 km拍摄 11/09 09:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:19 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-B2161DD2.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "05-rain-weather-off",
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 380,
+      "width": 570,
+      "x": 227,
+      "y": 348
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-09"
+      },
+      {
+        "label": "当地时间",
+        "value": "09:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "540"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "35"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "35"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "247"
+      },
+      {
+        "label": "_r_4_",
+        "value": "4"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "off",
+    "readout": "天气天气效果已关闭",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-B2161DD2.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "false"
+      }
+    ]
+  },
+  {
+    "name": "06-rain-restored",
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 380,
+      "width": 570,
+      "x": 227,
+      "y": 348
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-09"
+      },
+      {
+        "label": "当地时间",
+        "value": "09:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "540"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "35"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "35"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "247"
+      },
+      {
+        "label": "_r_4_",
+        "value": "4"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 68% · 低 68% / 中 68% / 高 24%降水 2.3 mm/小时 · 概率 88% · 能见度 2.1 km拍摄 11/09 09:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:19 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-B2161DD2.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "08-overcast-night",
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 380,
+      "width": 570,
+      "x": 227,
+      "y": 348
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-10"
+      },
+      {
+        "label": "当地时间",
+        "value": "21:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "1260"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "35"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "35"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "17.454016053409248"
+      },
+      {
+        "label": "_r_4_",
+        "value": "83.68204168492258"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 100% · 低 100% / 中 8% / 高 0%降水 0.2 mm/小时 · 概率 25% · 能见度 10.5 km拍摄 11/10 21:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:19 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-B2161DD2.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "09-night-weather-off",
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 380,
+      "width": 570,
+      "x": 227,
+      "y": 348
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-10"
+      },
+      {
+        "label": "当地时间",
+        "value": "21:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "1260"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "35"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "35"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "17.454016053409248"
+      },
+      {
+        "label": "_r_4_",
+        "value": "83.68204168492258"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "off",
+    "readout": "天气天气效果已关闭",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-B2161DD2.js",
+    "starLabels": 9,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "false"
+      }
+    ]
+  },
+  {
+    "name": "10-clouds-with-light-pollution",
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 380,
+      "width": 570,
+      "x": 227,
+      "y": 348
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-10"
+      },
+      {
+        "label": "当地时间",
+        "value": "21:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "1260"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "35"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "35"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "17.454016053409248"
+      },
+      {
+        "label": "_r_4_",
+        "value": "83.68204168492258"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 100% · 低 100% / 中 8% / 高 0%降水 0.2 mm/小时 · 概率 25% · 能见度 10.5 km拍摄 11/10 21:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:19 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-B2161DD2.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "true"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "11-mobile-preview",
+    "bounds": {
+      "height": 844,
+      "width": 390,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 231,
+      "width": 344,
+      "x": 23,
+      "y": 413
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-10"
+      },
+      {
+        "label": "当地时间",
+        "value": "21:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "1260"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "35"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "35"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "17.454016053409248"
+      },
+      {
+        "label": "_r_4_",
+        "value": "83.68204168492258"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 100% · 低 100% / 中 8% / 高 0%降水 0.2 mm/小时 · 概率 25% · 能见度 10.5 km拍摄 11/10 21:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:19 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-B2161DD2.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "true"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "12-mobile-readout",
+    "bounds": {
+      "height": 844,
+      "width": 390,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 231,
+      "width": 344,
+      "x": 23,
+      "y": 413
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-10"
+      },
+      {
+        "label": "当地时间",
+        "value": "21:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "1260"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "35"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "35"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "17.454016053409248"
+      },
+      {
+        "label": "_r_4_",
+        "value": "83.68204168492258"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 100% · 低 100% / 中 8% / 高 0%降水 0.2 mm/小时 · 概率 25% · 能见度 10.5 km拍摄 11/10 21:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:19 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-B2161DD2.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "true"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "13-final-overcast-night",
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 380,
+      "width": 570,
+      "x": 227,
+      "y": 348
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-10"
+      },
+      {
+        "label": "当地时间",
+        "value": "21:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "1260"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "35"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "35"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "17.454016053409248"
+      },
+      {
+        "label": "_r_4_",
+        "value": "83.68204168492258"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 100% · 低 100% / 中 8% / 高 0%降水 0.2 mm/小时 · 概率 25% · 能见度 10.5 km拍摄 11/10 21:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:35 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CRu2ydH1.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "14-final-rain",
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 380,
+      "width": 570,
+      "x": 227,
+      "y": 348
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-09"
+      },
+      {
+        "label": "当地时间",
+        "value": "09:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "540"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "35"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "35"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "247"
+      },
+      {
+        "label": "_r_4_",
+        "value": "4"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 68% · 低 68% / 中 68% / 高 24%降水 2.3 mm/小时 · 概率 88% · 能见度 2.1 km拍摄 11/09 09:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:35 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CRu2ydH1.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "15-final-view-turn",
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 380,
+      "width": 570,
+      "x": 227,
+      "y": 348
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-09"
+      },
+      {
+        "label": "当地时间",
+        "value": "09:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "540"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "35"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "35"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "252"
+      },
+      {
+        "label": "_r_4_",
+        "value": "4"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 68% · 低 68% / 中 68% / 高 24%降水 2.3 mm/小时 · 概率 88% · 能见度 2.1 km拍摄 11/09 09:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:35 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CRu2ydH1.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "16-final-mobile-preview",
+    "bounds": {
+      "height": 844,
+      "width": 390,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 231,
+      "width": 344,
+      "x": 23,
+      "y": 413
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-09"
+      },
+      {
+        "label": "当地时间",
+        "value": "09:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "540"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "35"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "35"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "247"
+      },
+      {
+        "label": "_r_4_",
+        "value": "4"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 68% · 低 68% / 中 68% / 高 24%降水 2.3 mm/小时 · 概率 88% · 能见度 2.1 km拍摄 11/09 09:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:35 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CRu2ydH1.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "17-final-mobile-readout",
+    "bounds": {
+      "height": 844,
+      "width": 390,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 231,
+      "width": 344,
+      "x": 23,
+      "y": 413
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-09"
+      },
+      {
+        "label": "当地时间",
+        "value": "09:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "540"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "35"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "35"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "247"
+      },
+      {
+        "label": "_r_4_",
+        "value": "4"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 68% · 低 68% / 中 68% / 高 24%降水 2.3 mm/小时 · 概率 88% · 能见度 2.1 km拍摄 11/09 09:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:35 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CRu2ydH1.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "18-weather-about",
+    "bounds": {
+      "height": 844,
+      "width": 390,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 231,
+      "width": 344,
+      "x": 23,
+      "y": 413
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-09"
+      },
+      {
+        "label": "当地时间",
+        "value": "09:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "540"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "35"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "35"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "247"
+      },
+      {
+        "label": "_r_4_",
+        "value": "4"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 68% · 低 68% / 中 68% / 高 24%降水 2.3 mm/小时 · 概率 88% · 能见度 2.1 km拍摄 11/09 09:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:35 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CRu2ydH1.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "19-small-mobile",
+    "bounds": {
+      "height": 640,
+      "width": 360,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 211,
+      "width": 314,
+      "x": 23,
+      "y": 321
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-09"
+      },
+      {
+        "label": "当地时间",
+        "value": "09:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "540"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "35"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "35"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "247"
+      },
+      {
+        "label": "_r_4_",
+        "value": "4"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 68% · 低 68% / 中 68% / 高 24%降水 2.3 mm/小时 · 概率 88% · 能见度 2.1 km拍摄 11/09 09:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:35 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CRu2ydH1.js",
+    "starLabels": 0,
+    "tools": [
+      {
+        "label": "显示构图线",
+        "pressed": "true"
+      },
+      {
+        "label": "当地光污染",
+        "pressed": "false"
+      },
+      {
+        "label": "天气效果",
+        "pressed": "true"
+      }
+    ]
+  },
+  {
+    "name": "20-sun-clouds",
+    "bodies": [
+      "太阳当前 DEM 未遮挡139.6° / 视 27.10°（几何 27.06°）云层透过约 0% · 显示近似朝向",
+      "月亮视场外146.2° / 视 25.56°（几何 25.52°）新月附近 · 亮面 0%云层透过约 0% · 显示近似朝向"
+    ],
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 379.453125,
+      "width": 569.1875,
+      "x": 227,
+      "y": 348.265625
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-09"
+      },
+      {
+        "label": "当地时间",
+        "value": "09:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "540"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "500"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "500"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "139.60365711058154"
+      },
+      {
+        "label": "_r_4_",
+        "value": "27.097525759519975"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 68% · 低 68% / 中 68% / 高 24%降水 2.3 mm/小时 · 概率 88% · 能见度 2.1 km拍摄 11/09 09:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:40 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CRu2ydH1.js",
+    "starLabels": 0
+  },
+  {
+    "name": "21-sun-weather-off",
+    "bodies": [
+      "太阳当前 DEM 未遮挡139.6° / 视 27.10°（几何 27.06°）朝向",
+      "月亮视场外146.2° / 视 25.56°（几何 25.52°）新月附近 · 亮面 0%朝向"
+    ],
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 379.453125,
+      "width": 569.1875,
+      "x": 227,
+      "y": 348.265625
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-09"
+      },
+      {
+        "label": "当地时间",
+        "value": "09:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "540"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "500"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "500"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "139.60365711058154"
+      },
+      {
+        "label": "_r_4_",
+        "value": "27.097525759519975"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "off",
+    "readout": "天气天气效果已关闭",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CRu2ydH1.js",
+    "starLabels": 0
+  },
+  {
+    "name": "22-moon-clouds",
+    "bodies": [
+      "太阳视场外242.7° / 视 6.81°（几何 6.68°）云层透过约 1% · 显示近似朝向",
+      "月亮当前 DEM 未遮挡210.6° / 视 18.90°（几何 18.85°）盈月牙 · 亮面 8%云层透过约 1% · 显示近似朝向"
+    ],
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 379.453125,
+      "width": 569.1875,
+      "x": 227,
+      "y": 348.265625
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-12"
+      },
+      {
+        "label": "当地时间",
+        "value": "16:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "960"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "500"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "500"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "210.6459862961757"
+      },
+      {
+        "label": "_r_4_",
+        "value": "18.8964490567388"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "ready",
+    "readout": "天气天气已应用 · 云层与降水示意总云量 68% · 低 68% / 中 6% / 高 0%降水 0.0 mm/小时 · 概率 0% · 能见度 45.8 km拍摄 11/12 16:00 · Asia/Tokyo预报 11/06 09:00 — 11/13 08:00获取 11/07 04:40 · 起报批次未提供Open-Meteo · 点位云量驱动示意 · 云块方位与透光为近似",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CRu2ydH1.js",
+    "starLabels": 0
+  },
+  {
+    "name": "23-moon-weather-off",
+    "bodies": [
+      "太阳视场外242.7° / 视 6.81°（几何 6.68°）朝向",
+      "月亮当前 DEM 未遮挡210.6° / 视 18.90°（几何 18.85°）盈月牙 · 亮面 8%朝向"
+    ],
+    "bounds": {
+      "height": 900,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "frame": {
+      "height": 379.453125,
+      "width": 569.1875,
+      "x": 227,
+      "y": 348.265625
+    },
+    "inputs": [
+      {
+        "label": "显示太阳",
+        "value": "on"
+      },
+      {
+        "label": "显示月亮",
+        "value": "on"
+      },
+      {
+        "label": "显示星空",
+        "value": "on"
+      },
+      {
+        "label": "显示银河",
+        "value": "on"
+      },
+      {
+        "label": "显示深空天体",
+        "value": "on"
+      },
+      {
+        "label": "显示空间站",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "value": "2"
+      },
+      {
+        "label": "当地日期",
+        "value": "2026-11-12"
+      },
+      {
+        "label": "当地时间",
+        "value": "16:00:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "value": "960"
+      },
+      {
+        "label": "显示时区",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "value": "standard"
+      },
+      {
+        "label": "_r_0_",
+        "value": "500"
+      },
+      {
+        "label": "焦距滑块",
+        "value": "500"
+      },
+      {
+        "label": "传感器",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "value": "landscape"
+      },
+      {
+        "label": "深空相机响应",
+        "value": "stock"
+      },
+      {
+        "label": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "label": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "label": "_r_3_",
+        "value": "210.6459862961757"
+      },
+      {
+        "label": "_r_4_",
+        "value": "18.8964490567388"
+      },
+      {
+        "label": "_r_5_",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "value": ""
+      },
+      {
+        "label": "显示星座名称与连线",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "value": "100"
+      }
+    ],
+    "phase": "off",
+    "readout": "天气天气效果已关闭",
+    "ready": "true",
+    "resource": "/Tamatamatori/assets/index-CRu2ydH1.js",
+    "starLabels": 0
+  }
+]

@@ -97,6 +97,18 @@ export function About() {
             </ul>
           </section>
 
+          <section aria-labelledby="about-weather-title">
+            <h3 id="about-weather-title">天气预报</h3>
+            <p>天气数据由 Open-Meteo 提供，汇集各国气象机构的数值预报，数据采用 CC BY 4.0。当前使用免密钥免费服务，仅限非商业用途。</p>
+            <p>按机位读取七天逐小时序列。云层覆盖受点位云量约束，云块位置、透光与降水外观为显示近似，实际预报精度随地区、时效与气象条件变化。</p>
+            <div className="about-downloads">
+              <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo</a>
+              <a href="https://open-meteo.com/en/docs" target="_blank" rel="noreferrer">变量与来源模式</a>
+              <a href="https://open-meteo.com/en/terms" target="_blank" rel="noreferrer">服务条件与数据许可</a>
+              <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>
+            </div>
+          </section>
+
           <section aria-labelledby="about-pollution-title">
             <h3 id="about-pollution-title">当地光污染</h3>
             <p>{lightPollutionAtlas.credit}</p>

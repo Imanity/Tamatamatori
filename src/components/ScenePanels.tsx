@@ -37,6 +37,8 @@ import { matchingStations } from "../domain/orbit-data";
 import { stationScene } from "../domain/stations";
 import { useLightPollution } from "./useLightPollution";
 import { lightPollutionAtlas } from "../domain/light-pollution";
+import { useWeather } from "./useWeather";
+import { WeatherReadout, WeatherActions, weatherMessage } from "./WeatherReadout";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -157,7 +159,9 @@ export function PreviewPanel({
   const pollution = useLightPollution(plan);
   const artificialMcd =
     pollution.phase === "ready" ? pollution.sample?.artificialMcd : undefined;
-  const starScene = useStarScene(plan, skyVisibility, artificialMcd);
+  const weatherFeed = useWeather(plan);
+  const weather = weatherFeed.sample ?? undefined;
+  const starScene = useStarScene(plan, skyVisibility, artificialMcd, weather);
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return (
     <div className="preview-content">
@@ -209,6 +213,15 @@ export function PreviewPanel({
           >
             <Icon name="light" size={16} />
           </button>
+          <button
+            className={`icon-button ${plan.weather ? "is-active" : ""}`}
+            aria-label="天气效果"
+            aria-pressed={!!plan.weather}
+            title="天气效果 · 云层与降水示意"
+            onClick={() => update({ weather: !plan.weather })}
+          >
+            <Icon name="cloud" size={16} />
+          </button>
         </div>
       </div>
       {plan.lightPollution &&
@@ -225,6 +238,12 @@ export function PreviewPanel({
             )}
           </div>
         )}
+      {["error", "outside", "missing", "stale"].includes(weatherFeed.phase) && (
+        <div className="weather-status" role="status">
+          天气未应用 · {weatherMessage(weatherFeed)}
+          <WeatherActions feed={weatherFeed} update={update} />
+        </div>
+      )}
       <div className="viewfinder-wrap">
         <div
           className={`viewfinder ${dragging ? "is-dragging" : ""}`}
@@ -320,16 +339,18 @@ export function PreviewPanel({
           <TerrainScene
             plan={plan}
             artificialMcd={artificialMcd}
+            weather={weather}
             stations={plan.layers.stations ? stations : undefined}
             onVisibilityChange={setVisibility}
             onCameraChange={setCamera}
             onSkyChange={setSkyVisibility}
             onInfoChange={setTerrainInfo}
           />
-          <CelestialDiscs scene={celestialScene} />
+          <CelestialDiscs scene={celestialScene} weather={weather} plan={plan} />
           <StarLabels scene={starScene} />
           <StationLabels
             plan={plan}
+            weather={weather}
             scene={stations}
             visibility={skyVisibility}
           />
@@ -392,6 +413,7 @@ export function PreviewPanel({
                 query={infoQuery}
                 additionalCount={stationMatches.length}
                 artificialMcd={artificialMcd}
+                weather={weather}
                 skyVisibility={skyVisibility}
                 visibility={visibility}
                 update={update}
@@ -466,6 +488,7 @@ export function PreviewPanel({
                           </button>
                         )}
                       </div>
+                      <WeatherReadout feed={weatherFeed} plan={plan} update={update} />
                       <p className="sky-limit">
                         曲面构图 · 高程基准未核定 · 水面按 DEM
                         近似。晴空与月光为构图参考。
@@ -481,6 +504,7 @@ export function PreviewPanel({
                     plan={plan}
                     update={update}
                     bodyId="sun"
+                    weather={weather}
                   />,
                 )}
                 {group(
@@ -491,6 +515,7 @@ export function PreviewPanel({
                     plan={plan}
                     update={update}
                     bodyId="moon"
+                    weather={weather}
                   />,
                 )}
                 {group(

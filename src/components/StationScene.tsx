@@ -6,6 +6,9 @@ import { skyPointView } from "../domain/starfield";
 import { celestialPlanKey, occlusionLabels } from "../domain/visibility";
 import { apparentElevation } from "../domain/refraction";
 import { matchingStations } from "../domain/orbit-data";
+import type { WeatherSample } from "../domain/weather";
+import { cloudOpacity, weatherClouds } from "../domain/weather-appearance";
+import { refractDirection } from "../domain/refraction";
 
 const utc = (instant: string | null) => instant
   ? `${new Date(instant.endsWith("Z") ? instant : `${instant}Z`).toISOString().slice(0, 19).replace("T", " ")} UTC`
@@ -21,14 +24,16 @@ function stationView(plan: ShootingPlan, scene: StationScene, visibility: SkyVis
   return { ...projected, occlusion };
 }
 
-export function StationLabels({ plan, scene, visibility }: { plan: ShootingPlan; scene: StationScene; visibility: SkyVisibility }) {
+export function StationLabels({ plan, scene, visibility, weather }: { plan: ShootingPlan; scene: StationScene; visibility: SkyVisibility; weather?: WeatherSample }) {
   if (!plan.layers.stations) return null;
   return scene.points.map((point) => {
     const view = stationView(plan, scene, visibility, point);
     if (view.state !== "画面内" || view.occlusion !== "clear" || !view.pixel) return null;
+    const opacity = 1 - cloudOpacity(refractDirection(point.direction, plan.refraction), weather ? weatherClouds(weather, plan) : undefined);
+    if (opacity < 0.05) return null;
     return (
       <span key={point.id} className="sky-label station-label" data-station-label={point.noradId}
-        style={{ left: `${(view.pixel.x + 1) * 50}%`, top: `${(view.pixel.y + 1) * 50}%` }}>
+        style={{ opacity, left: `${(view.pixel.x + 1) * 50}%`, top: `${(view.pixel.y + 1) * 50}%` }}>
         {point.name}<small>位置参考</small>
       </span>
     );

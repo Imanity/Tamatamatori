@@ -1,0 +1,115 @@
+{
+  "recordedAt": "2026-11-06T20:06:42.156Z",
+  "tests": {
+    "command": "npm test",
+    "tests": 210,
+    "passed": 210,
+    "failed": 0,
+    "logSha256": "5b2591d7284c610d3a2425d240d9887c7d12977ef6a9bb503b44316a0de890a5"
+  },
+  "build": {
+    "command": "npm run build -- --base /Tamatamatori/",
+    "result": "passed",
+    "warning": "既有 MapLibre 分块大于 500 kB",
+    "logSha256": "ce2f312553e97a9c809b29cd3f90c1ce4d54432757e9f1a42bbffd7dcece0beb",
+    "assets": [
+      {
+        "name": "index-CTRBXZWS.js",
+        "sha256": "5467d84bd74bccd256aded7dad9db2259f719012148e68679e9eb2699c639f5d"
+      },
+      {
+        "name": "index-rWz4kx0n.css",
+        "sha256": "da0d7bb2435694b59f3e50ea4e35665358e22858f64dbed52e10d00c371c3e65"
+      },
+      {
+        "name": "celestial-layer-DPMn2vmA.js",
+        "sha256": "479cb8edf7b583d838e2de65fbb07e7515581054e923bc472f8e10d445616eaa"
+      }
+    ]
+  },
+  "modelCheck": {
+    "horizonHeight": 0.12,
+    "meanOpacity": 0.6215706,
+    "rowsByElevationDegrees": {
+      "0": {
+        "min": 0.6215706,
+        "max": 0.6215706,
+        "range": 0
+      },
+      "10": {
+        "min": 0,
+        "max": 0.9952640969270778,
+        "range": 0.9952640969270778
+      },
+      "0.1": {
+        "min": 0.6212378280599665,
+        "max": 0.6219613040782248,
+        "range": 0.0007234760182582844
+      }
+    },
+    "method": "直接调用 CPU 显示模型，回归检查与 Chrome 实际 GPU 分开验收"
+  },
+  "browser": {
+    "engine": "Chrome/WebGL",
+    "recordCount": 8,
+    "beforeAfterInputsEqual": true,
+    "weatherReadoutsEqualExceptFetchTime": true,
+    "consoleErrorCount": 0,
+    "notes": [
+      "首次手机预览面板隐藏，重新采集后移除无对应截图的零尺寸 DOM 记录。",
+      "1000 mm 截图含 DEM 细化提示，仅验收云层投影。",
+      "截图保留浏览器返回的 JPEG 原始字节，文件后缀与格式一致。",
+      "点位小时预报驱动显示近似，远云采用平均覆盖。"
+    ]
+  },
+  "screenshots": [
+    {
+      "file": "01-before-high-view.jpg",
+      "width": 2560,
+      "height": 1271,
+      "sha256": "152fe8ab4ad1e6690416d28b34c577567154d30909b2aa9a2ebcef59586a5f99"
+    },
+    {
+      "file": "02-after-high-view.jpg",
+      "width": 2560,
+      "height": 1271,
+      "sha256": "0767ceaedf9e64467b6743dfcb43ee83c8c0e11ba77b6d2a1c1b0576b11b236c"
+    },
+    {
+      "file": "03-after-level-view.jpg",
+      "width": 2560,
+      "height": 1271,
+      "sha256": "70acf1dc71ee3c54ea352d99430fe1b244971c79f653de6397c28e5546e10177"
+    },
+    {
+      "file": "04-after-telephoto.jpg",
+      "width": 2560,
+      "height": 1271,
+      "sha256": "4caf2d5bb20477c3541b00c8393a717be085a258bef5d33fb72dc00eb7688d16"
+    },
+    {
+      "file": "05-after-ultrawide.jpg",
+      "width": 2560,
+      "height": 1271,
+      "sha256": "fc08413d3f1439a7f6ee660a20497a57ab98c9b0274699444abad16aaffb77b8"
+    },
+    {
+      "file": "06-low-sun.jpg",
+      "width": 2560,
+      "height": 1271,
+      "sha256": "c264909ef972b67274ee63a6926258e2bd9c0fc845ebe958e3facade85c0eee6"
+    },
+    {
+      "file": "07-mobile-after.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "5e4475ab094a50325e7eedc06d81781ae83e4a8daeb6e4e7d1ea96d1435c3f51"
+    },
+    {
+      "file": "08-mobile-weather-off.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "51ad984314d12b0f694cccac622ebc261b0d87199f24ee42988589b2bbd031fb"
+    }
+  ]
+}

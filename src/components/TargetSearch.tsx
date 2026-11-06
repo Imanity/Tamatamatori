@@ -6,6 +6,9 @@ import type { SkyVisibility } from "../domain/starfield";
 import { bodyPolygons } from "../domain/celestial-projection";
 import { celestialPlanKey, occlusionLabels } from "../domain/visibility";
 import type { VisibilitySnapshot } from "../domain/visibility";
+import type { WeatherSample } from "../domain/weather";
+import { cloudOpacity, weatherClouds } from "../domain/weather-appearance";
+import { refractDirection } from "../domain/refraction";
 import { deepSkyView, deepSkyImageSource, deepSkySourceNote } from "../domain/deep-sky";
 import {
   skyAppearance,
@@ -22,6 +25,7 @@ export function TargetSearchResults({
   update,
   additionalCount = 0,
   artificialMcd,
+  weather,
 }: {
   plan: ShootingPlan;
   view: ShootingPlan;
@@ -31,6 +35,7 @@ export function TargetSearchResults({
   update: (patch: Partial<ShootingPlan>) => void;
   additionalCount?: number;
   artificialMcd?: number;
+  weather?: WeatherSample;
 }) {
   const result = useMemo(() => {
     try {
@@ -109,6 +114,14 @@ export function TargetSearchResults({
             STAR_LABEL_ALPHA
           )
             status = "天空较亮 · 星点隐藏";
+        }
+        if (enabled && state === "画面内" && (occlusion === "clear" || occlusion === "partial") && weather) {
+          const sky = skyReference(plan), appearance = skyAppearance(sky.sunElevation, sky.moon, artificialMcd);
+          const baseOpacity = target.body || target.layer === "constellations" ? 1
+            : target.deep ? appearance.galaxyStrength : starOpacity(target, appearance);
+          const transmission = 1 - cloudOpacity(refractDirection(target.direction, plan.refraction), weatherClouds(weather, plan));
+          if (baseOpacity >= STAR_LABEL_ALPHA && baseOpacity * transmission < STAR_LABEL_ALPHA)
+            status = "云层遮蔽 · 显示近似";
         }
         const action = !enabled ? (below ? "开启图层" : "开启并朝向") : "朝向";
         return (

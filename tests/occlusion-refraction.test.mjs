@@ -12,6 +12,8 @@ import {constellationScene} from '../src/domain/constellations.ts';
 import {skyPointView} from '../src/domain/starfield.ts';
 import {deepSkyScene} from '../src/domain/deep-sky.ts';
 import {DeepSkyTextures} from '../src/preview/deep-sky-textures.ts';
+import { parseWeather, sampleWeather } from '../src/domain/weather.ts';
+import { weatherResponse } from './fixtures/weather.mjs';
 
 const close = (a, b, tolerance = 1e-6) => assert.ok(Math.abs(a - b) <= tolerance, `${a} vs ${b}`);
 const disc = (elevation) => ({ id: "sun", elevation, azimuth: 0, angularRadius: 0.25, distanceKm: 1.5e8, direction: direction(0, elevation) });
@@ -75,6 +77,7 @@ function fakeGL() {
   gl.getShaderParameter=()=>gl.compile; gl.getProgramParameter=()=>true; gl.getUniformLocation=(_,name)=>name;
   gl.uniform1f=(name,value)=>uniforms.set(name,value);gl.uniformMatrix4fv=()=>{};
   gl.uniform1i=gl.uniform1f;
+  gl.uniform2fv=gl.uniform3fv=(name,value)=>uniforms.set(name,Array.from(value));
   gl.isContextLost=()=>false; gl.getParameter=(key)=>key===gl.TEXTURE_BINDING_2D?state.get(`texture${state.get(gl.ACTIVE_TEXTURE)}`):key===gl.SAMPLER_BINDING?state.get(`sampler${state.get(gl.ACTIVE_TEXTURE)}`):state.get(key); gl.isEnabled=(cap)=>enabled.has(cap);
   gl.enable=(cap)=>enabled.add(cap); gl.disable=(cap)=>enabled.delete(cap);
   gl.useProgram=(value)=>state.set(gl.CURRENT_PROGRAM,value); gl.bindVertexArray=(value)=>state.set(gl.VERTEX_ARRAY_BINDING,value);
@@ -85,7 +88,7 @@ function fakeGL() {
   gl.blendFuncSeparate=(...values)=>['BLEND_SRC_RGB','BLEND_DST_RGB','BLEND_SRC_ALPHA','BLEND_DST_ALPHA'].forEach((name,i)=>state.set(gl[name],values[i]));
   gl.createQuery=()=>{const query={available:false}; queries.add(query);return query;};gl.deleteQuery=(query)=>queries.delete(query);
   gl.beginQuery=(_,query)=>{query.result=gl.results.shift();};gl.endQuery=()=>{};
-  gl.drawArrays=(mode,_,count)=>gl.draws.push({mode,count,probe:uniforms.get('u_probe'),haGain:uniforms.get('u_ha_gain'),dark:uniforms.get('u_dark'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK),colorMask:[...state.get(gl.COLOR_WRITEMASK)]});
+  gl.drawArrays=(mode,_,count)=>gl.draws.push({mode,count,probe:uniforms.get('u_probe'),haGain:uniforms.get('u_ha_gain'),dark:uniforms.get('u_dark'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK),colorMask:[...state.get(gl.COLOR_WRITEMASK)],weatherMode:uniforms.get('u_mode'),depthTest:enabled.has(gl.DEPTH_TEST),clouds:uniforms.get('u_layers')});
   gl.drawElements=(mode,count)=>gl.draws.push({mode,count,strength:uniforms.get('u_strength'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK)});
   gl.getQueryParameter=(query,key)=>key===gl.QUERY_RESULT_AVAILABLE?query.available:query.result;
   gl.complete=()=>queries.forEach(query=>query.available=true);
@@ -93,6 +96,20 @@ function fakeGL() {
 }
 const polygon = [{x:-0.2,y:-0.2},{x:0.2,y:-0.2},{x:0.2,y:0.2},{x:-0.2,y:0.2}];
 const frame = (key, ready=true) => ({key,planKey:key,ready,bodies:[{id:'sun',outline:polygon,illuminated:polygon}]});
+
+test('天气云层使用天空深度，降水可覆盖前景且不写深度，关闭和卸载恢复宿主', () => {
+  const {gl,resources,state,enabled} = fakeGL(), reports=[];
+  const previous=new Map(state), previousEnabled=new Set(enabled);
+  const layer=new CelestialLayer(s=>reports.push(s));layer.onAdd({triggerRepaint(){}},gl);
+  const weather=sampleWeather(parseWeather(weatherResponse(),Date.now()),initialPlan.instant);
+  layer.setScene({...frame('weather',false),plan:initialPlan,weather}); layer.render(gl);
+  const cloud=gl.draws.find(d=>d.weatherMode===0), rain=gl.draws.find(d=>d.weatherMode===1);
+  assert.deepEqual(cloud.clouds,[0.4,0.25,0.2]); assert.ok(cloud.depthTest); assert.equal(cloud.depth,gl.LEQUAL);
+  assert.equal(rain.depthTest,false); assert.equal(rain.write,false);
+  assert.deepEqual(state,previous);assert.deepEqual(enabled,previousEnabled);
+  const count=gl.draws.length;layer.setScene({...frame('off',false),plan:initialPlan});layer.render(gl);
+  assert.equal(gl.draws.length-count,2);layer.onRemove();assert.equal(resources.size,0);
+});
 
 test("异步 GPU 查询区分无遮挡、部分、全部遮挡和亚像素，且恢复宿主 GL 状态", () => {
   for (const [results,expected] of [[[true,false],'clear'],[[true,true],'partial'],[[false,true],'blocked'],[[false,false],'subpixel']]) {

@@ -1,3 +1,13 @@
+Open-Meteo weather forecasts, using numerical models from national weather services.
+Data licensed under Creative Commons Attribution 4.0 International (CC BY 4.0).
+https://open-meteo.com/
+https://open-meteo.com/en/docs
+https://open-meteo.com/en/terms
+https://creativecommons.org/licenses/by/4.0/
+The current free, keyless API service is for noncommercial use only.
+Cloud fractions are interpolated in time. Precipitation follows its accumulation interval.
+Procedural cloud placement, transmission, colouring and precipitation particles are display approximations.
+
 World Atlas 2015, GFZ Data Services version 1.1
 Fabio Falchi, Pierantonio Cinzano, Dan Duriscoe, Christopher C. M. Kyba,
 Christopher D. Elvidge, Kimberly Baugh, Boris Portnov, Nataliya A. Rybnikova,

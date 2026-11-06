@@ -1,5 +1,11 @@
 # 第三方许可
 
+## Open-Meteo 天气
+
+天气预报由 Open-Meteo 提供，汇集各国气象机构的数值模式，数据采用 CC BY 4.0。当前使用免密钥免费服务，仅限非商业用途，服务限额与数据许可分别适用。[Open-Meteo](https://open-meteo.com/)、[来源模式](https://open-meteo.com/en/docs)、[服务条件](https://open-meteo.com/en/terms)、[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+
+应用对云量进行时间插值，降水按累计区间采样。点位低中高云量用于控制程序云层，云块方位、光学透过、配色与降水粒子属于显示近似。预报抓取时间与有效时段在全局信息中展示，实际预测误差随地区和时效变化。
+
 ## World Atlas 2015 光污染
 
 使用 Fabio Falchi、Pierantonio Cinzano、Dan Duriscoe、Christopher C. M. Kyba、Christopher D. Elvidge、Kimberly Baugh、Boris Portnov、Nataliya A. Rybnikova、Riccardo Furgoni / ISTIL / GFZ Data Services 的 World Atlas 2015，发布版本 1.1。数据按 CC BY-NC 4.0 提供，仅限非商业使用。官方 DataCite 元数据记录 2019-11-13 许可变更，压缩包内 2016 README 的旧禁再分发说明按该更新处理。[数据与许可](https://doi.org/10.5880/GFZ.1.4.2016.001)，[许可文本](https://creativecommons.org/licenses/by-nc/4.0/legalcode)

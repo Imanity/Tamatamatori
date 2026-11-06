@@ -4,6 +4,9 @@ import { celestialBodies, moonPhaseLabel } from "../domain/ephemeris";
 import { bodyPolygons } from "../domain/celestial-projection";
 import { celestialPlanKey, occlusionLabels } from "../domain/visibility";
 import type { VisibilitySnapshot } from "../domain/visibility";
+import type { WeatherSample } from "../domain/weather";
+import { cloudOpacity, weatherClouds } from "../domain/weather-appearance";
+import { refractDirection } from "../domain/refraction";
 
 export function useCelestialScene(plan: ShootingPlan, visibility: VisibilitySnapshot, renderView?: { azimuth: number; pitch: number }) {
   const result = useMemo(() => {
@@ -19,7 +22,8 @@ export function useCelestialScene(plan: ShootingPlan, visibility: VisibilitySnap
 type CelestialScene = ReturnType<typeof useCelestialScene>;
 const name = (id: "sun" | "moon") => id === "sun" ? "太阳" : "月亮";
 
-export function CelestialDiscs({ scene }: { scene: CelestialScene }) {
+export function CelestialDiscs({ scene, weather, plan }: { scene: CelestialScene; weather?: WeatherSample; plan?: ShootingPlan }) {
+  const clouds = weather && plan ? weatherClouds(weather, plan) : undefined;
   const visible = scene.views.filter((view) => view.enabled && view.state === "画面内" && (view.occlusion === "clear" || view.occlusion === "partial"));
   const outside = scene.views.filter(view=>view.enabled&&view.indicator);
   // At conjunction keep both names readable instead of drawing overlapping pills.
@@ -29,7 +33,7 @@ export function CelestialDiscs({ scene }: { scene: CelestialScene }) {
   return <>
     {visible.map(({ body, centre, outline }) => centre && <span key={body.id} className="celestial-label"
       data-celestial-body={body.id}
-      style={{ left: `${Math.max(5, Math.min(95, (centre.x + 1) * 50))}%`, top: `calc(${Math.max(7, Math.min(90, (Math.min(...outline.map((p) => p.y)) + 1) * 50))}% - 4px)` }}>
+      style={{ opacity: 1 - cloudOpacity(refractDirection(body.direction, plan?.refraction ?? "none"), clouds), left: `${Math.max(5, Math.min(95, (centre.x + 1) * 50))}%`, top: `calc(${Math.max(7, Math.min(90, (Math.min(...outline.map((p) => p.y)) + 1) * 50))}% - 4px)` }}>
       {name(body.id)}<small>构图辅助</small>
     </span>)}
     <div className="celestial-directions">{groups.map(group=>{
@@ -49,8 +53,8 @@ export function CelestialDiscs({ scene }: { scene: CelestialScene }) {
   </>;
 }
 
-export function CelestialReadout({ scene, plan, update, bodyId }: {
-  scene: CelestialScene; plan: ShootingPlan; update: (patch: Partial<ShootingPlan>) => void; bodyId?: "sun" | "moon";
+export function CelestialReadout({ scene, plan, update, bodyId, weather }: {
+  scene: CelestialScene; plan: ShootingPlan; update: (patch: Partial<ShootingPlan>) => void; bodyId?: "sun" | "moon"; weather?: WeatherSample;
 }) {
   if (scene.error) return <p className="celestial-error" role="status">{scene.error}</p>;
   return <div className="celestial-readout" aria-label="日月图层状态">
@@ -60,6 +64,7 @@ export function CelestialReadout({ scene, plan, update, bodyId }: {
       {enabled && <>
         <span className="celestial-coordinates">{body.azimuth.toFixed(1)}° / 视 {visualElevation.toFixed(2)}°（几何 {body.elevation.toFixed(2)}°）</span>
         {body.id === "moon" && <span>{moonPhaseLabel(body.phaseAngle)} · 亮面 {(body.illuminatedFraction * 100).toFixed(0)}%</span>}
+        {weather && <span>云层透过约 {((1 - cloudOpacity(refractDirection(body.direction, plan.refraction), weatherClouds(weather, plan))) * 100).toFixed(0)}% · 显示近似</span>}
         <button aria-label={`朝向${name(body.id)}`} disabled={state === "地平线下"}
           onClick={() => update({ azimuth: body.azimuth, pitch: visualElevation })}>朝向</button>
       </>}
