@@ -1,5 +1,11 @@
 # 第三方许可
 
+## 巴纳德环与蛇夫座区域
+
+巴纳德环采用 Sun Shuwei 的 `barnard_loop-1..4.png`。固定上游 CREDITS 4.29 声明这些影像为公有领域，保留原作者署名及声明。Sh2-276 的中心和角径事实引用同版本合并目录的 Sharpless 条目，源文件哈希与记录标识存于目标数据。[固定影像与声明](https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md)
+
+蛇夫座复合体采用 `rho-a00/a10/a11/a01.png`，署名 **ESO/S. Guisard (www.eso.org/~sguisard)**。参考来自 ESO0934a 的 B/V/R 光学拼接，上游 CREDITS 4.94 及 ESO 按 CC BY 4.0 使用。两目标依公开四角拼接为派生 TAN 影像，保留原生分辨率说明、源 RGB 及作者处理的有限覆盖。巴纳德环采用显示信号亮度，蛇夫座红光增量排除黄色和蓝色反射结构。生成 PNG 按 CC BY-SA 4.0 提供，制作与输入哈希保存在来源清单。[ESO 资料](https://www.eso.org/public/images/eso0934a/)，[使用条款](https://www.eso.org/public/outreach/copyright/)
+
 ## Astronomy Engine 2.1.19
 
 用于本地日月、金木星星历及恒星/银河坐标旋转，使用 MIT 许可。[项目主页](https://github.com/cosinekitty/astronomy)
@@ -40,7 +46,7 @@ M45/M8/北美使用同一发布资料的原尺寸 TIFF，最终 RGB 保留高频
 
 ## ESO 银河全景
 
-银河外观衍生自 [ESO eso0932a](https://www.eso.org/public/images/eso0932a/)，署名 **ESO/S. Brunier**，按 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 使用。已裁切银河平面、缩放、压低星点/光晕、降噪、调整黑位及接缝，转换为 WebP；未使用 AI 修改。原始与输出 SHA-256、坐标约定和改动详见 [milky-way.json](src/data/milky-way.json)，生成入口为 `scripts/build-milky-way.py`。全景不作为星历或光度标定，署名在启用银河时显示于预览底部。
+银河外观衍生自 [ESO eso0932a](https://www.eso.org/public/images/eso0932a/)，署名 **ESO/S. Brunier**，按 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 使用。已裁切银河平面、缩放、压低星点/光晕、降噪、调整黑位及接缝，转换为 WebP；未使用 AI 修改。原始与输出 SHA-256、坐标约定和改动详见 [milky-way.json](src/data/milky-way.json)，生成入口为 `scripts/build-milky-way.py`。全景不作为星历或光度标定，完整署名在 header 的 About 中按银河影像列出，不依赖图层开关。
 
 ## Earcut 3.2.4
 

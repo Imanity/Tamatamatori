@@ -1,0 +1,1739 @@
+[
+  {
+    "name": "about-desktop-bottom",
+    "creditSources": [
+      "NGC0224",
+      "NGC1976",
+      "Mel022",
+      "NGC6523",
+      "NGC7000",
+      "NGC1499",
+      "IC1805",
+      "IC1848",
+      "NGC6514",
+      "NGC0598",
+      "NGC2237",
+      "IC0434",
+      "Sh2-276",
+      "RhoOph"
+    ],
+    "downloads": [
+      {
+        "href": "http://127.0.0.1:5173/src/data/bright-stars.json",
+        "name": "tamatamatori-bright-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellation-stars.json",
+        "name": "tamatamatori-constellation-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellations.json",
+        "name": "tamatamatori-constellations.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky.json?t=1793950154673",
+        "name": "tamatamatori-deep-sky.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0224.png",
+        "name": "tamatamatori-ngc0224.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1976.png",
+        "name": "tamatamatori-ngc1976.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/mel022.png",
+        "name": "tamatamatori-mel022.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6523.png",
+        "name": "tamatamatori-ngc6523.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc7000.png",
+        "name": "tamatamatori-ngc7000.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1499.png",
+        "name": "tamatamatori-ngc1499.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1805.png",
+        "name": "tamatamatori-ic1805.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1848.png",
+        "name": "tamatamatori-ic1848.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6514.png",
+        "name": "tamatamatori-ngc6514.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0598.png",
+        "name": "tamatamatori-ngc0598.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc2237.png",
+        "name": "tamatamatori-ngc2237.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic0434.png",
+        "name": "tamatamatori-ic0434.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/sh2-276.png",
+        "name": "tamatamatori-sh2-276.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/rhooph.png",
+        "name": "tamatamatori-rhooph.png"
+      }
+    ],
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-06-15T22:00"
+      },
+      {
+        "id": "",
+        "value": "1320"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "170.05178389091304"
+      },
+      {
+        "id": "_r_4_",
+        "value": "28.143145931201996"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "focus": "Temporal polyfill",
+    "layerStates": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        true
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        true
+      ]
+    ],
+    "mapAttribution": "maplibregl-ctrl maplibregl-ctrl-attrib maplibregl-compact maplibregl-compact-show",
+    "modal": true,
+    "modalBody": {
+      "height": 613,
+      "scrollHeight": 2804,
+      "scrollTop": 2191
+    },
+    "modalBounds": {
+      "bottom": 724,
+      "height": 708,
+      "left": 242.5,
+      "right": 1022.5,
+      "top": 16,
+      "width": 780,
+      "x": 242.5,
+      "y": 16
+    },
+    "preview": {
+      "bottom": 437.96875,
+      "height": 173.96875,
+      "left": 739.515625,
+      "right": 1000.484375,
+      "top": 264,
+      "width": 260.96875,
+      "x": 739.515625,
+      "y": 264
+    },
+    "previewCopyrightRows": 0,
+    "previewReady": "true",
+    "root": {
+      "bottom": 740,
+      "height": 740,
+      "left": 0,
+      "right": 1265,
+      "top": 0,
+      "width": 1265,
+      "x": 0,
+      "y": 0
+    },
+    "target": "找到 1 个目标蛇夫座星云复合体深空 · 混合星云 · 影像结构参考 · 蓝/黄反射与红色云气 · 原生 512 px 分片 · 区域中心当前 DEM 未遮挡170.1° / 几何 28.1°朝向"
+  },
+  {
+    "name": "after-small",
+    "creditSources": [
+      "NGC0224",
+      "NGC1976",
+      "Mel022",
+      "NGC6523",
+      "NGC7000",
+      "NGC1499",
+      "IC1805",
+      "IC1848",
+      "NGC6514",
+      "NGC0598",
+      "NGC2237",
+      "IC0434",
+      "Sh2-276",
+      "RhoOph"
+    ],
+    "downloads": [
+      {
+        "href": "http://127.0.0.1:5173/src/data/bright-stars.json",
+        "name": "tamatamatori-bright-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellation-stars.json",
+        "name": "tamatamatori-constellation-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellations.json",
+        "name": "tamatamatori-constellations.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky.json?t=1793950154673",
+        "name": "tamatamatori-deep-sky.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0224.png",
+        "name": "tamatamatori-ngc0224.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1976.png",
+        "name": "tamatamatori-ngc1976.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/mel022.png",
+        "name": "tamatamatori-mel022.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6523.png",
+        "name": "tamatamatori-ngc6523.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc7000.png",
+        "name": "tamatamatori-ngc7000.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1499.png",
+        "name": "tamatamatori-ngc1499.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1805.png",
+        "name": "tamatamatori-ic1805.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1848.png",
+        "name": "tamatamatori-ic1848.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6514.png",
+        "name": "tamatamatori-ngc6514.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0598.png",
+        "name": "tamatamatori-ngc0598.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc2237.png",
+        "name": "tamatamatori-ngc2237.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic0434.png",
+        "name": "tamatamatori-ic0434.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/sh2-276.png",
+        "name": "tamatamatori-sh2-276.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/rhooph.png",
+        "name": "tamatamatori-rhooph.png"
+      }
+    ],
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-06-15T22:00"
+      },
+      {
+        "id": "",
+        "value": "1320"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "170.05178389091304"
+      },
+      {
+        "id": "_r_4_",
+        "value": "28.143145931201996"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "focus": "About",
+    "layerStates": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        true
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        true
+      ]
+    ],
+    "mapAttribution": "maplibregl-ctrl maplibregl-ctrl-attrib maplibregl-compact maplibregl-compact-show",
+    "modal": false,
+    "modalBody": null,
+    "modalBounds": null,
+    "preview": {
+      "bottom": 437.96875,
+      "height": 173.96875,
+      "left": 739.515625,
+      "right": 1000.484375,
+      "top": 264,
+      "width": 260.96875,
+      "x": 739.515625,
+      "y": 264
+    },
+    "previewCopyrightRows": 0,
+    "previewReady": "true",
+    "root": {
+      "bottom": 740,
+      "height": 740,
+      "left": 0,
+      "right": 1265,
+      "top": 0,
+      "width": 1265,
+      "x": 0,
+      "y": 0
+    },
+    "target": "找到 1 个目标蛇夫座星云复合体深空 · 混合星云 · 影像结构参考 · 蓝/黄反射与红色云气 · 原生 512 px 分片 · 区域中心当前 DEM 未遮挡170.1° / 几何 28.1°朝向"
+  },
+  {
+    "name": "preview-mobile",
+    "creditSources": [
+      "NGC0224",
+      "NGC1976",
+      "Mel022",
+      "NGC6523",
+      "NGC7000",
+      "NGC1499",
+      "IC1805",
+      "IC1848",
+      "NGC6514",
+      "NGC0598",
+      "NGC2237",
+      "IC0434",
+      "Sh2-276",
+      "RhoOph"
+    ],
+    "downloads": [
+      {
+        "href": "http://127.0.0.1:5173/src/data/bright-stars.json",
+        "name": "tamatamatori-bright-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellation-stars.json",
+        "name": "tamatamatori-constellation-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellations.json",
+        "name": "tamatamatori-constellations.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky.json?t=1793950154673",
+        "name": "tamatamatori-deep-sky.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0224.png",
+        "name": "tamatamatori-ngc0224.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1976.png",
+        "name": "tamatamatori-ngc1976.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/mel022.png",
+        "name": "tamatamatori-mel022.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6523.png",
+        "name": "tamatamatori-ngc6523.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc7000.png",
+        "name": "tamatamatori-ngc7000.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1499.png",
+        "name": "tamatamatori-ngc1499.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1805.png",
+        "name": "tamatamatori-ic1805.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1848.png",
+        "name": "tamatamatori-ic1848.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6514.png",
+        "name": "tamatamatori-ngc6514.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0598.png",
+        "name": "tamatamatori-ngc0598.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc2237.png",
+        "name": "tamatamatori-ngc2237.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic0434.png",
+        "name": "tamatamatori-ic0434.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/sh2-276.png",
+        "name": "tamatamatori-sh2-276.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/rhooph.png",
+        "name": "tamatamatori-rhooph.png"
+      }
+    ],
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-06-15T22:00"
+      },
+      {
+        "id": "",
+        "value": "1320"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "170.05178389091304"
+      },
+      {
+        "id": "_r_4_",
+        "value": "28.143145931201996"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "focus": "拍摄预览",
+    "layerStates": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        true
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        true
+      ]
+    ],
+    "mapAttribution": "maplibregl-ctrl maplibregl-ctrl-attrib maplibregl-compact maplibregl-compact-show",
+    "modal": false,
+    "modalBody": null,
+    "modalBounds": null,
+    "preview": {
+      "bottom": 579.65625,
+      "height": 221.328125,
+      "left": 29,
+      "right": 361,
+      "top": 358.328125,
+      "width": 332,
+      "x": 29,
+      "y": 358.328125
+    },
+    "previewCopyrightRows": 0,
+    "previewReady": "true",
+    "root": {
+      "bottom": 700,
+      "height": 700,
+      "left": 0,
+      "right": 390,
+      "top": 0,
+      "width": 390,
+      "x": 0,
+      "y": 0
+    },
+    "target": "找到 1 个目标蛇夫座星云复合体深空 · 混合星云 · 影像结构参考 · 蓝/黄反射与红色云气 · 原生 512 px 分片 · 区域中心当前 DEM 未遮挡170.1° / 几何 28.1°朝向"
+  },
+  {
+    "name": "about-mobile",
+    "creditSources": [
+      "NGC0224",
+      "NGC1976",
+      "Mel022",
+      "NGC6523",
+      "NGC7000",
+      "NGC1499",
+      "IC1805",
+      "IC1848",
+      "NGC6514",
+      "NGC0598",
+      "NGC2237",
+      "IC0434",
+      "Sh2-276",
+      "RhoOph"
+    ],
+    "downloads": [
+      {
+        "href": "http://127.0.0.1:5173/src/data/bright-stars.json",
+        "name": "tamatamatori-bright-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellation-stars.json",
+        "name": "tamatamatori-constellation-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellations.json",
+        "name": "tamatamatori-constellations.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky.json?t=1793950154673",
+        "name": "tamatamatori-deep-sky.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0224.png",
+        "name": "tamatamatori-ngc0224.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1976.png",
+        "name": "tamatamatori-ngc1976.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/mel022.png",
+        "name": "tamatamatori-mel022.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6523.png",
+        "name": "tamatamatori-ngc6523.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc7000.png",
+        "name": "tamatamatori-ngc7000.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1499.png",
+        "name": "tamatamatori-ngc1499.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1805.png",
+        "name": "tamatamatori-ic1805.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1848.png",
+        "name": "tamatamatori-ic1848.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6514.png",
+        "name": "tamatamatori-ngc6514.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0598.png",
+        "name": "tamatamatori-ngc0598.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc2237.png",
+        "name": "tamatamatori-ngc2237.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic0434.png",
+        "name": "tamatamatori-ic0434.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/sh2-276.png",
+        "name": "tamatamatori-sh2-276.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/rhooph.png",
+        "name": "tamatamatori-rhooph.png"
+      }
+    ],
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-06-15T22:00"
+      },
+      {
+        "id": "",
+        "value": "1320"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "170.05178389091304"
+      },
+      {
+        "id": "_r_4_",
+        "value": "28.143145931201996"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "focus": "关闭",
+    "layerStates": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        true
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        true
+      ]
+    ],
+    "mapAttribution": "maplibregl-ctrl maplibregl-ctrl-attrib maplibregl-compact maplibregl-compact-show",
+    "modal": true,
+    "modalBody": {
+      "height": 581,
+      "scrollHeight": 3112,
+      "scrollTop": 2299
+    },
+    "modalBounds": {
+      "bottom": 684,
+      "height": 668,
+      "left": 16,
+      "right": 374,
+      "top": 16,
+      "width": 358,
+      "x": 16,
+      "y": 16
+    },
+    "preview": {
+      "bottom": 579.65625,
+      "height": 221.328125,
+      "left": 29,
+      "right": 361,
+      "top": 358.328125,
+      "width": 332,
+      "x": 29,
+      "y": 358.328125
+    },
+    "previewCopyrightRows": 0,
+    "previewReady": "true",
+    "root": {
+      "bottom": 700,
+      "height": 700,
+      "left": 0,
+      "right": 390,
+      "top": 0,
+      "width": 390,
+      "x": 0,
+      "y": 0
+    },
+    "target": "找到 1 个目标蛇夫座星云复合体深空 · 混合星云 · 影像结构参考 · 蓝/黄反射与红色云气 · 原生 512 px 分片 · 区域中心当前 DEM 未遮挡170.1° / 几何 28.1°朝向"
+  },
+  {
+    "name": "about-mobile-top",
+    "creditSources": [
+      "NGC0224",
+      "NGC1976",
+      "Mel022",
+      "NGC6523",
+      "NGC7000",
+      "NGC1499",
+      "IC1805",
+      "IC1848",
+      "NGC6514",
+      "NGC0598",
+      "NGC2237",
+      "IC0434",
+      "Sh2-276",
+      "RhoOph"
+    ],
+    "downloads": [
+      {
+        "href": "http://127.0.0.1:5173/src/data/bright-stars.json",
+        "name": "tamatamatori-bright-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellation-stars.json",
+        "name": "tamatamatori-constellation-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellations.json",
+        "name": "tamatamatori-constellations.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky.json?t=1793950154673",
+        "name": "tamatamatori-deep-sky.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0224.png",
+        "name": "tamatamatori-ngc0224.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1976.png",
+        "name": "tamatamatori-ngc1976.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/mel022.png",
+        "name": "tamatamatori-mel022.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6523.png",
+        "name": "tamatamatori-ngc6523.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc7000.png",
+        "name": "tamatamatori-ngc7000.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1499.png",
+        "name": "tamatamatori-ngc1499.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1805.png",
+        "name": "tamatamatori-ic1805.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1848.png",
+        "name": "tamatamatori-ic1848.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6514.png",
+        "name": "tamatamatori-ngc6514.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0598.png",
+        "name": "tamatamatori-ngc0598.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc2237.png",
+        "name": "tamatamatori-ngc2237.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic0434.png",
+        "name": "tamatamatori-ic0434.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/sh2-276.png",
+        "name": "tamatamatori-sh2-276.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/rhooph.png",
+        "name": "tamatamatori-rhooph.png"
+      }
+    ],
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-06-15T22:00"
+      },
+      {
+        "id": "",
+        "value": "1320"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "170.05178389091304"
+      },
+      {
+        "id": "_r_4_",
+        "value": "28.143145931201996"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "focus": "查看第三方完整版权、许可与修改说明",
+    "layerStates": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        true
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        true
+      ]
+    ],
+    "mapAttribution": "maplibregl-ctrl maplibregl-ctrl-attrib maplibregl-compact maplibregl-compact-show",
+    "modal": true,
+    "modalBody": {
+      "height": 581,
+      "scrollHeight": 3112,
+      "scrollTop": 0
+    },
+    "modalBounds": {
+      "bottom": 684,
+      "height": 668,
+      "left": 16,
+      "right": 374,
+      "top": 16,
+      "width": 358,
+      "x": 16,
+      "y": 16
+    },
+    "preview": {
+      "bottom": 579.65625,
+      "height": 221.328125,
+      "left": 29,
+      "right": 361,
+      "top": 358.328125,
+      "width": 332,
+      "x": 29,
+      "y": 358.328125
+    },
+    "previewCopyrightRows": 0,
+    "previewReady": "true",
+    "root": {
+      "bottom": 700,
+      "height": 700,
+      "left": 0,
+      "right": 390,
+      "top": 0,
+      "width": 390,
+      "x": 0,
+      "y": 0
+    },
+    "target": "找到 1 个目标蛇夫座星云复合体深空 · 混合星云 · 影像结构参考 · 蓝/黄反射与红色云气 · 原生 512 px 分片 · 区域中心当前 DEM 未遮挡170.1° / 几何 28.1°朝向"
+  },
+  {
+    "name": "about-360",
+    "creditSources": [
+      "NGC0224",
+      "NGC1976",
+      "Mel022",
+      "NGC6523",
+      "NGC7000",
+      "NGC1499",
+      "IC1805",
+      "IC1848",
+      "NGC6514",
+      "NGC0598",
+      "NGC2237",
+      "IC0434",
+      "Sh2-276",
+      "RhoOph"
+    ],
+    "downloads": [
+      {
+        "href": "http://127.0.0.1:5173/src/data/bright-stars.json",
+        "name": "tamatamatori-bright-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellation-stars.json",
+        "name": "tamatamatori-constellation-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellations.json",
+        "name": "tamatamatori-constellations.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky.json?t=1793950154673",
+        "name": "tamatamatori-deep-sky.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0224.png",
+        "name": "tamatamatori-ngc0224.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1976.png",
+        "name": "tamatamatori-ngc1976.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/mel022.png",
+        "name": "tamatamatori-mel022.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6523.png",
+        "name": "tamatamatori-ngc6523.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc7000.png",
+        "name": "tamatamatori-ngc7000.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1499.png",
+        "name": "tamatamatori-ngc1499.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1805.png",
+        "name": "tamatamatori-ic1805.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1848.png",
+        "name": "tamatamatori-ic1848.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6514.png",
+        "name": "tamatamatori-ngc6514.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0598.png",
+        "name": "tamatamatori-ngc0598.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc2237.png",
+        "name": "tamatamatori-ngc2237.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic0434.png",
+        "name": "tamatamatori-ic0434.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/sh2-276.png",
+        "name": "tamatamatori-sh2-276.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/rhooph.png",
+        "name": "tamatamatori-rhooph.png"
+      }
+    ],
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-06-15T22:00"
+      },
+      {
+        "id": "",
+        "value": "1320"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "170.05178389091304"
+      },
+      {
+        "id": "_r_4_",
+        "value": "28.143145931201996"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "focus": "查看第三方完整版权、许可与修改说明",
+    "layerStates": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        true
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        true
+      ]
+    ],
+    "mapAttribution": "maplibregl-ctrl maplibregl-ctrl-attrib maplibregl-compact maplibregl-compact-show",
+    "modal": true,
+    "modalBody": {
+      "height": 441,
+      "scrollHeight": 3198,
+      "scrollTop": 0
+    },
+    "modalBounds": {
+      "bottom": 544,
+      "height": 528,
+      "left": 16,
+      "right": 344,
+      "top": 16,
+      "width": 328,
+      "x": 16,
+      "y": 16
+    },
+    "preview": {
+      "bottom": 499.65625,
+      "height": 201.328125,
+      "left": 29,
+      "right": 331,
+      "top": 298.328125,
+      "width": 302,
+      "x": 29,
+      "y": 298.328125
+    },
+    "previewCopyrightRows": 0,
+    "previewReady": "true",
+    "root": {
+      "bottom": 560,
+      "height": 560,
+      "left": 0,
+      "right": 360,
+      "top": 0,
+      "width": 360,
+      "x": 0,
+      "y": 0
+    },
+    "target": "找到 1 个目标蛇夫座星云复合体深空 · 混合星云 · 影像结构参考 · 蓝/黄反射与红色云气 · 原生 512 px 分片 · 区域中心当前 DEM 未遮挡170.1° / 几何 28.1°朝向"
+  },
+  {
+    "name": "preview-360",
+    "creditSources": [
+      "NGC0224",
+      "NGC1976",
+      "Mel022",
+      "NGC6523",
+      "NGC7000",
+      "NGC1499",
+      "IC1805",
+      "IC1848",
+      "NGC6514",
+      "NGC0598",
+      "NGC2237",
+      "IC0434",
+      "Sh2-276",
+      "RhoOph"
+    ],
+    "downloads": [
+      {
+        "href": "http://127.0.0.1:5173/src/data/bright-stars.json",
+        "name": "tamatamatori-bright-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellation-stars.json",
+        "name": "tamatamatori-constellation-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellations.json",
+        "name": "tamatamatori-constellations.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky.json?t=1793950154673",
+        "name": "tamatamatori-deep-sky.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0224.png",
+        "name": "tamatamatori-ngc0224.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1976.png",
+        "name": "tamatamatori-ngc1976.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/mel022.png",
+        "name": "tamatamatori-mel022.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6523.png",
+        "name": "tamatamatori-ngc6523.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc7000.png",
+        "name": "tamatamatori-ngc7000.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1499.png",
+        "name": "tamatamatori-ngc1499.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1805.png",
+        "name": "tamatamatori-ic1805.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1848.png",
+        "name": "tamatamatori-ic1848.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6514.png",
+        "name": "tamatamatori-ngc6514.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0598.png",
+        "name": "tamatamatori-ngc0598.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc2237.png",
+        "name": "tamatamatori-ngc2237.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic0434.png",
+        "name": "tamatamatori-ic0434.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/sh2-276.png",
+        "name": "tamatamatori-sh2-276.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/rhooph.png",
+        "name": "tamatamatori-rhooph.png"
+      }
+    ],
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-06-15T22:00"
+      },
+      {
+        "id": "",
+        "value": "1320"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "170.05178389091304"
+      },
+      {
+        "id": "_r_4_",
+        "value": "28.143145931201996"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "focus": "About",
+    "layerStates": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        true
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        true
+      ]
+    ],
+    "mapAttribution": "maplibregl-ctrl maplibregl-ctrl-attrib maplibregl-compact maplibregl-compact-show",
+    "modal": false,
+    "modalBody": null,
+    "modalBounds": null,
+    "preview": {
+      "bottom": 499.65625,
+      "height": 201.328125,
+      "left": 29,
+      "right": 331,
+      "top": 298.328125,
+      "width": 302,
+      "x": 29,
+      "y": 298.328125
+    },
+    "previewCopyrightRows": 0,
+    "previewReady": "true",
+    "root": {
+      "bottom": 560,
+      "height": 560,
+      "left": 0,
+      "right": 360,
+      "top": 0,
+      "width": 360,
+      "x": 0,
+      "y": 0
+    },
+    "target": "找到 1 个目标蛇夫座星云复合体深空 · 混合星云 · 影像结构参考 · 蓝/黄反射与红色云气 · 原生 512 px 分片 · 区域中心当前 DEM 未遮挡170.1° / 几何 28.1°朝向"
+  },
+  {
+    "name": "about-desktop",
+    "creditSources": [
+      "NGC0224",
+      "NGC1976",
+      "Mel022",
+      "NGC6523",
+      "NGC7000",
+      "NGC1499",
+      "IC1805",
+      "IC1848",
+      "NGC6514",
+      "NGC0598",
+      "NGC2237",
+      "IC0434",
+      "Sh2-276",
+      "RhoOph"
+    ],
+    "downloads": [
+      {
+        "href": "http://127.0.0.1:5173/src/data/bright-stars.json",
+        "name": "tamatamatori-bright-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellation-stars.json",
+        "name": "tamatamatori-constellation-stars.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/constellations.json",
+        "name": "tamatamatori-constellations.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky.json?t=1793950154673",
+        "name": "tamatamatori-deep-sky.json"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0224.png",
+        "name": "tamatamatori-ngc0224.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1976.png",
+        "name": "tamatamatori-ngc1976.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/mel022.png",
+        "name": "tamatamatori-mel022.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6523.png",
+        "name": "tamatamatori-ngc6523.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc7000.png",
+        "name": "tamatamatori-ngc7000.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc1499.png",
+        "name": "tamatamatori-ngc1499.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1805.png",
+        "name": "tamatamatori-ic1805.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic1848.png",
+        "name": "tamatamatori-ic1848.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc6514.png",
+        "name": "tamatamatori-ngc6514.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc0598.png",
+        "name": "tamatamatori-ngc0598.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ngc2237.png",
+        "name": "tamatamatori-ngc2237.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/ic0434.png",
+        "name": "tamatamatori-ic0434.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/sh2-276.png",
+        "name": "tamatamatori-sh2-276.png"
+      },
+      {
+        "href": "http://127.0.0.1:5173/src/data/deep-sky/rhooph.png",
+        "name": "tamatamatori-rhooph.png"
+      }
+    ],
+    "fields": [
+      {
+        "id": "",
+        "value": "2026-06-15T22:00"
+      },
+      {
+        "id": "",
+        "value": "1320"
+      },
+      {
+        "id": "",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "id": "",
+        "value": "standard"
+      },
+      {
+        "id": "",
+        "value": "stock"
+      },
+      {
+        "id": "_r_0_",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "135"
+      },
+      {
+        "id": "",
+        "value": "full-frame"
+      },
+      {
+        "id": "",
+        "value": "3:2"
+      },
+      {
+        "id": "",
+        "value": "landscape"
+      },
+      {
+        "id": "_r_1_",
+        "value": "35.4172"
+      },
+      {
+        "id": "_r_2_",
+        "value": "138.8729"
+      },
+      {
+        "id": "_r_3_",
+        "value": "170.05178389091304"
+      },
+      {
+        "id": "_r_4_",
+        "value": "28.143145931201996"
+      },
+      {
+        "id": "_r_5_",
+        "value": "1.6"
+      }
+    ],
+    "focus": "查看第三方完整版权、许可与修改说明",
+    "layerStates": [
+      [
+        "显示太阳",
+        true
+      ],
+      [
+        "显示月亮",
+        true
+      ],
+      [
+        "显示星空",
+        true
+      ],
+      [
+        "显示银河",
+        false
+      ],
+      [
+        "显示星座名称与连线",
+        false
+      ],
+      [
+        "显示深空天体",
+        true
+      ]
+    ],
+    "mapAttribution": "maplibregl-ctrl maplibregl-ctrl-attrib maplibregl-compact maplibregl-compact-show",
+    "modal": true,
+    "modalBody": {
+      "height": 613,
+      "scrollHeight": 2804,
+      "scrollTop": 0
+    },
+    "modalBounds": {
+      "bottom": 724,
+      "height": 708,
+      "left": 242.5,
+      "right": 1022.5,
+      "top": 16,
+      "width": 780,
+      "x": 242.5,
+      "y": 16
+    },
+    "preview": {
+      "bottom": 437.96875,
+      "height": 173.96875,
+      "left": 739.515625,
+      "right": 1000.484375,
+      "top": 264,
+      "width": 260.96875,
+      "x": 739.515625,
+      "y": 264
+    },
+    "previewCopyrightRows": 0,
+    "previewReady": "true",
+    "root": {
+      "bottom": 740,
+      "height": 740,
+      "left": 0,
+      "right": 1265,
+      "top": 0,
+      "width": 1265,
+      "x": 0,
+      "y": 0
+    },
+    "target": "找到 1 个目标蛇夫座星云复合体深空 · 混合星云 · 影像结构参考 · 蓝/黄反射与红色云气 · 原生 512 px 分片 · 区域中心当前 DEM 未遮挡170.1° / 几何 28.1°朝向"
+  }
+]

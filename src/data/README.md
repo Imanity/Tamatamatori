@@ -1,12 +1,16 @@
 # 天文目录与影像数据
 
-NGC2024 火树星云通过 `imageReference` 共享 IC0434 光学参考，共 13 个目录目标、12 幅独立影像。火树的目录位置和查询范围独立，其网格 UV 投影回 IC0434 注册后的纹理，只绘制一次共享影像。新增 25 个 WCSLIB 共享 UV 检查点，马头 RGB 与其他十一份 PNG 保持。马头背景压暗权重上限为 0.18，源图暗轮廓及 RGB 细节保留。[融合与共享影像验收](../../docs/plan/horsehead-flame.md)
+巴纳德环与蛇夫座复合体使用固定 Stellarium 的八份分片和公开四角。新增目标的 `positionSource` 与 `sizeSource` 区分目录事实和区域构图锚点。源清单保留每片的原生尺寸、SHA256、四角及许可，`published-quad-mosaic` 表示派生 TAN 拼接参考。下载各 `panels[].url` 到源图目录后，执行 `python scripts/deep_sky_panels.py 源图目录`，再按既有目录、旧图集、独立纹理步骤生成。分片以四角单应插值投影，重叠权重归一化，外沿由合并覆盖过渡。`python scripts/check-wide-clouds.py 源图目录` 使用独立 WCSLIB/SVD 核查 200 个内部采样点和源 RGB。[范围与验收](../../docs/plan/wide-clouds.md)
 
-当前深空目录含 13 个目标。运行时从 `deep-sky/` 逐目标加载 PNG，按当前视场和屏幕尺寸解码，并采用 64 MiB 的深空 RGBA/mip 驻留预算。PNG 的许可、尺寸、SHA256 和 alpha 数据含义保存在每个对象的 `texture` 字段。所有生成的独立 PNG 按 CC BY-SA 4.0 提供。下面的旧八目标图集保留为离线回归输入。
+巴纳德环的已处理显示分片以 `signalModel=display-rgb` 保存 RGB 显示信号，减少再次按照片线性强度压低和量化造成的暗部丢失。该亮度用于构图参考。蛇夫座沿用照片强度近似，并以 `redEnhancementModel=reflection-safe` 排除黄色、蓝色反射结构的额外红光。派生 2048 纹理为原生 256–512 px 分片提供连续采样。
+
+NGC2024 火树星云通过 `imageReference` 共享 IC0434 光学参考，共 15 个目录目标、14 幅独立影像。火树的目录位置和查询范围独立，其网格 UV 投影回 IC0434 注册后的纹理，只绘制一次共享影像。新增 25 个 WCSLIB 共享 UV 检查点，马头 RGB 与其他十一份 PNG 保持。马头背景压暗权重上限为 0.18，源图暗轮廓及 RGB 细节保留。[融合与共享影像验收](../../docs/plan/horsehead-flame.md)
+
+当前深空目录含 15 个目标。运行时从 `deep-sky/` 逐目标加载 PNG，按当前视场和屏幕尺寸解码，并采用 64 MiB 的深空 RGBA/mip 驻留预算。PNG 的许可、尺寸、SHA256 和 alpha 数据含义保存在每个对象的 `texture` 字段。所有生成的独立 PNG 按 CC BY-SA 4.0 提供。下面的旧八目标图集保留为离线回归输入。
 
 新增 M20/M33 使用 NOIRLab 原尺寸 LRGB 与 AVM。玫瑰采用 Kees Scherer 的 Hα+RGB 参考，马头区域采用 Manuel Peitsch / Sun Shuwei 的可见光拼接参考。两幅宽幅纹理为固定 Stellarium 版本的 1024 方图，使用公开四角拟合 TAN/CD。最大四角残差分别为 0.643094 和 0.546195 源像素，本轮的两份资料采用 1 源像素界限。心脏/灵魂沿用 0.5 源像素界限。M20/M33 输出为 2048 方图。马头的 alpha 数据保存背景暗区对比，额外红光由基础 RGB 估计。来源、覆盖及验收见[四目标计划](../../docs/plan/deep-sky-next-four.md)。
 
-生成独立纹理时，在既有目录与旧图集生成步骤之后执行 `python scripts/build-deep-sky-targets.py 源图目录`。旧八目标图格逐像素拆分，四个新目标重投影到各自纹理。`scripts/check-deep-sky-images.py` 现对 12 个目标保存 300 个独立 WCS 采样点，并记录逐目标 PNG 哈希和四角拟合残差。运行和 CI 直接使用仓库资产。
+生成独立纹理时，在既有目录与旧图集生成步骤之后执行 `python scripts/build-deep-sky-targets.py 源图目录`。旧八目标图格逐像素拆分，四个新目标重投影到各自纹理。`scripts/check-deep-sky-images.py` 现对 14 幅参考保存 350 个独立 WCS 采样点，并记录逐目标 PNG 哈希和四角拟合残差。运行和 CI 直接使用仓库资产。
 
 `deep-sky.json` 与 `deep-sky-atlas.png` 是 [OpenNGC 固定提交](https://github.com/mattiaverga/OpenNGC/tree/be3cd6c5498806a2fbb2f7e0452ef802dbb02be0)的衍生数据，作者 Mattia Verga，采用 **CC BY-SA 4.0**。8 个目标保留 J2000 RA/Dec、目录全角径、可用位置角（北向东）和原 Aladin/DSS2 多级轮廓；缺失位置角保持 `null`。目录尺寸与描绘的外轮廓不一定相同，后者可能包含附近未分离的云气。应用使用逐点天球投影，不把图谱的固定角度当作摄影画面的朝向。
 
@@ -20,7 +24,7 @@ M31 使用 ESA/Hubble 发布、AstroPix 存档的 heic1112f，署名 **ESA/Hubbl
 
 M31/M45 的额外红色增量为零。加州沿用扩散光支持，心脏/灵魂保留上游去星外观，不重复背景扣除或整体模糊；三个目标均有基础 RGB 和独立红色增量。照片中的星点、光刺与原始色彩处理均是参考资料的一部分，不作为额外星历、精确去星结果或机型/曝光定标。三图另以颜色优势信号的形态重建控制连续支持，抑制照片外围星场，支持小孔处理避免白色星核空洞；基础 RGB 与红色增量同时衰减，星云内部可保留照片星点。此分离不是实测去星或谱线资料。当前验收见 [deep-sky-remaining.md](../../docs/plan/deep-sky-remaining.md)。
 
-手动导出：`node scripts/build-deep-sky.mjs` 核对固定上游内容并保存输入哈希；隔离 Python 环境安装 `Pillow==12.0.0 numpy==2.3.5` 后下载 `scripts/deep-sky-image-sources.json` 各条 url 并按 file 命名存入源图目录，再运行 `python scripts/build-deep-sky-atlas.py 源图目录`。资产输出哈希与各分量最大值写回 JSON；运行/构建/CI 不需要 Python。独立坐标参考由 `scripts/build-deep-sky-reference.py` 使用 `pyerfa==2.0.1.5` 生成，固定 DUT1/极移为零及无折射，未来日期仅作为固定闰秒假设下的矩阵回归。
+手动导出：`node scripts/build-deep-sky.mjs` 核对固定上游内容并保存输入哈希；隔离 Python 环境安装 `Pillow==12.0.0 numpy==2.3.5` 后下载 `scripts/deep-sky-image-sources.json` 单图条目的 url 并按 file 命名存入源图目录，分片条目按上文准备，再运行 `python scripts/build-deep-sky-atlas.py 源图目录`。资产输出哈希与各分量最大值写回 JSON；运行/构建/CI 不需要 Python。独立坐标参考由 `scripts/build-deep-sky-reference.py` 使用 `pyerfa==2.0.1.5` 生成，固定 DUT1/极移为零及无折射，未来日期仅作为固定闰秒假设下的矩阵回归。
 
 `milky-way.webp` 为 **ESO/S. Brunier** 的 [ESO0932a 全景](https://www.eso.org/public/images/eso0932a/)衍生图，采用 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)，不改变 HYG 数据的许可。`milky-way.json` 保存原图与输出 SHA-256、银河坐标映射及改动说明；图像 4096 × 512、约 116 KiB，只表示银纬 ±22.5° 的摄影外观。不是精密天图或曝光模型，可能残留照片中的未解析星点/星云，不据此显示新的可点击天体或推断星历精度。
 
@@ -34,7 +38,7 @@ M31/M45 的额外红色增量为零。加州沿用扩散光支持，心脏/灵�
 
 `constellation-stars.json` 是所需的额外 121 个 HYG 端点数据，按 CC BY-SA 4.0 分发；不增加默认亮星目录的显示数量。端点匹配的最大原始方向差为约 0.004517°，这是两个目录的匹配差，不是实景精度承诺。三份 JSON 随应用提供下载，全部运行时计算均为本地。
 
-重建：`node scripts/build-star-catalog.mjs`。仅重建时下载固定来源；应用运行时使用本地文件。预览署名提供完整子集下载，第三方许可页保留作者和许可证链接。
+重建：`node scripts/build-star-catalog.mjs`。仅重建时下载固定来源；应用运行时使用本地文件。About 提供完整子集下载，第三方许可页保留作者和许可证链接。
 
 搜索别名保留原始 HYG 固有名、HIP 编号及 d3-celestial 星座英文名/缩写，作为本地搜索索引使用；不新增在线搜索或外部运行时请求。
 

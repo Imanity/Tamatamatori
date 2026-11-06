@@ -1,0 +1,13 @@
+{
+  "catalogSha256": "7301aebd6d9a756cb54778e28e9adfe96e1b72ea202ba129836ffb550ce1bee6",
+  "texture": {
+    "file": "sh2-276.png",
+    "width": 2048,
+    "height": 2048,
+    "sha256": "2f9d26d15d39342ec53993c3529773b0aeecc48a1803df6ff39b483c04d08462",
+    "bytes": 211650,
+    "license": "CC-BY-SA-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "alphaData": "1 - additive red increment"
+  }
+}

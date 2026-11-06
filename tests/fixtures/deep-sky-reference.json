@@ -106,6 +106,22 @@
       "elevation": 48.706146472253415
     },
     {
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-08T16:00:00Z",
+      "id": "dso-sh2-276",
+      "azimuth": 156.51388106132868,
+      "elevation": 48.039996594988395
+    },
+    {
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-08T16:00:00Z",
+      "id": "dso-rhooph",
+      "azimuth": 356.19009741189365,
+      "elevation": -80.34422942794012
+    },
+    {
       "latitude": -33.8688,
       "longitude": 151.2093,
       "instant": "2026-07-15T15:00:00Z",
@@ -208,6 +224,22 @@
       "id": "dso-ngc2024",
       "azimuth": 121.6743367675002,
       "elevation": -35.4339964105485
+    },
+    {
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-15T15:00:00Z",
+      "id": "dso-sh2-276",
+      "azimuth": 120.48488536339254,
+      "elevation": -31.430022466773252
+    },
+    {
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-15T15:00:00Z",
+      "id": "dso-rhooph",
+      "azimuth": 260.9130533934146,
+      "elevation": 36.19716925280893
     },
     {
       "latitude": 0,
@@ -314,6 +346,22 @@
       "elevation": 74.95985463331219
     },
     {
+      "latitude": 0,
+      "longitude": 179.9,
+      "instant": "2000-01-01T12:00:00Z",
+      "id": "dso-sh2-276",
+      "azimuth": 257.6398317540831,
+      "elevation": 71.11742282248993
+    },
+    {
+      "latitude": 0,
+      "longitude": 179.9,
+      "instant": "2000-01-01T12:00:00Z",
+      "id": "dso-rhooph",
+      "azimuth": 131.2342085931451,
+      "elevation": -48.82581613439268
+    },
+    {
       "latitude": 64,
       "longitude": -21,
       "instant": "2099-01-01T00:00:00Z",
@@ -416,6 +464,22 @@
       "id": "dso-ngc2024",
       "azimuth": 172.65861127913155,
       "elevation": 23.995302999675943
+    },
+    {
+      "latitude": 64,
+      "longitude": -21,
+      "instant": "2099-01-01T00:00:00Z",
+      "id": "dso-sh2-276",
+      "azimuth": 176.61955558739777,
+      "elevation": 22.063123880678447
+    },
+    {
+      "latitude": 64,
+      "longitude": -21,
+      "instant": "2099-01-01T00:00:00Z",
+      "id": "dso-rhooph",
+      "azimuth": 16.53592405301427,
+      "elevation": -51.20919941080979
     }
   ]
 }

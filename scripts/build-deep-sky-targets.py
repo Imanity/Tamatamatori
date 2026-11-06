@@ -1,7 +1,7 @@
-"""Build the twelve current images for thirteen targets; no runtime mega-atlas.
+"""Build fourteen current images for fifteen targets; no runtime mega-atlas.
 
 Run the catalogue + legacy-atlas builders first. Old eight tiles are extracted
-without changing a byte; four new references use the same verified pipeline.
+without changing a byte; the remaining references use the verified pipeline.
 """
 import hashlib
 import json
@@ -21,7 +21,7 @@ legacy = Image.open(root/"src/data/deep-sky-atlas.png")
 assert hashlib.sha256((root/"src/data/deep-sky-atlas.png").read_bytes()).hexdigest() == catalog["atlas"]["sha256"]
 output = root/"src/data/deep-sky"
 output.mkdir(exist_ok=True)
-sizes = {"NGC6514": 2048, "NGC0598": 2048, "NGC2237": 1024, "IC0434": 1024}
+sizes = {"NGC6514": 2048, "NGC0598": 2048, "NGC2237": 1024, "IC0434": 1024, "Sh2-276": 2048, "RhoOph": 2048}
 stats = list(catalog["atlas"]["detailStatistics"])
 for obj in catalog["objects"]:
     cid = obj["catalogId"]

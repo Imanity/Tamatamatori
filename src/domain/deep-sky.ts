@@ -112,8 +112,8 @@ export function deepSkyScene(plan: ShootingPlan) {
       -Math.sin(imageD) * Math.sin(imageA),
       Math.cos(imageD),
     ];
-    const nx = Math.max(4, Math.min(32, Math.ceil((x1 - x0) / degrees / 0.25))),
-      ny = Math.max(4, Math.min(32, Math.ceil((y1 - y0) / degrees / 0.25)));
+    const nx = Math.max(4, Math.min(128, Math.ceil((x1 - x0) / degrees / 0.25))),
+      ny = Math.max(4, Math.min(128, Math.ceil((y1 - y0) / degrees / 0.25)));
     const grid: { ray: Vector3; uv: number[] }[] = [],
       boundary: Vector3[] = [];
     for (let y = 0; y <= ny; y++)

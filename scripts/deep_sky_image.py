@@ -3,6 +3,8 @@
 Only NumPy/Pillow are required for generation. No online astrometry or AI pixels.
 """
 import hashlib
+import io
+import json
 import re
 import xml.etree.ElementTree as ET
 
@@ -75,6 +77,13 @@ def quad_wcs(sky_corners, dimensions, corner_tolerance=0.5):
 
 
 def source_wcs(spec, data):
+    if spec.get("registrationModel") == "published-quad-mosaic":
+        image = Image.open(io.BytesIO(data))
+        metadata = json.loads(image.info["tamatamatori_registration"])
+        fingerprint = hashlib.sha256(json.dumps(spec["panels"], sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        if metadata != {"version": 1, "panelFingerprint": fingerprint, "wcs": spec["wcs"]}:
+            raise ValueError("Derived mosaic registration changed")
+        return spec["wcs"]
     if spec.get("registrationModel", "avm") == "avm":
         return read_avm(data)
     if spec["registrationModel"] == "stellarium-sky-corners":
@@ -244,6 +253,10 @@ def image_components(source_dir, spec, obj, width, height=None):
         raise ValueError("Unknown reference opacity model")
     if spec.get("supportSeed") not in (None, "catalogue-centre"):
         raise ValueError("Unknown diffuse support seed")
+    if spec.get("redEnhancementModel") not in (None, "reflection-safe"):
+        raise ValueError("Unknown red enhancement model")
+    if spec.get("signalModel") not in (None, "display-rgb"):
+        raise ValueError("Unknown display signal model")
     data = (source_dir/spec["file"]).read_bytes()
     if hashlib.sha256(data).hexdigest() != spec["sha256"]:
         raise ValueError(f"Source hash changed: {spec['file']}")
@@ -320,12 +333,25 @@ def image_components(source_dir, spec, obj, width, height=None):
         # A conservative *additional* red structure proxy. Stock keeps all of
         # the baseline red; this cannot recover a calibrated Hα exposure.
         enhancement = np.clip(r-(g+b)*0.5, 0, 1)*0.6
+        if spec.get("redEnhancementModel") == "reflection-safe":
+            # The yellow Antares reflection cloud must not inherit H-alpha
+            # merely because its broadband source has more red than blue.
+            warm = np.clip(((g-b)/np.maximum(r, 1e-9)-0.04)/0.08, 0, 1)
+            enhancement = np.maximum(r-1.2*np.maximum(g, b), 0)*0.6*(1-warm*warm*(3-2*warm))
     # The host framebuffer uses display RGB. Restore display colour ratios
     # after deriving a linear-light intensity, otherwise linear RGB displayed
     # directly becomes too saturated (especially the unmodified red nebula).
     intensity = sampled.max(axis=-1, keepdims=True)
     display = np.where(sampled <= 0.0031308, sampled*12.92, 1.055*sampled**(1/2.4)-0.055)
     display_signal = display/np.maximum(display.max(axis=-1, keepdims=True), 1e-9)*intensity
+    if spec.get("signalModel") == "display-rgb":
+        if obj["model"] != "emission":
+            raise ValueError("Display-RGB signal is scoped to the emission reference")
+        # These faint, already adapted planetarium panels carry a display
+        # signal. Preserve their RGB code values through RGBA8 quantization.
+        # This brightness is a composition reference, not calibrated exposure.
+        display_signal = display
+        enhancement = np.maximum(display[..., 0]-(display[..., 1]+display[..., 2])*0.5, 0)*0.6
     if sampled_dark is None:
         fade *= sampled_support
         components = np.concatenate([display_signal, enhancement[..., None]], axis=-1)*fade[..., None]

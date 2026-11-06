@@ -1,0 +1,118 @@
+{
+  "checkedOn": "2026-11-06",
+  "scope": "Local Chrome GPU, independent WCSLIB/SVD/ERFA and GL substitute lifecycle checks. Composition references.",
+  "tests": {
+    "passed": 170,
+    "failed": 0
+  },
+  "build": {
+    "command": "npm run build -- --base /Tamatamatori/",
+    "passed": true,
+    "entry": "index-BLFgMCER.js",
+    "sha256": "7740bec012f7b7daedc67106d81e92b4402e6569ecf5c40484b18fd9a2004096",
+    "warning": "Existing large-chunk warning"
+  },
+  "resources": {
+    "catalogSha256": "78ff07aedd3d80f2aaeb843304b2cd70d03f4ea86fe80112b1fdc72be4173815",
+    "layerSha256": "25d828752436cd1ef157d272127f4180486aa03e2ee4cf7fba84070c0ffd9d0a",
+    "domainSha256": "0777e22705aba54be2c74eef0dcd0d71349bc09beb6a80a36653018146cbd55b",
+    "targetCount": 15,
+    "imageCount": 14,
+    "compressedBytes": 13315778,
+    "textureBudgetBytes": 67108864,
+    "newTextures": [
+      {
+        "file": "sh2-276.png",
+        "width": 2048,
+        "height": 2048,
+        "sha256": "0f09ee91325f276e4ca9e3bec2a24e88903bdae2c3a368648435951052a8fb38",
+        "bytes": 779541,
+        "license": "CC-BY-SA-4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "alphaData": "1 - additive red increment"
+      },
+      {
+        "file": "rhooph.png",
+        "width": 2048,
+        "height": 2048,
+        "sha256": "6553bd583342a1a3ca14da24f8dfd9bbcda5b12d51d636645dbe8a06b01a4a50",
+        "bytes": 1143645,
+        "license": "CC-BY-SA-4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "alphaData": "1 - additive red increment"
+      }
+    ]
+  },
+  "registration": {
+    "reference": "WCSLIB, normalized SVD projective interpolation, ERFA directions",
+    "wcsSamples": 350,
+    "maximumSourcePixelError": 5.297806637827307e-11,
+    "panelSamples": 200,
+    "maximumPanelMosaicPixelError": 6.73594513500575e-12,
+    "retainedPanelRgbSamples": 200,
+    "sharedUvSamples": 25,
+    "erfaDirections": 60,
+    "maximumDirectionErrorDegreesRounded": 9.4e-05
+  },
+  "colour": {
+    "method": "Actual packed PNG colour classes and same-frame Chrome ROI checks",
+    "yellowPixels": 45651,
+    "yellowMaximumRedExtra": 0.0,
+    "bluePixels": 51021,
+    "blueMaximumRedExtra": 0.0,
+    "redPixels": 9088,
+    "redMaximumExtra": 33.0,
+    "gpuModeDifference": {
+      "changedPixels": 30156,
+      "maximumChannelDifference": 25,
+      "regions": {
+        "blueCore": {
+          "normalizedRect": [
+            0.51,
+            0.24,
+            0.54,
+            0.28
+          ],
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        },
+        "yellowCore": {
+          "normalizedRect": [
+            0.47,
+            0.52,
+            0.52,
+            0.57
+          ],
+          "changedPixels": 0,
+          "maximumChannelDifference": 0
+        }
+      }
+    }
+  },
+  "chrome": {
+    "acceptedScreenshots": 14,
+    "supersededInitialScreenshot": "before-barnard-50-stock.png",
+    "consoleErrors": 0,
+    "wideAndLocal": true,
+    "stockAndModified": true,
+    "milkyWayOnAndOff": true,
+    "barnardPartialTerrain": true,
+    "rhoPartialAndBlockedTerrain": true,
+    "layerOffAndRecovery": true,
+    "ultrawideMultiTarget": true,
+    "existingCameraFeedback": "The recovered frame retains the existing engine-avoidance hint, approximately 1.62 m actual ground clearance for a 1.6 m plan."
+  },
+  "scopeLimits": [
+    "Published sky-quad projective interpolation, not original astrometric plate calibration",
+    "Barnard native panels 256-512 pixels; bands unspecified; display-RGB composition brightness",
+    "Rho native panels 512 pixels; composition anchor at the published mosaic centre; finite Rho/Antares area",
+    "Mode enhancement is a colour proxy, not calibrated sensor response or H-alpha flux",
+    "Source contrast includes dark lanes without measured stellar extinction",
+    "Wide-field labels follow the existing collision rules"
+  ],
+  "evidence": {
+    "comparison": "comparison.jpg",
+    "comparisonSha256": "b28bf205d532836fed9b80bdaa9153c0e1631e83778e540b80a1a95c403fb536",
+    "initialSignalComparison": "barnard-signal-comparison.jpg"
+  }
+}

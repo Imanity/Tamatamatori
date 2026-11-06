@@ -1,0 +1,151 @@
+{
+  "name": "before-barnard-50-stock",
+  "sha256": "d41b36d3c6eb0f7d6bab4ca230eb887c6019627a9782ea998d82fa3e9b7683b2",
+  "feedback": [],
+  "labels": [
+    "猎户座大星云",
+    "玫瑰星云",
+    "马头星云区域"
+  ],
+  "parameters": [
+    {
+      "checked": true,
+      "label": "显示太阳",
+      "type": "checkbox",
+      "value": "on"
+    },
+    {
+      "checked": true,
+      "label": "显示月亮",
+      "type": "checkbox",
+      "value": "on"
+    },
+    {
+      "checked": true,
+      "label": "显示星空",
+      "type": "checkbox",
+      "value": "on"
+    },
+    {
+      "checked": false,
+      "label": "显示银河",
+      "type": "checkbox",
+      "value": "on"
+    },
+    {
+      "checked": false,
+      "label": "显示星座名称与连线",
+      "type": "checkbox",
+      "value": "on"
+    },
+    {
+      "checked": true,
+      "label": "显示深空天体",
+      "type": "checkbox",
+      "value": "on"
+    },
+    {
+      "label": "拍摄预览面板位置",
+      "type": "select-one",
+      "value": "0"
+    },
+    {
+      "label": "地图面板位置",
+      "type": "select-one",
+      "value": "1"
+    },
+    {
+      "label": "拍摄参数面板位置",
+      "type": "select-one",
+      "value": "2"
+    },
+    {
+      "label": "当地日期与时间",
+      "type": "datetime-local",
+      "value": "2026-11-09T01:00"
+    },
+    {
+      "label": "24 小时时间滑杆",
+      "type": "range",
+      "value": "60"
+    },
+    {
+      "label": "显示时区东京 · Asia/Tokyo上海 · Asia/ShanghaiUTC · 协调世界时纽约 · America/New_York伦敦 · Europe/London",
+      "type": "select-one",
+      "value": "Asia/Tokyo"
+    },
+    {
+      "label": "大气折射模型",
+      "type": "select-one",
+      "value": "standard"
+    },
+    {
+      "label": "深空相机响应",
+      "type": "select-one",
+      "value": "stock"
+    },
+    {
+      "label": "焦距mm",
+      "type": "number",
+      "value": "50"
+    },
+    {
+      "label": "焦距滑块",
+      "type": "range",
+      "value": "50"
+    },
+    {
+      "label": "传感器全画幅APS-C · 23.5 × 15.6M4/3 · 17.3 × 13",
+      "type": "select-one",
+      "value": "full-frame"
+    },
+    {
+      "label": "画幅比例3:216:91:1",
+      "type": "select-one",
+      "value": "3:2"
+    },
+    {
+      "label": "拍摄画幅方向",
+      "type": "select-one",
+      "value": "landscape"
+    },
+    {
+      "label": "纬度°",
+      "type": "number",
+      "value": "35.4172"
+    },
+    {
+      "label": "经度°",
+      "type": "number",
+      "value": "138.8729"
+    },
+    {
+      "label": "方位角°",
+      "type": "number",
+      "value": "156.51398468723607"
+    },
+    {
+      "label": "俯仰角°",
+      "type": "number",
+      "value": "48.05519923996906"
+    },
+    {
+      "label": "相机离地高度m",
+      "type": "number",
+      "value": "1.6"
+    },
+    {
+      "label": "搜索拍摄目标",
+      "type": "search",
+      "value": "巴纳德环"
+    }
+  ],
+  "search": "找到 1 个目标巴纳德环深空 · 发射星云 · 影像结构参考 · 分片原生 256–512 px · 波段未说明 · 近似结构参考当前 DEM 未遮挡156.5° / 几何 48.0°朝向",
+  "viewfinder": {
+    "height": 824,
+    "width": 1236,
+    "x": 266.25,
+    "y": 285
+  },
+  "errors": []
+}

@@ -10,7 +10,7 @@
 - 地表以简化的土地覆盖色和地形阴影表现；水体来自 OpenFreeMap / OpenMapTiles 的 `water` 面与 `waterway` 线。预览不绘制道路、地名和建筑标签。
 - 水体按真实边界着色、贴附当前 DEM 表面，水面高度为 DEM 近似，尚未校准独立水平水位。河流细线只是地理参考，不承诺实际宽度。界面始终显示这项限制。
 - 使用 1 倍真实地形，不夸大山体。天空、雾、地表明暗和坡面阴影随机位及 UTC 时刻变化；为晴空近似，详见[时间天空设计](time-sky.md)，不扩展天文图层。
-- 地形与水体服务均为公开网络服务，配置可替换；不引入账户、服务端或密钥。署名在取景框外持续显示，避免拖动和横竖幅切换遮挡。
+- 地形与水体服务均为公开网络服务，配置可替换；不引入账户、服务端或密钥。完整署名集中在 header 的 About，避免版权长列表挤压取景框；地图另保留 SDK 紧凑署名控件。
 
 资料：[Mapterhorn 数据访问](https://mapterhorn.com/data-access/)、[数据来源与署名](https://mapterhorn.com/attribution/)、[MapLibre 地形](https://maplibre.org/maplibre-gl-js/docs/examples/3d-terrain/)、[第一人称相机示例](https://maplibre.org/maplibre-gl-js/docs/examples/walk-around-a-map-in-first-person/)、[水体结构](https://github.com/openmaptiles/openmaptiles/blob/master/layers/water/water.yaml)（查阅：2026-11-04）。
 

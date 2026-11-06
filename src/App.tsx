@@ -7,6 +7,7 @@ import type { IconName } from "./components/Icon";
 import { Parameters } from "./components/Parameters";
 import { PreviewPanel } from "./components/ScenePanels";
 import { MapPanel } from "./components/MapPanel";
+import { About } from "./components/About";
 import type { MapViewport } from "./domain/map";
 
 type PanelId = "map" | "preview" | "parameters";
@@ -300,6 +301,7 @@ export default function App() {
             <span className="status-dot" /> 工作区原型
           </span>
           <span className="version-label">P3 / 天文构图</span>
+          <About />
         </div>
       </header>
       <div className="app-layout">

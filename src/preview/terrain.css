@@ -62,21 +62,6 @@
   font-size: 8px;
   line-height: 1.5;
 }
-.preview-attribution {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 3px 7px;
-  margin-top: 6px;
-  flex-shrink: 0;
-  color: #84967c;
-  font-size: 8px;
-  line-height: 1.5;
-}
-.preview-attribution a {
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
 .preview-lighting {
   margin-top: 7px;
   flex-shrink: 0;

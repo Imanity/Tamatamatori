@@ -234,6 +234,15 @@ before(async () => {
   ])
     installGlobal(name, name === "window" ? dom.window : dom.window[name]);
   installGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+  // JSDOM has no modal top layer. Verify the native method entry points here;
+  // real focus containment, Escape and responsive layout are browser-checked.
+  dom.window.HTMLDialogElement.prototype.showModal = function () {
+    this.open = true;
+  };
+  dom.window.HTMLDialogElement.prototype.close = function () {
+    this.open = false;
+    this.dispatchEvent(new dom.window.Event("close"));
+  };
   Object.defineProperty(dom.window.HTMLElement.prototype, "clientWidth", {
     configurable: true,
     get() {
@@ -671,7 +680,7 @@ test("三维预览启用真实地形与水体；缺失 DEM 返回的零值不覆
   );
   assert.ok(
     document
-      .querySelector(".preview-attribution")
+      .querySelector(".about-dialog")
       .textContent.includes("Mapterhorn"),
   );
   await settle(() => {
@@ -1093,7 +1102,7 @@ test('深空搜索开启与朝向，未改机/改机响应切换保留几何、�
   assert.equal(layer.cameraResponse,'ha-modified');assert.equal(layer.frame,originalFrame);assert.equal(groundRequests.length,requests);assert.equal(terrainMap(),map);assert.equal(map.cameraSolutions.length,poses);
   assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);assert.equal(input('当地日期与时间').value,time);
   await settle(()=>document.querySelector('[aria-label="清除目标搜索"]').click());
-  assert.equal(document.querySelectorAll('[data-dso-status]').length,13);assert.match(document.querySelector('.sky-readout').textContent,/天文改机/);
+  assert.equal(document.querySelectorAll('[data-dso-status]').length,15);assert.match(document.querySelector('.sky-readout').textContent,/天文改机/);
   await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());assert.equal(document.querySelector('[data-dso-label]'),null);
   await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());assert.equal(document.querySelector('[aria-label="深空相机响应"]').value,'ha-modified');
 });
@@ -1128,7 +1137,7 @@ test('银河纹理状态与遮挡分开，搜索时也显示失败，地形与�
   assert.match(document.querySelector('.sky-texture-feedback').textContent,/加载失败/);
   assert.equal(document.querySelector('.terrain-feedback-error'),null);assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
   assert.equal(document.querySelector('[aria-label="显示星空"]').checked,true);assert.ok(document.querySelector('[data-search-target="galactic-center"]'));
-  assert.ok(document.querySelector('.preview-attribution a[href="https://www.eso.org/public/images/eso0932a/"]'));
+  assert.ok(document.querySelector('.about-dialog a[href="https://www.eso.org/public/images/eso0932a/"]'));
   await settle(()=>document.querySelector('[aria-label="显示银河"]').click());assert.equal(document.querySelector('.sky-texture-feedback'),null);
   await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
   await settle(()=>layer.report({planKey:layer.frame.planKey,ready:true,view:null,states:{},milkyWay:{phase:'ready'}}));
@@ -1178,11 +1187,12 @@ test('白昼星点隐藏独立于 DEM 遮挡，夜间恢复，银心参考仍可
   assert.equal(status().dataset.skyOpacity,before);assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
 });
 
-test('拍摄信息只在右侧栏出现，版权留在预览；收起和恢复不重建地图或丢失状态',async t=>{
+test('拍摄信息只在右侧栏出现，版权独立于预览；收起和恢复不重建地图或丢失状态',async t=>{
   await workspace(t);const map=await readyTerrain(),sidebar=document.querySelector('.info-sidebar');
   assert.ok(sidebar.querySelector('.preview-readout'));assert.ok(sidebar.querySelector('.celestial-readout'));
   assert.equal(document.querySelector('.preview-content .preview-readout'),null);
-  assert.ok(document.querySelector('.preview-content .preview-attribution'));assert.equal(sidebar.querySelector('.preview-attribution'),null);
+  assert.equal(document.querySelector('.preview-content .preview-attribution'),null);
+  assert.equal(sidebar.querySelector('.about-dialog'),null);
   const requests=groundRequests.length;
   await settle(()=>document.querySelector('[aria-label="收起拍摄信息"]').click());
   assert.ok(sidebar.classList.contains('is-collapsed'));
@@ -1191,6 +1201,47 @@ test('拍摄信息只在右侧栏出现，版权留在预览；收起和恢复�
   assert.equal(sidebar.classList.contains('is-collapsed'),false);
   assert.match(sidebar.querySelector('.preview-lighting').textContent,/白昼/);
   assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
+});
+
+test('About 汇集所有署名与下载，开关图层和弹窗不重建地图或改变计划', async (t) => {
+  const { map: browserMap } = await workspace(t);
+  const map = await readyTerrain();
+  const dialog = document.querySelector('#about-dialog');
+  const trigger = document.querySelector('.topbar [aria-controls="about-dialog"]');
+  assert.equal(dialog.open, false);
+  assert.equal(trigger.getAttribute('aria-haspopup'), 'dialog');
+  assert.equal(browserMap.options.attributionControl.compact, true);
+  assert.equal(document.querySelector('.preview-attribution'), null);
+  const catalog = JSON.parse(readFileSync(new URL('../src/data/deep-sky.json', import.meta.url), 'utf8'));
+  assert.equal(dialog.querySelectorAll('[data-credit-source]').length, catalog.imageSources.length);
+  for (const source of catalog.imageSources) {
+    const credit = dialog.querySelector(`[data-credit-source="${source.catalogId}"]`);
+    assert.ok(credit.textContent.includes(source.credit));
+    assert.equal(credit.querySelector('a').getAttribute('href'), source.page);
+    assert.equal(credit.querySelectorAll('a[download]').length, 1);
+  }
+  assert.match(dialog.querySelector('[data-credit-source="IC0434"]').textContent, /火树/);
+  const downloads = [...dialog.querySelectorAll('a[download]')];
+  assert.equal(downloads.length, catalog.imageSources.length + 4);
+  assert.equal(new Set(downloads.map((link) => link.getAttribute('href'))).size, downloads.length);
+  const fields = ['经度', '纬度', '焦距', '相机离地高度', '方位角', '俯仰角'];
+  const before = fields.map(value), time = input('当地日期与时间').value;
+  const requests = groundRequests.length, maps = TestMap.instances.length;
+  for (const label of ['显示星空', '显示银河', '显示星座名称与连线', '显示深空天体']) {
+    await settle(() => document.querySelector(`[aria-label="${label}"]`).click());
+  }
+  await settle(() => trigger.click());
+  assert.equal(dialog.open, true);
+  assert.equal(dialog.querySelectorAll('[data-credit-source]').length, catalog.imageSources.length);
+  await settle(() => dialog.querySelector('button').click());
+  assert.equal(dialog.open, false);
+  await settle(() => trigger.click());
+  assert.equal(dialog.open, true);
+  assert.equal(terrainMap(), map);
+  assert.equal(TestMap.instances.length, maps);
+  assert.equal(groundRequests.length, requests);
+  assert.deepEqual(fields.map(value), before);
+  assert.equal(input('当地日期与时间').value, time);
 });
 
 test('星座默认关闭且独立于星空；主要亮星名称、星座定位与开关联动',async t=>{

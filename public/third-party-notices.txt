@@ -1,3 +1,19 @@
+Wide-cloud references added on 2026-11-06
+Barnard Loop panels by Sun Shuwei. Public domain as stated in upstream CREDITS 4.29.
+Rho Ophiuchi panels credited to ESO/S. Guisard (www.eso.org/~sguisard), CC BY 4.0.
+Original optical B/V/R reference at https://www.eso.org/public/images/eso0934a/
+Usage terms https://www.eso.org/public/outreach/copyright/
+Pinned panels, sky corners and credits
+https://github.com/Stellarium/stellarium/tree/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default
+https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md
+Modified by projective sky-quad resampling to a shared TAN mosaic per target,
+normalized overlap weights and exterior coverage transition. Original panels
+are 256-512 pixels per side. Barnard uses display RGB signal; Rho Ophiuchi
+protects yellow/blue reflection colours from the additional red proxy.
+PNG derivatives are distributed under CC BY-SA 4.0. Display brightness,
+colour proxies, published-corner interpolation and source dark-lane appearance
+provide composition references.
+
 Astronomy Engine 2.1.19
 https://github.com/cosinekitty/astronomy
 
@@ -8,7 +24,7 @@ License: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0
 https://creativecommons.org/licenses/by-sa/4.0/
 Changes: Sun excluded; V magnitude <= 4.5; selected numeric fields; Chinese labels added.
 The derived JSON subset is distributed under CC BY-SA 4.0, with source metadata
-and a download link in the preview attribution when stars or Milky Way are enabled.
+and a download link in the header About dialog, independent of enabled layers.
 This data license does not relicense unrelated application code.
 
 Astronomy Engine license:
@@ -204,7 +220,7 @@ from DSS2 Color. The contour source distributes no original DSS photographic pix
 Changes: twelve-object selection, Chinese labels/aliases, tangent-plane bounds;
 component masks and smooth display profiles are qualitative derived models,
 not measured spectroscopy or calibrated exposure. The JSON and derived atlas
-remain CC BY-SA 4.0 and are available from the preview attribution.
+remain CC BY-SA 4.0 and are available from the header About dialog.
 M45 associated stars use the separately credited HYG subset above.
 Input and derived file hashes and coordinate conventions: src/data/deep-sky.json.
 
@@ -224,7 +240,7 @@ https://manuel-astro.ch/project/south-of-orions-belt/
 https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md
 https://github.com/Stellarium/stellarium/tree/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default
 本项目进行了 TAN 重投影、缩放、扩散支持、红光增量估计，以及马头暗区背景对比估计。
-生成的 12 份独立 PNG 数据按 CC BY-SA 4.0 提供，下载入口位于预览署名区。
+生成的 12 份独立 PNG 数据按 CC BY-SA 4.0 提供，下载入口位于 header 的 About 弹窗。
 https://creativecommons.org/licenses/by-sa/4.0/
 完整来源、波段、处理说明和输入/输出哈希保存在 src/data/deep-sky.json。
 

@@ -1,0 +1,114 @@
+{
+  "reference": "Independent Astropy/WCSLIB plus normalized SVD homographies",
+  "scope": "Published-quad interpolation and source sampling, not original plate accuracy",
+  "records": [
+    {
+      "catalogId": "Sh2-276",
+      "mosaicSha256": "50ed699812b846e5281860b6017aca26746b3bf7ac5f2d1d21ed016d981f4d28",
+      "records": [
+        {
+          "file": "barnard_loop-1.png",
+          "sha256": "76250b774c3906f20f170fbba943cf8bb3ae9e1450c173960bb324e0c720fbc4",
+          "nativeDimensions": [
+            512,
+            512
+          ],
+          "sampleCount": 25,
+          "maximumMosaicPixelError": 6.73594513500575e-12,
+          "maximumCornerPixelError": 3.694822225952521e-13,
+          "retainedRgbSamples": 25
+        },
+        {
+          "file": "barnard_loop-2.png",
+          "sha256": "239d9403c6019215eb5b18a92b4dc5ed3bec15b0e933cc19720d82895f24aa86",
+          "nativeDimensions": [
+            512,
+            512
+          ],
+          "sampleCount": 25,
+          "maximumMosaicPixelError": 6.423306331271306e-12,
+          "maximumCornerPixelError": 4.831690603168681e-13,
+          "retainedRgbSamples": 25
+        },
+        {
+          "file": "barnard_loop-3.png",
+          "sha256": "fe482c38338d29353a1a9ae135f23f567ffee3cdd9b8ae991d376ce5320c4566",
+          "nativeDimensions": [
+            256,
+            256
+          ],
+          "sampleCount": 25,
+          "maximumMosaicPixelError": 1.3642420526593924e-12,
+          "maximumCornerPixelError": 2.2737367544323206e-13,
+          "retainedRgbSamples": 25
+        },
+        {
+          "file": "barnard_loop-4.png",
+          "sha256": "2928eed779a964a64e61e5943f17cc5946af0d6cfd12958b79f395f018f82285",
+          "nativeDimensions": [
+            512,
+            512
+          ],
+          "sampleCount": 25,
+          "maximumMosaicPixelError": 2.0463630789890885e-12,
+          "maximumCornerPixelError": 6.821210263296962e-13,
+          "retainedRgbSamples": 25
+        }
+      ]
+    },
+    {
+      "catalogId": "RhoOph",
+      "mosaicSha256": "de875c1aceb46429d5630c0a5b8d1c962a8f96e8c9d1e9a10288b2127c99d014",
+      "records": [
+        {
+          "file": "rho-a00.png",
+          "sha256": "bfeb8f9f6f54b9f135bb1db38628503127b73cbdbcffa1a7a4f94a674f18551a",
+          "nativeDimensions": [
+            512,
+            512
+          ],
+          "sampleCount": 25,
+          "maximumMosaicPixelError": 4.376943252282217e-12,
+          "maximumCornerPixelError": 4.547473508864641e-13,
+          "retainedRgbSamples": 25
+        },
+        {
+          "file": "rho-a01.png",
+          "sha256": "7734d855674b3c6cb0f486d08641a89dc9d95a170eaf903140f3ee0e0f5f0156",
+          "nativeDimensions": [
+            512,
+            512
+          ],
+          "sampleCount": 25,
+          "maximumMosaicPixelError": 4.320099833421409e-12,
+          "maximumCornerPixelError": 4.547473508864641e-13,
+          "retainedRgbSamples": 25
+        },
+        {
+          "file": "rho-a10.png",
+          "sha256": "ea309e3f46396f7bd12d74ba07f34441a494a0209e025156e3bb3ed5b8d27172",
+          "nativeDimensions": [
+            512,
+            512
+          ],
+          "sampleCount": 25,
+          "maximumMosaicPixelError": 5.7411853049416095e-12,
+          "maximumCornerPixelError": 4.547473508864641e-13,
+          "retainedRgbSamples": 25
+        },
+        {
+          "file": "rho-a11.png",
+          "sha256": "ba44ded1b1a642951e8bba197ec3d2423d566919f0fdfa372f6a79fa69cfc62c",
+          "nativeDimensions": [
+            512,
+            512
+          ],
+          "sampleCount": 25,
+          "maximumMosaicPixelError": 4.774847184307873e-12,
+          "maximumCornerPixelError": 7.958078640513122e-13,
+          "retainedRgbSamples": 25
+        }
+      ]
+    }
+  ]
+}

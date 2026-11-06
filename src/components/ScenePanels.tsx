@@ -25,13 +25,7 @@ import {
   StarReadout,
   useStarScene,
 } from "./StarScene";
-import starCatalogUrl from "../data/bright-stars.json?url";
-import constellationCatalogUrl from "../data/constellations.json?url";
-import constellationStarsUrl from "../data/constellation-stars.json?url";
 import { TargetSearchResults } from "./TargetSearch";
-import deepSkyCatalogUrl from "../data/deep-sky.json?url";
-import { deepSkyImageCredits, deepSkyCatalog } from "../domain/deep-sky";
-import { deepSkyImageUrl } from "../preview/deep-sky-texture";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -321,105 +315,6 @@ export function PreviewPanel({
           ),
           infoHost,
         )}
-      <div className="preview-attribution">
-        {plan.layers.deepSky && (
-          <>
-            <a
-              href="https://github.com/mattiaverga/OpenNGC"
-              target="_blank"
-              rel="noreferrer"
-            >
-              OpenNGC · Mattia Verga · CC BY-SA 4.0
-            </a>
-            <a href={deepSkyCatalogUrl} download="tamatamatori-deep-sky.json">
-              深空数据及轮廓
-            </a>
-            {deepSkyImageCredits.map((source) => (
-              <a
-                href={source.page}
-                key={source.catalogId}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {source.credit} · {source.license === "CC0-1.0" ? "CC0 1.0" : source.license === "CC-BY-SA-4.0" ? "CC BY-SA 4.0" : "CC BY 4.0"}
-                {" · 结构衍生"}
-              </a>
-            ))}
-            {deepSkyCatalog.map(entry => (
-              <a key={entry.id} href={deepSkyImageUrl(entry.catalogId).href} download={`tamatamatori-${entry.catalogId.toLowerCase()}.png`}>
-                {entry.aliases[0]} · 结构与色彩数据 · CC BY-SA 4.0
-              </a>
-            ))}
-          </>
-        )}
-        {plan.layers.milkyWay && (
-          <a
-            href="https://www.eso.org/public/images/eso0932a/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            ESO/S. Brunier · CC BY 4.0 · 全景衍生
-          </a>
-        )}
-        {(plan.layers.stars ||
-          plan.layers.milkyWay ||
-          plan.layers.constellations ||
-          plan.layers.deepSky) && (
-          <a href={starCatalogUrl} download="tamatamatori-bright-stars.json">
-            HYG 4.1 · CC BY-SA 4.0 · 目录
-          </a>
-        )}
-        {plan.layers.constellations && (
-          <a
-            href={constellationCatalogUrl}
-            download="tamatamatori-constellations.json"
-          >
-            d3-celestial · 星座 · BSD-3-Clause
-          </a>
-        )}
-        {plan.layers.constellations && (
-          <a
-            href={constellationStarsUrl}
-            download="tamatamatori-constellation-stars.json"
-          >
-            HYG 星座端点 · CC BY-SA 4.0
-          </a>
-        )}
-        <a
-          href="https://github.com/cosinekitty/astronomy"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Astronomy Engine
-        </a>
-        <a
-          href={`${import.meta.env.BASE_URL}third-party-notices.txt`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          第三方许可
-        </a>
-        <a
-          href="https://mapterhorn.com/attribution/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          © Mapterhorn
-        </a>
-        <a href="https://openfreemap.org/" target="_blank" rel="noreferrer">
-          OpenFreeMap
-        </a>
-        <a href="https://openmaptiles.org/" target="_blank" rel="noreferrer">
-          © OpenMapTiles
-        </a>
-        <a
-          href="https://www.openstreetmap.org/copyright"
-          target="_blank"
-          rel="noreferrer"
-        >
-          © OpenStreetMap
-        </a>
-      </div>
     </div>
   );
 }

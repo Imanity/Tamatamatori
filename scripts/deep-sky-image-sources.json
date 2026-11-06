@@ -656,5 +656,401 @@
     "backgroundModel": "none",
     "opacityModel": "diffuse-colour-reconstruction",
     "sourceProcessing": "Upstream display texture with finite resolution and published corner registration"
+  },
+  {
+    "upstreamCommit": "230f2bd84b7827fb16be2a54c2ebdae07edf17a6",
+    "registrationSource": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/textures.json",
+    "registrationSourceSha256": "75bbf1e0f0df37a600852f4923b2bb0b466a7ff5a5865d551d4e7b686baf6071",
+    "registrationModel": "published-quad-mosaic",
+    "dimensions": [
+      2048,
+      2048
+    ],
+    "workingMaxSize": 3000,
+    "detailMode": "source-rgb",
+    "backgroundModel": "none",
+    "edgeFadePixels": 3,
+    "role": "Published optical appearance and projective sky-quad reference, not camera calibration",
+    "preparationScript": "scripts/deep_sky_panels.py",
+    "sourceProcessing": "Display-adapted RGB panels with finite native resolution and published sky corners",
+    "licenseEvidence": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md",
+    "publisherPage": "https://github.com/Stellarium/stellarium/tree/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default",
+    "catalogId": "Sh2-276",
+    "file": "stellarium-barnard-loop-mosaic.png",
+    "page": "https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md",
+    "credit": "Sun Shuwei",
+    "license": "Public-Domain",
+    "licenseUrl": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md",
+    "bands": "Display reference; upstream spectral bands unspecified",
+    "sourceNote": "显示亮度参考 · 原生 256–512 px 分片 · 波段未说明",
+    "target": {
+      "name": "巴纳德环",
+      "aliases": [
+        "Sh2-276",
+        "Sh 2-276",
+        "Barnard Loop",
+        "Barnard's Loop",
+        "Barnards Loop",
+        "巴纳德环",
+        "巴纳德弧"
+      ],
+      "model": "emission",
+      "catalogType": "HII",
+      "ra": 81.88,
+      "dec": -3.97,
+      "majorArcmin": 1200,
+      "minorArcmin": 1200,
+      "positionAngle": null,
+      "magnitude": null,
+      "positionSource": {
+        "url": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/catalog.txt",
+        "sha256": "23a8f0b0b5a53e0cd93de8b64cff429ee5ae633d42c6e9430e96f5a9ee7d2477",
+        "recordId": 13841,
+        "reference": "Sharpless 1959 via Stellarium fixed catalogue, SH2 cross-index 276; coordinate/size facts"
+      },
+      "sizeSource": "Catalogue full angular size"
+    },
+    "panels": [
+      {
+        "file": "barnard_loop-1.png",
+        "url": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/barnard_loop-1.png",
+        "sha256": "76250b774c3906f20f170fbba943cf8bb3ae9e1450c173960bb324e0c720fbc4",
+        "bytes": 144876,
+        "dimensions": [
+          512,
+          512
+        ],
+        "skyCorners": [
+          [
+            94.345,
+            -11.5421
+          ],
+          [
+            85.5375,
+            -11.6019
+          ],
+          [
+            85.5418,
+            -2.9301
+          ],
+          [
+            94.1902,
+            -2.9259
+          ]
+        ]
+      },
+      {
+        "file": "barnard_loop-2.png",
+        "url": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/barnard_loop-2.png",
+        "sha256": "239d9403c6019215eb5b18a92b4dc5ed3bec15b0e933cc19720d82895f24aa86",
+        "bytes": 95794,
+        "dimensions": [
+          512,
+          512
+        ],
+        "skyCorners": [
+          [
+            85.5375,
+            -11.6019
+          ],
+          [
+            76.7651,
+            -11.4499
+          ],
+          [
+            76.9066,
+            -2.8553
+          ],
+          [
+            85.5448,
+            -2.94
+          ]
+        ]
+      },
+      {
+        "file": "barnard_loop-3.png",
+        "url": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/barnard_loop-3.png",
+        "sha256": "fe482c38338d29353a1a9ae135f23f567ffee3cdd9b8ae991d376ce5320c4566",
+        "bytes": 30255,
+        "dimensions": [
+          256,
+          256
+        ],
+        "skyCorners": [
+          [
+            85.5372,
+            0.9194
+          ],
+          [
+            81.2479,
+            0.9194
+          ],
+          [
+            81.2579,
+            5.1794
+          ],
+          [
+            85.5319,
+            5.1794
+          ]
+        ]
+      },
+      {
+        "file": "barnard_loop-4.png",
+        "url": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/barnard_loop-4.png",
+        "sha256": "2928eed779a964a64e61e5943f17cc5946af0d6cfd12958b79f395f018f82285",
+        "bytes": 98185,
+        "dimensions": [
+          512,
+          512
+        ],
+        "skyCorners": [
+          [
+            94.1902,
+            -2.9259
+          ],
+          [
+            85.5418,
+            -2.9301
+          ],
+          [
+            85.5314,
+            5.6592
+          ],
+          [
+            99.9844,
+            5.5843
+          ]
+        ]
+      }
+    ],
+    "wcs": {
+      "ReferenceDimension": [
+        2048.0,
+        2048.0
+      ],
+      "ReferencePixel": [
+        467.14743038847337,
+        913.5698633879224
+      ],
+      "ReferenceValue": [
+        81.88,
+        -3.97
+      ],
+      "CDMatrix": [
+        [
+          0.012418318571185945,
+          0
+        ],
+        [
+          0,
+          0.009234755503929918
+        ]
+      ],
+      "CoordinateFrame": "ICRS",
+      "Equinox": "J2000",
+      "CoordsystemProjection": "TAN",
+      "Quality": "Derived TAN mosaic of published sky quads using projective interpolation; not an original plate solution"
+    },
+    "sha256": "50ed699812b846e5281860b6017aca26746b3bf7ac5f2d1d21ed016d981f4d28",
+    "bytes": 723756,
+    "signalModel": "display-rgb"
+  },
+  {
+    "upstreamCommit": "230f2bd84b7827fb16be2a54c2ebdae07edf17a6",
+    "registrationSource": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/textures.json",
+    "registrationSourceSha256": "75bbf1e0f0df37a600852f4923b2bb0b466a7ff5a5865d551d4e7b686baf6071",
+    "registrationModel": "published-quad-mosaic",
+    "dimensions": [
+      2048,
+      2048
+    ],
+    "workingMaxSize": 3000,
+    "detailMode": "source-rgb",
+    "backgroundModel": "none",
+    "edgeFadePixels": 3,
+    "role": "Published optical appearance and projective sky-quad reference, not camera calibration",
+    "preparationScript": "scripts/deep_sky_panels.py",
+    "sourceProcessing": "Display-adapted RGB panels with finite native resolution and published sky corners",
+    "licenseEvidence": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md",
+    "publisherPage": "https://github.com/Stellarium/stellarium/tree/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default",
+    "catalogId": "RhoOph",
+    "file": "stellarium-rho-oph-mosaic.png",
+    "page": "https://www.eso.org/public/images/eso0934a/",
+    "credit": "ESO/S. Guisard (www.eso.org/~sguisard)",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "bands": "Optical B/V/R, from ESO0934a display-adapted panels",
+    "sourceNote": "蓝/黄反射与红色云气 · 原生 512 px 分片 · 区域中心",
+    "redEnhancementModel": "reflection-safe",
+    "target": {
+      "name": "蛇夫座星云复合体",
+      "aliases": [
+        "Rho Oph",
+        "Rho Ophiuchi",
+        "Rho Ophiuchi Cloud Complex",
+        "蛇夫座星云",
+        "蛇夫座ρ",
+        "天蝎调色盘",
+        "IC4604区域"
+      ],
+      "model": "mixed",
+      "catalogType": "CloudComplex",
+      "ra": 247.0317,
+      "dec": -25.7212,
+      "majorArcmin": 480,
+      "minorArcmin": 480,
+      "positionAngle": null,
+      "magnitude": null,
+      "positionSource": {
+        "url": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/textures.json",
+        "reference": "Shared published sky-quad vertex at the four-panel mosaic centre, a composition anchor"
+      },
+      "sizeSource": "Approximate eight-degree source footprint, not a single-nebula catalogue diameter"
+    },
+    "panels": [
+      {
+        "file": "rho-a00.png",
+        "url": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/rho-a00.png",
+        "sha256": "bfeb8f9f6f54b9f135bb1db38628503127b73cbdbcffa1a7a4f94a674f18551a",
+        "bytes": 387119,
+        "dimensions": [
+          512,
+          512
+        ],
+        "skyCorners": [
+          [
+            251.449,
+            -29.493
+          ],
+          [
+            247.0343,
+            -29.5646
+          ],
+          [
+            247.0317,
+            -25.7212
+          ],
+          [
+            251.2938,
+            -25.6541
+          ]
+        ]
+      },
+      {
+        "file": "rho-a01.png",
+        "url": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/rho-a01.png",
+        "sha256": "7734d855674b3c6cb0f486d08641a89dc9d95a170eaf903140f3ee0e0f5f0156",
+        "bytes": 319496,
+        "dimensions": [
+          512,
+          512
+        ],
+        "skyCorners": [
+          [
+            251.2938,
+            -25.6541
+          ],
+          [
+            247.0317,
+            -25.7212
+          ],
+          [
+            247.0275,
+            -21.8836
+          ],
+          [
+            251.1465,
+            -21.8166
+          ]
+        ]
+      },
+      {
+        "file": "rho-a10.png",
+        "url": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/rho-a10.png",
+        "sha256": "ea309e3f46396f7bd12d74ba07f34441a494a0209e025156e3bb3ed5b8d27172",
+        "bytes": 318276,
+        "dimensions": [
+          512,
+          512
+        ],
+        "skyCorners": [
+          [
+            247.0343,
+            -29.5646
+          ],
+          [
+            242.626,
+            -29.5019
+          ],
+          [
+            242.7723,
+            -25.6638
+          ],
+          [
+            247.0317,
+            -25.7212
+          ]
+        ]
+      },
+      {
+        "file": "rho-a11.png",
+        "url": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/rho-a11.png",
+        "sha256": "ba44ded1b1a642951e8bba197ec3d2423d566919f0fdfa372f6a79fa69cfc62c",
+        "bytes": 268078,
+        "dimensions": [
+          512,
+          512
+        ],
+        "skyCorners": [
+          [
+            247.0317,
+            -25.7212
+          ],
+          [
+            242.7723,
+            -25.6638
+          ],
+          [
+            242.9078,
+            -21.8233
+          ],
+          [
+            247.0275,
+            -21.8836
+          ]
+        ]
+      }
+    ],
+    "wcs": {
+      "ReferenceDimension": [
+        2048.0,
+        2048.0
+      ],
+      "ReferencePixel": [
+        1023.1895518581354,
+        1024.4869441811877
+      ],
+      "ReferenceValue": [
+        247.0317,
+        -25.7212
+      ],
+      "CDMatrix": [
+        [
+          0.0039906082248899,
+          0
+        ],
+        [
+          0,
+          0.003996928676232878
+        ]
+      ],
+      "CoordinateFrame": "ICRS",
+      "Equinox": "J2000",
+      "CoordsystemProjection": "TAN",
+      "Quality": "Derived TAN mosaic of published sky quads using projective interpolation; not an original plate solution"
+    },
+    "sha256": "de875c1aceb46429d5630c0a5b8d1c962a8f96e8c9d1e9a10288b2127c99d014",
+    "bytes": 3051451
   }
 ]

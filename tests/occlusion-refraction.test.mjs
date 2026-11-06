@@ -294,7 +294,7 @@ test('深空轮廓分别查询清晰和被遮挡像素，中心名称独立查�
   for(const [clear,blocked,expected] of [[true,false,'clear'],[true,true,'partial'],[false,true,'blocked'],[false,false,'subpixel']]){
     const {gl,state,enabled,queries,resources}=fakeGL(),reports=[],before=new Map(state),previousEnabled=new Set(enabled);
     const {layer,target}=await prepareDeep(gl,reports);gl.results=[false,clear,blocked,false,false];layer.render(gl);
-    assert.equal(queries.size,5);assert.ok(gl.draws.some(d=>d.mode===gl.TRIANGLES&&d.depth===gl.GREATER&&d.probe===1));
+    assert.equal(queries.size,7);assert.ok(gl.draws.some(d=>d.mode===gl.TRIANGLES&&d.depth===gl.GREATER&&d.probe===1));
     assert.deepEqual(state,before);assert.deepEqual(enabled,previousEnabled);gl.complete();layer.render(gl);
     assert.equal(reports.at(-1).states[target.id],expected);assert.equal(reports.at(-1).states[target.id+':label'],'blocked');
     assert.equal(reports.at(-1).deepSky.phase,'ready');layer.onRemove();assert.equal(resources.size,0);assert.equal(queries.size,0);
@@ -304,7 +304,7 @@ test('深空轮廓分别查询清晰和被遮挡像素，中心名称独立查�
 test('改机仅更新 Hα uniform，不重建几何、纹理或遮挡；深空失败不关闭其他图层',async()=>{
   const {gl,queries,resources}=fakeGL(),reports=[];let requests=0;
   const {layer}=await prepareDeep(gl,reports,async()=>{requests++;return {width:2048,height:1024,close(){}};});
-  const initialRequests=requests;assert.equal(initialRequests,2,'M42 view also intersects the IC434 reference footprint');
+  const initialRequests=requests;assert.equal(initialRequests,3,'M42 view intersects IC434 and the wider Barnard reference footprint');
   gl.results=[true,true,false];layer.render(gl);gl.complete();layer.render(gl);
   const uploads=gl.uploads.length,textureUploads=gl.textureUploads,count=reports.length;
   for(const [response,gain] of [['ha-modified',1],['stock',0]]){
@@ -315,7 +315,7 @@ test('改机仅更新 Hα uniform，不重建几何、纹理或遮挡；深空�
   }
   const frame=layer.frame;
   layer.invalidate();layer.setScene(frame);gl.results=[true,true,false];layer.render(gl);
-  assert.equal(queries.size,5,'an invalidated cached frame must resume queries even with the same key');
+  assert.equal(queries.size,7,'an invalidated cached frame must resume queries even with the same key');
   gl.complete();layer.render(gl);assert.equal(reports.at(-1).ready,true);
   assert.throws(()=>layer.setCameraResponse('full-spectrum'),RangeError);layer.onRemove();assert.equal(resources.size,0);
   const failedReports=[];const failed=await prepareDeep(gl,failedReports,async()=>{throw new Error('atlas unavailable');});
@@ -339,7 +339,7 @@ test('同视场单目标失败隔离，暗区在银河后和星表前合成，�
   assert.deepEqual(reports.at(-1).deepSkyTargets,{});
   broken=false;layer.setScene({...frame,key:'retry'});layer.render(gl);await new Promise(resolve=>setImmediate(resolve));layer.render(gl);
   assert.equal(reports.at(-1).deepSkyTargets['dso-ngc1976'].phase,'ready');
-  assert.equal(reports.at(-1).deepSkyTargets['dso-ic0434'].phase,'ready');assert.equal(requests,4);
+  assert.equal(reports.at(-1).deepSkyTargets['dso-ic0434'].phase,'ready');assert.equal(requests,6);
   layer.onRemove();assert.equal(resources.size,0);
 });
 
@@ -376,15 +376,15 @@ test('马头和火树共享一次解码与可见绘制，局部遮挡及资源�
   const frame={key:'shared',planKey:'shared',ready:true,plan};
   layer.setScene(frame);layer.camera={azimuth:plan.azimuth,pitch:plan.pitch};layer.matrix=photoCameraMatrix(plan);
   layer.render(gl);await new Promise(resolve=>setImmediate(resolve));
-  assert.deepEqual(requests,['IC0434']);
+  assert.deepEqual(requests,['IC0434','Sh2-276']);
   gl.draws=[];
   // Label queries first, then separate clear/blocked probes in catalogue order.
   gl.results=[true,true,true,true,true,false];
   layer.render(gl);
   const visible=gl.draws.filter(draw=>draw.mode===gl.TRIANGLES&&draw.probe===0);
-  assert.equal(visible.length,1);assert.equal(visible[0].count,horsehead.count);
+  assert.equal(visible.length,2);assert.equal(visible.filter(draw=>draw.count===horsehead.count).length,1);
   assert.ok(gl.draws.some(draw=>draw.mode===gl.TRIANGLES&&draw.probe===1&&draw.count===flame.count));
-  assert.equal(gl.textureUploads,1);
+  assert.equal(gl.textureUploads,2);
   gl.complete();layer.render(gl);
   assert.equal(reports.at(-1).states[horsehead.id],'partial');
   assert.equal(reports.at(-1).states[flame.id],'clear');
@@ -398,6 +398,6 @@ test('马头和火树共享一次解码与可见绘制，局部遮挡及资源�
   layer.setScene(off);broken=false;layer.setScene({...frame,key:'shared-retry'});
   layer.render(gl);await new Promise(resolve=>setImmediate(resolve));layer.render(gl);
   assert.equal(reports.at(-1).deepSkyTargets[flame.id].phase,'ready');
-  assert.deepEqual(requests,['IC0434','IC0434','IC0434']);
+  assert.deepEqual(requests,['IC0434','Sh2-276','IC0434','Sh2-276','IC0434','Sh2-276']);
   layer.onRemove();assert.equal(resources.size,0);
 });

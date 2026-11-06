@@ -176,8 +176,9 @@ export function MapPanel({
             dragRotate: true,
             touchPitch: false,
             pitchWithRotate: false,
-            attributionControl: { compact: false },
+            attributionControl: { compact: true },
             locale: {
+              "AttributionControl.ToggleAttribution": "地图版权与来源",
               "Map.Title": "摄影机位地图",
               "NavigationControl.ZoomIn": "放大地图",
               "NavigationControl.ZoomOut": "缩小地图",

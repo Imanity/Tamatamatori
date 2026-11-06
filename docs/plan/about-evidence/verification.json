@@ -1,0 +1,136 @@
+{
+  "verifiedAt": "2026-11-06T09:14:14.729065+00:00",
+  "baseCommit": "4bb4724d256bb66472fa3e1cf5f537a63554a244",
+  "sources": {
+    "src/components/About.tsx": "4501f4a8651f463d9a571da5665241ad5b6f103ead8ce6e94dabd0023f5024cc",
+    "src/App.tsx": "1b57a0f178987d000b0587420710a73c130618def1419afb3c4d9bbd7e307642",
+    "src/components/ScenePanels.tsx": "c8e663f1316fdd17cbaa7cf5e7ba8bbbba0d59d7806c49b32aa41c2bfced7a14",
+    "src/components/MapPanel.tsx": "000e90c10afded5c6b8dcc3c8ca7b70bcdef49a272465463cda255a55d181e0c",
+    "src/styles.css": "51a257a5efb93f21fab35acda312a9c75329a522f08dc9fb754b6f536c37fc4f",
+    "src/preview/terrain.css": "4fbe5b1ed7b37752275b144bef79efaa5ca41bb0c63926bda0426b666ccf835e",
+    "src/data/deep-sky.json": "78ff07aedd3d80f2aaeb843304b2cd70d03f4ea86fe80112b1fdc72be4173815",
+    "public/third-party-notices.txt": "54d0a75fc17cd55c85683afb02684300cc3156b15525b463e9ad3f4e9d28787f"
+  },
+  "builtEntry": [
+    "index-BGWAMhVD.js"
+  ],
+  "tests": {
+    "command": "npm test",
+    "passed": 171,
+    "failed": 0,
+    "log": "tamatamatori-about-tests.log"
+  },
+  "build": {
+    "command": "npm run build -- --base /Tamatamatori/",
+    "passed": true,
+    "all14TextureBytesMatchSource": true,
+    "noticesBytesMatchSource": true,
+    "warning": "Existing large-chunk warning"
+  },
+  "requestedViewports": [
+    [
+      1280,
+      740
+    ],
+    [
+      390,
+      700
+    ],
+    [
+      360,
+      560
+    ]
+  ],
+  "browserChecks": [
+    "fresh reload",
+    "deep-sky preview visible",
+    "modal native :modal state",
+    "Tab/Shift+Tab between close and first content link",
+    "Escape closes and restores About focus",
+    "close stays visible at end of scroll",
+    "no horizontal content overflow",
+    "all 14 sources and 18 downloads available",
+    "temporary viewport reset"
+  ],
+  "browserErrors": [],
+  "before": {
+    "measurement": "DOM after resetting to default layout",
+    "previewPanel": {
+      "width": 310,
+      "height": 269.984375
+    },
+    "copyrightHeight": 537,
+    "preview": {
+      "width": 0,
+      "height": 0
+    },
+    "screenshot": "before-layout-transition.png",
+    "screenshotCaveat": "Captured before layout-reset paint completed. This image shows the preceding panel arrangement and is not a visual record of the zero-size DOM state."
+  },
+  "screenshots": {
+    "about-360.png": {
+      "sha256": "d1aa1b9eb51bbe91eeca9e1b752ef5c1c25ebc7251ab08ff7d686d9ec5fd76c5",
+      "pixelSize": [
+        360,
+        560
+      ]
+    },
+    "about-desktop-bottom.png": {
+      "sha256": "d8799889e41c7fd96eb93fe0d3459428113777f3ab3b36c415f55ba84a415a22",
+      "pixelSize": [
+        1265,
+        731
+      ]
+    },
+    "about-desktop.png": {
+      "sha256": "d22f50727cb402417f3183fb6ea0b3370b3d5375162c5fe5004f6489790ec20e",
+      "pixelSize": [
+        1265,
+        731
+      ]
+    },
+    "about-mobile-top.png": {
+      "sha256": "f5396d90d063ae71ef1d21af1cc3a6299ea9ffcdac66ebdfa6ea5103c98c3035",
+      "pixelSize": [
+        390,
+        700
+      ]
+    },
+    "about-mobile.png": {
+      "sha256": "f0157c6f4f0d9693672d2b94c009de841c6c5461f47a6e5cd2413069ca3f4247",
+      "pixelSize": [
+        390,
+        700
+      ]
+    },
+    "after-small.png": {
+      "sha256": "05ba144051dd39b16f8813f50a6bd27b81e439932dfb68092125a9d0ec2f3059",
+      "pixelSize": [
+        1265,
+        731
+      ]
+    },
+    "before-layout-transition.png": {
+      "sha256": "b16ca681c25ba2291c1cde052e2471a934962c969ca60f903ab20adc68037586",
+      "pixelSize": [
+        1265,
+        731
+      ]
+    },
+    "preview-360.png": {
+      "sha256": "fa3fe58024bf34b8a448d30ebc4b75037292ec1ed65ee8de88e76eac8d63fac3",
+      "pixelSize": [
+        360,
+        560
+      ]
+    },
+    "preview-mobile.png": {
+      "sha256": "dda6f77257a9f5038f50da395c3a7b4fb69834cc883c70b9fc51550fed96be11",
+      "pixelSize": [
+        390,
+        700
+      ]
+    }
+  },
+  "domRecordsSha256": "4d057ee834e7cbdea42977b0ec5081f12188a8b5c67a351ee50c1fa50b24cb88"
+}
