@@ -6,7 +6,7 @@ import type { SkyVisibility } from "../domain/starfield";
 import { bodyPolygons } from "../domain/celestial-projection";
 import { celestialPlanKey, occlusionLabels } from "../domain/visibility";
 import type { VisibilitySnapshot } from "../domain/visibility";
-import { deepSkyView, deepSkyImageCredits, deepSkySourceNote } from "../domain/deep-sky";
+import { deepSkyView, deepSkyImageSource, deepSkySourceNote } from "../domain/deep-sky";
 import {
   skyAppearance,
   starOpacity,
@@ -50,9 +50,7 @@ export function TargetSearchResults({
       {result.targets.map((target) => {
         const deepEntry = target.deep?.entry;
         const structureLabel = deepEntry
-          ? deepSkyImageCredits.some(
-              (source) => source.catalogId === deepEntry.catalogId,
-            )
+          ? deepSkyImageSource(deepEntry.catalogId)
             ? "影像结构参考"
             : "目录轮廓"
           : null;

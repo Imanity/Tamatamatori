@@ -1,0 +1,6 @@
+{
+  "reference": "Independent WCSLIB target TAN to owner TAN pixel-centre UV",
+  "sampleCount": 25,
+  "maximumUvError": 2.9419464550606898e-8,
+  "tolerance": 1e-7
+}

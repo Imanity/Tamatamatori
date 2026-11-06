@@ -121,6 +121,34 @@ for spec in catalog["imageSources"]:
         "zeroAtlasBorder": True, "fullSourceFootprintContained": True,
         "samples": [{"atlasPixel": p.tolist(), "icrsDegrees": q.tolist(), "sourceReferencePixel": r.tolist()}
                     for p, q, r in zip(mesh, world, expected)]})
+result["sharedImages"] = []
+for obj in catalog["objects"]:
+    if not obj.get("imageReference"):
+        continue
+    owner = next(o for o in catalog["objects"] if o["catalogId"] == obj["imageReference"])
+    x0, y0, x1, y1 = obj["bounds"]
+    nx = max(4, min(32, int(np.ceil(np.degrees(x1-x0)/0.25))))
+    ny = max(4, min(32, int(np.ceil(np.degrees(y1-y0)/0.25))))
+    mesh = np.array([[x, y] for y in range(ny+1) for x in range(nx+1)])
+    target = WCS(naxis=2)
+    target.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    target.wcs.crpix = [1-x0/((x1-x0)/nx), 1+y1/((y1-y0)/ny)]
+    target.wcs.crval = [obj["ra"], obj["dec"]]
+    target.wcs.cdelt = np.degrees([(x1-x0)/nx, -(y1-y0)/ny])
+    world = target.all_pix2world(mesh, 0)
+    width, height = owner["texture"]["width"], owner["texture"]["height"]
+    ox0, oy0, ox1, oy1 = owner["bounds"]
+    dx, dy = (ox1-ox0)/(width-1), (oy1-oy0)/(height-1)
+    reference = WCS(naxis=2)
+    reference.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    reference.wcs.crpix = [1-ox0/dx, 1+oy1/dy]
+    reference.wcs.crval = [owner["ra"], owner["dec"]]
+    reference.wcs.cdelt = np.degrees([dx, -dy])
+    uv = (reference.all_world2pix(world, 0)+0.5)/[width, height]
+    assert np.all(uv > 0) and np.all(uv < 1)
+    result["sharedImages"].append({"catalogId": obj["catalogId"], "imageReference": owner["catalogId"],
+        "reference": "Independent WCSLIB target TAN to owner TAN pixel-centre UV", "nx": nx, "ny": ny,
+        "samples": [{"grid": p.tolist(), "icrsDegrees": q.tolist(), "uv": r.tolist()} for p, q, r in zip(mesh, world, uv)]})
 path = root/"tests/fixtures/deep-sky-image-registration.json"
 path.write_text(json.dumps(result, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
 print(json.dumps({"atlasSha256": digest, "WCSLIB": [{"id": r["catalogId"], "samples": r["sampleCount"], "maxPixelError": r["maxReferencePixelError"]} for r in result["records"]]}))

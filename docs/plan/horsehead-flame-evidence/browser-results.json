@@ -1,0 +1,86 @@
+{
+  "checkedOn": "2026-11-06",
+  "scope": "Local Chrome GPU validation plus independent numeric and GL-substitute checks; qualitative composition reference",
+  "tests": {
+    "passed": 167,
+    "failed": 0
+  },
+  "build": {
+    "command": "npm run build -- --base /Tamatamatori/",
+    "passed": true,
+    "entry": "index-6oWsDoJY.js",
+    "sha256": "a188572da6c8a3093b42dd87b1f1e6300e606080b2e8eb286b1c05341a4762d7",
+    "warning": "Existing large-chunk warning"
+  },
+  "directionChecks": {
+    "reference": "ERFA atco13",
+    "samples": 52,
+    "maximumErrorDegreesRounded": 9.4e-05
+  },
+  "registration": {
+    "imageCount": 12,
+    "sourcePixelSamples": 300,
+    "maximumSourcePixelError": 5.297806637827307e-11,
+    "sharedUv": {
+      "reference": "Independent WCSLIB target TAN to owner TAN pixel-centre UV",
+      "sampleCount": 25,
+      "maximumUvError": 2.9419464550606898e-08,
+      "tolerance": 1e-07
+    }
+  },
+  "resources": {
+    "catalogSha256": "9372c9d85c46295c15bad9dfe6107c83308882306096e99d728b0025914ed86c",
+    "layerSha256": "25d828752436cd1ef157d272127f4180486aa03e2ee4cf7fba84070c0ffd9d0a",
+    "domainSha256": "eb25fdbbfe3edbc5c5ebf228a802860e14ffdebb5d1e225f39fe071a410701dc",
+    "targetCount": 13,
+    "independentImageCount": 12,
+    "textureBudgetBytes": 67108864,
+    "compressedBytes": 11392592,
+    "horsehead": {
+      "file": "ic0434.png",
+      "width": 1024,
+      "height": 1024,
+      "sha256": "e9b05d08fffbef0ab392fa7af32c619b69ebea1e47c5db7526cead0755375945",
+      "bytes": 419697,
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "alphaData": "1 - background contrast opacity"
+    }
+  },
+  "blendChecks": {
+    "previousBackgroundWeightMaximum": 0.8,
+    "currentBackgroundWeightMaximum": 0.18,
+    "baselineRgbSha256": "274617cba9e293927a17ff8fbcc727dc428fd8f1c770730441f62f87632b839a",
+    "rgbUnchanged": true,
+    "otherImagesUnchanged": 11
+  },
+  "chrome": {
+    "newScreenshots": 13,
+    "beforeScreenshotFrom": "deep-sky-next-four-evidence/horsehead-1000-stock.png",
+    "normalAndHa": true,
+    "milkyWayOnAndOff": true,
+    "clearPartialAndBlockedTerrain": true,
+    "daylightHidden": true,
+    "layerOffAndRecovery": true,
+    "consoleErrorCount": 0
+  },
+  "sharedImageLifecycle": {
+    "method": "GL substitute",
+    "oneDecodeAndVisibleDraw": true,
+    "independentTerrainQueries": true,
+    "sharedFailureAndRetry": true,
+    "lateCancellationCovered": true
+  },
+  "limitations": [
+    "Native 1024x1024 optical field and published-corner registration retained",
+    "Stock and modified colours are qualitative references",
+    "Background contrast is not measured extinction; catalogue stars remain independent",
+    "NGC2024 shares the IC434 field, with its own OpenNGC catalogue centre and local query bounds",
+    "Wide-field labels follow existing collision placement"
+  ],
+  "comparison": {
+    "file": "comparison.jpg",
+    "sha256": "adeeacfbdfad4dda3e3026e839e657367bb8e5e1b9662736855be14083290e71",
+    "processing": "Crop and resize of actual Chrome screenshots, without colour modification"
+  }
+}

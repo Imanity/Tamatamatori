@@ -3,13 +3,13 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {inflateSync} from 'node:zlib';
-import {deepSkyScene,deepSkyCatalog,deepSkyView,deepSkyRedEnhancementColor,deepSkyTextureRequests,deepSkyTextureBudget} from '../src/domain/deep-sky.ts';
+import {deepSkyScene,deepSkyCatalog,deepSkyView,deepSkyRedEnhancementColor,deepSkyTextureRequests,deepSkyTextureBudget,deepSkyImageEntry,deepSkyImageSource} from '../src/domain/deep-sky.ts';
 import {initialPlan,fieldOfView} from '../src/domain/plan.ts';
 import {skyPointView} from '../src/domain/starfield.ts';
 import {celestialPlanKey} from '../src/domain/visibility.ts';
 import {direction} from '../src/domain/ephemeris.ts';
 import {searchTargets} from '../src/domain/target-search.ts';
-import {loadDeepSkyImage} from '../src/preview/deep-sky-texture.ts';
+import {loadDeepSkyImage,deepSkyImageUrl} from '../src/preview/deep-sky-texture.ts';
 const fixture=JSON.parse(readFileSync(new URL('./fixtures/deep-sky-reference.json',import.meta.url),'utf8'));
 const metadata=JSON.parse(readFileSync(new URL('../src/data/deep-sky.json',import.meta.url),'utf8'));
 const atlasBytes=readFileSync(new URL('../src/data/deep-sky-atlas.png',import.meta.url));
@@ -35,13 +35,13 @@ const plan={...initialPlan,instant:'2026-11-08T16:00:00Z',refraction:'none',foca
 const angle=(a,b)=>Math.acos(Math.max(-1,Math.min(1,a.reduce((sum,x,i)=>sum+x*b[i],0))))*180/Math.PI;
 
 test('深空子集保留固定来源、缺失位置角、轮廓与数据许可；分量图完整',()=>{
-  assert.equal(deepSkyCatalog.length,12);assert.equal(new Set(deepSkyCatalog.map(p=>p.id)).size,12);
+  assert.equal(deepSkyCatalog.length,13);assert.equal(new Set(deepSkyCatalog.map(p=>p.id)).size,13);
   assert.equal(metadata.commit,'be3cd6c5498806a2fbb2f7e0452ef802dbb02be0');assert.equal(metadata.license,'CC-BY-SA-4.0');
   assert.ok(metadata.inputs.every(source=>/^[0-9a-f]{64}$/.test(source.sha256)));
   const andromeda=deepSkyCatalog.find(p=>p.catalogId==='NGC0224');assert.equal(andromeda.majorArcmin,177.83);assert.equal(andromeda.positionAngle,35);
   assert.equal(deepSkyCatalog.find(p=>p.catalogId==='NGC7000').positionAngle,null);
   for(const object of metadata.objects){assert.ok(object.majorArcmin>=object.minorArcmin);assert.ok(object.bounds.every(Number.isFinite));assert.ok(object.outlines.every(ring=>[1,2,3].includes(ring.level)&&ring.points.length>2&&ring.points.flat().every(Number.isFinite)));}
-  for(const object of metadata.objects){if(['galaxy','reflection'].includes(object.model))assert.equal(object.redEnhancementMax,0);else if(object.model!=='dark')assert.ok(object.redEnhancementMax>0);}
+  for(const object of metadata.objects){if(['galaxy','reflection'].includes(object.model))assert.equal(object.redEnhancementMax,0);else if(object.model!=='dark'&&!object.imageReference)assert.ok(object.redEnhancementMax>0);}
   const bytes=readFileSync(new URL('../src/data/deep-sky-atlas.png',import.meta.url));
   assert.equal(createHash('sha256').update(bytes).digest('hex'),metadata.atlas.sha256);
   assert.equal(bytes.readUInt32BE(16),4096);assert.equal(bytes.readUInt32BE(20),4096);
@@ -217,10 +217,14 @@ test('深空球面网格有界且接受折射，相机响应/焦距/时区不重
   for(const object of scene.objects){
     const {width:w,height:h}=object.entry.texture,uv=[];
     for(let i=object.offset*8;i<(object.offset+object.count)*8;i+=8)uv.push([scene.vertices[i+3],scene.vertices[i+4]]);
-    assert.ok(Math.abs(Math.min(...uv.map(p=>p[0]))-.5/w)<1e-7);
-    assert.ok(Math.abs(Math.max(...uv.map(p=>p[0]))-(w-.5)/w)<1e-7);
-    assert.ok(Math.abs(Math.min(...uv.map(p=>p[1]))-.5/h)<1e-7);
-    assert.ok(Math.abs(Math.max(...uv.map(p=>p[1]))-(h-.5)/h)<1e-7);
+    if(object.entry.imageReference){
+      assert.ok(uv.every(point=>point.every(value=>value>0&&value<1)));
+    }else{
+      assert.ok(Math.abs(Math.min(...uv.map(p=>p[0]))-.5/w)<1e-7);
+      assert.ok(Math.abs(Math.max(...uv.map(p=>p[0]))-(w-.5)/w)<1e-7);
+      assert.ok(Math.abs(Math.min(...uv.map(p=>p[1]))-.5/h)<1e-7);
+      assert.ok(Math.abs(Math.max(...uv.map(p=>p[1]))-(h-.5)/h)<1e-7);
+    }
   }
   for(const cameraResponse of ['stock','ha-modified']){assert.equal(deepSkyScene({...plan,cameraResponse,focalLength:1000,orientation:'portrait',timeZone:'UTC'}),scene);assert.equal(celestialPlanKey({...plan,cameraResponse}),key);}
   assert.notEqual(deepSkyScene({...plan,refraction:'standard'}),scene);
@@ -240,7 +244,7 @@ test('深空搜索支持中文、目录和英文名，响应选择不改变目�
     const target=searchTargets(plan,query)[0];assert.equal(target.id,id);assert.equal(target.layer,'deepSky');assert.ok(target.deep);
     assert.deepEqual(target.direction,searchTargets({...plan,cameraResponse:'ha-modified'},query)[0].direction);
   }
-  assert.equal(searchTargets(plan,'深空').length,12);
+  assert.equal(searchTargets(plan,'深空').length,13);
 });
 
 test('独立纹理保留旧八图逐像素数据，新目标保留混合颜色、连续谱与真实暗区对比',()=>{
@@ -284,6 +288,65 @@ test('实际视场的独立纹理按设备与屏幕分辨率选择，全部驻�
   const point=objects.find(o=>o.entry.catalogId==='NGC6514'),aimed={...plan,instant:plan.instant,azimuth:point.azimuth,pitch:point.elevation};
   // Geometry and resource policy remain separate: response changes do not reload.
   assert.deepEqual(deepSkyTextureRequests(aimed,objects,900,600,512),deepSkyTextureRequests({...aimed,cameraResponse:'ha-modified'},objects,900,600,512));
+});
+
+test('火树独立搜索和朝向，共享马头影像及注册来源，视场只申请一次',()=>{
+  const objects=deepSkyScene(plan).objects;
+  const flame=objects.find(object=>object.entry.catalogId==='NGC2024');
+  const owner=objects.find(object=>object.entry.catalogId==='IC0434');
+  for(const query of ['火树','火焰星云','NGC2024','NGC 2024','Flame Nebula']){
+    assert.equal(searchTargets(plan,query)[0].id,flame.id);
+  }
+  assert.notDeepEqual(flame.direction,owner.direction);
+  assert.equal(flame.entry.imageReference,'IC0434');
+  assert.equal(deepSkyImageEntry(flame.entry),owner.entry);
+  assert.equal(deepSkyImageSource('NGC2024'),deepSkyImageSource('IC0434'));
+  assert.equal(deepSkyImageUrl('NGC2024').href,deepSkyImageUrl('IC0434').href);
+  const aimed={...plan,azimuth:flame.azimuth,pitch:flame.elevation,focalLength:1000};
+  assert.equal(deepSkyView(aimed,flame).state,'画面内');
+  const requests=deepSkyTextureRequests(aimed,objects,900,600,2048);
+  assert.equal(requests.filter(request=>request.object===owner).length,1);
+  assert.ok(requests.every(request=>request.object!==flame));
+  assert.ok(flame.entry.bounds[2]-flame.entry.bounds[0]<owner.entry.bounds[2]-owner.entry.bounds[0]);
+});
+
+test('火树局部网格 UV 对照独立 WCSLIB，共享资料不拉伸到新目录中心',()=>{
+  const reference=JSON.parse(readFileSync(new URL('./fixtures/deep-sky-image-registration.json',import.meta.url),'utf8'));
+  const scene=deepSkyScene(plan);
+  assert.equal(reference.sharedImages.length,1);
+  const record=reference.sharedImages[0];
+  const target=scene.objects.find(object=>object.entry.catalogId===record.catalogId);
+  const vertices=scene.vertices.subarray(target.offset*8,(target.offset+target.count)*8);
+  for(const sample of record.samples){
+    let nearest=Infinity;
+    for(let i=0;i<vertices.length;i+=8){
+      nearest=Math.min(nearest,Math.hypot(vertices[i+3]-sample.uv[0],vertices[i+4]-sample.uv[1]));
+    }
+    assert.ok(nearest<1e-7,`${record.catalogId}: shared-image UV ${nearest}`);
+  }
+});
+
+test('马头背景压暗有保守上限，RGB 和其他十一幅影像逐像素保持',()=>{
+  const reference=JSON.parse(readFileSync(new URL('./fixtures/horsehead-flame.json',import.meta.url),'utf8'));
+  for(const item of reference.unchangedImages){
+    const file=readFileSync(new URL('../src/data/deep-sky/'+item.file,import.meta.url));
+    assert.equal(createHash('sha256').update(file).digest('hex'),item.sha256);
+  }
+  const file=readFileSync(new URL('../src/data/deep-sky/ic0434.png',import.meta.url));
+  const {pixels,width,height}=rgbaPng(file);
+  const rgb=Buffer.alloc(width*height*3);
+  let maximum=0,contrasted=0;
+  for(let pixel=0;pixel<width*height;pixel++){
+    pixels.copy(rgb,pixel*3,pixel*4,pixel*4+3);
+    const opacity=(255-pixels[pixel*4+3])/255;
+    maximum=Math.max(maximum,opacity);
+    if(opacity>0.02)contrasted++;
+  }
+  assert.equal(createHash('sha256').update(rgb).digest('hex'),reference.baselineRgbSha256);
+  assert.ok(maximum<=reference.maximumBackgroundOpacity+1/255);
+  assert.ok(contrasted>1000,'source silhouette keeps limited background contrast');
+  const statistics=metadata.textureStatistics.find(item=>item.catalogId==='IC0434');
+  assert.equal(statistics.darkContrast.maximumOpacity,reference.maximumBackgroundOpacity);
 });
 
 test('M20 连通支持消除外围星场块，中心原始 RGBA 细节逐像素保留',()=>{

@@ -1,0 +1,199 @@
+{
+  "checkedOn": "2026-11-06",
+  "atlasSha256": "2e93d7c91147be4010f7172605e7579c5e37aa16368266d0ba581f2beb4ed870",
+  "scope": "Packed display-signal colour ratios before opacity/compositing, not spectral flux or camera colour accuracy",
+  "oldIncrementRgb": [
+    1,
+    0.1,
+    0.18
+  ],
+  "correctedIncrementRgb": [
+    1,
+    0,
+    0
+  ],
+  "minimumPeak": 0.02,
+  "minimumExtra": 0.004,
+  "records": [
+    {
+      "catalogId": "NGC0224",
+      "source": "https://esahubble.org/images/heic1112f/",
+      "enhancedPixels": 0,
+      "extraMaximum": 0.0,
+      "backgroundContrastMaximum": null,
+      "old": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      },
+      "corrected": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      }
+    },
+    {
+      "catalogId": "NGC1976",
+      "source": "https://www.astropix.org/image/noirlab/noao-m42steinberg",
+      "enhancedPixels": 78996,
+      "extraMaximum": 0.403921568627451,
+      "backgroundContrastMaximum": null,
+      "old": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      },
+      "corrected": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      }
+    },
+    {
+      "catalogId": "Mel022",
+      "source": "https://www.astropix.org/image/noirlab/noao-m45denton",
+      "enhancedPixels": 0,
+      "extraMaximum": 0.0,
+      "backgroundContrastMaximum": null,
+      "old": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      },
+      "corrected": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      }
+    },
+    {
+      "catalogId": "NGC6523",
+      "source": "https://www.astropix.org/image/noirlab/noao-m8wideblock",
+      "enhancedPixels": 623147,
+      "extraMaximum": 0.5294117647058824,
+      "backgroundContrastMaximum": null,
+      "old": {
+        "redFractionLoweredPixels": 24643,
+        "maximumRedFractionDrop": 0.1007194244604318
+      },
+      "corrected": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      }
+    },
+    {
+      "catalogId": "NGC7000",
+      "source": "https://www.astropix.org/image/noirlab/noao-n7000mosblock",
+      "enhancedPixels": 1019736,
+      "extraMaximum": 0.5333333333333333,
+      "backgroundContrastMaximum": null,
+      "old": {
+        "redFractionLoweredPixels": 114807,
+        "maximumRedFractionDrop": 0.1007194244604318
+      },
+      "corrected": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      }
+    },
+    {
+      "catalogId": "NGC1499",
+      "source": "https://www.astropix.org/image/noirlab/noao-n1499block",
+      "enhancedPixels": 850912,
+      "extraMaximum": 0.5372549019607843,
+      "backgroundContrastMaximum": null,
+      "old": {
+        "redFractionLoweredPixels": 6760,
+        "maximumRedFractionDrop": 0.1007194244604318
+      },
+      "corrected": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      }
+    },
+    {
+      "catalogId": "IC1805",
+      "source": "https://www.flickr.com/photos/133259498@N05/54332176110/",
+      "enhancedPixels": 150635,
+      "extraMaximum": 0.5176470588235293,
+      "backgroundContrastMaximum": null,
+      "old": {
+        "redFractionLoweredPixels": 18,
+        "maximumRedFractionDrop": 0.0408382146687567
+      },
+      "corrected": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      }
+    },
+    {
+      "catalogId": "IC1848",
+      "source": "https://www.flickr.com/photos/133259498@N05/54332176110/",
+      "enhancedPixels": 107952,
+      "extraMaximum": 0.4784313725490196,
+      "backgroundContrastMaximum": null,
+      "old": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      },
+      "corrected": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      }
+    },
+    {
+      "catalogId": "NGC6514",
+      "source": "https://www.astropix.org/image/noirlab/noao-m20johnson",
+      "enhancedPixels": 67756,
+      "extraMaximum": 0.48235294117647054,
+      "backgroundContrastMaximum": null,
+      "old": {
+        "redFractionLoweredPixels": 173,
+        "maximumRedFractionDrop": 0.1007194244604318
+      },
+      "corrected": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      }
+    },
+    {
+      "catalogId": "NGC0598",
+      "source": "https://www.astropix.org/image/noirlab/noao-m33hotelling",
+      "enhancedPixels": 0,
+      "extraMaximum": 0.0,
+      "backgroundContrastMaximum": null,
+      "old": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      },
+      "corrected": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      }
+    },
+    {
+      "catalogId": "NGC2237",
+      "source": "https://commons.wikimedia.org/wiki/File:2244_and_the_Rosette_Nebula.jpg",
+      "enhancedPixels": 299644,
+      "extraMaximum": 0.44313725490196076,
+      "backgroundContrastMaximum": null,
+      "old": {
+        "redFractionLoweredPixels": 312,
+        "maximumRedFractionDrop": 0.020325203252032464
+      },
+      "corrected": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      }
+    },
+    {
+      "catalogId": "IC0434",
+      "source": "https://manuel-astro.ch/project/south-of-orions-belt/",
+      "enhancedPixels": 143660,
+      "extraMaximum": 0.2388235294117647,
+      "backgroundContrastMaximum": 0.18039215686274512,
+      "old": {
+        "redFractionLoweredPixels": 1918,
+        "maximumRedFractionDrop": 0.09502262443438914
+      },
+      "corrected": {
+        "redFractionLoweredPixels": 0,
+        "maximumRedFractionDrop": 0.0
+      }
+    }
+  ]
+}

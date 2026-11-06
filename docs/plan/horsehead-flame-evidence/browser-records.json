@@ -1,0 +1,1964 @@
+[
+  {
+    "name": "horsehead-1000-stock",
+    "sha256": "ce6b69e98deec032dd3711902fc3b7e13e866089365ad2640580f2438f2a7219",
+    "feedback": [],
+    "labels": [
+      "马头星云区域",
+      "火树星云"
+    ],
+    "parameters": [
+      {
+        "checked": true,
+        "label": "显示太阳",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示月亮",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示星空",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示银河",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示星座名称与连线",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示深空天体",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "type": "select-one",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "type": "select-one",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "type": "select-one",
+        "value": "2"
+      },
+      {
+        "label": "当地日期与时间",
+        "type": "datetime-local",
+        "value": "2026-11-09T01:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "type": "range",
+        "value": "60"
+      },
+      {
+        "label": "显示时区东京 · Asia/Tokyo上海 · Asia/ShanghaiUTC · 协调世界时纽约 · America/New_York伦敦 · Europe/London",
+        "type": "select-one",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "type": "select-one",
+        "value": "standard"
+      },
+      {
+        "label": "深空相机响应",
+        "type": "select-one",
+        "value": "stock"
+      },
+      {
+        "label": "焦距mm",
+        "type": "number",
+        "value": "1000"
+      },
+      {
+        "label": "焦距滑块",
+        "type": "range",
+        "value": "1000"
+      },
+      {
+        "label": "传感器全画幅APS-C · 23.5 × 15.6M4/3 · 17.3 × 13",
+        "type": "select-one",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例3:216:91:1",
+        "type": "select-one",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "type": "select-one",
+        "value": "landscape"
+      },
+      {
+        "label": "纬度°",
+        "type": "number",
+        "value": "35.4172"
+      },
+      {
+        "label": "经度°",
+        "type": "number",
+        "value": "138.8729"
+      },
+      {
+        "label": "方位角°",
+        "type": "number",
+        "value": "150.9855776967944"
+      },
+      {
+        "label": "俯仰角°",
+        "type": "number",
+        "value": "48.24382696432095"
+      },
+      {
+        "label": "相机离地高度m",
+        "type": "number",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "type": "search",
+        "value": "马头"
+      }
+    ],
+    "search": "找到 1 个目标马头星云区域深空 · 暗云与发射背景 · 影像结构参考 · 暗区对比近似 · 马头/火树共享光学参考（1024）当前 DEM 未遮挡151.0° / 几何 48.2°朝向",
+    "targets": [],
+    "viewfinder": {
+      "height": 825.65625,
+      "width": 1238.5,
+      "x": 265,
+      "y": 291.671875
+    },
+    "errors": []
+  },
+  {
+    "name": "horsehead-1000-ha",
+    "sha256": "f581e0c6b52a08ab8ccfeadc9681ca4d87197b6cae1119f9570273d76166e983",
+    "feedback": [],
+    "labels": [
+      "马头星云区域",
+      "火树星云"
+    ],
+    "parameters": [
+      {
+        "checked": true,
+        "label": "显示太阳",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示月亮",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示星空",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示银河",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示星座名称与连线",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示深空天体",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "type": "select-one",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "type": "select-one",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "type": "select-one",
+        "value": "2"
+      },
+      {
+        "label": "当地日期与时间",
+        "type": "datetime-local",
+        "value": "2026-11-09T01:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "type": "range",
+        "value": "60"
+      },
+      {
+        "label": "显示时区东京 · Asia/Tokyo上海 · Asia/ShanghaiUTC · 协调世界时纽约 · America/New_York伦敦 · Europe/London",
+        "type": "select-one",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "type": "select-one",
+        "value": "standard"
+      },
+      {
+        "label": "深空相机响应",
+        "type": "select-one",
+        "value": "ha-modified"
+      },
+      {
+        "label": "焦距mm",
+        "type": "number",
+        "value": "1000"
+      },
+      {
+        "label": "焦距滑块",
+        "type": "range",
+        "value": "1000"
+      },
+      {
+        "label": "传感器全画幅APS-C · 23.5 × 15.6M4/3 · 17.3 × 13",
+        "type": "select-one",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例3:216:91:1",
+        "type": "select-one",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "type": "select-one",
+        "value": "landscape"
+      },
+      {
+        "label": "纬度°",
+        "type": "number",
+        "value": "35.4172"
+      },
+      {
+        "label": "经度°",
+        "type": "number",
+        "value": "138.8729"
+      },
+      {
+        "label": "方位角°",
+        "type": "number",
+        "value": "150.9855776967944"
+      },
+      {
+        "label": "俯仰角°",
+        "type": "number",
+        "value": "48.24382696432095"
+      },
+      {
+        "label": "相机离地高度m",
+        "type": "number",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "type": "search",
+        "value": "马头"
+      }
+    ],
+    "search": "找到 1 个目标马头星云区域深空 · 暗云与发射背景 · 影像结构参考 · 暗区对比近似 · 马头/火树共享光学参考（1024）当前 DEM 未遮挡151.0° / 几何 48.2°朝向",
+    "targets": [],
+    "viewfinder": {
+      "height": 825.65625,
+      "width": 1238.5,
+      "x": 265,
+      "y": 291.671875
+    },
+    "errors": []
+  },
+  {
+    "name": "horsehead-1000-stock-milky",
+    "sha256": "19fa55b03b1db0b4e90b2e0a3bcf4bfd8aed53ad8f0c477fcf38d0550edcebfa",
+    "feedback": [],
+    "labels": [
+      "马头星云区域",
+      "火树星云"
+    ],
+    "parameters": [
+      {
+        "checked": true,
+        "label": "显示太阳",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示月亮",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示星空",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示银河",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "type": "range",
+        "value": "100"
+      },
+      {
+        "checked": false,
+        "label": "显示星座名称与连线",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示深空天体",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "type": "select-one",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "type": "select-one",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "type": "select-one",
+        "value": "2"
+      },
+      {
+        "label": "当地日期与时间",
+        "type": "datetime-local",
+        "value": "2026-11-09T01:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "type": "range",
+        "value": "60"
+      },
+      {
+        "label": "显示时区东京 · Asia/Tokyo上海 · Asia/ShanghaiUTC · 协调世界时纽约 · America/New_York伦敦 · Europe/London",
+        "type": "select-one",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "type": "select-one",
+        "value": "standard"
+      },
+      {
+        "label": "深空相机响应",
+        "type": "select-one",
+        "value": "stock"
+      },
+      {
+        "label": "焦距mm",
+        "type": "number",
+        "value": "1000"
+      },
+      {
+        "label": "焦距滑块",
+        "type": "range",
+        "value": "1000"
+      },
+      {
+        "label": "传感器全画幅APS-C · 23.5 × 15.6M4/3 · 17.3 × 13",
+        "type": "select-one",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例3:216:91:1",
+        "type": "select-one",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "type": "select-one",
+        "value": "landscape"
+      },
+      {
+        "label": "纬度°",
+        "type": "number",
+        "value": "35.4172"
+      },
+      {
+        "label": "经度°",
+        "type": "number",
+        "value": "138.8729"
+      },
+      {
+        "label": "方位角°",
+        "type": "number",
+        "value": "150.9855776967944"
+      },
+      {
+        "label": "俯仰角°",
+        "type": "number",
+        "value": "48.24382696432095"
+      },
+      {
+        "label": "相机离地高度m",
+        "type": "number",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "type": "search",
+        "value": "马头"
+      }
+    ],
+    "search": "找到 1 个目标马头星云区域深空 · 暗云与发射背景 · 影像结构参考 · 暗区对比近似 · 马头/火树共享光学参考（1024）当前 DEM 未遮挡151.0° / 几何 48.2°朝向",
+    "targets": [],
+    "viewfinder": {
+      "height": 825.65625,
+      "width": 1238.5,
+      "x": 265,
+      "y": 291.671875
+    },
+    "errors": []
+  },
+  {
+    "name": "horsehead-400-stock-milky",
+    "sha256": "41c51d55137940d76507a94f98742b33e50c762fe5db128706d932b0d0143d75",
+    "feedback": [],
+    "labels": [
+      "马头星云区域"
+    ],
+    "parameters": [
+      {
+        "checked": true,
+        "label": "显示太阳",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示月亮",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示星空",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示银河",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "银河对比度",
+        "type": "range",
+        "value": "100"
+      },
+      {
+        "checked": false,
+        "label": "显示星座名称与连线",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示深空天体",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "type": "select-one",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "type": "select-one",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "type": "select-one",
+        "value": "2"
+      },
+      {
+        "label": "当地日期与时间",
+        "type": "datetime-local",
+        "value": "2026-11-09T01:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "type": "range",
+        "value": "60"
+      },
+      {
+        "label": "显示时区东京 · Asia/Tokyo上海 · Asia/ShanghaiUTC · 协调世界时纽约 · America/New_York伦敦 · Europe/London",
+        "type": "select-one",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "type": "select-one",
+        "value": "standard"
+      },
+      {
+        "label": "深空相机响应",
+        "type": "select-one",
+        "value": "stock"
+      },
+      {
+        "label": "焦距mm",
+        "type": "number",
+        "value": "400"
+      },
+      {
+        "label": "焦距滑块",
+        "type": "range",
+        "value": "400"
+      },
+      {
+        "label": "传感器全画幅APS-C · 23.5 × 15.6M4/3 · 17.3 × 13",
+        "type": "select-one",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例3:216:91:1",
+        "type": "select-one",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "type": "select-one",
+        "value": "landscape"
+      },
+      {
+        "label": "纬度°",
+        "type": "number",
+        "value": "35.4172"
+      },
+      {
+        "label": "经度°",
+        "type": "number",
+        "value": "138.8729"
+      },
+      {
+        "label": "方位角°",
+        "type": "number",
+        "value": "150.9855776967944"
+      },
+      {
+        "label": "俯仰角°",
+        "type": "number",
+        "value": "48.24382696432095"
+      },
+      {
+        "label": "相机离地高度m",
+        "type": "number",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "type": "search",
+        "value": "马头"
+      }
+    ],
+    "search": "找到 1 个目标马头星云区域深空 · 暗云与发射背景 · 影像结构参考 · 暗区对比近似 · 马头/火树共享光学参考（1024）当前 DEM 未遮挡151.0° / 几何 48.2°朝向",
+    "targets": [],
+    "viewfinder": {
+      "height": 825.65625,
+      "width": 1238.5,
+      "x": 265,
+      "y": 291.671875
+    },
+    "errors": []
+  },
+  {
+    "name": "flame-1000-stock",
+    "sha256": "012a14bfbd87012cc073ac1585046a77eaa4a6fc3818cda7a24651cb67d2701c",
+    "feedback": [],
+    "labels": [
+      "马头星云区域",
+      "火树星云"
+    ],
+    "parameters": [
+      {
+        "checked": true,
+        "label": "显示太阳",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示月亮",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示星空",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示银河",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示星座名称与连线",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示深空天体",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "type": "select-one",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "type": "select-one",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "type": "select-one",
+        "value": "2"
+      },
+      {
+        "label": "当地日期与时间",
+        "type": "datetime-local",
+        "value": "2026-11-09T01:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "type": "range",
+        "value": "60"
+      },
+      {
+        "label": "显示时区东京 · Asia/Tokyo上海 · Asia/ShanghaiUTC · 协调世界时纽约 · America/New_York伦敦 · Europe/London",
+        "type": "select-one",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "type": "select-one",
+        "value": "standard"
+      },
+      {
+        "label": "深空相机响应",
+        "type": "select-one",
+        "value": "stock"
+      },
+      {
+        "label": "焦距mm",
+        "type": "number",
+        "value": "1000"
+      },
+      {
+        "label": "焦距滑块",
+        "type": "range",
+        "value": "1000"
+      },
+      {
+        "label": "传感器全画幅APS-C · 23.5 × 15.6M4/3 · 17.3 × 13",
+        "type": "select-one",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例3:216:91:1",
+        "type": "select-one",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "type": "select-one",
+        "value": "landscape"
+      },
+      {
+        "label": "纬度°",
+        "type": "number",
+        "value": "35.4172"
+      },
+      {
+        "label": "经度°",
+        "type": "number",
+        "value": "138.8729"
+      },
+      {
+        "label": "方位角°",
+        "type": "number",
+        "value": "150.38388098285577"
+      },
+      {
+        "label": "俯仰角°",
+        "type": "number",
+        "value": "48.72100404715288"
+      },
+      {
+        "label": "相机离地高度m",
+        "type": "number",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "type": "search",
+        "value": "火树"
+      }
+    ],
+    "search": "找到 1 个目标火树星云深空 · 发射星云 · 影像结构参考 · 暗区对比近似 · 马头/火树共享光学参考（1024）当前 DEM 未遮挡150.4° / 几何 48.7°朝向",
+    "targets": [],
+    "viewfinder": {
+      "height": 825.65625,
+      "width": 1238.5,
+      "x": 265,
+      "y": 291.671875
+    },
+    "errors": []
+  },
+  {
+    "name": "flame-1000-ha",
+    "sha256": "f618dba15efcfdd1545e84ecd2c9441067d142d8288e1b6525e821c7058e5f1d",
+    "feedback": [],
+    "labels": [
+      "马头星云区域",
+      "火树星云"
+    ],
+    "parameters": [
+      {
+        "checked": true,
+        "label": "显示太阳",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示月亮",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示星空",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示银河",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示星座名称与连线",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示深空天体",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "type": "select-one",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "type": "select-one",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "type": "select-one",
+        "value": "2"
+      },
+      {
+        "label": "当地日期与时间",
+        "type": "datetime-local",
+        "value": "2026-11-09T01:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "type": "range",
+        "value": "60"
+      },
+      {
+        "label": "显示时区东京 · Asia/Tokyo上海 · Asia/ShanghaiUTC · 协调世界时纽约 · America/New_York伦敦 · Europe/London",
+        "type": "select-one",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "type": "select-one",
+        "value": "standard"
+      },
+      {
+        "label": "深空相机响应",
+        "type": "select-one",
+        "value": "ha-modified"
+      },
+      {
+        "label": "焦距mm",
+        "type": "number",
+        "value": "1000"
+      },
+      {
+        "label": "焦距滑块",
+        "type": "range",
+        "value": "1000"
+      },
+      {
+        "label": "传感器全画幅APS-C · 23.5 × 15.6M4/3 · 17.3 × 13",
+        "type": "select-one",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例3:216:91:1",
+        "type": "select-one",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "type": "select-one",
+        "value": "landscape"
+      },
+      {
+        "label": "纬度°",
+        "type": "number",
+        "value": "35.4172"
+      },
+      {
+        "label": "经度°",
+        "type": "number",
+        "value": "138.8729"
+      },
+      {
+        "label": "方位角°",
+        "type": "number",
+        "value": "150.38388098285577"
+      },
+      {
+        "label": "俯仰角°",
+        "type": "number",
+        "value": "48.72100404715288"
+      },
+      {
+        "label": "相机离地高度m",
+        "type": "number",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "type": "search",
+        "value": "火树"
+      }
+    ],
+    "search": "找到 1 个目标火树星云深空 · 发射星云 · 影像结构参考 · 暗区对比近似 · 马头/火树共享光学参考（1024）当前 DEM 未遮挡150.4° / 几何 48.7°朝向",
+    "targets": [],
+    "viewfinder": {
+      "height": 825.65625,
+      "width": 1238.5,
+      "x": 265,
+      "y": 291.671875
+    },
+    "errors": []
+  },
+  {
+    "name": "flame-200-stock",
+    "sha256": "6f379bca837fab2ffb0cbd9199974bba7eeb015fbcd1bc2522c61f352b7c6eb7",
+    "feedback": [],
+    "labels": [
+      "猎户座大星云",
+      "马头星云区域"
+    ],
+    "parameters": [
+      {
+        "checked": true,
+        "label": "显示太阳",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示月亮",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示星空",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示银河",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示星座名称与连线",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示深空天体",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "type": "select-one",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "type": "select-one",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "type": "select-one",
+        "value": "2"
+      },
+      {
+        "label": "当地日期与时间",
+        "type": "datetime-local",
+        "value": "2026-11-09T01:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "type": "range",
+        "value": "60"
+      },
+      {
+        "label": "显示时区东京 · Asia/Tokyo上海 · Asia/ShanghaiUTC · 协调世界时纽约 · America/New_York伦敦 · Europe/London",
+        "type": "select-one",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "type": "select-one",
+        "value": "standard"
+      },
+      {
+        "label": "深空相机响应",
+        "type": "select-one",
+        "value": "stock"
+      },
+      {
+        "label": "焦距mm",
+        "type": "number",
+        "value": "200"
+      },
+      {
+        "label": "焦距滑块",
+        "type": "range",
+        "value": "200"
+      },
+      {
+        "label": "传感器全画幅APS-C · 23.5 × 15.6M4/3 · 17.3 × 13",
+        "type": "select-one",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例3:216:91:1",
+        "type": "select-one",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "type": "select-one",
+        "value": "landscape"
+      },
+      {
+        "label": "纬度°",
+        "type": "number",
+        "value": "35.4172"
+      },
+      {
+        "label": "经度°",
+        "type": "number",
+        "value": "138.8729"
+      },
+      {
+        "label": "方位角°",
+        "type": "number",
+        "value": "150.38388098285577"
+      },
+      {
+        "label": "俯仰角°",
+        "type": "number",
+        "value": "48.72100404715288"
+      },
+      {
+        "label": "相机离地高度m",
+        "type": "number",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "type": "search",
+        "value": "火树"
+      }
+    ],
+    "search": "找到 1 个目标火树星云深空 · 发射星云 · 影像结构参考 · 暗区对比近似 · 马头/火树共享光学参考（1024）当前 DEM 未遮挡150.4° / 几何 48.7°朝向",
+    "targets": [],
+    "viewfinder": {
+      "height": 825.65625,
+      "width": 1238.5,
+      "x": 265,
+      "y": 291.671875
+    },
+    "errors": []
+  },
+  {
+    "name": "flame-400-low-clear",
+    "sha256": "62df6c86b3593b942483027ce641f4fb52e256c9362e51112324fd7185dd2741",
+    "feedback": [],
+    "labels": [
+      "马头星云区域",
+      "火树星云"
+    ],
+    "parameters": [
+      {
+        "checked": true,
+        "label": "显示太阳",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示月亮",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示星空",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示银河",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示星座名称与连线",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示深空天体",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "type": "select-one",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "type": "select-one",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "type": "select-one",
+        "value": "2"
+      },
+      {
+        "label": "当地日期与时间",
+        "type": "datetime-local",
+        "value": "2026-01-15T03:25"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "type": "range",
+        "value": "205"
+      },
+      {
+        "label": "显示时区东京 · Asia/Tokyo上海 · Asia/ShanghaiUTC · 协调世界时纽约 · America/New_York伦敦 · Europe/London",
+        "type": "select-one",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "type": "select-one",
+        "value": "standard"
+      },
+      {
+        "label": "深空相机响应",
+        "type": "select-one",
+        "value": "stock"
+      },
+      {
+        "label": "焦距mm",
+        "type": "number",
+        "value": "400"
+      },
+      {
+        "label": "焦距滑块",
+        "type": "range",
+        "value": "400"
+      },
+      {
+        "label": "传感器全画幅APS-C · 23.5 × 15.6M4/3 · 17.3 × 13",
+        "type": "select-one",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例3:216:91:1",
+        "type": "select-one",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "type": "select-one",
+        "value": "landscape"
+      },
+      {
+        "label": "纬度°",
+        "type": "number",
+        "value": "35.4172"
+      },
+      {
+        "label": "经度°",
+        "type": "number",
+        "value": "138.8729"
+      },
+      {
+        "label": "方位角°",
+        "type": "number",
+        "value": "264.77283294762833"
+      },
+      {
+        "label": "俯仰角°",
+        "type": "number",
+        "value": "4.328562224964034"
+      },
+      {
+        "label": "相机离地高度m",
+        "type": "number",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "type": "search",
+        "value": "火树"
+      }
+    ],
+    "search": "找到 1 个目标火树星云深空 · 发射星云 · 影像结构参考 · 暗区对比近似 · 马头/火树共享光学参考（1024）当前 DEM 未遮挡264.8° / 几何 4.1°朝向",
+    "targets": [],
+    "viewfinder": {
+      "height": 825.65625,
+      "width": 1238.5,
+      "x": 265,
+      "y": 291.671875
+    },
+    "errors": []
+  },
+  {
+    "name": "flame-400-blocked",
+    "sha256": "d5845cf17ed0a193203e127968d0d92c801da16ec2bc6e8acd2d181c6b965e6b",
+    "feedback": [],
+    "labels": [],
+    "parameters": [
+      {
+        "checked": true,
+        "label": "显示太阳",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示月亮",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示星空",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示银河",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示星座名称与连线",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示深空天体",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "type": "select-one",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "type": "select-one",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "type": "select-one",
+        "value": "2"
+      },
+      {
+        "label": "当地日期与时间",
+        "type": "datetime-local",
+        "value": "2026-01-15T03:35"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "type": "range",
+        "value": "215"
+      },
+      {
+        "label": "显示时区东京 · Asia/Tokyo上海 · Asia/ShanghaiUTC · 协调世界时纽约 · America/New_York伦敦 · Europe/London",
+        "type": "select-one",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "type": "select-one",
+        "value": "standard"
+      },
+      {
+        "label": "深空相机响应",
+        "type": "select-one",
+        "value": "stock"
+      },
+      {
+        "label": "焦距mm",
+        "type": "number",
+        "value": "400"
+      },
+      {
+        "label": "焦距滑块",
+        "type": "range",
+        "value": "400"
+      },
+      {
+        "label": "传感器全画幅APS-C · 23.5 × 15.6M4/3 · 17.3 × 13",
+        "type": "select-one",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例3:216:91:1",
+        "type": "select-one",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "type": "select-one",
+        "value": "landscape"
+      },
+      {
+        "label": "纬度°",
+        "type": "number",
+        "value": "35.4172"
+      },
+      {
+        "label": "经度°",
+        "type": "number",
+        "value": "138.8729"
+      },
+      {
+        "label": "方位角°",
+        "type": "number",
+        "value": "266.23451404455045"
+      },
+      {
+        "label": "俯仰角°",
+        "type": "number",
+        "value": "2.3824141547558924"
+      },
+      {
+        "label": "相机离地高度m",
+        "type": "number",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "type": "search",
+        "value": "火树"
+      }
+    ],
+    "search": "找到 1 个目标火树星云深空 · 发射星云 · 影像结构参考 · 暗区对比近似 · 马头/火树共享光学参考（1024）山体遮挡266.2° / 几何 2.1°朝向",
+    "targets": [],
+    "viewfinder": {
+      "height": 825.65625,
+      "width": 1238.5,
+      "x": 265,
+      "y": 291.671875
+    },
+    "errors": []
+  },
+  {
+    "name": "flame-400-partial",
+    "sha256": "95c15c6f7e092b3f0faf745780ea606b0a1e84f1a76691508cda2da8eb26b571",
+    "feedback": [],
+    "labels": [
+      "火树星云"
+    ],
+    "parameters": [
+      {
+        "checked": true,
+        "label": "显示太阳",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示月亮",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示星空",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示银河",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示星座名称与连线",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示深空天体",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "type": "select-one",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "type": "select-one",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "type": "select-one",
+        "value": "2"
+      },
+      {
+        "label": "当地日期与时间",
+        "type": "datetime-local",
+        "value": "2026-01-15T03:30"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "type": "range",
+        "value": "210"
+      },
+      {
+        "label": "显示时区东京 · Asia/Tokyo上海 · Asia/ShanghaiUTC · 协调世界时纽约 · America/New_York伦敦 · Europe/London",
+        "type": "select-one",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "type": "select-one",
+        "value": "standard"
+      },
+      {
+        "label": "深空相机响应",
+        "type": "select-one",
+        "value": "stock"
+      },
+      {
+        "label": "焦距mm",
+        "type": "number",
+        "value": "400"
+      },
+      {
+        "label": "焦距滑块",
+        "type": "range",
+        "value": "400"
+      },
+      {
+        "label": "传感器全画幅APS-C · 23.5 × 15.6M4/3 · 17.3 × 13",
+        "type": "select-one",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例3:216:91:1",
+        "type": "select-one",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "type": "select-one",
+        "value": "landscape"
+      },
+      {
+        "label": "纬度°",
+        "type": "number",
+        "value": "35.4172"
+      },
+      {
+        "label": "经度°",
+        "type": "number",
+        "value": "138.8729"
+      },
+      {
+        "label": "方位角°",
+        "type": "number",
+        "value": "265.50474187346583"
+      },
+      {
+        "label": "俯仰角°",
+        "type": "number",
+        "value": "3.348115015408456"
+      },
+      {
+        "label": "相机离地高度m",
+        "type": "number",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "type": "search",
+        "value": "火树"
+      }
+    ],
+    "search": "找到 1 个目标火树星云深空 · 发射星云 · 影像结构参考 · 暗区对比近似 · 马头/火树共享光学参考（1024）部分山体遮挡265.5° / 几何 3.1°朝向",
+    "targets": [],
+    "viewfinder": {
+      "height": 825.65625,
+      "width": 1238.5,
+      "x": 265,
+      "y": 291.671875
+    },
+    "errors": []
+  },
+  {
+    "name": "flame-400-daylight",
+    "sha256": "aa0b1c5c8749073fdbbab59a772cdc07d1a8a2b2590a486089481ca1893df401",
+    "feedback": [],
+    "labels": [],
+    "parameters": [
+      {
+        "checked": true,
+        "label": "显示太阳",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示月亮",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示星空",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示银河",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示星座名称与连线",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示深空天体",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "type": "select-one",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "type": "select-one",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "type": "select-one",
+        "value": "2"
+      },
+      {
+        "label": "当地日期与时间",
+        "type": "datetime-local",
+        "value": "2026-11-09T06:30"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "type": "range",
+        "value": "390"
+      },
+      {
+        "label": "显示时区东京 · Asia/Tokyo上海 · Asia/ShanghaiUTC · 协调世界时纽约 · America/New_York伦敦 · Europe/London",
+        "type": "select-one",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "type": "select-one",
+        "value": "standard"
+      },
+      {
+        "label": "深空相机响应",
+        "type": "select-one",
+        "value": "stock"
+      },
+      {
+        "label": "焦距mm",
+        "type": "number",
+        "value": "400"
+      },
+      {
+        "label": "焦距滑块",
+        "type": "range",
+        "value": "400"
+      },
+      {
+        "label": "传感器全画幅APS-C · 23.5 × 15.6M4/3 · 17.3 × 13",
+        "type": "select-one",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例3:216:91:1",
+        "type": "select-one",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "type": "select-one",
+        "value": "landscape"
+      },
+      {
+        "label": "纬度°",
+        "type": "number",
+        "value": "35.4172"
+      },
+      {
+        "label": "经度°",
+        "type": "number",
+        "value": "138.8729"
+      },
+      {
+        "label": "方位角°",
+        "type": "number",
+        "value": "252.47022058826252"
+      },
+      {
+        "label": "俯仰角°",
+        "type": "number",
+        "value": "20.0753761618833"
+      },
+      {
+        "label": "相机离地高度m",
+        "type": "number",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "type": "search",
+        "value": "火树"
+      }
+    ],
+    "search": "找到 1 个目标火树星云深空 · 发射星云 · 影像结构参考 · 暗区对比近似 · 马头/火树共享光学参考（1024）天空较亮 · 轮廓隐藏252.5° / 几何 20.0°朝向",
+    "targets": [],
+    "viewfinder": {
+      "height": 825.65625,
+      "width": 1238.5,
+      "x": 265,
+      "y": 291.671875
+    },
+    "errors": []
+  },
+  {
+    "name": "flame-layer-off",
+    "sha256": "115bb9748e442ef7ac80e835a1bfb10465bc2bdf24398f5f554c2a61f4c83712",
+    "feedback": [],
+    "labels": [],
+    "parameters": [
+      {
+        "checked": true,
+        "label": "显示太阳",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示月亮",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示星空",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示银河",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示星座名称与连线",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示深空天体",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "type": "select-one",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "type": "select-one",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "type": "select-one",
+        "value": "2"
+      },
+      {
+        "label": "当地日期与时间",
+        "type": "datetime-local",
+        "value": "2026-11-09T01:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "type": "range",
+        "value": "60"
+      },
+      {
+        "label": "显示时区东京 · Asia/Tokyo上海 · Asia/ShanghaiUTC · 协调世界时纽约 · America/New_York伦敦 · Europe/London",
+        "type": "select-one",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "type": "select-one",
+        "value": "standard"
+      },
+      {
+        "label": "深空相机响应",
+        "type": "select-one",
+        "value": "stock"
+      },
+      {
+        "label": "焦距mm",
+        "type": "number",
+        "value": "1000"
+      },
+      {
+        "label": "焦距滑块",
+        "type": "range",
+        "value": "1000"
+      },
+      {
+        "label": "传感器全画幅APS-C · 23.5 × 15.6M4/3 · 17.3 × 13",
+        "type": "select-one",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例3:216:91:1",
+        "type": "select-one",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "type": "select-one",
+        "value": "landscape"
+      },
+      {
+        "label": "纬度°",
+        "type": "number",
+        "value": "35.4172"
+      },
+      {
+        "label": "经度°",
+        "type": "number",
+        "value": "138.8729"
+      },
+      {
+        "label": "方位角°",
+        "type": "number",
+        "value": "150.38388098285577"
+      },
+      {
+        "label": "俯仰角°",
+        "type": "number",
+        "value": "48.72100404715288"
+      },
+      {
+        "label": "相机离地高度m",
+        "type": "number",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "type": "search",
+        "value": "火树"
+      }
+    ],
+    "search": "找到 1 个目标火树星云深空 · 发射星云 · 影像结构参考 · 暗区对比近似 · 马头/火树共享光学参考（1024）图层已关闭 · 画面内150.4° / 几何 48.7°开启并朝向",
+    "targets": [],
+    "viewfinder": {
+      "height": 825.65625,
+      "width": 1238.5,
+      "x": 265,
+      "y": 329.171875
+    },
+    "errors": []
+  },
+  {
+    "name": "flame-1000-recovered",
+    "sha256": "012a14bfbd87012cc073ac1585046a77eaa4a6fc3818cda7a24651cb67d2701c",
+    "feedback": [],
+    "labels": [
+      "马头星云区域",
+      "火树星云"
+    ],
+    "parameters": [
+      {
+        "checked": true,
+        "label": "显示太阳",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示月亮",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示星空",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示银河",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": false,
+        "label": "显示星座名称与连线",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "checked": true,
+        "label": "显示深空天体",
+        "type": "checkbox",
+        "value": "on"
+      },
+      {
+        "label": "拍摄预览面板位置",
+        "type": "select-one",
+        "value": "0"
+      },
+      {
+        "label": "地图面板位置",
+        "type": "select-one",
+        "value": "1"
+      },
+      {
+        "label": "拍摄参数面板位置",
+        "type": "select-one",
+        "value": "2"
+      },
+      {
+        "label": "当地日期与时间",
+        "type": "datetime-local",
+        "value": "2026-11-09T01:00"
+      },
+      {
+        "label": "24 小时时间滑杆",
+        "type": "range",
+        "value": "60"
+      },
+      {
+        "label": "显示时区东京 · Asia/Tokyo上海 · Asia/ShanghaiUTC · 协调世界时纽约 · America/New_York伦敦 · Europe/London",
+        "type": "select-one",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "label": "大气折射模型",
+        "type": "select-one",
+        "value": "standard"
+      },
+      {
+        "label": "深空相机响应",
+        "type": "select-one",
+        "value": "stock"
+      },
+      {
+        "label": "焦距mm",
+        "type": "number",
+        "value": "1000"
+      },
+      {
+        "label": "焦距滑块",
+        "type": "range",
+        "value": "1000"
+      },
+      {
+        "label": "传感器全画幅APS-C · 23.5 × 15.6M4/3 · 17.3 × 13",
+        "type": "select-one",
+        "value": "full-frame"
+      },
+      {
+        "label": "画幅比例3:216:91:1",
+        "type": "select-one",
+        "value": "3:2"
+      },
+      {
+        "label": "拍摄画幅方向",
+        "type": "select-one",
+        "value": "landscape"
+      },
+      {
+        "label": "纬度°",
+        "type": "number",
+        "value": "35.4172"
+      },
+      {
+        "label": "经度°",
+        "type": "number",
+        "value": "138.8729"
+      },
+      {
+        "label": "方位角°",
+        "type": "number",
+        "value": "150.38388098285577"
+      },
+      {
+        "label": "俯仰角°",
+        "type": "number",
+        "value": "48.72100404715288"
+      },
+      {
+        "label": "相机离地高度m",
+        "type": "number",
+        "value": "1.6"
+      },
+      {
+        "label": "搜索拍摄目标",
+        "type": "search",
+        "value": "火树"
+      }
+    ],
+    "search": "找到 1 个目标火树星云深空 · 发射星云 · 影像结构参考 · 暗区对比近似 · 马头/火树共享光学参考（1024）当前 DEM 未遮挡150.4° / 几何 48.7°朝向",
+    "targets": [],
+    "viewfinder": {
+      "height": 825.65625,
+      "width": 1238.5,
+      "x": 265,
+      "y": 291.671875
+    },
+    "errors": []
+  }
+]

@@ -357,3 +357,47 @@ test('按视场资源请求移出或关闭即取消，迟到图片释放且不�
   assert.equal(closed,first);assert.equal(gl.textureUploads,0);assert.deepEqual(pool.states,{});assert.equal(resources.size,0);
   pool.dispose(gl);
 });
+
+test('马头和火树共享一次解码与可见绘制，局部遮挡及资源失败分别反馈',async()=>{
+  const {gl,resources}=fakeGL(),reports=[],requests=[];
+  let broken=false;
+  const layer=new StarfieldLayer(snapshot=>reports.push(snapshot),async()=>({close(){}}),async(_signal,maxSize,entry)=>{
+    requests.push(entry.catalogId);
+    if(broken)throw new Error('shared field unavailable');
+    return {width:maxSize,height:maxSize,close(){}};
+  });
+  layer.onAdd({triggerRepaint(){},getContainer:()=>({clientWidth:900,clientHeight:600}),getCanvas:()=>({width:900})},gl);
+  const plan={...initialPlan,instant:'2026-11-08T16:00:00Z',refraction:'none',focalLength:1000,
+    layers:{sun:false,moon:false,stars:false,milkyWay:false,constellations:false,deepSky:true}};
+  const objects=deepSkyScene(plan).objects;
+  const flame=objects.find(object=>object.entry.catalogId==='NGC2024');
+  const horsehead=objects.find(object=>object.entry.catalogId==='IC0434');
+  plan.azimuth=flame.azimuth;plan.pitch=flame.elevation;
+  const frame={key:'shared',planKey:'shared',ready:true,plan};
+  layer.setScene(frame);layer.camera={azimuth:plan.azimuth,pitch:plan.pitch};layer.matrix=photoCameraMatrix(plan);
+  layer.render(gl);await new Promise(resolve=>setImmediate(resolve));
+  assert.deepEqual(requests,['IC0434']);
+  gl.draws=[];
+  // Label queries first, then separate clear/blocked probes in catalogue order.
+  gl.results=[true,true,true,true,true,false];
+  layer.render(gl);
+  const visible=gl.draws.filter(draw=>draw.mode===gl.TRIANGLES&&draw.probe===0);
+  assert.equal(visible.length,1);assert.equal(visible[0].count,horsehead.count);
+  assert.ok(gl.draws.some(draw=>draw.mode===gl.TRIANGLES&&draw.probe===1&&draw.count===flame.count));
+  assert.equal(gl.textureUploads,1);
+  gl.complete();layer.render(gl);
+  assert.equal(reports.at(-1).states[horsehead.id],'partial');
+  assert.equal(reports.at(-1).states[flame.id],'clear');
+  assert.equal(reports.at(-1).deepSkyTargets[horsehead.id].phase,'ready');
+  assert.equal(reports.at(-1).deepSkyTargets[flame.id].phase,'ready');
+  const off={...frame,key:'shared-off',plan:{...plan,layers:{...plan.layers,deepSky:false}}};
+  layer.setScene(off);broken=true;layer.setScene({...frame,key:'shared-failure'});
+  layer.render(gl);await new Promise(resolve=>setImmediate(resolve));layer.render(gl);
+  assert.equal(reports.at(-1).deepSkyTargets[horsehead.id].phase,'error');
+  assert.equal(reports.at(-1).deepSkyTargets[flame.id].phase,'error');
+  layer.setScene(off);broken=false;layer.setScene({...frame,key:'shared-retry'});
+  layer.render(gl);await new Promise(resolve=>setImmediate(resolve));layer.render(gl);
+  assert.equal(reports.at(-1).deepSkyTargets[flame.id].phase,'ready');
+  assert.deepEqual(requests,['IC0434','IC0434','IC0434']);
+  layer.onRemove();assert.equal(resources.size,0);
+});

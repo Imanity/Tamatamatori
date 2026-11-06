@@ -1,4 +1,4 @@
-"""Build the twelve actually used per-target textures; no runtime mega-atlas.
+"""Build the twelve current images for thirteen targets; no runtime mega-atlas.
 
 Run the catalogue + legacy-atlas builders first. Old eight tiles are extracted
 without changing a byte; four new references use the same verified pipeline.
@@ -25,6 +25,13 @@ sizes = {"NGC6514": 2048, "NGC0598": 2048, "NGC2237": 1024, "IC0434": 1024}
 stats = list(catalog["atlas"]["detailStatistics"])
 for obj in catalog["objects"]:
     cid = obj["catalogId"]
+    if obj.get("imageReference"):
+        owner = next(o for o in catalog["objects"] if o["catalogId"] == obj["imageReference"])
+        obj["texture"] = owner["texture"].copy()
+        obj["atlasRect"] = owner["atlasRect"].copy()
+        obj["redEnhancementMax"] = owner["redEnhancementMax"]
+        obj["componentMax"] = owner["componentMax"].copy()
+        continue
     if cid in sizes:
         spec = next(s for s in sources if s["catalogId"] == cid)
         obj["bounds"] = image_bounds(spec, obj)

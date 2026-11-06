@@ -1,11 +1,11 @@
 import type { ShootingPlan } from "../domain/plan.ts";
 import type { DeepSkyTarget } from "../domain/deep-sky.ts";
-import { deepSkyTextureRequests } from "../domain/deep-sky.ts";
+import { deepSkyTextureRequests, deepSkyCatalog, deepSkyImageEntry } from "../domain/deep-sky.ts";
 import { loadDeepSkyImage } from "./deep-sky-texture.ts";
 import { SkyTexture } from "./sky-texture.ts";
 import type { SkyTextureState } from "./sky-texture.ts";
 
-/** Resources for the twelve current references, not a general paging system. */
+/** Current image resources, with the Horsehead/Flame field shared once. */
 export class DeepSkyTextures {
   private slots = new Map<string, { resource: SkyTexture; maxSize: number }>();
   private changed: () => void;
@@ -15,7 +15,10 @@ export class DeepSkyTextures {
     this.load = load;
   }
   get states(): Record<string, SkyTextureState> {
-    return Object.fromEntries([...this.slots].map(([id, slot]) => [id, slot.resource.state]));
+    return Object.fromEntries(deepSkyCatalog.flatMap(entry => {
+      const slot = this.slots.get(deepSkyImageEntry(entry).id);
+      return slot ? [[entry.id, slot.resource.state]] : [];
+    }));
   }
   get state(): SkyTextureState {
     const states = [...this.slots.values()].map(slot => slot.resource.state);
@@ -23,7 +26,10 @@ export class DeepSkyTextures {
     if (error) return error;
     return { phase: states.some(state => state.phase === "loading") ? "loading" : "ready" };
   }
-  texture(id: string) { return this.slots.get(id)?.resource.texture; }
+  texture(id: string) {
+    const entry = deepSkyCatalog.find(object => object.id === id);
+    return this.slots.get(entry ? deepSkyImageEntry(entry).id : id)?.resource.texture;
+  }
   update(plan: ShootingPlan, objects: DeepSkyTarget[], gl: WebGL2RenderingContext, width: number, height: number) {
     const requests = deepSkyTextureRequests(plan, objects, width, height, Number(gl.getParameter(gl.MAX_TEXTURE_SIZE)) || 2048);
     let changed = false;

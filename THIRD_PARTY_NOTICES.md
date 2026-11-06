@@ -36,7 +36,7 @@ M45/M8/北美使用同一发布资料的原尺寸 TIFF，最终 RGB 保留高频
 - 玫瑰署名 Kees Scherer，采用 Stellarium 固定版本的 `n2244.png` 与四角坐标。原资料为 Hα+RGB，按 CC BY-SA 4.0 使用。已重投影、缩放并提取定性红光增量。许可依据为上游 CREDITS 第 4.58 项。[来源页](https://commons.wikimedia.org/wiki/File:2244_and_the_Rosette_Nebula.jpg)，[固定许可记录](https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md)
 - 马头区域署名 Manuel Peitsch, post-processing: Sun Shuwei，采用同一固定版本的 `ic434.png` 与四角坐标。作者资料采用 ASI2600MC-Pro、Optolong L-Pro 和可见光拼接，按 CC BY 4.0 使用。已重投影、提取扩散结构并估计暗区背景对比。许可依据为上游 CREDITS 第 4.132 项。[作者资料](https://manuel-astro.ch/project/south-of-orions-belt/)，[固定纹理与坐标](https://github.com/Stellarium/stellarium/tree/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default)
 
-四份参考的输入/输出 SHA256、原许可、派生处理及注册字段均保存在 `deep-sky.json`。四角资料的 TAN 拟合误差单独记录，既有心脏/灵魂继续使用原来的半像素验收界限。应用采用 12 份独立纹理，并按 CC BY-SA 4.0 提供生成后的 PNG。[完整数据](src/data/deep-sky.json)
+四份参考的输入/输出 SHA256、原许可、派生处理及注册字段均保存在 `deep-sky.json`。四角资料的 TAN 拟合误差单独记录，既有心脏/灵魂继续使用原来的半像素验收界限。应用采用 12 份独立纹理，并按 CC BY-SA 4.0 提供生成后的 PNG。NGC2024 火树星云共享上述 IC434 参考的注册与像素，新增目录位置、别名和局部查询范围；马头暗区显示权重已减弱。两目标共享一次可见绘制，原作者及许可沿用。[完整数据](src/data/deep-sky.json)
 
 ## ESO 银河全景
 

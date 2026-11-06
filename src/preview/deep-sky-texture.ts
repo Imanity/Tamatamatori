@@ -2,7 +2,8 @@ import catalog from "../data/deep-sky.json" with { type: "json" };
 import type { DeepSkyEntry } from "../domain/deep-sky.ts";
 
 export function deepSkyImageUrl(catalogId: string) {
-  const name = catalogId.toLowerCase();
+  const entry = catalog.objects.find(object => object.catalogId === catalogId);
+  const name = (entry && "imageReference" in entry ? String(entry.imageReference) : catalogId).toLowerCase();
   return new URL(`../data/deep-sky/${name}.png`, import.meta.url);
 }
 

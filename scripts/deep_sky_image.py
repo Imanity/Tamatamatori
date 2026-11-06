@@ -285,7 +285,10 @@ def image_components(source_dir, spec, obj, width, height=None):
         envelope = square_filter(square_filter(red, 81, maximum=True), 81)
         dark = np.clip((envelope-red)/np.maximum(envelope, 0.02), 0, 1)
         signal = np.clip((envelope-0.02)/0.10, 0, 1)
-        dark *= signal*signal*(3-2*signal)*0.8
+        # Keep the silhouette primarily in the source emission contrast.
+        # A conservative background weight avoids isolated black cutouts in
+        # the app's brighter approximate night sky and Milky Way panorama.
+        dark *= signal*signal*(3-2*signal)*0.18
     if spec.get("opacityModel"):
         seed = None
         if spec.get("supportSeed") == "catalogue-centre":
@@ -341,5 +344,5 @@ def image_components(source_dir, spec, obj, width, height=None):
         "opacitySupport": support_stats,
         "outputDimensions": [width, height],
         "componentModel": "Baseline RGB plus additive red structure proxy; not measured spectral components",
-        "darkContrast": {"model": "source-red-envelope-deficit", "closingPixels": 81, "maximumOpacity": 0.8, "scope": "Background contrast only, not optical depth or stellar distance"} if dark is not None else None,
+        "darkContrast": {"model": "source-red-envelope-deficit", "closingPixels": 81, "maximumOpacity": 0.18, "scope": "Background contrast only, not optical depth or stellar distance"} if dark is not None else None,
     }

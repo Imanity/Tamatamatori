@@ -4,8 +4,8 @@ Run in the existing NumPy/Pillow data-preparation environment. The runtime tint
 is separately checked by the Node tests using the exported shader constant.
 """
 import hashlib
+import argparse
 import json
-import sys
 from pathlib import Path
 
 import numpy as np
@@ -16,14 +16,18 @@ catalog = json.loads((root/"src/data/deep-sky.json").read_text(encoding="utf-8")
 raw = (root/"src/data/deep-sky-atlas.png").read_bytes()
 digest = hashlib.sha256(raw).hexdigest()
 assert digest == catalog["atlas"]["sha256"]
-target_mode = "--targets" in sys.argv
+parser = argparse.ArgumentParser()
+parser.add_argument("--targets", action="store_true")
+parser.add_argument("--output", type=Path)
+args = parser.parse_args()
+target_mode = args.targets
 atlas = None if target_mode else np.asarray(Image.open(root/"src/data/deep-sky-atlas.png"), dtype=float)/255
 result = {"checkedOn": "2026-11-06", "atlasSha256": digest,
     "scope": "Packed display-signal colour ratios before opacity/compositing, not spectral flux or camera colour accuracy",
     "oldIncrementRgb": [1, 0.1, 0.18], "correctedIncrementRgb": [1, 0, 0],
     "minimumPeak": 0.02, "minimumExtra": 0.004, "records": []}
 legacy_ids = {s["catalogId"] for s in catalog["atlas"]["detailStatistics"]}
-objects = catalog["objects"] if target_mode else [obj for obj in catalog["objects"] if obj["catalogId"] in legacy_ids]
+objects = [obj for obj in catalog["objects"] if not obj.get("imageReference")] if target_mode else [obj for obj in catalog["objects"] if obj["catalogId"] in legacy_ids]
 for obj in objects:
     if target_mode:
         path = root/"src/data/deep-sky"/obj["texture"]["file"]
@@ -53,7 +57,7 @@ for obj in objects:
         assert extra.max() == 0
     result["records"].append(record)
 directory = "deep-sky-next-four-evidence" if target_mode else "deep-sky-colour-evidence"
-path = root/"docs/plan"/directory/"pixel-audit.json"
+path = args.output or root/"docs/plan"/directory/"pixel-audit.json"
 path.parent.mkdir(parents=True, exist_ok=True)
 path.write_text(json.dumps(result, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
 print(json.dumps({"atlasSha256": digest, "records": result["records"]}, ensure_ascii=False))

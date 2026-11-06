@@ -1093,7 +1093,7 @@ test('深空搜索开启与朝向，未改机/改机响应切换保留几何、�
   assert.equal(layer.cameraResponse,'ha-modified');assert.equal(layer.frame,originalFrame);assert.equal(groundRequests.length,requests);assert.equal(terrainMap(),map);assert.equal(map.cameraSolutions.length,poses);
   assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);assert.equal(input('当地日期与时间').value,time);
   await settle(()=>document.querySelector('[aria-label="清除目标搜索"]').click());
-  assert.equal(document.querySelectorAll('[data-dso-status]').length,12);assert.match(document.querySelector('.sky-readout').textContent,/天文改机/);
+  assert.equal(document.querySelectorAll('[data-dso-status]').length,13);assert.match(document.querySelector('.sky-readout').textContent,/天文改机/);
   await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());assert.equal(document.querySelector('[data-dso-label]'),null);
   await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());assert.equal(document.querySelector('[aria-label="深空相机响应"]').value,'ha-modified');
 });

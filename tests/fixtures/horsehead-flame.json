@@ -1,0 +1,50 @@
+{
+  "baselineRgbSha256": "274617cba9e293927a17ff8fbcc727dc428fd8f1c770730441f62f87632b839a",
+  "maximumBackgroundOpacity": 0.18,
+  "unchangedImages": [
+    {
+      "file": "ngc0224.png",
+      "sha256": "67a8acff0b5f4a8932f6ea37288efcf1a9991865d1c65adc8e42fb1a94d36b4e"
+    },
+    {
+      "file": "ngc1976.png",
+      "sha256": "da669f9bef54d13dbb26230fdbf0a01b57a870c6fedc9719921e20e7dceef0e7"
+    },
+    {
+      "file": "mel022.png",
+      "sha256": "423419bd878aa68e6b299017a80a9a13ffa445633169edf6378d8c652ca03e6e"
+    },
+    {
+      "file": "ngc6523.png",
+      "sha256": "4d1047609885b9937cc48bef6429e83331b96c9e66f17540eb37d14583e71682"
+    },
+    {
+      "file": "ngc7000.png",
+      "sha256": "5e228d56f45b74a45e844e7370e9ad957d1df2557e7c6e3b94bdf12defa27ddd"
+    },
+    {
+      "file": "ngc1499.png",
+      "sha256": "c76ca0208676e24836b0aa83065565ee93b31fd3cda88877e884d41715853494"
+    },
+    {
+      "file": "ic1805.png",
+      "sha256": "ed0af6f4a01fb0432efd716e9e4bec65966de8b2c1ce86db165acfd9480640f6"
+    },
+    {
+      "file": "ic1848.png",
+      "sha256": "2c96c2cedbf61e5903d86f9b4077ea4ede95c73f441d42d97802d5c7867be470"
+    },
+    {
+      "file": "ngc6514.png",
+      "sha256": "4cf11eea847fd42becdb16ca4a161bfd394fb71620ab1e14aa6cd71d3500f4ae"
+    },
+    {
+      "file": "ngc0598.png",
+      "sha256": "99dc1311f97777559a695f67f8693e4adbefdbabc49209005bf138363799550e"
+    },
+    {
+      "file": "ngc2237.png",
+      "sha256": "14d1a0b74992b14731326f8d71cf61851e8cabd8ab9c6a0ecd0a0144cb5b466e"
+    }
+  ]
+}

@@ -648,7 +648,7 @@
     },
     "cornerTolerancePixels": 1,
     "bands": "Optical OSC mosaic, ASI2600MC-Pro / Optolong L-Pro",
-    "sourceNote": "暗区对比近似 · IC434区域参考",
+    "sourceNote": "暗区对比近似 · 马头/火树共享光学参考（1024）",
     "role": "Published optical display reference, not a calibrated stock/modified camera pair",
     "detailMode": "source-rgb",
     "workingMaxSize": 3000,

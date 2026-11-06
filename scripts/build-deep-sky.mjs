@@ -37,6 +37,7 @@ const selected = [
   ['NGC0598', '三角座星系', 'galaxy', ['M33','M 33','NGC598','Triangulum Galaxy']],
   ['NGC2237', '玫瑰星云', 'emission', ['NGC2237','NGC2238','NGC2239','NGC2244','Rosette Nebula']],
   ['IC0434', '马头星云区域', 'dark', ['IC434','B33','Barnard33','Barnard 33','Horsehead Nebula','马头星云']],
+  ['NGC2024', '火树星云', 'emission', ['NGC2024','NGC 2024','Flame Nebula','火焰星云']],
 ];
 const outlines = new Map(); let polygon;
 for (const line of inputs[2].text.split(/\r?\n/)) {
@@ -76,6 +77,9 @@ const objects = selected.map(([id, name, model, aliases], index) => {
   return {id:`dso-${id.toLowerCase()}`,catalogId:id,name,aliases,model,catalogType:row.Type,ra,dec,majorArcmin:major,minorArcmin:minor,positionAngle,magnitude:row['V-Mag'] ? Number(row['V-Mag']) : row['B-Mag'] ? Number(row['B-Mag']) : null,tile:index,bounds:[minX-padX,minY-padY,maxX+padX,maxY+padY],outlines:rings};
 });
 const hyg = JSON.parse(await readFile(new URL('../src/data/bright-stars.json', import.meta.url), 'utf8'));
+// The registered IC434 photograph already contains the Flame Nebula.
+// Keep its own catalogue centre and query footprint, with one visible image.
+objects.find(object => object.catalogId === 'NGC2024').imageReference = 'IC0434';
 const cluster = objects.find(object=>object.catalogId==='Mel022');
 cluster.starIds = hyg.stars.filter(([,r,d])=>{
   const xy=tangent(r*15,d,cluster.ra,cluster.dec);return Math.atan(Math.hypot(...xy))/degrees < cluster.majorArcmin/120;
@@ -86,7 +90,7 @@ const data = {
   license:'CC-BY-SA-4.0',licenseUrl:'https://creativecommons.org/licenses/by-sa/4.0/',
   inputs:inputs.map(({path,sha256})=>({path,sha256})),
   fields:'ICRS/J2000 RA/Dec in degrees; major/minor axes are full diameters in arcminutes; position angle north through east, null if absent; bounds are gnomonic east/north coordinates.',
-  modifications:'Twelve-object subset; Chinese names and search aliases added; original contour levels preserved. IC0434 is the Horsehead region, not a separate measurement of Barnard 33. Photographic bounds override catalogue envelopes. Rendering components/classification are qualitative display models, not measured line fluxes.',
+  modifications:'Thirteen-object subset; Chinese names and search aliases added; original contour levels preserved. IC0434 is the Horsehead region, not a separate measurement of Barnard 33. NGC2024 shares the IC0434 photograph with its own catalogue centre and query footprint. Photographic bounds override catalogue envelopes for image owners. Rendering components/classification are qualitative display models, not measured line fluxes.',
   clusterStarSource:{source:hyg.source,license:'CC-BY-SA-4.0',note:'M45 stars use existing HYG catalogue positions and magnitudes at runtime; IDs only are stored here.'},
   imageSources:JSON.parse(await readFile(new URL('./deep-sky-image-sources.json',import.meta.url),'utf8')),
   atlas:{width:4096,height:4096,layout:'atlasRect is assigned by build-deep-sky-atlas.py',channels:'RGB baseline colour; A = 1 - additive red enhancement. Alpha is data, not display opacity; not spectral fluxes.'},objects

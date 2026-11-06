@@ -98,6 +98,14 @@
       "elevation": 48.228719682915006
     },
     {
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "instant": "2026-11-08T16:00:00Z",
+      "id": "dso-ngc2024",
+      "azimuth": 150.3837814364743,
+      "elevation": 48.706146472253415
+    },
+    {
       "latitude": -33.8688,
       "longitude": 151.2093,
       "instant": "2026-07-15T15:00:00Z",
@@ -192,6 +200,14 @@
       "id": "dso-ic0434",
       "azimuth": 122.03796117193859,
       "elevation": -34.8874318450799
+    },
+    {
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "instant": "2026-07-15T15:00:00Z",
+      "id": "dso-ngc2024",
+      "azimuth": 121.6743367675002,
+      "elevation": -35.4339964105485
     },
     {
       "latitude": 0,
@@ -290,6 +306,14 @@
       "elevation": 74.70496890326896
     },
     {
+      "latitude": 0,
+      "longitude": 179.9,
+      "instant": "2000-01-01T12:00:00Z",
+      "id": "dso-ngc2024",
+      "azimuth": 262.8206599466184,
+      "elevation": 74.95985463331219
+    },
+    {
       "latitude": 64,
       "longitude": -21,
       "instant": "2099-01-01T00:00:00Z",
@@ -384,6 +408,14 @@
       "id": "dso-ic0434",
       "azimuth": 172.89004656072478,
       "elevation": 23.41028196521148
+    },
+    {
+      "latitude": 64,
+      "longitude": -21,
+      "instant": "2099-01-01T00:00:00Z",
+      "id": "dso-ngc2024",
+      "azimuth": 172.65861127913155,
+      "elevation": 23.995302999675943
     }
   ]
 }

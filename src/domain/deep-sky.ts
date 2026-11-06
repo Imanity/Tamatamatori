@@ -23,6 +23,7 @@ export interface DeepSkyEntry {
   magnitude: number | null;
   tile: number;
   atlasRect: number[];
+  imageReference?: string;
   texture: { file: string; width: number; height: number; sha256: string; bytes: number; alphaData: string };
   bounds: number[];
   starIds?: string[];
@@ -30,8 +31,18 @@ export interface DeepSkyEntry {
 export const deepSkyCatalog = catalog.objects as DeepSkyEntry[];
 export const deepSkyCount = deepSkyCatalog.length;
 export const deepSkyImageCredits = catalog.imageSources;
+/** The Flame label/query uses the same registered image as IC434. */
+export function deepSkyImageEntry(entry: DeepSkyEntry) {
+  return entry.imageReference
+    ? deepSkyCatalog.find(object => object.catalogId === entry.imageReference)!
+    : entry;
+}
+export function deepSkyImageSource(catalogId: string) {
+  const entry = deepSkyCatalog.find(object => object.catalogId === catalogId);
+  return deepSkyImageCredits.find(source => source.catalogId === (entry ? deepSkyImageEntry(entry).catalogId : catalogId));
+}
 export const deepSkySourceNote = (catalogId: string) => {
-  const source = deepSkyImageCredits.find(source => source.catalogId === catalogId);
+  const source = deepSkyImageSource(catalogId);
   return source && "sourceNote" in source ? String(source.sourceNote) : undefined;
 };
 // A qualitative red-only increment, not measured sensor/spectral response.
@@ -86,7 +97,21 @@ export function deepSkyScene(plan: ShootingPlan) {
     const direction = sky.horizontal(center),
       offset = vertices.length / 8;
     const [x0, y0, x1, y1] = entry.bounds;
-    const { width: atlasWidth, height: atlasHeight } = entry.texture;
+    const image = deepSkyImageEntry(entry);
+    const { width: atlasWidth, height: atlasHeight } = image.texture;
+    const imageA = image.ra * degrees,
+      imageD = image.dec * degrees;
+    const imageCenter = [
+      Math.cos(imageD) * Math.cos(imageA),
+      Math.cos(imageD) * Math.sin(imageA),
+      Math.sin(imageD),
+    ];
+    const imageEast = [-Math.sin(imageA), Math.cos(imageA), 0];
+    const imageNorth = [
+      -Math.sin(imageD) * Math.cos(imageA),
+      -Math.sin(imageD) * Math.sin(imageA),
+      Math.cos(imageD),
+    ];
     const nx = Math.max(4, Math.min(32, Math.ceil((x1 - x0) / degrees / 0.25))),
       ny = Math.max(4, Math.min(32, Math.ceil((y1 - y0) / degrees / 0.25)));
     const grid: { ray: Vector3; uv: number[] }[] = [],
@@ -103,11 +128,21 @@ export function deepSkyScene(plan: ShootingPlan) {
           ) as unknown as Vector3,
         );
         const ray = refractDirection(sky.horizontal(eq), plan.refraction);
+        let imageU = u,
+          imageV = v;
+        if (entry.imageReference) {
+          const z = eq.reduce((sum, value, i) => sum+value*imageCenter[i], 0);
+          const imageX = eq.reduce((sum, value, i) => sum+value*imageEast[i], 0)/z;
+          const imageY = eq.reduce((sum, value, i) => sum+value*imageNorth[i], 0)/z;
+          const [ix0, iy0, ix1, iy1] = image.bounds;
+          imageU = (imageX-ix0)/(ix1-ix0);
+          imageV = (iy1-imageY)/(iy1-iy0);
+        }
         grid.push({
           ray,
           uv: [
-            (0.5 + (atlasWidth - 1) * u) / atlasWidth,
-            (0.5 + (atlasHeight - 1) * v) / atlasHeight,
+            (0.5 + (atlasWidth - 1) * imageU) / atlasWidth,
+            (0.5 + (atlasHeight - 1) * imageV) / atlasHeight,
           ],
         });
         if (x === 0 || x === nx || y === 0 || y === ny) boundary.push(ray);
@@ -186,7 +221,7 @@ export const deepSkyResponseLabel = (
 export function deepSkyTextureRequests(plan: ShootingPlan, objects: DeepSkyTarget[], width: number, height: number, deviceMax: number) {
   if (!plan.layers.deepSky) return [];
   const fov = fieldOfView(plan);
-  const requests = objects.filter(object => deepSkyView(plan, object).state === "画面内").map(object => {
+  const requests = objects.filter(object => !object.entry.imageReference && deepSkyView(plan, object).state === "画面内").map(object => {
     const [x0, y0, x1, y1] = object.entry.bounds;
     const pixels = Math.max((x1-x0)/degrees/fov.horizontal*width, (y1-y0)/degrees/fov.vertical*height);
     const texture = object.entry.texture;

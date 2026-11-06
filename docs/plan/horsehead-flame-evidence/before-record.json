@@ -1,0 +1,33 @@
+{
+  "file": "horsehead-1000-stock.png",
+  "frame": {
+    "x": 265,
+    "y": 291.671875,
+    "width": 1239,
+    "height": 826,
+    "ready": "true"
+  },
+  "status": "当前 DEM 未遮挡",
+  "inputs": [
+    "2026-11-09T01:00",
+    "1000",
+    "35.4172",
+    "138.8729",
+    "150.9855776967944",
+    "48.24382696432095",
+    "1.6"
+  ],
+  "response": "stock",
+  "labels": [
+    "马头星云区域"
+  ],
+  "feedback": [],
+  "errors": [],
+  "layers": {
+    "stars": true,
+    "deepSky": true,
+    "milkyWay": false
+  },
+  "metadataSource": "CUA values emitted at screenshot capture",
+  "screenshotSha256": "39716e499b7ae0b4e5fe58492f23c92195f6fa654abea9a32268a0b0c09fa36f"
+}

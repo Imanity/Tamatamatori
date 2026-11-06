@@ -274,6 +274,10 @@ Modified: TAN/CD registration fitted to published corners, reprojection, lineari
 preserved published RGB detail and separate qualitative red enhancement.
 Upstream star removal and DSLR/filter response are not calibrated; no source AVM.
 No Stellarium program code is included. Input hashes and original corners are retained.
+NGC2024 (Flame Nebula) shares the registered IC434 optical image, its credit
+and original CC BY 4.0 license. Catalogue position and query footprint are
+independent. The shared field is drawn once. The Horsehead background contrast
+weight is reduced to a conservative display maximum of 0.18, with RGB retained.
 Historical validation screenshots retain the previous CC BY 4.0 references:
 eso1103a - ESO/Igor Chekalin; heic0512d - ÷ 2002 R. Gendler, Photo by R. Gendler.
 

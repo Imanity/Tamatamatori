@@ -14,7 +14,7 @@ import {
   deepSkyCount,
   deepSkyKinds,
   deepSkyResponseLabel,
-  deepSkyImageCredits,
+  deepSkyImageSource,
   deepSkySourceNote,
 } from "../domain/deep-sky";
 import type { DeepSkyTarget } from "../domain/deep-sky";
@@ -261,7 +261,7 @@ export function StarReadout({
           </p>
             <p>源图色彩与红光增强示意 · 非实测 Hα、器材色彩或曝光预测</p>
           <p>
-              {deepSkyImageCredits.length} 个目标使用影像结构参考；未作具体相机定标。
+              {deepSkyCount} 个目标使用影像结构参考；未作具体相机定标。
           </p>
           <details open>
             <summary>深空目标与朝向</summary>
@@ -277,9 +277,7 @@ export function StarReadout({
                     <small>
                       {entry.aliases[0]} · {deepSkyKinds[entry.model]}
                       {" · "}
-                      {deepSkyImageCredits.some(
-                        (source) => source.catalogId === entry.catalogId,
-                      )
+                      {deepSkyImageSource(entry.catalogId)
                         ? "影像结构参考"
                         : "目录轮廓"}
                       {deepSkySourceNote(entry.catalogId) && ` · ${deepSkySourceNote(entry.catalogId)}`}

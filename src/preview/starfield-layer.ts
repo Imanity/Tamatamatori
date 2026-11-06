@@ -21,7 +21,7 @@ import { loadMilkyWayImage } from "./milky-way-texture.ts";
 import { loadDeepSkyImage } from "./deep-sky-texture.ts";
 import { SkyTexture } from "./sky-texture.ts";
 import { DeepSkyTextures } from "./deep-sky-textures.ts";
-import { deepSkyScene, deepSkyView, deepSkyRedEnhancementColor } from "../domain/deep-sky.ts";
+import { deepSkyScene, deepSkyView, deepSkyRedEnhancementColor, deepSkyImageEntry } from "../domain/deep-sky.ts";
 import type { DeepSkyTarget } from "../domain/deep-sky.ts";
 import { classifyOcclusion } from "../domain/visibility.ts";
 
@@ -574,6 +574,7 @@ export class StarfieldLayer implements CustomLayerInterface {
         gl.uniform1f(gl.getUniformLocation(this.deepProgram, "u_probe"), 0);
         gl.bindVertexArray(this.deepVao!);
         for (const object of this.deepObjects) {
+          if (object.entry.imageReference) continue;
           const texture = this.deep.texture(object.id);
           if (!texture) continue;
           gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -628,7 +629,7 @@ export class StarfieldLayer implements CustomLayerInterface {
             if (!texture) continue;
             if (deepSkyView(view, object).state !== "画面内") continue;
             gl.bindTexture(gl.TEXTURE_2D, texture);
-            gl.uniform1f(gl.getUniformLocation(this.deepProgram, "u_dark"), object.entry.model === "dark" ? 1 : 0);
+            gl.uniform1f(gl.getUniformLocation(this.deepProgram, "u_dark"), deepSkyImageEntry(object.entry).model === "dark" ? 1 : 0);
             const clear = gl.createQuery(),
               blocked = gl.createQuery();
             if (!clear || !blocked) {
