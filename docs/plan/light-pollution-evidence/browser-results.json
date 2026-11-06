@@ -1,0 +1,2296 @@
+{
+  "checkedAt": "2026-11-06T18:07:15.729Z",
+  "cases": [
+    {
+      "name": "01-tokyo-off",
+      "appearance": "明暗近似 · 暗夜参考",
+      "enabled": "false",
+      "frame": {
+        "bottom": 727.71875,
+        "height": 379.453125,
+        "left": 227,
+        "right": 796.1875,
+        "top": 348.265625,
+        "width": 569.1875,
+        "x": 227,
+        "y": 348.265625
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-09"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "01:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "60"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "Asia/Tokyo"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "35.6762"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "139.6503"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "155.71968861147184"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "46.093611121363296"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [
+        "天狼星",
+        "参宿七",
+        "参宿四",
+        "参宿五",
+        "参宿二",
+        "井宿三",
+        "军市一",
+        "参宿六",
+        "猎户座大星云",
+        "玫瑰星云"
+      ],
+      "lighting": "夜间 · 太阳几何高度 -61.6°\n月光参考 · 亮面 1% · 几何高度 -57.5°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "off",
+      "pollutionReadout": "当地光污染已关闭",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m\n天狼星\n参宿七\n参宿四\n参宿五\n参宿二\n井宿三\n军市一\n参宿六\n猎户座大星云\n玫瑰星云\nSE\nS\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.6762°N   139.6503°E\n方向 155.7° 东南\n水平视场 54.4°\n焦距 35 mm\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n155.7°\n俯仰\n46.1°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n夜间 · 太阳几何高度 -61.6°\n月光参考 · 亮面 1% · 几何高度 -57.5°\n\n明暗近似 · 暗夜参考\n\n当地光污染已关闭\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 900,
+        "height": 900,
+        "left": 0,
+        "right": 1440,
+        "top": 0,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "02-tokyo-on",
+      "appearance": "明暗近似 · 光污染影响",
+      "enabled": "true",
+      "frame": {
+        "bottom": 738.421875,
+        "height": 379.453125,
+        "left": 227,
+        "right": 796.1875,
+        "top": 358.96875,
+        "width": 569.1875,
+        "x": 227,
+        "y": 358.96875
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-09"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "01:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "60"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "Asia/Tokyo"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "35.6762"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "139.6503"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "155.71968861147184"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "46.093611121363296"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [
+        "天狼星",
+        "参宿七",
+        "参宿四",
+        "参宿五",
+        "参宿二"
+      ],
+      "lighting": "夜间 · 太阳几何高度 -61.6°\n月光参考 · 亮面 1% · 几何高度 -57.5°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "光污染 · 2015 图集",
+      "pollutionReadout": "2015 天顶人工亮度 ≈ 6.491 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m\n光污染 · 2015 图集\n天狼星\n参宿七\n参宿四\n参宿五\n参宿二\nSE\nS\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.6762°N   139.6503°E\n方向 155.7° 东南\n水平视场 54.4°\n焦距 35 mm\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n155.7°\n俯仰\n46.1°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n夜间 · 太阳几何高度 -61.6°\n月光参考 · 亮面 1% · 几何高度 -57.5°\n\n明暗近似 · 光污染影响\n\n2015 天顶人工亮度 ≈ 6.491 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 900,
+        "height": 900,
+        "left": 0,
+        "right": 1440,
+        "top": 0,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "03-tokyo-restored",
+      "appearance": "明暗近似 · 暗夜参考",
+      "enabled": "false",
+      "frame": {
+        "bottom": 727.71875,
+        "height": 379.453125,
+        "left": 227,
+        "right": 796.1875,
+        "top": 348.265625,
+        "width": 569.1875,
+        "x": 227,
+        "y": 348.265625
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-09"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "01:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "60"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "Asia/Tokyo"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "35.6762"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "139.6503"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "155.71968861147184"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "46.093611121363296"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [
+        "天狼星",
+        "参宿七",
+        "参宿四",
+        "参宿五",
+        "参宿二",
+        "井宿三",
+        "军市一",
+        "参宿六",
+        "猎户座大星云",
+        "玫瑰星云"
+      ],
+      "lighting": "夜间 · 太阳几何高度 -61.6°\n月光参考 · 亮面 1% · 几何高度 -57.5°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "off",
+      "pollutionReadout": "当地光污染已关闭",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m\n天狼星\n参宿七\n参宿四\n参宿五\n参宿二\n井宿三\n军市一\n参宿六\n猎户座大星云\n玫瑰星云\nSE\nS\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.6762°N   139.6503°E\n方向 155.7° 东南\n水平视场 54.4°\n焦距 35 mm\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n155.7°\n俯仰\n46.1°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n夜间 · 太阳几何高度 -61.6°\n月光参考 · 亮面 1% · 几何高度 -57.5°\n\n明暗近似 · 暗夜参考\n\n当地光污染已关闭\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 900,
+        "height": 900,
+        "left": 0,
+        "right": 1440,
+        "top": 0,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "04-fuji-on",
+      "appearance": "明暗近似 · 光污染影响",
+      "enabled": "true",
+      "frame": {
+        "bottom": 738.421875,
+        "height": 379.453125,
+        "left": 227,
+        "right": 796.1875,
+        "top": 358.96875,
+        "width": 569.1875,
+        "x": 227,
+        "y": 358.96875
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-09"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "01:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "60"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "Asia/Tokyo"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "35.4172"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "138.8729"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "155.71968861147184"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "46.093611121363296"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [
+        "天狼星",
+        "参宿七",
+        "参宿四",
+        "参宿五",
+        "参宿二",
+        "井宿三",
+        "军市一",
+        "参宿六",
+        "猎户座大星云",
+        "玫瑰星云"
+      ],
+      "lighting": "夜间 · 太阳几何高度 -62.3°\n月光参考 · 亮面 1% · 几何高度 -58.1°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "光污染 · 2015 图集",
+      "pollutionReadout": "2015 天顶人工亮度 ≈ 0.202 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\n光污染 · 2015 图集\n天狼星\n参宿七\n参宿四\n参宿五\n参宿二\n井宿三\n军市一\n参宿六\n猎户座大星云\n玫瑰星云\nSE\nS\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.4172°N   138.8729°E\n方向 155.7° 东南\n水平视场 54.4°\n焦距 35 mm\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n155.7°\n俯仰\n46.1°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n夜间 · 太阳几何高度 -62.3°\n月光参考 · 亮面 1% · 几何高度 -58.1°\n\n明暗近似 · 光污染影响\n\n2015 天顶人工亮度 ≈ 0.202 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 900,
+        "height": 900,
+        "left": 0,
+        "right": 1440,
+        "top": 0,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "05-dark-on",
+      "appearance": "明暗近似 · 暗夜参考",
+      "enabled": "true",
+      "frame": {
+        "bottom": 738.421875,
+        "height": 379.453125,
+        "left": 227,
+        "right": 796.1875,
+        "top": 358.96875,
+        "width": 569.1875,
+        "x": 227,
+        "y": 358.96875
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-08"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "21:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "1260"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "UTC"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "23"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "10"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "355.26387738444134"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "71.50883916319272"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [
+        "天船三",
+        "娄宿三",
+        "壁宿二",
+        "奎宿九",
+        "大陵五",
+        "天大将军一",
+        "王良四",
+        "王良一",
+        "室宿二",
+        "仙女座星系",
+        "三角座星系"
+      ],
+      "lighting": "夜间 · 太阳几何高度 -60.3°\n月光参考 · 亮面 0% · 几何高度 -67.3°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 754.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "光污染 · 2015 图集",
+      "pollutionReadout": "2015 天顶人工亮度 ≈ 0.000 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 754.5 m · 离地 1.6 m\n光污染 · 2015 图集\n天船三\n娄宿三\n壁宿二\n奎宿九\n大陵五\n天大将军一\n王良四\n王良一\n室宿二\n仙女座星系\n三角座星系\nN\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n23.0000°N   10.0000°E\n方向 355.3° 北\n水平视场 54.4°\n焦距 35 mm\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n355.3°\n俯仰\n71.5°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n夜间 · 太阳几何高度 -60.3°\n月光参考 · 亮面 0% · 几何高度 -67.3°\n\n明暗近似 · 暗夜参考\n\n2015 天顶人工亮度 ≈ 0.000 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 900,
+        "height": 900,
+        "left": 0,
+        "right": 1440,
+        "top": 0,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "06-dark-off",
+      "appearance": "明暗近似 · 暗夜参考",
+      "enabled": "false",
+      "frame": {
+        "bottom": 727.71875,
+        "height": 379.453125,
+        "left": 227,
+        "right": 796.1875,
+        "top": 348.265625,
+        "width": 569.1875,
+        "x": 227,
+        "y": 348.265625
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-08"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "21:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "1260"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "UTC"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "23"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "10"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "355.26387738444134"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "71.50883916319272"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [
+        "天船三",
+        "娄宿三",
+        "壁宿二",
+        "奎宿九",
+        "大陵五",
+        "天大将军一",
+        "王良四",
+        "王良一",
+        "室宿二",
+        "仙女座星系",
+        "三角座星系"
+      ],
+      "lighting": "夜间 · 太阳几何高度 -60.3°\n月光参考 · 亮面 0% · 几何高度 -67.3°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 754.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "off",
+      "pollutionReadout": "当地光污染已关闭",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 754.5 m · 离地 1.6 m\n天船三\n娄宿三\n壁宿二\n奎宿九\n大陵五\n天大将军一\n王良四\n王良一\n室宿二\n仙女座星系\n三角座星系\nN\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n23.0000°N   10.0000°E\n方向 355.3° 北\n水平视场 54.4°\n焦距 35 mm\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n355.3°\n俯仰\n71.5°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n夜间 · 太阳几何高度 -60.3°\n月光参考 · 亮面 0% · 几何高度 -67.3°\n\n明暗近似 · 暗夜参考\n\n当地光污染已关闭\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 900,
+        "height": 900,
+        "left": 0,
+        "right": 1440,
+        "top": 0,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "07-paris-failed",
+      "appearance": "明暗近似 · 暗夜参考",
+      "enabled": "true",
+      "frame": {
+        "bottom": 742.21875,
+        "height": 379.453125,
+        "left": 227,
+        "right": 796.1875,
+        "top": 362.765625,
+        "width": 569.1875,
+        "x": 227,
+        "y": 362.765625
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-08"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "21:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "1260"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "UTC"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "48.8566"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "2.3522"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "355.26387738444134"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "71.50883916319272"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [
+        "策",
+        "王良四",
+        "王良一",
+        "天钩五",
+        "心脏星云"
+      ],
+      "lighting": "夜间 · 太阳几何高度 -45.2°\n月光参考 · 亮面 0% · 几何高度 -51.8°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "光污染未应用 · 光污染分块下载不完整\n重试光污染",
+      "pollutionReadout": "光污染分块下载不完整\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似\n\n重试光污染数据",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.5 m · 离地 1.6 m\n光污染未应用 · 光污染分块下载不完整\n重试光污染\n策\n王良四\n王良一\n天钩五\n心脏星云\nN\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n48.8566°N   2.3522°E\n方向 355.3° 北\n水平视场 54.4°\n焦距 35 mm\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n355.3°\n俯仰\n71.5°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n夜间 · 太阳几何高度 -45.2°\n月光参考 · 亮面 0% · 几何高度 -51.8°\n\n明暗近似 · 暗夜参考\n\n光污染分块下载不完整\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似\n\n重试光污染数据\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 900,
+        "height": 900,
+        "left": 0,
+        "right": 1440,
+        "top": 0,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "08-paris-recovered",
+      "appearance": "明暗近似 · 光污染影响",
+      "enabled": "true",
+      "frame": {
+        "bottom": 738.421875,
+        "height": 379.453125,
+        "left": 227,
+        "right": 796.1875,
+        "top": 358.96875,
+        "width": 569.1875,
+        "x": 227,
+        "y": 358.96875
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-08"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "21:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "1260"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "UTC"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "48.8566"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "2.3522"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "355.26387738444134"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "71.50883916319272"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [],
+      "lighting": "夜间 · 太阳几何高度 -45.2°\n月光参考 · 亮面 0% · 几何高度 -51.8°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "光污染 · 2015 图集",
+      "pollutionReadout": "2015 天顶人工亮度 ≈ 9.326 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.5 m · 离地 1.6 m\n光污染 · 2015 图集\nN\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n48.8566°N   2.3522°E\n方向 355.3° 北\n水平视场 54.4°\n焦距 35 mm\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n355.3°\n俯仰\n71.5°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n夜间 · 太阳几何高度 -45.2°\n月光参考 · 亮面 0% · 几何高度 -51.8°\n\n明暗近似 · 光污染影响\n\n2015 天顶人工亮度 ≈ 9.326 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 900,
+        "height": 900,
+        "left": 0,
+        "right": 1440,
+        "top": 0,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "09-outside-coverage",
+      "appearance": "明暗近似 · 暗夜参考",
+      "enabled": "true",
+      "frame": {
+        "bottom": 738.421875,
+        "height": 379.453125,
+        "left": 227,
+        "right": 796.1875,
+        "top": 358.96875,
+        "width": 569.1875,
+        "x": 227,
+        "y": 358.96875
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-08"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "21:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "1260"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "UTC"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "80"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "2.3522"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "355.26387738444134"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "71.50883916319272"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [],
+      "lighting": "夜间 · 太阳几何高度 -24.5°\n月光参考 · 亮面 0% · 几何高度 -29.1°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 待更新 · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "光污染未应用 · 当前机位超出光污染图集覆盖范围",
+      "pollutionReadout": "当前机位超出光污染图集覆盖范围\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似",
+      "ready": "false",
+      "rendered": "false",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 待更新 · 离地 1.6 m\n光污染未应用 · 当前机位超出光污染图集覆盖范围\n机位高程不可用：地形数据请求失败（404）\n重试预览\n\n正在加载银河细节…\n\n正在加载深空轮廓…\n\nN\n地图\n交互底图\n主栏\n右上\n右下\n▲\n500 米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n80.0000°N   2.3522°E\n方向 355.3° 北\n水平视场 54.4°\n焦距 35 mm\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n355.3°\n俯仰\n71.5°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n夜间 · 太阳几何高度 -24.5°\n月光参考 · 亮面 0% · 几何高度 -29.1°\n\n明暗近似 · 暗夜参考\n\n当前机位超出光污染图集覆盖范围\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 900,
+        "height": 900,
+        "left": 0,
+        "right": 1440,
+        "top": 0,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "10-day-on",
+      "appearance": "明暗近似 · 白昼 · 星点与银河淡出",
+      "enabled": "true",
+      "frame": {
+        "bottom": 738.421875,
+        "height": 379.453125,
+        "left": 227,
+        "right": 796.1875,
+        "top": 358.96875,
+        "width": 569.1875,
+        "x": 227,
+        "y": 358.96875
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-09"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "12:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "720"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "Asia/Tokyo"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "35.6762"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "139.6503"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "355.26387738444134"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "71.50883916319272"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [],
+      "lighting": "白昼 · 太阳几何高度 36.8°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "光污染 · 2015 图集",
+      "pollutionReadout": "2015 天顶人工亮度 ≈ 6.491 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m\n光污染 · 2015 图集\n太阳\n月亮\nN\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.6762°N   139.6503°E\n方向 355.3° 北\n水平视场 54.4°\n焦距 35 mm\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n355.3°\n俯仰\n71.5°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n白昼 · 太阳几何高度 36.8°\n\n明暗近似 · 白昼 · 星点与银河淡出\n\n2015 天顶人工亮度 ≈ 6.491 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 900,
+        "height": 900,
+        "left": 0,
+        "right": 1440,
+        "top": 0,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "11-day-off",
+      "appearance": "明暗近似 · 白昼 · 星点与银河淡出",
+      "enabled": "false",
+      "frame": {
+        "bottom": 727.71875,
+        "height": 379.453125,
+        "left": 227,
+        "right": 796.1875,
+        "top": 348.265625,
+        "width": 569.1875,
+        "x": 227,
+        "y": 348.265625
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-09"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "12:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "720"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "Asia/Tokyo"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "35.6762"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "139.6503"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "355.26387738444134"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "71.50883916319272"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [],
+      "lighting": "白昼 · 太阳几何高度 36.8°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "off",
+      "pollutionReadout": "当地光污染已关闭",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m\n太阳\n月亮\nN\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.6762°N   139.6503°E\n方向 355.3° 北\n水平视场 54.4°\n焦距 35 mm\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n355.3°\n俯仰\n71.5°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n白昼 · 太阳几何高度 36.8°\n\n明暗近似 · 白昼 · 星点与银河淡出\n\n当地光污染已关闭\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 900,
+        "height": 900,
+        "left": 0,
+        "right": 1440,
+        "top": 0,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "12-mobile-on",
+      "appearance": "明暗近似 · 光污染影响",
+      "enabled": "true",
+      "frame": {
+        "bottom": 653.859375,
+        "height": 229.328125,
+        "left": 23,
+        "right": 367,
+        "top": 424.53125,
+        "width": 344,
+        "x": 23,
+        "y": 424.53125
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-09"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "01:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "60"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "Asia/Tokyo"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "35.4172"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "138.8729"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "155.71968861147184"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "46.093611121363296"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [
+        "天狼星",
+        "参宿七",
+        "参宿四",
+        "参宿五",
+        "参宿二",
+        "井宿三",
+        "军市一",
+        "参宿六",
+        "猎户座大星云",
+        "玫瑰星云"
+      ],
+      "lighting": "夜间 · 太阳几何高度 -62.3°月光参考 · 亮面 1% · 几何高度 -58.1°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "光污染 · 2015 图集",
+      "pollutionReadout": "2015 天顶人工亮度 ≈ 0.202 mcd/m²World Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\nAbout\n图层\n地图\n拍摄预览\n拍摄参数\n拍摄信息\n拍摄预览\n地形模拟\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\n光污染 · 2015 图集\n天狼星\n参宿七\n参宿四\n参宿五\n参宿二\n井宿三\n军市一\n参宿六\n猎户座大星云\n玫瑰星云\nSE\nS\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 844,
+        "height": 844,
+        "left": 0,
+        "right": 390,
+        "top": 0,
+        "width": 390,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "13-mobile-readout",
+      "appearance": "明暗近似 · 光污染影响",
+      "enabled": "true",
+      "frame": {
+        "bottom": 653.859375,
+        "height": 229.328125,
+        "left": 23,
+        "right": 367,
+        "top": 424.53125,
+        "width": 344,
+        "x": 23,
+        "y": 424.53125
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-09"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "01:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "60"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "Asia/Tokyo"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "35.4172"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "138.8729"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "155.71968861147184"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "46.093611121363296"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [
+        "天狼星",
+        "参宿七",
+        "参宿四",
+        "参宿五",
+        "参宿二",
+        "井宿三",
+        "军市一",
+        "参宿六",
+        "猎户座大星云",
+        "玫瑰星云"
+      ],
+      "lighting": "夜间 · 太阳几何高度 -62.3°\n月光参考 · 亮面 1% · 几何高度 -58.1°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "光污染 · 2015 图集",
+      "pollutionReadout": "2015 天顶人工亮度 ≈ 0.202 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\nAbout\n图层\n地图\n拍摄预览\n拍摄参数\n拍摄信息\n拍摄预览\n地形模拟\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\n光污染 · 2015 图集\n天狼星\n参宿七\n参宿四\n参宿五\n参宿二\n井宿三\n军市一\n参宿六\n猎户座大星云\n玫瑰星云\nSE\nS\n搜索目标\n全局信息\n−\n取景参数\n方位\n155.7°\n俯仰\n46.1°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n夜间 · 太阳几何高度 -62.3°\n月光参考 · 亮面 1% · 几何高度 -58.1°\n\n明暗近似 · 光污染影响\n\n2015 天顶人工亮度 ≈ 0.202 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 844,
+        "height": 844,
+        "left": 0,
+        "right": 390,
+        "top": 0,
+        "width": 390,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "14-mobile-about",
+      "appearance": "明暗近似 · 光污染影响",
+      "enabled": "true",
+      "frame": {
+        "bottom": 653.859375,
+        "height": 229.328125,
+        "left": 23,
+        "right": 367,
+        "top": 424.53125,
+        "width": 344,
+        "x": 23,
+        "y": 424.53125
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-09"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "01:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "60"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "Asia/Tokyo"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "35.4172"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "138.8729"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "155.71968861147184"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "46.093611121363296"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [
+        "天狼星",
+        "参宿七",
+        "参宿四",
+        "参宿五",
+        "参宿二",
+        "井宿三",
+        "军市一",
+        "参宿六",
+        "猎户座大星云",
+        "玫瑰星云"
+      ],
+      "lighting": "夜间 · 太阳几何高度 -62.3°月光参考 · 亮面 1% · 几何高度 -58.1°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "光污染 · 2015 图集",
+      "pollutionReadout": "2015 天顶人工亮度 ≈ 0.202 mcd/m²World Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\nAbout\nABOUT TAMATAMATORI\n关于与版权\n关闭\n\nTamatamatori 是基于地理与天文数据的摄影构图模拟工具。以下汇集应用使用的数据、影像与开源软件来源。\n\n查看第三方完整版权、许可与修改说明\n地图与高程\nOpenFreeMap · 底图与水体瓦片服务\n© OpenMapTiles · 地图数据结构与样式\n© OpenStreetMap contributors · ODbL · 底图与水体数据\n© Mapterhorn · 高程及上游数据来源\n当地光污染\n\nFabio Falchi, Pierantonio Cinzano, Dan Duriscoe, Christopher C. M. Kyba, Christopher D. Elvidge, Kimberly Baugh, Boris Portnov, Nataliya A. Rybnikova, Riccardo Furgoni / ISTIL / GFZ Data Services\n\nWorld Atlas 2015 · GFZ 版本 1.1 · CC BY-NC 4.0，仅限非商业使用。\n\n数据来源与许可\nFalchi 等，Science Advances 2016\nCC BY-NC 4.0\n下载衍生数据索引与校验值\n原始全球图集\n\n原始 30 角秒栅格按 3×3 平均为约 2.8 km 格网，保留原格网注册，去掉北部覆盖外填充值，再对数编码并按需加载分块。衍生数据继续采用 CC BY-NC 4.0。\n\n覆盖约南纬 60° 至北纬 75°。数值为历史模型的天顶人工亮度，天空颜色与对比度为显示近似，不提供实时光污染、城市光穹方向、波特尔等级或曝光预测。\n\n天文目录\nHYG 4.1 · David Nash / Astronexus · CC BY-SA 4.0\n\n亮星子集、中文名称及星座连线端点。\n\n下载亮星目录\n下载星座端点\nd3-celestial · Olaf Frohn · BSD-3-Clause\n\n星名、星座名称与连线数据，已匹配目录并加入简体中文名称。\n\n下载星座数据\nOpenNGC · Mattia Verga · CC BY-SA 4.0\n\n深空目录及轮廓，含新增目标的独立来源、影像注册和处理记录。\n\n下载深空数据及来源清单\n空间站轨道\nCelesTrak · GP 轨道数据 · T.S. Kelso\n\n选取 ISS 与天宫目录条目，使用 SGP4 推算并生成构图轨迹。快照保留上游历元及检查时间。变轨后的新解发布存在延迟。\n\n下载已发布轨道快照及状态\n银河影像\nESO/S. Brunier · CC BY 4.0\n\n全景经裁切、缩放、星点压低、降噪、黑位和接缝处理，作为银河结构参考。\n\n深空影像\n\n以下保留原作者署名与原图许可。影像经天球重投影、缩放及背景处理，部分提取扩散结构、红光增量或暗区对比。衍生 PNG 按 CC BY-SA 4.0 提供，亮度和颜色用于构图参考。\n\n仙女座星系\nESA/Hubble & Digitized Sky Survey 2. Acknowledgment: Davide De Martin (ESA/Hubble)\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n猎户座大星云\nKPNO/NOIRLab/NSF/AURA/Ryan Steinberg and Family/Adam Block\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n昴星团\nKPNO/NOIRLab/NSF/AURA/Tad Denton/Adam Block\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n礁湖星云\nKPNO/NOIRLab/NSF/AURA/Adam Block\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n北美星云\nKPNO/NOIRLab/NSF/AURA/Adam Block\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n加州星云\nKPNO/NOIRLab/NSF/AURA/Adam Block\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n心脏星云\nGiuseppe Donatiello, post-processing: Sun Shuwei\n\nCC0 1.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n灵魂星云\nGiuseppe Donatiello, post-processing: Sun Shuwei\n\nCC0 1.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n三裂星云\nKPNO/NOIRLab/NSF/AURA/Lawrence Johnson and Kathy Ortega/Adam Block\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n三角座星系\nKPNO/NOIRLab/NSF/AURA/Ken Hotelling/Flynn Haase\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n玫瑰星云\nKees Scherer; Stellarium display adaptation\n\nCC BY-SA 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n马头星云区域 / 火树星云\nManuel Peitsch, post-processing: Sun Shuwei\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n巴纳德环\nSun Shuwei\n\n公有领域 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n蛇夫座星云复合体\nESO/S. Guisard (www.eso.org/~sguisard)\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n开源软件\nReact / React DOM · MIT\nMapLibre GL JS · BSD-3-Clause\nAstronomy Engine · MIT\nEarcut · ISC\nTemporal polyfill · ISC\nsatellite.js 7.1.0 · MIT\n\nMapLibre 的摄影预览投影与地形补丁修改说明随第三方许可文件分发。\n\n图层\n地图\n拍摄预览\n拍摄参数\n拍摄信息\n拍摄预览\n地形模拟\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\n光污染 · 2015 图集\n天狼星\n参宿七\n参宿四\n参宿五\n参宿二\n井宿三\n军市一\n参宿六\n猎户座大星云\n玫瑰星云\nSE\nS\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 844,
+        "height": 844,
+        "left": 0,
+        "right": 390,
+        "top": 0,
+        "width": 390,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "15-small-mobile",
+      "appearance": "明暗近似 · 光污染影响",
+      "enabled": "true",
+      "frame": {
+        "bottom": 541.859375,
+        "height": 209.328125,
+        "left": 23,
+        "right": 337,
+        "top": 332.53125,
+        "width": 314,
+        "x": 23,
+        "y": 332.53125
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-09"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "01:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "60"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "Asia/Tokyo"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "35.4172"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "138.8729"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "155.71968861147184"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "46.093611121363296"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [
+        "天狼星",
+        "参宿七",
+        "参宿四",
+        "参宿五",
+        "参宿二",
+        "井宿三",
+        "军市一",
+        "参宿六",
+        "猎户座大星云",
+        "玫瑰星云"
+      ],
+      "lighting": "夜间 · 太阳几何高度 -62.3°月光参考 · 亮面 1% · 几何高度 -58.1°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BDWWyzeA.js",
+      "pollution": "光污染 · 2015 图集",
+      "pollutionReadout": "2015 天顶人工亮度 ≈ 0.202 mcd/m²World Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\nAbout\n图层\n地图\n拍摄预览\n拍摄参数\n拍摄信息\n拍摄预览\n地形模拟\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\n光污染 · 2015 图集\n天狼星\n参宿七\n参宿四\n参宿五\n参宿二\n井宿三\n军市一\n参宿六\n猎户座大星云\n玫瑰星云\nSE\nS\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 640,
+        "height": 640,
+        "left": 0,
+        "right": 360,
+        "top": 0,
+        "width": 360,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "16-final-city",
+      "appearance": "明暗近似 · 光污染影响",
+      "enabled": "true",
+      "frame": {
+        "bottom": 738.421875,
+        "height": 379.453125,
+        "left": 227,
+        "right": 796.1875,
+        "top": 358.96875,
+        "width": 569.1875,
+        "x": 227,
+        "y": 358.96875
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-09"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "01:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "60"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "Asia/Tokyo"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "35.6762"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "139.6503"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "155.71968861147184"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "46.093611121363296"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [
+        "天狼星",
+        "参宿七",
+        "参宿四",
+        "参宿五",
+        "参宿二"
+      ],
+      "lighting": "夜间 · 太阳几何高度 -61.6°\n月光参考 · 亮面 1% · 几何高度 -57.5°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-CcC4cSjj.js",
+      "pollution": "光污染 · 2015 图集",
+      "pollutionReadout": "2015 天顶人工亮度 ≈ 6.491 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m\n光污染 · 2015 图集\n天狼星\n参宿七\n参宿四\n参宿五\n参宿二\nSE\nS\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.6762°N   139.6503°E\n方向 155.7° 东南\n水平视场 54.4°\n焦距 35 mm\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n155.7°\n俯仰\n46.1°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n夜间 · 太阳几何高度 -61.6°\n月光参考 · 亮面 1% · 几何高度 -57.5°\n\n明暗近似 · 光污染影响\n\n2015 天顶人工亮度 ≈ 6.491 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 900,
+        "height": 900,
+        "left": 0,
+        "right": 1440,
+        "top": 0,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "17-final-mobile",
+      "appearance": "明暗近似 · 光污染影响",
+      "enabled": "true",
+      "frame": {
+        "bottom": 541.859375,
+        "height": 209.328125,
+        "left": 23,
+        "right": 337,
+        "top": 332.53125,
+        "width": 314,
+        "x": 23,
+        "y": 332.53125
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-09"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "01:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "60"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "Asia/Tokyo"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "35.6762"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "139.6503"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "155.71968861147184"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "46.093611121363296"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [
+        "天狼星",
+        "参宿七",
+        "参宿四",
+        "参宿五",
+        "参宿二"
+      ],
+      "lighting": "夜间 · 太阳几何高度 -61.6°月光参考 · 亮面 1% · 几何高度 -57.5°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-CcC4cSjj.js",
+      "pollution": "光污染 · 2015 图集",
+      "pollutionReadout": "2015 天顶人工亮度 ≈ 6.491 mcd/m²World Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\nAbout\n图层\n地图\n拍摄预览\n拍摄参数\n拍摄信息\n拍摄预览\n地形模拟\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m\n光污染 · 2015 图集\n天狼星\n参宿七\n参宿四\n参宿五\n参宿二\nSE\nS\n拍摄预览已移动至主栏，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 640,
+        "height": 640,
+        "left": 0,
+        "right": 360,
+        "top": 0,
+        "width": 360,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "18-final-default",
+      "appearance": "明暗近似 · 光污染影响",
+      "enabled": "true",
+      "frame": {
+        "bottom": 509.296875,
+        "height": 193.875,
+        "left": 842.1875,
+        "right": 1133,
+        "top": 315.421875,
+        "width": 290.8125,
+        "x": 842.1875,
+        "y": 315.421875
+      },
+      "inputs": [
+        {
+          "label": "当地日期",
+          "type": "date",
+          "value": "2026-11-09"
+        },
+        {
+          "label": "当地时间",
+          "type": "time",
+          "value": "01:00:00"
+        },
+        {
+          "label": "24 小时时间滑杆",
+          "type": "range",
+          "value": "60"
+        },
+        {
+          "label": "显示时区",
+          "type": null,
+          "value": "Asia/Tokyo"
+        },
+        {
+          "label": "大气折射模型",
+          "type": null,
+          "value": "standard"
+        },
+        {
+          "label": "焦距",
+          "type": "number",
+          "value": "35"
+        },
+        {
+          "label": "焦距滑块",
+          "type": "range",
+          "value": "35"
+        },
+        {
+          "label": "传感器",
+          "type": null,
+          "value": "full-frame"
+        },
+        {
+          "label": "画幅比例",
+          "type": null,
+          "value": "3:2"
+        },
+        {
+          "label": "拍摄画幅方向",
+          "type": null,
+          "value": "landscape"
+        },
+        {
+          "label": "深空相机响应",
+          "type": null,
+          "value": "stock"
+        },
+        {
+          "label": "纬度",
+          "type": "number",
+          "value": "35.6762"
+        },
+        {
+          "label": "经度",
+          "type": "number",
+          "value": "139.6503"
+        },
+        {
+          "label": "方位角",
+          "type": "number",
+          "value": "155.71968861147184"
+        },
+        {
+          "label": "俯仰角",
+          "type": "number",
+          "value": "46.093611121363296"
+        },
+        {
+          "label": "相机离地高度",
+          "type": "number",
+          "value": "1.6"
+        }
+      ],
+      "labels": [
+        "天狼星",
+        "参宿七",
+        "参宿四",
+        "参宿五",
+        "参宿二"
+      ],
+      "lighting": "夜间 · 太阳几何高度 -61.6°\n月光参考 · 亮面 1% · 几何高度 -57.5°",
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-CcC4cSjj.js",
+      "pollution": "光污染 · 2015 图集",
+      "pollutionReadout": "2015 天顶人工亮度 ≈ 6.491 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似",
+      "ready": "true",
+      "rendered": "true",
+      "styles": [
+        "/Tamatamatori/assets/index-CdEQMclY.css"
+      ],
+      "text": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.6762°N   139.6503°E\n底图已加载\n方向 155.7° 东南\n水平视场 54.4°\n焦距 35 mm\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 35.3 m · 离地 1.6 m\n光污染 · 2015 图集\n天狼星\n参宿七\n参宿四\n参宿五\n参宿二\nSE\nS\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n155.7°\n俯仰\n46.1°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n夜间 · 太阳几何高度 -61.6°\n月光参考 · 亮面 1% · 几何高度 -57.5°\n\n明暗近似 · 光污染影响\n\n2015 天顶人工亮度 ≈ 6.491 mcd/m²\n\nWorld Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+\n拍摄预览已移动至右上，拍摄参数保持不变。",
+      "viewport": {
+        "bottom": 900,
+        "height": 900,
+        "left": 0,
+        "right": 1440,
+        "top": 0,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "initialFailure": {
+    "name": "00-initial-content-encoding-error",
+    "note": "第一次 .bin.gz 格式被静态服务按 Content-Encoding:gzip 自动解压，长度校验报错。该画面仅保留为失败记录，初次资源版本未保留。后续全部通过场景为显式 gzip 编码的 .bin 分块版本。"
+  },
+  "notes": [
+    "截图使用根工作区和取景框的可见 DOM 坐标裁切。",
+    "07 临时隔离本轮 dist 的巴黎分块，记录失败后恢复文件并通过按钮重试。源文件未更改。",
+    "14 为 About 覆盖画面，取景裁片不计作天空渲染对照。",
+    "01—15 为功能验收构建 index-BDWWyzeA.js。16—18 刷新到移除旧光污染排除文案后的最终构建，分别记录资源版本。",
+    "09 验证光污染无覆盖提示，同次高纬度地形源加载失败独立显示，不计作有效地形渲染通过。"
+  ],
+  "finalResources": {
+    "module": "/Tamatamatori/assets/index-CcC4cSjj.js",
+    "styles": [
+      "/Tamatamatori/assets/index-CdEQMclY.css"
+    ]
+  },
+  "finalConsoleErrors": []
+}

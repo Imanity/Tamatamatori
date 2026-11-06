@@ -1,0 +1,1186 @@
+{
+  "id": "world-atlas-2015-v1.1-3x3-log8",
+  "year": 2015,
+  "source": "https://doi.org/10.5880/GFZ.1.4.2016.001",
+  "paper": "https://doi.org/10.1126/sciadv.1600377",
+  "download": "https://datapub.gfz-potsdam.de/download/10.5880.GFZ.1.4.2016.001/World_Atlas_2015.zip",
+  "credit": "Fabio Falchi, Pierantonio Cinzano, Dan Duriscoe, Christopher C. M. Kyba, Christopher D. Elvidge, Kimberly Baugh, Boris Portnov, Nataliya A. Rybnikova, Riccardo Furgoni / ISTIL / GFZ Data Services",
+  "license": "CC BY-NC 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-nc/4.0/",
+  "sourceSha256": "9725566ed4fcf1a8fa311654143bb024c4fe2a792b85356be99adce07e1e83c1",
+  "archiveSha256": "9c6a624427463c40717efbca7696e3c6bb0f332c26d1b039e7a91e0dbc831fbf",
+  "directory": "light-pollution/atlas-2015/",
+  "width": 14400,
+  "height": 5400,
+  "tileSize": 800,
+  "pixelSize": 0.024999990000000007,
+  "rasterNorth": 75.0041708845001,
+  "west": -180.00000000000003,
+  "east": 179.99985600000005,
+  "north": 75,
+  "south": -59.995775115499924,
+  "encoding": {
+    "unitMcd": 0.001,
+    "scale": 16,
+    "nodata": 0,
+    "compression": "gzip"
+  },
+  "nativeGrid": {
+    "width": 43200,
+    "height": 17406,
+    "pixelScale": [
+      0.008333330000000002,
+      0.008333330000000002,
+      0.0
+    ],
+    "tiepoint": [
+      0.0,
+      0.0,
+      0.0,
+      -180.00000000000003,
+      85.0541668645001,
+      0.0
+    ],
+    "cropRow": 1206
+  },
+  "modifications": "Crop zero padding above published 75 N coverage, average valid native 3x3 samples in linear mcd/m², preserve missing pixels, encode 1+round(16*ln(1+L/0.001)) with 0 reserved for missing, split into up-to-800x800 gzip tiles. Runtime bilinear interpolation in decoded luminance. Native TIFF longitude rounding leaves its east edge about 16 m west of 180 degrees.",
+  "limitation": "Historical 2015 model of artificial zenith luminance, no natural sky component, real-time lighting, Bortle class, directional light domes or exposure calibration. Derived grid is about 2.8 km north-south. Quantisation relative error is below exp(1/32)-1 for L+0.001.",
+  "maximumMcd": 333.3276197645399,
+  "missingCells": 0,
+  "tiles": [
+    {
+      "x": 0,
+      "y": 0,
+      "file": "0-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 24289,
+      "sha256": "8b9ea3bb6c7603cbba0eb532a838a06cb056090dc8a75a2c4a0ec6c92d18f50c"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "file": "1-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 49603,
+      "sha256": "448e28366182f88c1d5ae839d62f9f96c17a0ba032720885988f2474b42405d2"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "file": "2-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 48433,
+      "sha256": "b917f2464fe045717a3c977824b67643abd1ea200d0fb86ed997879340f6d87b"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "file": "3-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 56706,
+      "sha256": "cf177f1caf34f492d5e0e4e499136cd6f7c043fdf2965ed64180c17baf5c86f3"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "file": "4-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 19405,
+      "sha256": "d3571fd92fc1a5d86b97898b20b9d2eb8406544c24d2311c4e230366731ec4f9"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "file": "5-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 18872,
+      "sha256": "ab236e72166835819d2c53a0d537160284aaabc4b5b6627e94aa6c6a79d0770b"
+    },
+    {
+      "x": 6,
+      "y": 0,
+      "file": "6-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 9729,
+      "sha256": "4c360679a574d6a410283edff410faf745dce0ed2599288feb18fe3ea9842371"
+    },
+    {
+      "x": 7,
+      "y": 0,
+      "file": "7-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 12697,
+      "sha256": "bc8ae37b85c6f33b95abb7334ba57162369d7536b3aaff3daca587a89ec54a34"
+    },
+    {
+      "x": 8,
+      "y": 0,
+      "file": "8-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 38982,
+      "sha256": "094ba7691d2a16096a408649bb68515ba1180632400db4fc8b4577c26b95669b"
+    },
+    {
+      "x": 9,
+      "y": 0,
+      "file": "9-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 146398,
+      "sha256": "0169341dae6c47ffa3df8c2be392cc71f76c0f06e983dc8202d52ebf2b5a2194"
+    },
+    {
+      "x": 10,
+      "y": 0,
+      "file": "10-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 195452,
+      "sha256": "63e49320f389f7b765d09f5d3d2ddc80ac99c038d652d25f5dc81572af966a16"
+    },
+    {
+      "x": 11,
+      "y": 0,
+      "file": "11-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 148878,
+      "sha256": "00ddbe420fd89057b63b9ab2708ad6dac4a3b8f82d882f8422305ac28cd41c2a"
+    },
+    {
+      "x": 12,
+      "y": 0,
+      "file": "12-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 169182,
+      "sha256": "4ff75f92ddfb5bebca62b73e33a91ba487899567f77935acde36b119538ee849"
+    },
+    {
+      "x": 13,
+      "y": 0,
+      "file": "13-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 89330,
+      "sha256": "8a16231ab227b8374e1bd2b31508494fc17a8067296aebfd00e4226b82e01bd7"
+    },
+    {
+      "x": 14,
+      "y": 0,
+      "file": "14-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 63740,
+      "sha256": "5020bc89330a22d7258a7c0805c9cbc6774a0e99a2f2bcef89acfee6da0ee123"
+    },
+    {
+      "x": 15,
+      "y": 0,
+      "file": "15-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 51250,
+      "sha256": "b38850e62817f4a6e3069739c63e9dd6ed8867fdc9127ea852d0e2b194af9eda"
+    },
+    {
+      "x": 16,
+      "y": 0,
+      "file": "16-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 30391,
+      "sha256": "0882dee542d48bacb3e2d49ca8b43e38d534053dda11bc5442c32dd4931311b2"
+    },
+    {
+      "x": 17,
+      "y": 0,
+      "file": "17-0.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 21552,
+      "sha256": "d4aecd7db23c58940a6f2d3c9c8f1aa1591c909546f30ab79938db1eb574584a"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "file": "0-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 2156,
+      "sha256": "941a5b2d5dd9564514525208f1f656104104e85541fe00a1d27c387131a6c063"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "file": "1-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 656,
+      "sha256": "320b417b9c2eb7d5b747aa1688827c95e32f8b2a29b19aedcc686e081519af2e"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "file": "2-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 78434,
+      "sha256": "95b69bf38ba2c0c92f170120285c04cc8ff926228098e74ffb523f81d4c36fc3"
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "file": "3-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 260388,
+      "sha256": "e0b52ad9d27813495a79eb247d045d66fcfdff6b3a0e8d5c1c677477950941c1"
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "file": "4-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 268234,
+      "sha256": "4f2f0370e88dece19fa3dc0676110506f86c06601606cf27e8aea2138480c121"
+    },
+    {
+      "x": 5,
+      "y": 1,
+      "file": "5-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 163358,
+      "sha256": "d861b34628ea7f72ed37e4cc3f7b6c394c3c9ef3165929fc66ceb652f1bce1b7"
+    },
+    {
+      "x": 6,
+      "y": 1,
+      "file": "6-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 26463,
+      "sha256": "f650ff5d02bab8c56cd635915aeb3052f47db60c765787d92c33e92a6f40206f"
+    },
+    {
+      "x": 7,
+      "y": 1,
+      "file": "7-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 5931,
+      "sha256": "1f9533fcb37bb98a0e5021d44af8c19a16c2386bf6c37412583c09f19c7aff9f"
+    },
+    {
+      "x": 8,
+      "y": 1,
+      "file": "8-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 140914,
+      "sha256": "6c294c26adea33914bc59984fca1e949ff92379c587b3ed620626b0d98cc6849"
+    },
+    {
+      "x": 9,
+      "y": 1,
+      "file": "9-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 286606,
+      "sha256": "8b2bc1f9a14514a9434e23ba7c30b4b9017004d80fe663cd0df487a355248520"
+    },
+    {
+      "x": 10,
+      "y": 1,
+      "file": "10-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 310046,
+      "sha256": "417b30a4d65dd134b85eaf4a4a531596129158a4786bf0fc57a0ccfc26838f5e"
+    },
+    {
+      "x": 11,
+      "y": 1,
+      "file": "11-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 261685,
+      "sha256": "448097bd1684d1f5d750e441d99fe021588217305fa01e4a1a382072af8f7dc7"
+    },
+    {
+      "x": 12,
+      "y": 1,
+      "file": "12-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 192338,
+      "sha256": "da57e750cefa837fc8c96e98e649a48afc978ba53e7059f176948ab2da5c4cc7"
+    },
+    {
+      "x": 13,
+      "y": 1,
+      "file": "13-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 139256,
+      "sha256": "533f03bf42c9f328db7ed2e6deb9f88aa62ba180af1b8a8f6ddd3328af5d2ed9"
+    },
+    {
+      "x": 14,
+      "y": 1,
+      "file": "14-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 176633,
+      "sha256": "68b8e369d89b3e86266f49ad9ffcf349e328262e9f80af116c054e61106d60ad"
+    },
+    {
+      "x": 15,
+      "y": 1,
+      "file": "15-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 189391,
+      "sha256": "918294758a62b4ee05814a7f32d15807c40d35e0b0789e3768045c44d46ad434"
+    },
+    {
+      "x": 16,
+      "y": 1,
+      "file": "16-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 57213,
+      "sha256": "501bbf86ff3475b0eb82e3552d1fc6c725495d0abd5fac7edbd6116c743fa9d9"
+    },
+    {
+      "x": 17,
+      "y": 1,
+      "file": "17-1.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 1233,
+      "sha256": "c5158d1d4c83688faeb8abd3cb65c3333db1bace92049abea27f2bf3f757bb6a"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "file": "0-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 776,
+      "sha256": "dd65bdc676e1b80ff605a20aa371de09ef939e7f7053caa7a76b5fde935fa799"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "file": "1-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 9170,
+      "sha256": "f39227c0f3ebf8f338811aa34ad7d32351befd29740e28478cd78d9b5739cc50"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "file": "2-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 2690,
+      "sha256": "b486583ff8fb94dc9b09e6fce5b0252747f6021265c80cfe689e88fe550f20a1"
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "file": "3-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 156870,
+      "sha256": "40f2360c3924259d201f2fa7cacab8a2d52deed331a4142b4a3ffa492183b9da"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "file": "4-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 233173,
+      "sha256": "6bb2c90922e942aa0d0a529d76f842fe9de4fd0eb20f80991557ccc2c529c523"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "file": "5-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 60214,
+      "sha256": "84cd7034ecaaa74665a1492c748177716381f291163b19124ab42e368d6ff2f0"
+    },
+    {
+      "x": 6,
+      "y": 2,
+      "file": "6-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 770,
+      "sha256": "79daf7e71151dad83f2c228085c49f44a0dbc52ed1a2c1c5a8b07fe7256f63ac"
+    },
+    {
+      "x": 7,
+      "y": 2,
+      "file": "7-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 3319,
+      "sha256": "6c5ad42806153d3204240cc544b82ea40425a38fb49c9b2a02247f37864ae6c8"
+    },
+    {
+      "x": 8,
+      "y": 2,
+      "file": "8-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 75444,
+      "sha256": "dabe126a21b57b7ade079097802a4684a41d29a1e7b24ff9522eb22b2e2b6ad5"
+    },
+    {
+      "x": 9,
+      "y": 2,
+      "file": "9-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 104407,
+      "sha256": "b34597ba29da8013416e7d45a2ae69a265b2e467556a11d64e2162e2b3e9d0a2"
+    },
+    {
+      "x": 10,
+      "y": 2,
+      "file": "10-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 134614,
+      "sha256": "2807c0f4330d3c00d9326db13b7a0ea3757aad58119be460d42a36ffddb7a1c4"
+    },
+    {
+      "x": 11,
+      "y": 2,
+      "file": "11-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 256240,
+      "sha256": "b566efa3cc4d1dfd43dff1e49e82dd7e42b7ab3c10d32c306a088124a050d415"
+    },
+    {
+      "x": 12,
+      "y": 2,
+      "file": "12-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 229292,
+      "sha256": "8ec028240d868bc38c739af6e9cc0d060eddf0022c30df0ad31d334778eb0a4d"
+    },
+    {
+      "x": 13,
+      "y": 2,
+      "file": "13-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 179766,
+      "sha256": "410a71fa622150c30f5b1da3431262e1be4c0dbdcc15c6ccf6bfe568d60af56b"
+    },
+    {
+      "x": 14,
+      "y": 2,
+      "file": "14-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 284201,
+      "sha256": "41a05d1a034d31e2272d768e4d66367d44c76cf4eb6482e92b21f8fdad205d5d"
+    },
+    {
+      "x": 15,
+      "y": 2,
+      "file": "15-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 87446,
+      "sha256": "7dd06c1a8543708f7e6591d05c4204a2d3fb64fcdcd367dfa3c237669f324389"
+    },
+    {
+      "x": 16,
+      "y": 2,
+      "file": "16-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 2670,
+      "sha256": "6e677e340f613b87d6a3cd1fdfa11da6c1f00c26ef277574e651f7097e03d24f"
+    },
+    {
+      "x": 17,
+      "y": 2,
+      "file": "17-2.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 711,
+      "sha256": "4182a9318de4bee2f115914561f82de3b4cea967de738dea214f81d871f2b16c"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "file": "0-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 656,
+      "sha256": "320b417b9c2eb7d5b747aa1688827c95e32f8b2a29b19aedcc686e081519af2e"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "file": "1-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 844,
+      "sha256": "46165e096db4e3a46cbc9a89fae4a46593f9792fecb7f360881388e21b7e625d"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "file": "2-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 656,
+      "sha256": "320b417b9c2eb7d5b747aa1688827c95e32f8b2a29b19aedcc686e081519af2e"
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "file": "3-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 656,
+      "sha256": "320b417b9c2eb7d5b747aa1688827c95e32f8b2a29b19aedcc686e081519af2e"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "file": "4-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 44722,
+      "sha256": "07adf3af191403948aeca56346c0bd9c41fcbe2ce6f16d45bcd02a91b7e77640"
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "file": "5-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 146130,
+      "sha256": "249814d6b991682fd7c753fbc2eb11323af5766dbbf5b13090d849f808335298"
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "file": "6-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 67350,
+      "sha256": "93400c20d2c8ada6e1a447092802290ad7a53691bbd0b1770321bd34fab06049"
+    },
+    {
+      "x": 7,
+      "y": 3,
+      "file": "7-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 9970,
+      "sha256": "9829016f69ded0a6252adb6981c4c72d2f81101d1c72f4827b3fdf2de0a58997"
+    },
+    {
+      "x": 8,
+      "y": 3,
+      "file": "8-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 72759,
+      "sha256": "86e4d6c2f4861b22f7c63ca67efe6fa459be4fb9279fe2caed54487769726145"
+    },
+    {
+      "x": 9,
+      "y": 3,
+      "file": "9-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 117335,
+      "sha256": "b2ede78ecbb9f9bef4f6311bf67ee0dda045e15e5d738a62f6782c2fcbbc2c40"
+    },
+    {
+      "x": 10,
+      "y": 3,
+      "file": "10-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 72955,
+      "sha256": "a0871b149c48482e250482921a0e994508633993f2021c609c6935e845004f80"
+    },
+    {
+      "x": 11,
+      "y": 3,
+      "file": "11-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 24465,
+      "sha256": "d3c2819082b21a31abf041c1f1707a9908bad37ba2d24f6663065530231195bc"
+    },
+    {
+      "x": 12,
+      "y": 3,
+      "file": "12-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 46971,
+      "sha256": "e29ae459a411ab770ed8128672dc8351690a6b96670a227f09cd01e0e30eb532"
+    },
+    {
+      "x": 13,
+      "y": 3,
+      "file": "13-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 53871,
+      "sha256": "17bdcc203c410acea3617469e6919bb4576a196cf00a095634f4e6de9eff7fd5"
+    },
+    {
+      "x": 14,
+      "y": 3,
+      "file": "14-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 181525,
+      "sha256": "4c8b91a88786835906fbec9a404583b697c4e10c96b8b9a9e2f60c0e247650ac"
+    },
+    {
+      "x": 15,
+      "y": 3,
+      "file": "15-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 63006,
+      "sha256": "78b0a19db690b7d42a37c103b8ce495f56fa3404ed2b0c34f4e28586e664047e"
+    },
+    {
+      "x": 16,
+      "y": 3,
+      "file": "16-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 8573,
+      "sha256": "841e6648f1bd9e64a9405f9ca36c692938c2cccc42832f548d9712fa8f4ddcb0"
+    },
+    {
+      "x": 17,
+      "y": 3,
+      "file": "17-3.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 3099,
+      "sha256": "83d2e3b21cead3b458275d0deb5aedf833c7a6e61d4ce648b39f2ad184d7bf43"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "file": "0-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 4016,
+      "sha256": "6d825b56820f9bfe7923078557a0725647d3e6cd3b2c4647cef6478513f0becb"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "file": "1-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 4394,
+      "sha256": "6ac056326b203b501065533b7dc9b55c6443eb13f8620c3b5496a2be9cf6a4b6"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "file": "2-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 968,
+      "sha256": "4ecba9cf336d8abb760d49d1527c62fa6c1bd62032f1d24117609f8ceadc23fc"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "file": "3-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 656,
+      "sha256": "320b417b9c2eb7d5b747aa1688827c95e32f8b2a29b19aedcc686e081519af2e"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "file": "4-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 3935,
+      "sha256": "df84d8dc12eae3b221f8b05b122eaf82b730144b205de23a077018bea62419ec"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "file": "5-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 128339,
+      "sha256": "694c0e849aafc2abc04743ccfde64ef57bcb16348fdb23e4ad63c89b00ce5b31"
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "file": "6-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 249154,
+      "sha256": "b03ef44f9c4a5cc596262073e4447ab930f1f6408e96ffef31b25869c7fb1037"
+    },
+    {
+      "x": 7,
+      "y": 4,
+      "file": "7-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 57520,
+      "sha256": "384871560efaf23549fad2fd6fbcc6b0f422ab65fb302f8fb97f18d5982d9824"
+    },
+    {
+      "x": 8,
+      "y": 4,
+      "file": "8-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 1116,
+      "sha256": "adabf65afaf90a89188cccd74e55c173c2d95e200e6a7c31c90464f1999f7c35"
+    },
+    {
+      "x": 9,
+      "y": 4,
+      "file": "9-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 50081,
+      "sha256": "6e37e56a597d58777fc837eb6085db751ab6f298544e54488a86e8f185881ef1"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "file": "10-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 105462,
+      "sha256": "3ecff7aea73a275e8211b578e6073b01b60cbde1387c62c38522a0dfa3a9ed8a"
+    },
+    {
+      "x": 11,
+      "y": 4,
+      "file": "11-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 20546,
+      "sha256": "366d5f50dea9839744b599f8f62ed35a1bffe66f82a1f1a2a611130155ec9e88"
+    },
+    {
+      "x": 12,
+      "y": 4,
+      "file": "12-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 1962,
+      "sha256": "7edeb25f1599e1ab72a9f1aaf814d3d066f8e4e2687f53ed62d8fa2fbfa15f02"
+    },
+    {
+      "x": 13,
+      "y": 4,
+      "file": "13-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 704,
+      "sha256": "7eed43682281fcb17d14ecfe3ce6bb239b1bc99d9a153a3a79a410230b8563a0"
+    },
+    {
+      "x": 14,
+      "y": 4,
+      "file": "14-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 52805,
+      "sha256": "5e617b52a779874057a10c7e749cdf56c27606f595609948902d02020f735ad1"
+    },
+    {
+      "x": 15,
+      "y": 4,
+      "file": "15-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 31907,
+      "sha256": "ca80c183848bbf9ce72d8d8c78b739945500ee5800d61d6a4cd759fb882e560d"
+    },
+    {
+      "x": 16,
+      "y": 4,
+      "file": "16-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 39370,
+      "sha256": "cc89c606fedf6c77512591ce679e4ad75d3e7bec6eeb7d93fefef18dee1385cb"
+    },
+    {
+      "x": 17,
+      "y": 4,
+      "file": "17-4.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 12346,
+      "sha256": "a46b7903a68ac23f98d5ef1dd70833be7a4e965823edf90e47ab66116838341e"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "file": "0-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 656,
+      "sha256": "320b417b9c2eb7d5b747aa1688827c95e32f8b2a29b19aedcc686e081519af2e"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "file": "1-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 753,
+      "sha256": "278ccd189cfabf712b62b5d192bad582ff104a2fde15797e56dbd01541fbbbad"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "file": "2-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 656,
+      "sha256": "320b417b9c2eb7d5b747aa1688827c95e32f8b2a29b19aedcc686e081519af2e"
+    },
+    {
+      "x": 3,
+      "y": 5,
+      "file": "3-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 1004,
+      "sha256": "a5ebd4d4e243aa144d9ff7348486d0e98dd02d1906b694227546ac100c2b3eb9"
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "file": "4-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 656,
+      "sha256": "320b417b9c2eb7d5b747aa1688827c95e32f8b2a29b19aedcc686e081519af2e"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "file": "5-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 154318,
+      "sha256": "53f1da771120d19f34bb795d9f20e34019b98c41e0e57aa3647f3045bd7bd849"
+    },
+    {
+      "x": 6,
+      "y": 5,
+      "file": "6-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 108012,
+      "sha256": "dfa00b34319564277ca84734028c35191f86677861e5325c83a863393ba045fc"
+    },
+    {
+      "x": 7,
+      "y": 5,
+      "file": "7-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 656,
+      "sha256": "320b417b9c2eb7d5b747aa1688827c95e32f8b2a29b19aedcc686e081519af2e"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "file": "8-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 656,
+      "sha256": "320b417b9c2eb7d5b747aa1688827c95e32f8b2a29b19aedcc686e081519af2e"
+    },
+    {
+      "x": 9,
+      "y": 5,
+      "file": "9-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 18109,
+      "sha256": "210a37244b0fd77086787a2e646a23a5776c2a5a39536a72f5614ceaedc08f79"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "file": "10-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 77793,
+      "sha256": "1f0cf311bc4b69e8337ff61e9176d0cda7151deb5dd1bd358c326fcbda1a7a32"
+    },
+    {
+      "x": 11,
+      "y": 5,
+      "file": "11-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 1092,
+      "sha256": "7151dc3f2f7c08d31355baec1949f58a7b66c727a503ed3396fe96fc947669b5"
+    },
+    {
+      "x": 12,
+      "y": 5,
+      "file": "12-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 656,
+      "sha256": "320b417b9c2eb7d5b747aa1688827c95e32f8b2a29b19aedcc686e081519af2e"
+    },
+    {
+      "x": 13,
+      "y": 5,
+      "file": "13-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 656,
+      "sha256": "320b417b9c2eb7d5b747aa1688827c95e32f8b2a29b19aedcc686e081519af2e"
+    },
+    {
+      "x": 14,
+      "y": 5,
+      "file": "14-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 22771,
+      "sha256": "85398d355bfefab114517bb1831b180b436e92a4422be32293605399800977f0"
+    },
+    {
+      "x": 15,
+      "y": 5,
+      "file": "15-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 24916,
+      "sha256": "6ccf68721c0ac6a66e0689e01fa6865eb28ea57a8b4a18fd6424e737a304c739"
+    },
+    {
+      "x": 16,
+      "y": 5,
+      "file": "16-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 83343,
+      "sha256": "b9b2f1452ea24aeb2b2b16402ca60575b49873490b719dc434707e3dd641d1a8"
+    },
+    {
+      "x": 17,
+      "y": 5,
+      "file": "17-5.bin",
+      "width": 800,
+      "height": 800,
+      "bytes": 28492,
+      "sha256": "047bdf3b66c4276f0f77d954f543bcac53f18ae826618ce46a878435d1de4f48"
+    },
+    {
+      "x": 0,
+      "y": 6,
+      "file": "0-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 501,
+      "sha256": "4e6daa804e15ede02c31d0926b38a42b36280e66d1e80f54812a81aa4c5c1b56"
+    },
+    {
+      "x": 1,
+      "y": 6,
+      "file": "1-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 501,
+      "sha256": "4e6daa804e15ede02c31d0926b38a42b36280e66d1e80f54812a81aa4c5c1b56"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "file": "2-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 501,
+      "sha256": "4e6daa804e15ede02c31d0926b38a42b36280e66d1e80f54812a81aa4c5c1b56"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "file": "3-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 501,
+      "sha256": "4e6daa804e15ede02c31d0926b38a42b36280e66d1e80f54812a81aa4c5c1b56"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "file": "4-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 501,
+      "sha256": "4e6daa804e15ede02c31d0926b38a42b36280e66d1e80f54812a81aa4c5c1b56"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "file": "5-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 29655,
+      "sha256": "ab4d8222bdaeeadb5254eec79bc853aed57603696b0d161f6bfa51eb8d4ae53f"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "file": "6-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 1400,
+      "sha256": "0fb4e6628bbce1f4e94f00b8f019a3ac38aee6bf6aa4e0f3477d8a75dcae58b8"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "file": "7-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 1232,
+      "sha256": "e5b1b1a7ec365f785737b5b16e87d91915953ec0e709b62c88827cda493e1c67"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "file": "8-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 681,
+      "sha256": "5a10c8b116ed798450852b406d6cd4e55d223fcd244a49e53bd10e3ee5aee29e"
+    },
+    {
+      "x": 9,
+      "y": 6,
+      "file": "9-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 524,
+      "sha256": "b1630f9da2adcc17f6835fa2fe2eec0062db5648d3fc3c5229fca784bfb8799b"
+    },
+    {
+      "x": 10,
+      "y": 6,
+      "file": "10-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 517,
+      "sha256": "9ca6e547b43490076277cff5c7f0e88c31c8bfab6ed1a19d6b447fd2f4f13083"
+    },
+    {
+      "x": 11,
+      "y": 6,
+      "file": "11-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 501,
+      "sha256": "4e6daa804e15ede02c31d0926b38a42b36280e66d1e80f54812a81aa4c5c1b56"
+    },
+    {
+      "x": 12,
+      "y": 6,
+      "file": "12-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 1347,
+      "sha256": "5fe7e51edbed72238510dd621a19b4e57ae2b0b00f41159364d0d5fafe04ef60"
+    },
+    {
+      "x": 13,
+      "y": 6,
+      "file": "13-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 611,
+      "sha256": "fd1377be1ba4392f67c20763373a0bd3ec8875be0cd6c01cb579f78e46388fa5"
+    },
+    {
+      "x": 14,
+      "y": 6,
+      "file": "14-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 501,
+      "sha256": "4e6daa804e15ede02c31d0926b38a42b36280e66d1e80f54812a81aa4c5c1b56"
+    },
+    {
+      "x": 15,
+      "y": 6,
+      "file": "15-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 580,
+      "sha256": "88255829e380d799e43b40542e0878da12fb5c8bc5f438522a4ef1db21f7b47d"
+    },
+    {
+      "x": 16,
+      "y": 6,
+      "file": "16-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 501,
+      "sha256": "4e6daa804e15ede02c31d0926b38a42b36280e66d1e80f54812a81aa4c5c1b56"
+    },
+    {
+      "x": 17,
+      "y": 6,
+      "file": "17-6.bin",
+      "width": 800,
+      "height": 600,
+      "bytes": 5897,
+      "sha256": "fc34307dfd34506d3f47a1a54715f809b381fa979e4295f03f3e47e74c84dbdd"
+    }
+  ]
+}

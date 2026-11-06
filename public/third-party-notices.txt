@@ -1,3 +1,21 @@
+World Atlas 2015, GFZ Data Services version 1.1
+Fabio Falchi, Pierantonio Cinzano, Dan Duriscoe, Christopher C. M. Kyba,
+Christopher D. Elvidge, Kimberly Baugh, Boris Portnov, Nataliya A. Rybnikova,
+Riccardo Furgoni / ISTIL / GFZ Data Services.
+Dataset https://doi.org/10.5880/GFZ.1.4.2016.001
+Paper https://doi.org/10.1126/sciadv.1600377
+Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0).
+https://creativecommons.org/licenses/by-nc/4.0/legalcode
+Noncommercial use only. Derived files retain CC BY-NC 4.0.
+Official DataCite metadata records the November 2019 license update, which
+supersedes the June 2016 distribution restriction inside the original ZIP README.
+Modifications: crop coverage padding, average valid 3x3 native pixels in linear
+mcd/m2, preserve the native geographic registration, logarithmic byte encoding,
+gzip tiling, runtime bilinear interpolation. Attribution, input/output hashes,
+data index and source links are provided in About and light-pollution.json.
+Values model historical artificial zenith luminance. They are not real-time
+measurements, Bortle classes, directional light domes or exposure predictions.
+
 Space-station GP data provided by CelesTrak / T.S. Kelso
 https://celestrak.org/NORAD/documentation/gp-data-formats.php
 https://celestrak.org/usage-policy.php

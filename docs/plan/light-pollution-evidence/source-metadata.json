@@ -1,0 +1,23 @@
+{
+  "doi": "10.5880/gfz.1.4.2016.001",
+  "url": "https://dataservices.gfz.de/10.5880/gfz.1.4.2016.001/supplement-to-the-new-world-atlas-of-artificial",
+  "version": "1.1",
+  "rightsList": [
+    {
+      "lang": "en",
+      "rights": "Creative Commons Attribution Non Commercial 4.0 International",
+      "rightsUri": "https://creativecommons.org/licenses/by-nc/4.0/legalcode",
+      "schemeUri": "https://spdx.org/licenses/",
+      "rightsIdentifier": "cc-by-nc-4.0",
+      "rightsIdentifierScheme": "SPDX"
+    },
+    {
+      "rights": "Open access",
+      "rightsUri": "http://purl.org/coar/access_right/c_abf2",
+      "schemeUri": "http://purl.org/coar/access_right/",
+      "rightsIdentifier": "c_abf2",
+      "rightsIdentifierScheme": "COAR Access Rights"
+    }
+  ],
+  "checkedAt": "2026-11-06T17:40:05.720943+00:00"
+}

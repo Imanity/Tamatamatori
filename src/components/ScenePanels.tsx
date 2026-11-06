@@ -35,6 +35,8 @@ import { useOrbits } from "./useOrbits";
 import { StationLabels, StationReadout } from "./StationScene";
 import { matchingStations } from "../domain/orbit-data";
 import { stationScene } from "../domain/stations";
+import { useLightPollution } from "./useLightPollution";
+import { lightPollutionAtlas } from "../domain/light-pollution";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -152,7 +154,10 @@ export function PreviewPanel({
       ? { ...plan, azimuth: camera.azimuth, pitch: camera.pitch }
       : plan;
   const celestialScene = useCelestialScene(plan, visibility, view);
-  const starScene = useStarScene(plan, skyVisibility);
+  const pollution = useLightPollution(plan);
+  const artificialMcd =
+    pollution.phase === "ready" ? pollution.sample?.artificialMcd : undefined;
+  const starScene = useStarScene(plan, skyVisibility, artificialMcd);
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return (
     <div className="preview-content">
@@ -185,16 +190,41 @@ export function PreviewPanel({
             </span>
           )}
         </div>
-        <button
-          className={`icon-button ${grid ? "is-active" : ""}`}
-          aria-label="显示构图线"
-          aria-pressed={grid}
-          title="构图线"
-          onClick={() => setGrid(!grid)}
-        >
-          <Icon name="grid" size={15} />
-        </button>
+        <div className="preview-tools" role="group" aria-label="预览显示设置">
+          <button
+            className={`icon-button ${grid ? "is-active" : ""}`}
+            aria-label="显示构图线"
+            aria-pressed={grid}
+            title="构图线"
+            onClick={() => setGrid(!grid)}
+          >
+            <Icon name="grid" size={15} />
+          </button>
+          <button
+            className={`icon-button ${plan.lightPollution ? "is-active" : ""}`}
+            aria-label="当地光污染"
+            aria-pressed={!!plan.lightPollution}
+            title="当地光污染"
+            onClick={() => update({ lightPollution: !plan.lightPollution })}
+          >
+            <Icon name="light" size={16} />
+          </button>
+        </div>
       </div>
+      {plan.lightPollution &&
+        (pollution.phase === "error" || pollution.phase === "unavailable") && (
+          <div
+            className={`pollution-status pollution-${pollution.phase}`}
+            role="status"
+          >
+            {`光污染未应用 · ${pollution.message}`}
+            {pollution.phase === "error" && (
+              <button type="button" onClick={pollution.retry}>
+                重试光污染
+              </button>
+            )}
+          </div>
+        )}
       <div className="viewfinder-wrap">
         <div
           className={`viewfinder ${dragging ? "is-dragging" : ""}`}
@@ -289,6 +319,7 @@ export function PreviewPanel({
         >
           <TerrainScene
             plan={plan}
+            artificialMcd={artificialMcd}
             stations={plan.layers.stations ? stations : undefined}
             onVisibilityChange={setVisibility}
             onCameraChange={setCamera}
@@ -360,6 +391,7 @@ export function PreviewPanel({
                 view={view}
                 query={infoQuery}
                 additionalCount={stationMatches.length}
+                artificialMcd={artificialMcd}
                 skyVisibility={skyVisibility}
                 visibility={visibility}
                 update={update}
@@ -409,6 +441,31 @@ export function PreviewPanel({
                           明暗近似 · {skyAppearanceLabel(starScene.appearance)}
                         </p>
                       )}
+                      <div
+                        className="pollution-readout"
+                        aria-label="当地光污染数据"
+                      >
+                        <p>
+                          {pollution.phase === "off"
+                            ? "当地光污染已关闭"
+                            : pollution.phase === "ready"
+                              ? `2015 天顶人工亮度 ≈ ${artificialMcd!.toFixed(3)} mcd/m²`
+                              : pollution.phase === "loading"
+                                ? "正在读取当地光污染，效果待应用"
+                                : pollution.message}
+                        </p>
+                        {plan.lightPollution && (
+                          <p>
+                            World Atlas {lightPollutionAtlas.year} · 约 2.8 km
+                            格网 · 历史模型与显示近似
+                          </p>
+                        )}
+                        {pollution.phase === "error" && (
+                          <button type="button" onClick={pollution.retry}>
+                            重试光污染数据
+                          </button>
+                        )}
+                      </div>
                       <p className="sky-limit">
                         曲面构图 · 高程基准未核定 · 水面按 DEM
                         近似。晴空与月光为构图参考。

@@ -45,3 +45,8 @@ M31/M45 的额外红色增量为零。加州沿用扩散光支持，心脏/灵�
 影像配准独立检查：在同一隔离环境额外安装 `astropy==7.1.1 pyavm==0.9.9`，执行 `python scripts/check-deep-sky-images.py 源图目录`，保存 300 个 WCSLIB 参考点、逐目标纹理哈希与旧 atlas 哈希到测试 fixture。只验证转换实现与图格边框，未重新测定影像的原始天球解，也不做光度/相机标定；构建和 CI 无需这些 Python 依赖。
 
 色彩核查：M31 是 DSS2 B/R 成品合成，M42 为 LRGB，其余资料的发布波段和未知项见来源清单。底图未按指定未改机相机标定；额外 RGB 红色优势也不是实测 Hα。运行时增量色为红通道 `[1,0,0]`，避免旧增量加入绿蓝而让本已红的云气偏粉；图集像素不变。可在既有 NumPy/Pillow 环境运行 `python scripts/check-deep-sky-colours.py` 复现固定图集的前后信号审计；Node 回归另核对 GLSL 共用常量。结果见[色彩核查](../../docs/plan/deep-sky-colour-audit.md)。
+## World Atlas 2015 光污染
+
+`light-pollution.json` 保存 GFZ 版本 1.1 的来源、许可、原始 SHA256、地理注册、对数编码和分块校验。`public/light-pollution/atlas-2015/*.bin` 是显式 gzip 压缩的 126 份字节分块，文件扩展名避开静态服务的自动 Content-Encoding 解压，运行时先校验压缩字节，再显式解码。有效原生 3×3 像元按线性亮度平均为约 2.8 km 格网，采样时对解码后的值作双线性插值。无效编码 0 与真实零亮度编码 1 分开。
+
+生成入口为 `scripts/build-light-pollution.py`，不参与正常构建或 CI 下载。原始和衍生数据均为 CC BY-NC 4.0，仅限非商业使用，完整作者与两份引用在 About 和第三方说明。版本、边界和验证见[光污染计划](../../docs/plan/light-pollution.md)。

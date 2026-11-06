@@ -1,6 +1,7 @@
 import type { Map as MapLibreMap, SkySpecification, ExpressionSpecification } from "maplibre-gl";
 import type { celestialBodies } from "../domain/ephemeris.ts";
 import { terrainColors } from "../domain/terrain.ts";
+import { skyAppearance } from "../domain/sky-appearance.ts";
 
 // Artistic clear-sky colours, not radiance, exposure or a weather forecast.
 const stops = [
@@ -23,7 +24,7 @@ const smoothstep = (low: number, high: number, value: number) => {
 type Bodies = ReturnType<typeof celestialBodies>;
 
 export function environmentForSky(sun: Pick<Bodies["sun"], "elevation" | "azimuth">,
-  moon: Pick<Bodies["moon"], "elevation" | "illuminatedFraction">) {
+  moon: Pick<Bodies["moon"], "elevation" | "illuminatedFraction">, artificialMcd = 0) {
   if (!Number.isFinite(sun.elevation) || !Number.isFinite(sun.azimuth))
     throw new RangeError("光照需要有效的太阳位置");
   if (!Number.isFinite(moon.elevation) || Math.abs(moon.elevation) > 90 ||
@@ -39,10 +40,11 @@ export function environmentForSky(sun: Pick<Bodies["sun"], "elevation" | "azimut
   // still illuminate the environment; a Moon below the geometric horizon does not.
   const moonlight = moon.illuminatedFraction ** 2 * Math.sqrt(Math.sin(Math.max(0,moon.elevation) * Math.PI / 180)) *
     nightWeight;
-  const skyColor = (first: string, second: string, lift: number[]) => {
+  const pollutionGlow = skyAppearance(sun.elevation, moon, artificialMcd).pollutionGlow;
+  const skyColor = (first: string, second: string, lift: number[], artificialLift: number[]) => {
     const to = channels(second);
     // Round only once, after solar interpolation and lunar lift are combined.
-    return hex(channels(first).map((value,i)=>mix(value,to[i],weight)+lift[i]*moonlight));
+    return hex(channels(first).map((value,i)=>mix(value,to[i],weight)+lift[i]*moonlight+artificialLift[i]*pollutionGlow));
   };
   const brightness = mix(a.brightness, b.brightness, weight) + 0.12 * moonlight;
   const warmth = mix(a.warmth, b.warmth, weight);
@@ -50,9 +52,9 @@ export function environmentForSky(sun: Pick<Bodies["sun"], "elevation" | "azimut
   const direct = clamp(sun.elevation / 6, 0, 1);
   return {
     sky: {
-      "sky-color": skyColor(a.sky, b.sky, [21,25,29]),
-      "horizon-color": skyColor(a.horizon, b.horizon, [30,35,35]),
-      "fog-color": skyColor(a.fog, b.fog, [30,32,32]),
+      "sky-color": skyColor(a.sky, b.sky, [21,25,29], [45,40,30]),
+      "horizon-color": skyColor(a.horizon, b.horizon, [30,35,35], [60,48,30]),
+      "fog-color": skyColor(a.fog, b.fog, [30,32,32], [50,43,32]),
       "sky-horizon-blend": 0.65,
       "horizon-fog-blend": 0.2,
       "fog-ground-blend": 0.06,

@@ -32,6 +32,7 @@ interface Frame {
   ready: boolean;
   plan: ShootingPlan;
   stations?: StationScene;
+  artificialMcd?: number;
 }
 type Pending = { id: string; query: WebGLQuery; blocked?: WebGLQuery };
 const pointVertex = `#version 300 es
@@ -267,6 +268,7 @@ export class StarfieldLayer implements CustomLayerInterface {
         !!p.layers.constellations,
         !!p.layers.deepSky,
         frame.stations?.key,
+        frame.artificialMcd ?? 0,
       ].join("/");
     if (key !== this.dataKey) {
       this.dataKey = key;
@@ -277,7 +279,7 @@ export class StarfieldLayer implements CustomLayerInterface {
           p.layers.constellations ||
           p.layers.deepSky,
         sky = active ? skyReference(p) : null;
-      const appearance = sky ? skyAppearance(sky.sunElevation, sky.moon) : null;
+      const appearance = sky ? skyAppearance(sky.sunElevation, sky.moon, frame.artificialMcd) : null;
       const figure = p.layers.constellations ? constellationScene(p) : null;
       this.lineData = figure?.vertices ?? new Float32Array();
       const deep = p.layers.deepSky ? deepSkyScene(p) : null;

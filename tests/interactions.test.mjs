@@ -200,6 +200,8 @@ class TestMarker extends Events {
 let server, App, createRoot, dom;
 let sequence = 0;
 let groundResponse;
+let pollutionResponse;
+const pollutionRequests = [];
 const terrainSize = { width: 600, height: 400 };
 const resizeObservers = [];
 const groundRequests = [];
@@ -256,6 +258,10 @@ before(async () => {
       return this.classList.contains("terrain-canvas") ? terrainSize.height : 0;
     },
   });
+  installGlobal("__testPollutionLoader", (point, signal) => {
+    pollutionRequests.push({ point, signal });
+    return pollutionResponse(point, signal);
+  });
   installGlobal("__testGroundLoader", (point, _url, signal) => {
     groundRequests.push({ point, signal });
     return groundResponse(point, signal);
@@ -308,6 +314,8 @@ before(async () => {
             return "export const StarfieldLayer = globalThis.__testStarfieldLayer;";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/celestial-layer.ts"))
             return "export const CelestialLayer = globalThis.__testCelestialLayer;";
+          if (id.replaceAll("\\", "/").endsWith("/src/preview/light-pollution.ts"))
+            return "export const sampleLightPollution = (...args) => globalThis.__testPollutionLoader(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/elevation.ts"))
             return "export const groundElevation = (...args) => globalThis.__testGroundLoader(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/map/sdk.ts"))
@@ -366,6 +374,8 @@ async function workspace(
   elevation = async () => ({ height: 1000, zoom: 12 }),
 ) {
   groundResponse = elevation;
+  pollutionRequests.length = 0;
+  pollutionResponse = async () => ({ artificialMcd: 6.5 });
   groundRequests.length = 0;
   resizeObservers.length = 0;
   TestMap.instances.length = 0;
@@ -1228,7 +1238,7 @@ test('About 汇集所有署名与下载，开关图层和弹窗不重建地图�
   }
   assert.match(dialog.querySelector('[data-credit-source="IC0434"]').textContent, /火树/);
   const downloads = [...dialog.querySelectorAll('a[download]')];
-  assert.equal(downloads.length, catalog.imageSources.length + 5);
+  assert.equal(downloads.length, catalog.imageSources.length + 6);
   assert.equal(new Set(downloads.map((link) => link.getAttribute('href'))).size, downloads.length);
   const fields = ['经度', '纬度', '焦距', '相机离地高度', '方位角', '俯仰角'];
   const before = fields.map(value), time = shootingDateTime();
@@ -1399,6 +1409,10 @@ test('侧栏收起、面板交换保留搜索，地平线下的未开启目标�
 
 test('精简工作区与默认折叠分组，左栏入口展开定位并清除搜索', async t => {
   await workspace(t); const map = await readyTerrain(), requests = groundRequests.length;
+  const layout = document.querySelector('.workgrid');
+  assert.equal(layout.style.getPropertyValue('--upper-track'), '50fr');
+  assert.equal(layout.style.getPropertyValue('--lower-track'), '50fr');
+  assert.equal(document.querySelector('[aria-label="调整右侧面板高度"]').getAttribute('aria-valuenow'), '50');
   for (const selector of ['.workspace-heading', '.workspace-footer', '.base-layer', '.sidebar-bottom', '.layer-hint', '.map-footer-note', '.viewfinder-label', '.viewfinder-focal', '.terrain-height', '.parameter-note', '.info-header'])
     assert.equal(document.querySelector(selector), null, selector);
   const groups = [...document.querySelectorAll('.info-group h2 button')];
@@ -1508,4 +1522,76 @@ test('画幅切换先同步画布尺寸再应用相机，无需等待 ResizeObse
   assert.equal(document.querySelector('.viewfinder').style.aspectRatio, '1');
   assert.equal(document.querySelector('.terrain-canvas').dataset.rendered, 'true');
   assert.equal(terrainMap(), map);
+});
+
+
+test('光污染开关紧邻构图线，按当地数据更新天空和星点，镜头和方向复用数据', async t => {
+  await workspace(t); const map = await readyTerrain();
+  await setShootingDateTime('2026-11-09T01:00');
+  await settle(() => document.querySelector('[aria-label="显示星空"]').click());
+  const button = document.querySelector('button[aria-label="当地光污染"]');
+  assert.deepEqual([...document.querySelectorAll('.preview-tools button')].map(e => e.getAttribute('aria-label')), ['显示构图线', '当地光污染']);
+  assert.equal(button.title, '当地光污染');
+  assert.equal(button.getAttribute('aria-pressed'), 'false'); assert.equal(pollutionRequests.length, 0);
+  const sky = structuredClone(map.environments.at(-1)), requests = groundRequests.length;
+  const layer = map.customLayers.find(l => l instanceof TestStarfieldLayer);
+  const pose = map.cameraSolutions.length;
+  const before = [...document.querySelectorAll('[data-sky-status]')].map(e => Number(e.dataset.skyOpacity));
+  await settle(() => button.click());
+  await waitUntil(() => layer.frame.artificialMcd === 6.5);
+  assert.equal(button.getAttribute('aria-pressed'), 'true');
+  assert.equal(document.querySelector('.pollution-status'), null);
+  assert.match(document.querySelector('.pollution-readout').textContent, /2015.*6.500/);
+  assert.equal(layer.frame.artificialMcd, 6.5); assert.notDeepEqual(map.environments.at(-1), sky);
+  const after = [...document.querySelectorAll('[data-sky-status]')].map(e => Number(e.dataset.skyOpacity));
+  assert.ok(after.every((value,index) => value <= before[index]));
+  assert.ok(after.some((value,index) => value < before[index] - .2));
+  assert.equal(map.cameraSolutions.length, pose); assert.equal(groundRequests.length, requests);
+  await settle(() => setControl(input('焦距'), 85));
+  await settle(() => setControl(input('方位角'), 120));
+  assert.equal(pollutionRequests.length, 1); assert.equal(groundRequests.length, requests);
+  await settle(() => button.click());
+  assert.equal(layer.frame.artificialMcd, undefined); assert.equal(document.querySelector('.pollution-status'), null);
+  assert.deepEqual(map.environments.at(-1), sky); assert.equal(terrainMap(), map);
+});
+
+test('光污染取消过期位置与关闭请求，无覆盖、失败和重试均有独立状态', async t => {
+  await workspace(t); await readyTerrain();
+  const pending = [];
+  pollutionResponse = (point, signal) => new Promise((resolve,reject) => pending.push({ point, signal, resolve, reject }));
+  const toggle = document.querySelector('button[aria-label="当地光污染"]');
+  await settle(() => toggle.click()); await waitUntil(() => pending.length === 1);
+  assert.equal(document.querySelector('.pollution-status'), null);
+  assert.match(document.querySelector('.pollution-readout').textContent, /正在读取/);
+  await settle(() => setControl(input('经度'), 139));
+  await waitUntil(() => pending.length === 2); assert.equal(pending[0].signal.aborted, true);
+  await settle(() => pending[0].resolve({ artificialMcd: 99 }));
+  assert.equal(document.querySelector('.pollution-status'), null);
+  assert.match(document.querySelector('.pollution-readout').textContent, /正在读取/);
+  await settle(() => toggle.click()); assert.equal(pending[1].signal.aborted, true);
+  await settle(() => pending[1].resolve({ artificialMcd: 99 }));
+  assert.equal(document.querySelector('.pollution-status'), null);
+  await settle(() => toggle.click()); await waitUntil(() => pending.length === 3);
+  await settle(() => pending[2].reject(new Error('测试光污染读取失败')));
+  assert.match(document.querySelector('.pollution-error').textContent, /未应用.*失败/);
+  await settle(() => document.querySelector('.pollution-status button').click());
+  await waitUntil(() => pending.length === 4);
+  await settle(() => pending[3].resolve({ artificialMcd: 1 }));
+  assert.equal(document.querySelector('.pollution-status'), null);
+  assert.match(document.querySelector('.pollution-readout').textContent, /2015.*1\.000/);
+  await settle(() => setControl(input('纬度'), 80));
+  assert.match(document.querySelector('.pollution-unavailable').textContent, /超出.*覆盖/);
+  assert.equal(pending.length, 4); assert.equal(toggle.getAttribute('aria-pressed'), 'true');
+  await settle(() => toggle.click()); assert.equal(document.querySelector('.pollution-status'), null);
+});
+
+
+test('已加载预览隐藏后恢复同一尺寸时重新提交星空帧', async t => {
+  await workspace(t); const map = await readyTerrain();
+  const layer = map.customLayers.find(l => l instanceof TestStarfieldLayer);
+  const old = layer.frame.key;
+  const observer = resizeObservers.find(o => o.target === document.querySelector('.terrain-canvas'));
+  await settle(() => observer.callback([{ contentRect: { width: 0, height: 0 } }]));
+  await settle(() => observer.callback([{ contentRect: terrainSize }]));
+  assert.notEqual(layer.frame.key, old); assert.equal(layer.frame.ready, true);
 });

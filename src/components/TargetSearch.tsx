@@ -21,6 +21,7 @@ export function TargetSearchResults({
   visibility,
   update,
   additionalCount = 0,
+  artificialMcd,
 }: {
   plan: ShootingPlan;
   view: ShootingPlan;
@@ -29,6 +30,7 @@ export function TargetSearchResults({
   visibility: VisibilitySnapshot;
   update: (patch: Partial<ShootingPlan>) => void;
   additionalCount?: number;
+  artificialMcd?: number;
 }) {
   const result = useMemo(() => {
     try {
@@ -91,7 +93,7 @@ export function TargetSearchResults({
           else if (occlusion === "clear" || occlusion === "partial") {
             const sky = skyReference(plan);
             if (
-              skyAppearance(sky.sunElevation, sky.moon).galaxyStrength <
+              skyAppearance(sky.sunElevation, sky.moon, artificialMcd).galaxyStrength <
               STAR_LABEL_ALPHA
             )
               status = "天空较亮 · 轮廓隐藏";
@@ -103,7 +105,7 @@ export function TargetSearchResults({
         ) {
           const sky = skyReference(plan);
           if (
-            starOpacity(target, skyAppearance(sky.sunElevation, sky.moon)) <
+            starOpacity(target, skyAppearance(sky.sunElevation, sky.moon, artificialMcd)) <
             STAR_LABEL_ALPHA
           )
             status = "天空较亮 · 星点隐藏";

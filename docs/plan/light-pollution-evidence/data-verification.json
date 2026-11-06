@@ -1,0 +1,81 @@
+{
+  "sourceSha256": "9725566ed4fcf1a8fa311654143bb024c4fe2a792b85356be99adce07e1e83c1",
+  "archiveSha256": "9c6a624427463c40717efbca7696e3c6bb0f332c26d1b039e7a91e0dbc831fbf",
+  "manifestSha256": "a09b387e512930b4c40561aef81538f97e4621b96c6ff435260b4680127a61c1",
+  "fixtureSha256": "d2413a52e087a623bff895c8d2386c660722c2b4392921a1dbe43bbbc0b8c5ed",
+  "rebuildIdentical": true,
+  "tileCount": 126,
+  "compressedBytes": 7830068,
+  "grid": {
+    "width": 14400,
+    "height": 5400,
+    "pixelSize": 0.024999990000000007,
+    "north": 75,
+    "south": -59.995775115499924
+  },
+  "sourceReferenceLocations": 9,
+  "sourceReferenceCells": 34,
+  "cachedDecodedBytesMaximum": 2560000,
+  "pixelChecks": [
+    {
+      "first": "01-tokyo-off",
+      "second": "02-tokyo-on",
+      "meanAbsolutePixelDifference": 27.174208945626653,
+      "medianRgbFirst": [
+        28.0,
+        44.0,
+        70.0
+      ],
+      "medianRgbSecond": [
+        65.0,
+        78.0,
+        95.0
+      ]
+    },
+    {
+      "first": "01-tokyo-off",
+      "second": "03-tokyo-restored",
+      "meanAbsolutePixelDifference": 0.0,
+      "medianRgbFirst": [
+        28.0,
+        44.0,
+        70.0
+      ],
+      "medianRgbSecond": [
+        28.0,
+        44.0,
+        70.0
+      ]
+    },
+    {
+      "first": "05-dark-on",
+      "second": "06-dark-off",
+      "meanAbsolutePixelDifference": 0.32971174103837525,
+      "medianRgbFirst": [
+        28.0,
+        44.0,
+        70.0
+      ],
+      "medianRgbSecond": [
+        28.0,
+        44.0,
+        70.0
+      ]
+    },
+    {
+      "first": "10-day-on",
+      "second": "11-day-off",
+      "meanAbsolutePixelDifference": 0.0031037803364386595,
+      "medianRgbFirst": [
+        160.0,
+        197.0,
+        224.0
+      ],
+      "medianRgbSecond": [
+        160.0,
+        197.0,
+        224.0
+      ]
+    }
+  ]
+}

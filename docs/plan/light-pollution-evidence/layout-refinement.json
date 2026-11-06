@@ -1,0 +1,27 @@
+{
+  "panels": [
+    {
+      "height": 576.5,
+      "name": "拍摄预览"
+    },
+    {
+      "height": 576.5,
+      "name": "拍摄参数"
+    }
+  ],
+  "pollutionReadout": "2015 天顶人工亮度 ≈ 0.202 mcd/m²World Atlas 2015 · 约 2.8 km 格网 · 历史模型与显示近似",
+  "previewText": "35 mm · 全画幅 · 横幅 3:2未改机 · 近似参考机位高程 ≈ 980.5 m · 离地 1.6 mSWW",
+  "resource": "/Tamatamatori/assets/index-C0ryoHwL.js",
+  "split": "50",
+  "status": null,
+  "toggle": {
+    "pressed": "true",
+    "title": "当地光污染"
+  },
+  "viewport": {
+    "height": 1271,
+    "width": 2560,
+    "x": 0,
+    "y": 0
+  }
+}

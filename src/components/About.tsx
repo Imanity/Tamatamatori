@@ -6,6 +6,8 @@ import constellationStarsUrl from "../data/constellation-stars.json?url";
 import deepSkyCatalogUrl from "../data/deep-sky.json?url";
 import { deepSkyCatalog, deepSkyImageCredits } from "../domain/deep-sky";
 import { deepSkyImageUrl } from "../preview/deep-sky-texture";
+import lightPollutionUrl from "../data/light-pollution.json?url";
+import { lightPollutionAtlas } from "../domain/light-pollution";
 
 const sourceLicenseLabels: Record<string, string> = {
   "Public-Domain": "公有领域",
@@ -93,6 +95,21 @@ export function About() {
                 <a href="https://mapterhorn.com/attribution/" target="_blank" rel="noreferrer">© Mapterhorn · 高程及上游数据来源</a>
               </li>
             </ul>
+          </section>
+
+          <section aria-labelledby="about-pollution-title">
+            <h3 id="about-pollution-title">当地光污染</h3>
+            <p>{lightPollutionAtlas.credit}</p>
+            <p>World Atlas 2015 · GFZ 版本 1.1 · CC BY-NC 4.0，仅限非商业使用。</p>
+            <div className="about-downloads">
+              <a href={lightPollutionAtlas.source} target="_blank" rel="noreferrer">数据来源与许可</a>
+              <a href={lightPollutionAtlas.paper} target="_blank" rel="noreferrer">Falchi 等，Science Advances 2016</a>
+              <a href={lightPollutionAtlas.licenseUrl} target="_blank" rel="noreferrer">CC BY-NC 4.0</a>
+              <a href={lightPollutionUrl} download="tamatamatori-light-pollution.json">下载衍生数据索引与校验值</a>
+              <a href={lightPollutionAtlas.download} target="_blank" rel="noreferrer">原始全球图集</a>
+            </div>
+            <p>原始 30 角秒栅格按 3×3 平均为约 2.8 km 格网，保留原格网注册，去掉北部覆盖外填充值，再对数编码并按需加载分块。衍生数据继续采用 CC BY-NC 4.0。</p>
+            <p>覆盖约南纬 60° 至北纬 75°。数值为历史模型的天顶人工亮度，天空颜色与对比度为显示近似，不提供实时光污染、城市光穹方向、波特尔等级或曝光预测。</p>
           </section>
 
           <section aria-labelledby="about-catalog-title">

@@ -426,3 +426,23 @@ test('马头和火树共享一次解码与可见绘制，局部遮挡及资源�
   assert.deepEqual(requests,['IC0434','Sh2-276','IC0434','Sh2-276','IC0434','Sh2-276']);
   layer.onRemove();assert.equal(resources.size,0);
 });
+
+
+test('光污染改变星空显示强度，天体位置、星座与深空几何保持一致', async () => {
+  const { gl, resources } = fakeGL(), reports = [];
+  const layer = await prepareStars(gl, reports);
+  layer.setScene(starFrame('pollution-base'));
+  const before = Array.from(layer.pointData), band = Array.from(layer.band.vertices), strength = layer.strength;
+  const polluted = starFrame('pollution-on'); polluted.artificialMcd = 6.5;
+  layer.setScene(polluted);
+  assert.ok(layer.strength < strength);
+  const after = Array.from(layer.pointData);
+  assert.equal(after.length, before.length);
+  let changed = false;
+  for (let i = 0; i < after.length; i++) {
+    if (i % 9 === 8) { assert.ok(after[i] <= before[i]); changed ||= after[i] < before[i]; }
+    else assert.equal(after[i], before[i]);
+  }
+  assert.equal(changed, true); assert.deepEqual(Array.from(layer.band.vertices), band);
+  layer.onRemove(); assert.equal(resources.size, 0);
+});

@@ -32,6 +32,7 @@ export interface ShootingPlan {
   refraction: "standard" | "none";
   milkyWayContrast: number;
   cameraResponse: "stock" | "ha-modified";
+  lightPollution?: boolean;
 }
 
 export const initialPlan: ShootingPlan = {
@@ -58,6 +59,7 @@ export const initialPlan: ShootingPlan = {
   refraction: "standard",
   milkyWayContrast: 100,
   cameraResponse: "stock",
+  lightPollution: false,
 };
 
 export function normalizeLongitude(longitude: number) {

@@ -13,7 +13,7 @@ import type { InfoGroupId, InfoNavigation } from "./components/InfoGroup";
 
 type PanelId = "map" | "preview" | "parameters";
 const defaultPanels: PanelId[] = ["map", "preview", "parameters"];
-const defaultUpperHeight = (100 * 2) / 3;
+const defaultUpperHeight = 50;
 const panelInfo: Record<
   PanelId,
   { title: string; icon: IconName; tag: string }

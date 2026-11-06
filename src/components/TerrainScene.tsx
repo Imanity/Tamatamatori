@@ -48,7 +48,7 @@ export interface TerrainInfo {
   adjusted: boolean;
 }
 
-export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChange, onSkyChange, onInfoChange }: { plan: ShootingPlan; stations?: StationScene; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void; onCameraChange?: (camera: RenderedCamera | null) => void; onSkyChange?: (snapshot:SkyVisibility)=>void; onInfoChange?: (info: TerrainInfo) => void }) {
+export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChange, onSkyChange, onInfoChange, artificialMcd }: { plan: ShootingPlan; stations?: StationScene; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void; onCameraChange?: (camera: RenderedCamera | null) => void; onSkyChange?: (snapshot:SkyVisibility)=>void; onInfoChange?: (info: TerrainInfo) => void; artificialMcd?: number }) {
   const container = useRef<HTMLDivElement>(null);
   const synchronize = useRef<(() => void) | null>(null);
   const key = `${plan.longitude}/${plan.latitude}`;
@@ -67,12 +67,12 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
     ground: number;
     altitude: number;
   } | null>(null);
-  const latest = useRef({ plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange });
+  const latest = useRef({ plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd });
 
   useEffect(() => {
-    latest.current = { plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange };
+    latest.current = { plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd };
     synchronize.current?.();
-  }, [plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange]);
+  }, [plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd]);
 
   useEffect(() => {
     // Unavailable ground has no render/query callback; keep its status explicit
@@ -237,10 +237,10 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
           sourceRevision++;
           celestialLayer?.invalidate();
         }
-        const environmentKey = `${current.key}/${current.plan.instant}`;
+        const environmentKey = `${current.key}/${current.plan.instant}/${current.artificialMcd ?? 0}`;
         if (environmentKey !== lastEnvironment) {
           const { sun, moon } = celestialBodies(current.plan);
-          applyEnvironment(map, environmentForSky(sun, moon));
+          applyEnvironment(map, environmentForSky(sun, moon, current.artificialMcd));
           lastEnvironment = environmentKey;
         }
         const rendered = map.queryTerrainElevation([
@@ -300,7 +300,7 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
         const planKey = celestialPlanKey(current.plan);
         const ready = map.areTilesLoaded() && map.isSourceLoaded(TERRAIN_SOURCE) && map.isSourceLoaded(WATER_SOURCE);
         const renderView = { azimuth: (map.getBearing() % 360 + 360) % 360, pitch: map.getPitch() - 90 };
-        const frameKey = `${poseKey}/${planKey}/${sourceRevision}/${ready}/${renderView.azimuth}/${renderView.pitch}/${current.stations?.key ?? ""}`;
+        const frameKey = `${poseKey}/${planKey}/${sourceRevision}/${ready}/${renderView.azimuth}/${renderView.pitch}/${current.stations?.key ?? ""}/${current.artificialMcd ?? 0}`;
         if (celestialLayer && frameKey !== lastCelestialFrame) {
           lastCelestialFrame = frameKey;
           const bodies = Object.values(celestialBodies(current.plan))
@@ -308,7 +308,7 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
             .map((body) => ({ id: body.id, ...bodyPolygons({ ...current.plan, ...renderView }, body) }))
             .filter((body) => body.state === "画面内");
           celestialLayer.setScene({ key: frameKey, planKey, ready, bodies });
-          starfield?.setScene({key:frameKey,planKey,ready,plan:current.plan,stations:current.stations});
+          starfield?.setScene({key:frameKey,planKey,ready,plan:current.plan,stations:current.stations,artificialMcd:current.artificialMcd});
         }
         markReady();
       } catch {
@@ -422,6 +422,9 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
         observer = new ResizeObserver((entries) => {
           const bounds = entries[0]?.contentRect;
           if (disposed || !map || !bounds) return;
+          // A hidden host invalidates queries even if its restored dimensions
+          // match the previous pose. Issue a fresh frame on every size event.
+          sourceRevision++;
           if (bounds.width <= 0 || bounds.height <= 0) {
             clearTimeout(timeout);
             timeout = undefined;

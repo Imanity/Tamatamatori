@@ -30,7 +30,7 @@ import {
 } from "../domain/sky-appearance";
 
 export { emptySkyVisibility };
-export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility) {
+export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, artificialMcd?: number) {
   const result = useMemo(() => {
     if (
       !plan.layers.stars &&
@@ -49,7 +49,7 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility) {
       const model = skyReference(plan);
       return {
         model,
-        appearance: skyAppearance(model.sunElevation, model.moon),
+        appearance: skyAppearance(model.sunElevation, model.moon, artificialMcd),
         figures: plan.layers.constellations
           ? constellationScene(plan).anchors
           : [],
@@ -74,6 +74,7 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility) {
     plan.layers.constellations,
     plan.layers.deepSky,
     plan.refraction,
+    artificialMcd,
   ]);
   const current = visibility.planKey === celestialPlanKey(plan),
     view = current && visibility.view ? { ...plan, ...visibility.view } : plan;
@@ -409,7 +410,7 @@ export function StarReadout({
         </details>
       )}
       <p className="sky-limit">
-        按当前 DEM 遮挡 · 银心环仅作定位 · 不含天气、曝光与光污染
+        按当前 DEM 遮挡 · 方向标记为构图参考 · 晴空与显示对比度近似
       </p>
     </div>
   );

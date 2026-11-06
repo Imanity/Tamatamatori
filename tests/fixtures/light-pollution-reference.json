@@ -1,0 +1,349 @@
+{
+  "sourceSha256": "9725566ed4fcf1a8fa311654143bb024c4fe2a792b85356be99adce07e1e83c1",
+  "samples": [
+    {
+      "name": "东京",
+      "latitude": 35.6762,
+      "longitude": 139.6503,
+      "cells": [
+        {
+          "x": 12785,
+          "y": 1572,
+          "weight": 0.18375504892731845,
+          "sourceMeanMcd": 6.1256698502434626,
+          "code": 141,
+          "decodedMcd": 6.309688108089024
+        },
+        {
+          "x": 12786,
+          "y": 1572,
+          "weight": 0.1967803232833972,
+          "sourceMeanMcd": 7.052656756507026,
+          "code": 143,
+          "decodedMcd": 7.149946467468294
+        },
+        {
+          "x": 12785,
+          "y": 1573,
+          "weight": 0.29913054423001595,
+          "sourceMeanMcd": 6.000832875569661,
+          "code": 140,
+          "decodedMcd": 5.927342844080489
+        },
+        {
+          "x": 12786,
+          "y": 1573,
+          "weight": 0.3203340835592684,
+          "sourceMeanMcd": 6.876456366644965,
+          "code": 142,
+          "decodedMcd": 6.716692523019596
+        }
+      ],
+      "artificialMcd": 6.491040659043973
+    },
+    {
+      "name": "山中湖",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "cells": [
+        {
+          "x": 12754,
+          "y": 1582,
+          "weight": 0.011885487595722053,
+          "sourceMeanMcd": 0.20752601325511932,
+          "code": 86,
+          "decodedMcd": 0.20185673683086489
+        },
+        {
+          "x": 12755,
+          "y": 1582,
+          "weight": 0.008645740613215993,
+          "sourceMeanMcd": 0.18709166844685873,
+          "code": 85,
+          "decodedMcd": 0.18956626845863
+        },
+        {
+          "x": 12754,
+          "y": 1583,
+          "weight": 0.5670125439671357,
+          "sourceMeanMcd": 0.19794617427719963,
+          "code": 86,
+          "decodedMcd": 0.20185673683086489
+        },
+        {
+          "x": 12755,
+          "y": 1583,
+          "weight": 0.4124562278239262,
+          "sourceMeanMcd": 0.19952663116984898,
+          "code": 86,
+          "decodedMcd": 0.20185673683086489
+        }
+      ],
+      "artificialMcd": 0.20175047662930362
+    },
+    {
+      "name": "纽约",
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "cells": [
+        {
+          "x": 4239,
+          "y": 1371,
+          "weight": 0.6235834206496345,
+          "sourceMeanMcd": 10.602040926615397,
+          "code": 149,
+          "decodedMcd": 10.403565716560722
+        },
+        {
+          "x": 4240,
+          "y": 1371,
+          "weight": 0.22103253719332705,
+          "sourceMeanMcd": 10.719977378845215,
+          "code": 149,
+          "decodedMcd": 10.403565716560722
+        },
+        {
+          "x": 4239,
+          "y": 1372,
+          "weight": 0.11472067467220248,
+          "sourceMeanMcd": 8.223780261145698,
+          "code": 145,
+          "decodedMcd": 8.102083927575384
+        },
+        {
+          "x": 4240,
+          "y": 1372,
+          "weight": 0.04066336748483602,
+          "sourceMeanMcd": 9.632639249165853,
+          "code": 148,
+          "decodedMcd": 9.773184947038395
+        }
+      ],
+      "artificialMcd": 10.113904768096077
+    },
+    {
+      "name": "巴黎",
+      "latitude": 48.8566,
+      "longitude": 2.3522,
+      "cells": [
+        {
+          "x": 7293,
+          "y": 1045,
+          "weight": 0.2441183699962472,
+          "sourceMeanMcd": 9.94936434427897,
+          "code": 148,
+          "decodedMcd": 9.773184947038395
+        },
+        {
+          "x": 7294,
+          "y": 1045,
+          "weight": 0.35262788869854594,
+          "sourceMeanMcd": 9.335537274678549,
+          "code": 147,
+          "decodedMcd": 9.18099701760271
+        },
+        {
+          "x": 7293,
+          "y": 1046,
+          "weight": 0.16496399363714082,
+          "sourceMeanMcd": 9.18758053249783,
+          "code": 147,
+          "decodedMcd": 9.18099701760271
+        },
+        {
+          "x": 7294,
+          "y": 1046,
+          "weight": 0.23828974766806604,
+          "sourceMeanMcd": 9.362780253092447,
+          "code": 147,
+          "decodedMcd": 9.18099701760271
+        }
+      ],
+      "artificialMcd": 9.325560969668002
+    },
+    {
+      "name": "纳米布",
+      "latitude": -24.5,
+      "longitude": 15,
+      "cells": [
+        {
+          "x": 7799,
+          "y": 3979,
+          "weight": 0.16475176953541631,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        },
+        {
+          "x": 7800,
+          "y": 3979,
+          "weight": 0.16682078309089593,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        },
+        {
+          "x": 7799,
+          "y": 3980,
+          "weight": 0.33212822921735824,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        },
+        {
+          "x": 7800,
+          "y": 3980,
+          "weight": 0.3362992181563295,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        }
+      ],
+      "artificialMcd": 0.0
+    },
+    {
+      "name": "撒哈拉",
+      "latitude": 23,
+      "longitude": 10,
+      "cells": [
+        {
+          "x": 7599,
+          "y": 2079,
+          "weight": 0.16515598510017912,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        },
+        {
+          "x": 7600,
+          "y": 2079,
+          "weight": 0.16717656782934978,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        },
+        {
+          "x": 7599,
+          "y": 2080,
+          "weight": 0.3318040136851353,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        },
+        {
+          "x": 7600,
+          "y": 2080,
+          "weight": 0.3358634333853358,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        }
+      ],
+      "artificialMcd": 0.0
+    },
+    {
+      "name": "太平洋",
+      "latitude": 0,
+      "longitude": -150,
+      "cells": [
+        {
+          "x": 1199,
+          "y": 2999,
+          "weight": 0.16582293334201476,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        },
+        {
+          "x": 1200,
+          "y": 2999,
+          "weight": 0.16614161944065037,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        },
+        {
+          "x": 1199,
+          "y": 3000,
+          "weight": 0.3336970664652474,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        },
+        {
+          "x": 1200,
+          "y": 3000,
+          "weight": 0.3343383807520875,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        }
+      ],
+      "artificialMcd": 0.0
+    },
+    {
+      "name": "日期变更线",
+      "latitude": 20,
+      "longitude": 179.999,
+      "cells": [
+        {
+          "x": 14399,
+          "y": 2199,
+          "weight": 0.17751970409912232,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        },
+        {
+          "x": 0,
+          "y": 2199,
+          "weight": 0.15476484881142838,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        },
+        {
+          "x": 14399,
+          "y": 2200,
+          "weight": 0.3567203096005507,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        },
+        {
+          "x": 0,
+          "y": 2200,
+          "weight": 0.3109951374888986,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        }
+      ],
+      "artificialMcd": 0.0
+    },
+    {
+      "name": "北界",
+      "latitude": 75,
+      "longitude": 0,
+      "cells": [
+        {
+          "x": 7199,
+          "y": 0,
+          "weight": 0.49711999884857505,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        },
+        {
+          "x": 7200,
+          "y": 0,
+          "weight": 0.502880001151425,
+          "sourceMeanMcd": 0.0,
+          "code": 1,
+          "decodedMcd": 0.0
+        }
+      ],
+      "artificialMcd": 0.0
+    }
+  ]
+}

@@ -1,5 +1,13 @@
 # 第三方许可
 
+## World Atlas 2015 光污染
+
+使用 Fabio Falchi、Pierantonio Cinzano、Dan Duriscoe、Christopher C. M. Kyba、Christopher D. Elvidge、Kimberly Baugh、Boris Portnov、Nataliya A. Rybnikova、Riccardo Furgoni / ISTIL / GFZ Data Services 的 World Atlas 2015，发布版本 1.1。数据按 CC BY-NC 4.0 提供，仅限非商业使用。官方 DataCite 元数据记录 2019-11-13 许可变更，压缩包内 2016 README 的旧禁再分发说明按该更新处理。[数据与许可](https://doi.org/10.5880/GFZ.1.4.2016.001)，[许可文本](https://creativecommons.org/licenses/by-nc/4.0/legalcode)
+
+引用 Falchi 等（2016），Supplement to: The New World Atlas of Artificial Night Sky Brightness，GFZ Data Services，DOI `10.5880/GFZ.1.4.2016.001`，以及 Falchi 等（2016），The new world atlas of artificial night sky brightness，Science Advances 2(6), e1600377，DOI `10.1126/sciadv.1600377`。
+
+本项目去掉北部覆盖外填充值，将有效原生 3×3 像元按线性 mcd/m² 平均为约 2.8 km 格网，保留原始格网注册，再对数编码、gzip 分块。衍生文件位于 `public/light-pollution/atlas-2015/`，继续按 CC BY-NC 4.0 提供。原始和逐块校验值、坐标、处理步骤及下载索引见 [light-pollution.json](src/data/light-pollution.json)，完整来源在 About。
+
 ## 空间站轨道与 satellite.js
 
 ISS（25544）与天宫天和核心舱（48274）的 GP JSON 由 CelesTrak 提供。保留原始轨道字段、UTC 历元及独立的检查状态，空间站白名单筛选和静态镜像均在本项目完成。遵守两小时最短请求间隔和错误暂停要求，署名与快照下载入口在 About。[数据说明](https://celestrak.org/NORAD/documentation/gp-data-formats.php)，[使用政策](https://celestrak.org/usage-policy.php)
