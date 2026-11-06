@@ -132,6 +132,7 @@ export function TargetSearchResults({
               disabled={enabled && below}
               onClick={() => {
                 const layers = { ...plan.layers, [target.layer]: true };
+                if (target.layer === "constellations") layers.stars = true;
                 if (below) {
                   update({ layers });
                   return;

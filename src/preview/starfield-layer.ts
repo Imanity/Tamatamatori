@@ -382,7 +382,6 @@ export class StarfieldLayer implements CustomLayerInterface {
       !c ||
       !p ||
       !b ||
-      !f.ready ||
       (!f.plan.layers.stars &&
         !f.plan.layers.milkyWay &&
         !f.plan.layers.constellations &&
@@ -606,7 +605,9 @@ export class StarfieldLayer implements CustomLayerInterface {
       gl.bindVertexArray(this.pointsVao!);
       gl.uniform1f(gl.getUniformLocation(p, "u_probe"), 0);
       gl.drawArrays(gl.POINTS, 0, this.points.length);
-      if (!this.pending.length && this.resolvedKey !== queryKey) {
+      // Keep drawing against current depth while replacement tiles arrive.
+      // Only settled terrain can resolve the visibility readout.
+      if (f.ready && !this.pending.length && this.resolvedKey !== queryKey) {
         const view = { ...f.plan, azimuth: c.azimuth, pitch: c.pitch };
         this.pendingKey = queryKey;
         this.pendingAt = Date.now();

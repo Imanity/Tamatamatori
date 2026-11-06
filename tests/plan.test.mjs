@@ -10,7 +10,26 @@ import {
   minuteOfDay,
   instantAtMinute,
   dragView,
+  instantOnDate,
+  localClockTime,
+  zoomFocalLength,
 } from "../src/domain/plan.ts";
+
+test("日期编辑保留当地秒钟，拒绝越界及夏令时重复或跳过", () => {
+  assert.equal(instantOnDate("2026-11-06T10:35:12Z", "Asia/Tokyo", "2026-11-07"), "2026-11-07T10:35:12Z");
+  assert.equal(localClockTime("2026-11-06T10:35:12Z", "Asia/Tokyo"), "19:35:12");
+  assert.throws(() => instantOnDate("2026-03-07T07:30:00Z", "America/New_York", "2026-03-08"));
+  assert.throws(() => instantOnDate("2026-10-31T05:30:00Z", "America/New_York", "2026-11-01"));
+  assert.throws(() => instantOnDate(initialPlan.instant, "UTC", "2101-01-01"));
+});
+
+test("滚轮焦距按比例变化，支持全范围并拒绝无效增量", () => {
+  assert.ok(zoomFocalLength(35, -100) > 35);
+  assert.ok(zoomFocalLength(35, 100) < 35);
+  assert.equal(zoomFocalLength(35, -1e6), 1000);
+  assert.equal(zoomFocalLength(35, 1e6), 8);
+  assert.equal(zoomFocalLength(35, NaN), 35);
+});
 
 test("全画幅 50 mm 的视场符合公开几何关系，增加焦距缩小视场", () => {
   const fov = fieldOfView({ ...initialPlan, focalLength: 50 });

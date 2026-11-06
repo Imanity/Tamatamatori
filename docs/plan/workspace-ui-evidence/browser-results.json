@@ -1,0 +1,1078 @@
+{
+  "checkedAt": "2026-11-06T16:08:54.154Z",
+  "finalResources": {
+    "module": "/Tamatamatori/assets/index-Cr5GaIE-.js",
+    "styles": [
+      "/Tamatamatori/assets/index-TxJyk9lC.css"
+    ]
+  },
+  "cases": [
+    {
+      "name": "01-desktop-default",
+      "buffer": {
+        "height": 194,
+        "width": 291
+      },
+      "canvas": {
+        "bottom": 498.71875,
+        "height": 194,
+        "left": 842.1875,
+        "right": 1133.1875,
+        "top": 304.71875,
+        "width": 291,
+        "x": 842.1875,
+        "y": 304.71875
+      },
+      "focus": "",
+      "frame": {
+        "bottom": 498.59375,
+        "height": 193.875,
+        "left": 842.1875,
+        "right": 1133,
+        "top": 304.71875,
+        "width": 290.8125,
+        "x": 842.1875,
+        "y": 304.71875
+      },
+      "groups": [
+        {
+          "expanded": "false",
+          "id": "info-global"
+        },
+        {
+          "expanded": "false",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "false",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BjCFEgJc.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.4172°N   138.8729°E\n底图已加载\n方向 247.0° 西南\n水平视场 54.4°\n焦距 35 mm\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\nSW\nW\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n+\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+"
+    },
+    {
+      "name": "02-desktop-square-sun",
+      "buffer": {
+        "height": 291,
+        "width": 291
+      },
+      "canvas": {
+        "bottom": 547.25,
+        "height": 291,
+        "left": 842.1875,
+        "right": 1133.1875,
+        "top": 256.25,
+        "width": 291,
+        "x": 842.1875,
+        "y": 256.25
+      },
+      "focus": "info-sun",
+      "frame": {
+        "bottom": 547.0625,
+        "height": 290.8125,
+        "left": 842.1875,
+        "right": 1133,
+        "top": 256.25,
+        "width": 290.8125,
+        "x": 842.1875,
+        "y": 256.25
+      },
+      "groups": [
+        {
+          "expanded": "false",
+          "id": "info-global"
+        },
+        {
+          "expanded": "true",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "false",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "35 mm · 全画幅 · 横幅 1:1\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BjCFEgJc.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.4172°N   138.8729°E\n底图已加载\n方向 247.0° 西南\n水平视场 37.8°\n焦距 35 mm\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 1:1\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n+\n太阳\n−\n太阳\n地平线下\n253.4° / 视 -2.70°（几何 -3.33°）\n朝向\n\n遮挡仅按当前 DEM · 标准折射为固定大气近似\n\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+"
+    },
+    {
+      "name": "03-desktop-wheel-drag",
+      "buffer": {
+        "height": 291,
+        "width": 291
+      },
+      "canvas": {
+        "bottom": 547.25,
+        "height": 291,
+        "left": 842.1875,
+        "right": 1133.1875,
+        "top": 256.25,
+        "width": 291,
+        "x": 842.1875,
+        "y": 256.25
+      },
+      "focus": "",
+      "frame": {
+        "bottom": 547.0625,
+        "height": 290.8125,
+        "left": 842.1875,
+        "right": 1133,
+        "top": 256.25,
+        "width": 290.8125,
+        "x": 842.1875,
+        "y": 256.25
+      },
+      "groups": [
+        {
+          "expanded": "false",
+          "id": "info-global"
+        },
+        {
+          "expanded": "true",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "false",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "45.8 mm · 全画幅 · 横幅 1:1\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BjCFEgJc.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.4172°N   138.8729°E\n底图已加载\n方向 244.9° 西南\n水平视场 29.4°\n焦距 45.8 mm\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n45.8 mm · 全画幅 · 横幅 1:1\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n+\n太阳\n−\n太阳\n地平线下\n253.4° / 视 -2.70°（几何 -3.33°）\n朝向\n\n遮挡仅按当前 DEM · 标准折射为固定大气近似\n\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+"
+    },
+    {
+      "name": "04-desktop-portrait",
+      "buffer": {
+        "height": 397,
+        "width": 265
+      },
+      "canvas": {
+        "bottom": 600,
+        "height": 397,
+        "left": 855.15625,
+        "right": 1120.15625,
+        "top": 203,
+        "width": 265,
+        "x": 855.15625,
+        "y": 203
+      },
+      "focus": "",
+      "frame": {
+        "bottom": 600.328125,
+        "height": 397.328125,
+        "left": 855.15625,
+        "right": 1120.03125,
+        "top": 203,
+        "width": 264.875,
+        "x": 855.15625,
+        "y": 203
+      },
+      "groups": [
+        {
+          "expanded": "false",
+          "id": "info-global"
+        },
+        {
+          "expanded": "true",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "false",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "45.8 mm · 全画幅 · 竖幅 2:3\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BjCFEgJc.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.4172°N   138.8729°E\n底图已加载\n方向 244.9° 西南\n水平视场 29.4°\n焦距 45.8 mm\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n45.8 mm · 全画幅 · 竖幅 2:3\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n+\n太阳\n−\n太阳\n地平线下\n253.4° / 视 -2.70°（几何 -3.33°）\n朝向\n\n遮挡仅按当前 DEM · 标准折射为固定大气近似\n\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+"
+    },
+    {
+      "name": "05-desktop-stars",
+      "buffer": {
+        "height": 397,
+        "width": 265
+      },
+      "canvas": {
+        "bottom": 600,
+        "height": 397,
+        "left": 855.15625,
+        "right": 1120.15625,
+        "top": 203,
+        "width": 265,
+        "x": 855.15625,
+        "y": 203
+      },
+      "focus": "shooting-clock",
+      "frame": {
+        "bottom": 600.328125,
+        "height": 397.328125,
+        "left": 855.15625,
+        "right": 1120.03125,
+        "top": 203,
+        "width": 264.875,
+        "x": 855.15625,
+        "y": 203
+      },
+      "groups": [
+        {
+          "expanded": "false",
+          "id": "info-global"
+        },
+        {
+          "expanded": "true",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "true",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "false",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "45.8 mm · 全画幅 · 竖幅 2:3\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BjCFEgJc.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.4172°N   138.8729°E\n底图已加载\n方向 244.9° 西南\n水平视场 29.4°\n焦距 45.8 mm\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n45.8 mm · 全画幅 · 竖幅 2:3\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n+\n太阳\n−\n太阳\n地平线下\n309.7° / 视 -61.77°（几何 -61.98°）\n朝向\n\n遮挡仅按当前 DEM · 标准折射为固定大气近似\n\n月亮\n+\n星空\n−\n星座名称与连线\n\n星空 · 亮星目录 925 颗及金星、木星 · 星点为定位符号\n\n星座参考 · 88 座 · 名称与连线仅作定位\n\n星空目标与朝向\n星座名称与朝向\n\n按当前 DEM 遮挡 · 银心环仅作定位 · 不含天气、曝光与光污染\n\n银河\n+\n深空天体\n+\n空间站\n+"
+    },
+    {
+      "name": "06-desktop-galaxy",
+      "buffer": {
+        "height": 397,
+        "width": 265
+      },
+      "canvas": {
+        "bottom": 600,
+        "height": 397,
+        "left": 855.15625,
+        "right": 1120.15625,
+        "top": 203,
+        "width": 265,
+        "x": 855.15625,
+        "y": 203
+      },
+      "focus": "info-milkyWay",
+      "frame": {
+        "bottom": 600.328125,
+        "height": 397.328125,
+        "left": 855.15625,
+        "right": 1120.03125,
+        "top": 203,
+        "width": 264.875,
+        "x": 855.15625,
+        "y": 203
+      },
+      "groups": [
+        {
+          "expanded": "false",
+          "id": "info-global"
+        },
+        {
+          "expanded": "true",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "true",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "true",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "45.8 mm · 全画幅 · 竖幅 2:3\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BjCFEgJc.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.4172°N   138.8729°E\n底图已加载\n方向 244.9° 西南\n水平视场 29.4°\n焦距 45.8 mm\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n45.8 mm · 全画幅 · 竖幅 2:3\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\n摩羯座\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n+\n太阳\n−\n太阳\n地平线下\n309.7° / 视 -61.77°（几何 -61.98°）\n朝向\n\n遮挡仅按当前 DEM · 标准折射为固定大气近似\n\n月亮\n+\n星空\n−\n星座名称与连线\n\n星空 · 亮星目录 925 颗及金星、木星 · 星点为定位符号\n\n星座参考 · 88 座 · 名称与连线仅作定位\n\n星空目标与朝向\n星座名称与朝向\n\n按当前 DEM 遮挡 · 银心环仅作定位 · 不含天气、曝光与光污染\n\n银河\n−\n对比度\n200%\n重置\n\n银河细节 · 对比度 200% · 全景衍生 · 银心地平线下\n\n星空目标与朝向\n\n按当前 DEM 遮挡 · 银心环仅作定位 · 不含天气、曝光与光污染\n\n深空天体\n+\n空间站\n+"
+    },
+    {
+      "name": "07-narrow-desktop",
+      "buffer": {
+        "height": 264,
+        "width": 176
+      },
+      "canvas": {
+        "bottom": 467,
+        "height": 264,
+        "left": 637,
+        "right": 813,
+        "top": 203,
+        "width": 176,
+        "x": 637,
+        "y": 203
+      },
+      "focus": "info-milkyWay",
+      "frame": {
+        "bottom": 467,
+        "height": 264,
+        "left": 637,
+        "right": 813,
+        "top": 203,
+        "width": 176,
+        "x": 637,
+        "y": 203
+      },
+      "groups": [
+        {
+          "expanded": "false",
+          "id": "info-global"
+        },
+        {
+          "expanded": "true",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "true",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "true",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "45.8 mm · 全画幅 · 竖幅 2:3\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BjCFEgJc.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.4172°N   138.8729°E\n方向 244.9° 西南\n水平视场 29.4°\n焦距 45.8 mm\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n45.8 mm · 全画幅 · 竖幅 2:3\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\n摩羯座\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n+\n太阳\n−\n太阳\n地平线下\n309.7° / 视 -61.77°（几何 -61.98°）\n朝向\n\n遮挡仅按当前 DEM · 标准折射为固定大气近似\n\n月亮\n+\n星空\n−\n星座名称与连线\n\n星空 · 亮星目录 925 颗及金星、木星 · 星点为定位符号\n\n星座参考 · 88 座 · 名称与连线仅作定位\n\n星空目标与朝向\n星座名称与朝向\n\n按当前 DEM 遮挡 · 银心环仅作定位 · 不含天气、曝光与光污染\n\n银河\n−\n对比度\n200%\n重置\n\n银河细节 · 对比度 200% · 全景衍生 · 银心地平线下\n\n星空目标与朝向\n\n按当前 DEM 遮挡 · 银心环仅作定位 · 不含天气、曝光与光污染\n\n深空天体\n+\n空间站\n+"
+    },
+    {
+      "name": "08-mobile-preview",
+      "buffer": {
+        "height": 516,
+        "width": 344
+      },
+      "canvas": {
+        "bottom": 786.5,
+        "height": 516,
+        "left": 23,
+        "right": 367,
+        "top": 270.5,
+        "width": 344,
+        "x": 23,
+        "y": 270.5
+      },
+      "focus": "",
+      "frame": {
+        "bottom": 786.5,
+        "height": 516,
+        "left": 23,
+        "right": 367,
+        "top": 270.5,
+        "width": 344,
+        "x": 23,
+        "y": 270.5
+      },
+      "groups": [
+        {
+          "expanded": "false",
+          "id": "info-global"
+        },
+        {
+          "expanded": "true",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "true",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "true",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "45.8 mm · 全画幅 · 竖幅 2:3\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BjCFEgJc.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\nAbout\n图层\n地图\n拍摄预览\n拍摄参数\n拍摄信息\n拍摄预览\n地形模拟\n45.8 mm · 全画幅 · 竖幅 2:3\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\n摩羯座"
+    },
+    {
+      "name": "09-mobile-layer-link",
+      "buffer": {
+        "height": 516,
+        "width": 344
+      },
+      "canvas": {
+        "bottom": 786.5,
+        "height": 516,
+        "left": 23,
+        "right": 367,
+        "top": 270.5,
+        "width": 344,
+        "x": 23,
+        "y": 270.5
+      },
+      "focus": "info-milkyWay",
+      "frame": {
+        "bottom": 786.5,
+        "height": 516,
+        "left": 23,
+        "right": 367,
+        "top": 270.5,
+        "width": 344,
+        "x": 23,
+        "y": 270.5
+      },
+      "groups": [
+        {
+          "expanded": "false",
+          "id": "info-global"
+        },
+        {
+          "expanded": "true",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "true",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "true",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "45.8 mm · 全画幅 · 竖幅 2:3\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BjCFEgJc.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\nAbout\n图层\n地图\n拍摄预览\n拍摄参数\n拍摄信息\n拍摄预览\n地形模拟\n45.8 mm · 全画幅 · 竖幅 2:3\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\n摩羯座\n搜索目标\n全局信息\n+\n太阳\n−\n太阳\n地平线下\n309.7° / 视 -61.77°（几何 -61.98°）\n朝向\n\n遮挡仅按当前 DEM · 标准折射为固定大气近似\n\n月亮\n+\n星空\n−\n星座名称与连线\n\n星空 · 亮星目录 925 颗及金星、木星 · 星点为定位符号\n\n星座参考 · 88 座 · 名称与连线仅作定位\n\n星空目标与朝向\n星座名称与朝向\n\n按当前 DEM 遮挡 · 银心环仅作定位 · 不含天气、曝光与光污染\n\n银河\n−\n对比度\n200%\n重置\n\n银河细节 · 对比度 200% · 全景衍生 · 银心地平线下\n\n星空目标与朝向\n\n按当前 DEM 遮挡 · 银心环仅作定位 · 不含天气、曝光与光污染\n\n深空天体\n+\n空间站\n+"
+    },
+    {
+      "name": "10-mobile-parameters",
+      "buffer": {
+        "height": 300,
+        "width": 400
+      },
+      "canvas": {
+        "bottom": 0,
+        "height": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "focus": "",
+      "frame": {
+        "bottom": 0,
+        "height": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "groups": [
+        {
+          "expanded": "false",
+          "id": "info-global"
+        },
+        {
+          "expanded": "true",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "true",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "true",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "45.8 mm · 全画幅 · 竖幅 2:3未改机 · 近似参考机位高程 ≈ 980.5 m · 离地 1.6 m引擎避让 · 实际离地 ≈ 2.34 m · 俯仰 5.03°",
+      "module": "/Tamatamatori/assets/index-BjCFEgJc.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\nAbout\n图层\n地图\n拍摄预览\n拍摄参数\n拍摄信息\n拍摄参数\n实时联动\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。"
+    },
+    {
+      "name": "11-small-mobile-square",
+      "buffer": {
+        "height": 314,
+        "width": 314
+      },
+      "canvas": {
+        "bottom": 583.5,
+        "height": 314,
+        "left": 23,
+        "right": 337,
+        "top": 269.5,
+        "width": 314,
+        "x": 23,
+        "y": 269.5
+      },
+      "focus": "",
+      "frame": {
+        "bottom": 583.5,
+        "height": 314,
+        "left": 23,
+        "right": 337,
+        "top": 269.5,
+        "width": 314,
+        "x": 23,
+        "y": 269.5
+      },
+      "groups": [
+        {
+          "expanded": "false",
+          "id": "info-global"
+        },
+        {
+          "expanded": "true",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "true",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "true",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "45.8 mm · 全画幅 · 竖幅 1:1\n天文改机 · Hα 增强示意\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BjCFEgJc.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\nAbout\n图层\n地图\n拍摄预览\n拍摄参数\n拍摄信息\n拍摄预览\n地形模拟\n45.8 mm · 全画幅 · 竖幅 1:1\n天文改机 · Hα 增强示意\n机位高程 ≈ 980.5 m · 离地 1.6 m\n摩羯座"
+    },
+    {
+      "name": "12-mobile-search",
+      "buffer": {
+        "height": 314,
+        "width": 314
+      },
+      "canvas": {
+        "bottom": 583.5,
+        "height": 314,
+        "left": 23,
+        "right": 337,
+        "top": 269.5,
+        "width": 314,
+        "x": 23,
+        "y": 269.5
+      },
+      "focus": "target-search",
+      "frame": {
+        "bottom": 583.5,
+        "height": 314,
+        "left": 23,
+        "right": 337,
+        "top": 269.5,
+        "width": 314,
+        "x": 23,
+        "y": 269.5
+      },
+      "groups": [],
+      "meta": "45.8 mm · 全画幅 · 竖幅 1:1\n天文改机 · Hα 增强示意\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BjCFEgJc.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\nAbout\n图层\n地图\n拍摄预览\n拍摄参数\n拍摄信息\n拍摄预览\n地形模拟\n45.8 mm · 全画幅 · 竖幅 1:1\n天文改机 · Hα 增强示意\n机位高程 ≈ 980.5 m · 离地 1.6 m\n摩羯座\n搜索目标\n清除\n\n找到 1 个目标\n\n猎户座大星云\n深空 · 混合星云 · 影像结构参考\n图层已关闭 · 视场外\n108.6° / 几何 15.6°\n开启并朝向"
+    },
+    {
+      "name": "13-mobile-stations",
+      "buffer": {
+        "height": 314,
+        "width": 314
+      },
+      "canvas": {
+        "bottom": 583.5,
+        "height": 314,
+        "left": 23,
+        "right": 337,
+        "top": 269.5,
+        "width": 314,
+        "x": 23,
+        "y": 269.5
+      },
+      "focus": "info-stations",
+      "frame": {
+        "bottom": 583.5,
+        "height": 314,
+        "left": 23,
+        "right": 337,
+        "top": 269.5,
+        "width": 314,
+        "x": 23,
+        "y": 269.5
+      },
+      "groups": [
+        {
+          "expanded": "true",
+          "id": "info-global"
+        },
+        {
+          "expanded": "true",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "true",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "true",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "true",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "45.8 mm · 全画幅 · 竖幅 1:1\n天文改机 · Hα 增强示意\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-BjCFEgJc.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\nAbout\n图层\n地图\n拍摄预览\n拍摄参数\n拍摄信息\n拍摄预览\n地形模拟\n45.8 mm · 全画幅 · 竖幅 1:1\n天文改机 · Hα 增强示意\n机位高程 ≈ 980.5 m · 离地 1.6 m\n摩羯座\n搜索目标\n全局信息\n−\n取景参数\n方位\n244.9°\n俯仰\n5.0°\n水平视场\n29.4°\n垂直视场\n29.4°\n光照与天空\n\n夜间 · 太阳几何高度 -62.0°\n月光参考 · 亮面 22% · 几何高度 -41.6°\n\n明暗近似 · 暗夜参考\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n−\n太阳\n地平线下\n309.7° / 视 -61.77°（几何 -61.98°）\n朝向\n\n遮挡仅按当前 DEM · 标准折射为固定大气近似\n\n月亮\n+\n星空\n−\n星座名称与连线\n\n星空 · 亮星目录 925 颗及金星、木星 · 星点为定位符号\n\n星座参考 · 88 座 · 名称与连线仅作定位\n\n星空目标与朝向\n星座名称与朝向\n\n按当前 DEM 遮挡 · 银心环仅作定位 · 不含天气、曝光与光污染\n\n银河\n−\n对比度\n200%\n重置\n\n银河细节 · 对比度 200% · 全景衍生 · 银心地平线下\n\n星空目标与朝向\n\n按当前 DEM 遮挡 · 银心环仅作定位 · 不含天气、曝光与光污染\n\n深空天体\n+\n空间站\n−\n空间站与轨道\n\n轨道快照检查失败 · 轨道检查记录回退，保留本地快照 · 使用本地有效快照\n\n上游成功检查 2026-11-06 12:18:31 UTC\n\n网页成功检查 未记录\n\n检查已发布快照\n使用当前时刻\n\n拍摄参考 2026-11-04 13:00:00 UTC\n\n−10 秒\n−1 秒\n+1 秒\n+10 秒\n国际空间站 ISS\n\n距历元超过 24 小时 · 低可信参考\n\n轨道历元 2026-11-05 20:28:36 UTC\n\n地平线下\n\n方位 157.9° · 几何高度 -85.8° · 距离 13139 km\n\n太阳照明中 · 日照与可拍摄性分别判断\n\n开启图层\n天宫空间站\n\n距历元超过 24 小时 · 低可信参考\n\n轨道历元 2026-11-05 22:20:18 UTC\n\n地平线下\n\n方位 302.4° · 几何高度 -28.9° · 距离 6908 km\n\n太阳照明中 · 日照与可拍摄性分别判断\n\n开启图层\n\n标记与轨迹点为构图辅助，范围 ±3 分钟、间隔 10 秒。变轨后需等待新轨道解，拍摄前重新检查。上游计划每 3 小时检查，最短请求间隔 2 小时，网页检查不会触发上游下载。"
+    },
+    {
+      "name": "14-desktop-moving-station",
+      "buffer": {
+        "height": 194,
+        "width": 291
+      },
+      "canvas": {
+        "bottom": 498.71875,
+        "height": 194,
+        "left": 842.1875,
+        "right": 1133.1875,
+        "top": 304.71875,
+        "width": 291,
+        "x": 842.1875,
+        "y": 304.71875
+      },
+      "focus": "",
+      "frame": {
+        "bottom": 498.59375,
+        "height": 193.875,
+        "left": 842.1875,
+        "right": 1133,
+        "top": 304.71875,
+        "width": 290.8125,
+        "x": 842.1875,
+        "y": 304.71875
+      },
+      "groups": [
+        {
+          "expanded": "false",
+          "id": "info-global"
+        },
+        {
+          "expanded": "false",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "false",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-Cr5GaIE-.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.4154°N   138.8765°E\n底图已加载\n方向 247.0° 西南\n水平视场 54.4°\n焦距 35 mm\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\nSW\nW\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n+\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+"
+    },
+    {
+      "name": "15-desktop-global",
+      "buffer": {
+        "height": 194,
+        "width": 291
+      },
+      "canvas": {
+        "bottom": 498.71875,
+        "height": 194,
+        "left": 842.1875,
+        "right": 1133.1875,
+        "top": 304.71875,
+        "width": 291,
+        "x": 842.1875,
+        "y": 304.71875
+      },
+      "focus": "info-global",
+      "frame": {
+        "bottom": 498.59375,
+        "height": 193.875,
+        "left": 842.1875,
+        "right": 1133,
+        "top": 304.71875,
+        "width": 290.8125,
+        "x": 842.1875,
+        "y": 304.71875
+      },
+      "groups": [
+        {
+          "expanded": "true",
+          "id": "info-global"
+        },
+        {
+          "expanded": "false",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "false",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-Cr5GaIE-.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.4154°N   138.8765°E\n底图已加载\n方向 247.0° 西南\n水平视场 54.4°\n焦距 35 mm\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\nSW\nW\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n247.0°\n俯仰\n4.0°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n民用暮光 · 太阳几何高度 -3.3°\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n+\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+"
+    },
+    {
+      "name": "16-small-mobile-about",
+      "buffer": {
+        "height": 300,
+        "width": 400
+      },
+      "canvas": {
+        "bottom": 0,
+        "height": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "focus": "",
+      "frame": {
+        "bottom": 0,
+        "height": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "groups": [
+        {
+          "expanded": "true",
+          "id": "info-global"
+        },
+        {
+          "expanded": "false",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "false",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "false",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "35 mm · 全画幅 · 横幅 3:2未改机 · 近似参考机位高程 ≈ 980.5 m · 离地 1.6 m引擎避让 · 实际离地 ≈ 0.84 m · 俯仰 4.00°",
+      "module": "/Tamatamatori/assets/index-Cr5GaIE-.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\nAbout\nABOUT TAMATAMATORI\n关于与版权\n关闭\n\nTamatamatori 是基于地理与天文数据的摄影构图模拟工具。以下汇集应用使用的数据、影像与开源软件来源。\n\n查看第三方完整版权、许可与修改说明\n地图与高程\nOpenFreeMap · 底图与水体瓦片服务\n© OpenMapTiles · 地图数据结构与样式\n© OpenStreetMap contributors · ODbL · 底图与水体数据\n© Mapterhorn · 高程及上游数据来源\n天文目录\nHYG 4.1 · David Nash / Astronexus · CC BY-SA 4.0\n\n亮星子集、中文名称及星座连线端点。\n\n下载亮星目录\n下载星座端点\nd3-celestial · Olaf Frohn · BSD-3-Clause\n\n星名、星座名称与连线数据，已匹配目录并加入简体中文名称。\n\n下载星座数据\nOpenNGC · Mattia Verga · CC BY-SA 4.0\n\n深空目录及轮廓，含新增目标的独立来源、影像注册和处理记录。\n\n下载深空数据及来源清单\n空间站轨道\nCelesTrak · GP 轨道数据 · T.S. Kelso\n\n选取 ISS 与天宫目录条目，使用 SGP4 推算并生成构图轨迹。快照保留上游历元及检查时间。变轨后的新解发布存在延迟。\n\n下载已发布轨道快照及状态\n银河影像\nESO/S. Brunier · CC BY 4.0\n\n全景经裁切、缩放、星点压低、降噪、黑位和接缝处理，作为银河结构参考。\n\n深空影像\n\n以下保留原作者署名与原图许可。影像经天球重投影、缩放及背景处理，部分提取扩散结构、红光增量或暗区对比。衍生 PNG 按 CC BY-SA 4.0 提供，亮度和颜色用于构图参考。\n\n仙女座星系\nESA/Hubble & Digitized Sky Survey 2. Acknowledgment: Davide De Martin (ESA/Hubble)\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n猎户座大星云\nKPNO/NOIRLab/NSF/AURA/Ryan Steinberg and Family/Adam Block\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n昴星团\nKPNO/NOIRLab/NSF/AURA/Tad Denton/Adam Block\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n礁湖星云\nKPNO/NOIRLab/NSF/AURA/Adam Block\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n北美星云\nKPNO/NOIRLab/NSF/AURA/Adam Block\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n加州星云\nKPNO/NOIRLab/NSF/AURA/Adam Block\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n心脏星云\nGiuseppe Donatiello, post-processing: Sun Shuwei\n\nCC0 1.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n灵魂星云\nGiuseppe Donatiello, post-processing: Sun Shuwei\n\nCC0 1.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n三裂星云\nKPNO/NOIRLab/NSF/AURA/Lawrence Johnson and Kathy Ortega/Adam Block\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n三角座星系\nKPNO/NOIRLab/NSF/AURA/Ken Hotelling/Flynn Haase\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n玫瑰星云\nKees Scherer; Stellarium display adaptation\n\nCC BY-SA 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n马头星云区域 / 火树星云\nManuel Peitsch, post-processing: Sun Shuwei\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n巴纳德环\nSun Shuwei\n\n公有领域 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n蛇夫座星云复合体\nESO/S. Guisard (www.eso.org/~sguisard)\n\nCC BY 4.0 · 结构与色彩衍生\n\n下载衍生 PNG · CC BY-SA 4.0\n开源软件\nReact / React DOM · MIT\nMapLibre GL JS · BSD-3-Clause\nAstronomy Engine · MIT\nEarcut · ISC\nTemporal polyfill · ISC\nsatellite.js 7.1.0 · MIT\n\nMapLibre 的摄影预览投影与地形补丁修改说明随第三方许可文件分发。\n\n图层\n地图\n拍摄预览\n拍摄参数\n拍摄信息\n地图\n交互底图\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.4154°N   138.8765°E\n方向 247.0° 西南\n水平视场 54.4°\n焦距 35 mm"
+    },
+    {
+      "name": "17-desktop-final",
+      "buffer": {
+        "height": 194,
+        "width": 291
+      },
+      "canvas": {
+        "bottom": 498.71875,
+        "height": 194,
+        "left": 842.1875,
+        "right": 1133.1875,
+        "top": 304.71875,
+        "width": 291,
+        "x": 842.1875,
+        "y": 304.71875
+      },
+      "focus": "info-moon",
+      "frame": {
+        "bottom": 498.59375,
+        "height": 193.875,
+        "left": 842.1875,
+        "right": 1133,
+        "top": 304.71875,
+        "width": 290.8125,
+        "x": 842.1875,
+        "y": 304.71875
+      },
+      "groups": [
+        {
+          "expanded": "true",
+          "id": "info-global"
+        },
+        {
+          "expanded": "false",
+          "id": "info-sun"
+        },
+        {
+          "expanded": "true",
+          "id": "info-moon"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stars"
+        },
+        {
+          "expanded": "false",
+          "id": "info-milkyWay"
+        },
+        {
+          "expanded": "false",
+          "id": "info-deepSky"
+        },
+        {
+          "expanded": "false",
+          "id": "info-stations"
+        }
+      ],
+      "meta": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m",
+      "module": "/Tamatamatori/assets/index-Cr5GaIE-.js",
+      "ready": "true",
+      "rendered": "true",
+      "visible": "Tamatamatori\n光影之间，自有方向\n摄影规划\n工作区原型\nP3 / 天文构图\nAbout\n图层\n太阳\n月亮\n星空\n银河\n深空天体\n空间站\n地图\n交互底图\n主栏\n右上\n右下\n▲\n2 千米\nOpenFreeMap © OpenMapTiles Data from OpenStreetMap\n放置机位\n定朝向\n35.4154°N   138.8765°E\n底图已加载\n方向 247.0° 西南\n水平视场 54.4°\n焦距 35 mm\n拍摄预览\n地形模拟\n主栏\n右上\n右下\n35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 980.5 m · 离地 1.6 m\nSW\nW\n拍摄参数\n实时联动\n主栏\n右上\n右下\n01\n拍摄时间\n当地日期\n当日时间\n00:00\n06:00\n12:00\n18:00\n23:59\n显示时区\n东京 · Asia/Tokyo\n上海 · Asia/Shanghai\nUTC · 协调世界时\n纽约 · America/New_York\n伦敦 · Europe/London\n大气折射\n标准折射 · 海平面近似\n无折射 · 几何位置\n02\n相机与镜头\n焦距\nmm\n8 mm\n24 mm\n35 mm\n50 mm\n85 mm\n200 mm\n600 mm\n1000 mm\n传感器\n全画幅\nAPS-C · 23.5 × 15.6\nM4/3 · 17.3 × 13\n画幅比例\n3:2\n16:9\n1:1\n画幅方向\n横幅\n竖幅\n深空相机响应\n未改机 · 近似参考\n天文改机 · Hα 增强示意\n\n未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。\n\n03\n机位与视角\n纬度\n°\n经度\n°\n方位角\n°\n俯仰角\n°\n相机离地高度\nm\n\n方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。\n\n搜索目标\n全局信息\n−\n取景参数\n方位\n247.0°\n俯仰\n4.0°\n水平视场\n54.4°\n垂直视场\n37.8°\n光照与天空\n\n民用暮光 · 太阳几何高度 -3.3°\n\n曲面构图 · 高程基准未核定 · 水面按 DEM 近似。晴空与月光为构图参考。\n\n太阳\n+\n月亮\n−\n月亮\n地平线下\n307.6° / 视 -34.05°（几何 -34.45°）\n残月 · 亮面 24%\n朝向\n\n遮挡仅按当前 DEM · 标准折射为固定大气近似\n\n星空\n+\n银河\n+\n深空天体\n+\n空间站\n+"
+    }
+  ],
+  "nativeGestures": [
+    {
+      "action": "wheel up 0.15 pages",
+      "beforeFocalMm": 35,
+      "afterFocalMm": 45.8
+    },
+    {
+      "action": "preview drag 20px right and 10px down",
+      "beforeAzimuth": 247,
+      "afterAzimuth": 244.9
+    },
+    {
+      "action": "camera marker drag 10px right and 6px down",
+      "afterLatitude": 35.4154,
+      "afterLongitude": 138.8765,
+      "immediateMeta": "机位高程 待更新",
+      "retainedCanvas": true
+    }
+  ],
+  "consoleErrors": [],
+  "notes": [
+    "01—13 为布局与交互验收构建，14—17 刷新到恢复 About 关闭按钮样式后的最终构建，逐项记录模块版本。",
+    "空间站分组检查遇到附带快照检查时间早于浏览器已有快照，正确保留缓存并提示回退。未直接请求上游。",
+    "参数与 About 场景中移动端隐藏预览，0×0 尺寸不计作渲染场景。"
+  ]
+}

@@ -390,6 +390,13 @@ function input(label) {
   assert.ok(field, `missing input ${label}`);
   return field.querySelector("input");
 }
+function shootingDateTime() {
+  return `${document.querySelector('input[type="date"]').value}T${document.querySelector('input[type="time"]').value.slice(0, 5)}`;
+}
+async function setShootingDateTime(local) {
+  await settle(() => setControl(document.querySelector('input[type="date"]'), local.slice(0, 10)));
+  await settle(() => setControl(document.querySelector('input[type="time"]'), local.slice(11)));
+}
 function value(label) {
   return Number(input(label).value);
 }
@@ -460,7 +467,7 @@ test("默认空白点击不改变机位；明确放置只生效一次，且可�
 
 test("机位拖动中即更新参数和扇形，并保持时间不变", async (t) => {
   const { map } = await workspace(t);
-  const time = document.querySelector('input[type="datetime-local"]').value;
+  const time = shootingDateTime();
   const marker = camera();
   const positionWrites = marker.positionWrites;
   await settle(() => {
@@ -475,7 +482,7 @@ test("机位拖动中即更新参数和扇形，并保持时间不变", async (t
     [139, 35.6],
   );
   assert.equal(
-    document.querySelector('input[type="datetime-local"]').value,
+    shootingDateTime(),
     time,
   );
   assert.equal(
@@ -579,9 +586,7 @@ test("拖动预览联动地图方向和俯仰，结束后不继续转动或移�
 
 test("24 小时滑杆更新同一天的当地时间，焦距上限和竖幅同步到地图及取景框", async (t) => {
   const { map } = await workspace(t);
-  const date = document
-    .querySelector('input[type="datetime-local"]')
-    .value.slice(0, 10);
+  const date = document.querySelector('input[type="date"]').value;
   await settle(() =>
     setControl(
       document.querySelector('input[aria-label="24 小时时间滑杆"]'),
@@ -589,7 +594,7 @@ test("24 小时滑杆更新同一天的当地时间，焦距上限和竖幅同�
     ),
   );
   assert.equal(
-    document.querySelector('input[type="datetime-local"]').value,
+    shootingDateTime(),
     `${date}T12:00`,
   );
   await settle(() =>
@@ -620,12 +625,11 @@ test("时间滑杆遇到夏令时跳过的钟点时显示错误并保留原时�
     (element) => element.value === "Asia/Tokyo",
   );
   await settle(() => setControl(zone, "America/New_York"));
-  const dateTime = document.querySelector('input[type="datetime-local"]');
-  await settle(() => setControl(dateTime, "2026-03-08T03:30"));
-  assert.equal(dateTime.value, "2026-03-08T03:30");
+  await setShootingDateTime('2026-03-08T03:30');
+  assert.equal(shootingDateTime(), "2026-03-08T03:30");
   const slider = document.querySelector('input[aria-label="24 小时时间滑杆"]');
   await settle(() => setControl(slider, 150));
-  assert.equal(dateTime.value, "2026-03-08T03:30");
+  assert.equal(shootingDateTime(), "2026-03-08T03:30");
   assert.equal(slider.value, "210");
   assert.equal(slider.getAttribute("aria-invalid"), "true");
   assert.ok(
@@ -677,7 +681,7 @@ test("三维预览启用真实地形与水体；缺失 DEM 返回的零值不覆
   assert.equal(pose.eye.lat, value("纬度"));
   assert.equal(map.cameraViews.at(-1).pitch, 94);
   assert.ok(
-    document.querySelector(".terrain-height").textContent.includes("1000.0"),
+    document.querySelector(".preview-elevation").textContent.includes("1000.0"),
   );
   assert.ok(
     document
@@ -828,11 +832,10 @@ test("时间驱动环境并合并连续更新，切换时区不重绘，布局�
 
 test("月光随日期变化，隐藏月亮保留环境及夜间参考，不重建相机或读取 DEM", async (t) => {
   await workspace(t);const map=await readyTerrain();
-  const time=document.querySelector('input[type="datetime-local"]');
-  await settle(()=>setControl(time,'2026-11-09T00:00'));
+  await setShootingDateTime('2026-11-09T00:00');
   const dark=structuredClone(map.environments.at(-1));
   const poses=map.cameraSolutions.length,requests=groundRequests.length;
-  await settle(()=>setControl(time,'2026-11-25T00:00'));
+  await setShootingDateTime('2026-11-25T00:00');
   const lit=structuredClone(map.environments.at(-1));
   assert.notDeepEqual(lit,dark);
   const writes=map.environments.length;
@@ -858,7 +861,7 @@ test("日月开关、主动朝向与状态联动，关闭太阳不改变光照�
   const slider = document.querySelector('input[aria-label="24 小时时间滑杆"]');
   await settle(() => setControl(slider, 720));
   const fields = ["经度", "纬度", "焦距", "相机离地高度"].map(value);
-  const time = document.querySelector('input[type="datetime-local"]').value;
+  const time = shootingDateTime();
   assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes("视场外"));
   await settle(() => document.querySelector('button[aria-label="朝向太阳"]').click());
   assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes("当前 DEM 未遮挡"));
@@ -872,7 +875,7 @@ test("日月开关、主动朝向与状态联动，关闭太阳不改变光照�
   assert.equal(map.environments.length, environments);
   assert.equal(groundRequests.length, requests);
   assert.deepEqual(["经度", "纬度", "焦距", "相机离地高度"].map(value), fields);
-  assert.equal(document.querySelector('input[type="datetime-local"]').value, time);
+  assert.equal(shootingDateTime(), time);
   await settle(() => setControl(document.querySelector('select[aria-label="拍摄预览面板位置"]'), 0));
   await readyTerrain();
   assert.equal(document.querySelector('input[aria-label="显示太阳"]').checked, false);
@@ -903,7 +906,7 @@ test("画外日月显示各自箭头，关闭或朝向入画后消失，地平�
 
 test("靠近日月的箭头并排，实际相机反馈决定画外方向而不改计划",async(t)=>{
   await workspace(t);const map=await readyTerrain();
-  await settle(()=>setControl(document.querySelector('input[type="datetime-local"]'),'2026-11-09T12:00'));
+  await setShootingDateTime('2026-11-09T12:00');
   const groups=document.querySelectorAll('.celestial-direction-group');
   assert.equal(groups.length,1);assert.equal(groups[0].querySelectorAll('[data-body-direction]').length,2);
   const layer=map.customLayers.find(layer=>layer instanceof TestCelestialLayer);
@@ -1009,7 +1012,7 @@ test("镜头与画幅变化复用地形屏幕细节函数，不重建预览或�
   assert.deepEqual(['经度','纬度','方位角','俯仰角','相机离地高度'].map(value),before);
 });
 
-test("切换机位取消过期高程请求；等待新高程时隐藏旧位置画面", async (t) => {
+test("切换机位取消过期高程请求；等待新高程时保留旧画面并标记未就绪", async (t) => {
   const pending = [];
   await workspace(
     t,
@@ -1045,7 +1048,7 @@ test('星空与银河独立开关、朝向及实际相机反馈联动，不重�
   await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
   await settle(()=>setControl(document.querySelector('input[aria-label="24 小时时间滑杆"]'),1320));
   assert.equal(document.querySelector('.sky-readout'),null);
-  const fields=['经度','纬度','焦距','相机离地高度'].map(value),time=input('当地日期与时间').value;
+  const fields=['经度','纬度','焦距','相机离地高度'].map(value),time=shootingDateTime();
   const poses=map.cameraSolutions.length,environments=map.environments.length;
   await settle(()=>document.querySelector('[aria-label="显示星空"]').click());
   await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
@@ -1062,16 +1065,16 @@ test('星空与银河独立开关、朝向及实际相机反馈联动，不重�
   assert.ok(document.querySelector('[data-sky-status="银心"]'));
   assert.equal(document.querySelector('[aria-label="显示银河"]').checked,true);
   assert.equal(groundRequests.length,requests);assert.equal(terrainMap(),map);
-  assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);assert.equal(input('当地日期与时间').value,time);
+  assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);assert.equal(shootingDateTime(),time);
 });
 
 test('银河对比度滑杆即时联动，重置/关闭重开/布局保留正确，未重载地形或作废几何状态',async t=>{
   await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
-  assert.equal(document.querySelector('#galaxy-contrast'),null);
+  assert.equal(document.querySelector('#galaxy-contrast').disabled,true);
   await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
   const slider=()=>document.querySelector('#galaxy-contrast'),layer=map.customLayers.find(l=>l instanceof TestStarfieldLayer);
   assert.equal(slider().value,'100');assert.equal(document.querySelector('[aria-label="重置银河对比度"]').disabled,true);
-  const fields=['经度','纬度','焦距','相机离地高度','方位角','俯仰角'].map(value),time=input('当地日期与时间').value;
+  const fields=['经度','纬度','焦距','相机离地高度','方位角','俯仰角'].map(value),time=shootingDateTime();
   const originalFrame=layer.frame,poses=map.cameraSolutions.length,environments=map.environments.length;
   for (const percent of [25,200]) {
     await settle(()=>setControl(slider(),percent));assert.equal(layer.contrast,percent);
@@ -1079,29 +1082,29 @@ test('银河对比度滑杆即时联动，重置/关闭重开/布局保留正确
     assert.match(document.querySelector('.sky-readout').textContent,new RegExp(`对比度 ${percent}%`));
     assert.equal(layer.frame,originalFrame);assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
     assert.equal(map.cameraSolutions.length,poses);assert.equal(map.environments.length,environments);
-    assert.deepEqual(['经度','纬度','焦距','相机离地高度','方位角','俯仰角'].map(value),fields);assert.equal(input('当地日期与时间').value,time);
+    assert.deepEqual(['经度','纬度','焦距','相机离地高度','方位角','俯仰角'].map(value),fields);assert.equal(shootingDateTime(),time);
   }
   await settle(()=>document.querySelector('[aria-label="重置银河对比度"]').click());assert.equal(slider().value,'100');assert.equal(layer.contrast,100);
-  await settle(()=>setControl(slider(),150));await settle(()=>document.querySelector('[aria-label="显示银河"]').click());assert.equal(slider(),null);
+  await settle(()=>setControl(slider(),150));await settle(()=>document.querySelector('[aria-label="显示银河"]').click());assert.equal(slider().disabled,true);
   await settle(()=>document.querySelector('[aria-label="显示银河"]').click());assert.equal(slider().value,'150');
   await settle(()=>setControl(document.querySelector('[aria-label="拍摄预览面板位置"]'),'0'));assert.equal(slider().value,'150');
-  await settle(()=>button('重置布局').click());assert.equal(slider().value,'150');
+  await settle(()=>setControl(document.querySelector('[aria-label="拍摄预览面板位置"]'),'1'));assert.equal(slider().value,'150');
 });
 
 test('深空搜索开启与朝向，未改机/改机响应切换保留几何、时刻与 DEM',async t=>{
   await workspace(t);const map=await readyTerrain();
-  await settle(()=>setControl(input('当地日期与时间'),'2026-11-09T01:00'));
+  await setShootingDateTime('2026-11-09T01:00');
   await settle(()=>setControl(document.querySelector('#target-search'),'M42'));
   assert.equal(document.querySelector('[aria-label="显示深空天体"]').checked,false);
   assert.match(document.querySelector('[data-search-target="dso-ngc1976"]').textContent,/图层已关闭/);
-  const time=input('当地日期与时间').value,fields=['经度','纬度','焦距','相机离地高度'].map(value);
+  const time=shootingDateTime(),fields=['经度','纬度','焦距','相机离地高度'].map(value);
   await settle(()=>document.querySelector('[aria-label="开启并朝向猎户座大星云"]').click());
   assert.equal(document.querySelector('[aria-label="显示深空天体"]').checked,true);
   assert.ok(document.querySelector('[data-dso-label="猎户座大星云"]'));
   const layer=map.customLayers.find(l=>l instanceof TestStarfieldLayer),originalFrame=layer.frame,requests=groundRequests.length,poses=map.cameraSolutions.length;
   await settle(()=>setControl(document.querySelector('[aria-label="深空相机响应"]'),'ha-modified'));
   assert.equal(layer.cameraResponse,'ha-modified');assert.equal(layer.frame,originalFrame);assert.equal(groundRequests.length,requests);assert.equal(terrainMap(),map);assert.equal(map.cameraSolutions.length,poses);
-  assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);assert.equal(input('当地日期与时间').value,time);
+  assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);assert.equal(shootingDateTime(),time);
   await settle(()=>document.querySelector('[aria-label="清除目标搜索"]').click());
   assert.equal(document.querySelectorAll('[data-dso-status]').length,15);assert.match(document.querySelector('.sky-readout').textContent,/天文改机/);
   await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());assert.equal(document.querySelector('[data-dso-label]'),null);
@@ -1110,7 +1113,7 @@ test('深空搜索开启与朝向，未改机/改机响应切换保留几何、�
 
 test('深空部分遮挡不等于中心名称可见，轮廓加载失败单独反馈',async t=>{
   await workspace(t);const map=await readyTerrain();
-  await settle(()=>setControl(input('当地日期与时间'),'2026-11-09T01:00'));
+  await setShootingDateTime('2026-11-09T01:00');
   await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());
   await settle(()=>document.querySelector('[aria-label="朝向猎户座大星云"]').click());
   const layer=map.customLayers.find(l=>l instanceof TestStarfieldLayer),id='dso-ngc1976',key=layer.frame.planKey;
@@ -1133,6 +1136,8 @@ test('银河纹理状态与遮挡分开，搜索时也显示失败，地形与�
   const layer=map.customLayers.find(l=>l instanceof TestStarfieldLayer);
   await settle(()=>setControl(document.querySelector('#target-search'),'银心'));
   await settle(()=>layer.report({planKey:layer.frame.planKey,ready:true,view:null,states:{},milkyWay:{phase:'loading'}}));
+  assert.equal(document.querySelector('.sky-texture-feedback'), null);
+  await act(async () => { await delay(850); });
   assert.match(document.querySelector('.sky-texture-feedback').textContent,/加载银河/);
   await settle(()=>layer.report({planKey:layer.frame.planKey,ready:true,view:null,states:{},milkyWay:{phase:'error',message:'银河纹理加载失败，请关闭再开启银河重试。'}}));
   assert.match(document.querySelector('.sky-texture-feedback').textContent,/加载失败/);
@@ -1181,7 +1186,7 @@ test('白昼星点隐藏独立于 DEM 遮挡，夜间恢复，银心参考仍可
   await settle(()=>setControl(document.querySelector('input[aria-label="24 小时时间滑杆"]'),1320));
   assert.ok(Number(status().dataset.skyOpacity)>0.06);assert.ok(document.querySelector('[data-sky-label="北极星"]'));
   const darkOpacity=Number(status().dataset.skyOpacity);
-  await settle(()=>setControl(input('当地日期与时间'),'2026-11-25T00:00'));
+  await setShootingDateTime('2026-11-25T00:00');
   assert.ok(Number(status().dataset.skyOpacity)<darkOpacity,'a high full Moon must dim the star');
   const before=status().dataset.skyOpacity;
   await settle(()=>document.querySelector('[aria-label="显示月亮"]').click());
@@ -1198,7 +1203,7 @@ test('拍摄信息只在右侧栏出现，版权独立于预览；收起和恢�
   await settle(()=>document.querySelector('[aria-label="收起拍摄信息"]').click());
   assert.ok(sidebar.classList.contains('is-collapsed'));
   await settle(()=>setControl(document.querySelector('input[aria-label="24 小时时间滑杆"]'),720));
-  await settle(()=>document.querySelector('.desktop-info-toggle').click());
+  await settle(()=>document.querySelector('[aria-label="展开拍摄信息"]').click());
   assert.equal(sidebar.classList.contains('is-collapsed'),false);
   assert.match(sidebar.querySelector('.preview-lighting').textContent,/白昼/);
   assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
@@ -1226,7 +1231,7 @@ test('About 汇集所有署名与下载，开关图层和弹窗不重建地图�
   assert.equal(downloads.length, catalog.imageSources.length + 5);
   assert.equal(new Set(downloads.map((link) => link.getAttribute('href'))).size, downloads.length);
   const fields = ['经度', '纬度', '焦距', '相机离地高度', '方位角', '俯仰角'];
-  const before = fields.map(value), time = input('当地日期与时间').value;
+  const before = fields.map(value), time = shootingDateTime();
   const requests = groundRequests.length, maps = TestMap.instances.length;
   for (const label of ['显示星空', '显示银河', '显示星座名称与连线', '显示深空天体']) {
     await settle(() => document.querySelector(`[aria-label="${label}"]`).click());
@@ -1242,7 +1247,7 @@ test('About 汇集所有署名与下载，开关图层和弹窗不重建地图�
   assert.equal(TestMap.instances.length, maps);
   assert.equal(groundRequests.length, requests);
   assert.deepEqual(fields.map(value), before);
-  assert.equal(input('当地日期与时间').value, time);
+  assert.equal(shootingDateTime(), time);
 });
 
 test('空间站按需读取同源轨道、搜索开启与朝向、秒级时间联动，地形和机位保留', async (t) => {
@@ -1259,7 +1264,7 @@ test('空间站按需读取同源轨道、搜索开启与朝向、秒级时间�
   const before = fields.map(value);
   assert.equal(calls.length, 0);
   assert.equal(document.querySelector('[aria-label="显示空间站"]').checked, false);
-  await settle(() => setControl(input('当地日期与时间'), '2026-11-06T19:35'));
+  await setShootingDateTime('2026-11-06T19:35');
   await settle(() => setControl(document.querySelector('#target-search'), 'ISS'));
   await waitUntil(() => document.querySelector('[aria-label="开启并朝向国际空间站 ISS"]'));
   assert.equal(calls.length, 1); assert.equal(calls[0].url, '/orbits/stations.json');
@@ -1275,10 +1280,10 @@ test('空间站按需读取同源轨道、搜索开启与朝向、秒级时间�
   assert.match(document.querySelector('.station-instant').textContent, /10:35:10 UTC/);
   await settle(() => layer.report({ planKey: layer.frame.planKey, orbitKey: 'old', ready: true, view: null, states: { 'station-25544': 'clear' } }));
   assert.equal(document.querySelector('[data-station-label="25544"]'), null);
-  await settle(() => setControl(input('当地日期与时间'), '2027-01-01T00:00'));
+  await setShootingDateTime('2027-01-01T00:00');
   assert.equal(layer.frame.stations.points.length, 0);
   assert.match(document.querySelector('.station-readout').textContent, /停止绘制/);
-  await settle(() => setControl(input('当地日期与时间'), '2026-11-06T19:35'));
+  await setShootingDateTime('2026-11-06T19:35');
   await settle(() => layer.report({ planKey: layer.frame.planKey, ready: false, view: null, states: {}, message: '地形不可用' }));
   assert.match(document.querySelector('.station-readout').textContent, /遮挡未知/);
   await settle(() => document.querySelector('[aria-label="显示空间站"]').click());
@@ -1322,10 +1327,10 @@ test('空间站加载取消忽略迟到响应，后台恢复按到期检查，�
   delete document.visibilityState;
 });
 
-test('星座默认关闭且独立于星空；主要亮星名称、星座定位与开关联动',async t=>{
+test('星座默认关闭并从属于星空；主要亮星名称、星座定位与开关联动',async t=>{
   await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
   assert.equal(document.querySelector('[aria-label="显示星座名称与连线"]').checked,false);
-  await settle(()=>setControl(input('当地日期与时间'),'2026-11-09T01:00'));
+  await setShootingDateTime('2026-11-09T01:00');
   await settle(()=>document.querySelector('[aria-label="显示星空"]').click());
   assert.ok(document.querySelectorAll('[data-sky-status]').length>=90);
   await settle(()=>document.querySelector('[aria-label="朝向参宿五"]').click());
@@ -1334,7 +1339,8 @@ test('星座默认关闭且独立于星空；主要亮星名称、星座定位�
   await settle(()=>document.querySelector('[aria-label="朝向猎户座"]').click());
   assert.ok(document.querySelector('[data-constellation-label="猎户座"]'));
   await settle(()=>document.querySelector('[aria-label="显示星空"]').click());
-  assert.ok(document.querySelector('[data-constellation-label="猎户座"]'));assert.equal(document.querySelector('[data-sky-status="参宿五"]'),null);
+  assert.equal(document.querySelector('[data-constellation-label="猎户座"]'), null);assert.equal(document.querySelector('[data-sky-status="参宿五"]'),null);
+  assert.equal(document.querySelector('[aria-label="显示星座名称与连线"]').disabled, true);
   await settle(()=>document.querySelector('[aria-label="显示星座名称与连线"]').click());
   assert.equal(document.querySelector('[data-constellation-label]'),null);assert.equal(document.querySelector('[data-constellation-status]'),null);
   assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
@@ -1342,18 +1348,17 @@ test('星座默认关闭且独立于星空；主要亮星名称、星座定位�
 
 test('侧栏搜索发现未开启目标，输入不改变构图，明确选择才开启图层和朝向',async t=>{
   await workspace(t);const map=await readyTerrain();
-  await settle(()=>setControl(input('当地日期与时间'),'2026-11-09T01:00'));
+  await setShootingDateTime('2026-11-09T01:00');
   const fields=['纬度','经度','方位角','俯仰角','焦距'].map(value),requests=groundRequests.length;
   await settle(()=>setControl(document.querySelector('#target-search'),'ＯＲＩ'));
   assert.match(document.querySelector('.target-search-results').textContent,/猎户座/);
   assert.match(document.querySelector('.target-search-results').textContent,/图层已关闭/);
-  assert.equal(document.querySelector('[aria-label="显示星座名称与连线"]').checked,false);
+  assert.equal(document.querySelector('[aria-label="显示星空"]').checked,false);
   assert.deepEqual(['纬度','经度','方位角','俯仰角','焦距'].map(value),fields);
   assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
   await settle(()=>document.querySelector('[aria-label="开启并朝向猎户座"]').click());
-  assert.equal(document.querySelector('[aria-label="显示星座名称与连线"]').checked,true);
   assert.ok(document.querySelector('[data-constellation-label="猎户座"]'));
-  assert.equal(document.querySelector('[aria-label="显示星空"]').checked,false);
+  assert.equal(document.querySelector('[aria-label="显示星空"]').checked,true);
   await settle(()=>setControl(document.querySelector('#target-search'),'不存在的目标_zzzz'));
   assert.match(document.querySelector('.target-search-results').textContent,/没有找到匹配目标/);
   await settle(()=>document.querySelector('[aria-label="清除目标搜索"]').click());
@@ -1363,7 +1368,7 @@ test('侧栏搜索发现未开启目标，输入不改变构图，明确选择�
 
 test('缓存视野的加载事件在没有后续 sourcedata 时恢复深空图层',async t=>{
   await workspace(t);const map=await readyTerrain();
-  await settle(()=>setControl(input('当地日期与时间'),'2026-11-09T01:00'));
+  await setShootingDateTime('2026-11-09T01:00');
   await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());
   await settle(()=>setControl(document.querySelector('#target-search'),'M31'));
   await settle(()=>document.querySelector('[aria-label="朝向仙女座星系"]').click());
@@ -1377,7 +1382,7 @@ test('缓存视野的加载事件在没有后续 sourcedata 时恢复深空图�
 
 test('侧栏收起、面板交换保留搜索，地平线下的未开启目标只启用图层',async t=>{
   await workspace(t);await readyTerrain();
-  await settle(()=>setControl(input('当地日期与时间'),'2026-11-25T00:00'));
+  await setShootingDateTime('2026-11-25T00:00');
   await settle(()=>setControl(document.querySelector('#target-search'),'Vega'));
   const pose=['方位角','俯仰角'].map(value);
   await settle(()=>document.querySelector('[aria-label="开启图层织女星"]').click());
@@ -1385,8 +1390,122 @@ test('侧栏收起、面板交换保留搜索，地平线下的未开启目标�
   assert.deepEqual(['方位角','俯仰角'].map(value),pose);
   assert.match(document.querySelector('.target-search-results').textContent,/地平线下/);
   await settle(()=>document.querySelector('[aria-label="收起拍摄信息"]').click());
-  await settle(()=>document.querySelector('.desktop-info-toggle').click());
+  await settle(()=>document.querySelector('[aria-label="展开拍摄信息"]').click());
   assert.equal(document.querySelector('#target-search').value,'Vega');
   await settle(()=>setControl(document.querySelector('select[aria-label="拍摄预览面板位置"]'),0));await readyTerrain();
   assert.equal(document.querySelector('#target-search').value,'Vega');assert.ok(document.querySelector('[data-search-target]'));
+});
+
+
+test('精简工作区与默认折叠分组，左栏入口展开定位并清除搜索', async t => {
+  await workspace(t); const map = await readyTerrain(), requests = groundRequests.length;
+  for (const selector of ['.workspace-heading', '.workspace-footer', '.base-layer', '.sidebar-bottom', '.layer-hint', '.map-footer-note', '.viewfinder-label', '.viewfinder-focal', '.terrain-height', '.parameter-note', '.info-header'])
+    assert.equal(document.querySelector(selector), null, selector);
+  const groups = [...document.querySelectorAll('.info-group h2 button')];
+  assert.deepEqual(groups.map(group => group.id), ['info-global', 'info-sun', 'info-moon', 'info-stars', 'info-milkyWay', 'info-deepSky', 'info-stations']);
+  assert.ok(groups.every(group => group.getAttribute('aria-expanded') === 'false'));
+  await settle(() => document.querySelector('#info-global').click());
+  await settle(() => document.querySelector('[aria-label="太阳设置与信息"]').click());
+  assert.equal(document.querySelector('#info-global').getAttribute('aria-expanded'), 'true');
+  assert.equal(document.querySelector('#info-sun').getAttribute('aria-expanded'), 'true');
+  assert.equal(document.activeElement.id, 'info-sun');
+  assert.equal(document.querySelector('#info-sun-body').hidden, false);
+  assert.equal(document.querySelector('#info-sun-body [data-body-status="moon"]'), null);
+  await settle(() => setControl(document.querySelector('#target-search'), 'Vega'));
+  await settle(() => document.querySelector('[aria-label="收起拍摄信息"]').click());
+  await settle(() => document.querySelector('[aria-label="月亮设置与信息"]').click());
+  assert.equal(document.querySelector('#target-search').value, '');
+  assert.equal(document.querySelector('.info-sidebar').classList.contains('is-collapsed'), false);
+  assert.equal(document.querySelector('#info-moon').getAttribute('aria-expanded'), 'true');
+  assert.equal(document.activeElement.id, 'info-moon');
+  await settle(() => document.querySelector('#info-moon').click());
+  await settle(() => document.querySelector('[aria-label="月亮设置与信息"]').click());
+  assert.equal(document.querySelector('#info-moon').getAttribute('aria-expanded'), 'true');
+  assert.equal(terrainMap(), map); assert.equal(groundRequests.length, requests);
+});
+
+test('星座和银河子设置位于右栏，预览信息与时间配置位于画布外', async t => {
+  await workspace(t); await readyTerrain();
+  const stars = document.querySelector('[aria-label="显示星座名称与连线"]');
+  assert.ok(stars.closest('#info-stars-body')); assert.equal(stars.disabled, true);
+  assert.equal(document.querySelector('.sidebar [aria-label="显示星座名称与连线"]'), null);
+  assert.ok(document.querySelector('#galaxy-contrast').closest('#info-milkyWay-body'));
+  await settle(() => document.querySelector('[aria-label="显示星空"]').click());
+  await settle(() => stars.click()); assert.equal(stars.checked, true);
+  await settle(() => document.querySelector('[aria-label="显示星空"]').click());
+  assert.equal(stars.checked, false); assert.equal(stars.disabled, true);
+  assert.match(document.querySelector('.preview-meta').textContent, /35 mm.*全画幅/s);
+  assert.match(document.querySelector('.preview-elevation').textContent, /1000.0.*1.6/s);
+  assert.equal(document.querySelector('.viewfinder .preview-elevation'), null);
+  const date = document.querySelector('input[type="date"]'), clock = document.querySelector('input[type="time"]');
+  assert.equal(date.closest('.time-row'), clock.closest('.time-row'));
+  assert.equal(document.querySelector('[aria-label="显示时区"]').closest('.field-pair'), document.querySelector('[aria-label="大气折射模型"]').closest('.field-pair'));
+  await settle(() => setControl(clock, '19:35:12'));
+  await settle(() => setControl(date, '2026-11-07'));
+  assert.equal(clock.value, '19:35:12');
+  assert.match(document.querySelector('.preview-meta').textContent, /未改机/);
+  await settle(() => setControl(document.querySelector('[aria-label="深空相机响应"]'), 'ha-modified'));
+  assert.match(document.querySelector('.preview-meta').textContent, /天文改机/);
+});
+
+test('滚轮调焦与地图和参数同步，连续事件累积，缩放边界和浏览器组合键保留', async t => {
+  const { map: browserMap } = await workspace(t); const map = await readyTerrain(), requests = groundRequests.length;
+  const frame = document.querySelector('.viewfinder'), before = ['经度', '纬度', '方位角', '俯仰角'].map(value);
+  const sector = structuredClone(geometry(browserMap));
+  const wheel = (deltaY, options = {}) => {
+    const event = new dom.window.WheelEvent('wheel', { deltaY, bubbles: true, cancelable: true, ...options });
+    frame.dispatchEvent(event); return event;
+  };
+  let event;
+  await settle(() => { event = wheel(-100); wheel(-100); });
+  assert.equal(event.defaultPrevented, true); assert.equal(value('焦距'), 52.2);
+  assert.notDeepEqual(geometry(browserMap), sector);
+  await settle(() => wheel(-10000)); assert.equal(value('焦距'), 1000);
+  await settle(() => wheel(10000)); assert.equal(value('焦距'), 8);
+  await settle(() => { event = wheel(-100, { ctrlKey: true }); });
+  assert.equal(event.defaultPrevented, false); assert.equal(value('焦距'), 8);
+  await settle(() => wheel(-3, { deltaMode: 1 })); assert.ok(value('焦距') > 8);
+  assert.deepEqual(['经度', '纬度', '方位角', '俯仰角'].map(value), before);
+  assert.equal(groundRequests.length, requests); assert.equal(terrainMap(), map);
+});
+
+test('新机位保留有效画布，短暂更新无加载提示，持续等待和失败明确反馈', async t => {
+  const pending = [];
+  await workspace(t, () => new Promise((resolve, reject) => pending.push({ resolve, reject })));
+  await waitUntil(() => pending.length === 1);
+  await settle(() => pending[0].resolve({ height: 1000 }));
+  const map = await readyTerrain(), canvas = document.querySelector('.terrain-canvas');
+  await settle(() => setControl(input('经度'), 139));
+  assert.equal(canvas.dataset.ready, 'false'); assert.equal(canvas.dataset.rendered, 'true');
+  assert.equal(document.querySelector('.terrain-feedback'), null);
+  assert.match(document.querySelector('.preview-elevation').textContent, /待更新/);
+  await waitUntil(() => pending.length === 2);
+  await act(async () => { await delay(850); });
+  assert.match(document.querySelector('.terrain-feedback').textContent, /暂留上一机位/);
+  await settle(() => pending[1].resolve({ height: 1200 }));
+  assert.equal(canvas.dataset.ready, 'true'); assert.equal(canvas.dataset.rendered, 'true');
+  assert.equal(document.querySelector('.terrain-feedback'), null);
+  assert.equal(map.cameraSolutions.at(-1).eye.lng, 139);
+  await settle(() => setControl(input('经度'), 140));
+  await waitUntil(() => pending.length === 3);
+  await settle(() => pending[2].reject(new Error('测试高程请求失败')));
+  assert.equal(canvas.dataset.rendered, 'false');
+  assert.match(document.querySelector('.terrain-feedback-error').textContent, /测试高程请求失败/);
+});
+
+
+test('画幅切换先同步画布尺寸再应用相机，无需等待 ResizeObserver', async t => {
+  await workspace(t); const map = await readyTerrain(), calls = [];
+  t.after(() => { terrainSize.width = 600; terrainSize.height = 400; });
+  const resize = map.resize.bind(map), solve = map.calculateCameraOptionsFromTo.bind(map);
+  map.resize = () => { calls.push('resize'); resize(); };
+  map.calculateCameraOptionsFromTo = (...args) => { calls.push('camera'); return solve(...args); };
+  await settle(() => {
+    terrainSize.width = 400;
+    setControl(document.querySelector('[aria-label="画幅比例"]'), '1:1');
+  });
+  assert.deepEqual(calls, ['resize', 'camera']);
+  assert.equal(document.querySelector('.viewfinder').style.aspectRatio, '1');
+  assert.equal(document.querySelector('.terrain-canvas').dataset.rendered, 'true');
+  assert.equal(terrainMap(), map);
 });

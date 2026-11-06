@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ShootingPlan } from "../domain/plan";
 import {
   emptySkyVisibility,
@@ -25,7 +25,6 @@ import {
 import { celestialPlanKey, occlusionLabels } from "../domain/visibility";
 import {
   skyAppearance,
-  skyAppearanceLabel,
   starOpacity,
   STAR_LABEL_ALPHA,
 } from "../domain/sky-appearance";
@@ -144,13 +143,26 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility) {
   };
 }
 type Scene = ReturnType<typeof useStarScene>;
+function useDelayedLoading(phase: string) {
+  const [delayed, setDelayed] = useState(false);
+  useEffect(() => {
+    setDelayed(false);
+    if (phase !== "loading") return;
+    const timer = setTimeout(() => setDelayed(true), 800);
+    return () => clearTimeout(timer);
+  }, [phase]);
+  return phase === "loading" && delayed;
+}
+
 export function StarLabels({ scene }: { scene: Scene }) {
+  const galaxyLoading = useDelayedLoading(scene.milkyWay.phase);
+  const deepLoading = useDelayedLoading(scene.deepSky.phase);
   const placed: { x: number; y: number }[] = [];
   const placedFigures: { x: number; y: number }[] = [];
   return (
     <>
       <div className="sky-feedback-stack">
-        {(scene.milkyWay.phase === "loading" ||
+        {(galaxyLoading ||
           scene.milkyWay.phase === "error") && (
           <p className="sky-texture-feedback" role="status">
             {scene.milkyWay.phase === "error"
@@ -158,7 +170,7 @@ export function StarLabels({ scene }: { scene: Scene }) {
               : "正在加载银河细节…"}
           </p>
         )}
-        {(scene.deepSky.phase === "loading" ||
+        {(deepLoading ||
           scene.deepSky.phase === "error") && (
           <p className="deep-sky-feedback" role="status">
             {scene.deepSky.phase === "error"
@@ -214,11 +226,16 @@ export function StarReadout({
   scene,
   plan,
   update,
+  section,
 }: {
   scene: Scene;
   plan: ShootingPlan;
   update: (patch: Partial<ShootingPlan>) => void;
+  section?: "stars" | "milkyWay" | "deepSky";
 }) {
+  const stars = !section || section === "stars";
+  const galaxy = !section || section === "milkyWay";
+  const deep = !section || section === "deepSky";
   if (
     !plan.layers.stars &&
     !plan.layers.milkyWay &&
@@ -234,15 +251,10 @@ export function StarReadout({
           {scene.error}
         </p>
       )}
-      {plan.layers.stars && (
+      {stars && plan.layers.stars && (
         <p>星空 · 亮星目录 {starCount} 颗及金星、木星 · 星点为定位符号</p>
       )}
-      {scene.appearance && (
-        <p className="sky-appearance" role="status">
-          明暗近似 · {skyAppearanceLabel(scene.appearance)}
-        </p>
-      )}
-      {plan.layers.milkyWay && (
+      {galaxy && plan.layers.milkyWay && (
         <p>
           银河细节 · 对比度 {plan.milkyWayContrast ?? 100}% · 全景衍生 · 银心
           {core?.state === "画面内"
@@ -250,10 +262,10 @@ export function StarReadout({
             : (core?.state ?? "计算中")}
         </p>
       )}
-      {plan.layers.constellations && (
+      {stars && plan.layers.constellations && (
         <p>星座参考 · {constellationCount} 座 · 名称与连线仅作定位</p>
       )}
-      {plan.layers.deepSky && (
+      {deep && plan.layers.deepSky && (
         <>
           <p>
             深空轮廓 · {deepSkyCount} 个目标 ·{" "}
@@ -321,10 +333,10 @@ export function StarReadout({
           </p>
         </>
       )}
-      {scene.targets.length > 0 && (
+      {scene.targets.some(t => t.point.id === "galactic-center" ? galaxy : stars) && (
         <details>
           <summary>星空目标与朝向</summary>
-          {scene.targets.map(({ point, state, occlusion, opacity }) => (
+          {scene.targets.filter(t => t.point.id === "galactic-center" ? galaxy : stars).map(({ point, state, occlusion, opacity }) => (
             <div
               className="celestial-row"
               key={point.id}
@@ -363,7 +375,7 @@ export function StarReadout({
           ))}
         </details>
       )}
-      {plan.layers.constellations && (
+      {stars && plan.layers.constellations && (
         <details>
           <summary>星座名称与朝向</summary>
           {scene.figures.map(({ point, state, occlusion }) => (

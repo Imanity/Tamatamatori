@@ -501,13 +501,13 @@ export function MapPanel({
           </p>
         )}
         {notice && <p className="map-coverage-warning">{notice}</p>}
-        {status.phase === "ready" && coverage && !notice && (
+        {status.phase === "ready" && coverage && !notice && mode !== "browse" && (
           <p className="map-interaction-hint">
             {mode === "position"
               ? "单击放置一次机位 · Escape 取消"
               : mode === "direction"
                 ? "单击目标设置一次朝向 · Escape 取消"
-                : "拖动浏览，右键拖动旋转 · 放置机位需先点击上方按钮"}
+                : ""}
           </p>
         )}
       </div>
@@ -537,9 +537,6 @@ export function MapPanel({
           </span>
         </div>
       </div>
-      <p className="map-footer-note">
-        扇形表示水平视场角；长度随缩放变化，不代表拍摄距离或地形可视范围。
-      </p>
     </div>
   );
 }

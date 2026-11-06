@@ -4,13 +4,14 @@ import {
   aspectRatios,
   instantFromLocal,
   instantAtMinute,
+  instantOnDate,
+  localClockTime,
   localDateTime,
   minuteOfDay,
   normalizeLongitude,
   sensors,
 } from "../domain/plan";
 import type { ShootingPlan } from "../domain/plan";
-import { Icon } from "./Icon";
 
 type UpdatePlan = (patch: Partial<ShootingPlan>) => void;
 
@@ -94,114 +95,157 @@ function TimeField({
   plan: ShootingPlan;
   update: UpdatePlan;
 }) {
-  const [draft, setDraft] = useState(
-    localDateTime(plan.instant, plan.timeZone),
+  const [date, setDate] = useState(
+    localDateTime(plan.instant, plan.timeZone).slice(0, 10),
   );
+  const [time, setTime] = useState(localClockTime(plan.instant, plan.timeZone));
   const [error, setError] = useState("");
   useEffect(() => {
-    setDraft(localDateTime(plan.instant, plan.timeZone));
+    setDate(localDateTime(plan.instant, plan.timeZone).slice(0, 10));
+    setTime(localClockTime(plan.instant, plan.timeZone));
     setError("");
   }, [plan.instant, plan.timeZone]);
   return (
     <>
-      <label className="field">
-        <span className="field-label">当地日期与时间</span>
-        <input
-          type="datetime-local"
-          value={draft}
-          min="1900-01-01T00:00"
-          max="2100-12-31T23:59"
-          aria-invalid={!!error}
-          aria-describedby={error ? "time-error" : undefined}
-          onChange={(event) => {
-            setDraft(event.target.value);
-            try {
-              update({
-                instant: instantFromLocal(event.target.value, plan.timeZone),
-              });
-              setError("");
-            } catch {
-              setError(
-                "请输入 1900—2100 年内的有效时间；夏令时重复或跳过的时刻需改选。",
-              );
+      <div className="time-row">
+        <label className="field date-field">
+          <span className="field-label">当地日期</span>
+          <input
+            type="date"
+            aria-label="当地日期"
+            min="1900-01-01"
+            max="2100-12-31"
+            value={date}
+            aria-invalid={!!error}
+            aria-describedby={error ? "time-error" : undefined}
+            onChange={(event) => {
+              setDate(event.target.value);
+              try {
+                update({
+                  instant: instantOnDate(
+                    plan.instant,
+                    plan.timeZone,
+                    event.target.value,
+                  ),
+                });
+                setError("");
+              } catch {
+                setError(
+                  "请输入 1900—2100 年内的有效日期，夏令时重复或跳过的时刻需改选。",
+                );
+              }
+            }}
+          />
+        </label>
+        <div className="field time-slider-field">
+          <div className="time-slider-label">
+            <label className="field-label" htmlFor="shooting-clock">
+              当日时间
+            </label>
+            <input
+              id="shooting-clock"
+              type="time"
+              step="1"
+              aria-label="当地时间"
+              value={time}
+              aria-invalid={!!error}
+              aria-describedby={error ? "time-error" : undefined}
+              onChange={(event) => {
+                setTime(event.target.value);
+                try {
+                  update({
+                    instant: instantFromLocal(
+                      `${date}T${event.target.value}`,
+                      plan.timeZone,
+                    ),
+                  });
+                  setError("");
+                } catch {
+                  setError(
+                    "该钟点因夏令时跳过或重复，已保留原时刻，请选择其他时间。",
+                  );
+                }
+              }}
+            />
+          </div>
+          <input
+            className="time-slider"
+            type="range"
+            aria-label="24 小时时间滑杆"
+            min={0}
+            max={1439}
+            step={1}
+            value={minuteOfDay(plan.instant, plan.timeZone)}
+            style={
+              {
+                "--time-progress": `${(minuteOfDay(plan.instant, plan.timeZone) / 1439) * 100}%`,
+              } as CSSProperties
             }
-          }}
-        />
-        {error && (
-          <span className="field-error" id="time-error">
-            {error}
+            aria-valuetext={`${time} ${plan.timeZone}`}
+            aria-invalid={!!error}
+            aria-describedby={error ? "time-error" : undefined}
+            onChange={(event) => {
+              try {
+                update({
+                  instant: instantAtMinute(
+                    plan.instant,
+                    plan.timeZone,
+                    Number(event.target.value),
+                  ),
+                });
+                setError("");
+              } catch {
+                setError(
+                  "该钟点因夏令时跳过或重复，已保留原时刻，请选择其他时间。",
+                );
+              }
+            }}
+          />
+          <span className="time-slider-ticks" aria-hidden="true">
+            {timeTicks.map(({ label, minute }) => (
+              <span key={label} style={{ left: `${(minute / 1439) * 100}%` }}>
+                {label}
+              </span>
+            ))}
           </span>
-        )}
-      </label>
-      <label className="field time-slider-field">
-        <span className="field-label time-slider-label">
-          当日 24 小时{" "}
-          <output>
-            {localDateTime(plan.instant, plan.timeZone).slice(11)}
-          </output>
-        </span>
-        <input
-          className="time-slider"
-          type="range"
-          aria-label="24 小时时间滑杆"
-          min={0}
-          max={1439}
-          step={1}
-          value={minuteOfDay(plan.instant, plan.timeZone)}
-          style={
-            {
-              "--time-progress": `${(minuteOfDay(plan.instant, plan.timeZone) / 1439) * 100}%`,
-            } as CSSProperties
-          }
-          aria-valuetext={`${localDateTime(plan.instant, plan.timeZone).slice(11)} ${plan.timeZone}`}
-          aria-invalid={!!error}
-          aria-describedby={
-            error ? "time-error time-slider-help" : "time-slider-help"
-          }
-          onChange={(event) => {
-            try {
+        </div>
+      </div>
+      {error && (
+        <p className="field-error" id="time-error" role="status">
+          {error}
+        </p>
+      )}
+      <div className="field-pair time-options">
+        <label className="field">
+          <span className="field-label">显示时区</span>
+          <select
+            aria-label="显示时区"
+            value={plan.timeZone}
+            onChange={(event) => update({ timeZone: event.target.value })}
+          >
+            <option value="Asia/Tokyo">东京 · Asia/Tokyo</option>
+            <option value="Asia/Shanghai">上海 · Asia/Shanghai</option>
+            <option value="UTC">UTC · 协调世界时</option>
+            <option value="America/New_York">纽约 · America/New_York</option>
+            <option value="Europe/London">伦敦 · Europe/London</option>
+          </select>
+        </label>
+        <label className="field">
+          <span className="field-label">大气折射</span>
+          <select
+            aria-label="大气折射模型"
+            value={plan.refraction}
+            onChange={(event) =>
               update({
-                instant: instantAtMinute(
-                  plan.instant,
-                  plan.timeZone,
-                  Number(event.target.value),
-                ),
-              });
-              setError("");
-            } catch {
-              setError(
-                "该钟点因夏令时跳过或重复，已保留原时刻，请选择其他时间。",
-              );
+                refraction: event.target.value as ShootingPlan["refraction"],
+              })
             }
-          }}
-        />
-        <span className="time-slider-ticks" aria-hidden="true">
-          {timeTicks.map(({ label, minute }) => (
-            <span key={label} style={{ left: `${(minute / 1439) * 100}%` }}>
-              {label}
-            </span>
-          ))}
-        </span>
-      </label>
-      <p className="field-hint" id="time-slider-help">
-        按当前日期与时区，以一分钟为步长调整钟点。
-      </p>
-      <label className="field">
-        <span className="field-label">显示时区</span>
-        <select
-          value={plan.timeZone}
-          onChange={(event) => update({ timeZone: event.target.value })}
-        >
-          <option value="Asia/Tokyo">东京 · Asia/Tokyo</option>
-          <option value="Asia/Shanghai">上海 · Asia/Shanghai</option>
-          <option value="UTC">UTC · 协调世界时</option>
-          <option value="America/New_York">纽约 · America/New_York</option>
-          <option value="Europe/London">伦敦 · Europe/London</option>
-        </select>
-      </label>
-      <p className="field-hint">
-        切换时区保留同一时刻；改变机位不会改变拍摄时间。
-      </p>
+          >
+            <option value="standard">标准折射 · 海平面近似</option>
+            <option value="none">无折射 · 几何位置</option>
+          </select>
+        </label>
+      </div>
     </>
   );
 }
@@ -220,48 +264,11 @@ export function Parameters({
           <span className="section-number">01</span> 拍摄时间
         </legend>
         <TimeField plan={plan} update={update} />
-        <label className="field">
-          <span className="field-label">大气折射</span>
-          <select
-            aria-label="大气折射模型"
-            value={plan.refraction}
-            onChange={(event) =>
-              update({
-                refraction: event.target.value as ShootingPlan["refraction"],
-              })
-            }
-          >
-            <option value="standard">标准折射 · 海平面近似</option>
-            <option value="none">无折射 · 几何位置</option>
-          </select>
-        </label>
-        <p className="field-hint">
-          标准折射使用固定参考大气，不含实测气象；近地平线结果仅供构图参考。
-        </p>
       </fieldset>
       <fieldset>
         <legend>
           <span className="section-number">02</span> 相机与镜头
         </legend>
-        <label className="field">
-          <span className="field-label">深空相机响应</span>
-          <select
-            aria-label="深空相机响应"
-            value={plan.cameraResponse}
-            onChange={(event) =>
-              update({
-                cameraResponse: event.target
-                  .value as ShootingPlan["cameraResponse"],
-              })
-            }
-          >
-            <option value="stock">未改机 · 近似参考</option>
-            <option value="ha-modified">天文改机 · Hα 增强示意</option>
-          </select>
-        </label>
-        <p className="field-hint">
-          未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。
-        </p>
         <NumberField
           label="焦距"
           value={plan.focalLength}
@@ -300,6 +307,7 @@ export function Parameters({
           <label className="field">
             <span className="field-label">传感器</span>
             <select
+              aria-label="传感器"
               value={plan.sensor}
               onChange={(event) =>
                 update({ sensor: event.target.value as ShootingPlan["sensor"] })
@@ -315,6 +323,7 @@ export function Parameters({
           <label className="field">
             <span className="field-label">画幅比例</span>
             <select
+              aria-label="画幅比例"
               value={plan.aspectRatio}
               onChange={(event) =>
                 update({
@@ -346,6 +355,25 @@ export function Parameters({
             <option value="portrait">竖幅</option>
           </select>
         </label>
+        <label className="field">
+          <span className="field-label">深空相机响应</span>
+          <select
+            aria-label="深空相机响应"
+            value={plan.cameraResponse}
+            onChange={(event) =>
+              update({
+                cameraResponse: event.target
+                  .value as ShootingPlan["cameraResponse"],
+              })
+            }
+          >
+            <option value="stock">未改机 · 近似参考</option>
+            <option value="ha-modified">天文改机 · Hα 增强示意</option>
+          </select>
+        </label>
+        <p className="field-hint">
+          未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。
+        </p>
       </fieldset>
       <fieldset>
         <legend>
@@ -408,13 +436,6 @@ export function Parameters({
           高程加离地高度定位。
         </p>
       </fieldset>
-      <div className="parameter-note">
-        <Icon name="info" size={16} />
-        <span>
-          天空与地表明暗随时间变化，仅为晴空近似，不含天气与曝光。水面高程按 DEM
-          近似。
-        </span>
-      </div>
     </div>
   );
 }

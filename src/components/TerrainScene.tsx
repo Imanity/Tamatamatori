@@ -41,12 +41,20 @@ interface SceneState {
   message: string;
 }
 
-export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChange, onSkyChange }: { plan: ShootingPlan; stations?: StationScene; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void; onCameraChange?: (camera: RenderedCamera | null) => void; onSkyChange?: (snapshot:SkyVisibility)=>void }) {
+export interface TerrainInfo {
+  ground: number | null;
+  actualHeight: number | null;
+  actualPitch: number | null;
+  adjusted: boolean;
+}
+
+export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChange, onSkyChange, onInfoChange }: { plan: ShootingPlan; stations?: StationScene; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void; onCameraChange?: (camera: RenderedCamera | null) => void; onSkyChange?: (snapshot:SkyVisibility)=>void; onInfoChange?: (info: TerrainInfo) => void }) {
   const container = useRef<HTMLDivElement>(null);
   const synchronize = useRef<(() => void) | null>(null);
   const key = `${plan.longitude}/${plan.latitude}`;
   const covered = isMapPosition(plan);
   const [attempt, setAttempt] = useState(0);
+  const [loadingDelayed, setLoadingDelayed] = useState(false);
   const [calibration, setCalibration] = useState<CalibrationSnapshot | null>(null);
   const [camera, setCamera] = useState<RenderedCamera | null>(null);
   const [ground, setGround] = useState<GroundState>({ key, phase: "loading" });
@@ -132,6 +140,7 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
     let styleReady = false;
     let failed = false;
     let lastPose = "";
+    let lastSize = "";
     let lastEnvironment = "";
     let lastDetail = 0;
     let currentPoseKey = "";
@@ -216,6 +225,11 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
       )
         return;
       try {
+        const size = `${container.current.clientWidth}/${container.current.clientHeight}`;
+        if (size !== lastSize) {
+          lastSize = size;
+          map.resize();
+        }
         const detailHeight = container.current.clientHeight;
         if (detailHeight !== lastDetail) {
           applyTerrainDetail(map, detailHeight);
@@ -456,12 +470,26 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
               : "";
   const error =
     scene.phase === "error" || (ground.key === key && ground.phase === "error");
+  const retained = !!applied && covered && !error;
+  const waiting = !!message && !error && covered;
+  useEffect(() => {
+    setLoadingDelayed(false);
+    if (!waiting) return;
+    const timer = setTimeout(() => setLoadingDelayed(true), 800);
+    return () => clearTimeout(timer);
+  }, [waiting, key, attempt]);
+  const groundHeight = visible && applied ? applied.ground : null;
+  const actualHeight = currentCamera && applied ? currentCamera.altitude - applied.ground : null;
+  const actualPitch = currentCamera?.pitch ?? null;
+  useEffect(() => {
+    onInfoChange?.({ ground: groundHeight, actualHeight, actualPitch, adjusted: !!adjusted });
+  }, [groundHeight, actualHeight, actualPitch, adjusted, onInfoChange]);
   return (
     <div
       className="terrain-scene"
       aria-label="真实 DEM 山体与静态水体预览，水面高程按 DEM 近似"
     >
-      <div className="terrain-canvas" ref={container} data-ready={!!visible} data-celestial-renderer="webgl-depth" data-terrain-projection="wgs84-enu" />
+      <div className="terrain-canvas" ref={container} data-ready={!!visible} data-rendered={retained} data-celestial-renderer="webgl-depth" data-terrain-projection="wgs84-enu" />
       {calibrationEnabled && calibration && visible && <>
         {Object.entries(calibration.pixels).filter(([name]) => name !== "matrixDem" && name !== "actualDem").map(([name, pixel]) => pixel &&
           pixel.x >= 0 && pixel.y >= 0 && pixel.x <= calibration.width && pixel.y <= calibration.height &&
@@ -481,12 +509,12 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
             data-ready={calibration.ready}>{JSON.stringify(calibration, null, 2)}</pre>
         </details>
       </>}
-      {message && (
+      {message && (error || !covered || loadingDelayed) && (
         <div
-          className={`terrain-feedback ${visible ? "terrain-feedback-partial" : ""} ${error ? "terrain-feedback-error" : ""}`}
+          className={`terrain-feedback ${retained ? "terrain-feedback-partial" : ""} ${error ? "terrain-feedback-error" : ""}`}
           role="status"
         >
-          <span>{message}</span>
+          <span>{message}{retained && !visible ? " · 暂留上一机位画面" : ""}</span>
           {error && covered && (
             <button
               onPointerDown={(event) => event.stopPropagation()}
@@ -501,15 +529,6 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
           )}
         </div>
       )}
-      {visible && applied && (
-        <span className="terrain-height">
-          机位高程 ≈ {applied.ground.toFixed(1)} m · 计划离地 {plan.cameraHeight} m
-          <br />曲面构图 · 高程基准未核定
-        </span>
-      )}
-      {adjusted && currentCamera && applied && <span className="camera-adjustment" role="status">
-        引擎避让：实际离地 ≈ {(currentCamera.altitude - applied.ground).toFixed(2)} m，俯仰 {currentCamera.pitch.toFixed(2)}°（计划 {plan.pitch.toFixed(2)}°）
-      </span>}
     </div>
   );
 }

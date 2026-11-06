@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import type { CSSProperties, ReactNode, RefObject } from "react";
-import { initialPlan, localDateTime } from "./domain/plan";
+import { initialPlan } from "./domain/plan";
 import type { ShootingPlan } from "./domain/plan";
 import { Icon } from "./components/Icon";
 import type { IconName } from "./components/Icon";
@@ -9,6 +9,7 @@ import { PreviewPanel } from "./components/ScenePanels";
 import { MapPanel } from "./components/MapPanel";
 import { About } from "./components/About";
 import type { MapViewport } from "./domain/map";
+import type { InfoGroupId, InfoNavigation } from "./components/InfoGroup";
 
 type PanelId = "map" | "preview" | "parameters";
 const defaultPanels: PanelId[] = ["map", "preview", "parameters"];
@@ -27,7 +28,6 @@ const skyLayers = [
   { id: "moon", name: "月亮", icon: "moon" },
   { id: "stars", name: "星空", icon: "stars" },
   { id: "milkyWay", name: "银河", icon: "orbit" },
-  { id: "constellations", name: "星座名称与连线", icon: "compass" },
   { id: "deepSky", name: "深空天体", icon: "orbit" },
   { id: "stations", name: "空间站", icon: "satellite" },
 ] as const;
@@ -222,6 +222,19 @@ export default function App() {
   const [infoOpen, setInfoOpen] = useState(false);
   const [infoHost, setInfoHost] = useState<HTMLDivElement | null>(null);
   const [infoQuery, setInfoQuery] = useState("");
+  const [infoNavigation, setInfoNavigation] = useState<InfoNavigation | null>(
+    null,
+  );
+  const openInfo = (id: InfoGroupId) => {
+    setInfoCollapsed(false);
+    setInfoOpen(true);
+    setLayersOpen(false);
+    setInfoQuery("");
+    setInfoNavigation((current) => ({
+      id,
+      request: (current?.request ?? 0) + 1,
+    }));
+  };
   const [announcement, setAnnouncement] = useState("");
   const workspaceRef = useRef<HTMLDivElement>(null);
   const secondaryRef = useRef<HTMLDivElement>(null);
@@ -239,7 +252,13 @@ export default function App() {
   const toggleLayer = (id: keyof ShootingPlan["layers"]) =>
     setPlan((current) => ({
       ...current,
-      layers: { ...current.layers, [id]: !current.layers[id] },
+      layers: {
+        ...current.layers,
+        [id]: !current.layers[id],
+        ...(id === "stars" && current.layers.stars
+          ? { constellations: false }
+          : {}),
+      },
     }));
   const movePanel = (id: PanelId, destination: number) => {
     const next = [...panels];
@@ -269,6 +288,7 @@ export default function App() {
             update={updatePlan}
             infoHost={infoHost}
             infoQuery={infoQuery}
+            infoNavigation={infoNavigation}
           />
         ) : (
           <Parameters plan={plan} update={updatePlan} />
@@ -276,11 +296,6 @@ export default function App() {
       </Panel>
     );
   };
-  const displayTime = localDateTime(plan.instant, plan.timeZone).replace(
-    "T",
-    "  ",
-  );
-
   return (
     <div className="app-shell">
       <header className="topbar">
@@ -308,31 +323,20 @@ export default function App() {
           aria-label="图层侧栏"
         >
           <div className="sidebar-intro">
-            <span className="eyebrow">IN YOUR FRAME</span>
             <h2>
-              <Icon name="layers" size={17} /> 预览图层
+              <Icon name="layers" size={17} /> 图层
             </h2>
-            <p>让每个目标，各就其位。</p>
-          </div>
-          <div className="base-layer">
-            <span className="base-layer-icon">
-              <Icon name="map" size={18} />
-            </span>
-            <div>
-              <strong>基础场景</strong>
-              <small>山体与静态水体</small>
-            </div>
-            <span
-              className="base-layer-dot"
-              title="地形预览已接入，状态见预览区"
-            />
-          </div>
-          <div className="sidebar-section-label">
-            天文参考 <span>构图辅助</span>
+            <button
+              className="icon-button layer-close"
+              aria-label="关闭图层"
+              onClick={() => setLayersOpen(false)}
+            >
+              <Icon name="arrow" size={17} />
+            </button>
           </div>
           <div className="layer-list">
             {skyLayers.map(({ id, name, icon }) => (
-              <div key={id}>
+              <div className="layer-item" key={id}>
                 <label className="layer-row layer-toggle">
                   <Icon name={icon} size={19} />
                   <span>{name}</span>
@@ -344,106 +348,19 @@ export default function App() {
                     onChange={() => toggleLayer(id)}
                   />
                 </label>
-                {id === "milkyWay" && plan.layers.milkyWay && (
-                  <div
-                    className="galaxy-contrast"
-                    role="group"
-                    aria-label="银河显示对比度"
-                  >
-                    <div className="galaxy-contrast-heading">
-                      <label htmlFor="galaxy-contrast">对比度</label>
-                      <output htmlFor="galaxy-contrast">
-                        {plan.milkyWayContrast}%
-                      </output>
-                    </div>
-                    <input
-                      id="galaxy-contrast"
-                      type="range"
-                      min="25"
-                      max="200"
-                      step="5"
-                      aria-label="银河对比度"
-                      aria-valuetext={`${plan.milkyWayContrast}%`}
-                      aria-describedby="galaxy-contrast-hint"
-                      value={plan.milkyWayContrast}
-                      onChange={(event) =>
-                        updatePlan({
-                          milkyWayContrast: Number(event.target.value),
-                        })
-                      }
-                    />
-                    <div className="galaxy-contrast-footer">
-                      <small id="galaxy-contrast-hint">银河显示强度</small>
-                      <button
-                        type="button"
-                        aria-label="重置银河对比度"
-                        disabled={plan.milkyWayContrast === 100}
-                        onClick={() => updatePlan({ milkyWayContrast: 100 })}
-                      >
-                        重置
-                      </button>
-                    </div>
-                  </div>
-                )}
+                <button
+                  className="icon-button layer-settings"
+                  aria-label={`${name}设置与信息`}
+                  title={`${name}设置与信息`}
+                  onClick={() => openInfo(id)}
+                >
+                  <Icon name="settings" size={15} />
+                </button>
               </div>
             ))}
           </div>
-          <p className="layer-hint">
-            天体按当前 DEM
-            深度遮挡。星空明暗随暮光、月光近似变化，不含真实曝光或天气。
-          </p>
-          <div className="sidebar-bottom">
-            <div className="small-compass">
-              <Icon name="compass" size={34} />
-            </div>
-            <span className="eyebrow">
-              EVERY FRAME BEGINS
-              <br />
-              WITH A PLACE.
-            </span>
-            <p>随时间 · 观察光线变化</p>
-          </div>
         </aside>
         <main className="main-content">
-          <div className="workspace-heading">
-            <div>
-              <div className="breadcrumb">
-                摄影计划 <span>/</span> 工作区
-              </div>
-              <h1>
-                下一张，从这里开始<span>。</span>
-              </h1>
-            </div>
-            <div className="heading-actions">
-              <button
-                className="reset-button desktop-info-toggle"
-                aria-expanded={!infoCollapsed}
-                onClick={() => setInfoCollapsed(!infoCollapsed)}
-              >
-                <Icon name="info" size={15} />
-                拍摄信息
-              </button>
-              <div className="time-summary">
-                <span>拍摄时间</span>
-                <strong>{displayTime}</strong>
-                <small>{plan.timeZone}</small>
-              </div>
-              <button
-                className="reset-button"
-                onClick={() => {
-                  setPanels(defaultPanels);
-                  setMainWidth(65);
-                  setUpperHeight(defaultUpperHeight);
-                  setInfoCollapsed(false);
-                  setInfoOpen(false);
-                  setAnnouncement("已恢复默认布局，拍摄参数保持不变。");
-                }}
-              >
-                <Icon name="reset" size={15} />
-                <span>重置布局</span>
-              </button>
-            </div>
-          </div>
           <div className="mobile-toolbar">
             <button
               className={`mobile-layer-button ${layersOpen ? "is-active" : ""}`}
@@ -519,14 +436,16 @@ export default function App() {
               {renderPanel(2)}
             </div>
           </div>
-          <footer className="workspace-footer">
-            <span>
-              <Icon name="grip" size={13} />{" "}
-              拖动分隔条调整大小，拖动把手交换面板
-            </span>
-            <span>地形模拟 · 水面高程按 DEM 近似</span>
-          </footer>
         </main>
+        {infoCollapsed && (
+          <button
+            className="info-reopen icon-button"
+            aria-label="展开拍摄信息"
+            onClick={() => setInfoCollapsed(false)}
+          >
+            <Icon name="info" size={17} />
+          </button>
+        )}
         <aside
           className={`info-sidebar ${infoCollapsed ? "is-collapsed" : ""} ${infoOpen ? "is-open" : ""}`}
           aria-label="拍摄信息"
@@ -537,37 +456,30 @@ export default function App() {
             }
           }}
         >
-          <header className="info-header">
-            <div>
-              <span className="eyebrow">当前预览</span>
-              <h2>
-                <Icon name="info" size={17} />
-                拍摄信息
-              </h2>
-            </div>
-            <button
-              className="icon-button info-close-desktop"
-              aria-label="收起拍摄信息"
-              onClick={() => setInfoCollapsed(true)}
-            >
-              <Icon name="arrow" size={17} />
-            </button>
-            <button
-              className="icon-button info-close-mobile"
-              aria-label="关闭拍摄信息"
-              onClick={() => setInfoOpen(false)}
-            >
-              <Icon name="arrow" size={17} />
-            </button>
-          </header>
           <div className="info-search" role="search" aria-label="拍摄目标搜索">
-            <label htmlFor="target-search">搜索目标</label>
+            <div className="info-search-tools">
+              <label htmlFor="target-search">搜索目标</label>
+              <button
+                className="icon-button info-close-desktop"
+                aria-label="收起拍摄信息"
+                onClick={() => setInfoCollapsed(true)}
+              >
+                <Icon name="arrow" size={17} />
+              </button>
+              <button
+                className="icon-button info-close-mobile"
+                aria-label="关闭拍摄信息"
+                onClick={() => setInfoOpen(false)}
+              >
+                <Icon name="arrow" size={17} />
+              </button>
+            </div>
             <div>
               <input
                 id="target-search"
                 type="search"
                 aria-label="搜索拍摄目标"
-                placeholder="亮星、星座或日月"
+                placeholder="日月、星空、深空或空间站"
                 maxLength={80}
                 value={infoQuery}
                 onChange={(event) => setInfoQuery(event.target.value)}

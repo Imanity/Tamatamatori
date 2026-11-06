@@ -152,6 +152,20 @@ export function localDateTime(instant: string, timeZone: string) {
     .toString({ smallestUnit: "minute" });
 }
 
+export function instantOnDate(instant: string, timeZone: string, date: string) {
+  const local = Temporal.Instant.from(instant).toZonedDateTimeISO(timeZone);
+  return instantFromLocal(`${Temporal.PlainDate.from(date)}T${local.toPlainTime()}`, timeZone);
+}
+
+export function localClockTime(instant: string, timeZone: string) {
+  return Temporal.Instant.from(instant).toZonedDateTimeISO(timeZone).toPlainTime().toString({ smallestUnit: "second" });
+}
+
+export function zoomFocalLength(focalLength: number, delta: number) {
+  if (!Number.isFinite(delta)) return focalLength;
+  return Math.round(Math.max(8, Math.min(1000, focalLength * Math.exp(-delta * 0.002))) * 10) / 10;
+}
+
 export function instantFromLocal(local: string, timeZone: string) {
   const date = Temporal.PlainDateTime.from(local);
   if (date.year < 1900 || date.year > 2100)

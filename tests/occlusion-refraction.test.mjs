@@ -195,7 +195,7 @@ test('星空查询在计划/地形失效后废弃，失败明确反馈并释放�
   gl.results=[true];layer.render(gl);assert.equal(queries.size,1);
   layer.setScene(starFrame('b'));assert.equal(queries.size,0);assert.equal(reports.at(-1).planKey,'b');
   gl.results=[false];layer.render(gl);layer.invalidate();assert.equal(queries.size,0);
-  const count=gl.draws.length;layer.render(gl);assert.equal(gl.draws.length,count);
+  const count=gl.draws.length;layer.render(gl);assert.ok(gl.draws.length>count);assert.equal(queries.size,0);assert.equal(reports.at(-1).ready,false);
   let clock=1000;t.mock.method(Date,'now',()=>clock);
   layer.setScene(starFrame('c'));gl.results=[true];layer.render(gl);clock+=6000;layer.render(gl);
   assert.match(reports.at(-1).message,/超时/);assert.equal(queries.size,0);layer.onRemove();assert.equal(resources.size,0);

@@ -1,0 +1,47 @@
+import type { ReactNode } from "react";
+
+export type InfoGroupId =
+  | "global"
+  | "sun"
+  | "moon"
+  | "stars"
+  | "milkyWay"
+  | "deepSky"
+  | "stations";
+export interface InfoNavigation {
+  id: InfoGroupId;
+  request: number;
+}
+
+export function InfoGroup({
+  id,
+  title,
+  open,
+  toggle,
+  children,
+}: {
+  id: InfoGroupId;
+  title: string;
+  open: boolean;
+  toggle: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <section className="info-group" data-info-group={id}>
+      <h2>
+        <button
+          id={`info-${id}`}
+          aria-expanded={open}
+          aria-controls={`info-${id}-body`}
+          onClick={toggle}
+        >
+          <span>{title}</span>
+          <span aria-hidden="true">{open ? "−" : "+"}</span>
+        </button>
+      </h2>
+      <div id={`info-${id}-body`} hidden={!open} aria-labelledby={`info-${id}`}>
+        {children}
+      </div>
+    </section>
+  );
+}

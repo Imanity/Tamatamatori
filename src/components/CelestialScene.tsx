@@ -49,12 +49,12 @@ export function CelestialDiscs({ scene }: { scene: CelestialScene }) {
   </>;
 }
 
-export function CelestialReadout({ scene, plan, update }: {
-  scene: CelestialScene; plan: ShootingPlan; update: (patch: Partial<ShootingPlan>) => void;
+export function CelestialReadout({ scene, plan, update, bodyId }: {
+  scene: CelestialScene; plan: ShootingPlan; update: (patch: Partial<ShootingPlan>) => void; bodyId?: "sun" | "moon";
 }) {
   if (scene.error) return <p className="celestial-error" role="status">{scene.error}</p>;
   return <div className="celestial-readout" aria-label="日月图层状态">
-    {scene.views.map(({ body, enabled, state, visualElevation, occlusion }) => <div key={body.id} className="celestial-row" data-body-status={body.id}>
+    {scene.views.filter(view => !bodyId || view.body.id === bodyId).map(({ body, enabled, state, visualElevation, occlusion }) => <div key={body.id} className="celestial-row" data-body-status={body.id}>
       <span className="celestial-name">{name(body.id)}</span>
       <span className="celestial-state">{!enabled ? "已关闭" : state === "画面内" ? occlusionLabels[occlusion] : state}</span>
       {enabled && <>
