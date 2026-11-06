@@ -26,9 +26,9 @@ result = {"reference": "PyAVM 0.9.9 for AVM; Astropy 7.1.1 / WCSLIB for AVM/TAN-
           "scope": "Coordinate transformation, corner fit and raster checks; not an independent source plate solve or photometry calibration",
           "atlasSha256": digest, "records": []}
 result["supportChecks"] = []
-for model in ("reflection", "emission"):
+for model in ("reflection", "emission", "mixed", "galaxy"):
     synthetic = np.zeros((160, 160, 3))
-    colour = [0.01, 0.05, 0.2] if model == "reflection" else [0.2, 0.05, 0.01]
+    colour = [0.01, 0.05, 0.2] if model in ("reflection", "mixed") else [0.2, 0.05, 0.01]
     synthetic[40:120, 40:120] = colour
     synthetic[78:82, 120:140] = colour  # Connected narrow filament.
     synthetic[71:89, 71:89] = 0.8  # White core inside genuine cloud.
@@ -41,6 +41,20 @@ for model in ("reflection", "emission"):
     result["supportChecks"].append({"model": model, "whiteCore": float(support[80, 80]),
         "connectedFilament": float(support[80, 130]), "exteriorPoint": float(support[16, 16]),
         "scope": "synthetic display support only, not GPU or source photometry"})
+synthetic = np.zeros((300, 360, 3))
+synthetic[70:150, 40:120] = [0.2, 0.05, 0.01]
+synthetic[30:90, 90:150] = [0.01, 0.05, 0.2]
+synthetic[100:105, 120:190] = [0.2, 0.05, 0.01]
+synthetic[230:255, 280:305] = [0.2, 0.05, 0.01]
+seed = np.zeros((300, 360), dtype=bool)
+seed[80:120, 80:120] = True
+support, stats = diffuse_support(synthetic, "mixed", seed)
+assert support[50, 120] > 0.99, "Connected blue reflection must survive beyond the seed"
+assert support[102, 170] > 0.99, "Connected red filament must survive beyond the seed"
+assert support[242, 292] == 0, "Detached broad exterior star-field islands must fade"
+result["supportChecks"].append({"model": "catalogue-seeded-mixed", "blueBeyondSeed": float(support[50, 120]),
+    "redFilamentBeyondSeed": float(support[102, 170]), "detachedIsland": float(support[242, 292]),
+    "scope": "Synthetic connected support, not source astrometry or GPU validation"})
 for spec in catalog["imageSources"]:
     raw = (source_dir/spec["file"]).read_bytes()
     assert hashlib.sha256(raw).hexdigest() == spec["sha256"]
@@ -74,7 +88,7 @@ for spec in catalog["imageSources"]:
         corners = np.array(spec["skyCorners"])
         edge_pixels = np.array([[0.5, 0.5], [rw+0.5, 0.5], [rw+0.5, rh+0.5], [0.5, rh+0.5]])
         quad_error = float(np.linalg.norm(reference.all_world2pix(corners, 1)-edge_pixels, axis=1).max())
-        assert quad_error < 0.5, "Published quad and source pixel axes must agree"
+        assert quad_error < spec.get("cornerTolerancePixels", 0.5), "Published quad and source pixel axes must agree within the fixed source-specific bound"
     else:
         corners = reference.all_pix2world([[1, 1], [rw, 1], [rw, rh], [1, rh]], 1)
     projected_corners = target.all_world2pix(corners, 0)
@@ -88,7 +102,9 @@ for spec in catalog["imageSources"]:
     actual = reference_pixels(rays, m)
     error = float(np.max(np.abs(expected-actual)))
     assert error < 1e-7, (spec["file"], error)
-    tile = atlas[ty:ty+height, tx:tx+width]
+    texture = root/"src/data/deep-sky"/obj["texture"]["file"]
+    assert hashlib.sha256(texture.read_bytes()).hexdigest() == obj["texture"]["sha256"]
+    tile = np.asarray(Image.open(texture))
     if obj["model"] in ("galaxy", "reflection"):
         assert np.all(tile[..., 3] == 255), "Galaxy/reflection data must not acquire an additive red increment"
     else:
@@ -100,6 +116,8 @@ for spec in catalog["imageSources"]:
         "publishedCornerMaxPixelError": quad_error,
         "wcs": m, "sampleCount": len(mesh), "maxReferencePixelError": error,
         "atlasRect": obj["atlasRect"],
+        "textureSha256": obj["texture"]["sha256"],
+        "cornerTolerancePixels": spec.get("cornerTolerancePixels", 0.5),
         "zeroAtlasBorder": True, "fullSourceFootprintContained": True,
         "samples": [{"atlasPixel": p.tolist(), "icrsDegrees": q.tolist(), "sourceReferencePixel": r.tolist()}
                     for p, q, r in zip(mesh, world, expected)]})

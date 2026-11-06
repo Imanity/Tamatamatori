@@ -1,0 +1,642 @@
+[
+  {
+    "file": "m33-400-stock.png",
+    "frame": {
+      "x": 265,
+      "y": 291.671875,
+      "width": 1239,
+      "height": 826,
+      "ready": "true"
+    },
+    "status": "当前 DEM 未遮挡",
+    "inputs": [
+      "2026-11-09T01:00",
+      "400",
+      "35.4172",
+      "138.8729",
+      "275.1371103000684",
+      "54.0786488095689",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [
+      "三角座星系"
+    ],
+    "feedback": [],
+    "errors": [],
+    "layers": {
+      "stars": true,
+      "deepSky": true,
+      "milkyWay": false
+    },
+    "metadataSource": "CUA values emitted at screenshot capture",
+    "screenshotSha256": "3d408c5bb2fa6b17e6fc90b545def28a246820a3fd4fdd88d3311bf2d625c642"
+  },
+  {
+    "file": "m33-1000-stock.png",
+    "frame": {
+      "x": 265,
+      "y": 291.671875,
+      "width": 1239,
+      "height": 826,
+      "ready": "true"
+    },
+    "status": "当前 DEM 未遮挡",
+    "inputs": [
+      "2026-11-09T01:00",
+      "1000",
+      "35.4172",
+      "138.8729",
+      "275.1371103000684",
+      "54.0786488095689",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [
+      "三角座星系"
+    ],
+    "feedback": [],
+    "errors": [],
+    "layers": {
+      "stars": true,
+      "deepSky": true,
+      "milkyWay": false
+    },
+    "metadataSource": "CUA values emitted at screenshot capture",
+    "screenshotSha256": "ebe08b6c6884f7b1025a49be9353e6228de6edc483477021b89bfae1e40c10d2"
+  },
+  {
+    "file": "m33-1000-ha.png",
+    "frame": {
+      "x": 265,
+      "y": 291.671875,
+      "width": 1239,
+      "height": 826,
+      "ready": "true"
+    },
+    "status": "当前 DEM 未遮挡",
+    "inputs": [
+      "2026-11-09T01:00",
+      "1000",
+      "35.4172",
+      "138.8729",
+      "275.1371103000684",
+      "54.0786488095689",
+      "1.6"
+    ],
+    "response": "ha-modified",
+    "labels": [
+      "三角座星系"
+    ],
+    "feedback": [],
+    "errors": [],
+    "layers": {
+      "stars": true,
+      "deepSky": true,
+      "milkyWay": false
+    },
+    "metadataSource": "CUA values emitted at screenshot capture",
+    "screenshotSha256": "d4b5a31966d213951b2e3b20b81bd5538fb4142d3567062671587043a38920ce"
+  },
+  {
+    "file": "rosette-400-stock.png",
+    "frame": {
+      "x": 265,
+      "y": 291.671875,
+      "width": 1239,
+      "height": 826,
+      "ready": "true"
+    },
+    "status": "当前 DEM 未遮挡",
+    "inputs": [
+      "2026-11-09T01:00",
+      "400",
+      "35.4172",
+      "138.8729",
+      "129.1106475960193",
+      "48.09174277749385",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [
+      "玫瑰星云"
+    ],
+    "feedback": [],
+    "errors": [],
+    "layers": {
+      "stars": true,
+      "deepSky": true,
+      "milkyWay": false
+    },
+    "metadataSource": "CUA values emitted at screenshot capture",
+    "screenshotSha256": "33ecc4674ec84249f6b4e11e5e73a2ee40f308f2690ca5f4af54eddc279b0081"
+  },
+  {
+    "file": "rosette-1000-stock.png",
+    "frame": {
+      "x": 265,
+      "y": 291.671875,
+      "width": 1239,
+      "height": 826,
+      "ready": "true"
+    },
+    "status": "当前 DEM 未遮挡",
+    "inputs": [
+      "2026-11-09T01:00",
+      "1000",
+      "35.4172",
+      "138.8729",
+      "129.1106475960193",
+      "48.09174277749385",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [
+      "玫瑰星云"
+    ],
+    "feedback": [],
+    "errors": [],
+    "layers": {
+      "stars": true,
+      "deepSky": true,
+      "milkyWay": false
+    },
+    "metadataSource": "CUA values emitted at screenshot capture",
+    "screenshotSha256": "a6d9ab4cc34f65930386b31bdb63d67a81fafeed1f2f5da0f88323d3b9ddd201"
+  },
+  {
+    "file": "rosette-1000-ha.png",
+    "frame": {
+      "x": 265,
+      "y": 291.671875,
+      "width": 1239,
+      "height": 826,
+      "ready": "true"
+    },
+    "status": "当前 DEM 未遮挡",
+    "inputs": [
+      "2026-11-09T01:00",
+      "1000",
+      "35.4172",
+      "138.8729",
+      "129.1106475960193",
+      "48.09174277749385",
+      "1.6"
+    ],
+    "response": "ha-modified",
+    "labels": [
+      "玫瑰星云"
+    ],
+    "feedback": [],
+    "errors": [],
+    "layers": {
+      "stars": true,
+      "deepSky": true,
+      "milkyWay": false
+    },
+    "metadataSource": "CUA values emitted at screenshot capture",
+    "screenshotSha256": "4e91ea1f8183849ecd4234ff1e5ef1cda8b1da449f456ea7fb13711ab780142a"
+  },
+  {
+    "file": "horsehead-400-stock.png",
+    "frame": {
+      "x": 265,
+      "y": 291.671875,
+      "width": 1239,
+      "height": 826,
+      "ready": "true"
+    },
+    "status": "当前 DEM 未遮挡",
+    "inputs": [
+      "2026-11-09T01:00",
+      "400",
+      "35.4172",
+      "138.8729",
+      "150.9855776967944",
+      "48.24382696432095",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [
+      "马头星云区域"
+    ],
+    "feedback": [],
+    "errors": [],
+    "layers": {
+      "stars": true,
+      "deepSky": true,
+      "milkyWay": false
+    },
+    "metadataSource": "CUA values emitted at screenshot capture",
+    "screenshotSha256": "190bff9ed21b40f893fa23e5387f620d2e96514ba62c9638bbf2c51e4c586fa6"
+  },
+  {
+    "file": "horsehead-1000-stock.png",
+    "frame": {
+      "x": 265,
+      "y": 291.671875,
+      "width": 1239,
+      "height": 826,
+      "ready": "true"
+    },
+    "status": "当前 DEM 未遮挡",
+    "inputs": [
+      "2026-11-09T01:00",
+      "1000",
+      "35.4172",
+      "138.8729",
+      "150.9855776967944",
+      "48.24382696432095",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [
+      "马头星云区域"
+    ],
+    "feedback": [],
+    "errors": [],
+    "layers": {
+      "stars": true,
+      "deepSky": true,
+      "milkyWay": false
+    },
+    "metadataSource": "CUA values emitted at screenshot capture",
+    "screenshotSha256": "39716e499b7ae0b4e5fe58492f23c92195f6fa654abea9a32268a0b0c09fa36f"
+  },
+  {
+    "file": "horsehead-1000-ha.png",
+    "frame": {
+      "x": 265,
+      "y": 291.671875,
+      "width": 1239,
+      "height": 826,
+      "ready": "true"
+    },
+    "status": "当前 DEM 未遮挡",
+    "inputs": [
+      "2026-11-09T01:00",
+      "1000",
+      "35.4172",
+      "138.8729",
+      "150.9855776967944",
+      "48.24382696432095",
+      "1.6"
+    ],
+    "response": "ha-modified",
+    "labels": [
+      "马头星云区域"
+    ],
+    "feedback": [],
+    "errors": [],
+    "layers": {
+      "stars": true,
+      "deepSky": true,
+      "milkyWay": false
+    },
+    "metadataSource": "CUA values emitted at screenshot capture",
+    "screenshotSha256": "54cd6dce3c683772d147a3f257f11f9ef012b211fb398acaa88f140a6518bfd1"
+  },
+  {
+    "file": "horsehead-1000-milky-ha.png",
+    "frame": {
+      "x": 265,
+      "y": 291.671875,
+      "width": 1239,
+      "height": 826,
+      "ready": "true"
+    },
+    "status": "当前 DEM 未遮挡",
+    "inputs": [
+      "2026-11-09T01:00",
+      "1000",
+      "35.4172",
+      "138.8729",
+      "150.9855776967944",
+      "48.24382696432095",
+      "1.6"
+    ],
+    "response": "ha-modified",
+    "labels": [
+      "马头星云区域"
+    ],
+    "feedback": [],
+    "errors": [],
+    "layers": {
+      "stars": true,
+      "deepSky": true,
+      "milkyWay": true
+    },
+    "metadataSource": "CUA values emitted at screenshot capture",
+    "screenshotSha256": "b4cee0e80c426ec65de32707b169476198b60c832cb495de05fcf271b5b9af36"
+  },
+  {
+    "file": "m20-400-stock.png",
+    "frame": {
+      "height": 826,
+      "ready": "true",
+      "width": 1239,
+      "x": 265,
+      "y": 291.671875
+    },
+    "status": "找到 1 个目标\n\n三裂星云\n深空 · 混合星云 · 影像结构参考\n当前 DEM 未遮挡\n175.9° / 几何 31.5°\n朝向",
+    "inputs": [
+      "2026-07-15T22:00",
+      "400",
+      "35.4172",
+      "138.8729",
+      "175.8797352322713",
+      "31.526759708670287",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [
+      "礁湖星云",
+      "三裂星云"
+    ],
+    "layers": {
+      "显示太阳": true,
+      "显示星座名称与连线": false,
+      "显示星空": true,
+      "显示月亮": true,
+      "显示深空天体": true,
+      "显示银河": false
+    },
+    "feedback": [],
+    "errors": [],
+    "screenshotSha256": "127202dbfe4a6698816d1e60e7e1349c71a2e6556a009c4dc178a26d716b5397"
+  },
+  {
+    "file": "m20-1000-stock.png",
+    "frame": {
+      "height": 826,
+      "ready": "true",
+      "width": 1239,
+      "x": 265,
+      "y": 291.671875
+    },
+    "status": "找到 1 个目标\n\n三裂星云\n深空 · 混合星云 · 影像结构参考\n当前 DEM 未遮挡\n175.9° / 几何 31.5°\n朝向",
+    "inputs": [
+      "2026-07-15T22:00",
+      "1000",
+      "35.4172",
+      "138.8729",
+      "175.8797352322713",
+      "31.526759708670287",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [
+      "三裂星云"
+    ],
+    "layers": {
+      "显示太阳": true,
+      "显示星座名称与连线": false,
+      "显示星空": true,
+      "显示月亮": true,
+      "显示深空天体": true,
+      "显示银河": false
+    },
+    "feedback": [],
+    "errors": [],
+    "screenshotSha256": "53c0b753842e6fe72b35a26f77b6b1608d7c81936fa26d3401daf146f87883cb"
+  },
+  {
+    "file": "m20-1000-ha.png",
+    "frame": {
+      "height": 826,
+      "ready": "true",
+      "width": 1239,
+      "x": 265,
+      "y": 291.671875
+    },
+    "status": "找到 1 个目标\n\n三裂星云\n深空 · 混合星云 · 影像结构参考\n当前 DEM 未遮挡\n175.9° / 几何 31.5°\n朝向",
+    "inputs": [
+      "2026-07-15T22:00",
+      "1000",
+      "35.4172",
+      "138.8729",
+      "175.8797352322713",
+      "31.526759708670287",
+      "1.6"
+    ],
+    "response": "ha-modified",
+    "labels": [
+      "三裂星云"
+    ],
+    "layers": {
+      "显示太阳": true,
+      "显示星座名称与连线": false,
+      "显示星空": true,
+      "显示月亮": true,
+      "显示深空天体": true,
+      "显示银河": false
+    },
+    "feedback": [],
+    "errors": [],
+    "screenshotSha256": "10f6c950e592952071398f5ebeb3f2886460db1179d16ce04e2cc8e34dbee90a"
+  },
+  {
+    "file": "m20-terrain-blocked.png",
+    "frame": {
+      "height": 826,
+      "ready": "true",
+      "width": 1239,
+      "x": 265,
+      "y": 291.671875
+    },
+    "status": "找到 1 个目标\n\n三裂星云\n深空 · 混合星云 · 影像结构参考\n山体遮挡\n238.5° / 几何 3.4°\n朝向",
+    "inputs": [
+      "2026-07-16T02:45",
+      "400",
+      "35.4172",
+      "138.8729",
+      "238.53022387930991",
+      "3.615481460695792",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [],
+    "layers": {
+      "显示太阳": true,
+      "显示星座名称与连线": false,
+      "显示星空": true,
+      "显示月亮": true,
+      "显示深空天体": true,
+      "显示银河": false
+    },
+    "feedback": [],
+    "errors": [],
+    "screenshotSha256": "fdc3fb72d601568bfab0269ce0fd0f5d002f016c1d7fffdd39431d5f1d00c977"
+  },
+  {
+    "file": "m20-terrain-partial.png",
+    "frame": {
+      "height": 826,
+      "ready": "true",
+      "width": 1239,
+      "x": 265,
+      "y": 291.671875
+    },
+    "status": "找到 1 个目标\n\n三裂星云\n深空 · 混合星云 · 影像结构参考\n部分山体遮挡\n235.4° / 几何 6.8°\n朝向",
+    "inputs": [
+      "2026-07-16T02:25",
+      "400",
+      "35.4172",
+      "138.8729",
+      "235.4239382854244",
+      "6.956627061009483",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [],
+    "layers": {
+      "显示太阳": true,
+      "显示星座名称与连线": false,
+      "显示星空": true,
+      "显示月亮": true,
+      "显示深空天体": true,
+      "显示银河": false
+    },
+    "feedback": [],
+    "errors": [],
+    "screenshotSha256": "320bec256bb8130898deaa4b01b13c114d6148250fa3927b48ccfad8cf041e85"
+  },
+  {
+    "file": "m20-twilight-hidden.png",
+    "frame": {
+      "height": 826,
+      "ready": "true",
+      "width": 1239,
+      "x": 265,
+      "y": 291.671875
+    },
+    "status": "找到 1 个目标\n\n三裂星云\n深空 · 混合星云 · 影像结构参考\n天空较亮 · 轮廓隐藏\n133.9° / 几何 15.5°\n朝向",
+    "inputs": [
+      "2026-07-15T19:00",
+      "400",
+      "35.4172",
+      "138.8729",
+      "133.92089886618749",
+      "15.52688786848419",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [],
+    "layers": {
+      "显示太阳": true,
+      "显示星座名称与连线": false,
+      "显示星空": true,
+      "显示月亮": true,
+      "显示深空天体": true,
+      "显示银河": false
+    },
+    "feedback": [],
+    "errors": [],
+    "screenshotSha256": "1344f3e9895f2451c866fb30b7b41adfc7e4672e2e98c307ef574e9d97e71a50"
+  },
+  {
+    "file": "m45-600-stock.png",
+    "frame": {
+      "height": 826,
+      "ready": "true",
+      "width": 1239,
+      "x": 265,
+      "y": 291.671875
+    },
+    "status": "找到 1 个目标\n\n昴星团\n深空 · 星团与反射云 · 影像结构参考\n当前 DEM 未遮挡\n218.6° / 几何 76.1°\n朝向",
+    "inputs": [
+      "2026-11-09T01:00",
+      "600",
+      "35.4172",
+      "138.8729",
+      "218.6186755054519",
+      "76.11694820116776",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [
+      "昴星团"
+    ],
+    "layers": {
+      "显示太阳": true,
+      "显示星座名称与连线": false,
+      "显示星空": true,
+      "显示月亮": true,
+      "显示深空天体": true,
+      "显示银河": false
+    },
+    "feedback": [],
+    "errors": [],
+    "screenshotSha256": "7c1203504ee5437b1c5c881fad5aab4b169f4c64caaddf369c6e5f101bc0e73a"
+  },
+  {
+    "file": "m45-600-ha.png",
+    "frame": {
+      "height": 826,
+      "ready": "true",
+      "width": 1239,
+      "x": 265,
+      "y": 291.671875
+    },
+    "status": "找到 1 个目标\n\n昴星团\n深空 · 星团与反射云 · 影像结构参考\n当前 DEM 未遮挡\n218.6° / 几何 76.1°\n朝向",
+    "inputs": [
+      "2026-11-09T01:00",
+      "600",
+      "35.4172",
+      "138.8729",
+      "218.6186755054519",
+      "76.11694820116776",
+      "1.6"
+    ],
+    "response": "ha-modified",
+    "labels": [
+      "昴星团"
+    ],
+    "layers": {
+      "显示太阳": true,
+      "显示星座名称与连线": false,
+      "显示星空": true,
+      "显示月亮": true,
+      "显示深空天体": true,
+      "显示银河": false
+    },
+    "feedback": [],
+    "errors": [],
+    "screenshotSha256": "e76a8516a2329644d83c1fbdec79900b15fa3c11c917e972f751911ede9cef64"
+  },
+  {
+    "file": "mixed-8mm.png",
+    "frame": {
+      "height": 826,
+      "ready": "true",
+      "width": 1239,
+      "x": 265,
+      "y": 291.671875
+    },
+    "status": "找到 12 个目标\n\n北美星云\n深空 · 发射星云 · 影像结构参考\n视场外\n317.6° / 几何 11.1°\n朝向\n加州星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n284.6° / 几何 85.5°\n朝向\n礁湖星云\n深空 · 发射星云 · 影像结构参考\n地平线下\n290.7° / 几何 -66.1°\n朝向\n猎户座大星云\n深空 · 混合星云 · 影像结构参考\n当前 DEM 未遮挡\n154.6° / 几何 46.0°\n朝向\n灵魂星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n336.4° / 几何 60.8°\n朝向\n马头星云区域\n深空 · 暗云与发射背景 · 影像结构参考 · 暗区对比近似 · IC434区域参考\n当前 DEM 未遮挡\n151.0° / 几何 48.2°\n朝向\n昴星团\n深空 · 星团与反射云 · 影像结构参考\n当前 DEM 未遮挡\n218.6° / 几何 76.1°\n朝向\n玫瑰星云\n深空 · 发射星云 · 影像结构参考 · 源图已含 Hα增强 · 未改机配色为近似参考\n当前 DEM 未遮挡\n129.1° / 几何 48.1°\n朝向\n三角座星系\n深空 · 星系 · 影像结构参考\n当前 DEM 未遮挡\n275.1° / 几何 54.1°\n朝向\n三裂星云\n深空 · 混合星云 · 影像结构参考\n地平线下\n293.9° / 几何 -65.5°\n朝向\n仙女座星系\n深空 · 星系 · 影像结构参考\n当前 DEM 未遮挡\n295.4° / 几何 46.7°\n朝向\n心脏星云\n深空 · 发射星云 · 影像结构参考\n当前 DEM 未遮挡\n334.7° / 几何 58.4°\n朝向",
+    "inputs": [
+      "2026-11-09T01:00",
+      "8",
+      "35.4172",
+      "138.8729",
+      "218.6186755054519",
+      "76.11694820116776",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [
+      "仙女座星系"
+    ],
+    "layers": {
+      "显示太阳": true,
+      "显示星座名称与连线": false,
+      "显示星空": true,
+      "显示月亮": true,
+      "显示深空天体": true,
+      "显示银河": false
+    },
+    "feedback": [],
+    "errors": [],
+    "screenshotSha256": "26d25895773c82a5522f98032b7ac784fced88deef10547c6ffea0356d89b64c"
+  }
+]

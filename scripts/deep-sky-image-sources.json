@@ -411,5 +411,250 @@
     "bands": "Optical DSLR mosaic; detailed filter response not published",
     "backgroundModel": "none",
     "sourceProcessing": "Upstream star-suppressed display texture; do not infer calibrated flux or exact star removal"
+  },
+  {
+    "catalogId": "NGC6514",
+    "supportSeed": "catalogue-centre",
+    "file": "noao-m20johnson.tif",
+    "page": "https://www.astropix.org/image/noirlab/noao-m20johnson",
+    "url": "https://noirlab.edu/public/media/archives/images/original/noao-m20johnson.tif",
+    "credit": "KPNO/NOIRLab/NSF/AURA/Lawrence Johnson and Kathy Ortega/Adam Block",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "sha256": "43537825287d769b2c2fcfa21f50f2fcee9373be07c3bd88f4bfece4a5247edc",
+    "bytes": 7766212,
+    "dimensions": [
+      1773,
+      1388
+    ],
+    "wcs": {
+      "ReferenceDimension": [
+        1773.0,
+        1388.0
+      ],
+      "ReferencePixel": [
+        959.00453186,
+        458.918273926
+      ],
+      "ReferenceValue": [
+        270.72131452,
+        -22.7577817741
+      ],
+      "Scale": [
+        -0.00100095111929,
+        0.00100101146702
+      ],
+      "Rotation": -149.75961923452,
+      "CoordinateFrame": "ICRS",
+      "Equinox": "J2000",
+      "CoordsystemProjection": "TAN",
+      "Quality": "Full"
+    },
+    "bands": "Optical LRGB",
+    "role": "Published optical appearance reference, not a calibrated camera pair",
+    "detailMode": "source-rgb",
+    "workingMaxSize": 3000,
+    "edgeFadePixels": 40,
+    "backgroundModel": "edge-harmonic",
+    "opacityModel": "diffuse-colour-reconstruction"
+  },
+  {
+    "catalogId": "NGC0598",
+    "file": "noao-m33hotelling.tif",
+    "page": "https://www.astropix.org/image/noirlab/noao-m33hotelling",
+    "url": "https://noirlab.edu/public/media/archives/images/original/noao-m33hotelling.tif",
+    "credit": "KPNO/NOIRLab/NSF/AURA/Ken Hotelling/Flynn Haase",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "sha256": "e6ac4937abfa9710d4d03e37c30f90561937f68eca0e489d9c29038823f0169b",
+    "bytes": 2569690,
+    "dimensions": [
+      1700,
+      1199
+    ],
+    "wcs": {
+      "ReferenceDimension": [
+        1700.0,
+        1199.0
+      ],
+      "ReferencePixel": [
+        1132.9815979,
+        659.719230652
+      ],
+      "ReferenceValue": [
+        23.2778261991,
+        30.4854950049
+      ],
+      "Scale": [
+        -0.000812387678434,
+        0.000811945619393
+      ],
+      "Rotation": 60.939475204524,
+      "CoordinateFrame": "ICRS",
+      "Equinox": "J2000",
+      "CoordsystemProjection": "TAN",
+      "Quality": "Full"
+    },
+    "bands": "Optical LRGB",
+    "role": "Published optical appearance reference, not a calibrated camera pair",
+    "detailMode": "source-rgb",
+    "workingMaxSize": 3000,
+    "edgeFadePixels": 40,
+    "backgroundModel": "edge-harmonic",
+    "opacityModel": "continuum-reconstruction"
+  },
+  {
+    "catalogId": "NGC2237",
+    "file": "stellarium-n2244.png",
+    "page": "https://commons.wikimedia.org/wiki/File:2244_and_the_Rosette_Nebula.jpg",
+    "publisherPage": "https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/n2244.png",
+    "url": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/n2244.png",
+    "credit": "Kees Scherer; Stellarium display adaptation",
+    "license": "CC-BY-SA-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "licenseEvidence": "https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md",
+    "sha256": "0d57c1c667d0809ea893293963d31fc2c12ac29e6b3a22b1c4d7016c1240a42c",
+    "bytes": 519419,
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "upstreamCommit": "230f2bd84b7827fb16be2a54c2ebdae07edf17a6",
+    "registrationSource": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/textures.json",
+    "registrationSourceSha256": "75bbf1e0f0df37a600852f4923b2bb0b466a7ff5a5865d551d4e7b686baf6071",
+    "registrationModel": "stellarium-sky-corners",
+    "skyCorners": [
+      [
+        99.0401,
+        4.4594
+      ],
+      [
+        97.5523,
+        3.9357
+      ],
+      [
+        97.0246,
+        5.4202
+      ],
+      [
+        98.5161,
+        5.9412
+      ]
+    ],
+    "wcs": {
+      "ReferenceDimension": [
+        1024.0,
+        1024.0
+      ],
+      "ReferencePixel": [
+        512.4998800563457,
+        512.5000167792838
+      ],
+      "ReferenceValue": [
+        98.03327577806236,
+        4.93959210622918
+      ],
+      "CDMatrix": [
+        [
+          -0.0014494429010376486,
+          -0.0005117068272131202
+        ],
+        [
+          -0.0005101583333026647,
+          0.0014486073016130095
+        ]
+      ],
+      "CoordinateFrame": "ICRS",
+      "Equinox": "J2000",
+      "CoordsystemProjection": "TAN",
+      "Quality": "Derived from published sky corners, not source AVM or an independent plate solution"
+    },
+    "cornerTolerancePixels": 1,
+    "bands": "Optical H-alpha + RGB; source already enhances H-alpha",
+    "sourceNote": "源图已含 Hα增强 · 未改机配色为近似参考",
+    "role": "Published optical display reference, not a calibrated stock/modified camera pair",
+    "detailMode": "source-rgb",
+    "workingMaxSize": 3000,
+    "edgeFadePixels": 40,
+    "backgroundModel": "none",
+    "opacityModel": "diffuse-colour-reconstruction",
+    "sourceProcessing": "Upstream display texture with finite resolution and published corner registration"
+  },
+  {
+    "catalogId": "IC0434",
+    "file": "stellarium-ic434.png",
+    "page": "https://manuel-astro.ch/project/south-of-orions-belt/",
+    "publisherPage": "https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/ic434.png",
+    "url": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/ic434.png",
+    "credit": "Manuel Peitsch, post-processing: Sun Shuwei",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "licenseEvidence": "https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md",
+    "sha256": "7280fb37a95919510a0251da17b67d6639b466b074694d01f02fb77833abfa4e",
+    "bytes": 1201316,
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "upstreamCommit": "230f2bd84b7827fb16be2a54c2ebdae07edf17a6",
+    "registrationSource": "https://raw.githubusercontent.com/Stellarium/stellarium/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default/textures.json",
+    "registrationSourceSha256": "75bbf1e0f0df37a600852f4923b2bb0b466a7ff5a5865d551d4e7b686baf6071",
+    "registrationModel": "stellarium-sky-corners",
+    "skyCorners": [
+      [
+        85.9484,
+        -3.7416
+      ],
+      [
+        83.5078,
+        -3.7871
+      ],
+      [
+        83.4671,
+        -1.3472
+      ],
+      [
+        85.9007,
+        -1.3064
+      ]
+    ],
+    "wcs": {
+      "ReferenceDimension": [
+        1024.0,
+        1024.0
+      ],
+      "ReferencePixel": [
+        512.4997825855041,
+        512.5001171759523
+      ],
+      "ReferenceValue": [
+        84.7060000324835,
+        -2.5461502318617972
+      ],
+      "CDMatrix": [
+        [
+          -0.002377986570895912,
+          -4.314315064242486e-05
+        ],
+        [
+          -4.214772870000331e-05,
+          0.0023813188244372263
+        ]
+      ],
+      "CoordinateFrame": "ICRS",
+      "Equinox": "J2000",
+      "CoordsystemProjection": "TAN",
+      "Quality": "Derived from published sky corners, not source AVM or an independent plate solution"
+    },
+    "cornerTolerancePixels": 1,
+    "bands": "Optical OSC mosaic, ASI2600MC-Pro / Optolong L-Pro",
+    "sourceNote": "暗区对比近似 · IC434区域参考",
+    "role": "Published optical display reference, not a calibrated stock/modified camera pair",
+    "detailMode": "source-rgb",
+    "workingMaxSize": 3000,
+    "edgeFadePixels": 40,
+    "backgroundModel": "none",
+    "opacityModel": "diffuse-colour-reconstruction",
+    "sourceProcessing": "Upstream display texture with finite resolution and published corner registration"
   }
 ]

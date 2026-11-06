@@ -12,7 +12,7 @@ David Nash / Astronexus 的亮星目录，使用 [CC BY-SA 4.0](https://creative
 
 ## OpenNGC 深空数据与轮廓
 
-使用 [Mattia Verga / OpenNGC 固定提交](https://github.com/mattiaverga/OpenNGC/tree/be3cd6c5498806a2fbb2f7e0452ef802dbb02be0)，按 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 分发 8 个目标的衍生子集及组合分量图。轮廓由原项目使用 CDS 的 Aladin Sky Atlas 从 DSS2 Color 描绘；此项不分发原始 DSS 摄影像素。已增加中文名、搜索别名、切平面边界与定性显示分量；组合图中另有下述六幅 CC BY 4.0 与两幅 CC0 1.0 影像的衍生结构。来源哈希、字段/历元、修改声明见 [deep-sky.json](src/data/deep-sky.json)。数据与分量图在预览署名区可下载；此许可不改变无关应用代码的许可。
+使用 Mattia Verga / OpenNGC 固定提交，按 CC BY-SA 4.0 分发 12 个目标的衍生目录与独立分量图。轮廓由原项目使用 CDS Aladin 从 DSS2 Color 描绘。已增加中文名称、搜索别名、切平面边界和定性显示分量。摄影参考资料包含九份 CC BY 4.0、两份 CC0 1.0 与一份 CC BY-SA 4.0 来源。来源哈希、历元和修改记录随数据分发。独立 PNG 衍生数据按 CC BY-SA 4.0 提供下载。[OpenNGC 固定版本](https://github.com/mattiaverga/OpenNGC/tree/be3cd6c5498806a2fbb2f7e0452ef802dbb02be0)，[衍生数据](src/data/deep-sky.json)，[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 
 ## 深空宽幅影像与色彩参考
 
@@ -28,6 +28,15 @@ David Nash / Astronexus 的亮星目录，使用 [CC BY-SA 4.0](https://creative
 M45/M8/北美使用同一发布资料的原尺寸 TIFF，最终 RGB 保留高频结构；背景与扩散光支持分别滤波，不对最终 RGB 整体去星或模糊；颜色支持的形态重建抑制外围照片星场并填补白色星核支持孔洞。三图采样边缘为 40 工作像素，M31/M42 为 3 像素。照片星点与光刺保留为参考，不是新增星历或光度定标。
 
 历史验收截图仍包含上一版 eso1103a（ESO/Igor Chekalin）与 heic0512d（÷ 2002 R. Gendler, Photo by R. Gendler）的结构衍生外观，按当时发布方 CC BY 4.0 保留署名；它们不再用于当前运行时图集。
+
+## 四个新增深空参考
+
+- M20 署名 KPNO/NOIRLab/NSF/AURA/Lawrence Johnson and Kathy Ortega/Adam Block，光学 LRGB、CC BY 4.0。使用原尺寸 TIFF、AVM 重投影和联合红蓝扩散结构支持。[发布资料](https://www.astropix.org/image/noirlab/noao-m20johnson)
+- M33 署名 KPNO/NOIRLab/NSF/AURA/Ken Hotelling/Flynn Haase，光学 LRGB、CC BY 4.0。使用原尺寸 TIFF、AVM 重投影和连续谱结构支持。[发布资料](https://www.astropix.org/image/noirlab/noao-m33hotelling)
+- 玫瑰署名 Kees Scherer，采用 Stellarium 固定版本的 `n2244.png` 与四角坐标。原资料为 Hα+RGB，按 CC BY-SA 4.0 使用。已重投影、缩放并提取定性红光增量。许可依据为上游 CREDITS 第 4.58 项。[来源页](https://commons.wikimedia.org/wiki/File:2244_and_the_Rosette_Nebula.jpg)，[固定许可记录](https://github.com/Stellarium/stellarium/blob/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/CREDITS.md)
+- 马头区域署名 Manuel Peitsch, post-processing: Sun Shuwei，采用同一固定版本的 `ic434.png` 与四角坐标。作者资料采用 ASI2600MC-Pro、Optolong L-Pro 和可见光拼接，按 CC BY 4.0 使用。已重投影、提取扩散结构并估计暗区背景对比。许可依据为上游 CREDITS 第 4.132 项。[作者资料](https://manuel-astro.ch/project/south-of-orions-belt/)，[固定纹理与坐标](https://github.com/Stellarium/stellarium/tree/230f2bd84b7827fb16be2a54c2ebdae07edf17a6/nebulae/default)
+
+四份参考的输入/输出 SHA256、原许可、派生处理及注册字段均保存在 `deep-sky.json`。四角资料的 TAN 拟合误差单独记录，既有心脏/灵魂继续使用原来的半像素验收界限。应用采用 12 份独立纹理，并按 CC BY-SA 4.0 提供生成后的 PNG。[完整数据](src/data/deep-sky.json)
 
 ## ESO 银河全景
 

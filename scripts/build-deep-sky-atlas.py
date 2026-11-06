@@ -46,6 +46,8 @@ def tangent(points, obj):
 
 
 for obj in catalog["objects"]:
+    if obj["catalogId"] not in regions:
+        continue  # New references are built as independent target textures.
     tx, ty, width, height = regions[obj["catalogId"]]
     obj["atlasRect"] = [tx, ty, width, height]
     spec = next((source for source in sources if source["catalogId"] == obj["catalogId"]), None)

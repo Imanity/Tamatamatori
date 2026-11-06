@@ -39,6 +39,8 @@
         1024,
         1024
       ],
+      "textureSha256": "67a8acff0b5f4a8932f6ea37288efcf1a9991865d1c65adc8e42fb1a94d36b4e",
+      "cornerTolerancePixels": 0.5,
       "zeroAtlasBorder": true,
       "fullSourceFootprintContained": true,
       "samples": [
@@ -430,6 +432,8 @@
         1024,
         1024
       ],
+      "textureSha256": "da669f9bef54d13dbb26230fdbf0a01b57a870c6fedc9719921e20e7dceef0e7",
+      "cornerTolerancePixels": 0.5,
       "zeroAtlasBorder": true,
       "fullSourceFootprintContained": true,
       "samples": [
@@ -821,6 +825,8 @@
         2048,
         1024
       ],
+      "textureSha256": "423419bd878aa68e6b299017a80a9a13ffa445633169edf6378d8c652ca03e6e",
+      "cornerTolerancePixels": 0.5,
       "zeroAtlasBorder": true,
       "fullSourceFootprintContained": true,
       "samples": [
@@ -1212,6 +1218,8 @@
         2048,
         1024
       ],
+      "textureSha256": "4d1047609885b9937cc48bef6429e83331b96c9e66f17540eb37d14583e71682",
+      "cornerTolerancePixels": 0.5,
       "zeroAtlasBorder": true,
       "fullSourceFootprintContained": true,
       "samples": [
@@ -1603,6 +1611,8 @@
         2048,
         2048
       ],
+      "textureSha256": "5e228d56f45b74a45e844e7370e9ad957d1df2557e7c6e3b94bdf12defa27ddd",
+      "cornerTolerancePixels": 0.5,
       "zeroAtlasBorder": true,
       "fullSourceFootprintContained": true,
       "samples": [
@@ -1994,6 +2004,8 @@
         2048,
         2048
       ],
+      "textureSha256": "c76ca0208676e24836b0aa83065565ee93b31fd3cda88877e884d41715853494",
+      "cornerTolerancePixels": 0.5,
       "zeroAtlasBorder": true,
       "fullSourceFootprintContained": true,
       "samples": [
@@ -2390,6 +2402,8 @@
         1024,
         1024
       ],
+      "textureSha256": "ed0af6f4a01fb0432efd716e9e4bec65966de8b2c1ce86db165acfd9480640f6",
+      "cornerTolerancePixels": 0.5,
       "zeroAtlasBorder": true,
       "fullSourceFootprintContained": true,
       "samples": [
@@ -2786,6 +2800,8 @@
         1024,
         1024
       ],
+      "textureSha256": "2c96c2cedbf61e5903d86f9b4077ea4ede95c73f441d42d97802d5c7867be470",
+      "cornerTolerancePixels": 0.5,
       "zeroAtlasBorder": true,
       "fullSourceFootprintContained": true,
       "samples": [
@@ -3140,6 +3156,1588 @@
           ]
         }
       ]
+    },
+    {
+      "catalogId": "NGC6514",
+      "sourceSha256": "43537825287d769b2c2fcfa21f50f2fcee9373be07c3bd88f4bfece4a5247edc",
+      "registrationModel": "avm",
+      "publishedCornerMaxPixelError": null,
+      "wcs": {
+        "ReferenceDimension": [
+          1773.0,
+          1388.0
+        ],
+        "ReferencePixel": [
+          959.00453186,
+          458.918273926
+        ],
+        "ReferenceValue": [
+          270.72131452,
+          -22.7577817741
+        ],
+        "Scale": [
+          -0.00100095111929,
+          0.00100101146702
+        ],
+        "Rotation": -149.75961923452,
+        "CoordinateFrame": "ICRS",
+        "Equinox": "J2000",
+        "CoordsystemProjection": "TAN",
+        "Quality": "Full"
+      },
+      "sampleCount": 25,
+      "maxReferencePixelError": 4.263256414560601e-11,
+      "atlasRect": [
+        0,
+        0,
+        2048,
+        2048
+      ],
+      "textureSha256": "4cf11eea847fd42becdb16ca4a161bfd394fb71620ab1e14aa6cd71d3500f4ae",
+      "cornerTolerancePixels": 0.5,
+      "zeroAtlasBorder": true,
+      "fullSourceFootprintContained": true,
+      "samples": [
+        {
+          "atlasPixel": [
+            0.0,
+            0.0
+          ],
+          "icrsDegrees": [
+            269.50766161698607,
+            -21.884767010348234
+          ],
+          "sourceReferencePixel": [
+            423.8166929900599,
+            -857.4961280335258
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.75,
+            0.0
+          ],
+          "icrsDegrees": [
+            270.14467776724865,
+            -21.888033417067895
+          ],
+          "sourceReferencePixel": [
+            934.2638171718796,
+            -560.1489738300216
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.5,
+            0.0
+          ],
+          "icrsDegrees": [
+            270.7818251630728,
+            -21.88884974814005
+          ],
+          "sourceReferencePixel": [
+            1444.703165657763,
+            -262.80634914771315
+          ]
+        },
+        {
+          "atlasPixel": [
+            1535.25,
+            0.0
+          ],
+          "icrsDegrees": [
+            271.41894625407065,
+            -21.887215179451406
+          ],
+          "sourceReferencePixel": [
+            1955.1347386252849,
+            34.53174611684631
+          ]
+        },
+        {
+          "atlasPixel": [
+            2047.0,
+            0.0
+          ],
+          "icrsDegrees": [
+            272.0558835288713,
+            -21.883131360988035
+          ],
+          "sourceReferencePixel": [
+            2465.5585362521433,
+            331.8653120671887
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            511.75
+          ],
+          "icrsDegrees": [
+            269.50289083791756,
+            -22.439036470197834
+          ],
+          "sourceReferencePixel": [
+            144.95549190224688,
+            -378.9064888921786
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.75,
+            511.75
+          ],
+          "icrsDegrees": [
+            270.14250889940206,
+            -22.44239550976474
+          ],
+          "sourceReferencePixel": [
+            655.4231994219228,
+            -81.55222709611178
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.5,
+            511.75
+          ],
+          "icrsDegrees": [
+            270.7822598216844,
+            -22.443234992123013
+          ],
+          "sourceReferencePixel": [
+            1165.8831306507773,
+            215.797504906634
+          ]
+        },
+        {
+          "atlasPixel": [
+            1535.25,
+            511.75
+          ],
+          "icrsDegrees": [
+            271.4219841153717,
+            -22.441554067092618
+          ],
+          "sourceReferencePixel": [
+            1676.3352857666537,
+            513.1427072196079
+          ]
+        },
+        {
+          "atlasPixel": [
+            2047.0,
+            511.75
+          ],
+          "icrsDegrees": [
+            272.0615223308911,
+            -22.43735443684781
+          ],
+          "sourceReferencePixel": [
+            2186.77966494712,
+            810.4833799463054
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            1023.5
+          ],
+          "icrsDegrees": [
+            269.498080924504,
+            -22.99340473094521
+          ],
+          "sourceReferencePixel": [
+            -133.92587896642453,
+            99.71776620910367
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.75,
+            1023.5
+          ],
+          "icrsDegrees": [
+            270.1403222345563,
+            -22.996856560095726
+          ],
+          "sourceReferencePixel": [
+            376.562413533414,
+            397.0791358480958
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.5,
+            1023.5
+          ],
+          "icrsDegrees": [
+            270.7826980472557,
+            -22.99771923293289
+          ],
+          "sourceReferencePixel": [
+            887.0429291476837,
+            694.4359754216983
+          ]
+        },
+        {
+          "atlasPixel": [
+            1535.25,
+            1023.5
+          ],
+          "icrsDegrees": [
+            271.4250469022558,
+            -22.995991873092375
+          ],
+          "sourceReferencePixel": [
+            1397.5156680540792,
+            991.7882850334231
+          ]
+        },
+        {
+          "atlasPixel": [
+            2047.0,
+            1023.5
+          ],
+          "icrsDegrees": [
+            272.06720737985444,
+            -22.99167623517196
+          ],
+          "sourceReferencePixel": [
+            1907.9806304303152,
+            1289.136064786789
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            1535.25
+          ],
+          "icrsDegrees": [
+            269.49323139330664,
+            -23.547768003164038
+          ],
+          "sourceReferencePixel": [
+            -412.82742180439755,
+            578.3766410260212
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.75,
+            1535.25
+          ],
+          "icrsDegrees": [
+            270.13811755276123,
+            -23.551312735845933
+          ],
+          "sourceReferencePixel": [
+            97.6814573182346,
+            875.7451187583599
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.5,
+            1535.25
+          ],
+          "icrsDegrees": [
+            270.7831398838749,
+            -23.552198627659788
+          ],
+          "sourceReferencePixel": [
+            608.1825589604042,
+            1173.1090661531966
+          ]
+        },
+        {
+          "atlasPixel": [
+            1535.25,
+            1535.25
+          ],
+          "icrsDegrees": [
+            271.4281349227399,
+            -23.550424775955133
+          ],
+          "sourceReferencePixel": [
+            1118.675883299872,
+            1470.4684833140736
+          ]
+        },
+        {
+          "atlasPixel": [
+            2047.0,
+            1535.25
+          ],
+          "icrsDegrees": [
+            272.07293924693613,
+            -23.54599298795715
+          ],
+          "sourceReferencePixel": [
+            1629.1614305143162,
+            1767.8233703444623
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            2047.0
+          ],
+          "icrsDegrees": [
+            269.4883417528925,
+            -24.102022502836874
+          ],
+          "sourceReferencePixel": [
+            -691.7491388002632,
+            1057.0701393149254
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.75,
+            2047.0
+          ],
+          "icrsDegrees": [
+            270.13589463042723,
+            -24.105660210236632
+          ],
+          "sourceReferencePixel": [
+            -181.21967141208916,
+            1354.4457253910134
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.5,
+            2047.0
+          ],
+          "icrsDegrees": [
+            270.78358537636024,
+            -24.106569338836827
+          ],
+          "sourceReferencePixel": [
+            329.3020179006986,
+            1651.8167808574583
+          ]
+        },
+        {
+          "atlasPixel": [
+            1535.25,
+            2047.0
+          ],
+          "icrsDegrees": [
+            271.43124848993637,
+            -24.104748959614717
+          ],
+          "sourceReferencePixel": [
+            839.8159293158553,
+            1949.1833058177824
+          ]
+        },
+        {
+          "atlasPixel": [
+            2047.0,
+            2047.0
+          ],
+          "icrsDegrees": [
+            272.0787185127534,
+            -24.10020093259534
+          ],
+          "sourceReferencePixel": [
+            1350.3220630110745,
+            2246.5453003755483
+          ]
+        }
+      ]
+    },
+    {
+      "catalogId": "NGC0598",
+      "sourceSha256": "e6ac4937abfa9710d4d03e37c30f90561937f68eca0e489d9c29038823f0169b",
+      "registrationModel": "avm",
+      "publishedCornerMaxPixelError": null,
+      "wcs": {
+        "ReferenceDimension": [
+          1700.0,
+          1199.0
+        ],
+        "ReferencePixel": [
+          1132.9815979,
+          659.719230652
+        ],
+        "ReferenceValue": [
+          23.2778261991,
+          30.4854950049
+        ],
+        "Scale": [
+          -0.000812387678434,
+          0.000811945619393
+        ],
+        "Rotation": 60.939475204524,
+        "CoordinateFrame": "ICRS",
+        "Equinox": "J2000",
+        "CoordsystemProjection": "TAN",
+        "Quality": "Full"
+      },
+      "sampleCount": 25,
+      "maxReferencePixelError": 2.205524651799351e-11,
+      "atlasRect": [
+        0,
+        0,
+        2048,
+        2048
+      ],
+      "textureSha256": "99dc1311f97777559a695f67f8693e4adbefdbabc49209005bf138363799550e",
+      "cornerTolerancePixels": 0.5,
+      "zeroAtlasBorder": true,
+      "fullSourceFootprintContained": true,
+      "samples": [
+        {
+          "atlasPixel": [
+            0.0,
+            0.0
+          ],
+          "icrsDegrees": [
+            22.51026934694852,
+            31.5487753879892
+          ],
+          "sourceReferencePixel": [
+            377.4999266098471,
+            2001.586833537904
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.75,
+            0.0
+          ],
+          "icrsDegrees": [
+            22.983394297995847,
+            31.551408981280503
+          ],
+          "sourceReferencePixel": [
+            135.63738456264093,
+            1567.8239449771663
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.5,
+            0.0
+          ],
+          "icrsDegrees": [
+            23.45658453387109,
+            31.552300391999555
+          ],
+          "sourceReferencePixel": [
+            -106.23459177525638,
+            1134.0441367017384
+          ]
+        },
+        {
+          "atlasPixel": [
+            1535.25,
+            0.0
+          ],
+          "icrsDegrees": [
+            23.92977551415532,
+            31.55144917290076
+          ],
+          "sourceReferencePixel": [
+            -348.1160029559146,
+            700.2474077216915
+          ]
+        },
+        {
+          "atlasPixel": [
+            2047.0,
+            0.0
+          ],
+          "icrsDegrees": [
+            24.402902697820494,
+            31.54885575106595
+          ],
+          "sourceReferencePixel": [
+            -590.0068495313781,
+            266.4337570469187
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            511.75
+          ],
+          "icrsDegrees": [
+            22.514671072125374,
+            31.103902404577198
+          ],
+          "sourceReferencePixel": [
+            855.8794910371164,
+            1734.5611774946765
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.75,
+            511.75
+          ],
+          "icrsDegrees": [
+            22.98560823269321,
+            31.10649082293216
+          ],
+          "sourceReferencePixel": [
+            614.0320029122947,
+            1300.8033473453565
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.5,
+            511.75
+          ],
+          "icrsDegrees": [
+            23.456609776449657,
+            31.107366942433075
+          ],
+          "sourceReferencePixel": [
+            372.17508130724036,
+            867.0285980791358
+          ]
+        },
+        {
+          "atlasPixel": [
+            1535.25,
+            511.75
+          ],
+          "icrsDegrees": [
+            23.927612054333228,
+            31.106530325113138
+          ],
+          "sourceReferencePixel": [
+            130.30872566998778,
+            433.23692870609995
+          ]
+        },
+        {
+          "atlasPixel": [
+            2047.0,
+            511.75
+          ],
+          "icrsDegrees": [
+            24.398551416687276,
+            31.103981389193702
+          ],
+          "sourceReferencePixel": [
+            -111.56706455150243,
+            -0.571661763814177
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            1023.5
+          ],
+          "icrsDegrees": [
+            22.519032274480853,
+            30.65897535546099
+          ],
+          "sourceReferencePixel": [
+            1334.2364123111518,
+            1467.548160584256
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.75,
+            1023.5
+          ],
+          "icrsDegrees": [
+            22.987801781491857,
+            30.661518696041608
+          ],
+          "sourceReferencePixel": [
+            1092.4039769545761,
+            1033.7953888534244
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.5,
+            1023.5
+          ],
+          "icrsDegrees": [
+            23.4566347865787,
+            30.66237955722751
+          ],
+          "sourceReferencePixel": [
+            850.5621089281283,
+            600.0256986034084
+          ]
+        },
+        {
+          "atlasPixel": [
+            1535.25,
+            1023.5
+          ],
+          "icrsDegrees": [
+            23.92546851569928,
+            30.661557510266633
+          ],
+          "sourceReferencePixel": [
+            608.7108076799807,
+            166.23908884436747
+          ]
+        },
+        {
+          "atlasPixel": [
+            2047.0,
+            1023.5
+          ],
+          "icrsDegrees": [
+            24.394240194229884,
+            30.659052964581022
+          ],
+          "sourceReferencePixel": [
+            366.8500726581351,
+            -267.5644414136766
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            1535.25
+          ],
+          "icrsDegrees": [
+            22.523353510988198,
+            30.214047901888915
+          ],
+          "sourceReferencePixel": [
+            1812.570692039635,
+            1200.5477819093094
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.75,
+            1535.25
+          ],
+          "icrsDegrees": [
+            22.98997522466492,
+            30.21654627240907
+          ],
+          "sourceReferencePixel": [
+            1570.7533082972375,
+            766.8000686039535
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.5,
+            1535.25
+          ],
+          "icrsDegrees": [
+            23.456659567454317,
+            30.217391911754586
+          ],
+          "sourceReferencePixel": [
+            1328.926492695311,
+            333.03543737715984
+          ]
+        },
+        {
+          "atlasPixel": [
+            1535.25,
+            1535.25
+          ],
+          "icrsDegrees": [
+            23.923344624368255,
+            30.21658440032253
+          ],
+          "sourceReferencePixel": [
+            1087.0902446820269,
+            -100.74611276091412
+          ]
+        },
+        {
+          "atlasPixel": [
+            2047.0,
+            1535.25
+          ],
+          "icrsDegrees": [
+            24.389968479850157,
+            30.21412413879831
+          ],
+          "sourceReferencePixel": [
+            845.2445637054964,
+            -534.5445828001169
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            2047.0
+          ],
+          "icrsDegrees": [
+            22.527635328460867,
+            29.769173705260936
+          ],
+          "sourceReferencePixel": [
+            2290.8823318299674,
+            933.5600405724963
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.75,
+            2047.0
+          ],
+          "icrsDegrees": [
+            22.992128837371343,
+            29.771627224013827
+          ],
+          "sourceReferencePixel": [
+            2049.079998547838,
+            499.81738569968485
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.5,
+            2047.0
+          ],
+          "icrsDegrees": [
+            23.456684122214273,
+            29.77245768157439
+          ],
+          "sourceReferencePixel": [
+            1807.268234216416,
+            66.05781350310531
+          ]
+        },
+        {
+          "atlasPixel": [
+            1535.25,
+            2047.0
+          ],
+          "icrsDegrees": [
+            23.92124011145254,
+            29.77166466742156
+          ],
+          "sourceReferencePixel": [
+            1565.447038283931,
+            -367.71867700702035
+          ]
+        },
+        {
+          "atlasPixel": [
+            2047.0,
+            2047.0
+          ],
+          "icrsDegrees": [
+            24.38573573299345,
+            29.769248573568312
+          ],
+          "sourceReferencePixel": [
+            1323.6164101985473,
+            -801.5120868205162
+          ]
+        }
+      ]
+    },
+    {
+      "catalogId": "NGC2237",
+      "sourceSha256": "0d57c1c667d0809ea893293963d31fc2c12ac29e6b3a22b1c4d7016c1240a42c",
+      "registrationModel": "stellarium-sky-corners",
+      "publishedCornerMaxPixelError": 0.6430936329981377,
+      "wcs": {
+        "ReferenceDimension": [
+          1024.0,
+          1024.0
+        ],
+        "ReferencePixel": [
+          512.4998800563457,
+          512.5000167792838
+        ],
+        "ReferenceValue": [
+          98.03327577806236,
+          4.93959210622918
+        ],
+        "CDMatrix": [
+          [
+            -0.0014494429010376486,
+            -0.0005117068272131202
+          ],
+          [
+            -0.0005101583333026647,
+            0.0014486073016130095
+          ]
+        ],
+        "CoordinateFrame": "ICRS",
+        "Equinox": "J2000",
+        "CoordsystemProjection": "TAN",
+        "Quality": "Derived from published sky corners, not source AVM or an independent plate solution"
+      },
+      "sampleCount": 25,
+      "maxReferencePixelError": 1.8417267710901797e-11,
+      "atlasRect": [
+        0,
+        0,
+        1024,
+        1024
+      ],
+      "textureSha256": "14d1a0b74992b14731326f8d71cf61851e8cabd8ab9c6a0ecd0a0144cb5b466e",
+      "cornerTolerancePixels": 1,
+      "zeroAtlasBorder": true,
+      "fullSourceFootprintContained": true,
+      "samples": [
+        {
+          "atlasPixel": [
+            0.0,
+            0.0
+          ],
+          "icrsDegrees": [
+            96.96358816754284,
+            6.002369065314159
+          ],
+          "sourceReferencePixel": [
+            934.8614477539666,
+            1395.699401996173
+          ]
+        },
+        {
+          "atlasPixel": [
+            255.75,
+            0.0
+          ],
+          "icrsDegrees": [
+            97.4987180819729,
+            6.002851243323488
+          ],
+          "sourceReferencePixel": [
+            608.2334294520814,
+            1280.46516819521
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.5,
+            0.0
+          ],
+          "icrsDegrees": [
+            98.03388791966813,
+            6.002813588396231
+          ],
+          "sourceReferencePixel": [
+            281.63767674741825,
+            1165.2423176839995
+          ]
+        },
+        {
+          "atlasPixel": [
+            767.25,
+            0.0
+          ],
+          "icrsDegrees": [
+            98.56900430970349,
+            6.002256129876906
+          ],
+          "sourceReferencePixel": [
+            -44.92581514076585,
+            1050.0308487759005
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.0,
+            0.0
+          ],
+          "icrsDegrees": [
+            99.10397393708661,
+            6.001179302078598
+          ],
+          "sourceReferencePixel": [
+            -371.457050992267,
+            934.8307597846006
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            255.75
+          ],
+          "icrsDegrees": [
+            96.96421482549214,
+            5.47083966260498
+          ],
+          "sourceReferencePixel": [
+            1050.2596241661922,
+            1069.2776581930443
+          ]
+        },
+        {
+          "atlasPixel": [
+            255.75,
+            255.75
+          ],
+          "icrsDegrees": [
+            97.49890580226118,
+            5.47127896667443
+          ],
+          "sourceReferencePixel": [
+            723.6316987316004,
+            954.0615912068197
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.5,
+            255.75
+          ],
+          "icrsDegrees": [
+            98.03363660412703,
+            5.471244659921079
+          ],
+          "sourceReferencePixel": [
+            397.03603831284926,
+            838.8569055139162
+          ]
+        },
+        {
+          "atlasPixel": [
+            767.25,
+            255.75
+          ],
+          "icrsDegrees": [
+            98.56831408975465,
+            5.4707367690694495
+          ],
+          "sourceReferencePixel": [
+            70.47263812935455,
+            723.6635994280222
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.0,
+            255.75
+          ],
+          "icrsDegrees": [
+            99.10284517351273,
+            5.469755689655437
+          ],
+          "sourceReferencePixel": [
+            -256.0585065984742,
+            608.4816712631309
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            511.5
+          ],
+          "icrsDegrees": [
+            96.96484045627119,
+            4.939237593666893
+          ],
+          "sourceReferencePixel": [
+            1165.6537072457381,
+            742.8674930199953
+          ]
+        },
+        {
+          "atlasPixel": [
+            255.75,
+            511.5
+          ],
+          "icrsDegrees": [
+            97.4990932148029,
+            4.9396340068902935
+          ],
+          "sourceReferencePixel": [
+            839.0258748773242,
+            627.6695916322273
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.5,
+            511.5
+          ],
+          "icrsDegrees": [
+            98.03338570058465,
+            4.939603049631191
+          ],
+          "sourceReferencePixel": [
+            512.4303069433528,
+            512.4830695415549
+          ]
+        },
+        {
+          "atlasPixel": [
+            767.25,
+            511.5
+          ],
+          "icrsDegrees": [
+            98.56762500111928,
+            4.939144745992463
+          ],
+          "sourceReferencePixel": [
+            185.86699866346737,
+            397.30792506197605
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.0,
+            511.5
+          ],
+          "icrsDegrees": [
+            99.1017182593856,
+            4.938259452708363
+          ],
+          "sourceReferencePixel": [
+            -140.6640547418442,
+            282.14415650779745
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            767.25
+          ],
+          "icrsDegrees": [
+            96.96546506240328,
+            4.407654372848965
+          ],
+          "sourceReferencePixel": [
+            1281.043697210378,
+            416.46890586095674
+          ]
+        },
+        {
+          "atlasPixel": [
+            255.75,
+            767.25
+          ],
+          "icrsDegrees": [
+            97.49928032035422,
+            4.408007900297758
+          ],
+          "sourceReferencePixel": [
+            954.4159581070044,
+            301.2891688554852
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.5,
+            767.25
+          ],
+          "icrsDegrees": [
+            98.03313520802865,
+            4.407980292136826
+          ],
+          "sourceReferencePixel": [
+            627.8204828567099,
+            186.12080915103593
+          ]
+        },
+        {
+          "atlasPixel": [
+            767.25,
+            767.25
+          ],
+          "icrsDegrees": [
+            98.5669370410184,
+            4.407571569847968
+          ],
+          "sourceReferencePixel": [
+            301.25726667926995,
+            70.96382506197108
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.0,
+            767.25
+          ],
+          "icrsDegrees": [
+            99.10059319016443,
+            4.406782051372184
+          ],
+          "sourceReferencePixel": [
+            -25.273695204606383,
+            -44.18178509707457
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            1023.0
+          ],
+          "icrsDegrees": [
+            96.96608864640343,
+            3.87618149503549
+          ],
+          "sourceReferencePixel": [
+            1396.4295942778922,
+            90.0818960999236
+          ]
+        },
+        {
+          "atlasPixel": [
+            255.75,
+            1023.0
+          ],
+          "icrsDegrees": [
+            97.49946711966881,
+            3.8764921637509206
+          ],
+          "sourceReferencePixel": [
+            1069.8019486384012,
+            -25.0796777393341
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.5,
+            1023.0
+          ],
+          "icrsDegrees": [
+            98.03288512545012,
+            3.876467902576246
+          ],
+          "sourceReferencePixel": [
+            743.2065662706217,
+            -140.22987627343934
+          ]
+        },
+        {
+          "atlasPixel": [
+            767.25,
+            1023.0
+          ],
+          "icrsDegrees": [
+            98.56625020668218,
+            3.8761087303749715
+          ],
+          "sourceReferencePixel": [
+            416.6434423944763,
+            -255.36870118767945
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.0,
+            1023.0
+          ],
+          "icrsDegrees": [
+            99.09946996132327,
+            3.8754149263360977
+          ],
+          "sourceReferencePixel": [
+            90.1125722308542,
+            -370.4961541671339
+          ]
+        }
+      ]
+    },
+    {
+      "catalogId": "IC0434",
+      "sourceSha256": "7280fb37a95919510a0251da17b67d6639b466b074694d01f02fb77833abfa4e",
+      "registrationModel": "stellarium-sky-corners",
+      "publishedCornerMaxPixelError": 0.546195406400312,
+      "wcs": {
+        "ReferenceDimension": [
+          1024.0,
+          1024.0
+        ],
+        "ReferencePixel": [
+          512.4997825855041,
+          512.5001171759523
+        ],
+        "ReferenceValue": [
+          84.7060000324835,
+          -2.5461502318617972
+        ],
+        "CDMatrix": [
+          [
+            -0.002377986570895912,
+            -4.314315064242486e-05
+          ],
+          [
+            -4.214772870000331e-05,
+            0.0023813188244372263
+          ]
+        ],
+        "CoordinateFrame": "ICRS",
+        "Equinox": "J2000",
+        "CoordsystemProjection": "TAN",
+        "Quality": "Derived from published sky corners, not source AVM or an independent plate solution"
+      },
+      "sampleCount": 25,
+      "maxReferencePixelError": 7.73070496506989e-12,
+      "atlasRect": [
+        0,
+        0,
+        1024,
+        1024
+      ],
+      "textureSha256": "8953134274f0c088b8f1168aec761eeb062ce27177baa4a4bfaa4d5d92e0b58e",
+      "cornerTolerancePixels": 1,
+      "zeroAtlasBorder": true,
+      "fullSourceFootprintContained": true,
+      "samples": [
+        {
+          "atlasPixel": [
+            0.0,
+            0.0
+          ],
+          "icrsDegrees": [
+            83.39232132976248,
+            -1.230228640034351
+          ],
+          "sourceReferencePixel": [
+            1054.848861557383,
+            1074.6626817285496
+          ]
+        },
+        {
+          "atlasPixel": [
+            255.75,
+            0.0
+          ],
+          "icrsDegrees": [
+            84.04916395912676,
+            -1.2306060071049723
+          ],
+          "sourceReferencePixel": [
+            778.6267495439271,
+            1069.7170678066655
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.5,
+            0.0
+          ],
+          "icrsDegrees": [
+            84.7063233770794,
+            -1.230821758445412
+          ],
+          "sourceReferencePixel": [
+            502.34411803446835,
+            1064.770370314529
+          ]
+        },
+        {
+          "atlasPixel": [
+            767.25,
+            0.0
+          ],
+          "icrsDegrees": [
+            85.36362683245528,
+            -1.230875638818703
+          ],
+          "sourceReferencePixel": [
+            226.00094713735768,
+            1059.8225888960155
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.0,
+            0.0
+          ],
+          "icrsDegrees": [
+            86.02090134677964,
+            -1.2307675844463821
+          ],
+          "sourceReferencePixel": [
+            -50.40278304779679,
+            1054.8737231947912
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            255.75
+          ],
+          "icrsDegrees": [
+            83.3914064277105,
+            -1.8876463326999464
+          ],
+          "sourceReferencePixel": [
+            1059.9617529693696,
+            798.522508589251
+          ]
+        },
+        {
+          "atlasPixel": [
+            255.75,
+            255.75
+          ],
+          "icrsDegrees": [
+            84.04857167076374,
+            -1.8882256877179893
+          ],
+          "sourceReferencePixel": [
+            783.7453202050249,
+            793.5467394266186
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.5,
+            255.75
+          ],
+          "icrsDegrees": [
+            84.70605416977823,
+            -1.8885569213699869
+          ],
+          "sourceReferencePixel": [
+            507.46837031069026,
+            788.5698801070178
+          ]
+        },
+        {
+          "atlasPixel": [
+            767.25,
+            255.75
+          ],
+          "icrsDegrees": [
+            85.36368091882056,
+            -1.888639641579779
+          ],
+          "sourceReferencePixel": [
+            231.13088339585175,
+            783.5919302721383
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.0,
+            255.75
+          ],
+          "icrsDegrees": [
+            86.02127868408829,
+            -1.8884737503755253
+          ],
+          "sourceReferencePixel": [
+            -45.26716043871011,
+            778.6128895635127
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            511.5
+          ],
+          "icrsDegrees": [
+            83.39049062613473,
+            -2.5452127841193954
+          ],
+          "sourceReferencePixel": [
+            1065.0744548917155,
+            522.3925695235632
+          ]
+        },
+        {
+          "atlasPixel": [
+            255.75,
+            511.5
+          ],
+          "icrsDegrees": [
+            84.04797879970998,
+            -2.545994264395427
+          ],
+          "sourceReferencePixel": [
+            788.8637011452076,
+            517.386647358854
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.5,
+            511.5
+          ],
+          "icrsDegrees": [
+            84.70578469753904,
+            -2.546441058901377
+          ],
+          "sourceReferencePixel": [
+            512.592432634595,
+            512.379628451192
+          ]
+        },
+        {
+          "atlasPixel": [
+            767.25,
+            511.5
+          ],
+          "icrsDegrees": [
+            85.36373505841914,
+            -2.546552638566683
+          ],
+          "sourceReferencePixel": [
+            236.26062947050036,
+            507.3715124400956
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.0,
+            511.5
+          ],
+          "icrsDegrees": [
+            86.02165639271743,
+            -2.5463288711872885
+          ],
+          "sourceReferencePixel": [
+            -40.13172824515311,
+            502.36229896495837
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            767.25
+          ],
+          "icrsDegrees": [
+            83.38957392370844,
+            -3.2027548088696567
+          ],
+          "sourceReferencePixel": [
+            1070.1869673349197,
+            246.27286396257
+          ]
+        },
+        {
+          "atlasPixel": [
+            255.75,
+            767.25
+          ],
+          "icrsDegrees": [
+            84.04738534510533,
+            -3.2037383922780953
+          ],
+          "sourceReferencePixel": [
+            793.9818923750212,
+            241.23679103427276
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.5,
+            767.25
+          ],
+          "icrsDegrees": [
+            84.70551495997054,
+            -3.2043007349823447
+          ],
+          "sourceReferencePixel": [
+            517.7163050167559,
+            236.19961477776422
+          ]
+        },
+        {
+          "atlasPixel": [
+            767.25,
+            767.25
+          ],
+          "icrsDegrees": [
+            85.36378925132964,
+            -3.2044411709419465
+          ],
+          "sourceReferencePixel": [
+            241.39018537188025,
+            231.1613348304072
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.0,
+            767.25
+          ],
+          "icrsDegrees": [
+            86.02203447321538,
+            -3.2041595337267936
+          ],
+          "sourceReferencePixel": [
+            -34.99648645653076,
+            226.12195082944584
+          ]
+        },
+        {
+          "atlasPixel": [
+            0.0,
+            1023.0
+          ],
+          "icrsDegrees": [
+            83.38865631910218,
+            -3.860099260116498
+          ],
+          "sourceReferencePixel": [
+            1075.2992903095378,
+            -29.836608662618914
+          ]
+        },
+        {
+          "atlasPixel": [
+            255.75,
+            1023.0
+          ],
+          "icrsDegrees": [
+            84.0467913060879,
+            -3.8612847651548403
+          ],
+          "sourceReferencePixel": [
+            799.0998939050207,
+            -34.90283011620454
+          ]
+        },
+        {
+          "atlasPixel": [
+            511.5,
+            1023.0
+          ],
+          "icrsDegrees": [
+            84.7052449566807,
+            -3.8619625522375487
+          ],
+          "sourceReferencePixel": [
+            522.8399874677181,
+            -39.970161482528965
+          ]
+        },
+        {
+          "atlasPixel": [
+            767.25,
+            1023.0
+          ],
+          "icrsDegrees": [
+            85.36384349763084,
+            -3.8621318185584617
+          ],
+          "sourceReferencePixel": [
+            246.51955111055855,
+            -45.038603126358225
+          ]
+        },
+        {
+          "atlasPixel": [
+            1023.0,
+            1023.0
+          ],
+          "icrsDegrees": [
+            86.02241292613158,
+            -3.8617923635125577
+          ],
+          "sourceReferencePixel": [
+            -29.861435062243913,
+            -50.1081554126464
+          ]
+        }
+      ]
     }
   ],
   "supportChecks": [
@@ -3156,6 +4754,27 @@
       "connectedFilament": 1.0,
       "exteriorPoint": 0.0,
       "scope": "synthetic display support only, not GPU or source photometry"
+    },
+    {
+      "model": "mixed",
+      "whiteCore": 1.0,
+      "connectedFilament": 1.0,
+      "exteriorPoint": 0.0,
+      "scope": "synthetic display support only, not GPU or source photometry"
+    },
+    {
+      "model": "galaxy",
+      "whiteCore": 1.0,
+      "connectedFilament": 1.0,
+      "exteriorPoint": 0.0,
+      "scope": "synthetic display support only, not GPU or source photometry"
+    },
+    {
+      "model": "catalogue-seeded-mixed",
+      "blueBeyondSeed": 1.0,
+      "redFilamentBeyondSeed": 1.0,
+      "detachedIsland": 0.0,
+      "scope": "Synthetic connected support, not source astrometry or GPU validation"
     }
   ]
 }

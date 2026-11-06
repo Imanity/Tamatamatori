@@ -6,7 +6,7 @@ import type { SkyVisibility } from "../domain/starfield";
 import { bodyPolygons } from "../domain/celestial-projection";
 import { celestialPlanKey, occlusionLabels } from "../domain/visibility";
 import type { VisibilitySnapshot } from "../domain/visibility";
-import { deepSkyView, deepSkyImageCredits } from "../domain/deep-sky";
+import { deepSkyView, deepSkyImageCredits, deepSkySourceNote } from "../domain/deep-sky";
 import {
   skyAppearance,
   starOpacity,
@@ -63,10 +63,13 @@ export function TargetSearchResults({
         const state = bodyView?.state ?? projected.state,
           enabled = plan.layers[target.layer],
           below = state === "地平线下";
+        const resource = skyVisibility.planKey === key
+          ? skyVisibility.deepSkyTargets?.[target.id] ?? skyVisibility.deepSky
+          : undefined;
         const occlusion =
-          target.deep && skyVisibility.deepSky?.phase === "error"
+          target.deep && resource?.phase === "error"
             ? "error"
-            : target.deep && skyVisibility.deepSky?.phase !== "ready"
+            : target.deep && resource?.phase !== "ready"
               ? "waiting"
               : target.body
                 ? visibility.planKey === key
@@ -82,8 +85,9 @@ export function TargetSearchResults({
         let status = state === "画面内" ? occlusionLabels[occlusion] : state;
         if (!enabled) status = `图层已关闭 · ${state}`;
         else if (target.deep && state === "画面内") {
-          if (skyVisibility.deepSky?.phase === "error")
+          if (resource?.phase === "error")
             status = "深空轮廓加载失败";
+          else if (resource?.phase === "loading") status = "正在加载影像";
           else if (occlusion === "clear" || occlusion === "partial") {
             const sky = skyReference(plan);
             if (
@@ -116,6 +120,7 @@ export function TargetSearchResults({
               <small>
                 {target.kind}
                 {structureLabel && ` · ${structureLabel}`}
+                {deepEntry && deepSkySourceNote(deepEntry.catalogId) && ` · ${deepSkySourceNote(deepEntry.catalogId)}`}
               </small>
             </span>
             <span>{status}</span>

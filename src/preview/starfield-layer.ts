@@ -20,6 +20,7 @@ import { constellationScene } from "../domain/constellations.ts";
 import { loadMilkyWayImage } from "./milky-way-texture.ts";
 import { loadDeepSkyImage } from "./deep-sky-texture.ts";
 import { SkyTexture } from "./sky-texture.ts";
+import { DeepSkyTextures } from "./deep-sky-textures.ts";
 import { deepSkyScene, deepSkyView, deepSkyRedEnhancementColor } from "../domain/deep-sky.ts";
 import type { DeepSkyTarget } from "../domain/deep-sky.ts";
 import { classifyOcclusion } from "../domain/visibility.ts";
@@ -80,14 +81,17 @@ void main(){gl_Position=u_camera*vec4(a_ray,0.0);gl_Position.z=gl_Position.w;v_u
 const deepFragment = `#version 300 es
 precision highp float;
 in vec2 v_uv;in vec3 v_tint;in float v_height;
-uniform sampler2D u_atlas;uniform float u_strength;uniform float u_ha_gain;uniform float u_probe;out vec4 color;
+uniform sampler2D u_atlas;uniform float u_strength;uniform float u_ha_gain;uniform float u_probe;uniform float u_dark;out vec4 color;
 void main(){if(v_height<=0.0)discard;vec4 components=texture(u_atlas,v_uv);
 float extra=1.0-components.a;
 if(u_probe>0.5){if(max(max(components.r,components.g),max(components.b,extra))<0.008)discard;color=vec4(1.0);return;}
+float dark=u_dark>0.5?extra:0.0;
+if(u_dark>0.5)extra=max(components.r-(components.g+components.b)*0.5,0.0)*0.6;
 vec3 signal=components.rgb*v_tint+extra*u_ha_gain*vec3(${deepSkyRedEnhancementColor.map(c => c.toFixed(2)).join(",")});
 float peak=max(signal.r,max(signal.g,signal.b));
 float a=(1.0-exp(-2.1*peak))*u_strength*smoothstep(0.0,0.04,v_height);
-if(a<0.0005)discard;color=vec4(signal/max(peak,0.0001)*a,a);}`;
+float opacity=a+(1.0-a)*dark*u_strength*smoothstep(0.0,0.04,v_height);
+if(opacity<0.0005)discard;color=vec4(signal/max(peak,0.0001)*a,opacity);}`;
 
 function program(gl: WebGL2RenderingContext, vertex: string, fragment: string) {
   const shaders: WebGLShader[] = [];
@@ -150,7 +154,7 @@ export class StarfieldLayer implements CustomLayerInterface {
   private strength = 1;
   private contrast = 1;
   private milky: SkyTexture;
-  private deep: SkyTexture;
+  private deep: DeepSkyTextures;
   private deepProgram?: WebGLProgram;
   private deepVao?: WebGLVertexArrayObject;
   private deepBuffer?: WebGLBuffer;
@@ -173,9 +177,7 @@ export class StarfieldLayer implements CustomLayerInterface {
     this.milky = new SkyTexture("银河纹理", "银河", true, loadImage, () =>
       this.textureChanged(),
     );
-    this.deep = new SkyTexture("深空结构", "深空天体", false, loadDeep, () =>
-      this.textureChanged(),
-    );
+    this.deep = new DeepSkyTextures(() => this.textureChanged(), loadDeep);
   }
   private publish(snapshot: SkyVisibility) {
     this.snapshot = snapshot;
@@ -187,6 +189,7 @@ export class StarfieldLayer implements CustomLayerInterface {
       deepSky: this.frame?.plan.layers.deepSky
         ? this.deep.state
         : { phase: "off" },
+      deepSkyTargets: this.deep.states,
     });
   }
   private textureChanged() {
@@ -248,7 +251,7 @@ export class StarfieldLayer implements CustomLayerInterface {
     this.frame = frame;
     this.resolvedKey = "";
     this.milky.setEnabled(!!frame.plan.layers.milkyWay, this.gl);
-    this.deep.setEnabled(!!frame.plan.layers.deepSky, this.gl);
+    if (!frame.plan.layers.deepSky) this.deep.dispose(this.gl);
     this.waiting();
     const p = frame.plan,
       key = [
@@ -456,6 +459,8 @@ export class StarfieldLayer implements CustomLayerInterface {
     const previousSampler = gl.getParameter(gl.SAMPLER_BINDING);
     try {
       gl.bindSampler(0, null);
+      this.deep.update({ ...f.plan, azimuth: c.azimuth, pitch: c.pitch }, this.deepObjects, gl,
+        this.map!.getContainer().clientWidth, this.map!.getContainer().clientHeight);
       if (f.plan.layers.milkyWay) this.milky.upload(gl);
       if (f.plan.layers.deepSky && this.deep.upload(gl)) {
         this.clearQueries();
@@ -550,9 +555,8 @@ export class StarfieldLayer implements CustomLayerInterface {
         gl.bindVertexArray(this.lineVao!);
         gl.drawArrays(gl.LINES, 0, this.lineData.length / 3);
       }
-      if (this.deep.texture && this.deepData.length && this.deepProgram) {
+      if (this.deepData.length && this.deepProgram) {
         gl.useProgram(this.deepProgram);
-        gl.bindTexture(gl.TEXTURE_2D, this.deep.texture);
         gl.uniformMatrix4fv(
           gl.getUniformLocation(this.deepProgram, "u_camera"),
           false,
@@ -569,7 +573,13 @@ export class StarfieldLayer implements CustomLayerInterface {
         );
         gl.uniform1f(gl.getUniformLocation(this.deepProgram, "u_probe"), 0);
         gl.bindVertexArray(this.deepVao!);
-        gl.drawArrays(gl.TRIANGLES, 0, this.deepData.length / 8);
+        for (const object of this.deepObjects) {
+          const texture = this.deep.texture(object.id);
+          if (!texture) continue;
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+          gl.uniform1f(gl.getUniformLocation(this.deepProgram, "u_dark"), object.entry.model === "dark" ? 1 : 0);
+          gl.drawArrays(gl.TRIANGLES, object.offset, object.count);
+        }
       }
       gl.useProgram(p);
       gl.uniformMatrix4fv(
@@ -609,13 +619,16 @@ export class StarfieldLayer implements CustomLayerInterface {
             gl.endQuery(gl.ANY_SAMPLES_PASSED);
           }
         }
-        if (this.deep.texture && this.deepProgram) {
+        if (this.deepProgram) {
           gl.useProgram(this.deepProgram);
-          gl.bindTexture(gl.TEXTURE_2D, this.deep.texture);
           gl.bindVertexArray(this.deepVao!);
           gl.uniform1f(gl.getUniformLocation(this.deepProgram, "u_probe"), 1);
           for (const object of this.deepObjects) {
+            const texture = this.deep.texture(object.id);
+            if (!texture) continue;
             if (deepSkyView(view, object).state !== "画面内") continue;
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.uniform1f(gl.getUniformLocation(this.deepProgram, "u_dark"), object.entry.model === "dark" ? 1 : 0);
             const clear = gl.createQuery(),
               blocked = gl.createQuery();
             if (!clear || !blocked) {

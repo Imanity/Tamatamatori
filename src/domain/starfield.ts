@@ -45,6 +45,7 @@ export interface SkyVisibility {
   message?: string;
   milkyWay?: { phase: "off" | "loading" | "ready" | "error"; message?: string };
   deepSky?: { phase: "off" | "loading" | "ready" | "error"; message?: string };
+  deepSkyTargets?: Record<string, { phase: "off" | "loading" | "ready" | "error"; message?: string }>;
 }
 export const emptySkyVisibility: SkyVisibility = {
   planKey: "",

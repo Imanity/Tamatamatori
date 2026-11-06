@@ -6,13 +6,14 @@ import { skyReference, skyPointView } from "./starfield.ts";
 import type { SkyPoint } from "./starfield.ts";
 import { refractDirection } from "./refraction.ts";
 import { projectDirection } from "./celestial-projection.ts";
+import { fieldOfView } from "./plan.ts";
 
 export interface DeepSkyEntry {
   id: string;
   catalogId: string;
   name: string;
   aliases: string[];
-  model: "galaxy" | "mixed" | "reflection" | "emission";
+  model: "galaxy" | "mixed" | "reflection" | "emission" | "dark";
   catalogType: string;
   ra: number;
   dec: number;
@@ -22,21 +23,27 @@ export interface DeepSkyEntry {
   magnitude: number | null;
   tile: number;
   atlasRect: number[];
+  texture: { file: string; width: number; height: number; sha256: string; bytes: number; alphaData: string };
   bounds: number[];
   starIds?: string[];
 }
 export const deepSkyCatalog = catalog.objects as DeepSkyEntry[];
 export const deepSkyCount = deepSkyCatalog.length;
 export const deepSkyImageCredits = catalog.imageSources;
+export const deepSkySourceNote = (catalogId: string) => {
+  const source = deepSkyImageCredits.find(source => source.catalogId === catalogId);
+  return source && "sourceNote" in source ? String(source.sourceNote) : undefined;
+};
 // A qualitative red-only increment, not measured sensor/spectral response.
 // Adding arbitrary G/B here can make an already red cloud less red.
 export const deepSkyRedEnhancementColor = [1, 0, 0] as const;
-const atlas = catalog.atlas;
+export const deepSkyTextureBudget = 64 * 1024 * 1024;
 export const deepSkyKinds = {
   galaxy: "星系",
   mixed: "混合星云",
   reflection: "星团与反射云",
   emission: "发射星云",
+  dark: "暗云与发射背景",
 };
 export type DeepSkyTarget = SkyPoint & {
   entry: DeepSkyEntry;
@@ -79,7 +86,7 @@ export function deepSkyScene(plan: ShootingPlan) {
     const direction = sky.horizontal(center),
       offset = vertices.length / 8;
     const [x0, y0, x1, y1] = entry.bounds;
-    const [atlasX, atlasY, atlasWidth, atlasHeight] = entry.atlasRect;
+    const { width: atlasWidth, height: atlasHeight } = entry.texture;
     const nx = Math.max(4, Math.min(32, Math.ceil((x1 - x0) / degrees / 0.25))),
       ny = Math.max(4, Math.min(32, Math.ceil((y1 - y0) / degrees / 0.25)));
     const grid: { ray: Vector3; uv: number[] }[] = [],
@@ -99,8 +106,8 @@ export function deepSkyScene(plan: ShootingPlan) {
         grid.push({
           ray,
           uv: [
-            (atlasX + 0.5 + (atlasWidth - 1) * u) / atlas.width,
-            (atlasY + 0.5 + (atlasHeight - 1) * v) / atlas.height,
+            (0.5 + (atlasWidth - 1) * u) / atlasWidth,
+            (0.5 + (atlasHeight - 1) * v) / atlasHeight,
           ],
         });
         if (x === 0 || x === nx || y === 0 || y === ny) boundary.push(ray);
@@ -174,3 +181,29 @@ export function deepSkyView(plan: ShootingPlan, target: DeepSkyTarget) {
 export const deepSkyResponseLabel = (
   response: ShootingPlan["cameraResponse"],
 ) => (response === "ha-modified" ? "天文改机 · Hα 增强示意" : "未改机 · 近似参考");
+
+/** Display-resolution policy only; celestial geometry does not use this LOD. */
+export function deepSkyTextureRequests(plan: ShootingPlan, objects: DeepSkyTarget[], width: number, height: number, deviceMax: number) {
+  if (!plan.layers.deepSky) return [];
+  const fov = fieldOfView(plan);
+  const requests = objects.filter(object => deepSkyView(plan, object).state === "画面内").map(object => {
+    const [x0, y0, x1, y1] = object.entry.bounds;
+    const pixels = Math.max((x1-x0)/degrees/fov.horizontal*width, (y1-y0)/degrees/fov.vertical*height);
+    const texture = object.entry.texture;
+    const native = Math.max(texture.width, texture.height);
+    const size = Math.min(native, deviceMax, 2 ** Math.ceil(Math.log2(Math.max(256, pixels*1.5))));
+    return { object, maxSize: Math.max(1, size) };
+  });
+  const bytes = (request: typeof requests[number]) => {
+    const { width, height } = request.object.entry.texture;
+    const scale = Math.min(1, request.maxSize/Math.max(width, height));
+    return Math.floor(width*scale)*Math.floor(height*scale)*4*4/3;
+  };
+  // Budget every selected allocation, including downloads awaiting upload.
+  while (requests.reduce((sum, request) => sum+bytes(request), 0) > deepSkyTextureBudget) {
+    const largest = requests.filter(r => r.maxSize > 1).sort((a,b) => bytes(b)-bytes(a))[0];
+    if (!largest) break;
+    largest.maxSize = Math.max(1, Math.floor(largest.maxSize/2));
+  }
+  return requests;
+}

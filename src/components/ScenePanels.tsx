@@ -30,8 +30,8 @@ import constellationCatalogUrl from "../data/constellations.json?url";
 import constellationStarsUrl from "../data/constellation-stars.json?url";
 import { TargetSearchResults } from "./TargetSearch";
 import deepSkyCatalogUrl from "../data/deep-sky.json?url";
-import deepSkyAtlasUrl from "../data/deep-sky-atlas.png?url";
-import { deepSkyImageCredits } from "../domain/deep-sky";
+import { deepSkyImageCredits, deepSkyCatalog } from "../domain/deep-sky";
+import { deepSkyImageUrl } from "../preview/deep-sky-texture";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -334,12 +334,6 @@ export function PreviewPanel({
             <a href={deepSkyCatalogUrl} download="tamatamatori-deep-sky.json">
               深空数据及轮廓
             </a>
-            <a
-              href={deepSkyAtlasUrl}
-              download="tamatamatori-deep-sky-components.png"
-            >
-              深空色彩与增强数据
-            </a>
             {deepSkyImageCredits.map((source) => (
               <a
                 href={source.page}
@@ -347,8 +341,13 @@ export function PreviewPanel({
                 target="_blank"
                 rel="noreferrer"
               >
-                {source.credit} · {source.license === "CC0-1.0" ? "CC0 1.0" : "CC BY 4.0"}
+                {source.credit} · {source.license === "CC0-1.0" ? "CC0 1.0" : source.license === "CC-BY-SA-4.0" ? "CC BY-SA 4.0" : "CC BY 4.0"}
                 {" · 结构衍生"}
+              </a>
+            ))}
+            {deepSkyCatalog.map(entry => (
+              <a key={entry.id} href={deepSkyImageUrl(entry.catalogId).href} download={`tamatamatori-${entry.catalogId.toLowerCase()}.png`}>
+                {entry.aliases[0]} · 结构与色彩数据 · CC BY-SA 4.0
               </a>
             ))}
           </>

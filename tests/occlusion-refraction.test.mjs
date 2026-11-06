@@ -11,6 +11,7 @@ import { photoCameraMatrix } from "../src/preview/terrain-perspective-math.ts";
 import {constellationScene} from '../src/domain/constellations.ts';
 import {skyPointView} from '../src/domain/starfield.ts';
 import {deepSkyScene} from '../src/domain/deep-sky.ts';
+import {DeepSkyTextures} from '../src/preview/deep-sky-textures.ts';
 
 const close = (a, b, tolerance = 1e-6) => assert.ok(Math.abs(a - b) <= tolerance, `${a} vs ${b}`);
 const disc = (elevation) => ({ id: "sun", elevation, azimuth: 0, angularRadius: 0.25, distanceKm: 1.5e8, direction: direction(0, elevation) });
@@ -84,7 +85,7 @@ function fakeGL() {
   gl.blendFuncSeparate=(...values)=>['BLEND_SRC_RGB','BLEND_DST_RGB','BLEND_SRC_ALPHA','BLEND_DST_ALPHA'].forEach((name,i)=>state.set(gl[name],values[i]));
   gl.createQuery=()=>{const query={available:false}; queries.add(query);return query;};gl.deleteQuery=(query)=>queries.delete(query);
   gl.beginQuery=(_,query)=>{query.result=gl.results.shift();};gl.endQuery=()=>{};
-  gl.drawArrays=(mode,_,count)=>gl.draws.push({mode,count,probe:uniforms.get('u_probe'),haGain:uniforms.get('u_ha_gain'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK),colorMask:[...state.get(gl.COLOR_WRITEMASK)]});
+  gl.drawArrays=(mode,_,count)=>gl.draws.push({mode,count,probe:uniforms.get('u_probe'),haGain:uniforms.get('u_ha_gain'),dark:uniforms.get('u_dark'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK),colorMask:[...state.get(gl.COLOR_WRITEMASK)]});
   gl.drawElements=(mode,count)=>gl.draws.push({mode,count,strength:uniforms.get('u_strength'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK)});
   gl.getQueryParameter=(query,key)=>key===gl.QUERY_RESULT_AVAILABLE?query.available:query.result;
   gl.complete=()=>queries.forEach(query=>query.available=true);
@@ -280,17 +281,20 @@ test('银河加载有明确超时，迟到结果不上传或覆盖错误状态',
 async function prepareDeep(gl,reports,load=async()=>({width:2048,height:1024,close(){}})){
   const layer=new StarfieldLayer(s=>reports.push(s),async()=>({width:2048,height:256,close(){}}),load);
   layer.onAdd({triggerRepaint(){},getContainer:()=>({clientWidth:900,clientHeight:600}),getCanvas:()=>({width:900})},gl);
-  const plan={...initialPlan,instant:'2026-11-08T16:00:00Z',refraction:'none',focalLength:200,layers:{...initialPlan.layers,sun:false,moon:false,stars:false,milkyWay:false,constellations:false,deepSky:true}};
+  const plan={...initialPlan,instant:'2026-11-08T16:00:00Z',refraction:'none',focalLength:1000,layers:{...initialPlan.layers,sun:false,moon:false,stars:false,milkyWay:false,constellations:false,deepSky:true}};
   const target=deepSkyScene(plan).objects.find(p=>p.entry.catalogId==='NGC1976');plan.azimuth=target.azimuth;plan.pitch=target.elevation;
   layer.setScene({key:'deep',planKey:'deep',ready:true,plan});layer.camera={azimuth:plan.azimuth,pitch:plan.pitch};layer.matrix=photoCameraMatrix(plan);
-  await new Promise(resolve=>setImmediate(resolve));return {layer,target};
+  // Requests now start from the actual rendered view, rather than layer enable.
+  layer.render(gl);await new Promise(resolve=>setImmediate(resolve));
+  const saved=layer.frame;layer.invalidate();layer.setScene(saved);
+  return {layer,target};
 }
 
 test('深空轮廓分别查询清晰和被遮挡像素，中心名称独立查询；GL 状态与资源恢复',async()=>{
   for(const [clear,blocked,expected] of [[true,false,'clear'],[true,true,'partial'],[false,true,'blocked'],[false,false,'subpixel']]){
     const {gl,state,enabled,queries,resources}=fakeGL(),reports=[],before=new Map(state),previousEnabled=new Set(enabled);
-    const {layer,target}=await prepareDeep(gl,reports);gl.results=[false,clear,blocked];layer.render(gl);
-    assert.equal(queries.size,3);assert.ok(gl.draws.some(d=>d.mode===gl.TRIANGLES&&d.depth===gl.GREATER&&d.probe===1));
+    const {layer,target}=await prepareDeep(gl,reports);gl.results=[false,clear,blocked,false,false];layer.render(gl);
+    assert.equal(queries.size,5);assert.ok(gl.draws.some(d=>d.mode===gl.TRIANGLES&&d.depth===gl.GREATER&&d.probe===1));
     assert.deepEqual(state,before);assert.deepEqual(enabled,previousEnabled);gl.complete();layer.render(gl);
     assert.equal(reports.at(-1).states[target.id],expected);assert.equal(reports.at(-1).states[target.id+':label'],'blocked');
     assert.equal(reports.at(-1).deepSky.phase,'ready');layer.onRemove();assert.equal(resources.size,0);assert.equal(queries.size,0);
@@ -300,20 +304,56 @@ test('深空轮廓分别查询清晰和被遮挡像素，中心名称独立查�
 test('改机仅更新 Hα uniform，不重建几何、纹理或遮挡；深空失败不关闭其他图层',async()=>{
   const {gl,queries,resources}=fakeGL(),reports=[];let requests=0;
   const {layer}=await prepareDeep(gl,reports,async()=>{requests++;return {width:2048,height:1024,close(){}};});
+  const initialRequests=requests;assert.equal(initialRequests,2,'M42 view also intersects the IC434 reference footprint');
   gl.results=[true,true,false];layer.render(gl);gl.complete();layer.render(gl);
   const uploads=gl.uploads.length,textureUploads=gl.textureUploads,count=reports.length;
   for(const [response,gain] of [['ha-modified',1],['stock',0]]){
     layer.setCameraResponse(response);layer.render(gl);
     assert.equal(gl.draws.filter(d=>d.mode===gl.TRIANGLES&&d.probe===0).at(-1).haGain,gain);
     assert.deepEqual(gl.draws.filter(d=>d.mode===gl.TRIANGLES&&d.probe===0).at(-1).colorMask,[true,true,true,true]);
-    assert.equal(gl.uploads.length,uploads);assert.equal(gl.textureUploads,textureUploads);assert.equal(reports.length,count);assert.equal(queries.size,0);assert.equal(requests,1);
+    assert.equal(gl.uploads.length,uploads);assert.equal(gl.textureUploads,textureUploads);assert.equal(reports.length,count);assert.equal(queries.size,0);assert.equal(requests,initialRequests);
   }
   const frame=layer.frame;
   layer.invalidate();layer.setScene(frame);gl.results=[true,true,false];layer.render(gl);
-  assert.equal(queries.size,3,'an invalidated cached frame must resume queries even with the same key');
+  assert.equal(queries.size,5,'an invalidated cached frame must resume queries even with the same key');
   gl.complete();layer.render(gl);assert.equal(reports.at(-1).ready,true);
   assert.throws(()=>layer.setCameraResponse('full-spectrum'),RangeError);layer.onRemove();assert.equal(resources.size,0);
   const failedReports=[];const failed=await prepareDeep(gl,failedReports,async()=>{throw new Error('atlas unavailable');});
   assert.equal(failedReports.at(-1).deepSky.phase,'error');assert.equal(failedReports.at(-1).message,undefined);
   gl.results=[true];failed.layer.render(gl);assert.ok(gl.draws.some(d=>d.mode===gl.POINTS));failed.layer.onRemove();assert.equal(resources.size,0);
+});
+
+test('同视场单目标失败隔离，暗区在银河后和星表前合成，关闭重开释放纹理并重试',async()=>{
+  const {gl,resources}=fakeGL(),reports=[];let broken=true,requests=0;
+  const {layer}=await prepareDeep(gl,reports,async(_signal,maxSize,entry)=>{
+    requests++;if(broken&&entry.catalogId==='NGC1976')throw new Error('one missing asset');
+    return {width:maxSize,height:maxSize,close(){}};
+  });
+  gl.results=[true,true,false];layer.render(gl);gl.complete();layer.render(gl);
+  assert.equal(reports.at(-1).deepSkyTargets['dso-ngc1976'].phase,'error');
+  assert.equal(reports.at(-1).deepSkyTargets['dso-ic0434'].phase,'ready');
+  assert.equal(reports.at(-1).message,undefined);
+  const darkIndex=gl.draws.findIndex(d=>d.mode===gl.TRIANGLES&&d.probe===0&&d.dark===1);
+  assert.ok(darkIndex>=0);assert.ok(gl.draws.slice(darkIndex+1).some(d=>d.mode===gl.POINTS&&d.probe===0));
+  const frame=layer.frame;layer.setScene({...frame,key:'off',plan:{...frame.plan,layers:{...frame.plan.layers,deepSky:false}}});
+  assert.deepEqual(reports.at(-1).deepSkyTargets,{});
+  broken=false;layer.setScene({...frame,key:'retry'});layer.render(gl);await new Promise(resolve=>setImmediate(resolve));layer.render(gl);
+  assert.equal(reports.at(-1).deepSkyTargets['dso-ngc1976'].phase,'ready');
+  assert.equal(reports.at(-1).deepSkyTargets['dso-ic0434'].phase,'ready');assert.equal(requests,4);
+  layer.onRemove();assert.equal(resources.size,0);
+});
+
+test('按视场资源请求移出或关闭即取消，迟到图片释放且不占 GPU',async()=>{
+  const {gl,resources}=fakeGL(),pending=[];let closed=0;
+  const pool=new DeepSkyTextures(()=>{},(signal,maxSize,entry)=>new Promise(resolve=>pending.push({signal,maxSize,entry,resolve})));
+  const plan={...initialPlan,instant:'2026-11-08T16:00:00Z',refraction:'none',focalLength:1000,layers:{...initialPlan.layers,deepSky:true}};
+  const objects=deepSkyScene(plan).objects,target=objects.find(o=>o.entry.catalogId==='Mel022');
+  pool.update({...plan,azimuth:target.azimuth,pitch:target.elevation},objects,gl,900,600);assert.ok(pending.length>0);
+  const first=pending.length;
+  pool.update({...plan,layers:{...plan.layers,deepSky:false}},objects,gl,900,600);
+  assert.ok(pending.every(r=>r.signal.aborted));
+  for(const request of pending)request.resolve({width:1024,height:1024,close(){closed++;}});
+  await new Promise(resolve=>setImmediate(resolve));pool.upload(gl);
+  assert.equal(closed,first);assert.equal(gl.textureUploads,0);assert.deepEqual(pool.states,{});assert.equal(resources.size,0);
+  pool.dispose(gl);
 });

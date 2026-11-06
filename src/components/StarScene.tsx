@@ -15,6 +15,7 @@ import {
   deepSkyKinds,
   deepSkyResponseLabel,
   deepSkyImageCredits,
+  deepSkySourceNote,
 } from "../domain/deep-sky";
 import type { DeepSkyTarget } from "../domain/deep-sky";
 import {
@@ -87,23 +88,25 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility) {
     : [];
   const project = (point: SkyPoint, reference = false) => {
     const isDeep = point.id.startsWith("dso-");
+    const resource = visibility.deepSkyTargets?.[point.id] ?? visibility.deepSky;
     const projected = isDeep
         ? deepSkyView(view, point as DeepSkyTarget)
         : skyPointView(view, point),
       occlusion =
         current &&
         (visibility.message ||
-          (isDeep && visibility.deepSky?.phase === "error"))
+          (isDeep && resource?.phase === "error"))
           ? "error"
           : current &&
               visibility.ready &&
-              (!isDeep || visibility.deepSky?.phase === "ready")
+              (!isDeep || resource?.phase === "ready")
             ? (visibility.states[point.id] ?? "waiting")
             : "waiting";
     return {
       point,
       ...projected,
       occlusion,
+      resource,
       labelOcclusion: isDeep
         ? current && visibility.ready
           ? (visibility.states[`${point.id}:label`] ?? "waiting")
@@ -263,7 +266,7 @@ export function StarReadout({
           <details open>
             <summary>深空目标与朝向</summary>
             {scene.deep.map(
-              ({ point, entry, state, occlusion, partialFrame, opacity }) => (
+              ({ point, entry, state, occlusion, partialFrame, opacity, resource }) => (
                 <div
                   className="celestial-row"
                   key={point.id}
@@ -279,11 +282,14 @@ export function StarReadout({
                       )
                         ? "影像结构参考"
                         : "目录轮廓"}
+                      {deepSkySourceNote(entry.catalogId) && ` · ${deepSkySourceNote(entry.catalogId)}`}
                     </small>
                   </span>
                   <span>
                     {state === "画面内"
-                      ? occlusion === "clear" && opacity < STAR_LABEL_ALPHA
+                      ? resource?.phase === "error" ? "深空轮廓加载失败"
+                        : resource?.phase === "loading" ? "正在加载影像"
+                        : occlusion === "clear" && opacity < STAR_LABEL_ALPHA
                         ? "天空较亮 · 轮廓隐藏"
                         : `${partialFrame ? "部分入画 · " : ""}${occlusionLabels[occlusion]}`
                       : state}

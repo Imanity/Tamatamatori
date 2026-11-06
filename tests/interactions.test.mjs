@@ -1093,7 +1093,7 @@ test('深空搜索开启与朝向，未改机/改机响应切换保留几何、�
   assert.equal(layer.cameraResponse,'ha-modified');assert.equal(layer.frame,originalFrame);assert.equal(groundRequests.length,requests);assert.equal(terrainMap(),map);assert.equal(map.cameraSolutions.length,poses);
   assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);assert.equal(input('当地日期与时间').value,time);
   await settle(()=>document.querySelector('[aria-label="清除目标搜索"]').click());
-  assert.equal(document.querySelectorAll('[data-dso-status]').length,8);assert.match(document.querySelector('.sky-readout').textContent,/天文改机/);
+  assert.equal(document.querySelectorAll('[data-dso-status]').length,12);assert.match(document.querySelector('.sky-readout').textContent,/天文改机/);
   await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());assert.equal(document.querySelector('[data-dso-label]'),null);
   await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());assert.equal(document.querySelector('[aria-label="深空相机响应"]').value,'ha-modified');
 });
@@ -1110,6 +1110,10 @@ test('深空部分遮挡不等于中心名称可见，轮廓加载失败单独�
   await settle(()=>setControl(document.querySelector('#target-search'),'M42'));await settle(()=>report('clear','error'));
   assert.match(document.querySelector('.deep-sky-feedback').textContent,/加载失败/);assert.equal(document.querySelector('.terrain-feedback-error'),null);assert.equal(document.querySelector('[data-dso-label]'),null);
   assert.match(document.querySelector('[data-search-target="dso-ngc1976"]').textContent,/深空轮廓加载失败/);
+  await settle(()=>layer.report({planKey:key,ready:true,view:null,states:{[id]:'clear',[id+':label']:'clear'},
+    deepSky:{phase:'error',message:'马头资料加载失败'},deepSkyTargets:{[id]:{phase:'ready'},'dso-ic0434':{phase:'error'}}}));
+  assert.ok(document.querySelector('[data-dso-label="猎户座大星云"]'),'another failed resource must not hide ready labels');
+  assert.doesNotMatch(document.querySelector('[data-search-target="dso-ngc1976"]').textContent,/加载失败/);
 });
 
 test('银河纹理状态与遮挡分开，搜索时也显示失败，地形与星点保持可用',async t=>{

@@ -1,0 +1,19 @@
+{
+  "scope": "Fixed photographic display-signal regression, not spectral flux or source astrometry",
+  "catalogId": "NGC6514",
+  "textureSha256": "4cf11eea847fd42becdb16ca4a161bfd394fb71620ab1e14aa6cd71d3500f4ae",
+  "bounds": [
+    -0.01891853705898364,
+    -0.01980716334881116,
+    0.022364391006140547,
+    0.018904254283086043
+  ],
+  "coreRadiusDegrees": 0.18,
+  "outerMinimumRadiusDegrees": 0.5,
+  "corePixels": 81294,
+  "changedCorePixels": 0,
+  "coreRgbaSha256": "2849790f52bee18bb23d9a7cce43ac7502f1f2accd5a4d96d5a902167a4fb624",
+  "oldOuterToCoreRgbRatio": 0.21562701132789802,
+  "outerToCoreRgbRatio": 0.006184608311450251,
+  "maximumOuterToCoreRgbRatio": 0.02
+}

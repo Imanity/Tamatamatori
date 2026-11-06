@@ -1,4 +1,10 @@
-# 亮星目录子集
+# 天文目录与影像数据
+
+当前深空目录含 12 个目标。运行时从 `deep-sky/` 逐目标加载 PNG，按当前视场和屏幕尺寸解码，并采用 64 MiB 的深空 RGBA/mip 驻留预算。PNG 的许可、尺寸、SHA256 和 alpha 数据含义保存在每个对象的 `texture` 字段。所有生成的独立 PNG 按 CC BY-SA 4.0 提供。下面的旧八目标图集保留为离线回归输入。
+
+新增 M20/M33 使用 NOIRLab 原尺寸 LRGB 与 AVM。玫瑰采用 Kees Scherer 的 Hα+RGB 参考，马头区域采用 Manuel Peitsch / Sun Shuwei 的可见光拼接参考。两幅宽幅纹理为固定 Stellarium 版本的 1024 方图，使用公开四角拟合 TAN/CD。最大四角残差分别为 0.643094 和 0.546195 源像素，本轮的两份资料采用 1 源像素界限。心脏/灵魂沿用 0.5 源像素界限。M20/M33 输出为 2048 方图。马头的 alpha 数据保存背景暗区对比，额外红光由基础 RGB 估计。来源、覆盖及验收见[四目标计划](../../docs/plan/deep-sky-next-four.md)。
+
+生成独立纹理时，在既有目录与旧图集生成步骤之后执行 `python scripts/build-deep-sky-targets.py 源图目录`。旧八目标图格逐像素拆分，四个新目标重投影到各自纹理。`scripts/check-deep-sky-images.py` 现对 12 个目标保存 300 个独立 WCS 采样点，并记录逐目标 PNG 哈希和四角拟合残差。运行和 CI 直接使用仓库资产。
 
 `deep-sky.json` 与 `deep-sky-atlas.png` 是 [OpenNGC 固定提交](https://github.com/mattiaverga/OpenNGC/tree/be3cd6c5498806a2fbb2f7e0452ef802dbb02be0)的衍生数据，作者 Mattia Verga，采用 **CC BY-SA 4.0**。8 个目标保留 J2000 RA/Dec、目录全角径、可用位置角（北向东）和原 Aladin/DSS2 多级轮廓；缺失位置角保持 `null`。目录尺寸与描绘的外轮廓不一定相同，后者可能包含附近未分离的云气。应用使用逐点天球投影，不把图谱的固定角度当作摄影画面的朝向。
 
@@ -30,6 +36,6 @@ M31/M45 的额外红色增量为零。加州沿用扩散光支持，心脏/灵�
 
 搜索别名保留原始 HYG 固有名、HIP 编号及 d3-celestial 星座英文名/缩写，作为本地搜索索引使用；不新增在线搜索或外部运行时请求。
 
-影像配准独立检查：在同一隔离环境额外安装 `astropy==7.1.1 pyavm==0.9.9`，执行 `python scripts/check-deep-sky-images.py 源图目录`，保存 125 个 WCSLIB 参考点及当前 atlas 哈希到测试 fixture。只验证转换实现与图格边框，未重新测定影像的原始天球解，也不做光度/相机标定；构建和 CI 无需这些 Python 依赖。
+影像配准独立检查：在同一隔离环境额外安装 `astropy==7.1.1 pyavm==0.9.9`，执行 `python scripts/check-deep-sky-images.py 源图目录`，保存 300 个 WCSLIB 参考点、逐目标纹理哈希与旧 atlas 哈希到测试 fixture。只验证转换实现与图格边框，未重新测定影像的原始天球解，也不做光度/相机标定；构建和 CI 无需这些 Python 依赖。
 
 色彩核查：M31 是 DSS2 B/R 成品合成，M42 为 LRGB，其余资料的发布波段和未知项见来源清单。底图未按指定未改机相机标定；额外 RGB 红色优势也不是实测 Hα。运行时增量色为红通道 `[1,0,0]`，避免旧增量加入绿蓝而让本已红的云气偏粉；图集像素不变。可在既有 NumPy/Pillow 环境运行 `python scripts/check-deep-sky-colours.py` 复现固定图集的前后信号审计；Node 回归另核对 GLSL 共用常量。结果见[色彩核查](../../docs/plan/deep-sky-colour-audit.md)。

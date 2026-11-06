@@ -1,0 +1,222 @@
+{
+  "completedOn": "2026-11-06",
+  "site": {
+    "latitude": 35.4172,
+    "longitude": 138.8729,
+    "heightAboveGround": 1.6
+  },
+  "timeZone": "Asia/Tokyo",
+  "sensor": "full-frame",
+  "orientation": "landscape",
+  "aspect": "3:2",
+  "refraction": "standard",
+  "mainUrl": "http://127.0.0.1:5173/",
+  "acceptedMainScreenshots": 19,
+  "acceptedFailureControlScreenshots": 3,
+  "supersededM20Screenshots": 3,
+  "testCommand": "npm test",
+  "testsPassed": 163,
+  "testsFailed": 0,
+  "buildCommand": "npm run build -- --base /Tamatamatori/",
+  "buildPassed": true,
+  "buildWarning": "Existing large-chunk warning",
+  "independentDirections": 48,
+  "independentWcsSamples": 300,
+  "textureBudgetBytes": 67108864,
+  "pixelAudit": "pixel-audit.json",
+  "modeComparisons": [
+    {
+      "target": "m20",
+      "focalLength": 1000,
+      "changedPreviewPixels": 102163,
+      "maximumChannelDifference": 50
+    },
+    {
+      "target": "m33",
+      "focalLength": 1000,
+      "changedPreviewPixels": 0,
+      "maximumChannelDifference": 0
+    },
+    {
+      "target": "rosette",
+      "focalLength": 1000,
+      "changedPreviewPixels": 508792,
+      "maximumChannelDifference": 65
+    },
+    {
+      "target": "horsehead",
+      "focalLength": 1000,
+      "changedPreviewPixels": 453340,
+      "maximumChannelDifference": 45
+    },
+    {
+      "target": "m45",
+      "focalLength": 600,
+      "changedPreviewPixels": 0,
+      "maximumChannelDifference": 0
+    }
+  ],
+  "assets": [
+    {
+      "catalogId": "NGC0224",
+      "file": "ngc0224.png",
+      "width": 1024,
+      "height": 1024,
+      "sha256": "67a8acff0b5f4a8932f6ea37288efcf1a9991865d1c65adc8e42fb1a94d36b4e",
+      "bytes": 88143,
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "alphaData": "1 - additive red increment",
+      "buildAsset": "ngc0224-DRe8_0XP.png"
+    },
+    {
+      "catalogId": "NGC1976",
+      "file": "ngc1976.png",
+      "width": 1024,
+      "height": 1024,
+      "sha256": "da669f9bef54d13dbb26230fdbf0a01b57a870c6fedc9719921e20e7dceef0e7",
+      "bytes": 169121,
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "alphaData": "1 - additive red increment",
+      "buildAsset": "ngc1976-DAtw1raM.png"
+    },
+    {
+      "catalogId": "Mel022",
+      "file": "mel022.png",
+      "width": 2048,
+      "height": 1024,
+      "sha256": "423419bd878aa68e6b299017a80a9a13ffa445633169edf6378d8c652ca03e6e",
+      "bytes": 935002,
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "alphaData": "1 - additive red increment",
+      "buildAsset": "mel022-CSGSDQcb.png"
+    },
+    {
+      "catalogId": "NGC6523",
+      "file": "ngc6523.png",
+      "width": 2048,
+      "height": 1024,
+      "sha256": "4d1047609885b9937cc48bef6429e83331b96c9e66f17540eb37d14583e71682",
+      "bytes": 1597382,
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "alphaData": "1 - additive red increment",
+      "buildAsset": "ngc6523-CEzWdCVh.png"
+    },
+    {
+      "catalogId": "NGC7000",
+      "file": "ngc7000.png",
+      "width": 2048,
+      "height": 2048,
+      "sha256": "5e228d56f45b74a45e844e7370e9ad957d1df2557e7c6e3b94bdf12defa27ddd",
+      "bytes": 3113933,
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "alphaData": "1 - additive red increment",
+      "buildAsset": "ngc7000-CZhrdeKj.png"
+    },
+    {
+      "catalogId": "NGC1499",
+      "file": "ngc1499.png",
+      "width": 2048,
+      "height": 2048,
+      "sha256": "c76ca0208676e24836b0aa83065565ee93b31fd3cda88877e884d41715853494",
+      "bytes": 1928655,
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "alphaData": "1 - additive red increment",
+      "buildAsset": "ngc1499-Bj11_p1j.png"
+    },
+    {
+      "catalogId": "IC1805",
+      "file": "ic1805.png",
+      "width": 1024,
+      "height": 1024,
+      "sha256": "ed0af6f4a01fb0432efd716e9e4bec65966de8b2c1ce86db165acfd9480640f6",
+      "bytes": 435191,
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "alphaData": "1 - additive red increment",
+      "buildAsset": "ic1805-BaFXuzyL.png"
+    },
+    {
+      "catalogId": "IC1848",
+      "file": "ic1848.png",
+      "width": 1024,
+      "height": 1024,
+      "sha256": "2c96c2cedbf61e5903d86f9b4077ea4ede95c73f441d42d97802d5c7867be470",
+      "bytes": 247601,
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "alphaData": "1 - additive red increment",
+      "buildAsset": "ic1848-DB22gPIo.png"
+    },
+    {
+      "catalogId": "NGC6514",
+      "file": "ngc6514.png",
+      "width": 2048,
+      "height": 2048,
+      "sha256": "4cf11eea847fd42becdb16ca4a161bfd394fb71620ab1e14aa6cd71d3500f4ae",
+      "bytes": 473532,
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "alphaData": "1 - additive red increment",
+      "buildAsset": "ngc6514-DD14acG3.png"
+    },
+    {
+      "catalogId": "NGC0598",
+      "file": "ngc0598.png",
+      "width": 2048,
+      "height": 2048,
+      "sha256": "99dc1311f97777559a695f67f8693e4adbefdbabc49209005bf138363799550e",
+      "bytes": 1094970,
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "alphaData": "1 - additive red increment",
+      "buildAsset": "ngc0598-ClgOjJ0n.png"
+    },
+    {
+      "catalogId": "NGC2237",
+      "file": "ngc2237.png",
+      "width": 1024,
+      "height": 1024,
+      "sha256": "14d1a0b74992b14731326f8d71cf61851e8cabd8ab9c6a0ecd0a0144cb5b466e",
+      "bytes": 889365,
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "alphaData": "1 - additive red increment",
+      "buildAsset": "ngc2237-D2h-Late.png"
+    },
+    {
+      "catalogId": "IC0434",
+      "file": "ic0434.png",
+      "width": 1024,
+      "height": 1024,
+      "sha256": "8953134274f0c088b8f1168aec761eeb062ce27177baa4a4bfaa4d5d92e0b58e",
+      "bytes": 521659,
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "alphaData": "1 - background contrast opacity",
+      "buildAsset": "ic0434-BydwBqNn.png"
+    }
+  ],
+  "buildEntry": {
+    "file": "index-Bq4RHLLh.js",
+    "sha256": "4a629c3a8cf5f7dcd0c0ba0b24d65802dafeb52f119b8c4aab9c04add8fb69f5"
+  },
+  "failureControl": {
+    "server": "Loopback static build, only M33 PNG returns 404 while flag enabled",
+    "recovery": "Disable fault flag and toggle deep-sky layer off/on",
+    "passed": true,
+    "serverStopped": true
+  },
+  "limitations": [
+    "Qualitative published-image appearance and H-alpha enhancement",
+    "Rosette source already includes H-alpha",
+    "Rosette/Horsehead reference textures are native 1024 square",
+    "Horsehead background contrast is derived from source appearance; catalogue stars draw independently",
+    "Texture budget excludes Milky Way, terrain and driver memory"
+  ]
+}

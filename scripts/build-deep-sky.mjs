@@ -33,6 +33,10 @@ const selected = [
   ['NGC1499', '加州星云', 'emission', ['NGC1499','California Nebula']],
   ['IC1805', '心脏星云', 'emission', ['IC1805','Heart Nebula','心形星云']],
   ['IC1848', '灵魂星云', 'emission', ['IC1848','Soul Nebula']],
+  ['NGC6514', '三裂星云', 'mixed', ['M20','M 20','NGC6514','Trifid Nebula']],
+  ['NGC0598', '三角座星系', 'galaxy', ['M33','M 33','NGC598','Triangulum Galaxy']],
+  ['NGC2237', '玫瑰星云', 'emission', ['NGC2237','NGC2238','NGC2239','NGC2244','Rosette Nebula']],
+  ['IC0434', '马头星云区域', 'dark', ['IC434','B33','Barnard33','Barnard 33','Horsehead Nebula','马头星云']],
 ];
 const outlines = new Map(); let polygon;
 for (const line of inputs[2].text.split(/\r?\n/)) {
@@ -62,8 +66,9 @@ const objects = selected.map(([id, name, model, aliases], index) => {
   let xy;
   if (rings.length) xy = rings.flatMap(ring => ring.points.map(([r,d]) => tangent(r,d,ra,dec)));
   else {
-    if (major !== minor && positionAngle === null) throw new Error(`Missing ${id} orientation`);
-    const pa = (positionAngle ?? 0)*degrees, a = Math.tan(major/120*degrees), b = Math.tan(minor/120*degrees);
+    // A photographic source supplies the final bounds. An unknown catalogue
+    // angle stays null; use a conservative square for this intermediate step.
+    const pa = (positionAngle ?? 0)*degrees, a = Math.tan(major/120*degrees), b = Math.tan((positionAngle === null ? major : minor)/120*degrees);
     xy = Array.from({length:128},(_,i)=>{const t=i*Math.PI/64;return [a*Math.cos(t)*Math.sin(pa)+b*Math.sin(t)*Math.cos(pa),a*Math.cos(t)*Math.cos(pa)-b*Math.sin(t)*Math.sin(pa)];});
   }
   let minX=Math.min(...xy.map(p=>p[0])),maxX=Math.max(...xy.map(p=>p[0])),minY=Math.min(...xy.map(p=>p[1])),maxY=Math.max(...xy.map(p=>p[1]));
@@ -81,7 +86,7 @@ const data = {
   license:'CC-BY-SA-4.0',licenseUrl:'https://creativecommons.org/licenses/by-sa/4.0/',
   inputs:inputs.map(({path,sha256})=>({path,sha256})),
   fields:'ICRS/J2000 RA/Dec in degrees; major/minor axes are full diameters in arcminutes; position angle north through east, null if absent; bounds are gnomonic east/north coordinates.',
-  modifications:'Eight-object subset; Chinese names and search aliases added; original contour levels preserved; tangent bounds padded 12%. Rendering components/classification are qualitative author-created display models, not measured line fluxes.',
+  modifications:'Twelve-object subset; Chinese names and search aliases added; original contour levels preserved. IC0434 is the Horsehead region, not a separate measurement of Barnard 33. Photographic bounds override catalogue envelopes. Rendering components/classification are qualitative display models, not measured line fluxes.',
   clusterStarSource:{source:hyg.source,license:'CC-BY-SA-4.0',note:'M45 stars use existing HYG catalogue positions and magnitudes at runtime; IDs only are stored here.'},
   imageSources:JSON.parse(await readFile(new URL('./deep-sky-image-sources.json',import.meta.url),'utf8')),
   atlas:{width:4096,height:4096,layout:'atlasRect is assigned by build-deep-sky-atlas.py',channels:'RGB baseline colour; A = 1 - additive red enhancement. Alpha is data, not display opacity; not spectral fluxes.'},objects

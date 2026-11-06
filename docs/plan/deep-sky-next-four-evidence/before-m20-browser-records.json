@@ -1,0 +1,102 @@
+[
+  {
+    "file": "before-m20-400-stock.png",
+    "frame": {
+      "x": 265,
+      "y": 291.671875,
+      "width": 1239,
+      "height": 826,
+      "ready": "true"
+    },
+    "status": "当前 DEM 未遮挡",
+    "inputs": [
+      "2026-07-15T22:00",
+      "400",
+      "35.4172",
+      "138.8729",
+      "175.8797352322713",
+      "31.526759708670287",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [
+      "礁湖星云",
+      "三裂星云"
+    ],
+    "feedback": [],
+    "errors": [],
+    "layers": {
+      "stars": true,
+      "deepSky": true,
+      "milkyWay": false
+    },
+    "metadataSource": "CUA values emitted at screenshot capture",
+    "textureSha256": "28ceaa3c2f350b9171038a436a12f9def7bb2f9475bc241281089cb1f4796be3"
+  },
+  {
+    "file": "before-m20-1000-stock.png",
+    "frame": {
+      "x": 265,
+      "y": 291.671875,
+      "width": 1239,
+      "height": 826,
+      "ready": "true"
+    },
+    "status": "当前 DEM 未遮挡",
+    "inputs": [
+      "2026-07-15T22:00",
+      "1000",
+      "35.4172",
+      "138.8729",
+      "175.8797352322713",
+      "31.526759708670287",
+      "1.6"
+    ],
+    "response": "stock",
+    "labels": [
+      "三裂星云"
+    ],
+    "feedback": [],
+    "errors": [],
+    "layers": {
+      "stars": true,
+      "deepSky": true,
+      "milkyWay": false
+    },
+    "metadataSource": "CUA values emitted at screenshot capture",
+    "textureSha256": "28ceaa3c2f350b9171038a436a12f9def7bb2f9475bc241281089cb1f4796be3"
+  },
+  {
+    "file": "before-m20-1000-ha.png",
+    "frame": {
+      "x": 265,
+      "y": 291.671875,
+      "width": 1239,
+      "height": 826,
+      "ready": "true"
+    },
+    "status": "当前 DEM 未遮挡",
+    "inputs": [
+      "2026-07-15T22:00",
+      "1000",
+      "35.4172",
+      "138.8729",
+      "175.8797352322713",
+      "31.526759708670287",
+      "1.6"
+    ],
+    "response": "ha-modified",
+    "labels": [
+      "三裂星云"
+    ],
+    "feedback": [],
+    "errors": [],
+    "layers": {
+      "stars": true,
+      "deepSky": true,
+      "milkyWay": false
+    },
+    "metadataSource": "CUA values emitted at screenshot capture",
+    "textureSha256": "28ceaa3c2f350b9171038a436a12f9def7bb2f9475bc241281089cb1f4796be3"
+  }
+]

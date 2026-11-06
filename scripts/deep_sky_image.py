@@ -48,7 +48,7 @@ def pixel_matrix(wcs):
     return np.array([[sx*c, -sy*s], [sx*s, sy*c]])
 
 
-def quad_wcs(sky_corners, dimensions):
+def quad_wcs(sky_corners, dimensions, corner_tolerance=0.5):
     """Fit published image-edge corners to TAN/CD; not an original plate solve."""
     w, h = dimensions
     a, d = np.radians(sky_corners).T
@@ -63,8 +63,10 @@ def quad_wcs(sky_corners, dimensions):
     cd = fit[:2].T
     offset = np.linalg.solve(cd, fit[2])
     error = np.linalg.norm((xy-fit[2]) @ np.linalg.inv(cd).T-pixels, axis=1)
-    if float(error.max()) >= 0.5:
-        raise ValueError("Published sky corners cannot fit TAN within half a source pixel")
+    if corner_tolerance not in (0.5, 1):
+        raise ValueError("Unsupported published-corner tolerance")
+    if float(error.max()) >= corner_tolerance:
+        raise ValueError("Published sky corners exceed the fixed source-pixel tolerance")
     return {"ReferenceDimension": [float(w), float(h)],
         "ReferencePixel": (np.array([(w+1)/2, (h+1)/2])-offset).tolist(),
         "ReferenceValue": [ra, dec], "CDMatrix": cd.tolist(),
@@ -76,7 +78,7 @@ def source_wcs(spec, data):
     if spec.get("registrationModel", "avm") == "avm":
         return read_avm(data)
     if spec["registrationModel"] == "stellarium-sky-corners":
-        fitted = quad_wcs(spec["skyCorners"], spec["dimensions"])
+        fitted = quad_wcs(spec["skyCorners"], spec["dimensions"], spec.get("cornerTolerancePixels", 0.5))
         for key in ("ReferenceDimension", "ReferencePixel", "ReferenceValue", "CDMatrix"):
             if not np.allclose(fitted[key], spec["wcs"][key], rtol=0, atol=1e-10):
                 raise ValueError("Published corners and fixed TAN registration disagree")
@@ -169,23 +171,41 @@ def square_filter(signal, size, maximum=False):
     return result
 
 
-def diffuse_support(rgb, model):
+def reconstruct_support(marker, signal):
+    for iteration in range(2048):
+        grown = square_filter(marker, 3, maximum=True)
+        np.minimum(grown, signal, out=grown)
+        if np.max(grown-marker) < 1e-7:
+            return grown, iteration+1
+        marker = grown
+    raise ValueError("Diffuse support reconstruction did not converge")
+
+
+def catalogue_support_seed(spec, obj, width, height):
+    """Seed connected cloud support at the catalogue position in source pixels."""
+    wcs = spec["wcs"]
+    rw, rh = wcs["ReferenceDimension"]
+    px, py = np.meshgrid((np.arange(width)+1)*rw/width, (height-np.arange(height))*rh/height)
+    offset = np.stack([px-wcs["ReferencePixel"][0], py-wcs["ReferencePixel"][1]], axis=-1)
+    tangent = np.radians(offset @ pixel_matrix(wcs).T)
+    center, east, north = basis(*wcs["ReferenceValue"])
+    target, _, _ = basis(obj["ra"], obj["dec"])
+    projected = center @ target + tangent[..., 0]*(east @ target) + tangent[..., 1]*(north @ target)
+    cosine = projected/np.sqrt(1+np.sum(tangent*tangent, axis=-1))
+    return cosine >= np.cos(np.radians(obj["majorArcmin"]/120))
+
+
+def diffuse_support(rgb, model, seed=None):
     """Colour-derived display support, not a spectral or calibrated starless map.
 
     Reconstruct broad cloud support under the original colour excess so narrow
     connected filaments survive. The final RGB is never filtered or inpainted.
     """
     r, g, b = rgb.transpose(2, 0, 1)
-    signal = np.maximum(b-r if model == "reflection" else r-(g+b)*0.5, 0).astype(np.float32)
-    marker = square_filter(signal, 9)
-    for iteration in range(2048):
-        grown = square_filter(marker, 3, maximum=True)
-        np.minimum(grown, signal, out=grown)
-        if np.max(grown-marker) < 1e-7:
-            break
-        marker = grown
-    else:
-        raise ValueError("Diffuse support reconstruction did not converge")
+    red = np.maximum(r-(g+b)*0.5, 0)
+    blue = np.maximum(b-r, 0)
+    signal = (blue if model == "reflection" else np.maximum(red, blue) if model in ("mixed", "dark") else rgb.max(axis=-1) if model == "galaxy" else red).astype(np.float32)
+    grown, iterations = reconstruct_support(square_filter(signal, 9), signal)
     # White stellar cores must not punch holes into genuine surrounding cloud.
     support = square_filter(square_filter(grown, 41, maximum=True), 41)
     kernel = np.exp(-0.5*(np.arange(-6, 7, dtype=float)/2)**2)
@@ -197,9 +217,17 @@ def diffuse_support(rgb, model):
     ceiling = max(floor*4, floor+0.008)
     weight = np.clip((support-floor)/(ceiling-floor), 0, 1)
     weight = weight*weight*(3-2*weight)
+    seed_iterations = None
+    if seed is not None:
+        # Catalogue size selects starting pixels only. Connected source cloud
+        # may continue beyond it; no catalogue boundary clips the final RGB.
+        if not np.any(weight[seed] > 0.01):
+            raise ValueError("No diffuse signal at the catalogue support seed")
+        weight, seed_iterations = reconstruct_support(np.where(seed, weight, 0), weight)
     return weight, {
         "model": "diffuse-colour-reconstruction", "openingPixels": 9,
-        "reconstructionIterations": iteration+1, "holeClosingPixels": 41,
+        "reconstructionIterations": iterations, "holeClosingPixels": 41,
+        "seedReconstructionIterations": seed_iterations,
         "supportBlurSigma": 2, "noiseFloor": floor, "fullSupport": ceiling,
         "supportedFraction": float(np.mean(weight > 0.01)),
         "fullSupportFraction": float(np.mean(weight > 0.99)),
@@ -212,8 +240,10 @@ def image_components(source_dir, spec, obj, width, height=None):
         raise ValueError("Unknown reference background model")
     if spec.get("detailMode") not in (None, "source-rgb"):
         raise ValueError("Unknown reference detail mode")
-    if spec.get("opacityModel") not in (None, "diffuse-colour-reconstruction"):
+    if spec.get("opacityModel") not in (None, "diffuse-colour-reconstruction", "continuum-reconstruction"):
         raise ValueError("Unknown reference opacity model")
+    if spec.get("supportSeed") not in (None, "catalogue-centre"):
+        raise ValueError("Unknown diffuse support seed")
     data = (source_dir/spec["file"]).read_bytes()
     if hashlib.sha256(data).hexdigest() != spec["sha256"]:
         raise ValueError(f"Source hash changed: {spec['file']}")
@@ -245,9 +275,25 @@ def image_components(source_dir, spec, obj, width, height=None):
     if spec.get("backgroundModel") != "none":
         rgb = np.maximum(rgb-(edge_background(estimate) if spec.get("backgroundModel") == "edge-harmonic" else background), 0)
     support_stats = None
+    dark = None
+    if obj["model"] == "dark":
+        # The wide optical source contains the dark silhouette itself. Estimate
+        # its display contrast against nearby red emission, never stellar depth.
+        # Filtering is used only for this estimate, not the final RGB texture.
+        proxy = np.asarray(image.filter(ImageFilter.MedianFilter(7)), dtype=float)/255
+        red = np.maximum(proxy[..., 0]-(proxy[..., 1]+proxy[..., 2])*0.5, 0).astype(np.float32)
+        envelope = square_filter(square_filter(red, 81, maximum=True), 81)
+        dark = np.clip((envelope-red)/np.maximum(envelope, 0.02), 0, 1)
+        signal = np.clip((envelope-0.02)/0.10, 0, 1)
+        dark *= signal*signal*(3-2*signal)*0.8
     if spec.get("opacityModel"):
-        support, support_stats = diffuse_support(rgb, obj["model"])
+        seed = None
+        if spec.get("supportSeed") == "catalogue-centre":
+            seed = catalogue_support_seed(spec, obj, image.width, image.height)
+        support, support_stats = diffuse_support(rgb, obj["model"], seed)
         rgb = np.concatenate([rgb, support[..., None]], axis=-1)
+    if dark is not None:
+        rgb = np.concatenate([rgb, dark[..., None]], axis=-1)
     x0, y0, x1, y1 = obj["bounds"]
     x, y = np.meshgrid(np.linspace(x0, x1, width), np.linspace(y1, y0, height))
     center, east, north = basis(obj["ra"], obj["dec"])
@@ -256,9 +302,14 @@ def image_components(source_dir, spec, obj, width, height=None):
     if edge_pixels not in (3, 12, 40):
         raise ValueError("Unsupported source-edge transition")
     sampled, fade, valid = sample_image(rgb, reference_pixels(rays, wcs), wcs, edge_pixels)
+    sampled_dark = sampled[..., -1].copy() if dark is not None else None
     if support_stats:
-        fade *= sampled[..., 3]
+        # Dark data has its own emission-envelope support, otherwise the actual
+        # black silhouette would be erased by the RGB support it must darken.
+        sampled_support = sampled[..., 3].copy()
         sampled = sampled[..., :3]
+    else:
+        sampled_support = 1
     r, g, b = sampled.transpose(2, 0, 1)
     if obj["model"] in ("galaxy", "reflection"):
         enhancement = np.zeros_like(r)
@@ -272,7 +323,12 @@ def image_components(source_dir, spec, obj, width, height=None):
     intensity = sampled.max(axis=-1, keepdims=True)
     display = np.where(sampled <= 0.0031308, sampled*12.92, 1.055*sampled**(1/2.4)-0.055)
     display_signal = display/np.maximum(display.max(axis=-1, keepdims=True), 1e-9)*intensity
-    components = np.concatenate([display_signal, enhancement[..., None]], axis=-1)*fade[..., None]
+    if sampled_dark is None:
+        fade *= sampled_support
+        components = np.concatenate([display_signal, enhancement[..., None]], axis=-1)*fade[..., None]
+    else:
+        display_signal *= (fade*sampled_support)[..., None]
+        components = np.concatenate([display_signal, (sampled_dark*fade)[..., None]], axis=-1)
     return components, {
         "catalogId": obj["catalogId"], "sourceSha256": spec["sha256"],
         "coveredPixels": int(np.count_nonzero(valid)), "totalPixels": width*height,
@@ -285,4 +341,5 @@ def image_components(source_dir, spec, obj, width, height=None):
         "opacitySupport": support_stats,
         "outputDimensions": [width, height],
         "componentModel": "Baseline RGB plus additive red structure proxy; not measured spectral components",
+        "darkContrast": {"model": "source-red-envelope-deficit", "closingPixels": 81, "maximumOpacity": 0.8, "scope": "Background contrast only, not optical depth or stellar distance"} if dark is not None else None,
     }
