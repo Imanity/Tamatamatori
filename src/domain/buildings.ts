@@ -34,7 +34,7 @@ export interface BuildingStatus {
   version?: string;
   fetchedAt?: string;
   message?: string;
-  landmark?: { phase:"applied"|"fallback"; triangles?:number; distance?:number; message:string };
+  landmarks?: Array<{id:string;phase:"applied"|"fallback";triangles?:number;distance:number;message:string}>;
 }
 export const emptyBuildings: BuildingStatus = { key: "", phase: "off", limited: false, tiles: 0, polygons: 0, triangles: 0, bytes: 0, skipped: 0 };
 export const buildingKey = (plan: Pick<ShootingPlan,"longitude"|"latitude">) => `${plan.longitude}/${plan.latitude}`;

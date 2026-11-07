@@ -1,0 +1,1141 @@
+{
+  "checkedAt": "2026-11-07T17:42:33.643Z",
+  "gitBase": "cc1e200cb3e539e33cf601fcd096da0b94e26ef7",
+  "uncommitted": true,
+  "scope": "Shanghai Tower local implementation and verification. Tokyo Tower candidate missing; no simultaneous same-city precision-model claim.",
+  "node": "v24.17.0",
+  "tests": {
+    "command": "npm test",
+    "count": 249,
+    "pass": 249,
+    "fail": 0,
+    "logSha256": "6ac91db67e3f52eaa9ce98d5ab723b21ac8ed9d086d5d1df514fac13e9e24186"
+  },
+  "build": {
+    "command": "npm run build -- --base=/Tamatamatori/",
+    "pass": true,
+    "logSha256": "967e04a81ecf041481a0d9fbd726090b2bec5083d8c758b2617d54788b28b4f1",
+    "warning": "Existing large bundle warning"
+  },
+  "files": {
+    "src/App.tsx": {
+      "bytes": 17103,
+      "sha256": "b225f8c3e4e87860f384784cdaed88e623bb04a78f99bb96bd9828458a54c86e"
+    },
+    "src/components/About.tsx": {
+      "bytes": 13306,
+      "sha256": "399ba26d7ee3b99c74a09591c7ce0c57ad577d06440f5db5a4f5b325df511cbd"
+    },
+    "src/components/BuildingReadout.tsx": {
+      "bytes": 3113,
+      "sha256": "02ba8c9c90b2a98c82e93bbbcf36e03248d4d464940b232ff7cacbecf4528375"
+    },
+    "src/components/CelestialScene.tsx": {
+      "bytes": 5820,
+      "sha256": "b351c8bda5b393b7c23c8d0cbb007526858cf2624b58c24635fd598afdfacd55"
+    },
+    "src/components/EnvironmentSettings.tsx": {
+      "bytes": 1438,
+      "sha256": "6091d5aadb6e39dd0bd867042f99c379dd79d84643a581d9fc0559e6f86ececa"
+    },
+    "src/components/Icon.tsx": {
+      "bytes": 2104,
+      "sha256": "04a8505c75af265a056aa65d4f00d190bf040d66c6ed2945476332b907d55d0c"
+    },
+    "src/components/InfoGroup.tsx": {
+      "bytes": 925,
+      "sha256": "766f271a3129d46d7fed220c13a1f2b0be94aa714a50702bab064097907844f7"
+    },
+    "src/components/MapPanel.tsx": {
+      "bytes": 17922,
+      "sha256": "60f81954305d9cea242bb5007cd2a106a7e41a68a2b81edd6ffb0ba2c17da1da"
+    },
+    "src/components/Parameters.tsx": {
+      "bytes": 13453,
+      "sha256": "90b088eff3681ba92d9911950229ddac1018092e17b2557a35e0d91cd6eff120"
+    },
+    "src/components/ScenePanels.tsx": {
+      "bytes": 24028,
+      "sha256": "cf1eaaf9abac46c438420ac2df68e2433f3404d906f81e75ee399eb5d018ab9a"
+    },
+    "src/components/StarScene.tsx": {
+      "bytes": 15498,
+      "sha256": "6b51878c2b67a6693cd369fa6256aeac2c6e8a1105c10d6acfcac1a4a9916cd4"
+    },
+    "src/components/StationScene.tsx": {
+      "bytes": 6710,
+      "sha256": "2c5253acf571dcdc6e91de3c3d15871334a9041eb4a173e660ffaa9a82689228"
+    },
+    "src/components/TargetSearch.tsx": {
+      "bytes": 6967,
+      "sha256": "6700c57cac891ef1e81d8e5112b759d872405a2f667c5cfd685c293973f0efaf"
+    },
+    "src/components/TerrainScene.tsx": {
+      "bytes": 27007,
+      "sha256": "25d6370e37a63abf9db07b876daa24e7584427f0232dec51f0da51a995c6016b"
+    },
+    "src/components/useLightPollution.ts": {
+      "bytes": 2480,
+      "sha256": "39ac56afe4798a50d8ae1ac41b0d6b117af15c649912bb90ceb525f54caa2496"
+    },
+    "src/components/useOrbits.ts": {
+      "bytes": 2884,
+      "sha256": "7156434ace597391f73bb6b09da7b9a32e367e99a5a0d4a5d0700a0e1a6bae10"
+    },
+    "src/components/useWeather.ts": {
+      "bytes": 3398,
+      "sha256": "28ca4bb6cf30bb5cc9161909fc046ecd34cfc4e73a0b6bb994d0ef76b4b12467"
+    },
+    "src/components/WeatherReadout.tsx": {
+      "bytes": 2927,
+      "sha256": "660302bb829f095612d4ab44c05be42e999b9918f6c09b2f47b40515ba299640"
+    },
+    "src/data/bright-stars.json": {
+      "bytes": 80689,
+      "sha256": "4b36a2ef9272b6112d002585081e452b84d8fdb836cbde8f963f215825dcd4cb"
+    },
+    "src/data/constellation-stars.json": {
+      "bytes": 10641,
+      "sha256": "7279b06a0dcb6e2710e04a52277814fe88d3d4a404ae6cd49b9a99ec6a418d4b"
+    },
+    "src/data/constellations.json": {
+      "bytes": 13766,
+      "sha256": "25058ebe15c7f3102d48b9cdaafcaa0f5aa07139d6b7cde3488c9b97834a780e"
+    },
+    "src/data/deep-sky/ic0434.png": {
+      "bytes": 419697,
+      "sha256": "e9b05d08fffbef0ab392fa7af32c619b69ebea1e47c5db7526cead0755375945"
+    },
+    "src/data/deep-sky/ic1805.png": {
+      "bytes": 435191,
+      "sha256": "ed0af6f4a01fb0432efd716e9e4bec65966de8b2c1ce86db165acfd9480640f6"
+    },
+    "src/data/deep-sky/ic1848.png": {
+      "bytes": 247601,
+      "sha256": "2c96c2cedbf61e5903d86f9b4077ea4ede95c73f441d42d97802d5c7867be470"
+    },
+    "src/data/deep-sky/mel022.png": {
+      "bytes": 935002,
+      "sha256": "423419bd878aa68e6b299017a80a9a13ffa445633169edf6378d8c652ca03e6e"
+    },
+    "src/data/deep-sky/ngc0224.png": {
+      "bytes": 88143,
+      "sha256": "67a8acff0b5f4a8932f6ea37288efcf1a9991865d1c65adc8e42fb1a94d36b4e"
+    },
+    "src/data/deep-sky/ngc0598.png": {
+      "bytes": 1094970,
+      "sha256": "99dc1311f97777559a695f67f8693e4adbefdbabc49209005bf138363799550e"
+    },
+    "src/data/deep-sky/ngc1499.png": {
+      "bytes": 1928655,
+      "sha256": "c76ca0208676e24836b0aa83065565ee93b31fd3cda88877e884d41715853494"
+    },
+    "src/data/deep-sky/ngc1976.png": {
+      "bytes": 169121,
+      "sha256": "da669f9bef54d13dbb26230fdbf0a01b57a870c6fedc9719921e20e7dceef0e7"
+    },
+    "src/data/deep-sky/ngc2237.png": {
+      "bytes": 889365,
+      "sha256": "14d1a0b74992b14731326f8d71cf61851e8cabd8ab9c6a0ecd0a0144cb5b466e"
+    },
+    "src/data/deep-sky/ngc6514.png": {
+      "bytes": 473532,
+      "sha256": "4cf11eea847fd42becdb16ca4a161bfd394fb71620ab1e14aa6cd71d3500f4ae"
+    },
+    "src/data/deep-sky/ngc6523.png": {
+      "bytes": 1597382,
+      "sha256": "4d1047609885b9937cc48bef6429e83331b96c9e66f17540eb37d14583e71682"
+    },
+    "src/data/deep-sky/ngc7000.png": {
+      "bytes": 3113933,
+      "sha256": "5e228d56f45b74a45e844e7370e9ad957d1df2557e7c6e3b94bdf12defa27ddd"
+    },
+    "src/data/deep-sky/rhooph.png": {
+      "bytes": 1143645,
+      "sha256": "6553bd583342a1a3ca14da24f8dfd9bbcda5b12d51d636645dbe8a06b01a4a50"
+    },
+    "src/data/deep-sky/sh2-276.png": {
+      "bytes": 779541,
+      "sha256": "0f09ee91325f276e4ca9e3bec2a24e88903bdae2c3a368648435951052a8fb38"
+    },
+    "src/data/deep-sky-atlas.png": {
+      "bytes": 8708911,
+      "sha256": "2e93d7c91147be4010f7172605e7579c5e37aa16368266d0ba581f2beb4ed870"
+    },
+    "src/data/deep-sky.json": {
+      "bytes": 139860,
+      "sha256": "78ff07aedd3d80f2aaeb843304b2cd70d03f4ea86fe80112b1fdc72be4173815"
+    },
+    "src/data/light-pollution.json": {
+      "bytes": 30131,
+      "sha256": "a09b387e512930b4c40561aef81538f97e4621b96c6ff435260b4680127a61c1"
+    },
+    "src/data/milky-way.json": {
+      "bytes": 1010,
+      "sha256": "055084f324f069b0e51a3114f9f68de5e01c61e79c26b2d5a38762b97212a7e2"
+    },
+    "src/data/milky-way.webp": {
+      "bytes": 118162,
+      "sha256": "40c738c6ee6fb479296b46817fb1cbf8f442bb798d4c5d3dd5e89e67e641aa9c"
+    },
+    "src/data/README.md": {
+      "bytes": 11750,
+      "sha256": "c4f321cd35ecafc26b15d1cc015f25f7edf3f7c1859d66e48277031f4290ab11"
+    },
+    "src/domain/buildings.ts": {
+      "bytes": 8595,
+      "sha256": "097c3c008fe13c510b18b446815a7402ee9d968137529393992785ddc1851004"
+    },
+    "src/domain/celestial-projection.ts": {
+      "bytes": 5713,
+      "sha256": "18f9bbe3db5e252b81421db87a3c3c2b3be27b8d9e485f9bd055abcf00403ffb"
+    },
+    "src/domain/constellations.ts": {
+      "bytes": 3610,
+      "sha256": "ef82e466bc8574bd371081a0b5d09fa208aca94a14670a7df87ceba1e03dfb3f"
+    },
+    "src/domain/deep-sky.ts": {
+      "bytes": 9171,
+      "sha256": "0777e22705aba54be2c74eef0dcd0d71349bc09beb6a80a36653018146cbd55b"
+    },
+    "src/domain/ephemeris.ts": {
+      "bytes": 3385,
+      "sha256": "46e088e00c4e232ced4b8f56ece39ca1e8a680a6ecfa8ab8905101a306550bdd"
+    },
+    "src/domain/geodesy.ts": {
+      "bytes": 1640,
+      "sha256": "4246526808f0a4d8821515ab6b97c056f26b207400f242a37277a104e7eaea12"
+    },
+    "src/domain/landmarks.ts": {
+      "bytes": 5065,
+      "sha256": "385951c9c7a87ed6a2731639e4495fa0735ff998b1d15310d24be2a50c539f2c"
+    },
+    "src/domain/light-pollution.ts": {
+      "bytes": 2135,
+      "sha256": "ead223a9fcb83d9c23d3dc58970cb00754a58212fad88d1751336c6f8a49d307"
+    },
+    "src/domain/map.ts": {
+      "bytes": 5427,
+      "sha256": "29c98b34e017cc1363c6494928e7f96e2754e2baa218cd0d1359c251769611ea"
+    },
+    "src/domain/orbit-data.ts": {
+      "bytes": 6042,
+      "sha256": "64261f451ee5a7318dc18c1bc313179ca5b6c40cae5f1b4528c31f6ebf65cbc1"
+    },
+    "src/domain/plan.ts": {
+      "bytes": 5804,
+      "sha256": "eeaf2c9fd944411a394a5a7cbd875d70a6f68fbefdea9e5b8849c87983ac27d6"
+    },
+    "src/domain/refraction.ts": {
+      "bytes": 893,
+      "sha256": "41faac7d8e2a4007ea71669df65b60358ec076f6af0c319af4a70191ffdd0a22"
+    },
+    "src/domain/sky-appearance.ts": {
+      "bytes": 3921,
+      "sha256": "555d613496ecef5d05ea68903a23d608779ba8f001f4586b86df761fc09ac12c"
+    },
+    "src/domain/solar.ts": {
+      "bytes": 434,
+      "sha256": "d78a56d4ce0a10ca66a288ae0df621330b3d5ea99351783bbd31667918b0f4c3"
+    },
+    "src/domain/starfield.ts": {
+      "bytes": 7152,
+      "sha256": "b0f0484725d6f79d62e65ac8f1fbe18daf020008c6d11b2ef006369bbd185f41"
+    },
+    "src/domain/stations.ts": {
+      "bytes": 4138,
+      "sha256": "aaaf6d1d5d4719c6859945edbef6022ea990feb21631da4415d19464f73ec585"
+    },
+    "src/domain/target-search.ts": {
+      "bytes": 4281,
+      "sha256": "28ea148e6505f350380e127533b1963af97954390907c5d28c0041ad0feff047"
+    },
+    "src/domain/terrain.ts": {
+      "bytes": 5660,
+      "sha256": "74afc05ae4423be012bd159493faae86fb25fc87d6d898a23241200eaf6753ed"
+    },
+    "src/domain/visibility.ts": {
+      "bytes": 2105,
+      "sha256": "f7e02a46f7338f2b95c40073bd44b0d2e24158c5f501ee233443663ae07e68fd"
+    },
+    "src/domain/weather-appearance.ts": {
+      "bytes": 3344,
+      "sha256": "254335d50a05ae9d35682d8daaab9c28689aabef7f65be4fa2353525a38f2af9"
+    },
+    "src/domain/weather.ts": {
+      "bytes": 5078,
+      "sha256": "fae28f7baf84fa28e523060c2cec91be1f0c01c03da69d9e6ccf451ed64feacd"
+    },
+    "src/main.tsx": {
+      "bytes": 331,
+      "sha256": "a40b5fd8be2fb4a1d9373a7b8240aa79437185c07304bf81e315c629752b878b"
+    },
+    "src/map/map.css": {
+      "bytes": 4940,
+      "sha256": "5f2455a107727f2f86b71e35a94882a7838e3319896e2cf8efa0324f4926f678"
+    },
+    "src/map/sdk.ts": {
+      "bytes": 222,
+      "sha256": "7e0522f2b0183a25d25b8f2467038ba6789a4d65ad4377191d6dd88c3fc602f2"
+    },
+    "src/preview/building-layer.ts": {
+      "bytes": 10600,
+      "sha256": "4f37ff9085257b27b70a4a452ce57ef6772aacf3ae98860e4650220bc61674c5"
+    },
+    "src/preview/buildings.ts": {
+      "bytes": 14172,
+      "sha256": "8bea1cd8f5541e9db4fddcaf41de742d111085cd08060545c06c416907cbba64"
+    },
+    "src/preview/calibration-math.ts": {
+      "bytes": 3955,
+      "sha256": "130c47aa01aad0d8745d75d8c33081a3b8f3e7593a32255ebaf26ca96a82b79b"
+    },
+    "src/preview/calibration.ts": {
+      "bytes": 7042,
+      "sha256": "93ba540901fd618206ff5382c9c05075633d565ad1cca3df65aa36f44d038eaf"
+    },
+    "src/preview/camera.ts": {
+      "bytes": 1951,
+      "sha256": "87bc1e8d67a6b33adbecda5c87eebcf0afc52841963abce183dfcbb4796c1584"
+    },
+    "src/preview/celestial-layer.ts": {
+      "bytes": 16862,
+      "sha256": "7e71e35f98475c37bd24656605640de8d02f9cbddfabf7f90930ccee9c6498cb"
+    },
+    "src/preview/deep-sky-texture.ts": {
+      "bytes": 1281,
+      "sha256": "3c976245f18abc6dabc2dd077853314b53cf7273e130f2851bab5a2288efb45a"
+    },
+    "src/preview/deep-sky-textures.ts": {
+      "bytes": 2821,
+      "sha256": "99bbf6de9b2f83000c6399978557d13307f839a44aa36551b6654f9e8a1839cd"
+    },
+    "src/preview/elevation.ts": {
+      "bytes": 4315,
+      "sha256": "a55f50c8068ddc55b66c32613e48f6521f6c961e42095834f6e6e69a66deb03d"
+    },
+    "src/preview/environment.ts": {
+      "bytes": 5929,
+      "sha256": "fd4bb1493190047534df022233fb9e2f6e7d8b79e85260c0d41e50f4d2da823b"
+    },
+    "src/preview/landmarks.ts": {
+      "bytes": 2912,
+      "sha256": "88bbdaaff35bd7673098d65b02abe553682c50b66301055a0f403eb730efcd8d"
+    },
+    "src/preview/light-pollution.ts": {
+      "bytes": 2746,
+      "sha256": "7dc2c968cb8ebf7c09073c8dcbee2788b646d0b4e08480db4f460f6360cf8ca0"
+    },
+    "src/preview/milky-way-texture.ts": {
+      "bytes": 748,
+      "sha256": "7032a556a14dffc72bd07338e011cd75825439339a1daadcf128842395f208c4"
+    },
+    "src/preview/orbit-feed.ts": {
+      "bytes": 1137,
+      "sha256": "94410069737f39b7b7c9656b631844bca8eb94537b5d69e4dd1eb8e49e8438e7"
+    },
+    "src/preview/rendered-camera.ts": {
+      "bytes": 1786,
+      "sha256": "7349fbfa1907261189d8bdd7a4e83268ec42acba905a57a6a77f0bbe4097508e"
+    },
+    "src/preview/sky-texture.ts": {
+      "bytes": 4289,
+      "sha256": "dd5108ef438f97e64defd6782c35f493f21fd0a478571db8a6b51c9826e499cd"
+    },
+    "src/preview/starfield-layer.ts": {
+      "bytes": 29788,
+      "sha256": "20291a853c80de3225b79a6873b05d8553f4afb1bbea0b915690ed43be37410f"
+    },
+    "src/preview/terrain-depth.glsl": {
+      "bytes": 653,
+      "sha256": "fdb6bd69533547a51d7cb722ca04a2c98e5e5f675a38f58339b59c092a893ce2"
+    },
+    "src/preview/terrain-detail.ts": {
+      "bytes": 2574,
+      "sha256": "d14138328d4765f4398cce8169ca6756696381c0283fb9faedac4bb8c0d9cf86"
+    },
+    "src/preview/terrain-perspective-math.ts": {
+      "bytes": 3413,
+      "sha256": "7c21eae6a107bdb070250cd70de7f4ab8b6bccb9d9710718a0d92df7a97c2374"
+    },
+    "src/preview/terrain-perspective.ts": {
+      "bytes": 9281,
+      "sha256": "af0991069b8e7b74d1a1d6b7fb63d552a6c16ac0487b92f03cc807bf6bb34854"
+    },
+    "src/preview/terrain-projection.glsl": {
+      "bytes": 2035,
+      "sha256": "d94981c23cb8051794ad04b7bf50876321211e1224170bdc3b62859e50aa9231"
+    },
+    "src/preview/terrain.css": {
+      "bytes": 5875,
+      "sha256": "e329cf2f7400be02fac39a342cb67348ff128e3c7186b02c131644fe9c3a15e5"
+    },
+    "src/preview/weather-shaders.ts": {
+      "bytes": 3226,
+      "sha256": "f69491ed7db9e981b54d143b14aeb8338d7423aa748db0fc84be4f2cdf45a370"
+    },
+    "src/preview/weather.ts": {
+      "bytes": 1583,
+      "sha256": "966188c819f8fd5bdfdd0d75cac284a03766eeac0b39639147558f3225ef93f2"
+    },
+    "src/styles.css": {
+      "bytes": 31954,
+      "sha256": "2ca8c87a7f3123862cec7bd8beca0fd944a509a5f46484fd17882bf78904d4b3"
+    },
+    "src/vite-env.d.ts": {
+      "bytes": 38,
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    "tests/.dev-config-ez6wDK/node_modules/.vite-terrain-5315340d3f76/deps/package.json": {
+      "bytes": 23,
+      "sha256": "3ca9d4afd21425087cf31893b8f9f63c81b0b8408db5e343ca76e5f8aa26ab9a"
+    },
+    "tests/.dev-config-ez6wDK/node_modules/.vite-terrain-5315340d3f76/deps/react-DgVJeC5g.js": {
+      "bytes": 39818,
+      "sha256": "3c18eca841add53dd9b8454b3a444291ed2b160a899b13512b2a22bf4a92d768"
+    },
+    "tests/.dev-config-ez6wDK/node_modules/.vite-terrain-5315340d3f76/deps/react-DgVJeC5g.js.map": {
+      "bytes": 71644,
+      "sha256": "17a7f0f3fd0616443d88271626eba2b99ecb13ea79e9e09347345b232d189d30"
+    },
+    "tests/.dev-config-ez6wDK/node_modules/.vite-terrain-5315340d3f76/deps/react-dom.js": {
+      "bytes": 15032,
+      "sha256": "c9f47e9ca831e7519946514c8087237d437f2f9595cf563ac518519f32d18bee"
+    },
+    "tests/.dev-config-ez6wDK/node_modules/.vite-terrain-5315340d3f76/deps/react-dom.js.map": {
+      "bytes": 26823,
+      "sha256": "6f1f38fb1d6304aa62e1ae2d682f8dc7dd858576db5a247281703fd900c1ba7b"
+    },
+    "tests/.dev-config-ez6wDK/node_modules/.vite-terrain-5315340d3f76/deps/react.js": {
+      "bytes": 90,
+      "sha256": "a59e03eb14bfbe1e60b58550c3edbe3d7044c1d1370a51338612381aef3519b8"
+    },
+    "tests/.dev-config-ez6wDK/node_modules/.vite-terrain-5315340d3f76/deps/react_jsx-dev-runtime.js": {
+      "bytes": 10728,
+      "sha256": "0fdec6304c67db5f1a3ef4bec895f57b7b1e424635eeb7dc386da66c740e1a90"
+    },
+    "tests/.dev-config-ez6wDK/node_modules/.vite-terrain-5315340d3f76/deps/react_jsx-dev-runtime.js.map": {
+      "bytes": 18655,
+      "sha256": "942a18e9e1d1ca6ad36af43e7c64ce4983327cbf9853d816f1b0f452d33ed5e8"
+    },
+    "tests/.dev-config-ez6wDK/node_modules/.vite-terrain-5315340d3f76/deps/react_jsx-runtime.js": {
+      "bytes": 11219,
+      "sha256": "bdd489cc3266584ab2bab029b2de5b2ed7c9b61cd74b2c1f5319d15139be78ac"
+    },
+    "tests/.dev-config-ez6wDK/node_modules/.vite-terrain-5315340d3f76/deps/react_jsx-runtime.js.map": {
+      "bytes": 19543,
+      "sha256": "2c14d0a45ad6b47851b26c263ea1b3402aa94968dd3ed134031587f335627948"
+    },
+    "tests/.dev-config-ez6wDK/node_modules/.vite-terrain-5315340d3f76/deps/_metadata.json": {
+      "bytes": 986,
+      "sha256": "fd08a6d44bff0f41dd6f79baafcdd1aaf6c96f0e567bcc8093cb2a93d8b99fff"
+    },
+    "tests/.dev-config-lbAfse/node_modules/.vite-terrain-5315340d3f76/deps/package.json": {
+      "bytes": 23,
+      "sha256": "3ca9d4afd21425087cf31893b8f9f63c81b0b8408db5e343ca76e5f8aa26ab9a"
+    },
+    "tests/.dev-config-lbAfse/node_modules/.vite-terrain-5315340d3f76/deps/react-DgVJeC5g.js": {
+      "bytes": 39818,
+      "sha256": "3c18eca841add53dd9b8454b3a444291ed2b160a899b13512b2a22bf4a92d768"
+    },
+    "tests/.dev-config-lbAfse/node_modules/.vite-terrain-5315340d3f76/deps/react-DgVJeC5g.js.map": {
+      "bytes": 71644,
+      "sha256": "17a7f0f3fd0616443d88271626eba2b99ecb13ea79e9e09347345b232d189d30"
+    },
+    "tests/.dev-config-lbAfse/node_modules/.vite-terrain-5315340d3f76/deps/react-dom.js": {
+      "bytes": 15032,
+      "sha256": "c9f47e9ca831e7519946514c8087237d437f2f9595cf563ac518519f32d18bee"
+    },
+    "tests/.dev-config-lbAfse/node_modules/.vite-terrain-5315340d3f76/deps/react-dom.js.map": {
+      "bytes": 26823,
+      "sha256": "6f1f38fb1d6304aa62e1ae2d682f8dc7dd858576db5a247281703fd900c1ba7b"
+    },
+    "tests/.dev-config-lbAfse/node_modules/.vite-terrain-5315340d3f76/deps/react.js": {
+      "bytes": 90,
+      "sha256": "a59e03eb14bfbe1e60b58550c3edbe3d7044c1d1370a51338612381aef3519b8"
+    },
+    "tests/.dev-config-lbAfse/node_modules/.vite-terrain-5315340d3f76/deps/react_jsx-dev-runtime.js": {
+      "bytes": 10728,
+      "sha256": "0fdec6304c67db5f1a3ef4bec895f57b7b1e424635eeb7dc386da66c740e1a90"
+    },
+    "tests/.dev-config-lbAfse/node_modules/.vite-terrain-5315340d3f76/deps/react_jsx-dev-runtime.js.map": {
+      "bytes": 18655,
+      "sha256": "942a18e9e1d1ca6ad36af43e7c64ce4983327cbf9853d816f1b0f452d33ed5e8"
+    },
+    "tests/.dev-config-lbAfse/node_modules/.vite-terrain-5315340d3f76/deps/react_jsx-runtime.js": {
+      "bytes": 11219,
+      "sha256": "bdd489cc3266584ab2bab029b2de5b2ed7c9b61cd74b2c1f5319d15139be78ac"
+    },
+    "tests/.dev-config-lbAfse/node_modules/.vite-terrain-5315340d3f76/deps/react_jsx-runtime.js.map": {
+      "bytes": 19543,
+      "sha256": "2c14d0a45ad6b47851b26c263ea1b3402aa94968dd3ed134031587f335627948"
+    },
+    "tests/.dev-config-lbAfse/node_modules/.vite-terrain-5315340d3f76/deps/_metadata.json": {
+      "bytes": 986,
+      "sha256": "1cc1264236ca6c07eff9073a4662e3c2edff5adca870e805ae5c63eddd22583d"
+    },
+    "tests/.dev-config-QsaDLY/applied.txt": {
+      "bytes": 14,
+      "sha256": "70688dc0b1258e2c42c6e3be026f21565cf02fdc9cb698e6a8ab66d204100983"
+    },
+    "tests/.dev-config-QsaDLY/index.html": {
+      "bytes": 33,
+      "sha256": "1219d9f9a5f3c95c6d4c4a8b412cfdbcb2f7dd9730c06eff2a6c805949fc0cdb"
+    },
+    "tests/.dev-config-QsaDLY/node_modules/.vite-terrain-2dbd37dd6c54/deps/package.json": {
+      "bytes": 23,
+      "sha256": "3ca9d4afd21425087cf31893b8f9f63c81b0b8408db5e343ca76e5f8aa26ab9a"
+    },
+    "tests/.dev-config-QsaDLY/node_modules/.vite-terrain-2dbd37dd6c54/deps/react-DgVJeC5g.js": {
+      "bytes": 39818,
+      "sha256": "3c18eca841add53dd9b8454b3a444291ed2b160a899b13512b2a22bf4a92d768"
+    },
+    "tests/.dev-config-QsaDLY/node_modules/.vite-terrain-2dbd37dd6c54/deps/react-DgVJeC5g.js.map": {
+      "bytes": 71644,
+      "sha256": "17a7f0f3fd0616443d88271626eba2b99ecb13ea79e9e09347345b232d189d30"
+    },
+    "tests/.dev-config-QsaDLY/node_modules/.vite-terrain-2dbd37dd6c54/deps/react-dom.js": {
+      "bytes": 15032,
+      "sha256": "c9f47e9ca831e7519946514c8087237d437f2f9595cf563ac518519f32d18bee"
+    },
+    "tests/.dev-config-QsaDLY/node_modules/.vite-terrain-2dbd37dd6c54/deps/react-dom.js.map": {
+      "bytes": 26823,
+      "sha256": "6f1f38fb1d6304aa62e1ae2d682f8dc7dd858576db5a247281703fd900c1ba7b"
+    },
+    "tests/.dev-config-QsaDLY/node_modules/.vite-terrain-2dbd37dd6c54/deps/react.js": {
+      "bytes": 90,
+      "sha256": "a59e03eb14bfbe1e60b58550c3edbe3d7044c1d1370a51338612381aef3519b8"
+    },
+    "tests/.dev-config-QsaDLY/node_modules/.vite-terrain-2dbd37dd6c54/deps/react_jsx-dev-runtime.js": {
+      "bytes": 10728,
+      "sha256": "0fdec6304c67db5f1a3ef4bec895f57b7b1e424635eeb7dc386da66c740e1a90"
+    },
+    "tests/.dev-config-QsaDLY/node_modules/.vite-terrain-2dbd37dd6c54/deps/react_jsx-dev-runtime.js.map": {
+      "bytes": 18655,
+      "sha256": "942a18e9e1d1ca6ad36af43e7c64ce4983327cbf9853d816f1b0f452d33ed5e8"
+    },
+    "tests/.dev-config-QsaDLY/node_modules/.vite-terrain-2dbd37dd6c54/deps/react_jsx-runtime.js": {
+      "bytes": 11219,
+      "sha256": "bdd489cc3266584ab2bab029b2de5b2ed7c9b61cd74b2c1f5319d15139be78ac"
+    },
+    "tests/.dev-config-QsaDLY/node_modules/.vite-terrain-2dbd37dd6c54/deps/react_jsx-runtime.js.map": {
+      "bytes": 19543,
+      "sha256": "2c14d0a45ad6b47851b26c263ea1b3402aa94968dd3ed134031587f335627948"
+    },
+    "tests/.dev-config-QsaDLY/node_modules/.vite-terrain-2dbd37dd6c54/deps/_metadata.json": {
+      "bytes": 986,
+      "sha256": "a1cd724b0e7a90540362334a0b676d817643d0c72ca40118c60465384665efba"
+    },
+    "tests/.dev-config-QsaDLY/scripts/patch-maplibre.mjs": {
+      "bytes": 216,
+      "sha256": "f50936eb45840bdf0df0ff2d639500875dbcd55b3b2edaaf62bc807e8f471e4a"
+    },
+    "tests/.dev-config-QsaDLY/scripts/patch-terrain-depth.mjs": {
+      "bytes": 14,
+      "sha256": "70688dc0b1258e2c42c6e3be026f21565cf02fdc9cb698e6a8ab66d204100983"
+    },
+    "tests/.dev-config-QsaDLY/scripts/patch-terrain-perspective.mjs": {
+      "bytes": 14,
+      "sha256": "70688dc0b1258e2c42c6e3be026f21565cf02fdc9cb698e6a8ab66d204100983"
+    },
+    "tests/.dev-config-QsaDLY/src/preview/terrain-depth.glsl": {
+      "bytes": 14,
+      "sha256": "70688dc0b1258e2c42c6e3be026f21565cf02fdc9cb698e6a8ab66d204100983"
+    },
+    "tests/.dev-config-QsaDLY/src/preview/terrain-projection.glsl": {
+      "bytes": 14,
+      "sha256": "70688dc0b1258e2c42c6e3be026f21565cf02fdc9cb698e6a8ab66d204100983"
+    },
+    "tests/.dev-config-QsaDLY/vite.config.ts": {
+      "bytes": 1303,
+      "sha256": "48c06ff21d79776d9d48e32ca85b5ddedfb9cbc795a81748282c2ed8db8f4e92"
+    },
+    "tests/buildings.test.mjs": {
+      "bytes": 41624,
+      "sha256": "a52d7b3a37dbc897e4298d901511df97bc1d881af77248005a4d9372001da2ee"
+    },
+    "tests/camera-calibration.test.mjs": {
+      "bytes": 34122,
+      "sha256": "e572fe63e19f03ae1e374c7e8c15410726cef5ec05e4ecd07ca156ee0fc5ac52"
+    },
+    "tests/celestial.test.mjs": {
+      "bytes": 9754,
+      "sha256": "f4ca848069b7028694412b10c7124b929a5b455de4e4bbc6913b46587838e5fb"
+    },
+    "tests/constellations.test.mjs": {
+      "bytes": 4263,
+      "sha256": "a6fd9b592d10496886c2cfd9c73d96dd291f107505cb4a8062581506392e9009"
+    },
+    "tests/deep-sky.test.mjs": {
+      "bytes": 32026,
+      "sha256": "3f8b5f0fc9254b7eda4c45be6aa86139217bffedbaceb20f51cfbf9bc08efa01"
+    },
+    "tests/dev-config.test.mjs": {
+      "bytes": 3355,
+      "sha256": "7358bd3ec77daac0fee3cb0e48618cf4264dacf17ca91a1cb5797c19cdac550a"
+    },
+    "tests/elevation.test.mjs": {
+      "bytes": 5269,
+      "sha256": "55f641693434030e73df5e16ffe628aa0bd2dc3da97bd033b7d8b51cb1efa2b1"
+    },
+    "tests/fixtures/deep-sky-boundary.json": {
+      "bytes": 1164,
+      "sha256": "67d51025ed324c47b284a08bc9dd697595cda3f4c965714b32853763c825d9e9"
+    },
+    "tests/fixtures/deep-sky-image-registration.json": {
+      "bytes": 140071,
+      "sha256": "80b293194be15b5cd706b1c17be99ab8b2d298a32991d3f777e20faf0ef83604"
+    },
+    "tests/fixtures/deep-sky-next-four.json": {
+      "bytes": 692,
+      "sha256": "c8c49a22214518cec53822df41bd6fd2450c494aa7b41c412db40d1b76ef4b8f"
+    },
+    "tests/fixtures/deep-sky-reference.json": {
+      "bytes": 13055,
+      "sha256": "58c9088326d129034104d96f4f951e9524e3c684cb376b1be2b8240e2c910c02"
+    },
+    "tests/fixtures/deep-sky-remaining.json": {
+      "bytes": 2006,
+      "sha256": "a91538f598235de15e52bd63189ff37d8df024e9c87453199b068edcb19d629c"
+    },
+    "tests/fixtures/deep-sky-sharpness.json": {
+      "bytes": 1464,
+      "sha256": "10fe1c69dba817c334d83b77242c387fbbc34e8469dd1da820ac34b7acc7f518"
+    },
+    "tests/fixtures/geodetic-reference.json": {
+      "bytes": 5519,
+      "sha256": "b4a20e6ba0d6b477ea72e343d7a5fd8693143a508b02e80e221ae28b9e1a1977"
+    },
+    "tests/fixtures/horsehead-flame.json": {
+      "bytes": 1579,
+      "sha256": "87c1cc205f472561c94a88139b25d6d623c38a07c694a2011f97a44196ffc75e"
+    },
+    "tests/fixtures/light-pollution-reference.json": {
+      "bytes": 8556,
+      "sha256": "d2413a52e087a623bff895c8d2386c660722c2b4392921a1dbe43bbbc0b8c5ed"
+    },
+    "tests/fixtures/moon-phases-reference.json": {
+      "bytes": 557,
+      "sha256": "513216cb571b8079c2b5d8c4be4fa1aadf34bcaa938f255d65911adbe4945ef3"
+    },
+    "tests/fixtures/starfield-reference.json": {
+      "bytes": 14523,
+      "sha256": "53d9a63627750c15857a2eb8f9b2217e277bbb3eb65653b182d5cb87d27bbaa7"
+    },
+    "tests/fixtures/stations-reference.json": {
+      "bytes": 17661,
+      "sha256": "742f144f8a1d93b65548bf1d6e5d25ebbd0487eff22cdedfe483c50f845ad0ae"
+    },
+    "tests/fixtures/sun-moon-reference.json": {
+      "bytes": 6307,
+      "sha256": "ef7d227d3b901052d6c19dc7d0149966a58d8e824d4445c75d9caa42ab3b9fba"
+    },
+    "tests/fixtures/terrain-scenes.mjs": {
+      "bytes": 1236,
+      "sha256": "433d6e363c2f063a1a0d2bedbbe908d7e41b10b1d668fa44b8ef55a363d639e7"
+    },
+    "tests/fixtures/weather.mjs": {
+      "bytes": 813,
+      "sha256": "9478256a624aea950236006f74fae14468276e62a0b464d9299484da7db22ae4"
+    },
+    "tests/fixtures/wide-cloud-registration.json": {
+      "bytes": 3886,
+      "sha256": "9596906d7a69a1af70cc08362cc2a9a184ebff0a9c5d16ab5efd10709de3a1fd"
+    },
+    "tests/fixtures/wide-clouds.json": {
+      "bytes": 5281,
+      "sha256": "86409d26440eb8c738fcf9d94b0e1e81696d9fe6d739933884781e9bab0777ee"
+    },
+    "tests/interactions.test.mjs": {
+      "bytes": 95456,
+      "sha256": "f6f10819972f1c5afc81c2ad1dcfbcea5250faf64db27123850aeb64098cd7e2"
+    },
+    "tests/light-pollution.test.mjs": {
+      "bytes": 8986,
+      "sha256": "4c332a2761fe35e1806734c5eb40dd4bc4f2c00f709bd20aefd7a7c13d732696"
+    },
+    "tests/map.test.mjs": {
+      "bytes": 6476,
+      "sha256": "f34425209c1dfcd5e11fb7c1a70e1dffb7900e68811a48681ed550bb989a56b3"
+    },
+    "tests/occlusion-refraction.test.mjs": {
+      "bytes": 41631,
+      "sha256": "946998a559f27b91b419168e239a8f155760628ad4f79bf274f44ca35894437b"
+    },
+    "tests/plan.test.mjs": {
+      "bytes": 7107,
+      "sha256": "97433d06a62f3e85dd9353ee61974471a1767f2045166365dc190c1a0b31f443"
+    },
+    "tests/sky-appearance.test.mjs": {
+      "bytes": 4807,
+      "sha256": "64d3c3152a21a73f47220ad39d9cb201f52f869bc8266e64db6fc5b845af4ed2"
+    },
+    "tests/solar.test.mjs": {
+      "bytes": 9906,
+      "sha256": "a8d14dcffe87925964cf7c1750cd43c26a79ab211f46447ff03c7123d0d527d7"
+    },
+    "tests/starfield.test.mjs": {
+      "bytes": 6693,
+      "sha256": "194b15484486367e796e9fe72f673d660d45baef94b972a83235aa9e6d8b4046"
+    },
+    "tests/stations.test.mjs": {
+      "bytes": 9243,
+      "sha256": "e8c2b50a0f36cf2d67e87144d539e93309ae6ab7b6368211ee61f007e77eafb4"
+    },
+    "tests/target-search.test.mjs": {
+      "bytes": 2370,
+      "sha256": "353a191d55233c5d77d284f2668521b22c8c6590f72c2624613f25c9689b0552"
+    },
+    "tests/terrain.test.mjs": {
+      "bytes": 5079,
+      "sha256": "6c63af398a5027c74824458bf4147300227320d955d76d1da50aaaf0b030e49a"
+    },
+    "tests/weather.test.mjs": {
+      "bytes": 9785,
+      "sha256": "1f717ad53ef1171f77e12b8940d4296d17fda4e7f53eeb7879c66545d328c866"
+    },
+    "scripts/audit-elevation-datum.mjs": {
+      "bytes": 3798,
+      "sha256": "f8a381a4994d20c0064bb2a85aea66d7e0c82318c385eaf133dabf3073b1d38d"
+    },
+    "scripts/build-deep-sky-atlas.py": {
+      "bytes": 6780,
+      "sha256": "4211452c4b0d742b52303fda938a400676049a383481af391a15e3c8c623a6f5"
+    },
+    "scripts/build-deep-sky-reference.py": {
+      "bytes": 1334,
+      "sha256": "232c84f82f97a15da784a6c0c8a96520524a4135f53ede57ab83ff37d8363e86"
+    },
+    "scripts/build-deep-sky-targets.py": {
+      "bytes": 2950,
+      "sha256": "e26933bb4f258647ccf8f4e9c91fe61894006d61c5ef6c8fa6cc7a4ffb110ec4"
+    },
+    "scripts/build-deep-sky.mjs": {
+      "bytes": 7918,
+      "sha256": "89aad27f113ed008bc9115b5f78df99a335e5494d5ab89bf55fbd1635f91a621"
+    },
+    "scripts/build-landmark-models.mjs": {
+      "bytes": 7038,
+      "sha256": "a4bc32b1f08b8e1f93d3723a318bcb712ecafa5dae47da3b614cbb6f673216fa"
+    },
+    "scripts/build-light-pollution.py": {
+      "bytes": 8631,
+      "sha256": "f1ab150917c3110a29050fc7d0d1388528bd5356e89ec59a9a029867711d1763"
+    },
+    "scripts/build-milky-way.py": {
+      "bytes": 3342,
+      "sha256": "5478931985985f6e2efd9d5cfcf8c34a063cbb2816ff5d1d65dfae07a8693c32"
+    },
+    "scripts/build-skytree.mjs": {
+      "bytes": 5650,
+      "sha256": "ac84bf543f78e4a2c1d8a3aeb9509765a66c5aabdb67deb61fb4b0cc04e277b5"
+    },
+    "scripts/build-star-catalog.mjs": {
+      "bytes": 9940,
+      "sha256": "c27010355b695f6d5151735df1ea9f28e1b4b8a3da948c646574089d356346ec"
+    },
+    "scripts/check-building-budget.mjs": {
+      "bytes": 3538,
+      "sha256": "17fd083f8971c8bcc50361e2a7e7b5f4245803e0c1c0260803fa32d7d412926e"
+    },
+    "scripts/check-deep-sky-colours.py": {
+      "bytes": 3486,
+      "sha256": "5d082e5ad978107ad02e43d61cea2de0ef3eb7c9b041abcf498959cad85f2f92"
+    },
+    "scripts/check-deep-sky-images.py": {
+      "bytes": 8908,
+      "sha256": "3e948825446bd23a3c2d62bda1f3effccda95574a63f68d428ebde41135f4ab9"
+    },
+    "scripts/check-landmark-coverage.mjs": {
+      "bytes": 6057,
+      "sha256": "47ce157bc273e9e5c9cdfb160914ddf8d4c3ffac2110ba1b579f670ba4d20bd8"
+    },
+    "scripts/check-skytree.mjs": {
+      "bytes": 5723,
+      "sha256": "f800e7268d3e71695f9b6ad465fa5a9b90d3d7eee92c07d22aab3b01202fbb7c"
+    },
+    "scripts/check-stations.py": {
+      "bytes": 2881,
+      "sha256": "6410a1d5cf25a80e9d5bf0c56454f8d4c2eb3012c2257b5bf70411fcfc24ddc9"
+    },
+    "scripts/check-terrain-coverage.mjs": {
+      "bytes": 3384,
+      "sha256": "0c27e36fec0d35e9049464d99a3604260f04f0bc872c514785434045593cf97c"
+    },
+    "scripts/check-wide-clouds.py": {
+      "bytes": 4349,
+      "sha256": "5bc30f2226a1606ae4a8a1ad383b24001d2796b04f296213a4a76feec85057de"
+    },
+    "scripts/deep-sky-image-sources.json": {
+      "bytes": 34496,
+      "sha256": "3fbd3137d0e628d3658d1c6a16c7ccf063f9ab0a7dc8b78a3ef8036b07d3e830"
+    },
+    "scripts/deep_sky_image.py": {
+      "bytes": 20962,
+      "sha256": "b3279194ddb4a346174c461a075e332085138680391ee4a7fe5b55da7582d2f4"
+    },
+    "scripts/deep_sky_panels.py": {
+      "bytes": 5239,
+      "sha256": "2af95958d4e4b3694f14c028c727809c510cff188c4b69a30311c68b16b967e0"
+    },
+    "scripts/generate-geodetic-fixtures.py": {
+      "bytes": 2630,
+      "sha256": "2fcad350a0a4ba3041b86296baa39f2a5e661d69935bdc47a47dc8ebce6b7e97"
+    },
+    "scripts/generate-height-sensitivity.mjs": {
+      "bytes": 2100,
+      "sha256": "b040fbb704ddfb2c18f8663b88c2668379ceda62a612838a5d771da951a3c4c1"
+    },
+    "scripts/generate-starfield-fixtures.py": {
+      "bytes": 3797,
+      "sha256": "ae9faf49cd9051681cda4c21940a0eb699fea787920af0b4d378ce60f16b3eeb"
+    },
+    "scripts/patch-maplibre.mjs": {
+      "bytes": 1959,
+      "sha256": "4e10f22f1a7d52005409812a2a1d4db5547491b70840c02a25087780c1a59fcb"
+    },
+    "scripts/patch-terrain-depth.mjs": {
+      "bytes": 3121,
+      "sha256": "ac921af32a789a2e84544160a9934a3c5bdb662aa4fba55fe83fa93c850ecbc8"
+    },
+    "scripts/patch-terrain-perspective.mjs": {
+      "bytes": 5866,
+      "sha256": "42b88e9f1ca46e6b94984f3d8e80648840965024d874444f878d4d1d7a4839af"
+    },
+    "scripts/patch-terrain-range.mjs": {
+      "bytes": 2552,
+      "sha256": "696b400e8f975b05e7ec774db7738804b595bb8dd60ed6c826c754944fcdd3df"
+    },
+    "scripts/update-stations.mjs": {
+      "bytes": 3879,
+      "sha256": "6318c1fc64b74e604f5ad7a42ee77e2375bdf7c405d5c0add1d849171dac9d5a"
+    },
+    "scripts/__pycache__/deep_sky_image.cpython-312.pyc": {
+      "bytes": 32679,
+      "sha256": "4e8214686b12d4395412c25e5e12ec31547f0fd589008c9909716bb2397c6470"
+    },
+    "scripts/__pycache__/deep_sky_panels.cpython-312.pyc": {
+      "bytes": 9712,
+      "sha256": "7eeabd57b2777e976602bf700786bda5ae3d106cee4a0c156b048f7c9383e171"
+    },
+    "public/landmarks/shanghai-tower-v1.json": {
+      "bytes": 2503,
+      "sha256": "92c3d51dcf1caf8e1eb4256fd72d273f1b8894305a4c3098f5f229943ae0c3d9"
+    },
+    "public/landmarks/shanghai-tower-v1.ttlm.gz": {
+      "bytes": 975220,
+      "sha256": "33a86c8ec1d446134e1d09c601ebb736158112559fc7393eeaa384c61d57f2de"
+    },
+    "public/landmarks/skytree-v1.json": {
+      "bytes": 2627,
+      "sha256": "bc4dec440a3f709b2dd24393f64774fabad58a7d71d4c5c50b7ed2842d978ceb"
+    },
+    "public/landmarks/skytree-v1.ttlm.gz": {
+      "bytes": 1236544,
+      "sha256": "4ee6a8d802db2ccf0538add4ff7f3b54e21237e4cd36267e7a487852305848cd"
+    },
+    "public/third-party-notices.txt": {
+      "bytes": 27993,
+      "sha256": "099e4640cf5d409b38ce040ef1534bc877b972c0c746f3c6d1322c9c9be13594"
+    },
+    "package.json": {
+      "bytes": 1788,
+      "sha256": "26b6ae6eab8491b26cba775516dc2fe3dcc8c9c1cd64495cf839cdeab7408470"
+    },
+    "package-lock.json": {
+      "bytes": 77018,
+      "sha256": "53541ad3aff9afe066f5a770ab2b5d0b74c389e14096dd123414f65fc6ea0db1"
+    },
+    "vite.config.ts": {
+      "bytes": 1368,
+      "sha256": "8fc7830ad486ac462a61411922a9280d14e1dc5905434e17d0dfeb09c09e6e8f"
+    },
+    "dist/index.html": {
+      "bytes": 1645,
+      "sha256": "5d3bda7367720c5874282004aa73468c200d0b0b49d5ed11c61440166c8d3380"
+    },
+    "dist/third-party-notices.txt": {
+      "bytes": 27993,
+      "sha256": "099e4640cf5d409b38ce040ef1534bc877b972c0c746f3c6d1322c9c9be13594"
+    },
+    "dist/assets/bright-stars-sNC3bvQ6.json": {
+      "bytes": 80689,
+      "sha256": "4b36a2ef9272b6112d002585081e452b84d8fdb836cbde8f963f215825dcd4cb"
+    },
+    "dist/assets/building-layer-OcfLYe1Z.js": {
+      "bytes": 31667,
+      "sha256": "5582d90927603342f6fc35986c8bcf8f372f50eafa600cc995e770e72d5eeb17"
+    },
+    "dist/assets/buildings-xDq4fLDC.js": {
+      "bytes": 6517,
+      "sha256": "1b0199c246cde10fb4073749f92de2681ceb1c5723f8e2dadcbdf308c2ae0a90"
+    },
+    "dist/assets/camera-7Kj-cBmk.js": {
+      "bytes": 847,
+      "sha256": "02cbb102b3bc1314062dd653f7e4d1780ab261f2e282a51748bbaa8514377ad8"
+    },
+    "dist/assets/celestial-layer-DZPtawwG.js": {
+      "bytes": 12885,
+      "sha256": "09c4e0dd634ae0594336cc45cd56f3cd4f48568e2d8a6427ff23c672b06a24bd"
+    },
+    "dist/assets/constellation-stars-DxyNjdYO.json": {
+      "bytes": 10641,
+      "sha256": "7279b06a0dcb6e2710e04a52277814fe88d3d4a404ae6cd49b9a99ec6a418d4b"
+    },
+    "dist/assets/constellations-Dna-tQQY.json": {
+      "bytes": 13766,
+      "sha256": "25058ebe15c7f3102d48b9cdaafcaa0f5aa07139d6b7cde3488c9b97834a780e"
+    },
+    "dist/assets/deep-sky-BCy54z53.json": {
+      "bytes": 139860,
+      "sha256": "78ff07aedd3d80f2aaeb843304b2cd70d03f4ea86fe80112b1fdc72be4173815"
+    },
+    "dist/assets/deep-sky-texture-TCi44f0i.js": {
+      "bytes": 241328,
+      "sha256": "fa82ead74bfcf824bbe5517d2d87971588aa097cef44114441428bb40143ae67"
+    },
+    "dist/assets/earcut-igf7EuqS.js": {
+      "bytes": 7165,
+      "sha256": "b117d3864ba3346d8c06baaffce1822060e2e56eecdfa8594b8c567bfcf516e5"
+    },
+    "dist/assets/elevation-BbbGAIaN.js": {
+      "bytes": 2054,
+      "sha256": "31f577c18586f1c919a1cdee709418841a32125706b3cd291f7b71814d2e62e7"
+    },
+    "dist/assets/elevation-CoxPwlFu.js": {
+      "bytes": 58,
+      "sha256": "65dee145757a1532032251fbeca2955451eae3f4dd7e6e4139e51eb639f81c40"
+    },
+    "dist/assets/ephemeris-_2XXLDKR.js": {
+      "bytes": 56147,
+      "sha256": "44e08c0e1411a38d92f509b7ef216fc2fcedc7b3cc0cd9b75adbb84d6e23badc"
+    },
+    "dist/assets/geodesy-DRKB_8qM.js": {
+      "bytes": 580,
+      "sha256": "d7c1c91bedcb035ae3fe05d191a07962e9e8deee0186754c9e4259ca6fae47e2"
+    },
+    "dist/assets/ic0434-CTVvmXFN.png": {
+      "bytes": 419697,
+      "sha256": "e9b05d08fffbef0ab392fa7af32c619b69ebea1e47c5db7526cead0755375945"
+    },
+    "dist/assets/ic1805-BaFXuzyL.png": {
+      "bytes": 435191,
+      "sha256": "ed0af6f4a01fb0432efd716e9e4bec65966de8b2c1ce86db165acfd9480640f6"
+    },
+    "dist/assets/ic1848-DB22gPIo.png": {
+      "bytes": 247601,
+      "sha256": "2c96c2cedbf61e5903d86f9b4077ea4ede95c73f441d42d97802d5c7867be470"
+    },
+    "dist/assets/index-CDrbpV_8.css": {
+      "bytes": 104471,
+      "sha256": "9377af406df2d30745eb61bf4679b63f745feb312d9273f75c9a973ac7ae2344"
+    },
+    "dist/assets/index-Q3cqmnhU.js": {
+      "bytes": 349393,
+      "sha256": "a91fc9e3b3b25d4e15f509436c4d732c8a3bd5a57d59da6659a76bdfa752085b"
+    },
+    "dist/assets/light-pollution-9vi00uXQ.js": {
+      "bytes": 1553,
+      "sha256": "448db9c0b2428941fff10cf9401035d0f7f4e859d4766e10a6f957dec427fcfc"
+    },
+    "dist/assets/light-pollution-D5aBGuLY.json": {
+      "bytes": 30131,
+      "sha256": "a09b387e512930b4c40561aef81538f97e4621b96c6ff435260b4680127a61c1"
+    },
+    "dist/assets/light-pollution-h6l5jF22.js": {
+      "bytes": 19412,
+      "sha256": "7a69ec8cae5db9f34d0d2e97926c0789f808fc170e3429a3cdcfd4b923bbdd8d"
+    },
+    "dist/assets/map-BpPfktjY.js": {
+      "bytes": 2103,
+      "sha256": "45b3285423bb9ae3f9498002bd44d54a71687795b994e30ac495403cd5061c6b"
+    },
+    "dist/assets/maplibre-gl-ClOtmkA8.js": {
+      "bytes": 1081080,
+      "sha256": "0586d8618860e5cbbe2d793716e5bb1c3d4185c1a4c9581d4d2237c803ece152"
+    },
+    "dist/assets/maplibre-gl-worker-BslLc_p7.js": {
+      "bytes": 519282,
+      "sha256": "0e13eedb49688356b94d44725aa875052efe2b9a917627e7f2aa063a51e7143b"
+    },
+    "dist/assets/mel022-CSGSDQcb.png": {
+      "bytes": 935002,
+      "sha256": "423419bd878aa68e6b299017a80a9a13ffa445633169edf6378d8c652ca03e6e"
+    },
+    "dist/assets/milky-way-BRTMl8u6.webp": {
+      "bytes": 118162,
+      "sha256": "40c738c6ee6fb479296b46817fb1cbf8f442bb798d4c5d3dd5e89e67e641aa9c"
+    },
+    "dist/assets/ngc0224-DRe8_0XP.png": {
+      "bytes": 88143,
+      "sha256": "67a8acff0b5f4a8932f6ea37288efcf1a9991865d1c65adc8e42fb1a94d36b4e"
+    },
+    "dist/assets/ngc0598-ClgOjJ0n.png": {
+      "bytes": 1094970,
+      "sha256": "99dc1311f97777559a695f67f8693e4adbefdbabc49209005bf138363799550e"
+    },
+    "dist/assets/ngc1499-Bj11_p1j.png": {
+      "bytes": 1928655,
+      "sha256": "c76ca0208676e24836b0aa83065565ee93b31fd3cda88877e884d41715853494"
+    },
+    "dist/assets/ngc1976-DAtw1raM.png": {
+      "bytes": 169121,
+      "sha256": "da669f9bef54d13dbb26230fdbf0a01b57a870c6fedc9719921e20e7dceef0e7"
+    },
+    "dist/assets/ngc2237-D2h-Late.png": {
+      "bytes": 889365,
+      "sha256": "14d1a0b74992b14731326f8d71cf61851e8cabd8ab9c6a0ecd0a0144cb5b466e"
+    },
+    "dist/assets/ngc6514-DD14acG3.png": {
+      "bytes": 473532,
+      "sha256": "4cf11eea847fd42becdb16ca4a161bfd394fb71620ab1e14aa6cd71d3500f4ae"
+    },
+    "dist/assets/ngc6523-CEzWdCVh.png": {
+      "bytes": 1597382,
+      "sha256": "4d1047609885b9937cc48bef6429e83331b96c9e66f17540eb37d14583e71682"
+    },
+    "dist/assets/ngc7000-CZhrdeKj.png": {
+      "bytes": 3113933,
+      "sha256": "5e228d56f45b74a45e844e7370e9ad957d1df2557e7c6e3b94bdf12defa27ddd"
+    },
+    "dist/assets/plan-OuPkCH0I.js": {
+      "bytes": 162409,
+      "sha256": "efc674c5b4df5300b4f78a31d34d41008c1a459deb703f11d257d1cb7395654b"
+    },
+    "dist/assets/rendered-camera-qjib1zov.js": {
+      "bytes": 769,
+      "sha256": "a374a62ba05a4869dab09d12b3da6d7de6ba53cb28d60238684b778affa0bec3"
+    },
+    "dist/assets/rhooph-tjSLGazH.png": {
+      "bytes": 1143645,
+      "sha256": "6553bd583342a1a3ca14da24f8dfd9bbcda5b12d51d636645dbe8a06b01a4a50"
+    },
+    "dist/assets/sdk-Lz804O5L.js": {
+      "bytes": 201,
+      "sha256": "187a56a309e9b688024fded7a2b3871b4583e371af740a03a243f38462e7a703"
+    },
+    "dist/assets/sh2-276-sa9nRo0w.png": {
+      "bytes": 779541,
+      "sha256": "0f09ee91325f276e4ca9e3bec2a24e88903bdae2c3a368648435951052a8fb38"
+    },
+    "dist/assets/starfield-layer-CXHEOVnx.js": {
+      "bytes": 21698,
+      "sha256": "cd4e9e8c6f10fa4021ceb38e20cca72dc4b785fe2d5957d3e5f40505e9440022"
+    },
+    "dist/assets/terrain-FSj7hfj1.js": {
+      "bytes": 2789,
+      "sha256": "9389bf6f488adaf045f5c221b57f78690e7ac9e72b969bde04333129b9973462"
+    },
+    "dist/assets/terrain-perspective-Dt2LvBOV.js": {
+      "bytes": 5568,
+      "sha256": "6a9f313379be3a79fabad38338bd6e54ba69de1e1feca8a4366c3b7b1ae81abe"
+    },
+    "dist/assets/terrain-perspective-math-DbCychVK.js": {
+      "bytes": 1077,
+      "sha256": "b13c961b869af197911b398bece9cd1d4734565a5647ce810b76d6bb731a84bd"
+    },
+    "dist/assets/terrain-projection-3gipVUA_.js": {
+      "bytes": 2059,
+      "sha256": "bef9a585866d4583cf0afcafe402c6967178a92325129f7b80fb64e09e4c5b53"
+    },
+    "dist/assets/visibility-D3mSqfUJ.js": {
+      "bytes": 1019,
+      "sha256": "2ee66eb51b94a801dfc02c21bb4fd1c169e47df18129d4ac4da92bf7936994a8"
+    },
+    "dist/assets/weather-appearance-CW24bYps.js": {
+      "bytes": 1263,
+      "sha256": "8415412577a5f62fa8805773aa3ae910a8c9b45e7505e3323f12f03dc0c76072"
+    }
+  },
+  "evidence": {
+    "docs/plan/landmark-expansion-evidence/browser-results.json": {
+      "bytes": 7512,
+      "sha256": "889da34abb12fe2d0e4edad4c44ba8722308129ecd0920c8cafb02fbac9334bc"
+    },
+    "docs/plan/landmark-expansion-evidence/rebuild-idempotence.json": {
+      "bytes": 526,
+      "sha256": "39ac4220f194b63ec1e61f71296bac3a0950f2b4eced6c48bf5efe4482d30f6b"
+    },
+    "docs/plan/landmark-expansion-evidence/registration-reference.json": {
+      "bytes": 29277,
+      "sha256": "413c9f25469a80f45cae625c24f981fb15a648323c6cf875092f75439d8788dd"
+    },
+    "docs/plan/landmark-expansion-evidence/shanghai-30km-dev.jpg": {
+      "bytes": 157216,
+      "sha256": "cfb982ac5058ed3ea8ca49c1c1a92cb0cfdf8df79c7d966001eb212aa6805504"
+    },
+    "docs/plan/landmark-expansion-evidence/shanghai-50km-portrait-production.jpg": {
+      "bytes": 166244,
+      "sha256": "de646b13622a0d79dfac84a42a850eacaf6ff27a0dc8fa470aeeb81eb0256785"
+    },
+    "docs/plan/landmark-expansion-evidence/shanghai-50km-production.jpg": {
+      "bytes": 170071,
+      "sha256": "e4112f90d1e9fe5ebad2d7e82a3a0a0fce3409b0c538dd47b8be7e2d709fe56d"
+    },
+    "docs/plan/landmark-expansion-evidence/shanghai-final-production.jpg": {
+      "bytes": 254643,
+      "sha256": "8ff518df5fa29459cb71328ec41f1b3decc5aff1dad9f210e7ccac095e73824b"
+    },
+    "docs/plan/landmark-expansion-evidence/shanghai-missing-asset-production.jpg": {
+      "bytes": 167309,
+      "sha256": "a7e99825e049baee70243ae0dda9eb1fc7e92cbc0864be9afd303fcd053d2701"
+    },
+    "docs/plan/landmark-expansion-evidence/shanghai-mobile-production.jpg": {
+      "bytes": 18697,
+      "sha256": "02d112598b402cc05c4ffb817e8de1b6b1501cef67930bf0bd37db4a17517f5e"
+    },
+    "docs/plan/landmark-expansion-evidence/shanghai-near-dev.jpg": {
+      "bytes": 240843,
+      "sha256": "dfa73dc16d68d2bb6aff8a76610d563d1fc8b5b1413a175fc2a88ee974dda267"
+    },
+    "docs/plan/landmark-expansion-evidence/shanghai-off-production.jpg": {
+      "bytes": 254645,
+      "sha256": "7de634e31887286753c5d302ac9c9129162c4a177fc04c9baaaa3f2842f7464a"
+    },
+    "docs/plan/landmark-expansion-evidence/shanghai-outside-production.jpg": {
+      "bytes": 165925,
+      "sha256": "b6eae54487fdddca992d3556b19a035f2881c36f0dc38cdfff43419505dea6cb"
+    },
+    "docs/plan/landmark-expansion-evidence/shanghai-recovered-production.jpg": {
+      "bytes": 170468,
+      "sha256": "972dc7f79872b363a6a286eac419ea3e172779c96fe77b4e67a3d8cd1a5876a0"
+    },
+    "docs/plan/landmark-expansion-evidence/shanghai-registration.json": {
+      "bytes": 23516,
+      "sha256": "eaf4cf7aa67d8fc866bcfffa9927cec878f456ab8dc8d00ad505e92f3f3e24dc"
+    },
+    "docs/plan/landmark-expansion-evidence/shanghai-south-dev.jpg": {
+      "bytes": 258782,
+      "sha256": "6e2bf13265e62a7213197f32e0fb7f04efcba4fb6d7e8eb10686b7f5c17588a0"
+    },
+    "docs/plan/landmark-expansion-evidence/shanghai-tower-cpu-coverage.json": {
+      "bytes": 3448,
+      "sha256": "2792dbdb1faa0cce8267cbb12b1b93664d52ed9571a480bc35f34c7d541659d6"
+    },
+    "docs/plan/landmark-expansion-evidence/shanghai-tower-cpu-coverage.png": {
+      "bytes": 290021,
+      "sha256": "22d3f5c41ba78de7c8a1341af927cc0b3ba7196cc242f37fe840e3c675adc673"
+    },
+    "docs/plan/landmark-expansion-evidence/skytree-regression-production.jpg": {
+      "bytes": 258778,
+      "sha256": "dbe96c457a179d77398b37bea4179f3d1e1c549844256eec308de17c2853208d"
+    },
+    "docs/plan/landmark-expansion-evidence/sources.json": {
+      "bytes": 2452,
+      "sha256": "4f2cbbb332ef7de174c5fa900de54afed28328d807b6173f5d2d1f6d6982247b"
+    }
+  },
+  "browserScriptUrls": [
+    "http://127.0.0.1:5179/Tamatamatori/assets/index-Q3cqmnhU.js"
+  ],
+  "skyModelUnchanged": true,
+  "heldProductionAsset": false,
+  "limits": [
+    "Community appearance/OSM alignment, not surveyed accuracy",
+    "CPU reduction coverage separate from real GPU scenes",
+    "No physical phone or sustained GPU FPS measurement"
+  ],
+  "pending": [
+    "Void Tokyo Tower source not yet present; no Tokyo Tower GPU or simultaneous Tokyo/Skytree claim"
+  ]
+}

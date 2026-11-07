@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "pipelineVersion": 1,
+  "id": "tokyo-tower",
+  "name": "东京塔",
+  "version": 1,
+  "recipeHash": "78fb88ee03ce95cce05acff97ef6874c7ef9d3f31860b31fed87dc1f7cc1161f",
+  "format": "TTLM 1; float32 ENU+normal stride6, uint32 indices; little-endian; gzip",
+  "source": {
+    "sha256": "2a11d6e9e188257913cfd69cd89ad8b924819d65648931e384d741df225a2f3f",
+    "filename": "tokyo_tower.glb",
+    "title": "Tokyo Tower",
+    "author": "Void",
+    "authorPage": "https://sketchfab.com/Void.com",
+    "page": "https://sketchfab.com/models/4f667743965e4260b451ad38efcc3712",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "用户通过正式入口手动下载的 Void 模型；作者未说明更上游制作资料，未独立认证。",
+    "bytes": 15881704,
+    "vertices": 137537,
+    "triangles": 88707
+  },
+  "frame": {
+    "space": "local",
+    "axes": [
+      "+x",
+      "+y",
+      "+z"
+    ],
+    "center": [
+      -0.31752777099609375,
+      -0.27332305908203125
+    ],
+    "height": 333,
+    "heightReference": "https://www.tokyotower.co.jp/index.html",
+    "yawDegrees": 56.25,
+    "requireSharedTransform": true,
+    "normalizeNormals": true,
+    "minimum": [
+      -79.6875,
+      -83.00450134277344,
+      -359.12200927734375
+    ],
+    "maximum": [
+      79.05244445800781,
+      82.45785522460938,
+      150.82627868652344
+    ],
+    "scale": 0.6530073889052747
+  },
+  "processing": {
+    "targetTriangles": 40000,
+    "maxErrorMetres": 0.02,
+    "normalWeight": 0.01,
+    "weld": true,
+    "positionMergeTolerance": 0.00001,
+    "normalMergeTolerance": 0.0001,
+    "permissive": true,
+    "reportedError": 0.019992979243397713
+  },
+  "geo": {
+    "latitude": 35.65859076767638,
+    "longitude": 139.7454446554184,
+    "partRadius": 100,
+    "parts": [
+      {
+        "id": 12449670040,
+        "height": 7,
+        "base": 0
+      },
+      {
+        "id": 12449670080,
+        "height": 40,
+        "base": 0
+      },
+      {
+        "id": 171335723,
+        "height": 53,
+        "base": 0
+      },
+      {
+        "id": 171335763,
+        "height": 97,
+        "base": 0
+      },
+      {
+        "id": 171335783,
+        "height": 120,
+        "base": 0
+      },
+      {
+        "id": 3138152462,
+        "height": 130,
+        "base": 120
+      },
+      {
+        "id": 3156575192,
+        "height": 150,
+        "base": 0
+      }
+    ],
+    "registration": "锚点与四脚参考 © OpenStreetMap contributors；本地 Z 轴向上，忽略作者共同放置的倾斜与非均匀缩放，按官方总高 333 m 统一尺度。四脚中心拟合朝向 56.25°，RMS 约 2.12 m，存在近似对称朝向歧义；保留 FootTown 普通体块。CPU 检查不代替画面与实景核验。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，四处塔脚及塔身分部",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "bounds": {
+    "horizontal": 73,
+    "height": 333
+  },
+  "asset": {
+    "file": "tokyo-tower-v1.ttlm.gz",
+    "sha256": "949cdec080264efd466e8acb2057ef2b3e6d945536744d6e3f6d8c952a7f088b",
+    "decodedSha256": "5af57bf65e18bc68d0d173d670d615b0fd5234832ef6465c9a0d723503d1d0a0",
+    "bytes": 1225486,
+    "decodedBytes": 3778604,
+    "vertices": 120057,
+    "triangles": 74767
+  },
+  "tools": {
+    "@gltf-transform/core": "4.5.0",
+    "meshoptimizer": "1.3.0"
+  },
+  "limitations": [
+    "社区外观模型，定位与朝向近似，不提供测绘精度。",
+    "无纹理、不透明共享光照，不模拟玻璃或夜景灯光。",
+    "地面沿用同源 DEM，不套固定高程偏移。"
+  ]
+}

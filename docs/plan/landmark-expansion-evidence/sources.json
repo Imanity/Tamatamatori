@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-11-07T16:58:32.220Z",
+  "scope": "Public metadata; not proof of source geometry or surveying accuracy",
+  "result": [
+    {
+      "uid": "4f667743965e4260b451ad38efcc3712",
+      "url": "https://api.sketchfab.com/v3/models/4f667743965e4260b451ad38efcc3712",
+      "modelUrl": "https://sketchfab.com/3d-models/tokyo-tower-4f667743965e4260b451ad38efcc3712",
+      "name": "Tokyo Tower",
+      "description": "",
+      "author": "Void",
+      "authorUrl": "https://sketchfab.com/Void.com",
+      "license": {
+        "uri": "https://api.sketchfab.com/v3/licenses/322a749bcfa841b29dff1e8a1bb74b0b",
+        "label": "CC Attribution",
+        "fullName": "Creative Commons Attribution",
+        "requirements": "Author must be credited. Commercial use is allowed.",
+        "url": "http://creativecommons.org/licenses/by/4.0/",
+        "slug": "by"
+      },
+      "triangles": 205739,
+      "vertices": 52501,
+      "isDownloadable": true,
+      "updatedAt": "2025-02-01T08:45:06.229080"
+    },
+    {
+      "uid": "e24fd5a66bbb4faaa7a8e26d3e7478fa",
+      "url": "https://api.sketchfab.com/v3/models/e24fd5a66bbb4faaa7a8e26d3e7478fa",
+      "modelUrl": "https://sketchfab.com/3d-models/shanghai-tower-e24fd5a66bbb4faaa7a8e26d3e7478fa",
+      "name": "Shanghai Tower",
+      "description": "Designed by Gensler, Shanghai Tower is currently the 3rd tallest building in the world located in Shanghai, China. Standing at 2,073 feet tall (632 meters) and consists of 128 floors, a few meters below Burj Khalifa's highest occupied floor. Completed on February 2, 2015 and opened as the 2nd tallest skyscraper in the world, pushing Willis Tower off the Top 10 list. Then in 2023, Shanghai Tower had been pushed to 3rd place due to the completion of Merdeka PNB 118, another megatall skyscraper in Malaysia with the height of 2,227 feet (678.9 meters).",
+      "author": "NanoRay",
+      "authorUrl": "https://sketchfab.com/NanoRay",
+      "license": {
+        "uri": "https://api.sketchfab.com/v3/licenses/322a749bcfa841b29dff1e8a1bb74b0b",
+        "label": "CC Attribution",
+        "fullName": "Creative Commons Attribution",
+        "requirements": "Author must be credited. Commercial use is allowed.",
+        "url": "http://creativecommons.org/licenses/by/4.0/",
+        "slug": "by"
+      },
+      "triangles": 121270,
+      "vertices": 86126,
+      "isDownloadable": true,
+      "updatedAt": "2023-12-31T21:45:01.955736"
+    }
+  ]
+}

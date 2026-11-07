@@ -2,8 +2,8 @@ import { VectorTile, classifyRings } from "@mapbox/vector-tile";
 import { PbfReader, PbfWriter } from "pbf";
 import { buildingKey, buildingTiles, buildingHeights, buildingCoordinates, buildingBounds, buildingGeometry,
   buildingCost, selectBuildings, simplifyBuilding, BUILDING_MAX_POINTS, BUILDING_MAX_TRIANGLES, BUILDING_RADIUS, BUILDING_NEAR_RADIUS, BUILDING_FAR_MIN_HEIGHT } from "../domain/buildings.ts";
-import { skytree, skytreeInRange, skytreeDistance, skytreePart } from "../domain/landmarks.ts";
-import { loadSkytree, clearLandmarkCache } from "./landmarks.ts";
+import { landmarks, landmarksInRange, landmarkPart, landmarkPartKey } from "../domain/landmarks.ts";
+import { loadLandmark, clearLandmarkCache } from "./landmarks.ts";
 import type { BuildingPolygon, BuildingMesh, BuildingStatus, BuildingCandidate } from "../domain/buildings.ts";
 import type { ShootingPlan } from "../domain/plan.ts";
 import type { PhotoTile } from "./terrain-perspective-math.ts";
@@ -82,14 +82,14 @@ export function decodeBuildings(bytes:Uint8Array,maximumPoints=BUILDING_MAX_POIN
 }
 
 export async function loadBuildings(plan:Pick<ShootingPlan,"longitude"|"latitude">,url:string,demUrl:string,signal:AbortSignal,
-  elevation=groundElevation,landmarkLoader=loadSkytree):Promise<{meshes:BuildingMesh[];status:BuildingStatus}> {
+  elevation=groundElevation,landmarkLoader=loadLandmark):Promise<{meshes:BuildingMesh[];status:BuildingStatus}> {
   const info=await source(url,signal),selection=buildingTiles(plan);
   const status:BuildingStatus={key:buildingKey(plan),phase:"empty",limited:selection.limited,tiles:0,polygons:0,triangles:0,bytes:0,skipped:0,
     version:info.version,fetchedAt:new Date().toISOString()};
   const meshes:BuildingMesh[]=[];
-  type Candidate = BuildingCandidate & {tileIndex:number;featureIndex:number;polygonIndex:number;distant:boolean;removedPoints:number;landmarkId?:number};
+  type Candidate = BuildingCandidate & {tileIndex:number;featureIndex:number;polygonIndex:number;distant:boolean;removedPoints:number;landmarkId?:string};
   const candidates:Candidate[]=[];
-  const confirmedParts=new Set<number>();
+  const confirmedParts=new Set<string>();
   const tiles:Array<{tile:PhotoTile;layer:VectorTile["layers"][string]}> = [];
   let scannedPoints=0,sourceBytes=0;
   for(const tile of selection.tiles) {
@@ -119,8 +119,8 @@ export async function loadBuildings(plan:Pick<ShootingPlan,"longitude"|"latitude
         const b={minX:raw.minX*scale,minY:raw.minY*scale,maxX:raw.maxX*scale,maxY:raw.maxY*scale,x:raw.x*scale,y:raw.y*scale};
         // Check the full tile before the ordinary 5 km footprint filter. At
         // the window boundary only some tower parts may become candidates.
-        const landmarkId=skytreePart(tile,feature.id,height.height,height.base,buildingCoordinates(tile,b.x,b.y))?feature.id:undefined;
-        if(landmarkId!==undefined)confirmedParts.add(landmarkId);
+        const landmarkId=landmarks.find(target=>landmarkPart(target,tile,feature.id,height.height,height.base,buildingCoordinates(tile,b.x,b.y)))?.id;
+        if(landmarkId!==undefined)confirmedParts.add(`${landmarkId}/${landmarkPartKey(tile,feature.id!)}`);
         const near=Math.hypot(Math.max(0,b.minX-observerX,observerX-b.maxX),Math.max(0,b.minY-observerY,observerY-b.maxY))*metresPerUnit;
         if(near>BUILDING_RADIUS)continue;
         const distant=Math.hypot(b.x-observerX,b.y-observerY)*metresPerUnit>BUILDING_NEAR_RADIUS;
@@ -136,21 +136,23 @@ export async function loadBuildings(plan:Pick<ShootingPlan,"longitude"|"latitude
   }
   signal.throwIfAborted();
   let available=candidates,remaining=BUILDING_MAX_TRIANGLES;
-  if(skytreeInRange(plan)){
-    const distance=skytreeDistance(plan),overlap=distance<=BUILDING_RADIUS+100;
+  status.landmarks=[];
+  for(const {target,distance} of landmarksInRange(plan)){
+    const overlap=distance<=BUILDING_RADIUS+target.bounds.horizontal;
     // Outside the ordinary window there are no coarse tower parts to replace.
     // Use the registered static model without fetching a remote city region.
-    if(!overlap||skytree.parts.every(part=>confirmedParts.has(part.id))){
+    if(!overlap||target.parts.length>0&&target.parts.every(part=>confirmedParts.has(`${target.id}/${landmarkPartKey(part.tile??target.tile,part.id)}`))){
+      if(target.asset.triangles>remaining){status.limited=true;status.landmarks.push({id:target.id,phase:"fallback",distance,message:`${target.name}未应用：剩余三角面预算不足。${overlap?"保留粗体块。":"该距离未加载对应粗体块。"}`});continue;}
       try{
-        const model=await landmarkLoader(signal),ground=(await elevation(skytree,demUrl,signal)).height;
+        const model=await landmarkLoader(target,signal),ground=(await elevation(target,demUrl,signal)).height;
         signal.throwIfAborted();
-        if(!Number.isFinite(ground)||model.indices.length/3>=remaining)throw new Error("地标几何或基座超出预算");
-        meshes.push({tile:skytree.tile,...model,anchor:{...skytree,ellipsoidalHeight:ground}});
-        remaining-=model.indices.length/3;status.triangles=model.indices.length/3;status.bytes=model.vertices.byteLength+model.indices.byteLength;
-        available=candidates.filter(c=>c.landmarkId===undefined);
-        status.landmark={phase:"applied",distance,triangles:model.indices.length/3,message:"晴空塔无纹理精细模型 · 定位与朝向近似"};
-      }catch{signal.throwIfAborted();status.landmark={phase:"fallback",distance,message:overlap?"晴空塔精细模型未应用，保留粗体块；可重新读取建筑。":"晴空塔精细模型未应用；该距离未加载对应粗体块，可重新读取建筑。"};}
-    }else status.landmark={phase:"fallback",distance,message:"晴空塔粗分部对应关系未确认，保留源体块。"};
+        if(!Number.isFinite(ground)||model.indices.length/3>remaining||model.indices.length/3!==target.asset.triangles||model.vertices.length/6!==target.asset.vertices)throw new Error("地标几何或基座超出预算");
+        meshes.push({tile:target.tile,...model,anchor:{longitude:target.longitude,latitude:target.latitude,ellipsoidalHeight:ground}});
+        remaining-=model.indices.length/3;status.triangles+=model.indices.length/3;status.bytes+=model.vertices.byteLength+model.indices.byteLength;
+        available=available.filter(c=>c.landmarkId!==target.id);
+        status.landmarks.push({id:target.id,phase:"applied",distance,triangles:model.indices.length/3,message:`${target.name}无纹理精细模型 · 定位与朝向近似${target.validation.visual==="pending"?" · 画面待验":""}`});
+      }catch{signal.throwIfAborted();status.landmarks.push({id:target.id,phase:"fallback",distance,message:overlap?`${target.name}精细模型未应用，保留粗体块；可重新读取建筑。`:`${target.name}精细模型未应用；该距离未加载对应粗体块，可重新读取建筑。`});}
+    }else status.landmarks.push({id:target.id,phase:"fallback",distance,message:`${target.name}粗分部对应关系未确认，保留源体块。`});
   }
   const chosen=selectBuildings(available,BUILDING_MAX_POINTS,remaining);status.candidates=available.length;status.distantCandidates=available.filter(c=>c.distant).length;status.distant=0;status.removedPoints=0;status.limited ||= chosen.limited;
   const samples=new Map<string,number>();
@@ -181,6 +183,6 @@ export async function loadBuildings(plan:Pick<ShootingPlan,"longitude"|"latitude
     }
     if(offset){const vertices=data.subarray(0,offset);meshes.push({tile,vertices});status.bytes+=vertices.byteLength;}
   }
-  signal.throwIfAborted();status.phase=status.polygons||status.landmark?.phase==="applied"?"ready":"empty";
+  signal.throwIfAborted();status.phase=status.polygons||status.landmarks.some(item=>item.phase==="applied")?"ready":"empty";
   return {meshes,status};
 }

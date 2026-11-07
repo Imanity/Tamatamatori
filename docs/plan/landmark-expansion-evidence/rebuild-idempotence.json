@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-07T17:37:54.545Z",
+  "node": "v24.17.0",
+  "files": [
+    "public/landmarks/shanghai-tower-v1.ttlm.gz",
+    "public/landmarks/shanghai-tower-v1.json"
+  ],
+  "before": [
+    "33a86c8ec1d446134e1d09c601ebb736158112559fc7393eeaa384c61d57f2de",
+    "92c3d51dcf1caf8e1eb4256fd72d273f1b8894305a4c3098f5f229943ae0c3d9"
+  ],
+  "after": [
+    "33a86c8ec1d446134e1d09c601ebb736158112559fc7393eeaa384c61d57f2de",
+    "92c3d51dcf1caf8e1eb4256fd72d273f1b8894305a4c3098f5f229943ae0c3d9"
+  ],
+  "identical": true
+}

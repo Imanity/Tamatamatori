@@ -1,0 +1,76 @@
+{
+  "kind": "真实单个东京塔 MVT + 其他瓦片为空的合成响应 + 高程0m合成平地；仅CPU回放，不是完整城市、真实DEM或GPU验收",
+  "source": {
+    "sha256": "daad1327ae326b22e68371dde93134b19c65a6924a04b717175f0951bd54f2dd",
+    "bytes": 646198,
+    "tile": {
+      "z": 14,
+      "x": 14551,
+      "y": 6452
+    },
+    "version": "20261101_080013_pt"
+  },
+  "matchedPartIds": [
+    12449670040,
+    12449670080,
+    171335723,
+    171335763,
+    171335783,
+    3138152462,
+    3156575192
+  ],
+  "matchedPolygons": 29,
+  "allRegisteredPartsConfirmed": true,
+  "museum": {
+    "id": 42473133,
+    "height": 20,
+    "base": 0,
+    "replaced": false
+  },
+  "status": {
+    "key": "139.7454446554184/35.65859076767638",
+    "phase": "ready",
+    "limited": false,
+    "tiles": 32,
+    "polygons": 4845,
+    "triangles": 233980,
+    "bytes": 11500872,
+    "skipped": 20,
+    "version": "cpu-fixture",
+    "fetchedAt": "2026-11-07T18:24:08.128Z",
+    "landmarks": [
+      {
+        "id": "tokyo-tower",
+        "phase": "applied",
+        "distance": 0,
+        "triangles": 74767,
+        "message": "东京塔无纹理精细模型 · 定位与朝向近似 · 画面待验"
+      },
+      {
+        "id": "tokyo-skytree",
+        "phase": "applied",
+        "distance": 8216.203213488521,
+        "triangles": 88581,
+        "message": "晴空塔无纹理精细模型 · 定位与朝向近似"
+      }
+    ],
+    "candidates": 4845,
+    "distantCandidates": 11,
+    "distant": 11,
+    "removedPoints": 8
+  },
+  "indexedMeshes": [
+    {
+      "latitude": 35.65859076767638,
+      "longitude": 139.7454446554184,
+      "triangles": 74767
+    },
+    {
+      "latitude": 35.71004508243534,
+      "longitude": 139.81071889400482,
+      "triangles": 88581
+    }
+  ],
+  "budget": 300000,
+  "passed": true
+}

@@ -482,7 +482,7 @@ test('远景地标覆盖扩展复用真实SDK，包含塔址DEM且不修改实�
   }
   t.diagnostic(JSON.stringify(records));
   const near={...terrainScenes[0].plan,...skytree,layers:{...terrainScenes[0].plan.layers,buildings:true}};
-  assert.equal(terrainCoverageRange(near),0);assert.equal(terrainCoverageRange({...near,longitude:130}),0);assert.equal(terrainCoverageRange({...near,latitude:35.98}),LANDMARK_TERRAIN_RANGE);assert.equal(terrainCoverageRange({...near,latitude:35.98,layers:{...near.layers,buildings:false}}),0);
+  assert.equal(terrainCoverageRange(near),LANDMARK_TERRAIN_RANGE);assert.equal(terrainCoverageRange({...near,longitude:130}),0);assert.equal(terrainCoverageRange({...near,latitude:35.98}),LANDMARK_TERRAIN_RANGE);assert.equal(terrainCoverageRange({...near,latitude:35.98,layers:{...near.layers,buildings:false}}),0);
   assert.throws(()=>terrainTileZoom(768,100000),RangeError);
 });
 

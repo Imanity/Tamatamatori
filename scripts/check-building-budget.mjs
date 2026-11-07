@@ -1,7 +1,8 @@
 // Replay cached, versioned real MVT with identical model and synthetic flat DEM.
-// Only the selected-point and triangle caps differ; no network or GPU benchmark.
+// Frozen Skytree-only asset set: only point/triangle caps differ, not later landmarks.
+// No network or GPU benchmark.
 import {readFile,writeFile,mkdir} from 'node:fs/promises';import {createHash} from 'node:crypto';import {stripTypeScriptTypes} from 'node:module';import {gunzipSync} from 'node:zlib';
-import {loadBuildings,clearBuildingCache,extractBuildingTile} from '../src/preview/buildings.ts';import {decodeLandmark} from '../src/domain/landmarks.ts';
+import {loadBuildings,clearBuildingCache,extractBuildingTile} from '../src/preview/buildings.ts';import {decodeLandmark,skytree} from '../src/domain/landmarks.ts';
 const loaderUrl=new URL('../src/preview/buildings.ts',import.meta.url);let code=await readFile(loaderUrl,'utf8');
 if(code.split('BUILDING_MAX_POINTS, BUILDING_MAX_TRIANGLES,').length!==2)throw Error('Budget import signature changed');
 code=code.replace('BUILDING_MAX_POINTS, BUILDING_MAX_TRIANGLES,','').replaceAll('BUILDING_MAX_POINTS','80000').replaceAll('BUILDING_MAX_TRIANGLES','120000');
@@ -18,7 +19,7 @@ const native=globalThis.fetch,requests=[];globalThis.fetch=async url=>{
 };
 const results=[];try{for(const point of [{name:'original-skytree',latitude:35.70698835542723,longitude:139.79386910980952},{name:'shanghai',latitude:31.2397,longitude:121.5008}]){
  const pairs=[];for(const [name,loader,clear] of [['old-120k-80k',old.loadBuildings,old.clearBuildingCache],['new-300k-160k',loadBuildings,clearBuildingCache]]){
- clear();requests.length=0;const t=performance.now(),result=await loader(point,'https://audit.test/meta','synthetic-zero',new AbortController().signal,async()=>({height:0}),async()=>model);
+ clear();requests.length=0;const t=performance.now(),result=await loader(point,'https://audit.test/meta','synthetic-zero',new AbortController().signal,async()=>({height:0}),async target=>{if(target.id!==skytree.id)throw Error("Frozen comparison includes Skytree only");return model;});
  pairs.push({name,status:result.status,cpuMilliseconds:performance.now()-t,meshes:result.meshes.length,allFinite:result.meshes.every(m=>m.vertices.every(Number.isFinite)),requests:[...requests]});}
  results.push({point,pairs});console.log(JSON.stringify({point,pairs:pairs.map(p=>({name:p.name,status:p.status,cpuMilliseconds:p.cpuMilliseconds}))}));}
 }finally{globalThis.fetch=native;clearBuildingCache();old.clearBuildingCache();}

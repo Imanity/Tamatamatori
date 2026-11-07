@@ -9,8 +9,8 @@ import { decodeBuildings, loadBuildings, clearBuildingCache, extractBuildingTile
 import { photoTileFrame, photoTileRay, photoFragmentDepth } from "../src/preview/terrain-perspective-math.ts";
 import { ellipsoidalRay } from "../src/domain/geodesy.ts";
 import { skyLabelKey, occlusionText } from "../src/domain/visibility.ts";
-import { skytree, skytreePart, skytreeInRange, skytreeDistance, LANDMARK_RADIUS, decodeLandmark, landmarkFrame } from "../src/domain/landmarks.ts";
-import { loadSkytree, clearLandmarkCache } from "../src/preview/landmarks.ts";
+import { skytree, shanghaiTower, tokyoTower, landmarks, landmarkPart, landmarksInRange, skytreePart, skytreeInRange, skytreeDistance, LANDMARK_RADIUS, decodeLandmark, landmarkFrame } from "../src/domain/landmarks.ts";
+import { loadLandmark, loadSkytree, clearLandmarkCache } from "../src/preview/landmarks.ts";
 import { gunzipSync } from "node:zlib";
 import { geodeticEcef } from "../src/domain/geodesy.ts";
 
@@ -317,6 +317,11 @@ test("建筑绘制失败清理网格并报告独立错误，单独重试恢复",
 
 const landmarkCompressed=readFileSync(new URL('../public/landmarks/skytree-v1.ttlm.gz',import.meta.url));
 const landmarkBytes=gunzipSync(landmarkCompressed),model=decodeLandmark(landmarkBytes);
+const landmarkStatus=(result,target=skytree)=>result.status.landmarks?.find(item=>item.id===target.id);
+const registeredModels=new Map(landmarks.map(target=>[target.id,{
+  compressed:readFileSync(new URL('../public/landmarks/'+target.asset.file,import.meta.url)),
+  model:decodeLandmark(gunzipSync(readFileSync(new URL('../public/landmarks/'+target.asset.file,import.meta.url))),target),
+}]));
 test('晴空塔静态模型有界解析，索引完整且高度634m，截断、错版本与越界被拒绝',()=>{
   assert.equal(model.indices.length/3,88581);assert.equal(model.vertices.length/6,65576);
   let top=-Infinity;for(let i=2;i<model.vertices.length;i+=6)top=Math.max(top,model.vertices[i]);close(top,634,.001);
@@ -334,6 +339,99 @@ test('晴空塔加载校验压缩与已解压响应，失败可重试，取消�
     const aborted=new AbortController();aborted.abort();await assert.rejects(loadSkytree(aborted.signal),{name:'AbortError'});
     globalThis.fetch=async()=>new Response(landmarkCompressed);assert.equal((await loadSkytree(new AbortController().signal)).indices.length,model.indices.length);
   }finally{globalThis.fetch=original;clearLandmarkCache();}
+});
+
+test('地标缓存按资产身份隔离、有界淘汰，清理后迟到的请求不重新驻留',async()=>{
+  const original=globalThis.fetch,signal=new AbortController().signal;let calls=0;
+  // Same known payload at four test identities isolates cache policy from I/O.
+  const targets=Array.from({length:4},(_,i)=>({...skytree,id:`cache-fixture-${i}`,asset:{...skytree.asset,file:`fixture-${i}.ttlm.gz`}}));
+  try{
+    clearLandmarkCache();globalThis.fetch=async()=>{calls++;return new Response(landmarkCompressed);};
+    for(const target of targets)await loadLandmark(target,signal);
+    assert.equal(calls,4);await loadLandmark(targets[3],signal);assert.equal(calls,4);
+    await loadLandmark(targets[0],signal);assert.equal(calls,5,'oldest entry evicted by the 8 MiB bound');
+    let release;clearLandmarkCache();globalThis.fetch=()=>new Promise(resolve=>{release=resolve;});
+    const pending=loadLandmark(skytree,signal);clearLandmarkCache();release(new Response(landmarkCompressed));await pending;
+    calls=0;globalThis.fetch=async()=>{calls++;return new Response(landmarkCompressed);};
+    await loadLandmark(skytree,signal);assert.equal(calls,1,'cleared in-flight request did not repopulate the cache');
+    const changed={...skytree,asset:{...skytree.asset,sha256:'0'.repeat(64)}};
+    await assert.rejects(loadLandmark(changed,signal),/校验/);
+  }finally{globalThis.fetch=original;clearLandmarkCache();}
+});
+
+test('已注册地标实际文件独立校验与跨城市缓存，总高误差有界且单位法线保留',async()=>{
+  const original=globalThis.fetch,signal=new AbortController().signal,requests=[];
+  try{
+    clearLandmarkCache();globalThis.fetch=async url=>{
+      requests.push(String(url));const target=landmarks.find(t=>String(url).endsWith(t.asset.file));
+      return target?new Response(registeredModels.get(target.id).compressed):new Response('',{status:404});
+    };
+    for(const target of landmarks){
+      const model=await loadLandmark(target,signal);let top=0;
+      for(let i=0;i<model.vertices.length;i+=6){top=Math.max(top,model.vertices[i+2]);close(Math.hypot(...model.vertices.subarray(i+3,i+6)),1,1e-5);}
+      close(top,target.bounds.height,.1);assert.ok(model.indices.length/3<=100000);
+      const part=target.parts[0];if(part){assert.ok(landmarkPart(target,part.tile??target.tile,part.id,part.height,part.base,target));
+      assert.ok(!landmarkPart(target,part.tile??target.tile,part.id,part.height+1,part.base,target));}
+    }
+    assert.equal(requests.length,landmarks.length);
+    const last=landmarks.at(-1);await loadLandmark(last,signal);assert.equal(requests.length,landmarks.length,'recent model remains cached');
+    for(const target of landmarks)await loadLandmark(target,signal);assert.ok(requests.length>landmarks.length,'three decoded assets exceed 8 MiB; oldest assets are evicted');
+    clearLandmarkCache();globalThis.fetch=async()=>new Response(landmarkCompressed);
+    await assert.rejects(loadLandmark(shanghaiTower,signal),/校验/,'a Skytree payload must not be reused for Shanghai');
+    assert.deepEqual(landmarksInRange(shanghaiTower).map(item=>item.target.id),[shanghaiTower.id]);
+  }finally{globalThis.fetch=original;clearLandmarkCache();}
+});
+
+test('上海中心只替换已确认三处塔身并保留邻楼，失败独立保留粗体块',async()=>{
+  const original=globalThis.fetch,target=shanghaiTower,meta={maxzoom:14,tiles:['https://example.test/planet/v1/{z}/{x}/{y}.pbf'],vector_layers:[{id:'building'}]};
+  const x=Math.round(((target.longitude+180)/360*2**14-target.tile.x)*8192),y=Math.round(((1-Math.asinh(Math.tan(target.latitude*Math.PI/180))/Math.PI)/2*2**14-target.tile.y)*8192);
+  const parts=target.parts.map(p=>({...p,rings:[rectangle(x-8,y-8,16,16)]}));parts.push({height:40,base:0,rings:[rectangle(x+150,y,40,40)]});
+  globalThis.fetch=async url=>new Response(String(url).endsWith('meta')?JSON.stringify(meta):String(url).endsWith(`/14/${target.tile.x}/${target.tile.y}.pbf`)?fixture(parts):fixture([]));
+  try{
+    clearBuildingCache();const result=await loadBuildings(target,'https://example.test/meta','dem',new AbortController().signal,async()=>({height:9}),async item=>registeredModels.get(item.id).model);
+    assert.equal(landmarkStatus(result,target).phase,'applied');assert.equal(result.status.polygons,1);assert.equal(result.meshes.filter(m=>m.anchor).length,1);
+    assert.equal(result.status.triangles,registeredModels.get(target.id).model.indices.length/3+result.meshes.filter(m=>!m.anchor).reduce((sum,m)=>sum+m.vertices.length/18,0));
+    const failed=await loadBuildings(target,'https://example.test/meta','dem',new AbortController().signal,async()=>({height:9}),async()=>{throw Error('unavailable');});
+    assert.equal(landmarkStatus(failed,target).phase,'fallback');assert.equal(failed.status.polygons,4);assert.ok(!failed.meshes.some(m=>m.anchor));
+  }finally{globalThis.fetch=original;clearBuildingCache();}
+});
+
+test('东京塔替换七类塔身但保留 FootTown，晴空塔可在同一场景独立应用',async()=>{
+  const original=globalThis.fetch,target=tokyoTower,meta={maxzoom:14,tiles:['https://example.test/planet/tokyo/{z}/{x}/{y}.pbf'],vector_layers:[{id:'building'}]};
+  const x=Math.round(((target.longitude+180)/360*2**14-target.tile.x)*8192),y=Math.round(((1-Math.asinh(Math.tan(target.latitude*Math.PI/180))/Math.PI)/2*2**14-target.tile.y)*8192);
+  const parts=target.parts.map(p=>({...p,rings:[rectangle(x-2,y-2,4,4)]}));parts.push({id:42473133,height:20,base:0,rings:[rectangle(x-40,y-30,80,60)]});
+  globalThis.fetch=async url=>new Response(String(url).endsWith('meta')?JSON.stringify(meta):String(url).endsWith(`/14/${target.tile.x}/${target.tile.y}.pbf`)?fixture(parts):fixture([]));
+  try{
+    clearBuildingCache();const result=await loadBuildings(target,'https://example.test/meta','dem',new AbortController().signal,async()=>({height:12}),async item=>registeredModels.get(item.id).model);
+    assert.equal(landmarkStatus(result,target).phase,'applied');assert.equal(landmarkStatus(result,target).message.includes('画面待验'),target.validation.visual==='pending');
+    assert.equal(landmarkStatus(result,skytree).phase,'applied');assert.equal(result.meshes.filter(m=>m.anchor).length,2);assert.equal(result.status.polygons,1,'FootTown is retained');
+    assert.ok(!landmarkPart(target,target.tile,42473133,20,0,target));assert.ok(result.status.triangles<=BUILDING_MAX_TRIANGLES);
+    const failed=await loadBuildings(target,'https://example.test/meta','dem',new AbortController().signal,async()=>({height:12}),async item=>{if(item.id===target.id)throw Error('Tokyo only');return registeredModels.get(item.id).model;});
+    assert.equal(landmarkStatus(failed,target).phase,'fallback');assert.equal(landmarkStatus(failed,skytree).phase,'applied');assert.equal(failed.status.polygons,parts.length);
+  }finally{globalThis.fetch=original;clearBuildingCache();}
+});
+
+test('没有粗分部映射时近处保留源数据；预算不足的远景模型不下载',async()=>{
+  const original=globalThis.fetch,target=tokyoTower,parts=target.parts,triangles=target.asset.triangles;
+  const meta={maxzoom:14,tiles:['https://example.test/planet/budget/{z}/{x}/{y}.pbf'],vector_layers:[{id:'building'}]};
+  globalThis.fetch=async url=>new Response(String(url).endsWith('meta')?JSON.stringify(meta):fixture([]));const calls=[];
+  const loader=async item=>{calls.push(item.id);return registeredModels.get(item.id).model;};
+  try{
+    target.parts=[];clearBuildingCache();let result=await loadBuildings(target,'https://example.test/meta','dem',new AbortController().signal,async()=>({height:0}),loader);
+    assert.equal(landmarkStatus(result,target).phase,'fallback');assert.match(landmarkStatus(result,target).message,/对应关系未确认/);assert.ok(!calls.includes(target.id));
+    target.parts=parts;target.asset.triangles=BUILDING_MAX_TRIANGLES;calls.length=0;clearBuildingCache();
+    // East of both towers: Skytree is nearer, receives budget first.
+    result=await loadBuildings({longitude:139.95,latitude:skytree.latitude},'https://example.test/meta','dem',new AbortController().signal,async()=>({height:0}),loader);
+    assert.equal(landmarkStatus(result,skytree).phase,'applied');assert.match(landmarkStatus(result,target).message,/预算不足/);assert.ok(!calls.includes(target.id));assert.ok(result.status.limited);
+  }finally{target.parts=parts;target.asset.triangles=triangles;globalThis.fetch=original;clearBuildingCache();}
+});
+
+test('同城双地标索引网格在 GL 替身共享场景绘制并全部释放',async()=>{
+  const {gl,state,resources,draws}=fakeGL(),before=new Map(state),meshes=[skytree,tokyoTower].map(target=>({tile:target.tile,...registeredModels.get(target.id).model,anchor:{...target,ellipsoidalHeight:10}}));
+  const layer=new BuildingLayer(()=>{},'tiles','dem',async()=>({meshes,status:{...emptyBuildings,phase:'ready'}}));
+  layer.onAdd(map,gl);layer.setScene({...initialPlan,layers:{...initialPlan.layers,buildings:true}},environment,[0,0,1]);await Promise.resolve();layer.render(gl,cameraInput);
+  assert.equal(draws.length,2);assert.ok(draws.every(d=>d.type===gl.UNSIGNED_INT&&d.index));assert.deepEqual(draws.map(d=>d.count),meshes.map(m=>m.indices.length));assert.deepEqual(state,before);
+  layer.onRemove();assert.equal(resources.size,0);assert.deepEqual(state,before);
 });
 test('地标局部ENU转换与独立ECEF矩阵相符，保留远景曲率及三维尺度',()=>{
   const axis=p=>{const a=p.latitude*Math.PI/180,b=p.longitude*Math.PI/180;return [[-Math.sin(b),Math.cos(b),0],[-Math.sin(a)*Math.cos(b),-Math.sin(a)*Math.sin(b),Math.cos(a)],[Math.cos(a)*Math.cos(b),Math.cos(a)*Math.sin(b),Math.sin(a)]];};
@@ -359,9 +457,9 @@ test('晴空塔确认三分部后替换并保留邻楼，共用全场面数预�
   const elevation=async()=>({height:7}),signal=new AbortController().signal;
   try{
     clearBuildingCache();let result=await loadBuildings(skytree,'https://example.test/meta','dem',signal,elevation,async()=>model);
-    assert.equal(result.status.landmark.phase,'applied');assert.equal(result.status.polygons,1);assert.equal(result.meshes.filter(m=>m.anchor).length,1);assert.ok(result.status.triangles<=BUILDING_MAX_TRIANGLES);assert.equal(result.meshes.find(m=>m.anchor).anchor.ellipsoidalHeight,7);
-    result=await loadBuildings(skytree,'https://example.test/meta','dem',signal,elevation,async()=>{throw new Error('network');});assert.equal(result.status.landmark.phase,'fallback');assert.equal(result.status.polygons,4);assert.ok(!result.meshes.some(m=>m.anchor));
-    change=true;clearBuildingCache();result=await loadBuildings(skytree,'https://example.test/meta','dem',signal,elevation,async()=>{throw new Error('must not load');});assert.equal(result.status.landmark.phase,'fallback');assert.equal(result.status.polygons,3);
+    assert.equal(landmarkStatus(result).phase,'applied');assert.equal(result.status.polygons,1);assert.equal(result.meshes.filter(m=>m.anchor).length,1);assert.ok(result.status.triangles<=BUILDING_MAX_TRIANGLES);assert.equal(result.meshes.find(m=>m.anchor).anchor.ellipsoidalHeight,7);
+    result=await loadBuildings(skytree,'https://example.test/meta','dem',signal,elevation,async()=>{throw new Error('network');});assert.equal(landmarkStatus(result).phase,'fallback');assert.equal(result.status.polygons,4);assert.ok(!result.meshes.some(m=>m.anchor));
+    change=true;clearBuildingCache();result=await loadBuildings(skytree,'https://example.test/meta','dem',signal,elevation,async()=>{throw new Error('must not load');});assert.equal(landmarkStatus(result).phase,'fallback');assert.equal(result.status.polygons,3);
   }finally{globalThis.fetch=original;clearBuildingCache();}
 });
 test('实际图层同时绘制索引地标与普通体块，索引归属VAO并回收全部资源',async()=>{
@@ -398,10 +496,10 @@ test('五公里外的地标无需远处MVT或粗分部，失败不假称保留�
   globalThis.fetch=async url=>{requests.push(String(url));return new Response(String(url).endsWith('meta')?JSON.stringify(metadata):fixture([]));};
   const signal=new AbortController().signal,point={longitude:139.5,latitude:skytree.latitude};let modelCalls=0;
   try{
-    clearBuildingCache();const result=await loadBuildings(point,'https://example.test/meta','dem',signal,async()=>({height:8}),async()=>{modelCalls++;return model;});
-    assert.equal(result.status.phase,'ready');assert.equal(result.status.polygons,0);assert.equal(result.status.landmark.phase,'applied');assert.ok(result.status.landmark.distance>27000);assert.equal(result.status.triangles,model.indices.length/3);
+    clearBuildingCache();const result=await loadBuildings(point,'https://example.test/meta','dem',signal,async()=>({height:8}),async target=>{if(target.id!==skytree.id)throw Error('fixture only');modelCalls++;return model;});
+    assert.equal(result.status.phase,'ready');assert.equal(result.status.polygons,0);assert.equal(landmarkStatus(result).phase,'applied');assert.ok(landmarkStatus(result).distance>27000);assert.equal(result.status.triangles,model.indices.length/3);
     assert.equal(modelCalls,1);assert.ok(!requests.some(r=>r.endsWith('/14554/6450.pbf')));assert.equal(result.status.tiles,buildingTiles(point).tiles.length);
-    const failed=await loadBuildings(point,'https://example.test/meta','dem',signal,async()=>({height:8}),async()=>{throw Error('model unavailable');});assert.equal(failed.status.phase,'empty');assert.equal(failed.status.landmark.phase,'fallback');assert.match(failed.status.landmark.message,/未加载对应粗体块/);assert.equal(failed.meshes.length,0);
+    const failed=await loadBuildings(point,'https://example.test/meta','dem',signal,async()=>({height:8}),async()=>{throw Error('model unavailable');});assert.equal(failed.status.phase,'empty');assert.equal(landmarkStatus(failed).phase,'fallback');assert.match(landmarkStatus(failed).message,/未加载对应粗体块/);assert.equal(failed.meshes.length,0);
     await loadBuildings({longitude:139,latitude:skytree.latitude},'https://example.test/meta','dem',signal,async()=>({height:8}),async()=>{modelCalls++;return model;});assert.equal(modelCalls,1);
     const abort=new AbortController();await assert.rejects(loadBuildings(point,'https://example.test/meta','dem',abort.signal,async()=>({height:8}),async()=>{abort.abort();return model;}),{name:'AbortError'});
   }finally{globalThis.fetch=original;clearBuildingCache();}
@@ -415,8 +513,8 @@ test('普通窗口边缘仅部分粗分部入选时，仍按整块源瓦片确�
   let missing=false;globalThis.fetch=async url=>new Response(String(url).endsWith('meta')?JSON.stringify(meta):String(url).endsWith('/14554/6450.pbf')?fixture(missing?parts.slice(1):parts):fixture([]));
   try{
     clearBuildingCache();const result=await loadBuildings(point,'https://example.test/meta','dem',new AbortController().signal,async()=>({height:0}),async()=>model);
-    assert.equal(result.status.landmark.phase,'applied');assert.equal(result.status.polygons,0);assert.equal(result.meshes.length,1);
-    const fallback=await loadBuildings(point,'https://example.test/meta','dem',new AbortController().signal,async()=>({height:0}),async()=>{throw Error('fail');});assert.equal(fallback.status.landmark.phase,'fallback');assert.ok(fallback.status.polygons>0&&fallback.status.polygons<3);
-    missing=true;clearBuildingCache();const changed=await loadBuildings(point,'https://example.test/meta','dem',new AbortController().signal,async()=>({height:0}),async()=>{throw Error('must not load');});assert.match(changed.status.landmark.message,/对应关系未确认/);
+    assert.equal(landmarkStatus(result).phase,'applied');assert.equal(result.status.polygons,0);assert.equal(result.meshes.length,1);
+    const fallback=await loadBuildings(point,'https://example.test/meta','dem',new AbortController().signal,async()=>({height:0}),async()=>{throw Error('fail');});assert.equal(landmarkStatus(fallback).phase,'fallback');assert.ok(fallback.status.polygons>0&&fallback.status.polygons<3);
+    missing=true;clearBuildingCache();const changed=await loadBuildings(point,'https://example.test/meta','dem',new AbortController().signal,async()=>({height:0}),async()=>{throw Error('must not load');});assert.match(landmarkStatus(changed).message,/对应关系未确认/);
   }finally{globalThis.fetch=original;clearBuildingCache();}
 });

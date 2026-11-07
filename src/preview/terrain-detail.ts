@@ -1,14 +1,14 @@
 import type { CalculateTileZoomFunction, Map as MapLibreMap } from "maplibre-gl";
 import { TERRAIN_SOURCE, TERRAIN_ZOOM } from "../domain/terrain.ts";
 import type { ShootingPlan } from "../domain/plan.ts";
-import { skytreeDistance, skytreeInRange } from "../domain/landmarks.ts";
+import { landmarksInRange } from "../domain/landmarks.ts";
 
 // A 128-segment mesh at z14 matches the spacing of the native 512px z12 DEM.
 // Further near-camera subdivision adds no source resolution and wastes RTTs.
 export const TERRAIN_MAX_MESH_ZOOM = TERRAIN_ZOOM + 2;
 export const TERRAIN_CELL_PIXELS = 8;
 export const LANDMARK_TERRAIN_RANGE = 75000;
-export const terrainCoverageRange = (plan:ShootingPlan) => plan.layers.buildings&&skytreeInRange(plan)&&skytreeDistance(plan)>5000?LANDMARK_TERRAIN_RANGE:0;
+export const terrainCoverageRange = (plan:ShootingPlan) => plan.layers.buildings&&landmarksInRange(plan).some(item=>item.distance>5000)?LANDMARK_TERRAIN_RANGE:0;
 export function terrainTileZoom(viewportHeight: number,coverageRange=0): CalculateTileZoomFunction {
   if (!Number.isFinite(viewportHeight) || viewportHeight <= 0) throw new RangeError("地形细节需要有效取景框高度");
   if(coverageRange!==0&&coverageRange!==LANDMARK_TERRAIN_RANGE)throw new RangeError("地形覆盖距离超出本轮范围");

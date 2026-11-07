@@ -1,0 +1,208 @@
+[
+  {
+    "id": "shanghai-tower",
+    "name": "上海中心",
+    "latitude": 31.235511180721932,
+    "longitude": 121.50132179260254,
+    "tile": {
+      "z": 14,
+      "x": 13721,
+      "y": 6694
+    },
+    "parts": [
+      {
+        "id": 3760235552,
+        "height": 360,
+        "base": 0
+      },
+      {
+        "id": 3760235562,
+        "height": 540,
+        "base": 0
+      },
+      {
+        "id": 3760235582,
+        "height": 632,
+        "base": 0
+      }
+    ],
+    "partRadius": 60,
+    "bounds": {
+      "horizontal": 61,
+      "height": 632
+    },
+    "asset": {
+      "file": "shanghai-tower-v1.ttlm.gz",
+      "sha256": "33a86c8ec1d446134e1d09c601ebb736158112559fc7393eeaa384c61d57f2de",
+      "decodedSha256": "14d1d4ff42588184d525a538edf8520fb6b1b9ddb0d79eed1098862dcdbd250d",
+      "bytes": 975220,
+      "decodedBytes": 2089040,
+      "vertices": 59701,
+      "triangles": 54682
+    },
+    "credit": {
+      "title": "Shanghai Tower",
+      "author": "NanoRay",
+      "authorPage": "https://sketchfab.com/NanoRay",
+      "page": "https://sketchfab.com/3d-models/shanghai-tower-e24fd5a66bbb4faaa7a8e26d3e7478fa",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。",
+      "registration": "锚点参考 © OpenStreetMap contributors 的塔尖轮廓中心；基座朝向对照 OSM 全轮廓按 0.25° 步长拟合，双向轮廓 RMS 约 4.83 m；属于近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑轮廓",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "tokyo-skytree",
+    "name": "晴空塔",
+    "latitude": 35.71004508243534,
+    "longitude": 139.81071889400482,
+    "tile": {
+      "z": 14,
+      "x": 14554,
+      "y": 6450
+    },
+    "parts": [
+      {
+        "id": 3623514152,
+        "height": 350,
+        "base": 290
+      },
+      {
+        "id": 2882691482,
+        "height": 450,
+        "base": 410
+      },
+      {
+        "id": 3623514142,
+        "height": 634,
+        "base": 0
+      }
+    ],
+    "partRadius": 60,
+    "bounds": {
+      "horizontal": 49,
+      "height": 634
+    },
+    "asset": {
+      "file": "skytree-v1.ttlm.gz",
+      "sha256": "4ee6a8d802db2ccf0538add4ff7f3b54e21237e4cd36267e7a487852305848cd",
+      "decodedSha256": "763e09e62f3a4e159a54e5a3df8ae6228529b6deee24fa675c5c31f4b1d868d3",
+      "bytes": 1236544,
+      "decodedBytes": 2636828,
+      "vertices": 65576,
+      "triangles": 88581
+    },
+    "credit": {
+      "title": "Tokyo Skytree, Japan",
+      "author": "Noah (smiN5214)",
+      "authorPage": "https://sketchfab.com/smiN5214",
+      "page": "https://sketchfab.com/3d-models/tokyo-skytree-japan-b4d347b8703f45f48ea8d5fe45d454b9",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。",
+      "registration": "机位参考 © OpenStreetMap contributors。朝向参考国土交通省 Project PLATEAU 东京都墨田区 2025 LOD2.1 的 30/100/200 m 水平轮廓，对称轮廓 RMS 约 6.48 m，存在 120° 对称歧义；仅为近似注册。地面采用同源 DEM，不套固定高程偏移。",
+      "references": [
+        {
+          "title": "国土交通省 Project PLATEAU 东京都墨田区 2025 LOD2.1 水平轮廓，仅用于近似朝向",
+          "url": "https://www.mlit.go.jp/plateau/site-policy/"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "tokyo-tower",
+    "name": "东京塔",
+    "latitude": 35.65859076767638,
+    "longitude": 139.7454446554184,
+    "tile": {
+      "z": 14,
+      "x": 14551,
+      "y": 6452
+    },
+    "parts": [
+      {
+        "id": 12449670040,
+        "height": 7,
+        "base": 0
+      },
+      {
+        "id": 12449670080,
+        "height": 40,
+        "base": 0
+      },
+      {
+        "id": 171335723,
+        "height": 53,
+        "base": 0
+      },
+      {
+        "id": 171335763,
+        "height": 97,
+        "base": 0
+      },
+      {
+        "id": 171335783,
+        "height": 120,
+        "base": 0
+      },
+      {
+        "id": 3138152462,
+        "height": 130,
+        "base": 120
+      },
+      {
+        "id": 3156575192,
+        "height": 150,
+        "base": 0
+      }
+    ],
+    "partRadius": 100,
+    "bounds": {
+      "horizontal": 73,
+      "height": 333
+    },
+    "asset": {
+      "file": "tokyo-tower-v1.ttlm.gz",
+      "sha256": "949cdec080264efd466e8acb2057ef2b3e6d945536744d6e3f6d8c952a7f088b",
+      "decodedSha256": "5af57bf65e18bc68d0d173d670d615b0fd5234832ef6465c9a0d723503d1d0a0",
+      "bytes": 1225486,
+      "decodedBytes": 3778604,
+      "vertices": 120057,
+      "triangles": 74767
+    },
+    "credit": {
+      "title": "Tokyo Tower",
+      "author": "Void",
+      "authorPage": "https://sketchfab.com/Void.com",
+      "page": "https://sketchfab.com/models/4f667743965e4260b451ad38efcc3712",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。",
+      "registration": "锚点与四脚参考 © OpenStreetMap contributors；本地 Z 轴向上，忽略作者共同放置的倾斜与非均匀缩放，按官方总高 333 m 统一尺度。四脚中心拟合朝向 56.25°，RMS 约 2.12 m，存在近似对称朝向歧义；保留 FootTown 普通体块。CPU 检查不代替画面与实景核验。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，四处塔脚及塔身分部",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "pending"
+    }
+  }
+]

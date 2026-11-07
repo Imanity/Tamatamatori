@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "version": 1,
+  "processing": {
+    "targetTriangles": 60000,
+    "maxErrorMetres": 0.1,
+    "normalWeight": 0.01,
+    "weld": false
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  },
+  "id": "tokyo-skytree",
+  "name": "晴空塔",
+  "source": {
+    "sha256": "007cd38f40f114dc2f2d6c2b8b00c216a95fa6401dbfb15b3946b1c8ca6bb150",
+    "filename": "tokyo_skytree_japan.glb",
+    "title": "Tokyo Skytree, Japan",
+    "author": "Noah (smiN5214)",
+    "authorPage": "https://sketchfab.com/smiN5214",
+    "page": "https://sketchfab.com/3d-models/tokyo-skytree-japan-b4d347b8703f45f48ea8d5fe45d454b9",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。"
+  },
+  "frame": {
+    "space": "local",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": [
+      2.0669,
+      -7.54065
+    ],
+    "height": 634,
+    "heightReference": "https://www.tokyo-skytree.jp/about/spec/structure/",
+    "yawDegrees": 10.25,
+    "requireSharedTransform": true,
+    "normalizeNormals": false,
+    "sharedTransformTolerance": 0.0002
+  },
+  "geo": {
+    "latitude": 35.71004508243534,
+    "longitude": 139.81071889400482,
+    "partRadius": 60,
+    "parts": [
+      {
+        "id": 3623514152,
+        "height": 350,
+        "base": 290
+      },
+      {
+        "id": 2882691482,
+        "height": 450,
+        "base": 410
+      },
+      {
+        "id": 3623514142,
+        "height": 634,
+        "base": 0
+      }
+    ],
+    "registration": "机位参考 © OpenStreetMap contributors。朝向参考国土交通省 Project PLATEAU 东京都墨田区 2025 LOD2.1 的 30/100/200 m 水平轮廓，对称轮廓 RMS 约 6.48 m，存在 120° 对称歧义；仅为近似注册。地面采用同源 DEM，不套固定高程偏移。",
+    "references": [
+      {
+        "title": "国土交通省 Project PLATEAU 东京都墨田区 2025 LOD2.1 水平轮廓，仅用于近似朝向",
+        "url": "https://www.mlit.go.jp/plateau/site-policy/"
+      }
+    ]
+  },
+  "assetStem": "skytree"
+}

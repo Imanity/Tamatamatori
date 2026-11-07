@@ -1263,11 +1263,14 @@ test('About 汇集所有署名与下载，开关图层和弹窗不重建地图�
     assert.equal(credit.querySelectorAll('a[download]').length, 1);
   }
   assert.match(dialog.querySelector('[data-credit-source="IC0434"]').textContent, /火树/);
+  const landmarkCatalog = JSON.parse(readFileSync(new URL('../src/data/landmarks.generated.json', import.meta.url), 'utf8'));
   const downloads = [...dialog.querySelectorAll('a[download]')];
-  assert.equal(downloads.length, catalog.imageSources.length + 8);
+  assert.equal(downloads.length, catalog.imageSources.length + 6 + 2 * landmarkCatalog.length);
   const landmarkSection=dialog.querySelector('[aria-labelledby="about-landmarks-title"]');
   assert.match(landmarkSection.textContent,/Noah.*CC BY 4.0/);
-  assert.equal(landmarkSection.querySelectorAll('a[download]').length,2);
+  assert.equal(landmarkSection.querySelectorAll('a[download]').length,2*landmarkCatalog.length);
+  for(const target of landmarkCatalog){const credit=landmarkSection.querySelector(`[data-landmark-credit="${target.id}"]`);assert.ok(credit);assert.ok(credit.textContent.includes(target.credit.author));assert.ok(credit.querySelector('a[href="'+target.credit.licenseUrl+'"]'));}
+  assert.match(landmarkSection.textContent,/NanoRay.*CC BY 4.0/);
   assert.equal(new Set(downloads.map((link) => link.getAttribute('href'))).size, downloads.length);
   const fields = ['经度', '纬度', '焦距', '相机离地高度', '方位角', '俯仰角'];
   const before = fields.map(value), time = shootingDateTime();

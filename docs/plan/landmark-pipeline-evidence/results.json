@@ -1,0 +1,244 @@
+{
+  "checkedAt": "2026-11-07T18:31:19.131Z",
+  "node": "v24.17.0",
+  "scope": "离线制作、CPU 数值与 GL 替身；本轮按用户要求未执行浏览器/GPU画面验收",
+  "candidateCount": 18,
+  "deterministicBatch": {
+    "passed": true,
+    "repetitions": 3
+  },
+  "models": [
+    {
+      "id": "shanghai-tower",
+      "recipeHash": "2db0fb36503335cb8f8fe66f857e5b310dbf53478736da4c499a65b8f9fe00d1",
+      "sourceSha256": "c706244b1ae46cc0c0ccd15b52e7fde2bff03b0097569af2924c6597db737900",
+      "asset": {
+        "file": "shanghai-tower-v1.ttlm.gz",
+        "sha256": "33a86c8ec1d446134e1d09c601ebb736158112559fc7393eeaa384c61d57f2de",
+        "decodedSha256": "14d1d4ff42588184d525a538edf8520fb6b1b9ddb0d79eed1098862dcdbd250d",
+        "bytes": 975220,
+        "decodedBytes": 2089040,
+        "vertices": 59701,
+        "triangles": 54682
+      },
+      "coverage": {
+        "kind": "CPU triangle union, not GPU or survey verification",
+        "metresPerPixel": 0.316,
+        "width": 424,
+        "height": 2048,
+        "sourceTriangles": 121254,
+        "fineTriangles": 54682,
+        "records": [
+          {
+            "azimuth": 0,
+            "intersectionOverUnion": 0.9997407850099674,
+            "changedPixels": 126,
+            "maxRasterCoverageDistanceMetres": 0.316,
+            "passed": true
+          },
+          {
+            "azimuth": 60,
+            "intersectionOverUnion": 0.9997895902127224,
+            "changedPixels": 111,
+            "maxRasterCoverageDistanceMetres": 0.316,
+            "passed": true
+          },
+          {
+            "azimuth": 120,
+            "intersectionOverUnion": 0.99974747899867,
+            "changedPixels": 120,
+            "maxRasterCoverageDistanceMetres": 0.316,
+            "passed": true
+          },
+          {
+            "azimuth": 180,
+            "intersectionOverUnion": 0.9997407850099674,
+            "changedPixels": 126,
+            "maxRasterCoverageDistanceMetres": 0.316,
+            "passed": true
+          },
+          {
+            "azimuth": 240,
+            "intersectionOverUnion": 0.9997516879532643,
+            "changedPixels": 131,
+            "maxRasterCoverageDistanceMetres": 0.316,
+            "passed": true
+          },
+          {
+            "azimuth": 300,
+            "intersectionOverUnion": 0.99974747899867,
+            "changedPixels": 120,
+            "maxRasterCoverageDistanceMetres": 0.316,
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
+      "visual": "verified"
+    },
+    {
+      "id": "tokyo-skytree",
+      "recipeHash": "8a173bdeb680daf06f03b1a7ccf67eb8b6d7e0061d7115e078d475507fc54c47",
+      "sourceSha256": "007cd38f40f114dc2f2d6c2b8b00c216a95fa6401dbfb15b3946b1c8ca6bb150",
+      "asset": {
+        "file": "skytree-v1.ttlm.gz",
+        "sha256": "4ee6a8d802db2ccf0538add4ff7f3b54e21237e4cd36267e7a487852305848cd",
+        "decodedSha256": "763e09e62f3a4e159a54e5a3df8ae6228529b6deee24fa675c5c31f4b1d868d3",
+        "bytes": 1236544,
+        "decodedBytes": 2636828,
+        "vertices": 65576,
+        "triangles": 88581
+      },
+      "coverage": {
+        "kind": "CPU triangle union, not GPU or survey verification",
+        "metresPerPixel": 0.317,
+        "width": 342,
+        "height": 2048,
+        "sourceTriangles": 285887,
+        "fineTriangles": 88581,
+        "records": [
+          {
+            "azimuth": 0,
+            "intersectionOverUnion": 0.9954229187106762,
+            "changedPixels": 1017,
+            "maxRasterCoverageDistanceMetres": 0.317,
+            "passed": true
+          },
+          {
+            "azimuth": 60,
+            "intersectionOverUnion": 0.995279514159233,
+            "changedPixels": 1061,
+            "maxRasterCoverageDistanceMetres": 0.634,
+            "passed": true
+          },
+          {
+            "azimuth": 120,
+            "intersectionOverUnion": 0.9959785761312479,
+            "changedPixels": 904,
+            "maxRasterCoverageDistanceMetres": 0.9510000000000001,
+            "passed": true
+          },
+          {
+            "azimuth": 180,
+            "intersectionOverUnion": 0.9954229187106762,
+            "changedPixels": 1017,
+            "maxRasterCoverageDistanceMetres": 0.317,
+            "passed": true
+          },
+          {
+            "azimuth": 240,
+            "intersectionOverUnion": 0.995279514159233,
+            "changedPixels": 1061,
+            "maxRasterCoverageDistanceMetres": 0.634,
+            "passed": true
+          },
+          {
+            "azimuth": 300,
+            "intersectionOverUnion": 0.9959785761312479,
+            "changedPixels": 904,
+            "maxRasterCoverageDistanceMetres": 0.9510000000000001,
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
+      "visual": "verified"
+    },
+    {
+      "id": "tokyo-tower",
+      "recipeHash": "78fb88ee03ce95cce05acff97ef6874c7ef9d3f31860b31fed87dc1f7cc1161f",
+      "sourceSha256": "2a11d6e9e188257913cfd69cd89ad8b924819d65648931e384d741df225a2f3f",
+      "asset": {
+        "file": "tokyo-tower-v1.ttlm.gz",
+        "sha256": "949cdec080264efd466e8acb2057ef2b3e6d945536744d6e3f6d8c952a7f088b",
+        "decodedSha256": "5af57bf65e18bc68d0d173d670d615b0fd5234832ef6465c9a0d723503d1d0a0",
+        "bytes": 1225486,
+        "decodedBytes": 3778604,
+        "vertices": 120057,
+        "triangles": 74767
+      },
+      "coverage": {
+        "kind": "CPU triangle union, not GPU or survey verification",
+        "metresPerPixel": 0.1665,
+        "width": 912,
+        "height": 2048,
+        "sourceTriangles": 88707,
+        "fineTriangles": 74767,
+        "records": [
+          {
+            "azimuth": 0,
+            "intersectionOverUnion": 0.9993181574666627,
+            "changedPixels": 210,
+            "maxRasterCoverageDistanceMetres": 0.37230531825371505,
+            "passed": true
+          },
+          {
+            "azimuth": 60,
+            "intersectionOverUnion": 0.9991211263052622,
+            "changedPixels": 261,
+            "maxRasterCoverageDistanceMetres": 0.23546655813512035,
+            "passed": true
+          },
+          {
+            "azimuth": 120,
+            "intersectionOverUnion": 0.9989032693743051,
+            "changedPixels": 216,
+            "maxRasterCoverageDistanceMetres": 0.1665,
+            "passed": true
+          },
+          {
+            "azimuth": 180,
+            "intersectionOverUnion": 0.9993149105974564,
+            "changedPixels": 211,
+            "maxRasterCoverageDistanceMetres": 0.37230531825371505,
+            "passed": true
+          },
+          {
+            "azimuth": 240,
+            "intersectionOverUnion": 0.9991211263052622,
+            "changedPixels": 261,
+            "maxRasterCoverageDistanceMetres": 0.23546655813512035,
+            "passed": true
+          },
+          {
+            "azimuth": 300,
+            "intersectionOverUnion": 0.9989032693743051,
+            "changedPixels": 216,
+            "maxRasterCoverageDistanceMetres": 0.1665,
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
+      "visual": "pending"
+    }
+  ],
+  "checks": {
+    "tests": {
+      "command": "npm test",
+      "passed": 267,
+      "failed": 0
+    },
+    "build": {
+      "command": "npm run build -- --base /Tamatamatori/",
+      "passed": true,
+      "warning": "既有大型 JS chunk 提示，构建成功"
+    },
+    "verify": {
+      "command": "npm run landmarks:verify",
+      "passed": true,
+      "requiresOriginalSource": false
+    },
+    "scopeNotes": [
+      "测试使用合成输入、JSDOM 与 GL 替身，不能代表实际 GPU。",
+      "东京单瓦片真实 MVT/其他瓦片为空/0m合成基座的回放另见 tokyo-source-replay.json。",
+      "晴空塔与上海中心沿用既有几何画面证据；迁入批量流程未重新浏览器验收。",
+      "同城模型与普通建筑共用300000面；字节缓存仍8MiB。"
+    ]
+  },
+  "gpu": {
+    "performed": false,
+    "tokyoTower": "pending",
+    "performance": "not measured"
+  }
+}

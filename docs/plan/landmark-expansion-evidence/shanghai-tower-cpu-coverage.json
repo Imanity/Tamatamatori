@@ -1,0 +1,136 @@
+{
+  "kind": "independent CPU orthographic union coverage, not actual GPU or real-site validation",
+  "assetSha256": "33a86c8ec1d446134e1d09c601ebb736158112559fc7393eeaa384c61d57f2de",
+  "sourceTriangles": 121254,
+  "fineTriangles": 54682,
+  "metresPerPixel": 0.316,
+  "rows": "source, reduced, difference; columns 0/60/120/180/240/300 degrees",
+  "records": [
+    {
+      "azimuth": 0,
+      "intersectionOverUnion": 0.9997407850099674,
+      "changedPixels": 126,
+      "changedBeyondOnePixel": 0,
+      "sourceOrFinePixels": 486083,
+      "maxRasterCoverageDistanceMetres": 0.316,
+      "maxRowBoundaryDifferenceMetres": 0.316,
+      "lowerSideBand": {
+        "up": [
+          20,
+          140
+        ],
+        "absoluteHorizontal": [
+          15,
+          35
+        ],
+        "sourceOpenFraction": 0,
+        "reducedOpenFraction": 0
+      }
+    },
+    {
+      "azimuth": 60,
+      "intersectionOverUnion": 0.9997895902127224,
+      "changedPixels": 111,
+      "changedBeyondOnePixel": 0,
+      "sourceOrFinePixels": 527542,
+      "maxRasterCoverageDistanceMetres": 0.316,
+      "maxRowBoundaryDifferenceMetres": 0.316,
+      "lowerSideBand": {
+        "up": [
+          20,
+          140
+        ],
+        "absoluteHorizontal": [
+          15,
+          35
+        ],
+        "sourceOpenFraction": 0,
+        "reducedOpenFraction": 0
+      }
+    },
+    {
+      "azimuth": 120,
+      "intersectionOverUnion": 0.99974747899867,
+      "changedPixels": 120,
+      "changedBeyondOnePixel": 0,
+      "sourceOrFinePixels": 475208,
+      "maxRasterCoverageDistanceMetres": 0.316,
+      "maxRowBoundaryDifferenceMetres": 0.316,
+      "lowerSideBand": {
+        "up": [
+          20,
+          140
+        ],
+        "absoluteHorizontal": [
+          15,
+          35
+        ],
+        "sourceOpenFraction": 0.10081453634085213,
+        "reducedOpenFraction": 0.10127401837928154
+      }
+    },
+    {
+      "azimuth": 180,
+      "intersectionOverUnion": 0.9997407850099674,
+      "changedPixels": 126,
+      "changedBeyondOnePixel": 0,
+      "sourceOrFinePixels": 486083,
+      "maxRasterCoverageDistanceMetres": 0.316,
+      "maxRowBoundaryDifferenceMetres": 0.316,
+      "lowerSideBand": {
+        "up": [
+          20,
+          140
+        ],
+        "absoluteHorizontal": [
+          15,
+          35
+        ],
+        "sourceOpenFraction": 0,
+        "reducedOpenFraction": 0
+      }
+    },
+    {
+      "azimuth": 240,
+      "intersectionOverUnion": 0.9997516879532643,
+      "changedPixels": 131,
+      "changedBeyondOnePixel": 0,
+      "sourceOrFinePixels": 527562,
+      "maxRasterCoverageDistanceMetres": 0.316,
+      "maxRowBoundaryDifferenceMetres": 0.316,
+      "lowerSideBand": {
+        "up": [
+          20,
+          140
+        ],
+        "absoluteHorizontal": [
+          15,
+          35
+        ],
+        "sourceOpenFraction": 0,
+        "reducedOpenFraction": 0
+      }
+    },
+    {
+      "azimuth": 300,
+      "intersectionOverUnion": 0.99974747899867,
+      "changedPixels": 120,
+      "changedBeyondOnePixel": 0,
+      "sourceOrFinePixels": 475208,
+      "maxRasterCoverageDistanceMetres": 0.316,
+      "maxRowBoundaryDifferenceMetres": 0.316,
+      "lowerSideBand": {
+        "up": [
+          20,
+          140
+        ],
+        "absoluteHorizontal": [
+          15,
+          35
+        ],
+        "sourceOpenFraction": 0.09427736006683375,
+        "reducedOpenFraction": 0.09473684210526316
+      }
+    }
+  ]
+}

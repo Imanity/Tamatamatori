@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "id": "shanghai-tower",
+      "version": 1,
+      "recipeHash": "2db0fb36503335cb8f8fe66f857e5b310dbf53478736da4c499a65b8f9fe00d1",
+      "assetSha256": "33a86c8ec1d446134e1d09c601ebb736158112559fc7393eeaa384c61d57f2de",
+      "placementHash": "0981de657abd5d335dd4b33cb76af9d05f2f4ba477d9dfb6ee45136fc484403f",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-expansion.md"
+    },
+    {
+      "id": "tokyo-skytree",
+      "version": 1,
+      "recipeHash": "8a173bdeb680daf06f03b1a7ccf67eb8b6d7e0061d7115e078d475507fc54c47",
+      "assetSha256": "4ee6a8d802db2ccf0538add4ff7f3b54e21237e4cd36267e7a487852305848cd",
+      "placementHash": "0d86c64e69f9b70d294e0853bb0b2d83de181b624c1150a57969cc5f7a5cf41e",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-ground-calibration.md"
+    },
+    {
+      "id": "tokyo-tower",
+      "version": 1,
+      "recipeHash": "78fb88ee03ce95cce05acff97ef6874c7ef9d3f31860b31fed87dc1f7cc1161f",
+      "assetSha256": "949cdec080264efd466e8acb2057ef2b3e6d945536744d6e3f6d8c952a7f088b",
+      "placementHash": "5176da3bc5ed4d5e4999fe2b4a2b21b42410bdbbd9e1daa18c24585e9bb7dab9",
+      "visual": "pending"
+    }
+  ]
+}

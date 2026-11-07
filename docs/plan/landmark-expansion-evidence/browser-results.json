@@ -1,0 +1,98 @@
+{
+  "recordedAt": "2026-11-07T17:39:26.368Z",
+  "build": "Production /Tamatamatori/ on isolated port 5179; DEV near/north/south/30km on 5178",
+  "scenes": [
+    {
+      "name": "shanghai-50km-production",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n上海中心无纹理精细模型 · 定位与朝向近似 · 约 49.8 km · 54,682 面\n\n已读取瓦片\n30\n分块体块\n297 / 297\n三角面（含地标）\n58,015 / 300,000\n网格\n2.22 MiB\n\n2–5 km 普通远景分部 0 / 0 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 17:21:38 UTC\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑",
+      "observed": "Tower intersects real terrain at base; no detached gap."
+    },
+    {
+      "name": "shanghai-50km-missing-asset",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n上海中心精细模型未应用；该距离未加载对应粗体块，可重新读取建筑。 · 约 49.8 km\n\n已读取瓦片\n30\n分块体块\n297 / 297\n三角面（含地标）\n3,333 / 300,000\n网格\n0.23 MiB\n\n2–5 km 普通远景分部 0 / 0 · 普通建筑在 5 km 外未加载。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 17:24:05 UTC\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑",
+      "observed": "Fine model removed; terrain and ordinary buildings remain. No coarse fallback claimed beyond ordinary range."
+    },
+    {
+      "name": "shanghai-asset-recovered",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n上海中心无纹理精细模型 · 定位与朝向近似 · 约 49.8 km · 54,682 面\n\n已读取瓦片\n30\n分块体块\n297 / 297\n三角面（含地标）\n58,015 / 300,000\n网格\n2.22 MiB\n\n2–5 km 普通远景分部 0 / 0 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 17:26:42 UTC\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑"
+    },
+    {
+      "name": "outside-50km",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n已读取瓦片\n29\n分块体块\n298 / 298\n三角面（含地标）\n3,166 / 300,000\n网格\n0.22 MiB\n\n2–5 km 普通远景分部 0 / 0 · 普通建筑在 5 km 外未加载。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 17:30:14 UTC\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑",
+      "landmarkRows": 0
+    },
+    {
+      "name": "skytree-regression",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n已达范围或网格预算，建筑覆盖不完整。\n\n晴空塔无纹理精细模型 · 定位与朝向近似 · 约 1.6 km · 88,581 面\n\n已读取瓦片\n32\n分块体块\n12856 / 57451\n三角面（含地标）\n299,969 / 300,000\n网格\n17.03 MiB\n\n2–5 km 普通远景分部 2027 / 7507 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n已清理 36 个重复或共线点，保留源轮廓。\n\n预算内优先保留高层并分配周边覆盖，省略 44595 个分部。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 17:31:15 UTC\n\n已略过 531 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑"
+    },
+    {
+      "name": "shanghai-buildings-off",
+      "info": "建筑已关闭"
+    },
+    {
+      "name": "shanghai-near-production-reenabled",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n上海中心无纹理精细模型 · 定位与朝向近似 · 约 1.7 km · 54,682 面\n\n已读取瓦片\n29\n分块体块\n4360 / 4360\n三角面（含地标）\n136,242 / 300,000\n网格\n7.59 MiB\n\n2–5 km 普通远景分部 1056 / 1056 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n已清理 26 个重复或共线点，保留源轮廓。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 17:35:56 UTC\n\n已略过 48 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑"
+    }
+  ],
+  "finalDOM": {
+    "canvas": [
+      {
+        "height": 826,
+        "ready": "true",
+        "width": 1239
+      }
+    ],
+    "diagnostics": 0,
+    "landmarks": [
+      {
+        "id": "shanghai-tower",
+        "phase": "applied",
+        "text": "上海中心无纹理精细模型 · 定位与朝向近似 · 约 1.7 km · 54,682 面"
+      }
+    ],
+    "scripts": [
+      "http://127.0.0.1:5179/Tamatamatori/assets/index-Q3cqmnhU.js"
+    ],
+    "viewport": {
+      "height": 1215,
+      "width": 2560
+    }
+  },
+  "console": [],
+  "mobile": {
+    "viewport": "390×844 Chrome emulation",
+    "screenshot": "shanghai-mobile-production.jpg",
+    "observed": "49.8km model intersects terrain; map/preview tab round trip restores preview",
+    "overrideReset": true
+  },
+  "about": {
+    "observed": true,
+    "authors": [
+      "Noah (smiN5214)",
+      "NanoRay"
+    ],
+    "downloadLinks": 4,
+    "base": "/Tamatamatori/landmarks/"
+  },
+  "faultInjection": {
+    "scope": "Renamed only dist Shanghai asset, retried through UI, captured fallback, restored exact asset hash and retried successfully",
+    "initialRead": "First synchronous read after click still showed prior timestamp; final fallback and recovery verified by subsequent stable states"
+  },
+  "pending": [
+    "Void Tokyo Tower source not yet present; no Tokyo Tower GPU or simultaneous Tokyo/Skytree claim"
+  ],
+  "limits": [
+    "Community appearance/OSM alignment, not surveyed accuracy",
+    "CPU reduction coverage separate from real GPU scenes",
+    "No physical phone or sustained GPU FPS measurement"
+  ],
+  "developmentWarnings": {
+    "source": "Owned Vite server console relay observed at shutdown",
+    "messages": [
+      "layers[highway-shield-non-us].filter[1]: Expected value to be of type number, but found null instead. Falling back to false.",
+      "layers[highway-shield-us-interstate].filter[1]: Expected value to be of type number, but found null instead. Falling back to false.",
+      "layers[road_shield_us].filter[1]: Expected value to be of type number, but found null instead. Falling back to false."
+    ],
+    "note": "Existing basemap road-shield warnings; final production console capture above was empty."
+  }
+}

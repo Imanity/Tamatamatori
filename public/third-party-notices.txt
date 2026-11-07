@@ -449,20 +449,15 @@ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-Tokyo Skytree, Japan — untextured derivative
-Copyright Noah (smiN5214)
-Source: https://sketchfab.com/3d-models/tokyo-skytree-japan-b4d347b8703f45f48ea8d5fe45d454b9
-Author: https://sketchfab.com/smiN5214
-License: Creative Commons Attribution 4.0 International
-https://creativecommons.org/licenses/by/4.0/
-https://creativecommons.org/licenses/by/4.0/legalcode
-Changes: Removed textures, UVs, tangents and materials; made opaque;
-converted authoring placement to local ENU, normalized total height to
-634 metres, applied approximate geographic registration and simplified.
-Source and output hashes, tools, processing and limitations are shipped
-in landmarks/skytree-v1.json. Derived geometry retains CC BY 4.0.
-Anchor reference: © OpenStreetMap contributors (ODbL).
-Orientation reference: 国土交通省 Project PLATEAU, 東京都墨田区 2025,
-LOD2.1 horizontal outlines processed for approximate orientation only.
-https://www.mlit.go.jp/plateau/site-policy/
-This is an appearance model, not surveyed or engineering geometry.
+Landmark models — untextured derivatives
+========================================
+The complete generated author, source, license, changes and registration
+credits for every shipped model are in landmarks/CREDITS.txt and About.
+Per-model source/output SHA-256, geometry, tools and limitations accompany
+each file in landmarks/*.json. Derived geometry retains its source license.
+CC BY 4.0: https://creativecommons.org/licenses/by/4.0/
+Legal text: https://creativecommons.org/licenses/by/4.0/legalcode
+Anchor/outline references: © OpenStreetMap contributors (ODbL).
+Skytree orientation also references 国土交通省 Project PLATEAU, 東京都墨田区
+2025 LOD2.1 outlines: https://www.mlit.go.jp/plateau/site-policy/
+These are appearance models, not surveyed or engineering geometry.

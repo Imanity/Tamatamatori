@@ -1,55 +1,93 @@
 {
+  "schemaVersion": 1,
+  "pipelineVersion": 1,
   "id": "tokyo-skytree",
-  "name": "东京晴空塔",
-  "format": "TTLM 1: 32-byte header, float32 ENU+normal stride6, uint32 indices; little-endian; gzip",
+  "name": "晴空塔",
+  "version": 1,
+  "recipeHash": "8a173bdeb680daf06f03b1a7ccf67eb8b6d7e0061d7115e078d475507fc54c47",
+  "format": "TTLM 1; float32 ENU+normal stride6, uint32 indices; little-endian; gzip",
   "source": {
+    "sha256": "007cd38f40f114dc2f2d6c2b8b00c216a95fa6401dbfb15b3946b1c8ca6bb150",
+    "filename": "tokyo_skytree_japan.glb",
     "title": "Tokyo Skytree, Japan",
     "author": "Noah (smiN5214)",
-    "page": "https://sketchfab.com/3d-models/tokyo-skytree-japan-b4d347b8703f45f48ea8d5fe45d454b9",
     "authorPage": "https://sketchfab.com/smiN5214",
+    "page": "https://sketchfab.com/3d-models/tokyo-skytree-japan-b4d347b8703f45f48ea8d5fe45d454b9",
     "license": "CC BY 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。",
     "bytes": 18497376,
-    "sha256": "007cd38f40f114dc2f2d6c2b8b00c216a95fa6401dbfb15b3946b1c8ca6bb150",
-    "triangles": 285887,
-    "vertices": 166513
+    "vertices": 166513,
+    "triangles": 285887
   },
-  "tools": {
-    "@gltf-transform/core": "4.5.0",
-    "meshoptimizer": "1.3.0"
-  },
-  "changes": {
-    "textures": "Removed all images, UVs, tangents and source materials; opaque shared lighting, including deck glass.",
-    "frame": "Removed common authoring scene placement; local Y up -> ENU, positive determinant; normals rotated.",
-    "centerXZ": [
-      2.0669,
-      7.54065
+  "frame": {
+    "space": "local",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
     ],
-    "minY": -0.03272410109639168,
-    "maxY": 634.2101440429688,
-    "scale": 0.9996170739061271,
+    "center": [
+      2.0669,
+      -7.54065
+    ],
     "height": 634,
-    "yawCounterclockwiseDegrees": 10.25,
-    "simplification": {
-      "absoluteErrorLimit": 0.1,
-      "reportedError": 0.09934128820896149,
-      "normalWeights": [
-        0.01,
-        0.01,
-        0.01
-      ],
-      "lockBorder": true
-    },
-    "registration": "OSM narrow tip bbox centre; PLATEAU LOD2 horizontal sections at 30/100/200m guide yaw only (approx. 6.48m symmetric outline RMS; 120-degree ambiguity). Not surveyed alignment. DEM supplies ground; no vertical datum offset."
+    "heightReference": "https://www.tokyo-skytree.jp/about/spec/structure/",
+    "yawDegrees": 10.25,
+    "requireSharedTransform": true,
+    "normalizeNormals": false,
+    "sharedTransformTolerance": 0.0002,
+    "minimum": [
+      -37.860198974609375,
+      -41.425498962402344,
+      -0.03272410109639168
+    ],
+    "maximum": [
+      37.818328857421875,
+      41.57789993286133,
+      634.2101440429688
+    ],
+    "scale": 0.9996170739061271
   },
-  "anchor": {
+  "processing": {
+    "targetTriangles": 60000,
+    "maxErrorMetres": 0.1,
+    "normalWeight": 0.01,
+    "weld": false,
+    "reportedError": 0.09934128820896149
+  },
+  "geo": {
+    "latitude": 35.71004508243534,
     "longitude": 139.81071889400482,
-    "latitude": 35.71004508243534
+    "partRadius": 60,
+    "parts": [
+      {
+        "id": 3623514152,
+        "height": 350,
+        "base": 290
+      },
+      {
+        "id": 2882691482,
+        "height": 450,
+        "base": 410
+      },
+      {
+        "id": 3623514142,
+        "height": 634,
+        "base": 0
+      }
+    ],
+    "registration": "机位参考 © OpenStreetMap contributors。朝向参考国土交通省 Project PLATEAU 东京都墨田区 2025 LOD2.1 的 30/100/200 m 水平轮廓，对称轮廓 RMS 约 6.48 m，存在 120° 对称歧义；仅为近似注册。地面采用同源 DEM，不套固定高程偏移。",
+    "references": [
+      {
+        "title": "国土交通省 Project PLATEAU 东京都墨田区 2025 LOD2.1 水平轮廓，仅用于近似朝向",
+        "url": "https://www.mlit.go.jp/plateau/site-policy/"
+      }
+    ]
   },
-  "orientationReference": {
-    "credit": "国土交通省 Project PLATEAU · 東京都墨田区 2025 LOD2.1",
-    "policy": "https://www.mlit.go.jp/plateau/site-policy/",
-    "sha256": "eea0aea8452f4d9dd4e0c287433f85d2e92557c5b13375f5814dcd3c3cc24746"
+  "bounds": {
+    "horizontal": 49,
+    "height": 634
   },
   "asset": {
     "file": "skytree-v1.ttlm.gz",
@@ -60,9 +98,13 @@
     "vertices": 65576,
     "triangles": 88581
   },
+  "tools": {
+    "@gltf-transform/core": "4.5.0",
+    "meshoptimizer": "1.3.0"
+  },
   "limitations": [
-    "Community appearance model; author upstream construction provenance not independently authenticated.",
-    "Height and north alignment are approximate; no survey or structural accuracy claim.",
-    "Opaque untextured decks; no glass transmission, night lighting or interiors."
+    "社区外观模型，定位与朝向近似，不提供测绘精度。",
+    "无纹理、不透明共享光照，不模拟玻璃或夜景灯光。",
+    "地面沿用同源 DEM，不套固定高程偏移。"
   ]
 }

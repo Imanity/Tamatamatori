@@ -94,6 +94,8 @@ MapLibre 固定为 6.16.0，`npm ci` 自动应用地形 LOD、空间投影与深
 
 远距地标下方缺少地形造成的悬空间隙已修正：仅对需要的摄影预览扩展 DEM/网格覆盖，原相机、模型高度和普通地图保持原行为。固定 SDK 的兼容补丁随安装与构建校验；[地表校准记录](docs/plan/landmark-ground-calibration.md)区分覆盖、投影一致性与实际画面，仍不承诺测绘精度。
 
+上海中心已作为第二处无纹理地标接入，约 0.93 MiB / 54,682 面，同样限约 50 km，与晴空塔及普通建筑共用 30 万面预算。逐项校验、近景替换、失败提示和 About 下载分别处理，缓存最多三份 / 8 MiB 几何字节。来源和朝向仍为近似；[扩展验收](docs/plan/landmark-expansion.md)包含 CPU 减面和真实 Chrome 画面。东京塔等待新的合格候选，尚未加入目录。
+
 ## 深空天体与相机响应
 
 勾选“深空天体”显示 M31、M42、M45、M8、北美、加州、心脏、灵魂、M20、M33、玫瑰与马头区域。支持中文名、M/NGC/IC 编号和 B33 别名搜索，并可主动朝向。结构跟随时间、机位、镜头与参考折射，接受 DEM 的部分或全部遮挡。中心被山体挡住时隐藏名称。
@@ -171,3 +173,18 @@ Chrome 连接已恢复，三组固定场景完成基础 GPU 画面检查，覆�
 - [曲率参考设计](docs/architecture/curvature-reference.md)：独立椭球方向、高程假设与复现方式。
 - [地形预览验收](docs/plan/terrain-validation.md)：固定场景、数值校准、真实画面截图与待验项。
 - [协作规则](AGENTS.md)：小步推进、文档维护与验证要求。
+
+## 地标批量制作
+
+[18 份集中下载清单](docs/plan/landmark-downloads.md)及[CSV](docs/plan/landmark-downloads.csv)已整理。原始 GLB 留在本地，先检查来源、轴向、尺度和锚点，再用 JSON 配方批量制作；详细步骤见[操作与东京塔样例](docs/plan/landmark-pipeline.md)。
+
+```powershell
+npm run landmarks -- inspect --input-dir C:/Users/TangRJ/Downloads
+npm run landmarks -- batch --all --input-dir C:/Users/TangRJ/Downloads
+npm run landmarks -- check --all
+npm run landmarks -- integrate --all --dry-run --allow-pending-visual
+npm run landmarks -- integrate --all --allow-pending-visual
+npm run landmarks:verify
+```
+
+`--all` 只包含人工核查完成的配方，候选不会自动进入应用。新模型默认画面待验；`--allow-pending-visual` 明确允许先集成待验资产。目录、About 署名和下载入口自动生成，构建在 CI 中强制验证一致性，无需原始下载。东京塔已完成 CPU 与 GL 替身检查，本轮按用户要求未进行浏览器验收；晴空塔与上海中心迁入同一流程后几何字节保持。

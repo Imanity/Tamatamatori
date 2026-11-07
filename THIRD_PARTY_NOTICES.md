@@ -86,6 +86,12 @@ M45/M8/北美使用同一发布资料的原尺寸 TIFF，最终 RGB 保留高频
 
 锚点参考 OpenStreetMap；朝向参考国土交通省 Project PLATEAU 的东京都墨田区 2025 LOD2.1 水平轮廓，经加工仅提取近似注册参数，未把其几何作为精细塔架。按 [PLATEAU 使用政策](https://www.mlit.go.jp/plateau/site-policy/)保留来源及加工说明。源样本 URL 与哈希见[资料核查](docs/plan/landmark-assessment-evidence/plateau-targets.json)及[注册记录](docs/plan/skytree-evidence/section-registration.json)。
 
+## 上海中心无纹理地标
+
+[Shanghai Tower](https://sketchfab.com/3d-models/shanghai-tower-e24fd5a66bbb4faaa7a8e26d3e7478fa)，作者 [NanoRay](https://sketchfab.com/NanoRay)，[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)。通过正式入口取得 GLB，去掉源材质、转换为 ENU、按官方 632 m 总高统一尺度、参照 OpenStreetMap 轮廓近似注册朝向并减面。源文件不含纹理；运行时使用不透明共享光照。
+
+衍生资源保留 CC BY 4.0：[处理记录](public/landmarks/shanghai-tower-v1.json)、[压缩几何](public/landmarks/shanghai-tower-v1.ttlm.gz)。锚点与朝向参考 © OpenStreetMap contributors，使用已载建筑图层同源的 WGS84 坐标；[注册记录](docs/plan/landmark-expansion-evidence/shanghai-registration.json)只证明模型与目录轮廓的近似对齐，不提供实景测绘精度。署名与下载集中于 About。
+
 离线转换使用 @gltf-transform/core 4.5.0（MIT）及 meshoptimizer 1.3.0（MIT），不进入网页运行时包；版权与许可保留在安装包中。
 
 ## d3-celestial 星座及星名数据
@@ -95,3 +101,7 @@ M45/M8/北美使用同一发布资料的原尺寸 TIFF，最终 RGB 保留高频
 ## MapLibre GL JS 6.16.0
 
 地形与地图渲染，使用 BSD-3-Clause 许可。本项目为地形绘制补充公开 LOD 函数的传递，并增加按 WebGL 上下文启用的摄影地形 ENU 顶点投影及对数主深度；修改由 `scripts/patch-maplibre.mjs`、`scripts/patch-terrain-perspective.mjs` 和 `scripts/patch-terrain-depth.mjs` 在安装后校验并应用。以上是本项目修改，不代表上游接口。完整版权与许可见 [third-party-notices.txt](public/third-party-notices.txt)。
+
+## 地标批量资源清单
+
+每个已接入模型的作者、原始来源、许可、加工说明及注册参考自动汇总于 [CREDITS.txt](public/landmarks/CREDITS.txt)，并由 About 提供原页面与衍生几何/清单下载。完整来源身份和变换参数随 `public/landmarks/*.json` 分发；源文件只留本地。新增东京塔为 [Void 的 Tokyo Tower](https://sketchfab.com/models/4f667743965e4260b451ad38efcc3712)，CC BY 4.0，去纹理、转换共同本地框架、按官方 333 m 总高缩放、近似定位并减面；[处理记录](public/landmarks/tokyo-tower-v1.json)与[衍生模型](public/landmarks/tokyo-tower-v1.ttlm.gz)保留该许可。其他待下载候选不属于已分发资源。后续接入以自动清单为准，无需逐模型改写 About 或许可总文件。

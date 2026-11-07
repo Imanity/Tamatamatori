@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { landmarks } from "../domain/landmarks";
 import { Icon } from "./Icon";
 import starCatalogUrl from "../data/bright-stars.json?url";
 import constellationCatalogUrl from "../data/constellations.json?url";
@@ -127,13 +128,19 @@ export function About() {
 
           <section aria-labelledby="about-landmarks-title">
             <h3 id="about-landmarks-title">地标模型</h3>
-            <a href="https://sketchfab.com/3d-models/tokyo-skytree-japan-b4d347b8703f45f48ea8d5fe45d454b9" target="_blank" rel="noreferrer">Tokyo Skytree, Japan · Noah (smiN5214)</a>
-            <p><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a> · 已去除纹理与材质、转为不透明几何、调整坐标与尺度并减面。社区外观模型，定位和朝向近似；不提供测绘精度、玻璃透光或夜景灯光。</p>
-            <p>锚点参考 © OpenStreetMap contributors；朝向参考国土交通省 Project PLATEAU 东京都墨田区 2025 LOD2.1 的水平轮廓，仅用于近似注册。<a href="https://www.mlit.go.jp/plateau/site-policy/" target="_blank" rel="noreferrer">PLATEAU 使用政策</a></p>
-            <div className="about-downloads">
-              <a href={`${import.meta.env.BASE_URL}landmarks/skytree-v1.ttlm.gz`} download>下载无纹理衍生模型 · CC BY 4.0</a>
-              <a href={`${import.meta.env.BASE_URL}landmarks/skytree-v1.json`} download>下载来源、校验与处理记录</a>
-            </div>
+            <p>社区外观模型，定位和朝向近似；无纹理、不透明共享光照，不提供测绘精度、玻璃透光或夜景灯光。</p>
+            {landmarks.map(model=><div key={model.id} data-landmark-credit={model.id}>
+              <a href={model.credit.page} target="_blank" rel="noreferrer">{model.name} · {model.credit.title} · {model.credit.author}</a>
+              <p><a href={model.credit.authorPage} target="_blank" rel="noreferrer">{model.credit.author}</a> · <a href={model.credit.licenseUrl} target="_blank" rel="noreferrer">{model.credit.license}</a> · {model.credit.changes}</p>
+              <p>{model.credit.registration}</p>
+              <p>{model.credit.references.map(ref=><a key={ref.url} href={ref.url} target="_blank" rel="noreferrer">{ref.title} </a>)}</p>
+              {model.validation.visual==="pending"&&<p>已完成 CPU 检查，画面待验证。</p>}
+              <div className="about-downloads">
+                <a href={`${import.meta.env.BASE_URL}landmarks/${model.asset.file}`} download>下载{model.name}无纹理衍生模型 · {model.credit.license}</a>
+                <a href={`${import.meta.env.BASE_URL}landmarks/${model.asset.file.replace('.ttlm.gz','.json')}`} download>下载{model.name}来源、校验与处理记录</a>
+              </div>
+            </div>)}
+
           </section>
 
           <section aria-labelledby="about-catalog-title">

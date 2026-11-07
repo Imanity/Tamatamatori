@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "id": "tokyo-tower",
+  "name": "东京塔",
+  "version": 1,
+  "source": {
+    "sha256": "2a11d6e9e188257913cfd69cd89ad8b924819d65648931e384d741df225a2f3f",
+    "filename": "tokyo_tower.glb",
+    "title": "Tokyo Tower",
+    "author": "Void",
+    "authorPage": "https://sketchfab.com/Void.com",
+    "page": "https://sketchfab.com/models/4f667743965e4260b451ad38efcc3712",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "用户通过正式入口手动下载的 Void 模型；作者未说明更上游制作资料，未独立认证。"
+  },
+  "frame": {
+    "space": "local",
+    "axes": [
+      "+x",
+      "+y",
+      "+z"
+    ],
+    "center": [
+      -0.31752777099609375,
+      -0.27332305908203125
+    ],
+    "height": 333,
+    "heightReference": "https://www.tokyotower.co.jp/index.html",
+    "yawDegrees": 56.25,
+    "requireSharedTransform": true,
+    "normalizeNormals": true
+  },
+  "processing": {
+    "targetTriangles": 40000,
+    "maxErrorMetres": 0.02,
+    "normalWeight": 0.01,
+    "weld": true,
+    "positionMergeTolerance": 0.00001,
+    "normalMergeTolerance": 0.0001,
+    "permissive": true
+  },
+  "geo": {
+    "latitude": 35.65859076767638,
+    "longitude": 139.7454446554184,
+    "partRadius": 100,
+    "parts": [
+      {
+        "id": 12449670040,
+        "height": 7,
+        "base": 0
+      },
+      {
+        "id": 12449670080,
+        "height": 40,
+        "base": 0
+      },
+      {
+        "id": 171335723,
+        "height": 53,
+        "base": 0
+      },
+      {
+        "id": 171335763,
+        "height": 97,
+        "base": 0
+      },
+      {
+        "id": 171335783,
+        "height": 120,
+        "base": 0
+      },
+      {
+        "id": 3138152462,
+        "height": 130,
+        "base": 120
+      },
+      {
+        "id": 3156575192,
+        "height": 150,
+        "base": 0
+      }
+    ],
+    "registration": "锚点与四脚参考 © OpenStreetMap contributors；本地 Z 轴向上，忽略作者共同放置的倾斜与非均匀缩放，按官方总高 333 m 统一尺度。四脚中心拟合朝向 56.25°，RMS 约 2.12 m，存在近似对称朝向歧义；保留 FootTown 普通体块。CPU 检查不代替画面与实景核验。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，四处塔脚及塔身分部",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  }
+}

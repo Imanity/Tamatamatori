@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "version": 1,
+  "processing": {
+    "targetTriangles": 40000,
+    "maxErrorMetres": 0.1,
+    "normalWeight": 0.01,
+    "weld": false
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  },
+  "id": "shanghai-tower",
+  "name": "上海中心",
+  "source": {
+    "sha256": "c706244b1ae46cc0c0ccd15b52e7fde2bff03b0097569af2924c6597db737900",
+    "filename": "shanghai_tower.glb",
+    "title": "Shanghai Tower",
+    "author": "NanoRay",
+    "authorPage": "https://sketchfab.com/NanoRay",
+    "page": "https://sketchfab.com/3d-models/shanghai-tower-e24fd5a66bbb4faaa7a8e26d3e7478fa",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。"
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": "base-bounds",
+    "height": 632,
+    "heightReference": "https://www.shanghaitower.com/ProjectIntroduction.html",
+    "yawDegrees": 136.25,
+    "requireSharedTransform": true,
+    "normalizeNormals": true
+  },
+  "geo": {
+    "latitude": 31.235511180721932,
+    "longitude": 121.50132179260254,
+    "partRadius": 60,
+    "parts": [
+      {
+        "id": 3760235552,
+        "height": 360,
+        "base": 0
+      },
+      {
+        "id": 3760235562,
+        "height": 540,
+        "base": 0
+      },
+      {
+        "id": 3760235582,
+        "height": 632,
+        "base": 0
+      }
+    ],
+    "registration": "锚点参考 © OpenStreetMap contributors 的塔尖轮廓中心；基座朝向对照 OSM 全轮廓按 0.25° 步长拟合，双向轮廓 RMS 约 4.83 m；属于近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑轮廓",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  }
+}

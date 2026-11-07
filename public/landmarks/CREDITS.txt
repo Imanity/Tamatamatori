@@ -1,0 +1,37 @@
+Tamatamatori 地标模型署名（自动生成）
+
+上海中心 / Shanghai Tower
+作者：NanoRay
+作者页：https://sketchfab.com/NanoRay
+来源：https://sketchfab.com/3d-models/shanghai-tower-e24fd5a66bbb4faaa7a8e26d3e7478fa
+许可：CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+加工：无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。
+注册：锚点参考 © OpenStreetMap contributors 的塔尖轮廓中心；基座朝向对照 OSM 全轮廓按 0.25° 步长拟合，双向轮廓 RMS 约 4.83 m；属于近似注册，不提供测绘精度。
+参考：© OpenStreetMap contributors，WGS84 建筑轮廓 https://www.openstreetmap.org/copyright
+清单：shanghai-tower-v1.json
+资源 SHA-256：33a86c8ec1d446134e1d09c601ebb736158112559fc7393eeaa384c61d57f2de
+画面：已有独立验收记录
+
+晴空塔 / Tokyo Skytree, Japan
+作者：Noah (smiN5214)
+作者页：https://sketchfab.com/smiN5214
+来源：https://sketchfab.com/3d-models/tokyo-skytree-japan-b4d347b8703f45f48ea8d5fe45d454b9
+许可：CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+加工：无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。
+注册：机位参考 © OpenStreetMap contributors。朝向参考国土交通省 Project PLATEAU 东京都墨田区 2025 LOD2.1 的 30/100/200 m 水平轮廓，对称轮廓 RMS 约 6.48 m，存在 120° 对称歧义；仅为近似注册。地面采用同源 DEM，不套固定高程偏移。
+参考：国土交通省 Project PLATEAU 东京都墨田区 2025 LOD2.1 水平轮廓，仅用于近似朝向 https://www.mlit.go.jp/plateau/site-policy/
+清单：skytree-v1.json
+资源 SHA-256：4ee6a8d802db2ccf0538add4ff7f3b54e21237e4cd36267e7a487852305848cd
+画面：已有独立验收记录
+
+东京塔 / Tokyo Tower
+作者：Void
+作者页：https://sketchfab.com/Void.com
+来源：https://sketchfab.com/models/4f667743965e4260b451ad38efcc3712
+许可：CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+加工：无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。
+注册：锚点与四脚参考 © OpenStreetMap contributors；本地 Z 轴向上，忽略作者共同放置的倾斜与非均匀缩放，按官方总高 333 m 统一尺度。四脚中心拟合朝向 56.25°，RMS 约 2.12 m，存在近似对称朝向歧义；保留 FootTown 普通体块。CPU 检查不代替画面与实景核验。
+参考：© OpenStreetMap contributors，四处塔脚及塔身分部 https://www.openstreetmap.org/copyright
+清单：tokyo-tower-v1.json
+资源 SHA-256：949cdec080264efd466e8acb2057ef2b3e6d945536744d6e3f6d8c952a7f088b
+画面：待验证，CPU 检查不替代画面验收
