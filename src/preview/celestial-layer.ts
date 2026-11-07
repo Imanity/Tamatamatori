@@ -80,6 +80,12 @@ export class CelestialLayer implements CustomLayerInterface {
   private onCamera?: (camera: RenderedCamera) => void;
   private labelKey = "";
   private labelStates: VisibilitySnapshot["labelStates"] = {};
+  private weatherDisplay?: { clouds: ReturnType<typeof weatherClouds>; color: number[]; rain: number; snow: number };
+  private visible = true;
+  private motion?: MediaQueryList;
+  private animationTime = 0;
+  private animationAt?: number;
+  private animationTimer?: ReturnType<typeof setTimeout>;
 
   private report: (snapshot: VisibilitySnapshot) => void;
   constructor(report: (snapshot: VisibilitySnapshot) => void, onCamera?: (camera: RenderedCamera) => void) { this.report = report; this.onCamera = onCamera; }
@@ -95,6 +101,11 @@ export class CelestialLayer implements CustomLayerInterface {
 
   onAdd(map: MapLibreMap, gl: WebGL2RenderingContext) {
     this.map = map; this.gl = gl;
+    if (typeof window !== "undefined") {
+      this.motion = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+      this.motion?.addEventListener("change", this.refreshAnimation);
+    }
+    if (typeof document !== "undefined") document.addEventListener("visibilitychange", this.refreshAnimation);
     try {
       this.program = makeProgram(gl);
       this.buffer = gl.createBuffer() ?? undefined;
@@ -108,6 +119,20 @@ export class CelestialLayer implements CustomLayerInterface {
     if (this.frame?.key === frame.key && this.frame.ready === frame.ready) return;
     this.clearQueries();
     this.frame = frame;
+    this.weatherDisplay = undefined;
+    if (frame.weather && frame.plan) {
+      const bodies = celestialBodies(frame.plan);
+      const appearance = skyAppearance(bodies.sun.elevation, bodies.moon, frame.artificialMcd);
+      const day = Math.max(0, Math.min(1, (bodies.sun.elevation + 6) / 14));
+      const lift = appearance.moonlight * 0.08 + appearance.pollutionGlow * 0.18;
+      this.weatherDisplay = {
+        clouds: weatherClouds(frame.weather, frame.plan),
+        color: [0.06 + day * 0.66 + lift, 0.08 + day * 0.67 + lift, 0.12 + day * 0.66 + lift],
+        rain: frame.weather.rain + frame.weather.showers,
+        snow: frame.weather.snow,
+      };
+    }
+    this.refreshAnimation();
     this.resolvedKey = "";
     this.meshes = frame.bodies.map((body) => ({
       id: body.id, outline: new Float32Array(body.outline.flatMap((p) => [p.x, p.y])),
@@ -136,6 +161,7 @@ export class CelestialLayer implements CustomLayerInterface {
 
   private fail(message = "日月深度渲染不可用，请重试预览。") {
     this.failed = true;
+    this.refreshAnimation();
     this.clearQueries();
     this.publish({ planKey: this.frame?.planKey ?? "", states: { sun: "error", moon: "error" }, message });
   }
@@ -152,6 +178,24 @@ export class CelestialLayer implements CustomLayerInterface {
     this.clearQueries(); this.resolvedKey = this.frame.key;
     this.publish(snapshot);
   }
+
+  setVisible(visible: boolean) {
+    this.visible = visible;
+    this.refreshAnimation();
+  }
+
+  private canAnimate() {
+    return !this.failed && this.visible && !!this.map && !!this.weatherDisplay &&
+      this.weatherDisplay.rain + this.weatherDisplay.snow > 0 && !this.motion?.matches &&
+      (typeof document === "undefined" || !document.hidden);
+  }
+
+  private refreshAnimation = () => {
+    clearTimeout(this.animationTimer);
+    this.animationTimer = undefined;
+    if (!this.canAnimate()) this.animationAt = undefined;
+    this.map?.triggerRepaint();
+  };
 
   render(gl: WebGL2RenderingContext, input?: CustomRenderMethodInput) {
     if (this.failed || !this.frame || !this.program || !this.buffer || !this.vao) return;
@@ -208,31 +252,33 @@ export class CelestialLayer implements CustomLayerInterface {
         gl.uniform4fv(this.color, mesh.id === "sun" ? [0.86, 0.71, 0.36, 0.9] : [0.435, 0.435, 0.43, 0.5]);
         draw(mesh.outline, gl.LINE_LOOP);
       }
-      if (this.frame.weather && this.frame.plan) {
+      if (this.frame.weather && this.frame.plan && this.weatherDisplay) {
         this.weatherProgram ??= makeProgram(gl, weatherVertex, weatherFragment);
         const p = this.weatherProgram, plan = this.frame.plan, weather = this.frame.weather;
         const camera = this.rendered ?? plan, fov = fieldOfView(plan);
         const az = camera.azimuth * Math.PI / 180, pitch = camera.pitch * Math.PI / 180;
         const horizontal = Math.tan(fov.horizontal * Math.PI / 360), vertical = Math.tan(fov.vertical * Math.PI / 360);
-        const clouds = weatherClouds(weather, plan), bodies = celestialBodies(plan);
-        const appearance = skyAppearance(bodies.sun.elevation, bodies.moon, this.frame.artificialMcd);
-        const day = Math.max(0, Math.min(1, (bodies.sun.elevation + 6) / 14));
-        const lift = appearance.moonlight * 0.08 + appearance.pollutionGlow * 0.18;
+        const display = this.weatherDisplay;
         gl.useProgram(p);
         gl.uniform3fv(gl.getUniformLocation(p, "u_forward"), [Math.sin(az) * Math.cos(pitch), Math.cos(az) * Math.cos(pitch), Math.sin(pitch)]);
         gl.uniform3fv(gl.getUniformLocation(p, "u_right"), [Math.cos(az) * horizontal, -Math.sin(az) * horizontal, 0]);
         gl.uniform3fv(gl.getUniformLocation(p, "u_up"), [-Math.sin(az) * Math.sin(pitch) * vertical, -Math.cos(az) * Math.sin(pitch) * vertical, Math.cos(pitch) * vertical]);
-        gl.uniform3fv(gl.getUniformLocation(p, "u_layers"), clouds.layers);
-        gl.uniform2fv(gl.getUniformLocation(p, "u_drift"), clouds.drift);
-        gl.uniform3fv(gl.getUniformLocation(p, "u_color"), [0.06 + day * 0.66 + lift, 0.08 + day * 0.67 + lift, 0.12 + day * 0.66 + lift]);
+        gl.uniform3fv(gl.getUniformLocation(p, "u_layers"), display.clouds.layers);
+        gl.uniform2fv(gl.getUniformLocation(p, "u_drift"), display.clouds.drift);
+        gl.uniform3fv(gl.getUniformLocation(p, "u_color"), display.color);
         gl.colorMask(true, true, true, true); gl.depthFunc(gl.LEQUAL);
         gl.uniform1f(gl.getUniformLocation(p, "u_mode"), 0);
         draw(weatherQuad, gl.TRIANGLES);
-        if (weather.rain + weather.showers + weather.snow > 0) {
+        if (display.rain + display.snow > 0) {
           gl.disable(gl.DEPTH_TEST);
           gl.uniform1f(gl.getUniformLocation(p, "u_mode"), 1);
-          gl.uniform2fv(gl.getUniformLocation(p, "u_precipitation"), [weather.rain + weather.showers, weather.snow]);
-          gl.uniform1f(gl.getUniformLocation(p, "u_time"), (weather.time / 1000) % 3600);
+          gl.uniform2fv(gl.getUniformLocation(p, "u_precipitation"), [display.rain, display.snow]);
+          const now = performance.now() / 1000;
+          if (this.canAnimate()) {
+            if (this.animationAt !== undefined) this.animationTime += Math.max(0, Math.min(0.1, now - this.animationAt));
+            this.animationAt = now;
+          } else this.animationAt = undefined;
+          gl.uniform1f(gl.getUniformLocation(p, "u_time"), this.animationTime);
           // Near-surface wind gives the precipitation illustration a screen
           // direction. Cloud advection retains its separate display model.
           gl.uniform1f(gl.getUniformLocation(p, "u_slant"), Math.max(-0.45, Math.min(0.45,
@@ -250,9 +296,21 @@ export class CelestialLayer implements CustomLayerInterface {
       gl.bindVertexArray(previous.vao); gl.bindBuffer(gl.ARRAY_BUFFER, previous.buffer); gl.useProgram(previous.program);
     }
     if (this.pending.length) this.map?.triggerRepaint();
+    if (this.canAnimate() && this.animationTimer === undefined) {
+      this.animationTimer = setTimeout(() => {
+        this.animationTimer = undefined;
+        if (this.canAnimate()) this.map?.triggerRepaint();
+      }, 1000 / 30);
+    }
   }
 
   onRemove() {
+    clearTimeout(this.animationTimer);
+    this.animationTimer = undefined;
+    this.animationAt = undefined;
+    this.motion?.removeEventListener("change", this.refreshAnimation);
+    if (typeof document !== "undefined") document.removeEventListener("visibilitychange", this.refreshAnimation);
+    this.weatherDisplay = undefined;
     this.labelStates = {};
     this.labelKey = "";
     this.clearQueries();

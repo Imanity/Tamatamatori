@@ -141,6 +141,7 @@ class TestMap extends Events {
 class TestCelestialLayer {
   type = "custom";
   constructor(report, onCamera) { this.report = report; this.onCamera = onCamera; }
+  setVisible(visible) { this.visible = visible; }
   setScene(frame) {
     this.frame = frame;
     this.report({ planKey: frame.planKey, states: { sun: frame.ready ? "clear" : "waiting", moon: frame.ready ? "clear" : "waiting" } });

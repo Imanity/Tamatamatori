@@ -1,4 +1,4 @@
-import { CLOUD_HORIZON_HEIGHT } from "../domain/weather-appearance.ts";
+import { CLOUD_HORIZON_HEIGHT, CLOUD_LAYERS } from "../domain/weather-appearance.ts";
 
 export const weatherVertex = `#version 300 es
 precision highp float;
@@ -18,10 +18,15 @@ float hash(ivec2 p,uint seed){uint h=uint(p.x)*374761393u^uint(p.y)*668265263u^s
 h=(h^(h>>13))*1274126177u;return float(h^(h>>16))/4294967295.0;}
 float noise(vec2 p,uint seed){ivec2 i=ivec2(floor(p));vec2 f=fract(p);f=f*f*(3.0-2.0*f);
 return mix(mix(hash(i,seed),hash(i+ivec2(1,0),seed),f.x),mix(hash(i+ivec2(0,1),seed),hash(i+ivec2(1,1),seed),f.x),f.y);}
+const vec4 layerGeometry[3]=vec4[3](${CLOUD_LAYERS.map(layer => `vec4(${[layer.height, layer.size, ...layer.stretch].map(value => value.toFixed(8)).join(",")})`).join(",")});
+const vec3 layerOptics[3]=vec3[3](${CLOUD_LAYERS.map(layer => `vec3(${[layer.fine, layer.edge, layer.opacity].map(value => value.toFixed(8)).join(",")})`).join(",")});
+const vec3 layerTint[3]=vec3[3](${CLOUD_LAYERS.map(layer => `vec3(${layer.tint.map(value => value.toFixed(8)).join(",")})`).join(",")});
 void main(){
 if(u_mode>0.5){
-  vec2 p=gl_FragCoord.xy+vec2(u_time*u_slant*20.0,-u_time*13.0);
-  vec2 rainGrid=p/vec2(19.0,31.0),snowGrid=(p*0.4)/27.0;
+  vec2 rainPosition=gl_FragCoord.xy+vec2(-u_slant*260.0,260.0)*u_time;
+  vec2 snowPosition=gl_FragCoord.xy+vec2(-u_slant*65.0,42.0)*u_time;
+  snowPosition.x+=sin(snowPosition.y*0.012+u_time*0.8)*5.0;
+  vec2 rainGrid=rainPosition/vec2(19.0,31.0),snowGrid=snowPosition/67.5;
   vec2 f=fract(rainGrid),s=fract(snowGrid);
   float rainShape=(1.0-smoothstep(0.015,0.045,abs(f.x-0.5-f.y*u_slant)))*smoothstep(0.1,0.25,f.y)*(1.0-smoothstep(0.65,0.9,f.y));
   float rain=step(1.0-clamp(u_precipitation.x/7.0,0.0,0.75),hash(ivec2(floor(rainGrid)),71u))*rainShape*min(1.0,u_precipitation.x);
@@ -30,16 +35,19 @@ if(u_mode>0.5){
 }
 vec3 ray=normalize(v_ray);
 float height=max(0.0,ray.z),horizon=${CLOUD_HORIZON_HEIGHT.toFixed(8)};
-float distance=2.0/(height+sqrt(height*height+horizon*horizon));
 float detail=smoothstep(0.0,horizon,height);
-vec2 plane=ray.xy*distance;float transmission=1.0;
-for(int k=0;k<3;k++){
-  float cover=u_layers[k];float scale=k==0?1.6:k==1?1.0:0.7;
-  vec2 p=plane*scale+u_drift+vec2(float(k)*19.0,float(k)*31.0);
-  float value=noise(p,uint(k+1))*0.7+noise(p*2.1,uint(k+11))*0.3;
-  float pattern=cover<=0.0?0.0:cover>=1.0?1.0:smoothstep(1.0-cover-0.14,1.0-cover+0.14,value);
+vec4 composite=vec4(0.0);
+for(int k=2;k>=0;k--){
+  vec4 geometry=layerGeometry[k];vec3 optics=layerOptics[k];
+  float distance=2.0*geometry.x/(height+sqrt(height*height+2.0*geometry.x/6371.0));
+  vec2 p=(ray.xy*distance/geometry.y+u_drift+vec2(float(k)*19.0,float(k)*31.0))*geometry.zw;
+  float cover=u_layers[k];
+  float value=noise(p,uint(k+1))*(1.0-optics.x)+noise(p*2.1,uint(k+11))*optics.x;
+  float pattern=cover<=0.0?0.0:cover>=1.0?1.0:smoothstep(1.0-cover-optics.y,1.0-cover+optics.y,value);
   float amount=mix(cover,pattern,detail);
-  transmission*=1.0-amount*(k==0?0.99:k==1?0.94:0.58);
+  float alpha=amount*optics.z;
+  vec3 tint=u_color*layerTint[k]*(0.88+0.12*mix(0.5,value,detail));
+  composite=vec4(tint*alpha,alpha)+composite*(1.0-alpha);
 }
-float a=1.0-transmission;color=vec4(u_color*a,a);
+color=composite;
 }`;

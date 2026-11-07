@@ -1,0 +1,288 @@
+{
+  "tests": {
+    "count": 215,
+    "passed": 215,
+    "failed": 0,
+    "command": "npm test",
+    "logSha256": "3c74079f884378dc324eabd01a024154badf11decced81fc36e94fdc27f4107c"
+  },
+  "build": {
+    "command": "npm run build -- --base /Tamatamatori/",
+    "assets": [
+      {
+        "name": "celestial-layer-CBjPH_YC.js",
+        "sha256": "1231c97ac08c47cea5b8f911ecd70df5a4db41ed7eaf3c10089b781510e11241"
+      },
+      {
+        "name": "index-CxOuz4uo.js",
+        "sha256": "10f0d3cfd62220b4dd93a0fd46bfdc8f10ea516dd136903650ea331e133f7d20"
+      },
+      {
+        "name": "index-db_hJWpU.css",
+        "sha256": "3037ac8c58ff87db8406e6da85e6bd72c60e2286950f9ed6d451d2a17505befd"
+      },
+      {
+        "name": "starfield-layer-DFkWWlpF.js",
+        "sha256": "71db9edac00c7891cce466aa3fb6c156c59d82bffea9d101c39a8b439f4f7fd2"
+      },
+      {
+        "name": "weather-appearance-CW24bYps.js",
+        "sha256": "8415412577a5f62fa8805773aa3ae910a8c9b45e7505e3323f12f03dc0c76072"
+      }
+    ]
+  },
+  "cloudLayers": [
+    {
+      "height": 1.5,
+      "size": 2.8,
+      "stretch": [
+        1,
+        1
+      ],
+      "fine": 0.35,
+      "edge": 0.14,
+      "opacity": 0.99,
+      "tint": [
+        0.82,
+        0.86,
+        0.92
+      ]
+    },
+    {
+      "height": 5,
+      "size": 7,
+      "stretch": [
+        1,
+        1.3
+      ],
+      "fine": 0.2,
+      "edge": 0.18,
+      "opacity": 0.94,
+      "tint": [
+        0.93,
+        0.95,
+        0.98
+      ]
+    },
+    {
+      "height": 10,
+      "size": 12,
+      "stretch": [
+        0.4,
+        2.6
+      ],
+      "fine": 0.45,
+      "edge": 0.23,
+      "opacity": 0.58,
+      "tint": [
+        1,
+        1,
+        1
+      ]
+    }
+  ],
+  "heightReference": "示意高度位于机位上方，三层作为 DEM 后方的天空背景",
+  "browser": {
+    "records": 25,
+    "accepted": 13,
+    "excluded": 12,
+    "images": 26,
+    "consoleErrors": 0,
+    "notes": [
+      "01—10 原生窗口 GPU 画布滞后，排除。",
+      "13/14 即时绘制过渡，25/26 稳定后重拍。",
+      "19/20 桌面 DEM 细化，差异包含地形更新。",
+      "21/22 手机雨雪混合场景用于粒子逐帧变化检查。",
+      "后台和减少动态效果为事件/定时器替身检查，手机隐藏恢复为实际浏览器检查。",
+      "全部截图保留返回的 JPEG 原始字节。"
+    ]
+  },
+  "independentProbes": [
+    {
+      "name": "japan",
+      "latitude": 35.4172,
+      "longitude": 138.8729,
+      "recordedAt": "2026-11-06T23:35:00.937Z",
+      "hours": 168,
+      "sha256": "7683b07679771d34b4ccc1e8996e2e57c51ab53915b9766d62cdbdb7acfada40"
+    },
+    {
+      "name": "tromso",
+      "latitude": 69.6492,
+      "longitude": 18.9553,
+      "recordedAt": "2026-11-06T23:35:01.134Z",
+      "hours": 168,
+      "sha256": "8a18290231ef0c3d3044c1ed6b2aee8acacea10e9bb3ee3be4024c52d6d8c380"
+    }
+  ],
+  "snowScene": {
+    "time": "2026-11-09T18:00:00Z",
+    "rain": 0,
+    "showers": 1,
+    "snowCm": 0.77
+  },
+  "comparisons": [
+    {
+      "first": "15-rain-a",
+      "second": "16-rain-b",
+      "box": [
+        1558,
+        213,
+        647,
+        432
+      ],
+      "changedPixels": 57382,
+      "meanAbsoluteDifference": 0.7350640181655123,
+      "sameParameters": true,
+      "sameForecastReadout": true
+    },
+    {
+      "first": "17-off-a",
+      "second": "18-off-b",
+      "box": [
+        1558,
+        213,
+        647,
+        432
+      ],
+      "changedPixels": 0,
+      "meanAbsoluteDifference": 0,
+      "sameParameters": true,
+      "sameForecastReadout": true
+    },
+    {
+      "first": "19-snow-a",
+      "second": "20-snow-b",
+      "box": [
+        1558,
+        213,
+        647,
+        432
+      ],
+      "changedPixels": 61825,
+      "meanAbsoluteDifference": 11.729774886942584,
+      "sameParameters": true,
+      "sameForecastReadout": true
+    },
+    {
+      "first": "21-mobile-snow-a",
+      "second": "22-mobile-snow-b",
+      "box": [
+        23,
+        414,
+        344,
+        229
+      ],
+      "changedPixels": 7237,
+      "meanAbsoluteDifference": 0.7630327341660743,
+      "sameParameters": true,
+      "sameForecastReadout": true
+    }
+  ],
+  "images": [
+    {
+      "name": "01-high-clouds.jpg",
+      "sha256": "029fddcd2b2847a1205d6805b42450fb5ac22d5c74c13ed93e1f9b8a9f1fce5b"
+    },
+    {
+      "name": "02-mid-clouds.jpg",
+      "sha256": "0827eef63616bdd13bc3717d50c11cdfce2c1445d21d10c737c7f3867fb5fd5f"
+    },
+    {
+      "name": "03-low-clouds.jpg",
+      "sha256": "a1125810eb92c106c4ef3aa7cb5f9410af7a104cf0fa1f3c3fbbd5f334ae7b13"
+    },
+    {
+      "name": "04-rain-a.jpg",
+      "sha256": "d2e539a3cc4dee554b1732f6ab7784b616d91211ccd65ca0dffaaca2e8c7a743"
+    },
+    {
+      "name": "05-rain-b.jpg",
+      "sha256": "052e6f0885b146688dca87bc2734d6241f234e6d3099745077b972079efd7534"
+    },
+    {
+      "name": "06-weather-off.jpg",
+      "sha256": "771a8f728c3f5084718be8caed891e6d501af256fa0e09e47de424f6ae62a7f0"
+    },
+    {
+      "name": "07-rain-stable-a.jpg",
+      "sha256": "4ba513eaa3283401a039283d3d7091ba067ec6bc4344964c39332b9932150505"
+    },
+    {
+      "name": "08-rain-stable-b.jpg",
+      "sha256": "b0a65198d8076156f72781f707332b5adcf6aaf4ac06e1941534e73d3cb6ab3b"
+    },
+    {
+      "name": "09-high-clouds-stable.jpg",
+      "sha256": "5ad7966be0770b1991a7c2084d53ea5b93c106a701133c3d312700d28f5533e9"
+    },
+    {
+      "name": "10-mid-clouds-stable.jpg",
+      "sha256": "7f8494e7d65c0d19d1a3b219db8028dae3673f3cfe9d0434625072e308577d59"
+    },
+    {
+      "name": "11-direct-current.jpg",
+      "sha256": "fb826d98d88401c17390646648b55da5edc9ce221b5902687e28d91679800d9f"
+    },
+    {
+      "name": "12-high-clouds.jpg",
+      "sha256": "e934e163125a349db6a4f50c531b630926f46cc00ccab4b0dbb955a3b8978e46"
+    },
+    {
+      "name": "13-mid-clouds.jpg",
+      "sha256": "ad9069016b7e0f15aac7320ab9058f420567ca6262857469daa27e252701d92f"
+    },
+    {
+      "name": "14-low-clouds.jpg",
+      "sha256": "92602d6416d4ef0e85a5607222de9876de3d64485ef06e7d78cf494e9a4535b8"
+    },
+    {
+      "name": "15-rain-a.jpg",
+      "sha256": "758e039fcd6542c40f6dc334c7867a060b4f377f9a1dc567f2bb772fdc4ae319"
+    },
+    {
+      "name": "16-rain-b.jpg",
+      "sha256": "b4aec53ecc7486e8d6794ee00413780324363d0ab31a9d460c2fa7013f5b3d1a"
+    },
+    {
+      "name": "17-off-a.jpg",
+      "sha256": "e72405cfb6cea4ec6a58b7018d82780eebf1c63c1b3491b8c9f7e386f402acbc"
+    },
+    {
+      "name": "18-off-b.jpg",
+      "sha256": "e72405cfb6cea4ec6a58b7018d82780eebf1c63c1b3491b8c9f7e386f402acbc"
+    },
+    {
+      "name": "19-snow-a.jpg",
+      "sha256": "4c7927fc84474d39cc9f89bc6c2276aec34f6d6ba5ee677da3c89fa57085a226"
+    },
+    {
+      "name": "20-snow-b.jpg",
+      "sha256": "54f0380a18a25aad76f78a951d8a4c69c5fc95a9a417cb5b35c8b76ebd9957a1"
+    },
+    {
+      "name": "21-mobile-snow-a.jpg",
+      "sha256": "990af3b550e1718633bd56af8bb91cb5a076e9583ea6316bc79664ee9389de14"
+    },
+    {
+      "name": "22-mobile-snow-b.jpg",
+      "sha256": "56282846761014d8e655c590c8e7f0603c3edae3a28fb34f89e2af174843bd99"
+    },
+    {
+      "name": "23-mobile-restored.jpg",
+      "sha256": "aad001b77590ab4d695c7a5245841cec15a32ce46c1b9357a004b309063f4124"
+    },
+    {
+      "name": "24-high-observer-horizon.jpg",
+      "sha256": "77e6abac257700c29027c242e9dc569aff023f73b3325bdc0ec0d6136011311f"
+    },
+    {
+      "name": "25-mid-clouds-settled.jpg",
+      "sha256": "9d97f6670a4be17b827ad486c9232c1deeff4f69e5753273b110538f4112602f"
+    },
+    {
+      "name": "26-low-clouds-settled.jpg",
+      "sha256": "a2bc280cc37aace3194a64376b95f67654aaa00977505a7e406be974ce1d2f43"
+    }
+  ]
+}

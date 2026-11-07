@@ -88,7 +88,7 @@ function fakeGL() {
   gl.blendFuncSeparate=(...values)=>['BLEND_SRC_RGB','BLEND_DST_RGB','BLEND_SRC_ALPHA','BLEND_DST_ALPHA'].forEach((name,i)=>state.set(gl[name],values[i]));
   gl.createQuery=()=>{const query={available:false}; queries.add(query);return query;};gl.deleteQuery=(query)=>queries.delete(query);
   gl.beginQuery=(_,query)=>{query.result=gl.results.shift();};gl.endQuery=()=>{};
-  gl.drawArrays=(mode,_,count)=>gl.draws.push({mode,count,probe:uniforms.get('u_probe'),haGain:uniforms.get('u_ha_gain'),dark:uniforms.get('u_dark'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK),colorMask:[...state.get(gl.COLOR_WRITEMASK)],weatherMode:uniforms.get('u_mode'),depthTest:enabled.has(gl.DEPTH_TEST),clouds:uniforms.get('u_layers')});
+  gl.drawArrays=(mode,_,count)=>gl.draws.push({mode,count,probe:uniforms.get('u_probe'),haGain:uniforms.get('u_ha_gain'),dark:uniforms.get('u_dark'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK),colorMask:[...state.get(gl.COLOR_WRITEMASK)],weatherMode:uniforms.get('u_mode'),depthTest:enabled.has(gl.DEPTH_TEST),clouds:uniforms.get('u_layers'),animationTime:uniforms.get('u_time')});
   gl.drawElements=(mode,count)=>gl.draws.push({mode,count,strength:uniforms.get('u_strength'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK)});
   gl.getQueryParameter=(query,key)=>key===gl.QUERY_RESULT_AVAILABLE?query.available:query.result;
   gl.complete=()=>queries.forEach(query=>query.available=true);
@@ -109,6 +109,49 @@ test('天气云层使用天空深度，降水可覆盖前景且不写深度，�
   assert.deepEqual(state,previous);assert.deepEqual(enabled,previousEnabled);
   const count=gl.draws.length;layer.setScene({...frame('off',false),plan:initialPlan});layer.render(gl);
   assert.equal(gl.draws.length-count,2);layer.onRemove();assert.equal(resources.size,0);
+});
+
+test('雨雪使用独立播放时钟，隐藏、减少动态、关闭与卸载暂停且恢复不跳时', t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  let clock = 1000, repaints = 0;
+  t.mock.method(performance, 'now', () => clock);
+  const doc = new EventTarget(); doc.hidden = false;
+  const motion = new EventTarget(); motion.matches = false;
+  const previousDocument = Object.getOwnPropertyDescriptor(globalThis, 'document');
+  const previousWindow = Object.getOwnPropertyDescriptor(globalThis, 'window');
+  Object.defineProperty(globalThis, 'document', { value: doc, configurable: true });
+  Object.defineProperty(globalThis, 'window', { value: { matchMedia: () => motion }, configurable: true });
+  t.after(() => {
+    if (previousDocument) Object.defineProperty(globalThis, 'document', previousDocument); else delete globalThis.document;
+    if (previousWindow) Object.defineProperty(globalThis, 'window', previousWindow); else delete globalThis.window;
+  });
+  const { gl, resources } = fakeGL();
+  const layer = new CelestialLayer(() => {});
+  layer.onAdd({ triggerRepaint() { repaints++; } }, gl);
+  const weather = sampleWeather(parseWeather(weatherResponse(), Date.now()), initialPlan.instant);
+  layer.setScene({ key: 'rain', planKey: 'rain', ready: false, bodies: [], plan: initialPlan, weather });
+  layer.render(gl); const display = layer.weatherDisplay;
+  assert.equal(gl.draws.at(-1).animationTime, 0); assert.ok(layer.animationTimer);
+  clock += 50; layer.render(gl); close(gl.draws.at(-1).animationTime, 0.05);
+  assert.equal(layer.weatherDisplay, display, 'animation reuses prepared weather and celestial lighting');
+  doc.hidden = true; doc.dispatchEvent(new Event('visibilitychange'));
+  assert.equal(layer.animationTimer, undefined);
+  clock += 100000; layer.render(gl); close(gl.draws.at(-1).animationTime, 0.05);
+  doc.hidden = false; doc.dispatchEvent(new Event('visibilitychange')); layer.render(gl);
+  close(gl.draws.at(-1).animationTime, 0.05);
+  clock += 50; layer.render(gl); close(gl.draws.at(-1).animationTime, 0.1);
+  motion.matches = true; motion.dispatchEvent(new Event('change'));
+  clock += 1000; layer.render(gl); close(gl.draws.at(-1).animationTime, 0.1);
+  assert.equal(layer.animationTimer, undefined);
+  motion.matches = false; motion.dispatchEvent(new Event('change')); layer.render(gl);
+  layer.setVisible(false); assert.equal(layer.animationTimer, undefined);
+  layer.setVisible(true); layer.render(gl); close(gl.draws.at(-1).animationTime, 0.1);
+  layer.setScene({ key: 'dry', planKey: 'dry', ready: false, bodies: [], plan: initialPlan, weather: { ...weather, rain: 0, showers: 0, snow: 0 } });
+  layer.render(gl); assert.equal(layer.animationTimer, undefined);
+  layer.setScene({ key: 'snow', planKey: 'snow', ready: false, bodies: [], plan: initialPlan, weather: { ...weather, rain: 0, showers: 0, snow: 1 } });
+  layer.render(gl); clock += 50; layer.render(gl); close(gl.draws.at(-1).animationTime, 0.15);
+  layer.onRemove(); assert.equal(resources.size, 0);
+  const before = repaints; t.mock.timers.tick(5000); assert.equal(repaints, before);
 });
 
 test("异步 GPU 查询区分无遮挡、部分、全部遮挡和亚像素，且恢复宿主 GL 状态", () => {

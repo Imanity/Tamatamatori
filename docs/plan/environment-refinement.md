@@ -31,3 +31,32 @@ Open-Meteo 已提供低、中、高云量，分别覆盖约 0—3 km、3—8 km�
 Chrome 使用 `index-BWP9toXS.js`、`index-db_hJWpU.css`。保存[7 组场景](environment-evidence/browser-results.json)，包含[星空与深空](environment-evidence/01-night-labels.jpg)、[拖拽后](environment-evidence/02-after-drag.jpg)、四个模型与[手机环境入口](environment-evidence/07-mobile-environment.jpg)。真实往返拖拽期间[60 次公开 DOM 采样](environment-evidence/drag-samples.json)中，参宿七及猎户座大星云的标注均存在，位置随视角变化。此为连续采样，采样间隔由工具连接决定。
 
 首次完整自动检查出现组件进程内存退出，并发现新检查的固定云量期望值写错。核对投影视角反馈优先级并修正期望后，完整重跑 213 项通过。浏览器初次预览服务漏设子路径，修正启动参数后重新加载。直接在受限读取环境中调用逐帧 API 失败，连接恢复后改用公开 DOM 轮询，失败采集未记作通过。最终[浏览器错误日志](environment-evidence/browser-console.json)为空。
+
+第一阶段已提交推送至 `main`，提交为 `74c918b`。随后开展以下第二阶段工作。
+
+## 第二阶段执行记录
+
+### 分层可行性与实施
+
+2026-11-07 完成分层云与雨雪动画的本地实现和验收。现有接口提供独立的低、中、高云量，足以驱动可区分的三层显示。每层采用独立的水平尺度、伸展方向、细节比例、透光与配色，高云偏薄和条絮状，中云偏大片，低云更厚暗，按高、中、低顺序合成。CPU 透过率与 GPU 着色器共用同一份层参数，保留日月星空的云遮蔽。
+
+来源的层云量不能直接推出云底。显示层取机位上方 1.5、5、10 km 作为示意距离，结合曲率约束远处投影，实际云高仍待资料支持。三层继续作为 DEM 后方的天空构图背景。接近地平线时，纹理细节和着色变化同时收敛到平均覆盖，保留既有条带修正。
+
+### 动画与生命周期
+
+雨滴较快下落，雪花较慢下落并轻微横向漂移，近地风影响显示倾斜。播放时间使用独立单调时钟，拍摄计划与天气采样时刻保持固定。静止场景按最多每秒 30 次的定时请求刷新，光照和云参数在场景变化时准备，逐帧复用。关闭天气、无降水、隐藏预览、页面转入后台、系统减少动态效果、渲染失败及卸载均停止动画定时器，恢复时从暂停的播放位置继续。
+
+### 验收与证据
+
+`npm test` 共 215 项通过，子路径构建通过。新检查覆盖单层独立透光、三层形态差异、地平线连续性、雨雪时钟、关闭和无降水、预览/页面隐藏、减少动态效果、恢复与资源释放。组件测试替身也接收画布可见性，既有场景测试保留。
+
+Chrome 使用 `index-CxOuz4uo.js`，保存[25 组采集记录](weather-motion-evidence/browser-results.json)，其中 13 组用于最终页面画面核对。天气来自真实公开请求，接口快照与构建、截图的校验值见[验证元数据](weather-motion-evidence/verification.json)。
+
+- 山中湖机位分别核对[高云占主导](weather-motion-evidence/12-high-clouds.jpg)、[中云占主导](weather-motion-evidence/25-mid-clouds-settled.jpg)与[低云覆盖](weather-motion-evidence/26-low-clouds-settled.jpg)。实际低/中/高云量分别为 16/0/53%、4/61/21% 与 100/3/0%。这些天气时刻的太阳光照分别计算，单层隔离由固定输入检查执行。
+- [降雨 A](weather-motion-evidence/15-rain-a.jpg)与[降雨 B](weather-motion-evidence/16-rain-b.jpg)使用相同机位、姿态、拍摄时刻及 2.3 mm/小时预报。取景范围内 57382 个像素变化，平均绝对差约 0.735/通道。关闭天气的 17/18 两帧在相同取景范围内逐像素相等。比较范围与数据一致性见[帧比较](weather-motion-evidence/frame-comparison.json)。
+- 特罗姆瑟采用含 0.77 cm/小时降雪的雨雪混合预报，核对[手机 A](weather-motion-evidence/21-mobile-snow-a.jpg)、[手机 B](weather-motion-evidence/22-mobile-snow-b.jpg)和[隐藏后恢复](weather-motion-evidence/23-mobile-restored.jpg)。手机两帧取景范围内 7237 个像素变化，平均绝对差约 0.763/通道。桌面 19/20 包含 DEM 细化过渡，差异包含地形更新，仅作为雨雪绘制检查。
+- [高处机位回归](weather-motion-evidence/24-high-observer-horizon.jpg)为 `39.8206°N, 141.5275°E`、DEM 约 941.6 m、35 mm、方位 46.4°、俯仰 4°、东京时区 06:29。此次更新后的总云量 47%、低 45%、中 17%，远云连续且地面遮挡保留。此项与先前 55% 云量的旧预报分开记录。
+
+最初原生窗口截图的 GPU 画布出现滞后，01—10 已标记排除。切换后立即采集的 13/14 含绘制过渡，也已排除，25/26 为稳定后重拍。最终采用 Chrome 页面截图并保留返回的 JPEG 原字节，[错误日志](weather-motion-evidence/browser-console.json)为空。后台和减少动态效果的暂停采用事件/定时器替身验证，手机面板隐藏恢复另行进行真实浏览器检查。
+
+云高、云块方位、分层遮叠与粒子的速度、大小仍为构图显示参数。下一小步可独立接入可靠的云底或周边空间云场，进一步核对高山机位的云层位置。

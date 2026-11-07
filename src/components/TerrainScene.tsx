@@ -382,6 +382,7 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
           });
           try { map.addLayer(celestialLayer); }
           catch { fail("日月深度图层无法启动，请重试预览。"); return; }
+          celestialLayer.setVisible(hasSize());
           if (calibrationEnabled) void import("../preview/calibration").then(({ calibrationLayer }) => {
             if (disposed || !map) return;
             map.addLayer(calibrationLayer(map, () => ({ plan: latest.current.plan,
@@ -427,6 +428,7 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
           // A hidden host invalidates queries even if its restored dimensions
           // match the previous pose. Issue a fresh frame on every size event.
           sourceRevision++;
+          celestialLayer?.setVisible(bounds.width > 0 && bounds.height > 0);
           if (bounds.width <= 0 || bounds.height <= 0) {
             clearTimeout(timeout);
             timeout = undefined;

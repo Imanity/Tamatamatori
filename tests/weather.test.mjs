@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { weatherResponse } from "./fixtures/weather.mjs";
 import { parseWeather, sampleWeather, weatherLocationKey, WEATHER_TTL } from "../src/domain/weather.ts";
 import { loadWeather } from "../src/preview/weather.ts";
-import { cloudOpacity, weatherClouds } from "../src/domain/weather-appearance.ts";
+import { cloudOpacity, cloudLayerOpacities, CLOUD_LAYERS, weatherClouds } from "../src/domain/weather-appearance.ts";
 import { direction } from "../src/domain/ephemeris.ts";
 import { environmentForSky } from "../src/preview/environment.ts";
 
@@ -131,4 +131,22 @@ test("预报模型隔离缓存，缺失能见度单独表达且仍应用有效�
   const result = sampleWeather(parseWeather(response, start), at(0.5));
   assert.equal(result.visibility, null); assert.equal(result.low, 0.4);
   assert.equal(environmentForSky({ elevation: 30, azimuth: 90 }, { elevation: -10, illuminatedFraction: 0 }, 0, result).sky["horizon-fog-blend"], 0.2);
+});
+
+test("低中高云独立控制覆盖与透光，示意高度有序、云形可区分且地平线有限", () => {
+  assert.deepEqual(CLOUD_LAYERS.map(layer => layer.height), [1.5, 5, 10]);
+  const clouds = weatherClouds(sample(), { latitude: 39.8206, longitude: 141.5275 });
+  const patterns = [];
+  for (let index = 0; index < 3; index++) {
+    const isolated = { ...clouds, layers: [0, 0, 0] }; isolated.layers[index] = 1;
+    for (const elevation of [-2, 0, 0.1, 6.9, 30, 90]) {
+      const opacities = cloudLayerOpacities(direction(46.4, elevation), isolated);
+      assert.equal(opacities[index], CLOUD_LAYERS[index].opacity);
+      assert.ok(opacities.every((value, i) => i === index || value === 0));
+      assert.equal(cloudOpacity(direction(46.4, elevation), isolated), 1 - (1 - CLOUD_LAYERS[index].opacity));
+    }
+    isolated.layers[index] = 0.5;
+    patterns.push(Array.from({ length: 180 }, (_, azimuth) => cloudOpacity(direction(azimuth * 2, 30), isolated)));
+  }
+  assert.notDeepEqual(patterns[0], patterns[1]); assert.notDeepEqual(patterns[1], patterns[2]);
 });

@@ -1,0 +1,58 @@
+[
+  {
+    "first": "15-rain-a",
+    "second": "16-rain-b",
+    "box": [
+      1558,
+      213,
+      647,
+      432
+    ],
+    "changedPixels": 57382,
+    "meanAbsoluteDifference": 0.7350640181655123,
+    "sameParameters": true,
+    "sameForecastReadout": true
+  },
+  {
+    "first": "17-off-a",
+    "second": "18-off-b",
+    "box": [
+      1558,
+      213,
+      647,
+      432
+    ],
+    "changedPixels": 0,
+    "meanAbsoluteDifference": 0,
+    "sameParameters": true,
+    "sameForecastReadout": true
+  },
+  {
+    "first": "19-snow-a",
+    "second": "20-snow-b",
+    "box": [
+      1558,
+      213,
+      647,
+      432
+    ],
+    "changedPixels": 61825,
+    "meanAbsoluteDifference": 11.729774886942584,
+    "sameParameters": true,
+    "sameForecastReadout": true
+  },
+  {
+    "first": "21-mobile-snow-a",
+    "second": "22-mobile-snow-b",
+    "box": [
+      23,
+      414,
+      344,
+      229
+    ],
+    "changedPixels": 7237,
+    "meanAbsoluteDifference": 0.7630327341660743,
+    "sameParameters": true,
+    "sameForecastReadout": true
+  }
+]

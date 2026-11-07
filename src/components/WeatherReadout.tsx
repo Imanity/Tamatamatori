@@ -32,6 +32,7 @@ export function WeatherReadout({ feed, plan, update }: {
     {feed.phase !== "off" && <p>模型 {weatherModels[plan.weatherModel ?? "best_match"]}</p>}
     {sample && <>
       <p>总云量 {(sample.cloud * 100).toFixed(0)}% · 低 {(sample.low * 100).toFixed(0)}% / 中 {(sample.mid * 100).toFixed(0)}% / 高 {(sample.high * 100).toFixed(0)}%</p>
+      <p className="sky-limit">低、中、高云分层显示 · 云高与形态为示意 · 雨雪动态预览</p>
       <p>降水 {sample.precipitation.toFixed(1)} mm/小时 · 概率 {(sample.probability * 100).toFixed(0)}% · 能见度 {sample.visibility === null ? "模型未提供" : `${(sample.visibility / 1000).toFixed(1)} km`}</p>
       <p>拍摄 {time(sample.time, plan.timeZone)} · {plan.timeZone}</p>
     </>}
