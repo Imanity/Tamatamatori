@@ -1,0 +1,119 @@
+{
+  "checkedAt": "2026-11-07T07:19:11.775Z",
+  "baselineCommit": "89176f8819c8067c7095c5a4c05088c52fc66f5a",
+  "workingTree": "uncommitted building prototype and regional budget fix",
+  "tests": {
+    "command": "npm test",
+    "passed": 229,
+    "failed": 0,
+    "sha256": "143c5edef09bb743805b6f9218c29d07c92ca365cb4d8af3b24096cbbd4c7da1",
+    "encoding": "utf8"
+  },
+  "build": {
+    "command": "npm run build -- --base /Tamatamatori/",
+    "passed": true,
+    "sha256": "3a489a9320a694533828052011a6b437ede304862fa2c0ee6a9aae62a38deae5",
+    "encoding": "utf8",
+    "assets": {
+      "building-layer-S0Ip4ZhB.js": "83463ad167bd21eafe4b1b92f981643c6ff39da1fd59f5d1adf4704682d84bfa",
+      "buildings-6xaiTWF8.js": "040c477ad8a64b64f9393c59d5d3a31ee4a412d9a08e172c1b128302e155f03b",
+      "celestial-layer-D3o4Zsbv.js": "7cd15921de1a234c0683d1fe197f29a774657e0e4d5b169ce5c5c069cd038582",
+      "index-Bx0b7MX6.js": "f1bebaa55d1b44f139b6965cdd7eae42142cce2ccf2bb6e280025b8fbc1068e6",
+      "index-CDrbpV_8.css": "9377af406df2d30745eb61bf4679b63f745feb312d9273f75c9a973ac7ae2344",
+      "starfield-layer-DlocG4zo.js": "20672a5f054b494fd015219c1041eb64c558de4123d5014acfde07fbd8cc0225"
+    }
+  },
+  "sourceSha256": {
+    "src/components/BuildingReadout.tsx": "b40e693721babe0aa48771e14ddb68daaaf2d66967524a4bfbb42b267eb2b036",
+    "src/domain/buildings.ts": "4f8ee289c330420f90469f73ee4e05a44960b52eab3e64be8e55793e1df94189",
+    "src/preview/building-layer.ts": "eddd768e0ae862c58a27e8fae61fecba1963d81eddaa3629a0dd16e151c80c65",
+    "src/preview/buildings.ts": "a194cf0584c77a6b44df6c5c300b97c6784b30ddad1582f9f107e3c5b910d5b7",
+    "tests/buildings.test.mjs": "598e32acc3e94594ec25952c28b8509cc27fd80790847f2220ab879d0e0587e6",
+    "package-lock.json": "990ed885b3480563100835bb2c5803bdb792bc3716a1006bdb6f5e6d3f2cfdbd",
+    "package.json": "58952122c9a2ea0a1740a3daf8bf90fe0b10cb8a56955822d8356f055c11fbd1",
+    "src/App.tsx": "b225f8c3e4e87860f384784cdaed88e623bb04a78f99bb96bd9828458a54c86e",
+    "src/components/About.tsx": "9e47533ca7420e42b2b9e6d6f9b4cabbf16db7a78293b1b71b46ff18a56c0557",
+    "src/components/CelestialScene.tsx": "b351c8bda5b393b7c23c8d0cbb007526858cf2624b58c24635fd598afdfacd55",
+    "src/components/Icon.tsx": "04a8505c75af265a056aa65d4f00d190bf040d66c6ed2945476332b907d55d0c",
+    "src/components/InfoGroup.tsx": "766f271a3129d46d7fed220c13a1f2b0be94aa714a50702bab064097907844f7",
+    "src/components/ScenePanels.tsx": "cf1eaaf9abac46c438420ac2df68e2433f3404d906f81e75ee399eb5d018ab9a",
+    "src/components/StarScene.tsx": "6b51878c2b67a6693cd369fa6256aeac2c6e8a1105c10d6acfcac1a4a9916cd4",
+    "src/components/StationScene.tsx": "2c5253acf571dcdc6e91de3c3d15871334a9041eb4a173e660ffaa9a82689228",
+    "src/components/TargetSearch.tsx": "6700c57cac891ef1e81d8e5112b759d872405a2f667c5cfd685c293973f0efaf",
+    "src/components/TerrainScene.tsx": "12ef1266b340316a7a97cf6eac0bd68d534779e1ea49038c8177d7415cc3601c",
+    "src/domain/plan.ts": "eeaf2c9fd944411a394a5a7cbd875d70a6f68fbefdea9e5b8849c87983ac27d6",
+    "src/domain/starfield.ts": "b0f0484725d6f79d62e65ac8f1fbe18daf020008c6d11b2ef006369bbd185f41",
+    "src/domain/visibility.ts": "f7e02a46f7338f2b95c40073bd44b0d2e24158c5f501ee233443663ae07e68fd",
+    "src/preview/celestial-layer.ts": "7e71e35f98475c37bd24656605640de8d02f9cbddfabf7f90930ccee9c6498cb",
+    "src/preview/environment.ts": "fd4bb1493190047534df022233fb9e2f6e7d8b79e85260c0d41e50f4d2da823b",
+    "src/preview/starfield-layer.ts": "20291a853c80de3225b79a6873b05d8553f4afb1bbea0b915690ed43be37410f",
+    "src/styles.css": "2ca8c87a7f3123862cec7bd8beca0fd944a509a5f46484fd17882bf78904d4b3",
+    "tests/interactions.test.mjs": "a386f9feeb05840e8d961cfb0829839da947526979b353a98e3b199deaab4b14",
+    "tests/occlusion-refraction.test.mjs": "946998a559f27b91b419168e239a8f155760628ad4f79bf274f44ca35894437b"
+  },
+  "cpu": {
+    "file": "../skytree-retention-after.json",
+    "sha256": "2dbba41c0dd679b52e44f59c3ddf0e1e270139c91d5bdda42a04cb2c8eb4d7b6",
+    "syntheticBaseMetres": 0
+  },
+  "browser": {
+    "file": "browser-results.json",
+    "sha256": "6381111f96ef5c33bd9ec168eba15ad95ed62a24d980cff774cd2013c3476ae5",
+    "realCityDemGpu": true,
+    "desktopScenes": true,
+    "mobileViewport": true,
+    "physicalMobile": false,
+    "frameTime": false,
+    "fixedCelestialIntersection": false
+  },
+  "screenshots": {
+    "01-user-35mm-day.jpg": {
+      "bytes": 511454,
+      "sha256": "b9268d78501db5149991f4ba584ded2e99ffbedc3baeb0057d68863206dc4612"
+    },
+    "02-user-24mm.jpg": {
+      "bytes": 514538,
+      "sha256": "f7fdcae7deacc1252886fac6307e953299dc53f87153f2abe9471e6609d45427"
+    },
+    "03-user-85mm.jpg": {
+      "bytes": 498280,
+      "sha256": "305c4845e23037c021af0a93024e457244d2bd651b4a86da2ea2f02445822ecf"
+    },
+    "04-user-200mm.jpg": {
+      "bytes": 497358,
+      "sha256": "17d5644637f66675474f18018b8daa4c39c1971eca1b30e1b21ddce6fb36f9c2"
+    },
+    "05-user-1000mm.jpg": {
+      "bytes": 498714,
+      "sha256": "4694bd3f472600b1978ca1d0887ecb6c7676b15028b3b8ef2ca370619de92565"
+    },
+    "06-user-drag.jpg": {
+      "bytes": 508642,
+      "sha256": "8f535b086e4ccbe3139dce2413e45b3cdb7c1169d36a0968d0db33a0750de3af"
+    },
+    "07-buildings-off.jpg": {
+      "bytes": 486387,
+      "sha256": "95f50b1c4d05d9207984b18067ce231e5bce3c7757b05ec9b0bab396add82ebd"
+    },
+    "08-buildings-restored.jpg": {
+      "bytes": 508639,
+      "sha256": "ec3a04ea8045ff203b58e1339613165e7af0f9917e5fa0df565b5b4024631bea"
+    },
+    "09-mobile-readout.jpg": {
+      "bytes": 43917,
+      "sha256": "534f3bcf50206344bceb18b7f08035a468025e7153c665f8d792ef7e128323df"
+    },
+    "10-mobile-preview.jpg": {
+      "bytes": 23620,
+      "sha256": "dc7fafbcedc5e5d0b7ab3a2783cac3c4b2800a8a01066f445a5b2fad935b5baf"
+    },
+    "11-shanghai.jpg": {
+      "bytes": 515233,
+      "sha256": "f878936d1aaec8fb16efb19b833409bdb6818e657db97312cdf821e3d22617b5"
+    },
+    "12-final-user-view.jpg": {
+      "bytes": 512997,
+      "sha256": "271924db4817579777b168669ac951f1f7c07d348f557b7391e150bc830adb13"
+    }
+  }
+}

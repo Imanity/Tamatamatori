@@ -1,0 +1,130 @@
+{
+  "kind": "independent CPU orthographic union coverage, not actual GPU or real-site validation",
+  "assetSha256": "4ee6a8d802db2ccf0538add4ff7f3b54e21237e4cd36267e7a487852305848cd",
+  "sourceTriangles": 285887,
+  "fineTriangles": 88581,
+  "metresPerPixel": 0.317,
+  "rows": "source, reduced, difference; columns 0/60/120/180/240/300 degrees",
+  "records": [
+    {
+      "azimuth": 0,
+      "intersectionOverUnion": 0.9954229187106762,
+      "changedPixels": 1017,
+      "changedBeyondOnePixel": 152,
+      "sourceOrFinePixels": 222194,
+      "maxRowBoundaryDifferenceMetres": 0.634,
+      "lowerSideBand": {
+        "up": [
+          20,
+          140
+        ],
+        "absoluteHorizontal": [
+          15,
+          35
+        ],
+        "sourceOpenFraction": 0.4284034601494919,
+        "reducedOpenFraction": 0.4343453430755018
+      }
+    },
+    {
+      "azimuth": 60,
+      "intersectionOverUnion": 0.995279514159233,
+      "changedPixels": 1061,
+      "changedBeyondOnePixel": 302,
+      "sourceOrFinePixels": 224765,
+      "maxRowBoundaryDifferenceMetres": 4.121,
+      "lowerSideBand": {
+        "up": [
+          20,
+          140
+        ],
+        "absoluteHorizontal": [
+          15,
+          35
+        ],
+        "sourceOpenFraction": 0.44148400100781054,
+        "reducedOpenFraction": 0.4464390694549425
+      }
+    },
+    {
+      "azimuth": 120,
+      "intersectionOverUnion": 0.9959785761312479,
+      "changedPixels": 904,
+      "changedBeyondOnePixel": 194,
+      "sourceOrFinePixels": 224796,
+      "maxRowBoundaryDifferenceMetres": 1.9020000000000001,
+      "lowerSideBand": {
+        "up": [
+          20,
+          140
+        ],
+        "absoluteHorizontal": [
+          15,
+          35
+        ],
+        "sourceOpenFraction": 0.424204249601075,
+        "reducedOpenFraction": 0.4318678088519358
+      }
+    },
+    {
+      "azimuth": 180,
+      "intersectionOverUnion": 0.9954229187106762,
+      "changedPixels": 1017,
+      "changedBeyondOnePixel": 152,
+      "sourceOrFinePixels": 222194,
+      "maxRowBoundaryDifferenceMetres": 0.634,
+      "lowerSideBand": {
+        "up": [
+          20,
+          140
+        ],
+        "absoluteHorizontal": [
+          15,
+          35
+        ],
+        "sourceOpenFraction": 0.42981019568321155,
+        "reducedOpenFraction": 0.43583606282018983
+      }
+    },
+    {
+      "azimuth": 240,
+      "intersectionOverUnion": 0.995279514159233,
+      "changedPixels": 1061,
+      "changedBeyondOnePixel": 302,
+      "sourceOrFinePixels": 224765,
+      "maxRowBoundaryDifferenceMetres": 4.121,
+      "lowerSideBand": {
+        "up": [
+          20,
+          140
+        ],
+        "absoluteHorizontal": [
+          15,
+          35
+        ],
+        "sourceOpenFraction": 0.4404341983707063,
+        "reducedOpenFraction": 0.44541026287058033
+      }
+    },
+    {
+      "azimuth": 300,
+      "intersectionOverUnion": 0.9959785761312479,
+      "changedPixels": 904,
+      "changedBeyondOnePixel": 194,
+      "sourceOrFinePixels": 224796,
+      "maxRowBoundaryDifferenceMetres": 1.9020000000000001,
+      "lowerSideBand": {
+        "up": [
+          20,
+          140
+        ],
+        "absoluteHorizontal": [
+          15,
+          35
+        ],
+        "sourceOpenFraction": 0.42523305618543716,
+        "reducedOpenFraction": 0.4328756193835559
+      }
+    }
+  ]
+}

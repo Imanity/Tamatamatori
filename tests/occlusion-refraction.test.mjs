@@ -264,6 +264,7 @@ test('转向时延续星空与深空标注遮挡，最新读数保持待测，�
     assert.deepEqual(reports.at(-1).states, {});
     assert.deepEqual(reports.at(-1).labelStates, confirmed);
     layer.invalidate(); assert.deepEqual(reports.at(-1).labelStates, confirmed);
+    layer.invalidate(true); assert.deepEqual(reports.at(-1).labelStates, {}, 'new building geometry clears retained direction occlusion');
     layer.setScene({ ...original, key: 'moved', planKey: 'moved', plan: { ...original.plan, latitude: original.plan.latitude + 0.01 } });
     assert.deepEqual(reports.at(-1).labelStates, {});
     layer.fail('测试失败'); assert.deepEqual(reports.at(-1).labelStates, {});

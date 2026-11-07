@@ -25,6 +25,7 @@ const panelInfo: Record<
 };
 const slotNames = ["主栏", "右上", "右下"];
 const skyLayers = [
+  { id: "buildings", name: "建筑", icon: "building" },
   { id: "sun", name: "太阳", icon: "sun" },
   { id: "moon", name: "月亮", icon: "moon" },
   { id: "stars", name: "星空", icon: "stars" },

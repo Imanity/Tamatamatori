@@ -22,6 +22,7 @@ export interface ShootingPlan {
   instant: string;
   timeZone: string;
   layers: {
+    buildings?: boolean;
     sun: boolean;
     moon: boolean;
     stars: boolean;
@@ -51,6 +52,7 @@ export const initialPlan: ShootingPlan = {
   instant: "2026-11-04T08:00:00Z",
   timeZone: "Asia/Tokyo",
   layers: {
+    buildings: false,
     sun: true,
     moon: true,
     stars: false,

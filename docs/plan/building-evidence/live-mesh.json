@@ -1,0 +1,169 @@
+{
+  "checkedAt": "2026-11-07T06:18:58.203Z",
+  "sourceSha256": {
+    "src/domain/buildings.ts": "f453fc76fbdf6637782317c413bc38142d30fbfbdad8b599e3906da9d2a25e8e",
+    "src/preview/buildings.ts": "a92698cef62e08a21447db043e507105c36a44e55a9ab9c3b5ba714505db34d6"
+  },
+  "scope": "真实 MVT 接入、有限几何构建及预算探测；高程显式注入合成平地 0 m，不是 DEM / 浏览器 / GPU / 实景精度或稳定帧率验收。Node 内存包含网络缓存与重复构建，不能等同于浏览器峰值。",
+  "records": [
+    {
+      "scene": {
+        "name": "东京晴空塔周边",
+        "longitude": 139.8107,
+        "latitude": 35.7101
+      },
+      "status": {
+        "key": "139.8107/35.7101",
+        "phase": "ready",
+        "limited": true,
+        "tiles": 2,
+        "polygons": 10214,
+        "triangles": 119999,
+        "bytes": 8639928,
+        "skipped": 11,
+        "version": "20261101_080013_pt",
+        "fetchedAt": "2026-11-07T06:18:51.694Z"
+      },
+      "finite": true,
+      "meshes": 1,
+      "totalMilliseconds": 2501.5305,
+      "cachedRebuildMilliseconds": 2331.6101,
+      "repeatedRequestCount": 0,
+      "sameTriangleCount": true,
+      "memoryBefore": {
+        "rss": 73396224,
+        "heapTotal": 15458304,
+        "heapUsed": 11169304,
+        "external": 8794607,
+        "arrayBuffers": 29999
+      },
+      "memoryAfter": {
+        "rss": 336003072,
+        "heapTotal": 238321664,
+        "heapUsed": 151865272,
+        "external": 29406028,
+        "arrayBuffers": 18811800
+      },
+      "requests": [
+        {
+          "url": "https://tiles.openfreemap.org/planet",
+          "status": 200,
+          "cors": "*",
+          "bytes": 19254,
+          "sha256": "3339dd4706556bf88d514cb54b10647dbe1f8306381f739f2a2e52341147040c"
+        },
+        {
+          "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6450.pbf",
+          "status": 200,
+          "cors": "*",
+          "bytes": 759861,
+          "sha256": "d9dfeff06d9adba5745f60bd730691c10e94266448117a2e19aec53bc8f184f9"
+        },
+        {
+          "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6449.pbf",
+          "status": 200,
+          "cors": "*",
+          "bytes": 684678,
+          "sha256": "3ae491a68111f0f48475cc04e41aa80e040ae746c688fe8b2ae17851679013ba"
+        }
+      ]
+    },
+    {
+      "scene": {
+        "name": "上海陆家嘴周边",
+        "longitude": 121.5008,
+        "latitude": 31.2397
+      },
+      "status": {
+        "key": "121.5008/31.2397",
+        "phase": "ready",
+        "limited": false,
+        "tiles": 7,
+        "polygons": 3253,
+        "triangles": 61347,
+        "bytes": 4416984,
+        "skipped": 28,
+        "version": "20261101_080013_pt",
+        "fetchedAt": "2026-11-07T06:18:56.478Z"
+      },
+      "finite": true,
+      "meshes": 7,
+      "totalMilliseconds": 998.3581999999997,
+      "cachedRebuildMilliseconds": 741.5736999999999,
+      "repeatedRequestCount": 0,
+      "sameTriangleCount": true,
+      "memoryBefore": {
+        "rss": 336003072,
+        "heapTotal": 238321664,
+        "heapUsed": 151866152,
+        "external": 29406028,
+        "arrayBuffers": 18811800
+      },
+      "memoryAfter": {
+        "rss": 344313856,
+        "heapTotal": 242323456,
+        "heapUsed": 138731376,
+        "external": 39433495,
+        "arrayBuffers": 28839267
+      },
+      "requests": [
+        {
+          "url": "https://tiles.openfreemap.org/planet",
+          "status": 200,
+          "cors": "*",
+          "bytes": 19254,
+          "sha256": "3339dd4706556bf88d514cb54b10647dbe1f8306381f739f2a2e52341147040c"
+        },
+        {
+          "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6694.pbf",
+          "status": 200,
+          "cors": "*",
+          "bytes": 183012,
+          "sha256": "8ef40e9fd3543e077b828d63f1b4b118a762cee077ee4fa04bc063e463a33796"
+        },
+        {
+          "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6693.pbf",
+          "status": 200,
+          "cors": "*",
+          "bytes": 143058,
+          "sha256": "6643588a1b923135cb9197d31b64b6553a9df7d9594e6a8b3b0e8ea87385067b"
+        },
+        {
+          "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13722/6694.pbf",
+          "status": 200,
+          "cors": "*",
+          "bytes": 130501,
+          "sha256": "10abbc500c969061ef65f4778a0495500962bc7a8d5d7ba841ed1fa49ea7d507"
+        },
+        {
+          "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13722/6693.pbf",
+          "status": 200,
+          "cors": "*",
+          "bytes": 70399,
+          "sha256": "5ca870bb2034a114cf65d172d677ae75e8200777c2648f61a78c99d1870a3ead"
+        },
+        {
+          "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13720/6694.pbf",
+          "status": 200,
+          "cors": "*",
+          "bytes": 266275,
+          "sha256": "17be155a00fa7266538638b39f90d025e9f518339253343f6af7433c676d999d"
+        },
+        {
+          "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13720/6693.pbf",
+          "status": 200,
+          "cors": "*",
+          "bytes": 171476,
+          "sha256": "bdda889c280018345f91526945e1d3ab310593717c082d696e51a32af5699821"
+        },
+        {
+          "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6695.pbf",
+          "status": 200,
+          "cors": "*",
+          "bytes": 94833,
+          "sha256": "eda74623762ff695b9a99fc481d1d440690986348b4c1fd612ddd9e2a64eb412"
+        }
+      ]
+    }
+  ]
+}

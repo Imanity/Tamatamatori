@@ -81,7 +81,7 @@ export function About() {
             <ul>
               <li>
                 <a href="https://openfreemap.org/" target="_blank" rel="noreferrer">OpenFreeMap</a>
-                <span> · 底图与水体瓦片服务</span>
+                <span> · 底图、水体与建筑瓦片服务</span>
               </li>
               <li>
                 <a href="https://openmaptiles.org/" target="_blank" rel="noreferrer">© OpenMapTiles</a>
@@ -89,12 +89,13 @@ export function About() {
               </li>
               <li>
                 <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap contributors</a>
-                <span> · ODbL · 底图与水体数据</span>
+                <span> · ODbL · 底图、水体与建筑数据</span>
               </li>
               <li>
                 <a href="https://mapterhorn.com/attribution/" target="_blank" rel="noreferrer">© Mapterhorn · 高程及上游数据来源</a>
               </li>
             </ul>
+            <p>建筑以周边有限范围的轮廓和渲染高度生成体块；高度可能来自楼层换算或缺省值，不含完整屋顶、实景材质或灯光。基座采用同源 DEM 近似，不保证建筑完整覆盖或楼顶日月对齐精度。</p>
           </section>
 
           <section aria-labelledby="about-weather-title">
@@ -122,6 +123,17 @@ export function About() {
             </div>
             <p>原始 30 角秒栅格按 3×3 平均为约 2.8 km 格网，保留原格网注册，去掉北部覆盖外填充值，再对数编码并按需加载分块。衍生数据继续采用 CC BY-NC 4.0。</p>
             <p>覆盖约南纬 60° 至北纬 75°。数值为历史模型的天顶人工亮度，天空颜色与对比度为显示近似，不提供实时光污染、城市光穹方向、波特尔等级或曝光预测。</p>
+          </section>
+
+          <section aria-labelledby="about-landmarks-title">
+            <h3 id="about-landmarks-title">地标模型</h3>
+            <a href="https://sketchfab.com/3d-models/tokyo-skytree-japan-b4d347b8703f45f48ea8d5fe45d454b9" target="_blank" rel="noreferrer">Tokyo Skytree, Japan · Noah (smiN5214)</a>
+            <p><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a> · 已去除纹理与材质、转为不透明几何、调整坐标与尺度并减面。社区外观模型，定位和朝向近似；不提供测绘精度、玻璃透光或夜景灯光。</p>
+            <p>锚点参考 © OpenStreetMap contributors；朝向参考国土交通省 Project PLATEAU 东京都墨田区 2025 LOD2.1 的水平轮廓，仅用于近似注册。<a href="https://www.mlit.go.jp/plateau/site-policy/" target="_blank" rel="noreferrer">PLATEAU 使用政策</a></p>
+            <div className="about-downloads">
+              <a href={`${import.meta.env.BASE_URL}landmarks/skytree-v1.ttlm.gz`} download>下载无纹理衍生模型 · CC BY 4.0</a>
+              <a href={`${import.meta.env.BASE_URL}landmarks/skytree-v1.json`} download>下载来源、校验与处理记录</a>
+            </div>
           </section>
 
           <section aria-labelledby="about-catalog-title">

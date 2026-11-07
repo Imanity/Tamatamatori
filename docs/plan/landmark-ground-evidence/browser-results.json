@@ -1,0 +1,70 @@
+{
+  "recordedAt": "2026-11-07T15:44:16.224Z",
+  "environment": "Chrome extension, production subpath build and separate DEV GPU probe",
+  "scenes": [
+    {
+      "name": "production-30km",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n晴空塔无纹理精细模型 · 定位与朝向近似 · 约 30.0 km · 88,581 面\n\n已读取瓦片\n32\n分块体块\n6816 / 6816\n三角面（含地标）\n198,434 / 300,000\n网格\n10.06 MiB\n\n2–5 km 普通远景分部 26 / 26 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n已清理 19 个重复或共线点，保留源轮廓。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 14:23:38 UTC\n\n已略过 196 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑",
+      "diagnostics": 0
+    },
+    {
+      "name": "production-50km",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n晴空塔无纹理精细模型 · 定位与朝向近似 · 约 49.9 km · 88,581 面\n\n已读取瓦片\n32\n分块体块\n496 / 496\n三角面（含地标）\n95,913 / 300,000\n网格\n3.02 MiB\n\n2–5 km 普通远景分部 11 / 11 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n已清理 1 个重复或共线点，保留源轮廓。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 14:24:54 UTC\n\n已略过 16 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑"
+    },
+    {
+      "name": "production-50km-portrait",
+      "info": "拍摄预览\n地形模拟\n主栏\n右上\n右下\n1000 mm · 全画幅 · 竖幅 2:3\n未改机 · 近似参考\n机位高程 ≈ 19.0 m · 离地 100 m\n太阳\n月亮\nS"
+    },
+    {
+      "name": "production-reenabled",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n晴空塔无纹理精细模型 · 定位与朝向近似 · 约 49.9 km · 88,581 面\n\n已读取瓦片\n32\n分块体块\n496 / 496\n三角面（含地标）\n95,913 / 300,000\n网格\n3.02 MiB\n\n2–5 km 普通远景分部 11 / 11 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n已清理 1 个重复或共线点，保留源轮廓。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 15:30:45 UTC\n\n已略过 16 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑"
+    },
+    {
+      "name": "production-10km",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n已达范围或网格预算，建筑覆盖不完整。\n\n晴空塔无纹理精细模型 · 定位与朝向近似 · 约 10.0 km · 88,581 面\n\n已读取瓦片\n32\n分块体块\n10700 / 29293\n三角面（含地标）\n299,965 / 300,000\n网格\n17.03 MiB\n\n2–5 km 普通远景分部 1351 / 1546 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n已清理 104 个重复或共线点，保留源轮廓。\n\n预算内优先保留高层并分配周边覆盖，省略 18593 个分部。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 15:33:14 UTC\n\n已略过 164 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑"
+    },
+    {
+      "name": "production-near",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n已达范围或网格预算，建筑覆盖不完整。\n\n晴空塔无纹理精细模型 · 定位与朝向近似 · 约 1.6 km · 88,581 面\n\n已读取瓦片\n32\n分块体块\n12856 / 57451\n三角面（含地标）\n299,969 / 300,000\n网格\n17.03 MiB\n\n2–5 km 普通远景分部 2027 / 7507 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n已清理 36 个重复或共线点，保留源轮廓。\n\n预算内优先保留高层并分配周边覆盖，省略 44595 个分部。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 15:36:00 UTC\n\n已略过 531 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑"
+    }
+  ],
+  "finalDOM": {
+    "canvas": [
+      {
+        "height": 826,
+        "ready": "true",
+        "width": 1239
+      }
+    ],
+    "diagnostics": 0,
+    "scripts": [
+      "http://127.0.0.1:5176/Tamatamatori/assets/index--STfWIvE.js"
+    ],
+    "viewport": {
+      "height": 1215,
+      "width": 2560
+    }
+  },
+  "console": [],
+  "mobile": {
+    "viewport": "390×844 CSS px, Chrome emulation",
+    "scene": "49.9 km / 1000 mm / 100 m above ground",
+    "screenshot": "production-mobile-50km.jpg",
+    "observed": "Tower visible; real terrain meets and clips base. Changed station while preview hidden, then restored; map/preview tab round trip retains rendering.",
+    "overrideReset": true
+  },
+  "limits": [
+    "No physical phone or sustained GPU FPS measurement",
+    "Same-source coordinate consistency is not survey accuracy",
+    "Prior-stage model failure/retry evidence retained separately"
+  ],
+  "developmentWarnings": {
+    "source": "DEV Vite browser-console relay, observed while stopping owned validation server",
+    "messages": [
+      "layers[highway-shield-non-us].filter[1]: Expected value to be of type number, but found null instead. Falling back to false.",
+      "layers[highway-shield-us-interstate].filter[1]: Expected value to be of type number, but found null instead. Falling back to false.",
+      "layers[road_shield_us].filter[1]: Expected value to be of type number, but found null instead. Falling back to false."
+    ],
+    "note": "Basemap road-shield warnings; final production captured console list was empty."
+  }
+}

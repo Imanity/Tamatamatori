@@ -1,0 +1,143 @@
+{
+  "checkedAt": "2026-11-07T10:40:44.557Z",
+  "scope": "仅资料评估、公开元数据和有界B3DM样本解析；没有精模实现/转换/渲染。",
+  "applicationUnchanged": true,
+  "sourceCheck": {
+    "src/components/BuildingReadout.tsx": {
+      "sha256": "6317a9f5a9fbec021e6a75379f0c2743fdefd77e20235634036cf495c1e96700",
+      "unchanged": true
+    },
+    "src/domain/buildings.ts": {
+      "sha256": "45ab85a2d8f1956f8106f11559e60d8839dc97327c9f20137bf304130d4c4453",
+      "unchanged": true
+    },
+    "src/preview/building-layer.ts": {
+      "sha256": "eddd768e0ae862c58a27e8fae61fecba1963d81eddaa3629a0dd16e151c80c65",
+      "unchanged": true
+    },
+    "src/preview/buildings.ts": {
+      "sha256": "f78fd7508ad209b455eeefed6dcf19ff1cdba3b8ac6e8530ec67add164de7fa2",
+      "unchanged": true
+    },
+    "tests/buildings.test.mjs": {
+      "sha256": "81b17543b518777eca77373d1c7e786a1d6434a19502e98bc8d5cd1ceb8c1298",
+      "unchanged": true
+    },
+    "package-lock.json": {
+      "sha256": "990ed885b3480563100835bb2c5803bdb792bc3716a1006bdb6f5e6d3f2cfdbd",
+      "unchanged": true
+    },
+    "package.json": {
+      "sha256": "58952122c9a2ea0a1740a3daf8bf90fe0b10cb8a56955822d8356f055c11fbd1",
+      "unchanged": true
+    },
+    "src/App.tsx": {
+      "sha256": "b225f8c3e4e87860f384784cdaed88e623bb04a78f99bb96bd9828458a54c86e",
+      "unchanged": true
+    },
+    "src/components/About.tsx": {
+      "sha256": "9e47533ca7420e42b2b9e6d6f9b4cabbf16db7a78293b1b71b46ff18a56c0557",
+      "unchanged": true
+    },
+    "src/components/CelestialScene.tsx": {
+      "sha256": "b351c8bda5b393b7c23c8d0cbb007526858cf2624b58c24635fd598afdfacd55",
+      "unchanged": true
+    },
+    "src/components/Icon.tsx": {
+      "sha256": "04a8505c75af265a056aa65d4f00d190bf040d66c6ed2945476332b907d55d0c",
+      "unchanged": true
+    },
+    "src/components/InfoGroup.tsx": {
+      "sha256": "766f271a3129d46d7fed220c13a1f2b0be94aa714a50702bab064097907844f7",
+      "unchanged": true
+    },
+    "src/components/ScenePanels.tsx": {
+      "sha256": "cf1eaaf9abac46c438420ac2df68e2433f3404d906f81e75ee399eb5d018ab9a",
+      "unchanged": true
+    },
+    "src/components/StarScene.tsx": {
+      "sha256": "6b51878c2b67a6693cd369fa6256aeac2c6e8a1105c10d6acfcac1a4a9916cd4",
+      "unchanged": true
+    },
+    "src/components/StationScene.tsx": {
+      "sha256": "2c5253acf571dcdc6e91de3c3d15871334a9041eb4a173e660ffaa9a82689228",
+      "unchanged": true
+    },
+    "src/components/TargetSearch.tsx": {
+      "sha256": "6700c57cac891ef1e81d8e5112b759d872405a2f667c5cfd685c293973f0efaf",
+      "unchanged": true
+    },
+    "src/components/TerrainScene.tsx": {
+      "sha256": "12ef1266b340316a7a97cf6eac0bd68d534779e1ea49038c8177d7415cc3601c",
+      "unchanged": true
+    },
+    "src/domain/plan.ts": {
+      "sha256": "eeaf2c9fd944411a394a5a7cbd875d70a6f68fbefdea9e5b8849c87983ac27d6",
+      "unchanged": true
+    },
+    "src/domain/starfield.ts": {
+      "sha256": "b0f0484725d6f79d62e65ac8f1fbe18daf020008c6d11b2ef006369bbd185f41",
+      "unchanged": true
+    },
+    "src/domain/visibility.ts": {
+      "sha256": "f7e02a46f7338f2b95c40073bd44b0d2e24158c5f501ee233443663ae07e68fd",
+      "unchanged": true
+    },
+    "src/preview/celestial-layer.ts": {
+      "sha256": "7e71e35f98475c37bd24656605640de8d02f9cbddfabf7f90930ccee9c6498cb",
+      "unchanged": true
+    },
+    "src/preview/environment.ts": {
+      "sha256": "fd4bb1493190047534df022233fb9e2f6e7d8b79e85260c0d41e50f4d2da823b",
+      "unchanged": true
+    },
+    "src/preview/starfield-layer.ts": {
+      "sha256": "20291a853c80de3225b79a6873b05d8553f4afb1bbea0b915690ed43be37410f",
+      "unchanged": true
+    },
+    "src/styles.css": {
+      "sha256": "2ca8c87a7f3123862cec7bd8beca0fd944a509a5f46484fd17882bf78904d4b3",
+      "unchanged": true
+    },
+    "tests/interactions.test.mjs": {
+      "sha256": "a386f9feeb05840e8d961cfb0829839da947526979b353a98e3b199deaab4b14",
+      "unchanged": true
+    },
+    "tests/occlusion-refraction.test.mjs": {
+      "sha256": "946998a559f27b91b419168e239a8f155760628ad4f79bf274f44ca35894437b",
+      "unchanged": true
+    }
+  },
+  "previousApplicationChecks": {
+    "passed": 234,
+    "rerunThisRound": false
+  },
+  "evidence": {
+    "plateau-catalog.json": "a0d84f26a69ac33ed36f0beda7864ed4807cf54b8c32ebe0995f36b3dd98bad4",
+    "plateau-targets.json": "fd963cce7439d8809da3768204a601eae646da006a969715bfe99c7a5c822680",
+    "community-shortlist.json": "57c9fc375594212f23c65551069644bab64fe2b709f0e31e2c59d978ee5d63e8"
+  },
+  "assessment": {
+    "officialCatalog": true,
+    "ckanLicenseMetadata": true,
+    "b3dmHeaderAndBatchTables": true,
+    "dracoDecoded": false,
+    "communityModelMetadata": true,
+    "communityDownloadStatus": 401,
+    "communityFilesDownloaded": false,
+    "accountOrBillingOpened": false,
+    "modelGpuOrAccuracyAcceptance": false
+  },
+  "limits": {
+    "fullDistrictArchivesDownloaded": false,
+    "rawBinariesInRepository": false,
+    "rawDataLocation": ".cache/landmark-assessment/"
+  },
+  "knownLimits": [
+    "全国地标精模栋数未统计；地区/条目/纹理变体不是地标数量。",
+    "GLB容量区间是试制预算；社区模型实际ZIP/GLB体积未测。",
+    "作者来源标签不等于完整权利和实景精度验证。",
+    "网页访问Sketchfab/G空间详情曾返回403，公开元数据API可读；无认证下载返回401，未使用私有预览资源绕过。",
+    "墨田区tileset超过初始2MiB元数据阈值，调整为12MiB有界读取；实测4,479,071字节。"
+  ]
+}

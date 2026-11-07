@@ -1,0 +1,145 @@
+{
+  "checkedAt": "2026-11-07T07:38:05.618Z",
+  "baselineCommit": "89176f8819c8067c7095c5a4c05088c52fc66f5a",
+  "workingTree": "uncommitted building work and five-kilometre range/cache optimisation",
+  "tests": {
+    "command": "npm test",
+    "passed": 234,
+    "failed": 0,
+    "sha256": "29b695914b7cdb885ccf032aa3734d8eb10f1d340094b308dfeda3785a1456fe",
+    "encoding": "utf8"
+  },
+  "build": {
+    "command": "npm run build -- --base /Tamatamatori/",
+    "passed": true,
+    "sha256": "71e937217add43979551eb0c31d6dc198ab20d038ce50911ed331abf7217793a",
+    "encoding": "utf8",
+    "assets": {
+      "building-layer-Bf4beZ2R.js": "2aa5209988670b6b16eb7e473a774796295208ffc207fcbccd77bdd038a626b3",
+      "buildings-D31LjLYU.js": "41a4da4e0c8bb7abd7ce76053b469148c0cff75d13257920967dc2cc2bb4e413",
+      "celestial-layer-D3o4Zsbv.js": "7cd15921de1a234c0683d1fe197f29a774657e0e4d5b169ce5c5c069cd038582",
+      "index-C9JgdA_y.js": "24a4327621b02bb64c104b53bd4bfd3142f2ec24d56b8cfe9039e69994bdda08",
+      "index-CDrbpV_8.css": "9377af406df2d30745eb61bf4679b63f745feb312d9273f75c9a973ac7ae2344",
+      "starfield-layer-DlocG4zo.js": "20672a5f054b494fd015219c1041eb64c558de4123d5014acfde07fbd8cc0225"
+    }
+  },
+  "sourceSha256": {
+    "src/components/BuildingReadout.tsx": "6317a9f5a9fbec021e6a75379f0c2743fdefd77e20235634036cf495c1e96700",
+    "src/domain/buildings.ts": "45ab85a2d8f1956f8106f11559e60d8839dc97327c9f20137bf304130d4c4453",
+    "src/preview/building-layer.ts": "eddd768e0ae862c58a27e8fae61fecba1963d81eddaa3629a0dd16e151c80c65",
+    "src/preview/buildings.ts": "f78fd7508ad209b455eeefed6dcf19ff1cdba3b8ac6e8530ec67add164de7fa2",
+    "tests/buildings.test.mjs": "81b17543b518777eca77373d1c7e786a1d6434a19502e98bc8d5cd1ceb8c1298",
+    "package-lock.json": "990ed885b3480563100835bb2c5803bdb792bc3716a1006bdb6f5e6d3f2cfdbd",
+    "package.json": "58952122c9a2ea0a1740a3daf8bf90fe0b10cb8a56955822d8356f055c11fbd1",
+    "src/App.tsx": "b225f8c3e4e87860f384784cdaed88e623bb04a78f99bb96bd9828458a54c86e",
+    "src/components/About.tsx": "9e47533ca7420e42b2b9e6d6f9b4cabbf16db7a78293b1b71b46ff18a56c0557",
+    "src/components/CelestialScene.tsx": "b351c8bda5b393b7c23c8d0cbb007526858cf2624b58c24635fd598afdfacd55",
+    "src/components/Icon.tsx": "04a8505c75af265a056aa65d4f00d190bf040d66c6ed2945476332b907d55d0c",
+    "src/components/InfoGroup.tsx": "766f271a3129d46d7fed220c13a1f2b0be94aa714a50702bab064097907844f7",
+    "src/components/ScenePanels.tsx": "cf1eaaf9abac46c438420ac2df68e2433f3404d906f81e75ee399eb5d018ab9a",
+    "src/components/StarScene.tsx": "6b51878c2b67a6693cd369fa6256aeac2c6e8a1105c10d6acfcac1a4a9916cd4",
+    "src/components/StationScene.tsx": "2c5253acf571dcdc6e91de3c3d15871334a9041eb4a173e660ffaa9a82689228",
+    "src/components/TargetSearch.tsx": "6700c57cac891ef1e81d8e5112b759d872405a2f667c5cfd685c293973f0efaf",
+    "src/components/TerrainScene.tsx": "12ef1266b340316a7a97cf6eac0bd68d534779e1ea49038c8177d7415cc3601c",
+    "src/domain/plan.ts": "eeaf2c9fd944411a394a5a7cbd875d70a6f68fbefdea9e5b8849c87983ac27d6",
+    "src/domain/starfield.ts": "b0f0484725d6f79d62e65ac8f1fbe18daf020008c6d11b2ef006369bbd185f41",
+    "src/domain/visibility.ts": "f7e02a46f7338f2b95c40073bd44b0d2e24158c5f501ee233443663ae07e68fd",
+    "src/preview/celestial-layer.ts": "7e71e35f98475c37bd24656605640de8d02f9cbddfabf7f90930ccee9c6498cb",
+    "src/preview/environment.ts": "fd4bb1493190047534df022233fb9e2f6e7d8b79e85260c0d41e50f4d2da823b",
+    "src/preview/starfield-layer.ts": "20291a853c80de3225b79a6873b05d8553f4afb1bbea0b915690ed43be37410f",
+    "src/styles.css": "2ca8c87a7f3123862cec7bd8beca0fd944a509a5f46484fd17882bf78904d4b3",
+    "tests/interactions.test.mjs": "a386f9feeb05840e8d961cfb0829839da947526979b353a98e3b199deaab4b14",
+    "tests/occlusion-refraction.test.mjs": "946998a559f27b91b419168e239a8f155760628ad4f79bf274f44ca35894437b"
+  },
+  "evidence": {
+    "live-cpu.json": "099afb5420d250ab0adcbce795a972fb5c903e283ecee54f9df7b9e7e81721fc",
+    "source-probe.json": "8e2a514d5394a64835214791c1a38fac8e3fd618a60177b497ea652e914483ba",
+    "browser-results.json": "e9b75bb73979c0b48edd18654ccc6dbbe39d039377ddf7ae791582804df6f074",
+    "browser-phase-one.json": "39d0129787067ead4a7e2db159ffc7e376bcb6968180fbddd08d9202e16e0287"
+  },
+  "screenshots": {
+    "01-skytree-4km-85mm.jpg": {
+      "bytes": 502646,
+      "sha256": "9ad69d05e89a149daf0cb507bcc2b341afcd678638f4b3be4bc6574297b177e6"
+    },
+    "02-skytree-4km-settled.jpg": {
+      "bytes": 520513,
+      "sha256": "c012df6e44a5646349419bdc41c56f94bbb77e9514e1d825fc6b04f02d0d9be4"
+    },
+    "03-skytree-4km-200mm.jpg": {
+      "bytes": 513631,
+      "sha256": "ed582afc1620025318b13614a4da9ee06a141e4950dbf9ec760d1b98303a8428"
+    },
+    "04-skytree-4km-1000mm.jpg": {
+      "bytes": 514199,
+      "sha256": "003880153b1cb0779640585066aec6cd96d198a47ccfaec4fe52ed781d1b3915"
+    },
+    "05-skytree-4km-35mm.jpg": {
+      "bytes": 528517,
+      "sha256": "c4045f87685ea06bb1b6c1ef22705a712b5de450b8b5a4cb9d501becba3902d7"
+    },
+    "06-skytree-4km-drag.jpg": {
+      "bytes": 527738,
+      "sha256": "6cb6f545212cee7dc18b683206c28a9c80722ba32cb334867938540e5209f54e"
+    },
+    "07-far-buildings-off.jpg": {
+      "bytes": 497149,
+      "sha256": "970637e95a72544ff84f9c05930250a73b27a8cb99170996e9e99eb1346fd080"
+    },
+    "08-mobile-far-readout.jpg": {
+      "bytes": 46624,
+      "sha256": "11b8789dd93307fd16b8f01f7566f8e360f6dca8b9c413c473f7c86db56af3cf"
+    },
+    "09-mobile-far-preview.jpg": {
+      "bytes": 25529,
+      "sha256": "82a2d27e619d1eee9814972223fd4832588a708e93300c255d739b46e83fbbb8"
+    },
+    "10-original-user-view.jpg": {
+      "bytes": 526062,
+      "sha256": "cef690d3484be6dcae3fac8c939beb3e83863e32e4e094c63e45fd4177285d9b"
+    },
+    "11-shanghai-5km.jpg": {
+      "bytes": 518770,
+      "sha256": "0e4136bfbe3fbca5e86396fcf3f36389a65f5245dec9d0b700cdc3e13fdfce20"
+    },
+    "12-final-skytree-4km-85mm.jpg": {
+      "bytes": 520461,
+      "sha256": "f1086a08789e204563f8a141a2136bef49cec5e96c517ed5595003d9279509d6"
+    },
+    "13-final-200mm.jpg": {
+      "bytes": 513619,
+      "sha256": "0ff91bec5c3a6010cc379a8fdfdb9f0def628065498536eca5df0211ebe5315f"
+    },
+    "14-final-restored.jpg": {
+      "bytes": 521328,
+      "sha256": "1960a5b625a41102d29c900aa7e1f74ae9f145954c6db6b86d2cd2662038da03"
+    },
+    "15-final-mobile.jpg": {
+      "bytes": 22362,
+      "sha256": "b898324c70ebc996d9e8df006ed65b452b9ea893ca9ceca566b182a1ad009316"
+    },
+    "16-final-shanghai.jpg": {
+      "bytes": 519802,
+      "sha256": "7433872383210775c4ac45f9000b05531ed46b4a680868183d94656a69263400"
+    }
+  },
+  "limits": {
+    "radiusMetres": 5000,
+    "nearRadiusMetres": 2000,
+    "farMinimumHeightMetres": 20,
+    "tiles": 48,
+    "points": 80000,
+    "triangles": 120000,
+    "rawRegionBudgetBytes": 41943040,
+    "buildingCacheBytes": 16777216
+  },
+  "validation": {
+    "cpuSyntheticBase": true,
+    "realDemCityGpu": true,
+    "mobileChromeViewport": true,
+    "physicalMobile": false,
+    "gpuFrameTime": false,
+    "fixedCelestialOcclusion": false
+  },
+  "browserVersions": "01-11 before cache extraction; 12-16 refreshed final version; see browser-results.json"
+}

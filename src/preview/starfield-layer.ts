@@ -328,7 +328,8 @@ export class StarfieldLayer implements CustomLayerInterface {
     }
     this.map?.triggerRepaint();
   }
-  invalidate() {
+  invalidate(resetLabels = false) {
+    if (resetLabels) { this.labelStates = {}; this.labelKey = ""; }
     this.clearQueries();
     this.resolvedKey = "";
     if (this.frame) {

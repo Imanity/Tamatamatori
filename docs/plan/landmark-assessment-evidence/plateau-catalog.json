@@ -1,0 +1,266 @@
+{
+  "checkedAt": "2026-11-07T10:37:42.069Z",
+  "source": "https://api.plateauview.mlit.go.jp/datacatalog/plateau-datasets",
+  "catalogBytes": 9746073,
+  "catalogSha256": "1949fe7a87254436fe00a96e499662c9c27e43c14194a9f617043622a416435c",
+  "totalEntries": 7776,
+  "buildingLod3": {
+    "entries": 45,
+    "areaCodes": 24,
+    "areas": [
+      {
+        "code": "01639",
+        "name": "更別村",
+        "year": 2023
+      },
+      {
+        "code": "08220",
+        "name": "つくば市",
+        "year": 2023
+      },
+      {
+        "code": "11214",
+        "name": "春日部市",
+        "year": 2023
+      },
+      {
+        "code": "13103",
+        "name": "港区",
+        "year": 2025
+      },
+      {
+        "code": "13106",
+        "name": "台東区",
+        "year": 2025
+      },
+      {
+        "code": "13107",
+        "name": "墨田区",
+        "year": 2025
+      },
+      {
+        "code": "14103",
+        "name": "西区",
+        "year": 2024
+      },
+      {
+        "code": "14104",
+        "name": "中区",
+        "year": 2024
+      },
+      {
+        "code": "14114",
+        "name": "瀬谷区",
+        "year": 2024
+      },
+      {
+        "code": "14131",
+        "name": "川崎区",
+        "year": 2022
+      },
+      {
+        "code": "15103",
+        "name": "中央区",
+        "year": 2023
+      },
+      {
+        "code": "19201",
+        "name": "甲府市",
+        "year": 2023
+      },
+      {
+        "code": "21201",
+        "name": "岐阜市",
+        "year": 2025
+      },
+      {
+        "code": "22203",
+        "name": "沼津市",
+        "year": 2023
+      },
+      {
+        "code": "26104",
+        "name": "中京区",
+        "year": 2025
+      },
+      {
+        "code": "26105",
+        "name": "東山区",
+        "year": 2025
+      },
+      {
+        "code": "26106",
+        "name": "下京区",
+        "year": 2025
+      },
+      {
+        "code": "27127",
+        "name": "北区",
+        "year": 2025
+      },
+      {
+        "code": "27128",
+        "name": "中央区",
+        "year": 2025
+      },
+      {
+        "code": "32201",
+        "name": "松江市",
+        "year": 2024
+      },
+      {
+        "code": "34102",
+        "name": "東区",
+        "year": 2024
+      },
+      {
+        "code": "34103",
+        "name": "南区",
+        "year": 2024
+      },
+      {
+        "code": "40225",
+        "name": "うきは市",
+        "year": 2025
+      },
+      {
+        "code": "43206",
+        "name": "玉名市",
+        "year": 2024
+      }
+    ],
+    "variants": [
+      {
+        "texture": true,
+        "entries": 24,
+        "knownSizes": 24,
+        "bytes": 3723334219
+      },
+      {
+        "texture": false,
+        "entries": 21,
+        "knownSizes": 21,
+        "bytes": 1285545279
+      }
+    ]
+  },
+  "sizeMeaning": "file_size 为目录提供的源包/CMS资产体积，非单栋模型或 tileset.json 的实际响应；有无纹理、瓦片层级均可能重复几何。没有下载完整地区包。",
+  "selected": [
+    {
+      "id": "13103_bldg_lod3",
+      "name": "建築物モデル（港区）",
+      "pref": "東京都",
+      "pref_code": "13",
+      "city": "港区",
+      "city_code": "13103",
+      "ward": null,
+      "ward_code": null,
+      "type": "建築物モデル",
+      "type_en": "bldg",
+      "url": "https://assets.cms.plateau.reearth.io/assets/c7/ffcc73-1d33-434b-a49a-aa0289160814/13103_minato-ku_pref_2025_citygml_1_op_bldg_3dtiles_13103_minato-ku_lod3/tileset.json",
+      "file_size": 369231400,
+      "composite_url": "https://api.plateauview.mlit.go.jp/datacatalog/3dtiles/13103-bldg-lod3-texture-2025/tileset.json",
+      "layers": null,
+      "year": 2025,
+      "registration_year": 2025,
+      "spec": "5.0",
+      "format": "3D Tiles",
+      "format_version": "1.0",
+      "lod": "3",
+      "texture": true,
+      "crs": "JGD2011",
+      "attribute_set": "DEFAULT"
+    },
+    {
+      "id": "13103_bldg_lod3_no_texture",
+      "name": "建築物モデル（港区）",
+      "pref": "東京都",
+      "pref_code": "13",
+      "city": "港区",
+      "city_code": "13103",
+      "ward": null,
+      "ward_code": null,
+      "type": "建築物モデル",
+      "type_en": "bldg",
+      "url": "https://assets.cms.plateau.reearth.io/assets/cb/a78f63-b217-4460-8f0c-b329c840ed2b/13103_minato-ku_pref_2025_citygml_1_op_bldg_3dtiles_13103_minato-ku_lod3_no_texture/tileset.json",
+      "file_size": 63916664,
+      "composite_url": "https://api.plateauview.mlit.go.jp/datacatalog/3dtiles/13103-bldg-lod3-notexture-2025/tileset.json",
+      "layers": null,
+      "year": 2025,
+      "registration_year": 2025,
+      "spec": "5.0",
+      "format": "3D Tiles",
+      "format_version": "1.0",
+      "lod": "3",
+      "texture": false,
+      "crs": "JGD2011",
+      "attribute_set": "DEFAULT"
+    },
+    {
+      "id": "13107_bldg_lod3",
+      "name": "建築物モデル（墨田区）",
+      "pref": "東京都",
+      "pref_code": "13",
+      "city": "墨田区",
+      "city_code": "13107",
+      "ward": null,
+      "ward_code": null,
+      "type": "建築物モデル",
+      "type_en": "bldg",
+      "url": "https://assets.cms.plateau.reearth.io/assets/f2/aaaf35-d94c-4c15-affd-d9f652cd16c1/13107_sumida-ku_pref_2025_citygml_1_op_bldg_3dtiles_13107_sumida-ku_lod3/tileset.json",
+      "file_size": 109243830,
+      "composite_url": "https://api.plateauview.mlit.go.jp/datacatalog/3dtiles/13107-bldg-lod3-texture-2025/tileset.json",
+      "layers": null,
+      "year": 2025,
+      "registration_year": 2025,
+      "spec": "5.0",
+      "format": "3D Tiles",
+      "format_version": "1.0",
+      "lod": "3",
+      "texture": true,
+      "crs": "JGD2011",
+      "attribute_set": "DEFAULT"
+    },
+    {
+      "id": "13107_bldg_lod3_no_texture",
+      "name": "建築物モデル（墨田区）",
+      "pref": "東京都",
+      "pref_code": "13",
+      "city": "墨田区",
+      "city_code": "13107",
+      "ward": null,
+      "ward_code": null,
+      "type": "建築物モデル",
+      "type_en": "bldg",
+      "url": "https://assets.cms.plateau.reearth.io/assets/f8/3a75b8-f75a-4ec0-9e56-da7eb661b399/13107_sumida-ku_pref_2025_citygml_1_op_bldg_3dtiles_13107_sumida-ku_lod3_no_texture/tileset.json",
+      "file_size": 71726136,
+      "composite_url": "https://api.plateauview.mlit.go.jp/datacatalog/3dtiles/13107-bldg-lod3-notexture-2025/tileset.json",
+      "layers": null,
+      "year": 2025,
+      "registration_year": 2025,
+      "spec": "5.0",
+      "format": "3D Tiles",
+      "format_version": "1.0",
+      "lod": "3",
+      "texture": false,
+      "crs": "JGD2011",
+      "attribute_set": "DEFAULT"
+    }
+  ],
+  "licenses": [
+    {
+      "id": "plateau-13103-minato-ku-2025",
+      "url": "https://www.geospatial.jp/ckan/dataset/plateau-13103-minato-ku-2025",
+      "apiUrl": "https://www.geospatial.jp/ckan/api/3/action/package_show?id=plateau-13103-minato-ku-2025",
+      "licenseId": "plateau",
+      "licenseUrl": "https://www.mlit.go.jp/plateau/site-policy/"
+    },
+    {
+      "id": "plateau-13107-sumida-ku-2025",
+      "url": "https://www.geospatial.jp/ckan/dataset/plateau-13107-sumida-ku-2025",
+      "apiUrl": "https://www.geospatial.jp/ckan/api/3/action/package_show?id=plateau-13107-sumida-ku-2025",
+      "licenseId": "plateau",
+      "licenseUrl": "https://www.mlit.go.jp/plateau/site-policy/"
+    }
+  ]
+}

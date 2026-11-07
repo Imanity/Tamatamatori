@@ -10,7 +10,10 @@ import { direction } from "../src/domain/ephemeris.ts";
 import { compareEarthModels, matrixPixel, mercatorXY, mercatorMeter, referencePixel, referenceRay, rayAngles } from "../src/preview/calibration-math.ts";
 import { ellipsoidalRay, geodeticEcef } from "../src/domain/geodesy.ts";
 import { matrixEye } from "../src/preview/rendered-camera.ts";
-import { terrainTileZoom, TERRAIN_MAX_MESH_ZOOM } from "../src/preview/terrain-detail.ts";
+import { terrainTileZoom, TERRAIN_MAX_MESH_ZOOM, LANDMARK_TERRAIN_RANGE, terrainCoverageRange } from "../src/preview/terrain-detail.ts";
+import { skytree } from "../src/domain/landmarks.ts";
+import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { TERRAIN_VISUAL_TILE_SIZE } from "../src/domain/terrain.ts";
 import { readFileSync } from "node:fs";
 import { photoCameraMatrix, photoFragmentDepth, photoFogDepth, photoTileFrame, photoTileRay } from "../src/preview/terrain-perspective-math.ts";
@@ -456,4 +459,51 @@ test("真实 SDK 地形网格采用公共 LOD 策略，长焦参考点使用 z12
         assertEye(camera,plan,scene.syntheticGround);
       }
   t.diagnostic(`30 组覆盖，最大 ${maxMeshes} 个网格、${maxDem} 个理想 DEM 瓦片（不含加载父瓦片）`);
+});
+
+test('远景地标覆盖扩展复用真实SDK，包含塔址DEM且不修改实际相机/普通地图',t=>{
+  const reference=MercatorCoordinate.fromLngLat([skytree.longitude,skytree.latitude]),records=[];
+  for(const [latitude,focalLength,pitch,ground] of [[35.80013517252544,200,1,3],[35.98031535270562,600,.3,7.6],[36.159594631984895,1000,.1,19]]){
+    const plan={...terrainScenes[0].plan,longitude:skytree.longitude,latitude,azimuth:180,pitch,focalLength,cameraHeight:100,layers:{...terrainScenes[0].plan.layers,buildings:true}};
+    const camera=createCamera(1238.5,825.65625,ground);apply(camera,plan,ground);
+    const terrain={...flatTerrain(ground),getMinMaxElevation:()=>({minElevation:0,maxElevation:30})};
+    const source={tileSize:TERRAIN_VISUAL_TILE_SIZE,minzoom:0,maxzoom:12,calculateTileZoom:terrainTileZoom(825.65625)};
+    const tiles={_source:source,usedForTerrain:false,map:{painter:{}},update(){},getTileByID(key){return {key};}},manager=new TerrainTileManager(tiles);
+    const cover=()=>{manager.update(camera.transform,terrain);return manager.getRenderableTiles().map(t=>t.tileID);};
+    const atTower=ts=>ts.some(t=>t.canonical.x===Math.floor(reference.x*2**t.canonical.z)&&t.canonical.y===Math.floor(reference.y*2**t.canonical.z));
+    const native=cover(),matrix=Array.from(camera.transform.modelViewProjectionMatrix),far=camera.transform.farZ;
+    if(focalLength>=600)assert.ok(!atTower(native),'native range reproduces missing ground');
+    source.calculateTileZoom=terrainTileZoom(825.65625,terrainCoverageRange(plan));
+    const extended=cover();assert.ok(atTower(extended),'extended coverage includes tower ground');assert.ok(extended.length<96);
+    const dem=coveringTiles(camera.transform,{tileSize:manager.tileSize,minzoom:0,maxzoom:12,terrain,calculateTileZoom:source.calculateTileZoom});assert.ok(atTower(dem));assert.ok(dem.length<64);
+    assert.deepEqual(Array.from(camera.transform.modelViewProjectionMatrix),matrix);assert.equal(camera.transform.farZ,far);assert.equal(camera.transform.nearFarZOverride,null);
+    assertEye(camera,plan,ground);source.calculateTileZoom=terrainTileZoom(825.65625);assert.deepEqual(cover().map(t=>t.key),native.map(t=>t.key));
+    records.push({focalLength,meshes:extended.length,dem:dem.length});
+  }
+  t.diagnostic(JSON.stringify(records));
+  const near={...terrainScenes[0].plan,...skytree,layers:{...terrainScenes[0].plan.layers,buildings:true}};
+  assert.equal(terrainCoverageRange(near),0);assert.equal(terrainCoverageRange({...near,longitude:130}),0);assert.equal(terrainCoverageRange({...near,latitude:35.98}),LANDMARK_TERRAIN_RANGE);assert.equal(terrainCoverageRange({...near,latitude:35.98,layers:{...near.layers,buildings:false}}),0);
+  assert.throws(()=>terrainTileZoom(768,100000),RangeError);
+});
+
+test('远距覆盖补丁同时校验源码/ESM并保持重复安装幂等',()=>{
+  const files=['src/geo/projection/covering_tiles.ts','dist/maplibre-gl.mjs'].map(p=>new URL('../node_modules/maplibre-gl/'+p,import.meta.url));
+  const digest=()=>files.map(p=>createHash('sha256').update(readFileSync(p)).digest('hex'));
+  for(const p of files){const s=readFileSync(p,'utf8');assert.equal(s.split('TAMATAMATORI_TERRAIN_RANGE_V1').length,2);assert.ok(s.includes('tamatamatori.terrain-range.v1'));}
+  const before=digest();execFileSync(process.execPath,['scripts/patch-terrain-range.mjs'],{stdio:'pipe'});assert.deepEqual(digest(),before);
+});
+
+test('远距覆盖在广角/长焦及横竖幅下保持有界，普通覆盖不带扩展标记',t=>{
+  let maxMesh=0,maxDem=0;const records=[];
+  for(const focalLength of [8,35,200,1000])for(const orientation of ['landscape','portrait']){
+    const plan={...terrainScenes[0].plan,longitude:skytree.longitude,latitude:35.98,cameraHeight:100,azimuth:180,pitch:.3,focalLength,orientation,layers:{...terrainScenes[0].plan.layers,buildings:true}};
+    const camera=createCamera(...(orientation==='portrait'?[512,768]:[1152,768]),7.6);apply(camera,plan,7.6);
+    const terrain={...flatTerrain(7.6),getMinMaxElevation:()=>({minElevation:0,maxElevation:30})},calculateTileZoom=terrainTileZoom(768,terrainCoverageRange(plan));
+    const source={tileSize:TERRAIN_VISUAL_TILE_SIZE,minzoom:0,maxzoom:12,calculateTileZoom};
+    const manager=new TerrainTileManager({_source:source,usedForTerrain:false,update(){},getTileByID(k){return {key:k};}});manager.update(camera.transform,terrain);
+    const mesh=manager.getRenderableTiles(),dem=coveringTiles(camera.transform,{tileSize:manager.tileSize,minzoom:0,maxzoom:12,terrain,calculateTileZoom});
+    assert.ok(mesh.length<160,`${focalLength}/${orientation}: ${mesh.length}`);assert.ok(dem.length<64,`${focalLength}/${orientation}: ${dem.length}`);assert.ok(mesh.every(t=>t.tileID.canonical.z<=14));
+    maxMesh=Math.max(maxMesh,mesh.length);maxDem=Math.max(maxDem,dem.length);records.push({focalLength,orientation,meshes:mesh.length,dem:dem.length});
+  }
+  t.diagnostic(JSON.stringify({maxMesh,maxDem,records}));
 });

@@ -3,7 +3,7 @@ import type { StationScene } from "../domain/stations";
 import type { SkyVisibility } from "../domain/starfield";
 import type { OrbitFeed } from "./useOrbits";
 import { skyPointView } from "../domain/starfield";
-import { celestialPlanKey, skyLabelKey, occlusionLabels } from "../domain/visibility";
+import { celestialPlanKey, skyLabelKey, occlusionText } from "../domain/visibility";
 import { apparentElevation } from "../domain/refraction";
 import { matchingStations } from "../domain/orbit-data";
 import type { WeatherSample } from "../domain/weather";
@@ -19,7 +19,7 @@ function stationView(plan: ShootingPlan, scene: StationScene, visibility: SkyVis
   const current = planCurrent && visibility.orbitKey === scene.key;
   const view = current && visibility.view ? { ...plan, ...visibility.view } : plan;
   const projected = skyPointView(view, point);
-  const occlusion = planCurrent && visibility.message ? "error" : current && visibility.ready
+  const occlusion = planCurrent && (visibility.message || visibility.occlusionUnavailable) ? "error" : current && visibility.ready
     ? visibility.states[point.id] ?? "waiting" : "waiting";
   return { ...projected, occlusion };
 }
@@ -79,7 +79,7 @@ export function StationReadout({ plan, scene, visibility, feed, query, update }:
       {rows.map((row) => {
         const point = row.point;
         const projected = point ? stationView(plan, scene, visibility, point) : null;
-        const state = projected?.state === "画面内" ? occlusionLabels[projected.occlusion] : projected?.state;
+        const state = projected?.state === "画面内" ? occlusionText(projected.occlusion,plan) : projected?.state;
         const action = point && point.elevation > 0 ? (plan.layers.stations ? "朝向" : "开启并朝向") : "开启图层";
         return (
           <div className="station-row" data-station-status={row.id} key={row.id}>

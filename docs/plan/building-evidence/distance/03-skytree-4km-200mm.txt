@@ -1,0 +1,262 @@
+- banner:
+  - link "Tamatamatori 首页":
+    - /url: ./
+    - text: Tamatamatori
+    - generic: 光影之间，自有方向
+  - generic: 摄影规划
+  - generic: 工作区原型
+  - generic: P3 / 天文构图
+  - button "关于 Tamatamatori":
+    - text: About
+- complementary "图层侧栏":
+  - heading "图层" [level=2]:
+    - text: 图层
+  - generic: 建筑
+  - switch "显示建筑" [checked]
+  - button "建筑设置与信息":
+  - generic: 太阳
+  - switch "显示太阳" [checked]
+  - button "太阳设置与信息":
+  - generic: 月亮
+  - switch "显示月亮" [checked]
+  - button "月亮设置与信息":
+  - generic: 星空
+  - switch "显示星空"
+  - button "星空设置与信息":
+  - generic: 银河
+  - switch "显示银河"
+  - button "银河设置与信息":
+  - generic: 深空天体
+  - switch "显示深空天体"
+  - button "深空天体设置与信息":
+  - generic: 空间站
+  - switch "显示空间站"
+  - button "空间站设置与信息":
+  - generic "环境":
+    - text: 环境
+  - generic: 光污染
+  - switch "当地光污染"
+  - generic: 天气效果
+  - switch "天气效果"
+  - generic: 预测模型
+  - combobox "天气预测模型":
+    - option "自动匹配" [selected]
+    - option "NOAA GFS"
+    - option "DWD ICON"
+    - option "ECMWF IFS 0.25°"
+- main:
+  - region "地图":
+    - heading "地图" [level=2]
+    - generic: 交互底图
+    - combobox "地图面板位置":
+      - option "主栏" [selected]
+      - option "右上"
+      - option "右下"
+    - button "拖动地图面板以交换位置":
+    - generic "交互地图，可用方向键浏览、加减键缩放；机位和朝向也可在参数区输入":
+      - region "摄影机位地图"
+      - img "当前机位：纬度 35.7070，经度 139.7650。可拖动修改，也可在参数区输入。"
+      - img "拍摄方向把手，可拖动；也可在参数区输入方位角": ▲
+      - button "放大地图"
+      - button "缩小地图"
+      - button "恢复地图朝北"
+      - generic: 2 千米
+      - generic "地图版权与来源"
+      - link "OpenFreeMap":
+        - /url: https://openfreemap.org
+      - link "© OpenMapTiles":
+        - /url: https://www.openmaptiles.org/
+      - text: Data from
+      - link "OpenStreetMap":
+        - /url: https://www.openstreetmap.org/copyright
+    - generic "地图点击操作":
+      - button "放置机位"
+      - button "定朝向"
+    - button "回到机位":
+    - button "全球视图":
+    - generic: 35.7070°N 139.7650°E
+    - generic: 底图已加载
+    - text: 方向
+    - strong: 85.2°
+    - text: 东
+    - text: 水平视场
+    - strong: 10.3°
+    - text: 焦距
+    - strong: "200"
+    - text: mm
+  - separator "调整主栏宽度"
+  - region "拍摄预览":
+    - heading "拍摄预览" [level=2]
+    - generic: 地形模拟
+    - combobox "拍摄预览面板位置":
+      - option "主栏"
+      - option "右上" [selected]
+      - option "右下"
+    - button "拖动拍摄预览面板以交换位置":
+    - strong: 200 mm
+    - text: · 全画幅 · 横幅 3:2
+    - generic: 未改机 · 近似参考
+    - generic: 机位高程 ≈ 22.0 m · 离地 100 m
+    - group "预览显示设置":
+      - button "显示构图线" [pressed]:
+    - group "拍摄预览，拖动调整拍摄视角，滚轮调整焦距，也可使用方向键，Shift 加速":
+      - generic "真实 DEM 山体与静态水体预览，水面高程按 DEM 近似":
+        - region "山体与水体摄影预览"
+      - img "太阳在画面右上方（相机后方），视场外方向参考":
+        - text: 太阳
+        - generic: 后方
+      - img "月亮在画面上方（相机后方），视场外方向参考":
+        - text: 月亮
+        - generic: 后方
+      - img "取景辅助线，水平视场 10.3 度，垂直视场 6.9 度。":
+        - generic: E
+  - separator "调整右侧面板高度"
+  - region "拍摄参数":
+    - heading "拍摄参数" [level=2]
+    - generic: 实时联动
+    - combobox "拍摄参数面板位置":
+      - option "主栏"
+      - option "右上"
+      - option "右下" [selected]
+    - button "拖动拍摄参数面板以交换位置":
+    - group "01 拍摄时间":
+      - generic: "01"
+      - text: 拍摄时间
+      - generic: 当地日期
+      - textbox "当地日期": 2026-11-04
+      - generic: 当日时间
+      - textbox "当地时间": 12:00:00
+      - slider "24 小时时间滑杆": "720"
+      - generic: 00:00
+      - generic: 06:00
+      - generic: 12:00
+      - generic: 18:00
+      - generic: 23:59
+      - generic: 显示时区
+      - combobox "显示时区":
+        - option "东京 · Asia/Tokyo" [selected]
+        - option "上海 · Asia/Shanghai"
+        - option "UTC · 协调世界时"
+        - option "纽约 · America/New_York"
+        - option "伦敦 · Europe/London"
+      - generic: 大气折射
+      - combobox "大气折射模型":
+        - option "标准折射 · 海平面近似" [selected]
+        - option "无折射 · 几何位置"
+    - group "02 相机与镜头":
+      - generic: "02"
+      - text: 相机与镜头
+      - generic: 焦距
+      - spinbutton "焦距 mm": "200"
+      - generic: mm
+      - slider "焦距滑块": "200"
+      - generic "常用焦距":
+        - button "8 mm"
+        - button "24 mm"
+        - button "35 mm"
+        - button "50 mm"
+        - button "85 mm"
+        - button "200 mm" [active] [pressed]
+        - button "600 mm"
+        - button "1000 mm"
+      - generic: 传感器
+      - combobox "传感器":
+        - option "全画幅" [selected]
+        - option "APS-C · 23.5 × 15.6"
+        - option "M4/3 · 17.3 × 13"
+      - generic: 画幅比例
+      - combobox "画幅比例":
+        - option "3:2" [selected]
+        - option "16:9"
+        - option "1:1"
+      - generic: 画幅方向
+      - combobox "拍摄画幅方向":
+        - option "横幅" [selected]
+        - option "竖幅"
+      - generic: 深空相机响应
+      - combobox "深空相机响应":
+        - option "未改机 · 近似参考" [selected]
+        - option "天文改机 · Hα 增强示意"
+      - paragraph: 未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。
+    - group "03 机位与视角":
+      - generic: "03"
+      - text: 机位与视角
+      - generic: 纬度
+      - spinbutton "纬度 °": "35.70698835542723"
+      - generic: °
+      - generic: 经度
+      - spinbutton "经度 °": "139.765"
+      - generic: °
+      - generic: 方位角
+      - spinbutton "方位角 °": "85.21455"
+      - generic: °
+      - generic: 俯仰角
+      - spinbutton "俯仰角 °": "3.5"
+      - generic: °
+      - generic: 相机离地高度
+      - spinbutton "相机离地高度 m": "100"
+      - generic: m
+      - paragraph: 方位角以真北为 0°，顺时针递增；俯仰角向上为正。预览相机以 DEM 高程加离地高度定位。
+- complementary "拍摄信息":
+  - search "拍摄目标搜索":
+    - generic: 搜索目标
+    - button "收起拍摄信息":
+    - searchbox "搜索拍摄目标"
+  - heading "全局信息" [level=2]:
+    - button "全局信息":
+      - generic: 全局信息
+      - generic: +
+  - heading "建筑" [level=2]:
+    - button "建筑" [expanded]:
+      - generic: 建筑
+      - generic: −
+  - generic "建筑":
+    - generic "建筑数据状态":
+      - status: 建筑体块已应用
+      - paragraph: 近景约 2 km · 远景至约 5 km，优先显示高度 ≥20 m 的建筑 · 体块与高度近似
+      - status: 已达范围或网格预算，建筑覆盖不完整。
+      - text: 已读取瓦片
+      - strong: "32"
+      - text: 分块体块
+      - strong: 6589 / 42567
+      - text: 三角面
+      - strong: 119,986
+      - text: 网格
+      - strong: 8.24 MiB
+      - paragraph: 2–5 km 远景分部 1370 / 4904 · 5 km 外未加载。
+      - paragraph: 已清理 13 个重复或共线点，保留源轮廓。
+      - paragraph: 预算内优先保留高层并分配周边覆盖，省略 35978 个分部。
+      - paragraph: 来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。
+      - paragraph: 本次载入 2026-11-07 07:28:15 UTC
+      - paragraph: 已略过 509 个隐藏轮廓、非面或高度无效要素。
+      - paragraph:
+        - link "OpenFreeMap":
+          - /url: https://openfreemap.org/
+        - text: ·
+        - link "© OpenStreetMap contributors":
+          - /url: https://www.openstreetmap.org/copyright
+      - button "重新读取建筑"
+  - heading "太阳" [level=2]:
+    - button "太阳":
+      - generic: 太阳
+      - generic: +
+  - heading "月亮" [level=2]:
+    - button "月亮":
+      - generic: 月亮
+      - generic: +
+  - heading "星空" [level=2]:
+    - button "星空":
+      - generic: 星空
+      - generic: +
+  - heading "银河" [level=2]:
+    - button "银河":
+      - generic: 银河
+      - generic: +
+  - heading "深空天体" [level=2]:
+    - button "深空天体":
+      - generic: 深空天体
+      - generic: +
+  - heading "空间站" [level=2]:
+    - button "空间站":
+      - generic: 空间站
+      - generic: +

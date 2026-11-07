@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-11-07T14:22:19.232Z",
+  "package": {
+    "name": "maplibre-gl",
+    "version": "6.16.0",
+    "integrity": "sha512-gApO66EMtoDZuio680RUBvskR7ahFd/NNhLN4tBAs+Y7FeT4gQV8zVFgYVMRmFxQznOEzecW19w6xOd9XjZjiA==",
+    "shasum": "ace29d707f7338e3a8631057c734019e9a73ce8c",
+    "bytes": 6211903
+  },
+  "installedFrom": "npm offline cache, official package archive",
+  "freshAllPatches": true,
+  "idempotent": true,
+  "signatureTamperRejected": true,
+  "esmUntouchedOnRejection": true,
+  "sha256": {
+    "src/geo/projection/covering_tiles.ts": "ccf4b6e50d5721d45378356ce6c18cec297de9fdb555752067ee4fdceeee3901",
+    "dist/maplibre-gl.mjs": "95c2b377aba5edc0f1bd1579d7146203e1f9f803aa4f38578ceb1f093d64bd26"
+  }
+}

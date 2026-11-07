@@ -1,0 +1,77 @@
+{
+  "checkedAt": "2026-11-07T07:16:58.891Z",
+  "url": "http://127.0.0.1:5176/Tamatamatori/",
+  "scripts": [
+    "http://127.0.0.1:5176/Tamatamatori/assets/index-Bx0b7MX6.js"
+  ],
+  "scenes": [
+    {
+      "name": "01-user-35mm-day",
+      "screenshot": "01-user-35mm-day.jpg",
+      "snapshot": "01-user-35mm-day.txt"
+    },
+    {
+      "name": "02-user-24mm",
+      "screenshot": "02-user-24mm.jpg",
+      "snapshot": "02-user-24mm.txt"
+    },
+    {
+      "name": "03-user-85mm",
+      "screenshot": "03-user-85mm.jpg",
+      "snapshot": "03-user-85mm.txt"
+    },
+    {
+      "name": "04-user-200mm",
+      "screenshot": "04-user-200mm.jpg",
+      "snapshot": "04-user-200mm.txt"
+    },
+    {
+      "name": "05-user-1000mm",
+      "screenshot": "05-user-1000mm.jpg",
+      "snapshot": "05-user-1000mm.txt"
+    },
+    {
+      "name": "06-user-drag",
+      "screenshot": "06-user-drag.jpg",
+      "snapshot": "06-user-drag.txt"
+    },
+    {
+      "name": "07-buildings-off",
+      "screenshot": "07-buildings-off.jpg",
+      "snapshot": "07-buildings-off.txt"
+    },
+    {
+      "name": "08-buildings-restored",
+      "screenshot": "08-buildings-restored.jpg",
+      "snapshot": "08-buildings-restored.txt"
+    },
+    {
+      "name": "09-mobile-readout",
+      "screenshot": "09-mobile-readout.jpg",
+      "snapshot": "09-mobile-readout.txt"
+    },
+    {
+      "name": "10-mobile-preview",
+      "screenshot": "10-mobile-preview.jpg",
+      "snapshot": "10-mobile-preview.txt"
+    },
+    {
+      "name": "11-shanghai",
+      "screenshot": "11-shanghai.jpg",
+      "snapshot": "11-shanghai.txt"
+    },
+    {
+      "name": "12-final-user-view",
+      "screenshot": "12-final-user-view.jpg",
+      "snapshot": "12-final-user-view.txt"
+    }
+  ],
+  "dragReadoutUnchanged": true,
+  "console": [],
+  "notes": [
+    "真实 OpenFreeMap 与 Mapterhorn DEM；手机为桌面 Chrome 390×844 视口，非实体手机性能测试。",
+    "最初 5175 服务 base 不匹配，资源返回 HTML；改用显式 /Tamatamatori/ 的 5176 服务重新验收。",
+    "时间控件 fill 未更新计划，改用原生时间滑杆到 12:01；最终天空与滑杆一致。",
+    "没有做 GPU 帧耗时测量、固定天体恰与楼体相交的遮挡专项或网络故障注入。"
+  ]
+}

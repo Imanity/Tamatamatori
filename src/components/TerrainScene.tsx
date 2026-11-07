@@ -21,11 +21,15 @@ import type { StarfieldLayer } from "../preview/starfield-layer";
 import type { WeatherSample } from "../domain/weather";
 import type { SkyVisibility } from "../domain/starfield";
 import type { RenderedCamera } from "../preview/rendered-camera";
-import { applyTerrainDetail } from "../preview/terrain-detail";
+import { applyTerrainDetail, terrainCoverageRange } from "../preview/terrain-detail";
 import type { TerrainPerspective } from "../preview/terrain-perspective";
 import type { StationScene } from "../domain/stations";
+import type { BuildingLayer } from "../preview/building-layer";
+import { emptyBuildings } from "../domain/buildings";
+import type { BuildingStatus } from "../domain/buildings";
 
-const calibrationEnabled = import.meta.env.DEV && new URLSearchParams(window.location.search).get("calibration") === "fuji";
+const calibrationName = import.meta.env.DEV ? new URLSearchParams(window.location.search).get("calibration") : null;
+const calibrationEnabled = calibrationName === "fuji" || calibrationName === "skytree";
 
 const terrainUrl =
   import.meta.env.VITE_TERRAIN_TILEJSON_URL?.trim() || DEFAULT_TERRAIN_URL;
@@ -49,7 +53,7 @@ export interface TerrainInfo {
   adjusted: boolean;
 }
 
-export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChange, onSkyChange, onInfoChange, artificialMcd, weather }: { plan: ShootingPlan; stations?: StationScene; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void; onCameraChange?: (camera: RenderedCamera | null) => void; onSkyChange?: (snapshot:SkyVisibility)=>void; onInfoChange?: (info: TerrainInfo) => void; artificialMcd?: number; weather?: WeatherSample }) {
+export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChange, onSkyChange, onInfoChange, artificialMcd, weather, onBuildingsChange, buildingAttempt=0 }: { plan: ShootingPlan; stations?: StationScene; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void; onCameraChange?: (camera: RenderedCamera | null) => void; onSkyChange?: (snapshot:SkyVisibility)=>void; onInfoChange?: (info: TerrainInfo) => void; artificialMcd?: number; weather?: WeatherSample; onBuildingsChange?: (status:BuildingStatus)=>void; buildingAttempt?:number }) {
   const container = useRef<HTMLDivElement>(null);
   const synchronize = useRef<(() => void) | null>(null);
   const key = `${plan.longitude}/${plan.latitude}`;
@@ -68,12 +72,12 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
     ground: number;
     altitude: number;
   } | null>(null);
-  const latest = useRef({ plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd, weather });
+  const latest = useRef({ plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd, weather, onBuildingsChange, buildingAttempt });
 
   useEffect(() => {
-    latest.current = { plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd, weather };
+    latest.current = { plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd, weather, onBuildingsChange, buildingAttempt };
     synchronize.current?.();
-  }, [plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd, weather]);
+  }, [plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd, weather, onBuildingsChange, buildingAttempt]);
 
   useEffect(() => {
     // Unavailable ground has no render/query callback; keep its status explicit
@@ -133,6 +137,8 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
     let celestialLayer: CelestialLayer | undefined;
     let starfield: StarfieldLayer | undefined;
     let perspective: TerrainPerspective | undefined;
+    let buildings: BuildingLayer | undefined;
+    let buildingState: BuildingStatus = emptyBuildings;
     let sourceRevision = 0;
     let lastCelestialFrame = "";
     let createCamera: typeof terrainCamera | undefined;
@@ -143,7 +149,10 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
     let lastPose = "";
     let lastSize = "";
     let lastEnvironment = "";
+    let buildingEnvironment: ReturnType<typeof environmentForSky> | undefined;
+    let buildingSun: number[] = [0,0,1];
     let lastDetail = 0;
+    let lastCoverageRange = -1;
     let currentPoseKey = "";
     let currentPoseGround: number | null = null;
     let timeout: ReturnType<typeof setTimeout> | undefined;
@@ -213,38 +222,38 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
         !map ||
         !createCamera ||
         !styleReady ||
-        !container.current ||
-        container.current.clientWidth <= 0 ||
-        container.current.clientHeight <= 0
+        !container.current
       )
         return;
       const current = latest.current;
-      if (
-        current.ground.key !== current.key ||
-        current.ground.phase !== "ready" ||
-        current.ground.height === undefined
-      )
-        return;
+      buildings?.setVisible(hasSize()&&current.ground.key===current.key&&current.ground.phase==="ready");
       try {
+        const weatherKey = current.weather ? JSON.stringify(current.weather) : "";
+        const environmentKey = `${current.key}/${current.plan.instant}/${current.artificialMcd ?? 0}/${weatherKey}`;
+        if (environmentKey !== lastEnvironment) {
+          const { sun, moon } = celestialBodies(current.plan);
+          buildingEnvironment=environmentForSky(sun, moon, current.artificialMcd, current.weather);
+          buildingSun=[...sun.direction];
+          applyEnvironment(map, buildingEnvironment);
+          lastEnvironment = environmentKey;
+        }
+        if(buildingEnvironment)buildings?.setScene(current.plan,buildingEnvironment,buildingSun,current.weather?.visibility,current.buildingAttempt);
+        if(!hasSize())return;
         const size = `${container.current.clientWidth}/${container.current.clientHeight}`;
         if (size !== lastSize) {
           lastSize = size;
           map.resize();
         }
         const detailHeight = container.current.clientHeight;
-        if (detailHeight !== lastDetail) {
-          applyTerrainDetail(map, detailHeight);
+        const coverageRange=terrainCoverageRange(current.plan);
+        if (detailHeight !== lastDetail||coverageRange!==lastCoverageRange) {
+          applyTerrainDetail(map, detailHeight,coverageRange);
           lastDetail = detailHeight;
+          lastCoverageRange = coverageRange;
           sourceRevision++;
           celestialLayer?.invalidate();
         }
-        const weatherKey = current.weather ? JSON.stringify(current.weather) : "";
-        const environmentKey = `${current.key}/${current.plan.instant}/${current.artificialMcd ?? 0}/${weatherKey}`;
-        if (environmentKey !== lastEnvironment) {
-          const { sun, moon } = celestialBodies(current.plan);
-          applyEnvironment(map, environmentForSky(sun, moon, current.artificialMcd, current.weather));
-          lastEnvironment = environmentKey;
-        }
+        if(current.ground.key!==current.key||current.ground.phase!=="ready"||current.ground.height===undefined)return;
         const rendered = map.queryTerrainElevation([
           current.plan.longitude,
           current.plan.latitude,
@@ -268,6 +277,7 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
           current.plan.sensor,
           current.plan.aspectRatio,
           current.plan.orientation,
+          !!current.plan.layers.buildings,
           container.current.clientWidth,
           container.current.clientHeight,
         ].join("/");
@@ -300,7 +310,8 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
         starfield?.setContrast(current.plan.milkyWayContrast);
         starfield?.setCameraResponse(current.plan.cameraResponse);
         const planKey = celestialPlanKey(current.plan);
-        const ready = map.areTilesLoaded() && map.isSourceLoaded(TERRAIN_SOURCE) && map.isSourceLoaded(WATER_SOURCE);
+        const buildingReady = !current.plan.layers.buildings || (buildingState.key===current.key && (buildingState.phase==="ready" || buildingState.phase==="empty"));
+        const ready = buildingReady && map.areTilesLoaded() && map.isSourceLoaded(TERRAIN_SOURCE) && map.isSourceLoaded(WATER_SOURCE);
         const renderView = { azimuth: (map.getBearing() % 360 + 360) % 360, pitch: map.getPitch() - 90 };
         const frameKey = `${poseKey}/${planKey}/${sourceRevision}/${ready}/${renderView.azimuth}/${renderView.pitch}/${current.stations?.key ?? ""}/${current.artificialMcd ?? 0}/${weatherKey}`;
         if (celestialLayer && frameKey !== lastCelestialFrame) {
@@ -327,12 +338,13 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
 
     void (async () => {
       try {
-        const [sdk, cameraModule, celestialModule, perspectiveModule, starfieldModule] = await Promise.all([
+        const [sdk, cameraModule, celestialModule, perspectiveModule, starfieldModule, buildingModule] = await Promise.all([
           import("../map/sdk"),
           import("../preview/camera"),
           import("../preview/celestial-layer"),
           import("../preview/terrain-perspective"),
           import("../preview/starfield-layer"),
+          import("../preview/building-layer"),
         ]);
         createCamera = cameraModule.terrainCamera;
         if (disposed || !container.current) return;
@@ -365,15 +377,27 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
           perspective = new perspectiveModule.TerrainPerspective(fail);
           try { map.addLayer(perspective); }
           catch { fail("地形坐标桥接无法启动，请重新安装依赖后重试。"); return; }
+          buildings = new buildingModule.BuildingLayer((status)=>{
+            if(disposed)return;
+            buildingState=status;
+            sourceRevision++;
+            celestialLayer?.invalidate(true);starfield?.invalidate(true);
+            latest.current.onBuildingsChange?.(status);schedule();
+          },waterUrl,terrainUrl);
+          try { map.addLayer(buildings); }
+          catch { fail("建筑图层无法启动，请重试预览。");return; }
           starfield = new starfieldModule.StarfieldLayer((snapshot)=>{
-            if(disposed)return;latest.current.onSkyChange?.(snapshot);
+            if(disposed)return;
+            const unavailable=!!latest.current.plan.layers.buildings&&buildingState.phase==="error";
+            latest.current.onSkyChange?.(unavailable?{...snapshot,ready:false,occlusionUnavailable:true,labelStates:{}}:snapshot);
             if(snapshot.message)fail(snapshot.message);
           });
           try { map.addLayer(starfield); }
           catch { fail('星空与银河图层无法启动，请重试预览。');return; }
           celestialLayer = new celestialModule.CelestialLayer((snapshot) => {
             if (disposed) return;
-            latest.current.onVisibilityChange?.(snapshot);
+            const unavailable=!!latest.current.plan.layers.buildings&&buildingState.phase==="error";
+            latest.current.onVisibilityChange?.(unavailable?{...snapshot,states:{sun:"error",moon:"error"},labelStates:{}}:snapshot);
             if (snapshot.message) fail(snapshot.message);
           }, (rendered) => {
             if (disposed) return;
@@ -383,13 +407,14 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
           try { map.addLayer(celestialLayer); }
           catch { fail("日月深度图层无法启动，请重试预览。"); return; }
           celestialLayer.setVisible(hasSize());
-          if (calibrationEnabled) void import("../preview/calibration").then(({ calibrationLayer }) => {
+          if (calibrationEnabled) void import("../preview/calibration").then(({ calibrationLayer, skytreeCalibrationTarget }) => {
             if (disposed || !map) return;
             map.addLayer(calibrationLayer(map, () => ({ plan: latest.current.plan,
               ground: currentPoseKey === latest.current.key && latest.current.ground.key === latest.current.key && latest.current.ground.phase === "ready"
                 ? currentPoseGround : null }), terrainUrl,
             (snapshot) => { if (!disposed) setCalibration(snapshot); },
-            (point,width,height) => perspective?.projectProbe(point,width,height) ?? null));
+            (point,width,height) => perspective?.projectProbe(point,width,height) ?? null,
+            calibrationName === "skytree" ? skytreeCalibrationTarget : undefined));
           });
           styleReady = true;
           schedule();
@@ -429,6 +454,7 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
           // match the previous pose. Issue a fresh frame on every size event.
           sourceRevision++;
           celestialLayer?.setVisible(bounds.width > 0 && bounds.height > 0);
+          buildings?.setVisible(bounds.width > 0 && bounds.height > 0 && latest.current.ground.key===latest.current.key && latest.current.ground.phase==="ready");
           if (bounds.width <= 0 || bounds.height <= 0) {
             clearTimeout(timeout);
             timeout = undefined;

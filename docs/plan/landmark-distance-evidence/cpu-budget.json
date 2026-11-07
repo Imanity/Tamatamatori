@@ -1,0 +1,864 @@
+{
+  "checkedAt": "2026-11-07T12:45:17.966Z",
+  "scope": "Identical cached real MVT, synthetic flat DEM 0m, identical landmark; old pair changes only selected point/triangle caps. Node wall time is not GPU or browser frame performance.",
+  "results": [
+    {
+      "point": {
+        "name": "original-skytree",
+        "latitude": 35.70698835542723,
+        "longitude": 139.79386910980952
+      },
+      "pairs": [
+        {
+          "name": "old-120k-80k",
+          "status": {
+            "key": "139.79386910980952/35.70698835542723",
+            "phase": "ready",
+            "limited": true,
+            "tiles": 32,
+            "polygons": 1559,
+            "triangles": 119994,
+            "bytes": 4898532,
+            "skipped": 531,
+            "version": "20261101_080013_pt",
+            "fetchedAt": "2026-11-07T12:45:10.753Z",
+            "landmark": {
+              "phase": "applied",
+              "distance": 1562.0725012045777,
+              "triangles": 88581,
+              "message": "晴空塔无纹理精细模型 · 定位与朝向近似"
+            },
+            "candidates": 57451,
+            "distantCandidates": 7507,
+            "distant": 317,
+            "removedPoints": 3
+          },
+          "cpuMilliseconds": 974.7262999999999,
+          "meshes": 23,
+          "allFinite": true,
+          "requests": [
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6450.pbf",
+              "bytes": 759861,
+              "buildingBytes": 169542,
+              "sha256": "d9dfeff06d9adba5745f60bd730691c10e94266448117a2e19aec53bc8f184f9"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14553/6450.pbf",
+              "bytes": 1354891,
+              "buildingBytes": 199543,
+              "sha256": "9d07acf2c3122bb0d93d0b4f9e903fdc2f7238c5a39b7f11ff8f1bede5d17d04"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6449.pbf",
+              "bytes": 684678,
+              "buildingBytes": 223286,
+              "sha256": "3ae491a68111f0f48475cc04e41aa80e040ae746c688fe8b2ae17851679013ba"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14553/6449.pbf",
+              "bytes": 923481,
+              "buildingBytes": 179055,
+              "sha256": "b9613d7564b829e1a57238e9a8ab615b87aad52998cfe6a82085d47ee19ba4c4"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6451.pbf",
+              "bytes": 612052,
+              "buildingBytes": 195025,
+              "sha256": "51554e0377406ead32ed5644f946332e3a455ce50ea7fe75357a5d37eae7f679"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14555/6450.pbf",
+              "bytes": 546595,
+              "buildingBytes": 207771,
+              "sha256": "fb89d363325e281a46dd21823c0ed385481f6f9282c2190eee369cc1bb9c5ec7"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14553/6451.pbf",
+              "bytes": 761140,
+              "buildingBytes": 114750,
+              "sha256": "48019e0b917793f6be41ed656de6fead84714945fedb2e69631aa8f1193cb873"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14555/6449.pbf",
+              "bytes": 499959,
+              "buildingBytes": 291113,
+              "sha256": "929b2dd33332f30ce24ecb3bebdf41e0b3173b46436c323ee0c5db9668503960"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14552/6450.pbf",
+              "bytes": 1040650,
+              "buildingBytes": 115019,
+              "sha256": "6dfdb7fe28895e8841f665535d538f6c9fd2903a578ce7fdeb64d7eef082d9b8"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6448.pbf",
+              "bytes": 429417,
+              "buildingBytes": 156044,
+              "sha256": "94b4c2436c26840954591eb44ec18e8a08815893f3b9e56df39cdd16a43a89ed"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14552/6449.pbf",
+              "bytes": 759537,
+              "buildingBytes": 220494,
+              "sha256": "dc85acd9e85b274029cd5b115f5c47a93bcece914ba8c41914becbf8b04a9836"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14553/6448.pbf",
+              "bytes": 445530,
+              "buildingBytes": 154475,
+              "sha256": "db441e05e12d043f7f126c80949db43a9abed18fc1fa643b77d907a8c7a90fea"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14555/6451.pbf",
+              "bytes": 468312,
+              "buildingBytes": 204166,
+              "sha256": "cbcebb8700607350d7cf9acef4b38194c02fc170fec8d1ba07c98deeb9b203bc"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14552/6451.pbf",
+              "bytes": 748661,
+              "buildingBytes": 27941,
+              "sha256": "235914c31f14d0450a19da8c0f0f9c42ab98422378dae798bd2c0a3fa2932413"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14555/6448.pbf",
+              "bytes": 366123,
+              "buildingBytes": 179462,
+              "sha256": "e583c06ba827a41ff61938cf841303a1e421c887b08b2ae466cafd0cec455ab5"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6452.pbf",
+              "bytes": 343115,
+              "buildingBytes": 115456,
+              "sha256": "62eeaf08c62ab8c8dccf15b57e86336224f6e5427931a20f5d9f4bbf4f00ec9b"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14556/6450.pbf",
+              "bytes": 287223,
+              "buildingBytes": 153859,
+              "sha256": "34ced246ab6d953c2e438fddc333a82429c051d77f67235f70a8ca199d031eff"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14553/6452.pbf",
+              "bytes": 476046,
+              "buildingBytes": 89799,
+              "sha256": "96a03dafe858d3d6624864f8c8fe9d872345458d1133dcbd5e9343b7b589e7f6"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14552/6448.pbf",
+              "bytes": 561928,
+              "buildingBytes": 183288,
+              "sha256": "3450d5290ad30b664cafc4073901b8e667e456b69397e52cbb83d6849b026d71"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14556/6449.pbf",
+              "bytes": 248534,
+              "buildingBytes": 130332,
+              "sha256": "25a5d654980d430089776d8b362bb3ce17613e83007afdca612b1d7fdac4de9b"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14555/6452.pbf",
+              "bytes": 214258,
+              "buildingBytes": 70356,
+              "sha256": "ca23d8543c0f6802f05c66ecc825d00b83f3112dce89a769b5d1037f7b0f5a2e"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14556/6451.pbf",
+              "bytes": 250295,
+              "buildingBytes": 135555,
+              "sha256": "7a31ab9cdf8b383c6467776cdfc545a07bb171a36e89715bb7407b57096f0a36"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14551/6450.pbf",
+              "bytes": 574172,
+              "buildingBytes": 155637,
+              "sha256": "a7a8ad9a425d4fd73cb721f15595ad08f56480e9a14868eaa89612d0aabca8c0"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6447.pbf",
+              "bytes": 425735,
+              "buildingBytes": 209398,
+              "sha256": "1b5887ff03dae75c57b798edf12d882dc2ffc46c79732dd11fee0fab241e89c5"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14551/6449.pbf",
+              "bytes": 537016,
+              "buildingBytes": 182768,
+              "sha256": "fdf3afe84dea6811380a1e5fbfddb55ad7b57e6e4356a89c30efdc3ffb155c9d"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14553/6447.pbf",
+              "bytes": 291179,
+              "buildingBytes": 141387,
+              "sha256": "6546036d41abd30c00d5c16338e66d01cef2242256617a488c0d4667aff8ae61"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14552/6452.pbf",
+              "bytes": 719055,
+              "buildingBytes": 68958,
+              "sha256": "bc826bd83a6def88796cef0fbabc8218eed247bca04e54b4d55891f811c08f6d"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14556/6448.pbf",
+              "bytes": 427616,
+              "buildingBytes": 265186,
+              "sha256": "fb04a496ee9531e409a2556aa5ed375c640d415545a83e8fdadf9435327e021b"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14551/6451.pbf",
+              "bytes": 536161,
+              "buildingBytes": 73147,
+              "sha256": "cc65476238e32f9b45494294d92de8cb607de9dfe1bdfcc8190a52b3b736304c"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14555/6447.pbf",
+              "bytes": 396596,
+              "buildingBytes": 200580,
+              "sha256": "1673a3cd11b9feaa68d18d4dde64506e8016c223a2b28e45e0df52880d5aa425"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14551/6448.pbf",
+              "bytes": 613941,
+              "buildingBytes": 229311,
+              "sha256": "d999c11e2f16dfbf72557e3d5095ff7c4b013fa266db6a5dd4ed383c71c875ff"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14552/6447.pbf",
+              "bytes": 335516,
+              "buildingBytes": 152571,
+              "sha256": "4d5ec19f85c2f7a242b2b18cabdfd1650d8867a3eca5a22e74736af3f6b89fcb"
+            }
+          ]
+        },
+        {
+          "name": "new-300k-160k",
+          "status": {
+            "key": "139.79386910980952/35.70698835542723",
+            "phase": "ready",
+            "limited": true,
+            "tiles": 32,
+            "polygons": 12856,
+            "triangles": 299969,
+            "bytes": 17856732,
+            "skipped": 531,
+            "version": "20261101_080013_pt",
+            "fetchedAt": "2026-11-07T12:45:11.723Z",
+            "landmark": {
+              "phase": "applied",
+              "distance": 1562.0725012045777,
+              "triangles": 88581,
+              "message": "晴空塔无纹理精细模型 · 定位与朝向近似"
+            },
+            "candidates": 57451,
+            "distantCandidates": 7507,
+            "distant": 2027,
+            "removedPoints": 36
+          },
+          "cpuMilliseconds": 3608.4276,
+          "meshes": 28,
+          "allFinite": true,
+          "requests": [
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6450.pbf",
+              "bytes": 759861,
+              "buildingBytes": 169542,
+              "sha256": "d9dfeff06d9adba5745f60bd730691c10e94266448117a2e19aec53bc8f184f9"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14553/6450.pbf",
+              "bytes": 1354891,
+              "buildingBytes": 199543,
+              "sha256": "9d07acf2c3122bb0d93d0b4f9e903fdc2f7238c5a39b7f11ff8f1bede5d17d04"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6449.pbf",
+              "bytes": 684678,
+              "buildingBytes": 223286,
+              "sha256": "3ae491a68111f0f48475cc04e41aa80e040ae746c688fe8b2ae17851679013ba"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14553/6449.pbf",
+              "bytes": 923481,
+              "buildingBytes": 179055,
+              "sha256": "b9613d7564b829e1a57238e9a8ab615b87aad52998cfe6a82085d47ee19ba4c4"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6451.pbf",
+              "bytes": 612052,
+              "buildingBytes": 195025,
+              "sha256": "51554e0377406ead32ed5644f946332e3a455ce50ea7fe75357a5d37eae7f679"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14555/6450.pbf",
+              "bytes": 546595,
+              "buildingBytes": 207771,
+              "sha256": "fb89d363325e281a46dd21823c0ed385481f6f9282c2190eee369cc1bb9c5ec7"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14553/6451.pbf",
+              "bytes": 761140,
+              "buildingBytes": 114750,
+              "sha256": "48019e0b917793f6be41ed656de6fead84714945fedb2e69631aa8f1193cb873"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14555/6449.pbf",
+              "bytes": 499959,
+              "buildingBytes": 291113,
+              "sha256": "929b2dd33332f30ce24ecb3bebdf41e0b3173b46436c323ee0c5db9668503960"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14552/6450.pbf",
+              "bytes": 1040650,
+              "buildingBytes": 115019,
+              "sha256": "6dfdb7fe28895e8841f665535d538f6c9fd2903a578ce7fdeb64d7eef082d9b8"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6448.pbf",
+              "bytes": 429417,
+              "buildingBytes": 156044,
+              "sha256": "94b4c2436c26840954591eb44ec18e8a08815893f3b9e56df39cdd16a43a89ed"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14552/6449.pbf",
+              "bytes": 759537,
+              "buildingBytes": 220494,
+              "sha256": "dc85acd9e85b274029cd5b115f5c47a93bcece914ba8c41914becbf8b04a9836"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14553/6448.pbf",
+              "bytes": 445530,
+              "buildingBytes": 154475,
+              "sha256": "db441e05e12d043f7f126c80949db43a9abed18fc1fa643b77d907a8c7a90fea"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14555/6451.pbf",
+              "bytes": 468312,
+              "buildingBytes": 204166,
+              "sha256": "cbcebb8700607350d7cf9acef4b38194c02fc170fec8d1ba07c98deeb9b203bc"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14552/6451.pbf",
+              "bytes": 748661,
+              "buildingBytes": 27941,
+              "sha256": "235914c31f14d0450a19da8c0f0f9c42ab98422378dae798bd2c0a3fa2932413"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14555/6448.pbf",
+              "bytes": 366123,
+              "buildingBytes": 179462,
+              "sha256": "e583c06ba827a41ff61938cf841303a1e421c887b08b2ae466cafd0cec455ab5"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6452.pbf",
+              "bytes": 343115,
+              "buildingBytes": 115456,
+              "sha256": "62eeaf08c62ab8c8dccf15b57e86336224f6e5427931a20f5d9f4bbf4f00ec9b"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14556/6450.pbf",
+              "bytes": 287223,
+              "buildingBytes": 153859,
+              "sha256": "34ced246ab6d953c2e438fddc333a82429c051d77f67235f70a8ca199d031eff"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14553/6452.pbf",
+              "bytes": 476046,
+              "buildingBytes": 89799,
+              "sha256": "96a03dafe858d3d6624864f8c8fe9d872345458d1133dcbd5e9343b7b589e7f6"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14552/6448.pbf",
+              "bytes": 561928,
+              "buildingBytes": 183288,
+              "sha256": "3450d5290ad30b664cafc4073901b8e667e456b69397e52cbb83d6849b026d71"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14556/6449.pbf",
+              "bytes": 248534,
+              "buildingBytes": 130332,
+              "sha256": "25a5d654980d430089776d8b362bb3ce17613e83007afdca612b1d7fdac4de9b"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14555/6452.pbf",
+              "bytes": 214258,
+              "buildingBytes": 70356,
+              "sha256": "ca23d8543c0f6802f05c66ecc825d00b83f3112dce89a769b5d1037f7b0f5a2e"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14556/6451.pbf",
+              "bytes": 250295,
+              "buildingBytes": 135555,
+              "sha256": "7a31ab9cdf8b383c6467776cdfc545a07bb171a36e89715bb7407b57096f0a36"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14551/6450.pbf",
+              "bytes": 574172,
+              "buildingBytes": 155637,
+              "sha256": "a7a8ad9a425d4fd73cb721f15595ad08f56480e9a14868eaa89612d0aabca8c0"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6447.pbf",
+              "bytes": 425735,
+              "buildingBytes": 209398,
+              "sha256": "1b5887ff03dae75c57b798edf12d882dc2ffc46c79732dd11fee0fab241e89c5"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14551/6449.pbf",
+              "bytes": 537016,
+              "buildingBytes": 182768,
+              "sha256": "fdf3afe84dea6811380a1e5fbfddb55ad7b57e6e4356a89c30efdc3ffb155c9d"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14553/6447.pbf",
+              "bytes": 291179,
+              "buildingBytes": 141387,
+              "sha256": "6546036d41abd30c00d5c16338e66d01cef2242256617a488c0d4667aff8ae61"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14552/6452.pbf",
+              "bytes": 719055,
+              "buildingBytes": 68958,
+              "sha256": "bc826bd83a6def88796cef0fbabc8218eed247bca04e54b4d55891f811c08f6d"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14556/6448.pbf",
+              "bytes": 427616,
+              "buildingBytes": 265186,
+              "sha256": "fb04a496ee9531e409a2556aa5ed375c640d415545a83e8fdadf9435327e021b"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14551/6451.pbf",
+              "bytes": 536161,
+              "buildingBytes": 73147,
+              "sha256": "cc65476238e32f9b45494294d92de8cb607de9dfe1bdfcc8190a52b3b736304c"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14555/6447.pbf",
+              "bytes": 396596,
+              "buildingBytes": 200580,
+              "sha256": "1673a3cd11b9feaa68d18d4dde64506e8016c223a2b28e45e0df52880d5aa425"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14551/6448.pbf",
+              "bytes": 613941,
+              "buildingBytes": 229311,
+              "sha256": "d999c11e2f16dfbf72557e3d5095ff7c4b013fa266db6a5dd4ed383c71c875ff"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14552/6447.pbf",
+              "bytes": 335516,
+              "buildingBytes": 152571,
+              "sha256": "4d5ec19f85c2f7a242b2b18cabdfd1650d8867a3eca5a22e74736af3f6b89fcb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "point": {
+        "name": "shanghai",
+        "latitude": 31.2397,
+        "longitude": 121.5008
+      },
+      "pairs": [
+        {
+          "name": "old-120k-80k",
+          "status": {
+            "key": "121.5008/31.2397",
+            "phase": "ready",
+            "limited": false,
+            "tiles": 29,
+            "polygons": 4009,
+            "triangles": 78797,
+            "bytes": 5673384,
+            "skipped": 51,
+            "version": "20261101_080013_pt",
+            "fetchedAt": "2026-11-07T12:45:15.350Z",
+            "candidates": 4009,
+            "distantCandidates": 843,
+            "distant": 843,
+            "removedPoints": 21
+          },
+          "cpuMilliseconds": 1253.3323,
+          "meshes": 27,
+          "allFinite": true,
+          "requests": [
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6694.pbf",
+              "bytes": 183012,
+              "buildingBytes": 21300,
+              "sha256": "8ef40e9fd3543e077b828d63f1b4b118a762cee077ee4fa04bc063e463a33796"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6693.pbf",
+              "bytes": 143058,
+              "buildingBytes": 17462,
+              "sha256": "6643588a1b923135cb9197d31b64b6553a9df7d9594e6a8b3b0e8ea87385067b"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13722/6694.pbf",
+              "bytes": 130501,
+              "buildingBytes": 31948,
+              "sha256": "10abbc500c969061ef65f4778a0495500962bc7a8d5d7ba841ed1fa49ea7d507"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13722/6693.pbf",
+              "bytes": 70399,
+              "buildingBytes": 8451,
+              "sha256": "5ca870bb2034a114cf65d172d677ae75e8200777c2648f61a78c99d1870a3ead"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13720/6694.pbf",
+              "bytes": 266275,
+              "buildingBytes": 35999,
+              "sha256": "17be155a00fa7266538638b39f90d025e9f518339253343f6af7433c676d999d"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13720/6693.pbf",
+              "bytes": 171476,
+              "buildingBytes": 20872,
+              "sha256": "bdda889c280018345f91526945e1d3ab310593717c082d696e51a32af5699821"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6695.pbf",
+              "bytes": 94833,
+              "buildingBytes": 15753,
+              "sha256": "eda74623762ff695b9a99fc481d1d440690986348b4c1fd612ddd9e2a64eb412"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6692.pbf",
+              "bytes": 110857,
+              "buildingBytes": 23146,
+              "sha256": "9b3470608f609ac7e06cea4d9bbebef6609b2777bcfdb7e410a0832fb483157b"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13722/6695.pbf",
+              "bytes": 75114,
+              "buildingBytes": 15848,
+              "sha256": "ee2fc578a59f9bced6ef6b92ffbf9cd8d16343d881f5bc16709bee777c3ba3eb"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13722/6692.pbf",
+              "bytes": 68172,
+              "buildingBytes": 11438,
+              "sha256": "167fd9376dfd80f503630c030aa5c2511d82da210b18dcc0e93c56508ff9a0dc"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13720/6695.pbf",
+              "bytes": 176282,
+              "buildingBytes": 33360,
+              "sha256": "119c960519a87bee987e806b60ec7b56b90b315efabe8f48643bb8e0c61f9001"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13723/6694.pbf",
+              "bytes": 81018,
+              "buildingBytes": 11763,
+              "sha256": "e430c96b69ef69808cb2ed9092b879b41ec91af0b7984726f88c9435fe84431a"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13720/6692.pbf",
+              "bytes": 118165,
+              "buildingBytes": 28758,
+              "sha256": "3b103b59f902772c0a1750a318349b7a1813cc51bd091f1eb14bb15e83ae183e"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13723/6693.pbf",
+              "bytes": 50968,
+              "buildingBytes": 6337,
+              "sha256": "2d6f25471e20f4be063aab4e8cd9a78432aa1cf60b37ae3738132f07e24080ff"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13719/6694.pbf",
+              "bytes": 251431,
+              "buildingBytes": 30239,
+              "sha256": "a7cc6252b79fe78b03f2cb257b665ca4aded40ee44df343debe757ce39dee96a"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13719/6693.pbf",
+              "bytes": 130214,
+              "buildingBytes": 11714,
+              "sha256": "1484c651ed2ab5de78a771d006dd2b8271a55dd76639ed72525439ceb0ee193e"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13723/6695.pbf",
+              "bytes": 71216,
+              "buildingBytes": 10674,
+              "sha256": "5d0da6e33573a480176e897cf3ea79b7091237b8410c4e77ac0e3978e4f2e65d"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6696.pbf",
+              "bytes": 66778,
+              "buildingBytes": 6635,
+              "sha256": "beabb1b40b499b619cffdcb6449cef550da5f7f6e2892b51a990121a308b47ad"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13723/6692.pbf",
+              "bytes": 36343,
+              "buildingBytes": 2535,
+              "sha256": "a8762ab05f762249ba7b1a4ef21206c7ab7e7e457e4ec15514576558c5be1051"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13719/6695.pbf",
+              "bytes": 256194,
+              "buildingBytes": 56992,
+              "sha256": "b16667eada757ed006a1254af78e3b5696a0e973b719f12bf5599022142bba23"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6691.pbf",
+              "bytes": 117646,
+              "buildingBytes": 31494,
+              "sha256": "4fa66c199e1e5e6c2241fa7a200e5fbf7f6c74fb1052047c9303ab9010d198d1"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13722/6696.pbf",
+              "bytes": 59955,
+              "buildingBytes": 8696,
+              "sha256": "ab477dcf6394f74f142610120b39d67eafa4b6a1b706424d4f09cb25cc7a2165"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13719/6692.pbf",
+              "bytes": 76696,
+              "buildingBytes": 18562,
+              "sha256": "d85171d83252483e92d1b34632f6d87ec4598eb4115d004ebfe8857eeff968c6"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13720/6696.pbf",
+              "bytes": 82884,
+              "buildingBytes": 8580,
+              "sha256": "5e206304e58e69ad3bb07476fe37868502cc2bf356a3e21bc3caeb0b594abdb9"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13722/6691.pbf",
+              "bytes": 70940,
+              "buildingBytes": 9282,
+              "sha256": "a53059c192fb6c218723e00530959c6f9f5eba7d0eed064c89f3e3fc781d6075"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13720/6691.pbf",
+              "bytes": 98041,
+              "buildingBytes": 31028,
+              "sha256": "6cbc415736cbcf246141bf2b6bcfe3612d28837c31fe4e25f7ff85d7f737ceab"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13724/6694.pbf",
+              "bytes": 56301,
+              "buildingBytes": 11477,
+              "sha256": "54ab195bcdd7f243469b0adfb5ad92715dc034a5120e1b8f7386b06f510beb1b"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13724/6693.pbf",
+              "bytes": 50659,
+              "buildingBytes": 8360,
+              "sha256": "3239fb9bca523d6c9d6e5b9db847531342fb2e7dde6eba772ec0221cd7d4499d"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13723/6696.pbf",
+              "bytes": 59133,
+              "buildingBytes": 8689,
+              "sha256": "a7de2db1c92b73ab0f183524b25788e5bb377a3e009e56c961303f9bf2d3c80f"
+            }
+          ]
+        },
+        {
+          "name": "new-300k-160k",
+          "status": {
+            "key": "121.5008/31.2397",
+            "phase": "ready",
+            "limited": false,
+            "tiles": 29,
+            "polygons": 4009,
+            "triangles": 78797,
+            "bytes": 5673384,
+            "skipped": 51,
+            "version": "20261101_080013_pt",
+            "fetchedAt": "2026-11-07T12:45:16.609Z",
+            "candidates": 4009,
+            "distantCandidates": 843,
+            "distant": 843,
+            "removedPoints": 21
+          },
+          "cpuMilliseconds": 1349.0866999999998,
+          "meshes": 27,
+          "allFinite": true,
+          "requests": [
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6694.pbf",
+              "bytes": 183012,
+              "buildingBytes": 21300,
+              "sha256": "8ef40e9fd3543e077b828d63f1b4b118a762cee077ee4fa04bc063e463a33796"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6693.pbf",
+              "bytes": 143058,
+              "buildingBytes": 17462,
+              "sha256": "6643588a1b923135cb9197d31b64b6553a9df7d9594e6a8b3b0e8ea87385067b"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13722/6694.pbf",
+              "bytes": 130501,
+              "buildingBytes": 31948,
+              "sha256": "10abbc500c969061ef65f4778a0495500962bc7a8d5d7ba841ed1fa49ea7d507"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13722/6693.pbf",
+              "bytes": 70399,
+              "buildingBytes": 8451,
+              "sha256": "5ca870bb2034a114cf65d172d677ae75e8200777c2648f61a78c99d1870a3ead"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13720/6694.pbf",
+              "bytes": 266275,
+              "buildingBytes": 35999,
+              "sha256": "17be155a00fa7266538638b39f90d025e9f518339253343f6af7433c676d999d"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13720/6693.pbf",
+              "bytes": 171476,
+              "buildingBytes": 20872,
+              "sha256": "bdda889c280018345f91526945e1d3ab310593717c082d696e51a32af5699821"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6695.pbf",
+              "bytes": 94833,
+              "buildingBytes": 15753,
+              "sha256": "eda74623762ff695b9a99fc481d1d440690986348b4c1fd612ddd9e2a64eb412"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6692.pbf",
+              "bytes": 110857,
+              "buildingBytes": 23146,
+              "sha256": "9b3470608f609ac7e06cea4d9bbebef6609b2777bcfdb7e410a0832fb483157b"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13722/6695.pbf",
+              "bytes": 75114,
+              "buildingBytes": 15848,
+              "sha256": "ee2fc578a59f9bced6ef6b92ffbf9cd8d16343d881f5bc16709bee777c3ba3eb"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13722/6692.pbf",
+              "bytes": 68172,
+              "buildingBytes": 11438,
+              "sha256": "167fd9376dfd80f503630c030aa5c2511d82da210b18dcc0e93c56508ff9a0dc"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13720/6695.pbf",
+              "bytes": 176282,
+              "buildingBytes": 33360,
+              "sha256": "119c960519a87bee987e806b60ec7b56b90b315efabe8f48643bb8e0c61f9001"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13723/6694.pbf",
+              "bytes": 81018,
+              "buildingBytes": 11763,
+              "sha256": "e430c96b69ef69808cb2ed9092b879b41ec91af0b7984726f88c9435fe84431a"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13720/6692.pbf",
+              "bytes": 118165,
+              "buildingBytes": 28758,
+              "sha256": "3b103b59f902772c0a1750a318349b7a1813cc51bd091f1eb14bb15e83ae183e"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13723/6693.pbf",
+              "bytes": 50968,
+              "buildingBytes": 6337,
+              "sha256": "2d6f25471e20f4be063aab4e8cd9a78432aa1cf60b37ae3738132f07e24080ff"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13719/6694.pbf",
+              "bytes": 251431,
+              "buildingBytes": 30239,
+              "sha256": "a7cc6252b79fe78b03f2cb257b665ca4aded40ee44df343debe757ce39dee96a"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13719/6693.pbf",
+              "bytes": 130214,
+              "buildingBytes": 11714,
+              "sha256": "1484c651ed2ab5de78a771d006dd2b8271a55dd76639ed72525439ceb0ee193e"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13723/6695.pbf",
+              "bytes": 71216,
+              "buildingBytes": 10674,
+              "sha256": "5d0da6e33573a480176e897cf3ea79b7091237b8410c4e77ac0e3978e4f2e65d"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6696.pbf",
+              "bytes": 66778,
+              "buildingBytes": 6635,
+              "sha256": "beabb1b40b499b619cffdcb6449cef550da5f7f6e2892b51a990121a308b47ad"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13723/6692.pbf",
+              "bytes": 36343,
+              "buildingBytes": 2535,
+              "sha256": "a8762ab05f762249ba7b1a4ef21206c7ab7e7e457e4ec15514576558c5be1051"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13719/6695.pbf",
+              "bytes": 256194,
+              "buildingBytes": 56992,
+              "sha256": "b16667eada757ed006a1254af78e3b5696a0e973b719f12bf5599022142bba23"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6691.pbf",
+              "bytes": 117646,
+              "buildingBytes": 31494,
+              "sha256": "4fa66c199e1e5e6c2241fa7a200e5fbf7f6c74fb1052047c9303ab9010d198d1"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13722/6696.pbf",
+              "bytes": 59955,
+              "buildingBytes": 8696,
+              "sha256": "ab477dcf6394f74f142610120b39d67eafa4b6a1b706424d4f09cb25cc7a2165"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13719/6692.pbf",
+              "bytes": 76696,
+              "buildingBytes": 18562,
+              "sha256": "d85171d83252483e92d1b34632f6d87ec4598eb4115d004ebfe8857eeff968c6"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13720/6696.pbf",
+              "bytes": 82884,
+              "buildingBytes": 8580,
+              "sha256": "5e206304e58e69ad3bb07476fe37868502cc2bf356a3e21bc3caeb0b594abdb9"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13722/6691.pbf",
+              "bytes": 70940,
+              "buildingBytes": 9282,
+              "sha256": "a53059c192fb6c218723e00530959c6f9f5eba7d0eed064c89f3e3fc781d6075"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13720/6691.pbf",
+              "bytes": 98041,
+              "buildingBytes": 31028,
+              "sha256": "6cbc415736cbcf246141bf2b6bcfe3612d28837c31fe4e25f7ff85d7f737ceab"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13724/6694.pbf",
+              "bytes": 56301,
+              "buildingBytes": 11477,
+              "sha256": "54ab195bcdd7f243469b0adfb5ad92715dc034a5120e1b8f7386b06f510beb1b"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13724/6693.pbf",
+              "bytes": 50659,
+              "buildingBytes": 8360,
+              "sha256": "3239fb9bca523d6c9d6e5b9db847531342fb2e7dde6eba772ec0221cd7d4499d"
+            },
+            {
+              "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13723/6696.pbf",
+              "bytes": 59133,
+              "buildingBytes": 8689,
+              "sha256": "a7de2db1c92b73ab0f183524b25788e5bb377a3e009e56c961303f9bf2d3c80f"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

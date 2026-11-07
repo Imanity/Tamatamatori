@@ -1,0 +1,46 @@
+{
+  "checkedAt": "2026-11-07T07:31:17.608Z",
+  "scripts": [
+    "http://127.0.0.1:5176/Tamatamatori/assets/index-4rYx1Bce.js"
+  ],
+  "scenes": [
+    {
+      "name": "01-skytree-4km-85mm"
+    },
+    {
+      "name": "02-skytree-4km-settled"
+    },
+    {
+      "name": "03-skytree-4km-200mm"
+    },
+    {
+      "name": "04-skytree-4km-1000mm"
+    },
+    {
+      "name": "05-skytree-4km-35mm"
+    },
+    {
+      "name": "06-skytree-4km-drag"
+    },
+    {
+      "name": "07-far-buildings-off"
+    },
+    {
+      "name": "08-mobile-far-readout"
+    },
+    {
+      "name": "09-mobile-far-preview"
+    },
+    {
+      "name": "10-original-user-view"
+    },
+    {
+      "name": "11-shanghai-5km"
+    }
+  ],
+  "console": [],
+  "notes": [
+    "01 为载入到上传 GPU 的过渡画面，不能判通过；02 起有稳定建筑画面。",
+    "五公里和冗余顶点版本，建筑层缓存优化前；最终版本需刷新补验。"
+  ]
+}

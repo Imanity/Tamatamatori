@@ -1,0 +1,80 @@
+{
+  "checkedAt": "2026-11-07T10:37:42.080Z",
+  "scope": "两个塔址的无纹理 B3DM 样本；只解析 B3DM、Batch Table 和内嵌 GLB JSON，未解码 Draco、未渲染、未提取单体模型。港区样本包含101栋记录，不是东京塔单体大小。",
+  "samples": [
+    {
+      "area": "13103",
+      "target": {
+        "name": "Tokyo Tower",
+        "longitude": 139.7454,
+        "latitude": 35.6586
+      },
+      "sourceUrl": "https://assets.cms.plateau.reearth.io/assets/cb/a78f63-b217-4460-8f0c-b329c840ed2b/13103_minato-ku_pref_2025_citygml_1_op_bldg_3dtiles_13103_minato-ku_lod3_no_texture/data/data248.b3dm",
+      "bytes": 1201956,
+      "sha256": "420a27d417cc7a629f3e012811d10ff1beb9c28eff1b1c2f42d56c09a83b10a2",
+      "tilesetBytes": 412889,
+      "tilesetSha256": "edec4c24d137eaf08a8525cecea505a3f21a30823b9ef4fb530e10774cea1323",
+      "batchCount": 101,
+      "declaredTriangles": 9574,
+      "images": 0,
+      "targetRows": [
+        {
+          "i": 95,
+          "id": "bldg_7aff4a51-be8b-405b-abe4-ac489697cbc8",
+          "name": null,
+          "height": 332.1,
+          "lod": 2,
+          "lodType": "LOD2.2",
+          "x": 139.74546900904346,
+          "y": 35.65858483542351,
+          "zmin": 18.391,
+          "zmax": 350.514
+        }
+      ],
+      "lodCounts": {
+        "2": 101
+      },
+      "compression": [
+        "CESIUM_RTC",
+        "KHR_draco_mesh_compression"
+      ]
+    },
+    {
+      "area": "13107",
+      "target": {
+        "name": "Tokyo Skytree",
+        "longitude": 139.8107,
+        "latitude": 35.7101
+      },
+      "sourceUrl": "https://assets.cms.plateau.reearth.io/assets/f8/3a75b8-f75a-4ec0-9e56-da7eb661b399/13107_sumida-ku_pref_2025_citygml_1_op_bldg_3dtiles_13107_sumida-ku_lod3_no_texture/data/4/data396.b3dm",
+      "bytes": 166840,
+      "sha256": "eea0aea8452f4d9dd4e0c287433f85d2e92557c5b13375f5814dcd3c3cc24746",
+      "tilesetBytes": 4479071,
+      "tilesetSha256": "8f8f8243b17aa0238e50ed55ae6d3511dff6b19806bb7c90f191e29850aac0b4",
+      "batchCount": 1,
+      "declaredTriangles": 2166,
+      "images": 0,
+      "targetRows": [
+        {
+          "i": 0,
+          "id": "bldg_58ab8c46-8369-49c4-86cf-6912bbc4efe1",
+          "name": "東京スカイツリー",
+          "height": 355.5,
+          "lod": 2,
+          "lodType": "LOD2.1",
+          "x": 139.81091665640577,
+          "y": 35.71024229715201,
+          "zmin": 0.26393197,
+          "zmax": 635.1411518
+        }
+      ],
+      "lodCounts": {
+        "2": 1
+      },
+      "compression": [
+        "CESIUM_RTC",
+        "KHR_draco_mesh_compression"
+      ]
+    }
+  ]
+}

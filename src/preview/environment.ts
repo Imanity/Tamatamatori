@@ -62,6 +62,7 @@ export function environmentForSky(sun: Pick<Bodies["sun"], "elevation" | "azimut
       "fog-ground-blend": 0.06,
     } satisfies SkySpecification,
     ground: surface(terrainColors.ground),
+    building: surface("#b5aea1"),
     landcover: ["match", ["get", "class"],
       "wood", surface(terrainColors.wood), "grass", surface(terrainColors.grass),
       "sand", surface(terrainColors.sand), "ice", surface(terrainColors.ice),

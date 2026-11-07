@@ -13,7 +13,7 @@ export const emptyVisibility: VisibilitySnapshot = { planKey: "", states: { sun:
 export function celestialPlanKey(plan: ShootingPlan) {
   return [plan.longitude, plan.latitude, plan.instant, plan.azimuth, plan.pitch, plan.focalLength,
     plan.sensor, plan.aspectRatio, plan.orientation, plan.cameraHeight, plan.refraction,
-    plan.layers.sun, plan.layers.moon, !!plan.layers.stars, !!plan.layers.milkyWay, !!plan.layers.constellations, !!plan.layers.deepSky, !!plan.layers.stations].join("/");
+    plan.layers.sun, plan.layers.moon, !!plan.layers.stars, !!plan.layers.milkyWay, !!plan.layers.constellations, !!plan.layers.deepSky, !!plan.layers.stations, !!plan.layers.buildings].join("/");
 }
 
 // Turning or zooming the camera does not move a target relative to a mountain.
@@ -21,7 +21,7 @@ export function celestialPlanKey(plan: ShootingPlan) {
 export function skyLabelKey(plan: ShootingPlan) {
   return [plan.longitude, plan.latitude, plan.instant, plan.cameraHeight, plan.refraction,
     !!plan.layers.sun, !!plan.layers.moon, !!plan.layers.stars, !!plan.layers.milkyWay, !!plan.layers.constellations,
-    !!plan.layers.deepSky, !!plan.layers.stations].join("/");
+    !!plan.layers.deepSky, !!plan.layers.stations, !!plan.layers.buildings].join("/");
 }
 
 export function classifyOcclusion(clear: boolean, blocked: boolean): Occlusion {
@@ -32,3 +32,8 @@ export const occlusionLabels: Record<Occlusion, string> = {
   waiting: "遮挡待测", clear: "当前 DEM 未遮挡", partial: "部分山体遮挡",
   blocked: "山体遮挡", subpixel: "像素不足", error: "遮挡未知",
 };
+
+export function occlusionText(state: Occlusion, plan: ShootingPlan) {
+  if(!plan.layers.buildings)return occlusionLabels[state];
+  return ({clear:"已载场景未遮挡",partial:"部分场景遮挡",blocked:"场景遮挡"} as Partial<Record<Occlusion,string>>)[state]??occlusionLabels[state];
+}

@@ -1,0 +1,170 @@
+{
+  "checkedAt": "2026-11-07T06:58:13.627Z",
+  "scope": "仅使用已缓存的真实 MVT 与合成平地 0 m，检查当前加载器输出的几何保留。第二组机位来自用户复现输入、离地 100 m；高度不会参与加载器选择。不是浏览器、真实 DEM、GPU 或地标外观验收。",
+  "records": [
+    {
+      "observer": {
+        "longitude": 139.8107,
+        "latitude": 35.7101,
+        "cameraHeight": 1.6
+      },
+      "selectedTiles": [
+        {
+          "z": 14,
+          "x": 14554,
+          "y": 6450
+        },
+        {
+          "z": 14,
+          "x": 14554,
+          "y": 6449
+        },
+        {
+          "z": 14,
+          "x": 14555,
+          "y": 6450
+        },
+        {
+          "z": 14,
+          "x": 14555,
+          "y": 6449
+        },
+        {
+          "z": 14,
+          "x": 14553,
+          "y": 6450
+        },
+        {
+          "z": 14,
+          "x": 14554,
+          "y": 6451
+        },
+        {
+          "z": 14,
+          "x": 14553,
+          "y": 6449
+        },
+        {
+          "z": 14,
+          "x": 14555,
+          "y": 6451
+        }
+      ],
+      "requestedTiles": [
+        {
+          "z": 14,
+          "x": 14554,
+          "y": 6450
+        },
+        {
+          "z": 14,
+          "x": 14554,
+          "y": 6449
+        }
+      ],
+      "skytreeTileOrder": 1,
+      "skytreeTileRequested": true,
+      "approximateDistanceMetres": 0,
+      "approximateAzimuthDegrees": 0,
+      "status": {
+        "key": "139.8107/35.7101",
+        "phase": "ready",
+        "limited": true,
+        "tiles": 2,
+        "polygons": 10214,
+        "triangles": 119999,
+        "bytes": 8639928,
+        "skipped": 11,
+        "version": "20261101_080013_pt",
+        "fetchedAt": "2026-11-07T06:58:08.798Z"
+      },
+      "retainedWithin100Metres": {
+        "maximumHeight": 634,
+        "vertexCount": 1026,
+        "has634MetreComponent": true
+      }
+    },
+    {
+      "observer": {
+        "longitude": 139.79386910980952,
+        "latitude": 35.70698835542723,
+        "cameraHeight": 100
+      },
+      "selectedTiles": [
+        {
+          "z": 14,
+          "x": 14554,
+          "y": 6450
+        },
+        {
+          "z": 14,
+          "x": 14553,
+          "y": 6450
+        },
+        {
+          "z": 14,
+          "x": 14554,
+          "y": 6449
+        },
+        {
+          "z": 14,
+          "x": 14553,
+          "y": 6449
+        },
+        {
+          "z": 14,
+          "x": 14554,
+          "y": 6451
+        },
+        {
+          "z": 14,
+          "x": 14555,
+          "y": 6450
+        },
+        {
+          "z": 14,
+          "x": 14553,
+          "y": 6451
+        },
+        {
+          "z": 14,
+          "x": 14555,
+          "y": 6449
+        }
+      ],
+      "requestedTiles": [
+        {
+          "z": 14,
+          "x": 14554,
+          "y": 6450
+        },
+        {
+          "z": 14,
+          "x": 14553,
+          "y": 6450
+        }
+      ],
+      "skytreeTileOrder": 1,
+      "skytreeTileRequested": true,
+      "approximateDistanceMetres": 1561.738720544222,
+      "approximateAzimuthDegrees": 77.22340420851515,
+      "status": {
+        "key": "139.79386910980952/35.70698835542723",
+        "phase": "ready",
+        "limited": true,
+        "tiles": 2,
+        "polygons": 10195,
+        "triangles": 119998,
+        "bytes": 8639856,
+        "skipped": 11,
+        "version": "20261101_080013_pt",
+        "fetchedAt": "2026-11-07T06:58:11.157Z"
+      },
+      "retainedWithin100Metres": {
+        "maximumHeight": 19,
+        "vertexCount": 174,
+        "has634MetreComponent": false
+      }
+    }
+  ]
+}

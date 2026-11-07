@@ -1,0 +1,64 @@
+{
+  "checkedAt": "2026-11-07T12:09:51.003Z",
+  "url": "http://127.0.0.1:5176/Tamatamatori/",
+  "final": {
+    "buildingInfo": "建筑体块已应用\n\n近景约 2 km · 远景至约 5 km，优先显示高度 ≥20 m 的建筑 · 体块与高度近似\n\n已达范围或网格预算，建筑覆盖不完整。\n\n晴空塔无纹理精细模型 · 定位与朝向近似 · 88,581 面\n\n已读取瓦片\n32\n分块体块\n1559 / 57451\n三角面（含地标）\n119,994\n网格\n4.67 MiB\n\n2–5 km 远景分部 317 / 7507 · 5 km 外未加载。\n\n已清理 3 个重复或共线点，保留源轮廓。\n\n预算内优先保留高层并分配周边覆盖，省略 55892 个分部。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 12:09:26 UTC\n\n已略过 531 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑",
+    "canvas": {
+      "bottom": 1108.328125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 282.671875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 282.671875
+    },
+    "controls": [
+      {
+        "label": "焦距mm",
+        "value": "50"
+      },
+      {
+        "label": "纬度°",
+        "value": "35.70698835542723"
+      },
+      {
+        "label": "经度°",
+        "value": "139.79386910980952"
+      },
+      {
+        "label": "方位角°",
+        "value": "77.22"
+      },
+      {
+        "label": "俯仰角°",
+        "value": "9"
+      },
+      {
+        "label": "相机离地高度m",
+        "value": "100"
+      }
+    ],
+    "scriptUrls": [
+      "http://127.0.0.1:5176/Tamatamatori/assets/index-Djq2UeLc.js"
+    ]
+  },
+  "logs": [],
+  "checks": [
+    "original camera: default35, main24/50/85/200/1000mm",
+    "native preview drag: azimuth77.22->76.97018550764182, pitch8->8.08327301707518; load timestamp unchanged",
+    "native wheel: 200->1000mm; same regional geometry",
+    "model file temporarily withheld from isolated preview dist: fallback retained coarse parts, neighbours and terrain",
+    "restored file and independent building retry: detailed model returned",
+    "building off: no geometry; on: detailed model returned",
+    "far camera139.765,35.70698835542723 height100m az85.21 pitch3.5 focal85: model applied,119988 triangles",
+    "mobile390x844: preview displayed, map/preview hide-restore checked, viewport reset",
+    "midnight: shared dark material, no emitted lighting; noon restored",
+    "About: author/CC BY/changes/PLATEAU credit and both subpath download links checked"
+  ],
+  "limits": [
+    "No surveyed alignment or measured GPU frame-time benchmark",
+    "Mobile emulation, not physical phone hardware",
+    "Screen captures may include browser extension highlight control"
+  ]
+}

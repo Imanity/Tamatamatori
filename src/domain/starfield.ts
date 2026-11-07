@@ -38,6 +38,7 @@ export interface SkyPoint {
   color: readonly [number, number, number];
 }
 export interface SkyVisibility {
+  occlusionUnavailable?: boolean;
   planKey: string;
   ready: boolean;
   view: { azimuth: number; pitch: number } | null;

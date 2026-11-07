@@ -142,8 +142,9 @@ export class CelestialLayer implements CustomLayerInterface {
     this.map?.triggerRepaint();
   }
 
-  invalidate() {
+  invalidate(resetLabels = false) {
     if (this.failed) return;
+    if (resetLabels) { this.labelStates = {}; this.labelKey = ""; }
     this.clearQueries(); this.resolvedKey = "";
     if (this.frame) {
       this.frame = { ...this.frame, ready: false };

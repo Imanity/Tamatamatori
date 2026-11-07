@@ -1,0 +1,68 @@
+{
+  "id": "tokyo-skytree",
+  "name": "东京晴空塔",
+  "format": "TTLM 1: 32-byte header, float32 ENU+normal stride6, uint32 indices; little-endian; gzip",
+  "source": {
+    "title": "Tokyo Skytree, Japan",
+    "author": "Noah (smiN5214)",
+    "page": "https://sketchfab.com/3d-models/tokyo-skytree-japan-b4d347b8703f45f48ea8d5fe45d454b9",
+    "authorPage": "https://sketchfab.com/smiN5214",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "bytes": 18497376,
+    "sha256": "007cd38f40f114dc2f2d6c2b8b00c216a95fa6401dbfb15b3946b1c8ca6bb150",
+    "triangles": 285887,
+    "vertices": 166513
+  },
+  "tools": {
+    "@gltf-transform/core": "4.5.0",
+    "meshoptimizer": "1.3.0"
+  },
+  "changes": {
+    "textures": "Removed all images, UVs, tangents and source materials; opaque shared lighting, including deck glass.",
+    "frame": "Removed common authoring scene placement; local Y up -> ENU, positive determinant; normals rotated.",
+    "centerXZ": [
+      2.0669,
+      7.54065
+    ],
+    "minY": -0.03272410109639168,
+    "maxY": 634.2101440429688,
+    "scale": 0.9996170739061271,
+    "height": 634,
+    "yawCounterclockwiseDegrees": 10.25,
+    "simplification": {
+      "absoluteErrorLimit": 0.1,
+      "reportedError": 0.09934128820896149,
+      "normalWeights": [
+        0.01,
+        0.01,
+        0.01
+      ],
+      "lockBorder": true
+    },
+    "registration": "OSM narrow tip bbox centre; PLATEAU LOD2 horizontal sections at 30/100/200m guide yaw only (approx. 6.48m symmetric outline RMS; 120-degree ambiguity). Not surveyed alignment. DEM supplies ground; no vertical datum offset."
+  },
+  "anchor": {
+    "longitude": 139.81071889400482,
+    "latitude": 35.71004508243534
+  },
+  "orientationReference": {
+    "credit": "国土交通省 Project PLATEAU · 東京都墨田区 2025 LOD2.1",
+    "policy": "https://www.mlit.go.jp/plateau/site-policy/",
+    "sha256": "eea0aea8452f4d9dd4e0c287433f85d2e92557c5b13375f5814dcd3c3cc24746"
+  },
+  "asset": {
+    "file": "skytree-v1.ttlm.gz",
+    "sha256": "4ee6a8d802db2ccf0538add4ff7f3b54e21237e4cd36267e7a487852305848cd",
+    "decodedSha256": "763e09e62f3a4e159a54e5a3df8ae6228529b6deee24fa675c5c31f4b1d868d3",
+    "bytes": 1236544,
+    "decodedBytes": 2636828,
+    "vertices": 65576,
+    "triangles": 88581
+  },
+  "limitations": [
+    "Community appearance model; author upstream construction provenance not independently authenticated.",
+    "Height and north alignment are approximate; no survey or structural accuracy claim.",
+    "Opaque untextured decks; no glass transmission, night lighting or interiors."
+  ]
+}

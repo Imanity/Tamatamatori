@@ -25,7 +25,7 @@ import {
   constellationScene,
   constellationCount,
 } from "../domain/constellations";
-import { celestialPlanKey, skyLabelKey, occlusionLabels } from "../domain/visibility";
+import { celestialPlanKey, skyLabelKey, occlusionText } from "../domain/visibility";
 import {
   skyAppearance,
   starOpacity,
@@ -100,7 +100,7 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, arti
         : skyPointView(view, point),
       occlusion =
         current &&
-        (visibility.message ||
+        (visibility.message || visibility.occlusionUnavailable ||
           (isDeep && resource?.phase === "error"))
           ? "error"
           : current &&
@@ -260,7 +260,7 @@ export function StarReadout({
         <p>
           银河细节 · 对比度 {plan.milkyWayContrast ?? 100}% · 全景衍生 · 银心
           {core?.state === "画面内"
-            ? core.occlusion === "clear" && core.cloudHidden ? "云层遮蔽 · 显示近似" : occlusionLabels[core.occlusion]
+            ? core.occlusion === "clear" && core.cloudHidden ? "云层遮蔽 · 显示近似" : occlusionText(core.occlusion,plan)
             : (core?.state ?? "计算中")}
         </p>
       )}
@@ -303,7 +303,7 @@ export function StarReadout({
                         : resource?.phase === "loading" ? "正在加载影像"
                         : occlusion === "clear" && opacity < STAR_LABEL_ALPHA
                         ? cloudHidden ? "云层遮蔽 · 显示近似" : "天空较亮 · 轮廓隐藏"
-                        : `${partialFrame ? "部分入画 · " : ""}${occlusionLabels[occlusion]}`
+                        : `${partialFrame ? "部分入画 · " : ""}${occlusionText(occlusion,plan)}`
                       : state}
                   </span>
                   <span>
@@ -350,10 +350,10 @@ export function StarReadout({
                 {state !== "画面内"
                   ? state
                   : occlusion !== "clear"
-                    ? occlusionLabels[occlusion]
+                    ? occlusionText(occlusion,plan)
                     : opacity < STAR_LABEL_ALPHA
                       ? cloudHidden ? "云层遮蔽 · 显示近似" : "天空较亮 · 星点隐藏"
-                      : occlusionLabels[occlusion]}
+                      : occlusionText(occlusion,plan)}
               </span>
               <span>
                 {point.azimuth.toFixed(1)}° / 几何 {point.elevation.toFixed(1)}°
@@ -388,7 +388,7 @@ export function StarReadout({
             >
               <span>{point.name}</span>
               <span>
-                {state === "画面内" ? occlusionLabels[occlusion] : state}
+                {state === "画面内" ? occlusionText(occlusion,plan) : state}
               </span>
               <span>
                 {point.azimuth.toFixed(1)}° / 几何 {point.elevation.toFixed(1)}°

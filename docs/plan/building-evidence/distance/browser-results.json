@@ -1,0 +1,74 @@
+{
+  "checkedAt": "2026-11-07T07:36:03.842Z",
+  "url": "http://127.0.0.1:5176/Tamatamatori/",
+  "scripts": [
+    "http://127.0.0.1:5176/Tamatamatori/assets/index-C9JgdA_y.js"
+  ],
+  "scenes": [
+    {
+      "name": "01-skytree-4km-85mm"
+    },
+    {
+      "name": "02-skytree-4km-settled"
+    },
+    {
+      "name": "03-skytree-4km-200mm"
+    },
+    {
+      "name": "04-skytree-4km-1000mm"
+    },
+    {
+      "name": "05-skytree-4km-35mm"
+    },
+    {
+      "name": "06-skytree-4km-drag"
+    },
+    {
+      "name": "07-far-buildings-off"
+    },
+    {
+      "name": "08-mobile-far-readout"
+    },
+    {
+      "name": "09-mobile-far-preview"
+    },
+    {
+      "name": "10-original-user-view"
+    },
+    {
+      "name": "11-shanghai-5km"
+    },
+    {
+      "name": "12-final-skytree-4km-85mm"
+    },
+    {
+      "name": "13-final-200mm"
+    },
+    {
+      "name": "14-final-restored"
+    },
+    {
+      "name": "15-final-mobile"
+    },
+    {
+      "name": "16-final-shanghai"
+    }
+  ],
+  "initialRevision": {
+    "scripts": [
+      "http://127.0.0.1:5176/Tamatamatori/assets/index-4rYx1Bce.js"
+    ],
+    "scenes": "01–11"
+  },
+  "finalRevision": {
+    "scenes": "12–16",
+    "cache": "building payload only"
+  },
+  "console": [],
+  "notes": [
+    "01 是加载/GPU 上传过渡，判为待稳定；02 为同场景稳定画面。",
+    "最终版本已完整刷新复验四公里85/200 mm、关闭重开、390×844手机视口及上海。其他焦距与拖动在缓存优化前版本检查，几何与GL核未改变。",
+    "0额外请求与网格逐字节一致由独立CPU回放验证；没有通过浏览器测量网络请求数或GPU帧耗时。",
+    "手机出现短暂引擎避让提示，按实际相机绘制，截图保留；非实体手机性能验收。"
+  ]
+}

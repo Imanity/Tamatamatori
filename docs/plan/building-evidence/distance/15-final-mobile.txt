@@ -1,0 +1,36 @@
+- banner:
+  - link "Tamatamatori 首页":
+    - /url: ./
+    - text: Tamatamatori
+    - generic: 光影之间，自有方向
+  - button "关于 Tamatamatori":
+    - text: About
+- main:
+  - button "图层":
+    - text: 图层
+  - tablist "工作区面板":
+    - tab "地图"
+    - tab "拍摄预览" [active] [selected]
+    - tab "拍摄参数"
+  - button "拍摄信息":
+    - text: 拍摄信息
+  - region "拍摄预览":
+    - heading "拍摄预览" [level=2]
+    - generic: 地形模拟
+    - strong: 85 mm
+    - text: · 全画幅 · 横幅 3:2
+    - generic: 未改机 · 近似参考
+    - generic: 机位高程 ≈ 22.0 m · 离地 100 m
+    - group "预览显示设置":
+      - button "显示构图线" [pressed]:
+    - group "拍摄预览，拖动调整拍摄视角，滚轮调整焦距，也可使用方向键，Shift 加速":
+      - generic "真实 DEM 山体与静态水体预览，水面高程按 DEM 近似":
+        - region "山体与水体摄影预览"
+      - img "太阳在画面右上方（相机后方），视场外方向参考":
+        - text: 太阳
+        - generic: 后方
+      - img "月亮在画面上方（相机后方），视场外方向参考":
+        - text: 月亮
+        - generic: 后方
+      - img "取景辅助线，水平视场 23.9 度，垂直视场 16.1 度。":
+        - generic: E

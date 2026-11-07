@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 export type InfoGroupId =
+  | "buildings"
   | "global"
   | "sun"
   | "moon"

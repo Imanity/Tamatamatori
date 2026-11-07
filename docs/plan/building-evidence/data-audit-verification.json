@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-11-07T07:00:48.866Z",
+  "applicationCodeUnchangedSince226Tests": true,
+  "sourceVersion": "20261101_080013_pt",
+  "sourceSha256": {
+    "src/domain/buildings.ts": "f453fc76fbdf6637782317c413bc38142d30fbfbdad8b599e3906da9d2a25e8e",
+    "src/preview/buildings.ts": "a92698cef62e08a21447db043e507105c36a44e55a9ab9c3b5ba714505db34d6"
+  },
+  "evidenceSha256": {
+    "storage-audit.json": "aee4a60cb9d1eff83dc513efa93b404581fda48b7fd8f9571c4923f91d39f65e",
+    "skytree-retention.json": "9bbe73662dd61d207044c08ab2c10fe6dd9a85513aaf75edbf94f83cc1954026"
+  },
+  "localLinksChecked": 38,
+  "browser": {
+    "connected": true,
+    "appTabLocated": false,
+    "newGpuValidation": false
+  },
+  "scope": "Source MVT sizes, lossless building-layer extraction and synthetic-flat-height loader diagnosis. No application change, full-city/global download, data-package integration, GPU pass, commit or push."
+}

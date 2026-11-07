@@ -11,27 +11,31 @@
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/plan.test.mjs tests/map.test.mjs tests/terrain.test.mjs tests/elevation.test.mjs tests/interactions.test.mjs tests/camera-calibration.test.mjs tests/solar.test.mjs tests/celestial.test.mjs tests/starfield.test.mjs tests/deep-sky.test.mjs tests/sky-appearance.test.mjs tests/constellations.test.mjs tests/target-search.test.mjs tests/occlusion-refraction.test.mjs tests/dev-config.test.mjs tests/stations.test.mjs tests/light-pollution.test.mjs tests/weather.test.mjs",
+    "test": "node --experimental-strip-types --test tests/plan.test.mjs tests/map.test.mjs tests/terrain.test.mjs tests/elevation.test.mjs tests/interactions.test.mjs tests/camera-calibration.test.mjs tests/solar.test.mjs tests/celestial.test.mjs tests/starfield.test.mjs tests/deep-sky.test.mjs tests/sky-appearance.test.mjs tests/constellations.test.mjs tests/target-search.test.mjs tests/occlusion-refraction.test.mjs tests/dev-config.test.mjs tests/stations.test.mjs tests/light-pollution.test.mjs tests/weather.test.mjs tests/buildings.test.mjs",
     "test:terrain": "node --experimental-strip-types --test tests/terrain.test.mjs tests/camera-calibration.test.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "update:orbits": "node --experimental-strip-types scripts/update-stations.mjs"
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.5.1",
+    "@mapbox/vector-tile": "3.0.0",
     "astronomy-engine": "2.1.19",
     "earcut": "3.2.4",
     "maplibre-gl": "6.16.0",
+    "pbf": "5.1.2",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "satellite.js": "7.1.0"
   },
   "devDependencies": {
+    "@gltf-transform/core": "4.5.0",
     "@types/geojson": "^7946.0.16",
     "@types/node": "22.18.0",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.2.1",
     "jsdom": "^27.4.0",
+    "meshoptimizer": "1.3.0",
     "typescript": "^7.0.2",
     "vite": "^8.3.5"
   }

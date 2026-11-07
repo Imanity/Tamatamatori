@@ -1,0 +1,79 @@
+{
+  "checkedAt": "2026-11-07T06:20:19.464Z",
+  "baselineCommit": "89176f8819c8067c7095c5a4c05088c52fc66f5a",
+  "workingTree": "uncommitted building prototype",
+  "tests": {
+    "command": "npm test",
+    "passed": 226,
+    "failed": 0,
+    "logEncoding": "UTF-16LE",
+    "logSha256": "300eb394a3356ece531465a0a0414ce62365b2b9c4469ab809f5dc6049e22839"
+  },
+  "build": {
+    "command": "npm run build -- --base /Tamatamatori/",
+    "passed": true,
+    "logSha256": "ebc6e62d41646791d43c91886d09edc93451945dbcc288c42887e97e7e0e6030",
+    "assets": {
+      "building-layer-CXUXnB0_.js": "a8c2541dec976e68adf05133b9b43fd08bbee75e7fe037ea808ffcd45b694029",
+      "celestial-layer-D3o4Zsbv.js": "7cd15921de1a234c0683d1fe197f29a774657e0e4d5b169ce5c5c069cd038582",
+      "index-CDrbpV_8.css": "9377af406df2d30745eb61bf4679b63f745feb312d9273f75c9a973ac7ae2344",
+      "index-tg0jKAvH.js": "567eb9f801cdfd3f1eb9c90d48d4f26161f61a96291489eeba8c92e5af4c7db7",
+      "starfield-layer-DlocG4zo.js": "20672a5f054b494fd015219c1041eb64c558de4123d5014acfde07fbd8cc0225"
+    }
+  },
+  "sourceSha256": {
+    "src/components/BuildingReadout.tsx": "add2ff30b5c9290c42019287371504dca6aad67244899d8a9b5774936c32b428",
+    "src/domain/buildings.ts": "f453fc76fbdf6637782317c413bc38142d30fbfbdad8b599e3906da9d2a25e8e",
+    "src/preview/building-layer.ts": "eddd768e0ae862c58a27e8fae61fecba1963d81eddaa3629a0dd16e151c80c65",
+    "src/preview/buildings.ts": "a92698cef62e08a21447db043e507105c36a44e55a9ab9c3b5ba714505db34d6",
+    "tests/buildings.test.mjs": "50ed3be02ea132741e6bfbf331abe98ddbdd584b4e960ddf60834336f5195553",
+    "package-lock.json": "990ed885b3480563100835bb2c5803bdb792bc3716a1006bdb6f5e6d3f2cfdbd",
+    "package.json": "58952122c9a2ea0a1740a3daf8bf90fe0b10cb8a56955822d8356f055c11fbd1",
+    "src/App.tsx": "b225f8c3e4e87860f384784cdaed88e623bb04a78f99bb96bd9828458a54c86e",
+    "src/components/About.tsx": "9e47533ca7420e42b2b9e6d6f9b4cabbf16db7a78293b1b71b46ff18a56c0557",
+    "src/components/CelestialScene.tsx": "b351c8bda5b393b7c23c8d0cbb007526858cf2624b58c24635fd598afdfacd55",
+    "src/components/Icon.tsx": "04a8505c75af265a056aa65d4f00d190bf040d66c6ed2945476332b907d55d0c",
+    "src/components/InfoGroup.tsx": "766f271a3129d46d7fed220c13a1f2b0be94aa714a50702bab064097907844f7",
+    "src/components/ScenePanels.tsx": "cf1eaaf9abac46c438420ac2df68e2433f3404d906f81e75ee399eb5d018ab9a",
+    "src/components/StarScene.tsx": "6b51878c2b67a6693cd369fa6256aeac2c6e8a1105c10d6acfcac1a4a9916cd4",
+    "src/components/StationScene.tsx": "2c5253acf571dcdc6e91de3c3d15871334a9041eb4a173e660ffaa9a82689228",
+    "src/components/TargetSearch.tsx": "6700c57cac891ef1e81d8e5112b759d872405a2f667c5cfd685c293973f0efaf",
+    "src/components/TerrainScene.tsx": "12ef1266b340316a7a97cf6eac0bd68d534779e1ea49038c8177d7415cc3601c",
+    "src/domain/plan.ts": "eeaf2c9fd944411a394a5a7cbd875d70a6f68fbefdea9e5b8849c87983ac27d6",
+    "src/domain/starfield.ts": "b0f0484725d6f79d62e65ac8f1fbe18daf020008c6d11b2ef006369bbd185f41",
+    "src/domain/visibility.ts": "f7e02a46f7338f2b95c40073bd44b0d2e24158c5f501ee233443663ae07e68fd",
+    "src/preview/celestial-layer.ts": "7e71e35f98475c37bd24656605640de8d02f9cbddfabf7f90930ccee9c6498cb",
+    "src/preview/environment.ts": "fd4bb1493190047534df022233fb9e2f6e7d8b79e85260c0d41e50f4d2da823b",
+    "src/preview/starfield-layer.ts": "20291a853c80de3225b79a6873b05d8553f4afb1bbea0b915690ed43be37410f",
+    "src/styles.css": "2ca8c87a7f3123862cec7bd8beca0fd944a509a5f46484fd17882bf78904d4b3",
+    "tests/interactions.test.mjs": "a386f9feeb05840e8d961cfb0829839da947526979b353a98e3b199deaab4b14",
+    "tests/occlusion-refraction.test.mjs": "946998a559f27b91b419168e239a8f155760628ad4f79bf274f44ca35894437b"
+  },
+  "liveCpu": {
+    "file": "live-mesh.json",
+    "sha256": "e5f6ad528a8d45e3e268ba0c80fc31cfa61e068e446d686290f3d20605dd87d9",
+    "height": "synthetic flat 0 m; real DEM is not exercised"
+  },
+  "browser": {
+    "phase": "unavailable",
+    "attempts": 4,
+    "sessionResets": 1,
+    "afterUserReportedRestored": true,
+    "errors": [
+      "The browser access host is unavailable",
+      "Computer Use native pipe is unavailable"
+    ],
+    "gpuVerified": false,
+    "mobileVerified": false,
+    "frameTimeVerified": false
+  },
+  "limits": {
+    "radiusMetres": 2000,
+    "maximumTiles": 16,
+    "maximumAcceptedPoints": 80000,
+    "maximumTriangles": 120000,
+    "maximumDecodedTileBytes": 3145728,
+    "maximumRawCacheBytes": 16777216
+  },
+  "precision": "CPU model checks and GL doubles do not certify actual source heights, GPU rasterization or real photography alignment."
+}

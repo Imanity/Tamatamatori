@@ -1,5 +1,7 @@
 # 第三方许可
 
+MapLibre GL JS 6.16.0 的本地修改还包括：为带有本项目 LOD 回调标记的 DEM/地形覆盖遍历克隆远裁剪范围，补齐远景地标下方的真实 DEM 网格；不修改实际相机及普通地图。版本/签名校验与修改源码随仓库提供，继续保留原 BSD-3-Clause 许可，详见[远景校准](docs/plan/landmark-ground-calibration.md)。
+
 ## Open-Meteo 天气
 
 天气预报由 Open-Meteo 提供，汇集各国气象机构的数值模式，数据采用 CC BY 4.0。当前使用免密钥免费服务，仅限非商业用途，服务限额与数据许可分别适用。[Open-Meteo](https://open-meteo.com/)、[来源模式](https://open-meteo.com/en/docs)、[服务条件](https://open-meteo.com/en/terms)、[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
@@ -70,7 +72,21 @@ M45/M8/北美使用同一发布资料的原尺寸 TIFF，最终 RGB 保留高频
 
 ## Earcut 3.2.4
 
-用于日月凹多边形三角化，使用 ISC 许可。版权与许可同样包含在 [third-party-notices.txt](public/third-party-notices.txt)。
+用于日月凹多边形及建筑屋顶（含孔洞）三角化，使用 ISC 许可。版权与许可同样包含在 [third-party-notices.txt](public/third-party-notices.txt)。
+
+## OpenFreeMap / OpenStreetMap 建筑及 MVT 解码
+
+建筑按当前机位周边有限范围读取 OpenFreeMap 的版本化 MVT，源数据采用 ODbL，署名为 © OpenStreetMap contributors 与 © OpenMapTiles。渲染高度可能由层数换算或缺省生成，应用未将其作为实测楼高；具体版本和体块近似在右栏表达，来源完整说明集中于 About。地图已有来源署名继续保留。[数据来源](https://openfreemap.org/)、[OSM 版权与许可](https://www.openstreetmap.org/copyright)。
+
+建筑解码直接使用 @mapbox/vector-tile 3.0.0、pbf 5.1.2 及其 @mapbox/point-geometry 1.1.0 依赖，均为 BSD-3-Clause。完整版权及许可随 [third-party-notices.txt](public/third-party-notices.txt) 提供。运行时建筑不写入仓库；评估抽样记录保留来源 URL、版本与校验值。
+
+## 晴空塔无纹理地标
+
+[Tokyo Skytree, Japan](https://sketchfab.com/3d-models/tokyo-skytree-japan-b4d347b8703f45f48ea8d5fe45d454b9)，作者 [Noah (smiN5214)](https://sketchfab.com/smiN5214)，采用 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)。通过正式下载取得 GLB，衍生模型去掉纹理、UV、切线与材质，采用不透明共享光照，转换局部坐标、按 634 m 总高归一化、近似注册朝向并减面。衍生资源继续采用 CC BY 4.0；[来源和处理参数](public/landmarks/skytree-v1.json)、[压缩几何](public/landmarks/skytree-v1.ttlm.gz)随应用提供，About 含对应下载链接。模型并非测绘资料，作者上游制作来源未独立认证。
+
+锚点参考 OpenStreetMap；朝向参考国土交通省 Project PLATEAU 的东京都墨田区 2025 LOD2.1 水平轮廓，经加工仅提取近似注册参数，未把其几何作为精细塔架。按 [PLATEAU 使用政策](https://www.mlit.go.jp/plateau/site-policy/)保留来源及加工说明。源样本 URL 与哈希见[资料核查](docs/plan/landmark-assessment-evidence/plateau-targets.json)及[注册记录](docs/plan/skytree-evidence/section-registration.json)。
+
+离线转换使用 @gltf-transform/core 4.5.0（MIT）及 meshoptimizer 1.3.0（MIT），不进入网页运行时包；版权与许可保留在安装包中。
 
 ## d3-celestial 星座及星名数据
 

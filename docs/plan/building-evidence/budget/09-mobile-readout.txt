@@ -1,0 +1,110 @@
+- banner:
+  - link "Tamatamatori 首页":
+    - /url: ./
+    - text: Tamatamatori
+    - generic: 光影之间，自有方向
+  - button "关于 Tamatamatori":
+    - text: About
+- main:
+  - button "图层":
+    - text: 图层
+  - tablist "工作区面板":
+    - tab "地图" [selected]
+    - tab "拍摄预览"
+    - tab "拍摄参数"
+  - button "拍摄信息" [expanded]:
+    - text: 拍摄信息
+  - region "地图":
+    - heading "地图" [level=2]
+    - generic: 交互底图
+    - generic "交互地图，可用方向键浏览、加减键缩放；机位和朝向也可在参数区输入":
+      - region "摄影机位地图"
+      - img "当前机位：纬度 35.7070，经度 139.7939。可拖动修改，也可在参数区输入。"
+      - img "拍摄方向把手，可拖动；也可在参数区输入方位角": ▲
+      - button "放大地图"
+      - button "缩小地图"
+      - button "恢复地图朝北"
+      - generic: 2 千米
+      - generic "地图版权与来源"
+      - link "OpenFreeMap":
+        - /url: https://openfreemap.org
+      - link "© OpenMapTiles":
+        - /url: https://www.openmaptiles.org/
+      - text: Data from
+      - link "OpenStreetMap":
+        - /url: https://www.openstreetmap.org/copyright
+    - generic "地图点击操作":
+      - button "放置机位"
+      - button "定朝向"
+    - button "回到机位":
+    - button "全球视图":
+    - generic: 35.7070°N 139.7939°E
+    - text: 方向
+    - strong: 73.6°
+    - text: 东
+    - text: 水平视场
+    - strong: 54.4°
+    - text: 焦距
+    - strong: "35"
+    - text: mm
+- complementary "拍摄信息":
+  - search "拍摄目标搜索":
+    - generic: 搜索目标
+    - button "关闭拍摄信息":
+    - searchbox "搜索拍摄目标"
+  - heading "全局信息" [level=2]:
+    - button "全局信息":
+      - generic: 全局信息
+      - generic: +
+  - heading "建筑" [level=2]:
+    - button "建筑" [expanded]:
+      - generic: 建筑
+      - generic: −
+  - generic "建筑":
+    - generic "建筑数据状态":
+      - status: 建筑体块已应用
+      - paragraph: 周边约 2 km · 体块与高度近似 · 未加载远处建筑
+      - status: 已达范围或网格预算，建筑覆盖不完整。
+      - text: 已读取瓦片
+      - strong: "8"
+      - text: 分块体块
+      - strong: 8035 / 50282
+      - text: 三角面
+      - strong: 119,981
+      - text: 网格
+      - strong: 8.24 MiB
+      - paragraph: 预算内优先保留高层并分配周边覆盖，省略 42247 个分部。
+      - paragraph: 来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。
+      - paragraph: 本次载入 2026-11-07 07:15:18 UTC
+      - paragraph: 已略过 147 个隐藏轮廓、非面或高度无效要素。
+      - paragraph:
+        - link "OpenFreeMap":
+          - /url: https://openfreemap.org/
+        - text: ·
+        - link "© OpenStreetMap contributors":
+          - /url: https://www.openstreetmap.org/copyright
+      - button "重新读取建筑"
+  - heading "太阳" [level=2]:
+    - button "太阳":
+      - generic: 太阳
+      - generic: +
+  - heading "月亮" [level=2]:
+    - button "月亮":
+      - generic: 月亮
+      - generic: +
+  - heading "星空" [level=2]:
+    - button "星空":
+      - generic: 星空
+      - generic: +
+  - heading "银河" [level=2]:
+    - button "银河":
+      - generic: 银河
+      - generic: +
+  - heading "深空天体" [level=2]:
+    - button "深空天体":
+      - generic: 深空天体
+      - generic: +
+  - heading "空间站" [level=2]:
+    - button "空间站":
+      - generic: 空间站
+      - generic: +

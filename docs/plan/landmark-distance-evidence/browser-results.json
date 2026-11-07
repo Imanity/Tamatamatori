@@ -1,0 +1,129 @@
+{
+  "checkedAt": "2026-11-07T12:47:55.654Z",
+  "url": "http://127.0.0.1:5176/Tamatamatori/",
+  "records": [
+    {
+      "name": "original-300k",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n已达范围或网格预算，建筑覆盖不完整。\n\n晴空塔无纹理精细模型 · 定位与朝向近似 · 约 1.6 km · 88,581 面\n\n已读取瓦片\n32\n分块体块\n12856 / 57451\n三角面（含地标）\n299,969 / 300,000\n网格\n17.03 MiB\n\n2–5 km 普通远景分部 2027 / 7507 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n已清理 36 个重复或共线点，保留源轮廓。\n\n预算内优先保留高层并分配周边覆盖，省略 44595 个分部。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 12:34:10 UTC\n\n已略过 531 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑"
+    },
+    {
+      "name": "ten-km-200mm",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n已达范围或网格预算，建筑覆盖不完整。\n\n晴空塔无纹理精细模型 · 定位与朝向近似 · 约 10.0 km · 88,581 面\n\n已读取瓦片\n32\n分块体块\n10700 / 29293\n三角面（含地标）\n299,965 / 300,000\n网格\n17.03 MiB\n\n2–5 km 普通远景分部 1351 / 1546 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n已清理 104 个重复或共线点，保留源轮廓。\n\n预算内优先保留高层并分配周边覆盖，省略 18593 个分部。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 12:35:27 UTC\n\n已略过 164 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑"
+    },
+    {
+      "name": "thirty-km-600mm",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n晴空塔无纹理精细模型 · 定位与朝向近似 · 约 30.0 km · 88,581 面\n\n已读取瓦片\n32\n分块体块\n6816 / 6816\n三角面（含地标）\n198,434 / 300,000\n网格\n10.06 MiB\n\n2–5 km 普通远景分部 26 / 26 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n已清理 19 个重复或共线点，保留源轮廓。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 12:36:52 UTC\n\n已略过 196 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑"
+    },
+    {
+      "name": "49.88-km-1000mm",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n晴空塔无纹理精细模型 · 定位与朝向近似 · 约 49.9 km · 88,581 面\n\n已读取瓦片\n32\n分块体块\n496 / 496\n三角面（含地标）\n95,913 / 300,000\n网格\n3.02 MiB\n\n2–5 km 普通远景分部 11 / 11 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n已清理 1 个重复或共线点，保留源轮廓。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 12:42:02 UTC\n\n已略过 16 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑"
+    },
+    {
+      "name": "far-model-failure",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n晴空塔精细模型未应用；该距离未加载对应粗体块，可重新读取建筑。 · 约 49.9 km\n\n已读取瓦片\n32\n分块体块\n496 / 496\n三角面（含地标）\n7,332 / 300,000\n网格\n0.50 MiB\n\n2–5 km 普通远景分部 11 / 11 · 普通建筑在 5 km 外未加载。\n\n已清理 1 个重复或共线点，保留源轮廓。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 12:43:36 UTC\n\n已略过 16 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑"
+    },
+    {
+      "name": "outside-50.28km",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n已读取瓦片\n31\n分块体块\n305 / 305\n三角面（含地标）\n4,606 / 300,000\n网格\n0.32 MiB\n\n2–5 km 普通远景分部 8 / 8 · 普通建筑在 5 km 外未加载。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 12:43:54 UTC\n\n已略过 12 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑",
+      "landmarkCount": 0
+    },
+    {
+      "name": "dense-native-drag",
+      "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n已达范围或网格预算，建筑覆盖不完整。\n\n晴空塔无纹理精细模型 · 定位与朝向近似 · 约 1.6 km · 88,581 面\n\n已读取瓦片\n32\n分块体块\n12856 / 57451\n三角面（含地标）\n299,969 / 300,000\n网格\n17.03 MiB\n\n2–5 km 普通远景分部 2027 / 7507 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n已清理 36 个重复或共线点，保留源轮廓。\n\n预算内优先保留高层并分配周边覆盖，省略 44595 个分部。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 12:44:43 UTC\n\n已略过 531 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑",
+      "angles": [
+        {
+          "label": "焦距mm",
+          "value": "50"
+        },
+        {
+          "label": "纬度°",
+          "value": "35.70698835542723"
+        },
+        {
+          "label": "经度°",
+          "value": "139.79386910980952"
+        },
+        {
+          "label": "方位角°",
+          "value": "75.8878876745759"
+        },
+        {
+          "label": "俯仰角°",
+          "value": "9.499625789951548"
+        },
+        {
+          "label": "相机离地高度m",
+          "value": "100"
+        }
+      ]
+    }
+  ],
+  "final": {
+    "canvas": {
+      "bottom": 1136.328125,
+      "height": 825.65625,
+      "left": 265,
+      "right": 1503.5,
+      "top": 310.671875,
+      "width": 1238.5,
+      "x": 265,
+      "y": 310.671875
+    },
+    "controls": [
+      {
+        "label": "焦距mm",
+        "value": "50"
+      },
+      {
+        "label": "纬度°",
+        "value": "35.70698835542723"
+      },
+      {
+        "label": "经度°",
+        "value": "139.79386910980952"
+      },
+      {
+        "label": "方位角°",
+        "value": "77.22"
+      },
+      {
+        "label": "俯仰角°",
+        "value": "9"
+      },
+      {
+        "label": "相机离地高度m",
+        "value": "100"
+      }
+    ],
+    "info": "建筑体块已应用\n\n普通建筑：近景约 2 km，远景至约 5 km、高度 ≥20 m · 已接入地标至约 50 km\n\n已达范围或网格预算，建筑覆盖不完整。\n\n晴空塔无纹理精细模型 · 定位与朝向近似 · 约 1.6 km · 88,581 面\n\n已读取瓦片\n32\n分块体块\n12856 / 57451\n三角面（含地标）\n299,969 / 300,000\n网格\n17.03 MiB\n\n2–5 km 普通远景分部 2027 / 7507 · 普通建筑在 5 km 外未加载。\n\n地标仍受地形、已载建筑及雾影响，距离范围不代表一定可见。\n\n已清理 36 个重复或共线点，保留源轮廓。\n\n预算内优先保留高层并分配周边覆盖，省略 44595 个分部。\n\n来源版本 20261101_080013_pt · 高度可能由楼层推算或缺省生成，屋顶为简化平面。\n\n本次载入 2026-11-07 12:44:43 UTC\n\n已略过 531 个隐藏轮廓、非面或高度无效要素。\n\nOpenFreeMap · © OpenStreetMap contributors\n\n重新读取建筑",
+    "scriptUrls": [
+      "http://127.0.0.1:5176/Tamatamatori/assets/index-Bzx_Y0pG.js"
+    ]
+  },
+  "logs": [],
+  "mobile": {
+    "viewport": [
+      390,
+      844
+    ],
+    "scene": "original camera, 299969 total triangles / 12856 ordinary parts",
+    "restored": true,
+    "overrideReset": true
+  },
+  "observed": [
+    "Original camera increased building coverage; tower and neighbours remain",
+    "Native dense-scene drag changed azimuth77.22->75.8878876745759, pitch9->9.499625789951548; same load timestamp12:44:43UTC",
+    "10km200mm,30km600mm,49.88km1000mm: landmark present",
+    "49.88km model file withheld from isolated dist: ordinary scene remained, explicit no corresponding coarse fallback; restored retry applied model",
+    "50.28km: landmark count0 and no stale tower",
+    "390x844: dense scene and map/preview hide-restore displayed; normal viewport restored"
+  ],
+  "notPassed": [
+    "Distant foot-to-ground contact at30/50km looks detached; no surveyed or exact terrain-contact acceptance",
+    "No GPU timer or sustained frame-rate benchmark; no physical phone"
+  ],
+  "notes": [
+    "Initial 10km locator wait expired while the normal building readout was still loading; later stable frame separately captured",
+    "Browser extension text-highlight control may appear in screenshots"
+  ]
+}

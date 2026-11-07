@@ -6,6 +6,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const inputs = ["scripts/patch-maplibre.mjs", "scripts/patch-terrain-perspective.mjs", "scripts/patch-terrain-depth.mjs",
+  "scripts/patch-terrain-range.mjs",
   "src/preview/terrain-projection.glsl", "src/preview/terrain-depth.glsl"]
   .map(path => fileURLToPath(new URL(path, import.meta.url)));
 

@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 
 const paths = {
+  building: "M4 21V7h7v14M11 21V3h9v18M2 21h20M7 10h1m-1 4h1m-1 4h1m6-12h3m-3 4h3m-3 4h3m-3 4h3",
   camera:
     "M14 4h-4L8 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-4l-2-3ZM16 13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z",
   map: "m9 18-6 3V6l6-3 6 3 6-3v15l-6 3-6-3Zm0 0V3m6 3v15",

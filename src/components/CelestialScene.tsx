@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import type { ShootingPlan } from "../domain/plan";
 import { celestialBodies, moonPhaseLabel } from "../domain/ephemeris";
 import { bodyPolygons } from "../domain/celestial-projection";
-import { celestialPlanKey, skyLabelKey, occlusionLabels } from "../domain/visibility";
+import { celestialPlanKey, skyLabelKey, occlusionText } from "../domain/visibility";
 import type { VisibilitySnapshot } from "../domain/visibility";
 import type { WeatherSample } from "../domain/weather";
 import { cloudOpacity, weatherClouds } from "../domain/weather-appearance";
@@ -62,7 +62,7 @@ export function CelestialReadout({ scene, plan, update, bodyId, weather }: {
   return <div className="celestial-readout" aria-label="日月图层状态">
     {scene.views.filter(view => !bodyId || view.body.id === bodyId).map(({ body, enabled, state, visualElevation, occlusion }) => <div key={body.id} className="celestial-row" data-body-status={body.id}>
       <span className="celestial-name">{name(body.id)}</span>
-      <span className="celestial-state">{!enabled ? "已关闭" : state === "画面内" ? occlusionLabels[occlusion] : state}</span>
+      <span className="celestial-state">{!enabled ? "已关闭" : state === "画面内" ? occlusionText(occlusion,plan) : state}</span>
       {enabled && <>
         <span className="celestial-coordinates">{body.azimuth.toFixed(1)}° / 视 {visualElevation.toFixed(2)}°（几何 {body.elevation.toFixed(2)}°）</span>
         {body.id === "moon" && <span>{moonPhaseLabel(body.phaseAngle)} · 亮面 {(body.illuminatedFraction * 100).toFixed(0)}%</span>}
@@ -71,6 +71,6 @@ export function CelestialReadout({ scene, plan, update, bodyId, weather }: {
           onClick={() => update({ azimuth: body.azimuth, pitch: visualElevation })}>朝向</button>
       </>}
     </div>)}
-    {(plan.layers.sun || plan.layers.moon) && <p className="celestial-limit">遮挡仅按当前 DEM · {plan.refraction === "standard" ? "标准折射为固定大气近似" : "无大气折射"}</p>}
+    {(plan.layers.sun || plan.layers.moon) && <p className="celestial-limit">{plan.layers.buildings?"遮挡按已载 DEM 与有限建筑体块":"遮挡仅按当前 DEM"} · {plan.refraction === "standard" ? "标准折射为固定大气近似" : "无大气折射"}</p>}
   </div>;
 }

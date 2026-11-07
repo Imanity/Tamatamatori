@@ -4,7 +4,7 @@ import { searchTargets } from "../domain/target-search";
 import { skyPointView, skyReference } from "../domain/starfield";
 import type { SkyVisibility } from "../domain/starfield";
 import { bodyPolygons } from "../domain/celestial-projection";
-import { celestialPlanKey, occlusionLabels } from "../domain/visibility";
+import { celestialPlanKey, occlusionText } from "../domain/visibility";
 import type { VisibilitySnapshot } from "../domain/visibility";
 import type { WeatherSample } from "../domain/weather";
 import { cloudOpacity, weatherClouds } from "../domain/weather-appearance";
@@ -84,12 +84,12 @@ export function TargetSearchResults({
                   : "waiting"
                 : skyVisibility.planKey !== key
                   ? "waiting"
-                  : skyVisibility.message
+                  : skyVisibility.message || skyVisibility.occlusionUnavailable
                     ? "error"
                     : skyVisibility.ready
                       ? (skyVisibility.states[target.id] ?? "waiting")
                       : "waiting";
-        let status = state === "画面内" ? occlusionLabels[occlusion] : state;
+        let status = state === "画面内" ? occlusionText(occlusion,plan) : state;
         if (!enabled) status = `图层已关闭 · ${state}`;
         else if (target.deep && state === "画面内") {
           if (resource?.phase === "error")

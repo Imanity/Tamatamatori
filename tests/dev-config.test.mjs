@@ -13,6 +13,7 @@ test("开发服务启动及着色器更新时重新应用补丁并切换预构�
   let server;
   try {
     const inputs = ["scripts/patch-maplibre.mjs", "scripts/patch-terrain-perspective.mjs", "scripts/patch-terrain-depth.mjs",
+      "scripts/patch-terrain-range.mjs",
       "src/preview/terrain-projection.glsl", "src/preview/terrain-depth.glsl"];
     await writeFile(join(root, "vite.config.ts"), await readFile(new URL("../vite.config.ts", import.meta.url)));
     await writeFile(join(root, "index.html"), "<html><body>fixture</body></html>");

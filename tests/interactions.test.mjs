@@ -167,6 +167,19 @@ class TestStarfieldLayer {
   onRemove() { this.removed=true; }
 }
 
+class TestBuildingLayer {
+  id="preview-buildings";type="custom";loads=0;key="";
+  constructor(report){this.report=report;}
+  setVisible(visible){this.visible=visible;}
+  setScene(plan,_environment,_sun,_visibility,retry=0){
+    const key=`${!!plan.layers.buildings}/${plan.longitude}/${plan.latitude}/${retry}`;
+    if(key===this.key)return;this.key=key;this.loads++;
+    this.status={key:`${plan.longitude}/${plan.latitude}`,phase:plan.layers.buildings?"ready":"off",limited:false,tiles:4,polygons:200,triangles:2400,bytes:172800,skipped:0,version:"test-fixture"};
+    this.report(this.status);
+  }
+  onRemove(){this.removed=true;}
+}
+
 class TestMarker extends Events {
   static instances = [];
   constructor(options) {
@@ -227,6 +240,7 @@ before(async () => {
   installGlobal("__testWeatherLoader", (point, signal, now, model) => { weatherRequests.push({ point, signal, model }); return weatherLoader(point, signal, now, model); });
   installGlobal("__testCelestialLayer", TestCelestialLayer);
   installGlobal("__testStarfieldLayer", TestStarfieldLayer);
+  installGlobal("__testBuildingLayer", TestBuildingLayer);
   dom = new JSDOM("<!doctype html><html><body></body></html>", {
     url: "http://localhost/",
   });
@@ -318,6 +332,8 @@ before(async () => {
         load(id) {
           if (id.replaceAll("\\", "/").endsWith("/src/preview/starfield-layer.ts"))
             return "export const StarfieldLayer = globalThis.__testStarfieldLayer;";
+          if (id.replaceAll("\\", "/").endsWith("/src/preview/building-layer.ts"))
+            return "export const BuildingLayer = globalThis.__testBuildingLayer;";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/celestial-layer.ts"))
             return "export const CelestialLayer = globalThis.__testCelestialLayer;";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/light-pollution.ts"))
@@ -1248,7 +1264,10 @@ test('About 汇集所有署名与下载，开关图层和弹窗不重建地图�
   }
   assert.match(dialog.querySelector('[data-credit-source="IC0434"]').textContent, /火树/);
   const downloads = [...dialog.querySelectorAll('a[download]')];
-  assert.equal(downloads.length, catalog.imageSources.length + 6);
+  assert.equal(downloads.length, catalog.imageSources.length + 8);
+  const landmarkSection=dialog.querySelector('[aria-labelledby="about-landmarks-title"]');
+  assert.match(landmarkSection.textContent,/Noah.*CC BY 4.0/);
+  assert.equal(landmarkSection.querySelectorAll('a[download]').length,2);
   assert.equal(new Set(downloads.map((link) => link.getAttribute('href'))).size, downloads.length);
   const fields = ['经度', '纬度', '焦距', '相机离地高度', '方位角', '俯仰角'];
   const before = fields.map(value), time = shootingDateTime();
@@ -1426,7 +1445,7 @@ test('精简工作区与默认折叠分组，左栏入口展开定位并清除�
   for (const selector of ['.workspace-heading', '.workspace-footer', '.base-layer', '.sidebar-bottom', '.layer-hint', '.map-footer-note', '.viewfinder-label', '.viewfinder-focal', '.terrain-height', '.parameter-note', '.info-header'])
     assert.equal(document.querySelector(selector), null, selector);
   const groups = [...document.querySelectorAll('.info-group h2 button')];
-  assert.deepEqual(groups.map(group => group.id), ['info-global', 'info-sun', 'info-moon', 'info-stars', 'info-milkyWay', 'info-deepSky', 'info-stations']);
+  assert.deepEqual(groups.map(group => group.id), ['info-global', 'info-buildings', 'info-sun', 'info-moon', 'info-stars', 'info-milkyWay', 'info-deepSky', 'info-stations']);
   assert.ok(groups.every(group => group.getAttribute('aria-expanded') === 'false'));
   await settle(() => document.querySelector('#info-global').click());
   await settle(() => document.querySelector('[aria-label="太阳设置与信息"]').click());
@@ -1446,6 +1465,26 @@ test('精简工作区与默认折叠分组，左栏入口展开定位并清除�
   await settle(() => document.querySelector('[aria-label="月亮设置与信息"]').click());
   assert.equal(document.querySelector('#info-moon').getAttribute('aria-expanded'), 'true');
   assert.equal(terrainMap(), map); assert.equal(groundRequests.length, requests);
+});
+
+test('建筑入口联动右栏、转向调焦复用几何，失败独立重试且不重建 DEM', async t => {
+  await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
+  const toggle=document.querySelector('[aria-label="显示建筑"]');assert.equal(toggle.checked,false);
+  await settle(()=>document.querySelector('[aria-label="建筑设置与信息"]').click());
+  assert.equal(document.querySelector('#info-buildings').getAttribute('aria-expanded'),'true');
+  await settle(()=>toggle.click());
+  const layer=map.customLayers.find(l=>l.id==='preview-buildings');
+  assert.equal(document.querySelector('.building-readout').dataset.buildingPhase,'ready');
+  const loads=layer.loads;
+  await settle(()=>setControl(input('焦距'),85));
+  assert.equal(layer.loads,loads);assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
+  await settle(()=>layer.report({...layer.status,phase:'error',message:'测试建筑请求失败'}));
+  assert.match(document.querySelector('.building-readout').textContent,/建筑未应用.*测试建筑请求失败/s);
+  assert.equal(document.querySelector('.terrain-feedback-error'),null);
+  await settle(()=>[...document.querySelectorAll('.building-readout button')].find(b=>b.textContent==='重新读取建筑').click());
+  assert.equal(layer.loads,loads+1);assert.equal(document.querySelector('.building-readout').dataset.buildingPhase,'ready');
+  await settle(()=>toggle.click());assert.equal(document.querySelector('.building-readout').dataset.buildingPhase,'off');
+  assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
 });
 
 test('星座和银河子设置位于右栏，预览信息与时间配置位于画布外', async t => {

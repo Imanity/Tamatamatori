@@ -1,0 +1,49 @@
+{
+  "checkedAt": "2026-11-07T07:23:09.729Z",
+  "buildingMetadata": {
+    "id": "building",
+    "fields": {
+      "colour": "String",
+      "hide_3d": "Boolean",
+      "render_height": "Number",
+      "render_min_height": "Number"
+    },
+    "minzoom": 13,
+    "maxzoom": 14
+  },
+  "records": [
+    {
+      "z": 12,
+      "x": 3638,
+      "y": 1612,
+      "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/12/3638/1612.pbf",
+      "bytes": 363664,
+      "features": 0,
+      "validHeights": 0,
+      "highest": 0,
+      "sha256": "2237662456be6b4b4cccb755bd809eec2a31b21c83e3a60346597b116eef0bf4"
+    },
+    {
+      "z": 13,
+      "x": 7277,
+      "y": 3225,
+      "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/13/7277/3225.pbf",
+      "bytes": 214160,
+      "features": 1,
+      "validHeights": 0,
+      "highest": 0,
+      "sha256": "1b2f157884121e13336366daf64c2ed10857efdb00783d004cacc64afdcfceef"
+    },
+    {
+      "z": 14,
+      "x": 14554,
+      "y": 6450,
+      "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6450.pbf",
+      "bytes": 759861,
+      "features": 91,
+      "validHeights": 81,
+      "highest": 634,
+      "sha256": "d9dfeff06d9adba5745f60bd730691c10e94266448117a2e19aec53bc8f184f9"
+    }
+  ]
+}

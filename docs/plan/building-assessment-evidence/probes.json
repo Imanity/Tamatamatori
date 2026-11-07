@@ -1,0 +1,409 @@
+{
+  "purpose": "建筑数据可用性与字段抽样，不是建筑实测精度或 GPU 渲染验收。每处只取一个 z14 瓦片，包含瓦片裁切/分部要素，数量不是独立建筑数。",
+  "checkedAt": "2026-11-07T05:40:38.995Z",
+  "source": {
+    "url": "https://tiles.openfreemap.org/planet",
+    "status": 200,
+    "fetchedAt": "2026-11-07T05:40:38.610Z",
+    "bytesDecoded": 19254,
+    "sha256": "3339dd4706556bf88d514cb54b10647dbe1f8306381f739f2a2e52341147040c",
+    "cors": "*",
+    "cacheControl": "max-age=3600, public",
+    "lastModified": "Sun, 01 Nov 2026 23:47:38 GMT",
+    "etag": "W/\"6ae7cf9a-4b36\"",
+    "minzoom": 0,
+    "maxzoom": 14,
+    "attribution": "<a href=\"https://openfreemap.org\" target=\"_blank\">OpenFreeMap</a> <a href=\"https://www.openmaptiles.org/\" target=\"_blank\">&copy; OpenMapTiles</a> Data from <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">OpenStreetMap</a>",
+    "tiles": [
+      "https://tiles.openfreemap.org/planet/20261101_080013_pt/{z}/{x}/{y}.pbf"
+    ],
+    "buildingSchema": {
+      "id": "building",
+      "fields": {
+        "colour": "String",
+        "hide_3d": "Boolean",
+        "render_height": "Number",
+        "render_min_height": "Number"
+      },
+      "minzoom": 13,
+      "maxzoom": 14
+    }
+  },
+  "results": [
+    {
+      "site": {
+        "name": "东京晴空塔",
+        "longitude": 139.8107,
+        "latitude": 35.7101
+      },
+      "tile": {
+        "z": 14,
+        "x": 14554,
+        "y": 6450
+      },
+      "response": {
+        "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14554/6450.pbf",
+        "status": 200,
+        "fetchedAt": "2026-11-07T05:40:38.650Z",
+        "bytesDecoded": 759861,
+        "sha256": "d9dfeff06d9adba5745f60bd730691c10e94266448117a2e19aec53bc8f184f9",
+        "cors": "*",
+        "cacheControl": "max-age=315360000, public",
+        "lastModified": "Sun, 01 Nov 2026 14:28:34 GMT",
+        "etag": "\"6ae74c92-6a8e4\""
+      },
+      "features": 91,
+      "fields": {
+        "render_height": 91,
+        "render_min_height": 91,
+        "hide_3d": 10,
+        "colour": 16
+      },
+      "renderHeight": {
+        "count": 91,
+        "min": 3,
+        "max": 634,
+        "mostFrequent": [
+          {
+            "height": 26,
+            "count": 5
+          },
+          {
+            "height": 30,
+            "count": 4
+          },
+          {
+            "height": 33,
+            "count": 4
+          },
+          {
+            "height": 5,
+            "count": 3
+          },
+          {
+            "height": 12,
+            "count": 3
+          },
+          {
+            "height": 15,
+            "count": 3
+          }
+        ]
+      },
+      "hide3d": 10,
+      "featuresContainingProbePoint": [
+        {
+          "id": 22778970,
+          "properties": {
+            "render_height": 5,
+            "render_min_height": 0
+          }
+        },
+        {
+          "id": 940948580,
+          "properties": {
+            "render_height": 19,
+            "render_min_height": 0
+          }
+        },
+        {
+          "id": 3623514152,
+          "properties": {
+            "render_height": 350,
+            "render_min_height": 290
+          }
+        },
+        {
+          "id": 2882691482,
+          "properties": {
+            "render_height": 450,
+            "render_min_height": 410
+          }
+        },
+        {
+          "id": 2882691472,
+          "properties": {
+            "render_height": 634,
+            "render_min_height": 0,
+            "hide_3d": true
+          }
+        }
+      ]
+    },
+    {
+      "site": {
+        "name": "东京塔",
+        "longitude": 139.7454,
+        "latitude": 35.6586
+      },
+      "tile": {
+        "z": 14,
+        "x": 14551,
+        "y": 6452
+      },
+      "response": {
+        "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14551/6452.pbf",
+        "status": 200,
+        "fetchedAt": "2026-11-07T05:40:38.712Z",
+        "bytesDecoded": 646198,
+        "sha256": "daad1327ae326b22e68371dde93134b19c65a6924a04b717175f0951bd54f2dd",
+        "cors": "*",
+        "cacheControl": "max-age=315360000, public",
+        "lastModified": "Sun, 01 Nov 2026 14:28:34 GMT",
+        "etag": "\"6ae74c92-5cf6e\""
+      },
+      "features": 178,
+      "fields": {
+        "render_height": 178,
+        "render_min_height": 178,
+        "hide_3d": 20,
+        "colour": 70
+      },
+      "renderHeight": {
+        "count": 178,
+        "min": 4,
+        "max": 326,
+        "mostFrequent": [
+          {
+            "height": 5,
+            "count": 6
+          },
+          {
+            "height": 15,
+            "count": 6
+          },
+          {
+            "height": 11,
+            "count": 5
+          },
+          {
+            "height": 22,
+            "count": 5
+          },
+          {
+            "height": 30,
+            "count": 5
+          },
+          {
+            "height": 37,
+            "count": 5
+          }
+        ]
+      },
+      "hide3d": 20,
+      "featuresContainingProbePoint": [
+        {
+          "id": 42473133,
+          "properties": {
+            "colour": "#ab6b83",
+            "render_height": 20,
+            "render_min_height": 0
+          }
+        },
+        {
+          "id": 42473123,
+          "properties": {
+            "render_height": 21,
+            "render_min_height": 0,
+            "hide_3d": true
+          }
+        },
+        {
+          "id": 3138152462,
+          "properties": {
+            "colour": "white",
+            "render_height": 130,
+            "render_min_height": 120
+          }
+        },
+        {
+          "id": 3156575192,
+          "properties": {
+            "render_height": 150,
+            "render_min_height": 0
+          }
+        },
+        {
+          "id": 12453370102,
+          "properties": {
+            "colour": "#ffffff",
+            "render_height": 150,
+            "render_min_height": 20,
+            "hide_3d": true
+          }
+        },
+        {
+          "id": 12449669862,
+          "properties": {
+            "colour": "#ffffff",
+            "render_height": 227,
+            "render_min_height": 224,
+            "hide_3d": true
+          }
+        },
+        {
+          "id": 12449669792,
+          "properties": {
+            "colour": "#ffffff",
+            "render_height": 241,
+            "render_min_height": 217,
+            "hide_3d": true
+          }
+        },
+        {
+          "id": 3138152472,
+          "properties": {
+            "colour": "#ffffff",
+            "render_height": 246,
+            "render_min_height": 241,
+            "hide_3d": true
+          }
+        },
+        {
+          "id": 12449669852,
+          "properties": {
+            "colour": "#ff0000",
+            "render_height": 251,
+            "render_min_height": 246,
+            "hide_3d": true
+          }
+        }
+      ]
+    },
+    {
+      "site": {
+        "name": "上海陆家嘴",
+        "longitude": 121.5008,
+        "latitude": 31.2397
+      },
+      "tile": {
+        "z": 14,
+        "x": 13721,
+        "y": 6694
+      },
+      "response": {
+        "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6694.pbf",
+        "status": 200,
+        "fetchedAt": "2026-11-07T05:40:38.961Z",
+        "bytesDecoded": 183012,
+        "sha256": "8ef40e9fd3543e077b828d63f1b4b118a762cee077ee4fa04bc063e463a33796",
+        "cors": "*",
+        "cacheControl": "max-age=315360000, public",
+        "lastModified": "Sun, 01 Nov 2026 14:27:10 GMT",
+        "etag": "\"6ae74c3e-1c8dd\""
+      },
+      "features": 74,
+      "fields": {
+        "render_height": 74,
+        "render_min_height": 74,
+        "hide_3d": 11,
+        "colour": 22
+      },
+      "renderHeight": {
+        "count": 74,
+        "min": 3,
+        "max": 632,
+        "mostFrequent": [
+          {
+            "height": 5,
+            "count": 3
+          },
+          {
+            "height": 26,
+            "count": 2
+          },
+          {
+            "height": 158,
+            "count": 2
+          },
+          {
+            "height": 180,
+            "count": 2
+          },
+          {
+            "height": 185,
+            "count": 2
+          },
+          {
+            "height": 196,
+            "count": 2
+          }
+        ]
+      },
+      "hide3d": 11,
+      "featuresContainingProbePoint": []
+    },
+    {
+      "site": {
+        "name": "巴黎埃菲尔铁塔",
+        "longitude": 2.2945,
+        "latitude": 48.8584
+      },
+      "tile": {
+        "z": 14,
+        "x": 8296,
+        "y": 5636
+      },
+      "response": {
+        "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/8296/5636.pbf",
+        "status": 200,
+        "fetchedAt": "2026-11-07T05:40:38.992Z",
+        "bytesDecoded": 514435,
+        "sha256": "850bd22e9f088f8860cd4f96bd99d1d191f25fd6f56d2cafe2081089f2b58f3f",
+        "cors": "*",
+        "cacheControl": "max-age=315360000, public",
+        "lastModified": "Sun, 01 Nov 2026 14:12:44 GMT",
+        "etag": "\"6ae748dc-49cf3\""
+      },
+      "features": 103,
+      "fields": {
+        "render_height": 103,
+        "render_min_height": 103,
+        "colour": 22,
+        "hide_3d": 11
+      },
+      "renderHeight": {
+        "count": 103,
+        "min": 1,
+        "max": 330,
+        "mostFrequent": [
+          {
+            "height": 4,
+            "count": 7
+          },
+          {
+            "height": 11,
+            "count": 5
+          },
+          {
+            "height": 15,
+            "count": 5
+          },
+          {
+            "height": 44,
+            "count": 5
+          },
+          {
+            "height": 13,
+            "count": 4
+          },
+          {
+            "height": 5,
+            "count": 3
+          }
+        ]
+      },
+      "hide3d": 11,
+      "featuresContainingProbePoint": [
+        {
+          "id": 3086877450,
+          "properties": {
+            "colour": "#706550",
+            "render_height": 277,
+            "render_min_height": 115
+          }
+        }
+      ]
+    }
+  ]
+}

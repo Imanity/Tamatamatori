@@ -618,6 +618,8 @@ p {
 .pollution-error, .pollution-unavailable { color: #966538; }
 .pollution-readout { margin-top: 10px; font-size: 10px; line-height: 1.8; color: #788368; }
 .weather-readout { margin-top: 14px; font-size: 10px; line-height: 1.8; color: #788368; }
+.building-readout { font-size: 10px; line-height: 1.8; color: #788368; }
+.building-readout button { border: 1px solid #d6dfcc; border-radius: 4px; background: #f7f9f2; color: #647c57; font-size: 10px; padding: 2px 7px; }
 .weather-status { flex-shrink: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 7px; color: #966538; font-size: 10px; }
 .weather-status button, .weather-readout button { border: 1px solid #d6dfcc; border-radius: 4px; background: #f7f9f2; color: #647c57; font-size: 10px; padding: 2px 7px; }
 .pollution-status button, .pollution-readout button { border: 1px solid #d6dfcc; border-radius: 4px; background: #f7f9f2; color: #647c57; font-size: 10px; padding: 2px 7px; }

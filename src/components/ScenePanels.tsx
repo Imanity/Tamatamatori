@@ -39,6 +39,8 @@ import { useLightPollution } from "./useLightPollution";
 import { lightPollutionAtlas } from "../domain/light-pollution";
 import { useWeather } from "./useWeather";
 import { WeatherReadout, WeatherActions, weatherMessage } from "./WeatherReadout";
+import { emptyBuildings, buildingKey } from "../domain/buildings";
+import { BuildingReadout } from "./BuildingReadout";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -124,6 +126,10 @@ export function PreviewPanel({
   const [visibility, setVisibility] = useState(emptyVisibility);
   const [skyVisibility, setSkyVisibility] = useState(emptySkyVisibility);
   const [camera, setCamera] = useState<RenderedCamera | null>(null);
+  const [buildings,setBuildings] = useState(emptyBuildings);
+  const [buildingAttempt,setBuildingAttempt] = useState(0);
+  const buildingStatus = !plan.layers.buildings ? {...emptyBuildings,key:buildingKey(plan)} : buildings.key===buildingKey(plan)&&buildings.phase!=="off"
+    ? buildings : {...emptyBuildings,key:buildingKey(plan),phase:"loading" as const};
   const stationMatches = matchingStations(infoQuery);
   const orbits = useOrbits(!!plan.layers.stations || stationMatches.length > 0);
   const observerAltitude =
@@ -327,6 +333,8 @@ export function PreviewPanel({
             onCameraChange={setCamera}
             onSkyChange={setSkyVisibility}
             onInfoChange={setTerrainInfo}
+            onBuildingsChange={setBuildings}
+            buildingAttempt={buildingAttempt}
           />
           <CelestialDiscs scene={celestialScene} weather={weather} plan={plan} />
           <StarLabels scene={starScene} />
@@ -478,6 +486,7 @@ export function PreviewPanel({
                     </section>
                   </>,
                 )}
+                {group("buildings","建筑",<BuildingReadout status={buildingStatus} retry={()=>setBuildingAttempt(v=>v+1)} />)}
                 {group(
                   "sun",
                   "太阳",
