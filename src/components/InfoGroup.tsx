@@ -9,12 +9,13 @@ export type InfoGroupId =
   | "milkyWay"
   | "deepSky"
   | "stations";
-export interface InfoNavigation {
-  id: InfoGroupId;
-  request: number;
-  /** Enabling a layer expands and reveals its group; disabling collapses it. */
-  open: boolean;
-}
+/**
+ * A layer switch expands and reveals its group (`open`) or collapses it;
+ * `sync` sets every layer group to its switch after a whole plan was applied.
+ */
+export type InfoNavigation =
+  | { id: InfoGroupId; open: boolean; request: number }
+  | { sync: true; request: number };
 
 export function InfoGroup({
   id,

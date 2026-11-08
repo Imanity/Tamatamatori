@@ -130,18 +130,42 @@ export function About() {
           <section aria-labelledby="about-landmarks-title">
             <h3 id="about-landmarks-title">地标模型</h3>
             <p>社区外观模型，定位和朝向近似；无纹理、不透明共享光照，不提供测绘精度、玻璃透光或夜景灯光。</p>
-            {landmarks.map(model=><div key={model.id} data-landmark-credit={model.id}>
-              <a href={model.credit.page} target="_blank" rel="noreferrer">{model.name} · {model.credit.title} · {model.credit.author}</a>
-              <p><a href={model.credit.authorPage} target="_blank" rel="noreferrer">{model.credit.author}</a> · <a href={model.credit.licenseUrl} target="_blank" rel="noreferrer">{model.credit.license}</a>{model.credit.use&&<>，{model.credit.use}</>} · {model.credit.changes}</p>
-              <p>{model.credit.registration}</p>
-              <p>{model.credit.references.map(ref=><a key={ref.url} href={ref.url} target="_blank" rel="noreferrer">{ref.title} </a>)}</p>
-              {model.validation.visual==="pending"&&<p>已完成 CPU 检查，画面待验证。</p>}
-              <div className="about-downloads">
-                <a href={`${import.meta.env.BASE_URL}landmarks/${model.asset.file}`} download>下载{model.name}无纹理衍生模型 · {model.credit.license}{model.credit.use&&`，${model.credit.use}`}</a>
-                <a href={`${import.meta.env.BASE_URL}landmarks/${model.asset.file.replace('.ttlm.gz','.json')}`} download>下载{model.name}来源、校验与处理记录</a>
-              </div>
-            </div>)}
-
+            <ul className="about-image-credits">
+              {landmarks.map((model) => (
+                <li key={model.id} data-landmark-credit={model.id}>
+                  <h4>{model.name}</h4>
+                  <p className="about-credit-line">
+                    <a href={model.credit.page} target="_blank" rel="noreferrer">{model.credit.title}</a>
+                    {" · "}
+                    <a href={model.credit.authorPage} target="_blank" rel="noreferrer">{model.credit.author}</a>
+                  </p>
+                  <p>
+                    <a href={model.credit.licenseUrl} target="_blank" rel="noreferrer">{model.credit.license}</a>
+                    {model.credit.use && <strong className="about-use">，{model.credit.use}</strong>} · {model.credit.changes}
+                  </p>
+                  {model.validation.visual === "pending" && <p>已完成 CPU 检查，画面待验证。</p>}
+                  <details className="about-more">
+                    <summary>定位、朝向与参考资料</summary>
+                    <p>{model.credit.registration}</p>
+                    <ul className="about-references">
+                      {model.credit.references.map((ref) => (
+                        <li key={ref.url}>
+                          <a href={ref.url} target="_blank" rel="noreferrer">{ref.title}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                  <div className="about-downloads">
+                    <a href={`${import.meta.env.BASE_URL}landmarks/${model.asset.file}`} download>
+                      下载无纹理衍生模型 · {model.credit.license}{model.credit.use && `，${model.credit.use}`}
+                    </a>
+                    <a href={`${import.meta.env.BASE_URL}landmarks/${model.asset.file.replace(".ttlm.gz", ".json")}`} download>
+                      下载来源、校验与处理记录
+                    </a>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </section>
 
           <section aria-labelledby="about-catalog-title">
@@ -204,6 +228,11 @@ export function About() {
                 );
               })}
             </ul>
+          </section>
+
+          <section aria-labelledby="about-storage-title">
+            <h3 id="about-storage-title">本地保存</h3>
+            <p>保存的机位和上次的工作状态只存放在此浏览器的本地存储中，不上传、不跨设备同步，清除网站数据即删除。GitHub Pages 上同一域名下的其他页面与本应用共用这份本地存储。</p>
           </section>
 
           <section aria-labelledby="about-software-title">

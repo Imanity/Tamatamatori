@@ -13,6 +13,9 @@ import {
   instantOnDate,
   localClockTime,
   zoomFocalLength,
+  shiftInstant,
+  shiftDate,
+  cameraHeightSlider,
 } from "../src/domain/plan.ts";
 
 test("日期编辑保留当地秒钟，拒绝越界及夏令时重复或跳过", () => {
@@ -185,4 +188,42 @@ test("时间滑杆拒绝夏令时跳过和重复的钟点，其他钟点可以�
     instantAtMinute("2026-11-01T12:00:00Z", "America/New_York", 210),
     "2026-11-01T08:30:00Z",
   );
+});
+
+test("时间微调按绝对分钟跨午夜与夏令时，前后一天保留当地钟点并拒绝不存在的钟点", () => {
+  assert.equal(shiftInstant("2026-11-04T14:55:00Z", "Asia/Tokyo", 10), "2026-11-04T15:05:00Z");
+  assert.equal(localDateTime(shiftInstant("2026-11-04T14:55:00Z", "Asia/Tokyo", 10), "Asia/Tokyo"), "2026-11-05T00:05");
+  // 01:30 EST + 1 h crosses the spring-forward gap to 03:30 EDT.
+  assert.equal(localDateTime(shiftInstant(instantFromLocal("2026-03-08T01:30", "America/New_York"), "America/New_York", 60), "America/New_York"), "2026-03-08T03:30");
+  assert.throws(() => shiftInstant("2100-12-31T23:30:00Z", "UTC", 60), /1900—2100/);
+  assert.throws(() => shiftInstant("2026-11-04T00:00:00Z", "UTC", 0.5), RangeError);
+  assert.equal(shiftDate("2026-11-04T08:00:12Z", "Asia/Tokyo", -1), "2026-11-03T08:00:12Z");
+  assert.equal(localDateTime(shiftDate(instantFromLocal("2026-10-31T23:30", "Europe/Paris"), "Europe/Paris", 1), "Europe/Paris"), "2026-11-01T23:30");
+  assert.throws(() => shiftDate(instantFromLocal("2026-03-07T02:30", "America/New_York"), "America/New_York", 1), RangeError);
+});
+
+test("离地高度滑条按对数映射 0.1—100 m，10 m 以下精确到 0.1 m，键盘每步至少改变一个单位", () => {
+  const { toPosition, fromPosition, max } = cameraHeightSlider;
+  assert.equal(toPosition(0.1), 0);
+  assert.equal(toPosition(1), 200);
+  assert.equal(toPosition(10), 400);
+  assert.equal(toPosition(100), max);
+  for (const height of [0.1, 0.5, 1.6, 5, 10, 30, 100]) assert.equal(fromPosition(toPosition(height)), height, `${height}`);
+  let previous = 0;
+  for (let position = 0; position <= max; position += 1) {
+    const height = fromPosition(position);
+    assert.ok(height >= previous, `monotonic at ${position}`);
+    assert.ok(height < 10 ? Math.abs(height * 10 - Math.round(height * 10)) < 1e-9 : Number.isInteger(height), `${height}`);
+    previous = height;
+  }
+  assert.equal(fromPosition(max + 1), 100);
+  assert.equal(fromPosition(-1), 0.1);
+  // Arrow keys move by one unit even where one slider position is smaller than the unit.
+  assert.equal(cameraHeightSlider.step(1.5, 1), 1.6);
+  assert.equal(cameraHeightSlider.step(1.5, -1), 1.4);
+  assert.equal(cameraHeightSlider.step(9.9, 1), 10);
+  assert.equal(cameraHeightSlider.step(10, -1), 9.9);
+  assert.equal(cameraHeightSlider.step(50, 1), 51);
+  assert.equal(cameraHeightSlider.step(100, 1), 100);
+  assert.equal(cameraHeightSlider.step(0.1, -1), 0.1);
 });

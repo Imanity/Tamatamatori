@@ -106,6 +106,22 @@ export function PreviewPanel({
   const [revealing, setRevealing] = useState<InfoGroupId | null>(null);
   useEffect(() => {
     if (!infoNavigation) return;
+    if ("sync" in infoNavigation) {
+      const layers = latestPlan.current.layers;
+      pendingReveal.current = null;
+      setRevealing(null);
+      setExpanded((current) => ({
+        ...current,
+        buildings: !!layers.buildings,
+        sun: layers.sun,
+        moon: layers.moon,
+        stars: layers.stars,
+        milkyWay: layers.milkyWay,
+        deepSky: layers.deepSky,
+        stations: layers.stations,
+      }));
+      return;
+    }
     const { id, open } = infoNavigation;
     setExpanded((current) => ({ ...current, [id]: open }));
     if (open) setRevealing(id);

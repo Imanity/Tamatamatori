@@ -184,6 +184,36 @@ export function instantFromLocal(local: string, timeZone: string) {
     .toString();
 }
 
+/** Move the shooting instant by whole minutes; crosses local midnight and DST freely. */
+export function shiftInstant(instant: string, timeZone: string, minutes: number) {
+  if (!Number.isInteger(minutes)) throw new RangeError("时间偏移需为整数分钟");
+  const next = Temporal.Instant.from(instant).add({ minutes });
+  const year = next.toZonedDateTimeISO(timeZone).year;
+  if (year < 1900 || year > 2100) throw new RangeError("本原型支持 1900—2100 年");
+  return next.toString();
+}
+
+/** Same local clock time on the neighbouring local date; rejects DST-skipped or repeated times. */
+export function shiftDate(instant: string, timeZone: string, days: number) {
+  const date = Temporal.Instant.from(instant).toZonedDateTimeISO(timeZone).toPlainDate().add({ days });
+  return instantOnDate(instant, timeZone, date.toString());
+}
+
+const roundHeight = (value: number) =>
+  Math.max(0.1, Math.min(100, value < 10 ? Math.round(value * 10) / 10 : Math.round(value)));
+
+/** Camera height slider: logarithmic 0.1–100 m, 0.1 m below 10 m and whole metres above. */
+export const cameraHeightSlider = {
+  max: 600,
+  toPosition: (height: number) => Math.round((Math.log10(Math.max(0.1, Math.min(100, height)) / 0.1) * 600) / 3),
+  fromPosition: (position: number) => roundHeight(0.1 * 10 ** ((Math.max(0, Math.min(600, position)) * 3) / 600)),
+  /** Arrow keys: one unit per press, since one slider position can be smaller than the rounding unit. */
+  step(current: number, direction: 1 | -1) {
+    const unit = current < 10 || (current === 10 && direction < 0) ? 0.1 : 1;
+    return roundHeight(current + direction * unit);
+  },
+};
+
 export function signedAngle(angle: number) {
   return ((((angle + 180) % 360) + 360) % 360) - 180;
 }

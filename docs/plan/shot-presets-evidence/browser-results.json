@@ -1,0 +1,141 @@
+{
+ "resources": [
+  "index-GXKo2v7g.js",
+  "index-B85JffqQ.css"
+ ],
+ "log": [
+  {
+   "step": "header",
+   "text": "Tamatamatori | 光影之间，自有方向 | 未保存的机位 | About",
+   "label": "未保存的机位"
+  },
+  {
+   "step": "baseline-values",
+   "valuesA": "35.4172 138.8729 200 18 24 1.6 | 2026-11-12 23:40 | 东京 UTC+9"
+  },
+  {
+   "step": "save-suggestion",
+   "name": "35.417°N 138.873°E · 11-12 23:40"
+  },
+  {
+   "step": "saved",
+   "label": "富士 · 冬夜银河",
+   "stored": 1
+  },
+  {
+   "step": "modified",
+   "label": "富士 · 冬夜银河",
+   "modifiedDot": true,
+   "values": "35.7101 139.7546 90 2 200 30 | 2026-11-20 07:10:00 | 巴黎 UTC+1"
+  },
+  {
+   "step": "apply-a",
+   "label": "富士 · 冬夜银河",
+   "toast": "已应用「富士 · 冬夜银河」\n撤销\n×",
+   "values": "35.4172 138.8729 200 18 24 1.6 | 2026-11-12 23:40:00 | 东京 UTC+9",
+   "matchesSaved": false
+  },
+  {
+   "step": "pixels-after-apply",
+   "pixels": 215651,
+   "changedOver8": 0,
+   "changedShare": 0,
+   "maxDelta": 0,
+   "meanDelta": 0
+  },
+  {
+   "step": "reload-layout",
+   "previewSlot": "1"
+  },
+  {
+   "step": "reload",
+   "label": "富士 · 冬夜银河",
+   "values": "35.4172 138.8729 200 18 24 1.6 | 2026-11-12 23:40:00 | 东京 UTC+9",
+   "matchesSaved": false
+  },
+  {
+   "step": "pixels-after-reload",
+   "pixels": 215651,
+   "changedOver8": 0,
+   "changedShare": 0,
+   "maxDelta": 0,
+   "meanDelta": 0
+  },
+  {
+   "step": "share",
+   "length": 912,
+   "prefix": "tmt1:"
+  },
+  {
+   "step": "import-errors",
+   "errors": [
+    "position.latitude：应在 -90～90 之间，收到 95",
+    "position.longitude：缺少该字段",
+    "view.azimuth：应为数字，收到 \"西南\"",
+    "time.timeZone：使用 time.local 时必须给出 IANA 时区，例如 \"Asia/Tokyo\""
+   ]
+  },
+  {
+   "step": "import-preview",
+   "summary": "地点 | 埃菲尔铁塔附近 · 离地 2 m | 时间 | 2026-12-20 22:15 · Europe/Paris | 方向 | 方位 250.0° · 俯仰 8.0° | 镜头 | 200 mm · 全画幅 · 横幅 3:2 | 图层 | 太阳、银河",
+   "defaults": "15 项未提供，已用默认值"
+  },
+  {
+   "step": "after-cancel",
+   "label": "富士 · 冬夜银河",
+   "unchanged": false
+  },
+  {
+   "step": "mobile-header",
+   "button": {
+    "x": 190.4375,
+    "y": 14,
+    "width": 103.578125,
+    "height": 32
+   },
+   "about": {
+    "x": 302.015625,
+    "y": 14,
+    "width": 72.984375,
+    "height": 32
+   },
+   "overflow": 0
+  },
+  {
+   "step": "mobile-panel",
+   "panel": {
+    "x": 10,
+    "y": 66,
+    "width": 370,
+    "height": 360
+   }
+  },
+  {
+   "step": "mobile-timezone",
+   "picker": {
+    "x": 30,
+    "y": 220.78125,
+    "width": 330,
+    "height": 304
+   },
+   "options": 424
+  },
+  {
+   "step": "field-string-note",
+   "note": "matchesSaved=false 只来自基线字符串：保存前时间输入框保留键入草稿“23:40”（见 baseline-values），应用与刷新后显示“23:40:00”，其余字段逐项相同；两次像素差均为 0。"
+  },
+  {
+   "step": "about-storage",
+   "resources": [
+    "index-EO__z5Kb.js",
+    "index-B85JffqQ.css"
+   ],
+   "about": "本地保存\n\n保存的机位和上次的工作状态只存放在此浏览器的本地存储中，不上传、不跨设备同步，清除网站数据即删除。GitHub Pages 上同一域名下的其他页面与本应用共用这份本地存储。",
+   "restored": {
+    "label": "富士 · 冬夜银河",
+    "session": true
+   },
+   "note": "About 本地保存说明在最终构建上单独核对；前述步骤使用 index-GXKo2v7g.js，两次构建只差 About 文本。"
+  }
+ ]
+}

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode, RefObject } from "react";
 import { initialPlan } from "./domain/plan";
 import type { ShootingPlan } from "./domain/plan";
@@ -11,6 +11,8 @@ import { About } from "./components/About";
 import { EnvironmentSettings } from "./components/EnvironmentSettings";
 import type { MapViewport } from "./domain/map";
 import type { InfoGroupId, InfoNavigation } from "./components/InfoGroup";
+import { ShotMenu, ShotToast } from "./components/ShotMenu";
+import { browserStorage, readSession, writeSession } from "./domain/shot-library";
 
 type PanelId = "map" | "preview" | "parameters";
 const defaultPanels: PanelId[] = ["map", "preview", "parameters"];
@@ -212,7 +214,19 @@ function Panel({
 }
 
 export default function App() {
-  const [plan, setPlan] = useState<ShootingPlan>(initialPlan);
+  // The last working state is restored after a reload (see shot-library).
+  const [restored] = useState(() => readSession(browserStorage()));
+  const [plan, setPlan] = useState<ShootingPlan>(restored?.plan ?? initialPlan);
+  const [activeShotId, setActiveShotId] = useState<string | null>(
+    restored?.activeId ?? null,
+  );
+  // Bumped whenever a whole plan replaces the current one, so the parameter
+  // inputs drop any half-typed drafts.
+  const [planGeneration, setPlanGeneration] = useState(0);
+  const [shotNotice, setShotNotice] = useState<{
+    text: string;
+    undo: { plan: ShootingPlan; activeId: string | null };
+  } | null>(null);
   const [panels, setPanels] = useState(defaultPanels);
   const [mainWidth, setMainWidth] = useState(65);
   const [upperHeight, setUpperHeight] = useState(defaultUpperHeight);
@@ -237,8 +251,8 @@ export default function App() {
   const workspaceRef = useRef<HTMLDivElement>(null);
   const secondaryRef = useRef<HTMLDivElement>(null);
   const mapViewport = useRef<MapViewport>({
-    longitude: initialPlan.longitude,
-    latitude: initialPlan.latitude,
+    longitude: plan.longitude,
+    latitude: plan.latitude,
     zoom: 11,
     bearing: 0,
   });
@@ -247,6 +261,46 @@ export default function App() {
       setPlan((current) => ({ ...current, ...patch })),
     [],
   );
+  const session = useRef({ plan, activeShotId });
+  session.current = { plan, activeShotId };
+  useEffect(() => {
+    const timer = setTimeout(
+      () => writeSession(browserStorage(), plan, activeShotId),
+      300,
+    );
+    return () => clearTimeout(timer);
+  }, [plan, activeShotId]);
+  useEffect(() => {
+    const flush = () =>
+      writeSession(
+        browserStorage(),
+        session.current.plan,
+        session.current.activeShotId,
+      );
+    window.addEventListener("pagehide", flush);
+    return () => {
+      window.removeEventListener("pagehide", flush);
+      flush();
+    };
+  }, []);
+  const replacePlan = (next: ShootingPlan, id: string | null) => {
+    setPlan(next);
+    setActiveShotId(id);
+    setPlanGeneration((value) => value + 1);
+    setInfoQuery("");
+    // Information groups follow the new layer switches.
+    setInfoNavigation((current) => ({
+      sync: true,
+      request: (current?.request ?? 0) + 1,
+    }));
+  };
+  const applyShot = (next: ShootingPlan, id: string | null, name: string) => {
+    setShotNotice({
+      text: `已应用「${name}」`,
+      undo: { plan, activeId: activeShotId },
+    });
+    replacePlan(next, id);
+  };
   const toggleLayer = (id: (typeof skyLayers)[number]["id"]) => {
     // The information group follows its layer: enabling expands and reveals
     // it without moving focus, disabling collapses it. On narrow screens the
@@ -300,7 +354,7 @@ export default function App() {
             infoNavigation={infoNavigation}
           />
         ) : (
-          <Parameters plan={plan} update={updatePlan} />
+          <Parameters key={planGeneration} plan={plan} update={updatePlan} />
         )}
       </Panel>
     );
@@ -316,16 +370,26 @@ export default function App() {
             Tamatamatori<small>光影之间，自有方向</small>
           </span>
         </a>
-        <div className="topbar-divider" />
-        <span className="topbar-label">摄影规划</span>
         <div className="topbar-end">
-          <span className="prototype-badge">
-            <span className="status-dot" /> 工作区原型
-          </span>
-          <span className="version-label">P3 / 天文构图</span>
+          <ShotMenu
+            plan={plan}
+            activeId={activeShotId}
+            onActiveChange={setActiveShotId}
+            onApply={applyShot}
+          />
           <About />
         </div>
       </header>
+      {shotNotice && (
+        <ShotToast
+          text={shotNotice.text}
+          onUndo={() => {
+            replacePlan(shotNotice.undo.plan, shotNotice.undo.activeId);
+            setShotNotice(null);
+          }}
+          onClose={() => setShotNotice(null)}
+        />
+      )}
       <div className="app-layout">
         <aside
           className={`sidebar ${layersOpen ? "is-open" : ""}`}

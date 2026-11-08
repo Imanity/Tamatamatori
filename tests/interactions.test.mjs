@@ -12,6 +12,9 @@ import {deepSkyScene} from '../src/domain/deep-sky.ts';
 import { weatherResponse } from './fixtures/weather.mjs';
 import { parseWeather, WEATHER_TTL } from '../src/domain/weather.ts';
 import { ellipsoidalRay } from '../src/domain/geodesy.ts';
+import { parseShotText } from '../src/domain/shot.ts';
+import { dayEvents } from '../src/domain/day-events.ts';
+import { cameraHeightSlider } from '../src/domain/plan.ts';
 
 // Exercise real React handlers and state with an SDK test double; no WebGL is
 // simulated, and these checks do not claim browser rendering verification.
@@ -397,6 +400,7 @@ async function waitForMap() {
 async function workspace(
   t,
   elevation = async () => ({ height: 1000, zoom: 12 }),
+  { keepStorage = false } = {},
 ) {
   groundResponse = elevation;
   pollutionRequests.length = 0;
@@ -407,6 +411,9 @@ async function workspace(
   resizeObservers.length = 0;
   TestMap.instances.length = 0;
   TestMarker.instances.length = 0;
+  // Saved shots and the restored session must not leak between tests;
+  // `keepStorage` simulates a page reload within one test.
+  if (!keepStorage) dom.window.localStorage.clear();
   const host = document.createElement("div");
   document.body.append(host);
   const root = createRoot(host);
@@ -416,7 +423,11 @@ async function workspace(
     frames.clear();
   });
   await act(async () => root.render(createElement(App)));
-  return { host, map: await waitForMap() };
+  const unmount = async () => {
+    await act(async () => root.unmount());
+    host.remove();
+  };
+  return { host, map: await waitForMap(), unmount };
 }
 
 function input(label) {
@@ -426,6 +437,11 @@ function input(label) {
   );
   assert.ok(field, `missing input ${label}`);
   return field.querySelector("input");
+}
+async function chooseTimeZone(zone, query = zone) {
+  await settle(() => document.querySelector(".timezone-trigger").click());
+  await settle(() => setControl(document.querySelector('[aria-label="搜索时区"]'), query));
+  await settle(() => document.querySelector(`.timezone-list [data-zone="${zone}"]`).click());
 }
 function shootingDateTime() {
   return `${document.querySelector('input[type="date"]').value}T${document.querySelector('input[type="time"]').value.slice(0, 5)}`;
@@ -454,7 +470,9 @@ function setControl(element, value) {
   const prototype =
     element.tagName === "SELECT"
       ? dom.window.HTMLSelectElement.prototype
-      : dom.window.HTMLInputElement.prototype;
+      : element.tagName === "TEXTAREA"
+        ? dom.window.HTMLTextAreaElement.prototype
+        : dom.window.HTMLInputElement.prototype;
   Object.getOwnPropertyDescriptor(prototype, "value").set.call(
     element,
     String(value),
@@ -658,10 +676,7 @@ test("24 小时滑杆更新同一天的当地时间，焦距上限和竖幅同�
 
 test("时间滑杆遇到夏令时跳过的钟点时显示错误并保留原时间", async (t) => {
   await workspace(t);
-  const zone = [...document.querySelectorAll("select")].find(
-    (element) => element.value === "Asia/Tokyo",
-  );
-  await settle(() => setControl(zone, "America/New_York"));
+  await chooseTimeZone("America/New_York");
   await setShootingDateTime('2026-03-08T03:30');
   assert.equal(shootingDateTime(), "2026-03-08T03:30");
   const slider = document.querySelector('input[aria-label="24 小时时间滑杆"]');
@@ -857,8 +872,7 @@ test("时间驱动环境并合并连续更新，切换时区不重绘，布局�
   assert.ok(document.querySelector(".preview-lighting").textContent.includes("夜间"));
   assert.equal(map.cameraSolutions.length, poses);
   assert.equal(groundRequests.length, requests);
-  const zone = [...document.querySelectorAll("select")].find((element) => element.value === "Asia/Tokyo");
-  await settle(() => setControl(zone, "America/New_York"));
+  await chooseTimeZone("America/New_York");
   assert.equal(map.environments.length, writes + 1);
   assert.deepEqual(["经度", "纬度", "方位角", "俯仰角", "焦距", "相机离地高度"].map(value), fields);
   await settle(() => setControl(document.querySelector('select[aria-label="拍摄预览面板位置"]'), 0));
@@ -1594,7 +1608,7 @@ test('星座和银河子设置位于右栏，预览信息与时间配置位于�
   assert.equal(document.querySelector('.viewfinder .preview-elevation'), null);
   const date = document.querySelector('input[type="date"]'), clock = document.querySelector('input[type="time"]');
   assert.equal(date.closest('.time-row'), clock.closest('.time-row'));
-  assert.equal(document.querySelector('[aria-label="显示时区"]').closest('.field-pair'), document.querySelector('[aria-label="大气折射模型"]').closest('.field-pair'));
+  assert.equal(document.querySelector('.timezone-trigger').closest('.field-pair'), document.querySelector('[aria-label="大气折射模型"]').closest('.field-pair'));
   await settle(() => setControl(clock, '19:35:12'));
   await settle(() => setControl(date, '2026-11-07'));
   assert.equal(clock.value, '19:35:12');
@@ -1834,4 +1848,251 @@ test('环境分组保留关闭时的模型选择，切换模型取消旧数据�
   assert.equal(pending[1].model, 'ecmwf_ifs025');
   assert.match(document.querySelector('.weather-readout').textContent, /能见度 模型未提供/);
   assert.equal(terrainMap(), map); assert.equal(groundRequests.length, ground);
+});
+
+const shotButton = () => document.querySelector('.shot-button');
+const panelButton = (text) => [...document.querySelectorAll('.shot-panel button')].find((b) => b.textContent.trim() === text);
+const openShots = async () => { if (!document.querySelector('.shot-panel')) await settle(() => shotButton().click()); };
+async function saveShotAs(name) {
+  await openShots();
+  await settle(() => (panelButton('保存为机位') ?? panelButton('另存为新机位')).click());
+  await settle(() => setControl(document.querySelector('[aria-label="机位名称"]'), name));
+  await settle(() => panelButton('保存').click());
+}
+const savedShots = () => JSON.parse(dom.window.localStorage.getItem('tamatamatori.shots.v1') ?? '{"shots":[]}').shots;
+const keydown = (element, key) => element.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key, bubbles: true }));
+
+test('页头删去调试文本；机位保存、修改标记、切换应用与撤销，参数、图层与右栏同步', async t => {
+  await workspace(t); const map = await readyTerrain();
+  const header = document.querySelector('.topbar').textContent;
+  for (const removed of ['工作区原型', 'P3', '天文构图', '摄影规划']) assert.ok(!header.includes(removed), removed);
+  assert.equal(shotButton().textContent.trim(), '未保存的机位');
+  await openShots();
+  assert.match(document.querySelector('.shot-current').textContent, /尚未保存/);
+  assert.match(document.querySelector('.shot-empty').textContent, /还没有保存的机位/);
+  await settle(() => panelButton('保存为机位').click());
+  assert.match(document.querySelector('[aria-label="机位名称"]').value, /°N .*11-04 17:00/, 'suggested name from place and local time');
+  await settle(() => setControl(document.querySelector('[aria-label="机位名称"]'), '富士 A'));
+  await settle(() => panelButton('保存').click());
+  assert.equal(shotButton().textContent.trim(), '富士 A'); assert.match(document.querySelector('.shot-notice').textContent, /已保存「富士 A」/);
+  assert.equal(savedShots().length, 1);
+  const [first] = savedShots();
+  // Changing anything in the picture marks the bound shot as modified.
+  await settle(() => setControl(input('焦距'), 85));
+  await settle(() => document.querySelector('[aria-label="显示星空"]').click());
+  assert.ok(document.querySelector('.shot-modified')); assert.match(shotButton().getAttribute('aria-label'), /已修改/);
+  await saveShotAs('富士 B');
+  assert.equal(shotButton().textContent.trim(), '富士 B'); assert.equal(document.querySelector('.shot-modified'), null);
+  assert.deepEqual(savedShots().map((entry) => entry.shot.name), ['富士 B', '富士 A']);
+  // Apply A: every control, the layer switches and the information groups follow.
+  await openShots();
+  assert.match(document.querySelector(`[data-shot-id="${first.id}"]`).textContent, /富士 A.*35 mm · 全画幅 · 横幅 3:2/s);
+  await settle(() => document.querySelector(`[data-shot-id="${first.id}"] .shot-apply`).click());
+  assert.equal(document.querySelector('.shot-panel'), null); assert.equal(document.activeElement, shotButton());
+  assert.equal(value('焦距'), 35); assert.equal(document.querySelector('[aria-label="显示星空"]').checked, false);
+  assert.equal(document.querySelector('#info-stars').getAttribute('aria-expanded'), 'false');
+  assert.equal(shotButton().textContent.trim(), '富士 A');
+  assert.match(document.querySelector('.shot-toast').textContent, /已应用「富士 A」/);
+  await settle(() => [...document.querySelectorAll('.shot-toast button')].find((b) => b.textContent === '撤销').click());
+  assert.equal(value('焦距'), 85); assert.equal(document.querySelector('[aria-label="显示星空"]').checked, true);
+  assert.equal(document.querySelector('#info-stars').getAttribute('aria-expanded'), 'true');
+  assert.equal(shotButton().textContent.trim(), '富士 B'); assert.equal(document.querySelector('.shot-toast'), null);
+  // Saving changes overwrites the bound entry and moves it to the top.
+  await settle(() => setControl(input('焦距'), 50));
+  await openShots(); await settle(() => panelButton('保存修改').click());
+  assert.equal(savedShots()[0].shot.camera.focalLength, 50); assert.equal(document.querySelector('.shot-modified'), null);
+  // Rename, then delete with undo.
+  const second = savedShots()[0];
+  await settle(() => document.querySelector(`[data-shot-id="${second.id}"] .shot-more`).click());
+  await settle(() => panelButton('重命名').click());
+  await settle(() => setControl(document.querySelector('[aria-label="新名称"]'), '富士 · 星空'));
+  await settle(() => panelButton('确定').click());
+  assert.equal(savedShots()[0].shot.name, '富士 · 星空'); assert.equal(shotButton().textContent.trim(), '富士 · 星空');
+  await settle(() => document.querySelector(`[data-shot-id="${second.id}"] .shot-more`).click());
+  await settle(() => panelButton('删除').click());
+  assert.equal(savedShots().length, 1); assert.equal(shotButton().textContent.trim(), '未保存的机位');
+  await settle(() => panelButton('撤销').click());
+  assert.equal(savedShots().length, 2); assert.equal(shotButton().textContent.trim(), '富士 · 星空');
+  await settle(() => keydown(document.querySelector('.shot-panel'), 'Escape'));
+  assert.equal(document.querySelector('.shot-panel'), null);
+  assert.equal(terrainMap(), map);
+});
+
+test('导入机位：错误带字段路径，部分 JSON 补默认值，任意时区与保存并应用，分享码往返', async t => {
+  await workspace(t); await readyTerrain();
+  await openShots(); await settle(() => panelButton('导入机位').click());
+  const dialog = document.querySelector('.shot-dialog[open]'), field = dialog.querySelector('textarea');
+  await settle(() => setControl(field, '{"format":"tamatamatori.shot","version":1,"view":{"azimuth":"西南"}}'));
+  const errors = dialog.querySelector('.shot-errors').textContent;
+  assert.match(errors, /view.azimuth：应为数字/); assert.match(errors, /position：缺少该字段/);
+  assert.ok([...dialog.querySelectorAll('footer button')].every((b) => b.disabled));
+  const json = { format: 'tamatamatori.shot', version: 1, name: '埃菲尔铁塔 · 冬夜', position: { latitude: 48.8530, longitude: 2.3499, heightAboveGround: 2 },
+    view: { azimuth: 250, pitch: 8 }, camera: { focalLength: 200 }, time: { local: '2026-12-20T22:15', timeZone: 'Europe/Paris' }, layers: { moon: false, milkyWay: true } };
+  await settle(() => setControl(field, '```json\n' + JSON.stringify(json, null, 2) + '\n```'));
+  assert.equal(dialog.querySelector('.shot-errors'), null);
+  assert.match(dialog.querySelector('.shot-summary').textContent, /埃菲尔铁塔附近.*2026-12-20 22:15 · Europe\/Paris.*200 mm.*太阳、银河/s);
+  assert.match(dialog.querySelector('.shot-defaults').textContent, /camera.sensor/);
+  assert.equal(dialog.querySelector('[aria-label="导入机位名称"]').value, '埃菲尔铁塔 · 冬夜');
+  await settle(() => [...dialog.querySelectorAll('footer button')].find((b) => b.textContent === '保存并应用').click());
+  assert.equal(dialog.open, false);
+  assert.equal(value('焦距'), 200); assert.equal(value('纬度'), 48.853);
+  assert.equal(document.querySelector('input[type="date"]').value, '2026-12-20');
+  assert.match(document.querySelector('.timezone-trigger').textContent, /巴黎.*UTC\+1/);
+  assert.equal(document.querySelector('[aria-label="显示银河"]').checked, true); assert.equal(document.querySelector('[aria-label="显示月亮"]').checked, false);
+  assert.equal(shotButton().textContent.trim(), '埃菲尔铁塔 · 冬夜'); assert.equal(savedShots().length, 1);
+  // Share the current shot and read the code back.
+  await openShots(); await settle(() => panelButton('分享').click());
+  const share = document.querySelector('.shot-dialog[open]'), code = share.querySelector('[aria-label="分享码"]').value;
+  assert.match(code, /^tmt1:/);
+  const parsed = parseShotText(code);
+  assert.equal(parsed.ok, true); assert.equal(parsed.shot.name, '埃菲尔铁塔 · 冬夜'); assert.equal(parsed.plan.timeZone, 'Europe/Paris');
+  assert.equal(parsed.plan.instant, '2026-12-20T21:15:00Z'); assert.equal(parsed.plan.focalLength, 200);
+  assert.deepEqual(JSON.parse(share.querySelector('[aria-label="机位 JSON"]').value), parsed.shot);
+  await settle(() => share.querySelector('header button').click());
+  assert.equal(share.open, false);
+});
+
+test('时区选择：常用分组标出当前时区，中文城市搜索与键盘选择，Escape 不改时区，只改显示不改拍摄时刻', async t => {
+  await workspace(t); await readyTerrain();
+  const instant = document.querySelector('input[type="time"]').value, trigger = document.querySelector('.timezone-trigger');
+  assert.match(trigger.textContent, /东京.*UTC\+9/);
+  await settle(() => trigger.click());
+  assert.equal(trigger.getAttribute('aria-expanded'), 'true');
+  const groups = [...document.querySelectorAll('.timezone-group')].map((g) => g.textContent);
+  assert.deepEqual(groups, ['常用'], 'only the common group is labelled; all zones follow a divider');
+  assert.equal(document.querySelectorAll('.timezone-divider').length, 1);
+  assert.equal(document.querySelector('.timezone-list [aria-selected="true"]').dataset.zone, 'Asia/Tokyo');
+  assert.ok(document.querySelectorAll('.timezone-list [role="option"]').length > 300);
+  const search = document.querySelector('[aria-label="搜索时区"]');
+  await settle(() => setControl(search, '悉尼'));
+  assert.equal(document.querySelector('.timezone-list [role="option"]').dataset.zone, 'Australia/Sydney');
+  assert.equal(search.getAttribute('aria-activedescendant'), document.querySelector('.timezone-list [role="option"]').id);
+  await settle(() => keydown(search, 'Enter'));
+  assert.equal(trigger.getAttribute('aria-expanded'), 'false'); assert.equal(document.activeElement, trigger);
+  assert.match(trigger.textContent, /悉尼.*UTC\+11/, 'Sydney is on daylight time in November');
+  assert.notEqual(document.querySelector('input[type="time"]').value, instant, 'display time changes with the zone');
+  await settle(() => trigger.click());
+  await settle(() => setControl(document.querySelector('[aria-label="搜索时区"]'), 'utc-3'));
+  assert.ok([...document.querySelectorAll('.timezone-list [role="option"]')].some((o) => o.dataset.zone === 'America/Sao_Paulo'));
+  await settle(() => keydown(document.querySelector('[aria-label="搜索时区"]'), 'Escape'));
+  assert.equal(document.querySelector('.timezone-picker'), null); assert.match(trigger.textContent, /悉尼/);
+  await settle(() => trigger.click());
+  await settle(() => setControl(document.querySelector('[aria-label="搜索时区"]'), 'zzzz'));
+  assert.match(document.querySelector('.timezone-note').textContent, /没有匹配的时区/);
+});
+
+test('刷新后恢复上次工作状态与关联机位，损坏的会话安静回退到默认机位', async t => {
+  const first = await workspace(t); await readyTerrain();
+  await settle(() => setControl(input('焦距'), 120));
+  await chooseTimeZone('Asia/Shanghai', '北京');
+  await saveShotAs('恢复测试');
+  await settle(() => setControl(input('方位角'), 200));
+  await act(async () => { await delay(350); });
+  const session = JSON.parse(dom.window.localStorage.getItem('tamatamatori.session.v1'));
+  assert.equal(session.shot.camera.focalLength, 120); assert.equal(session.shot.view.azimuth, 200); assert.equal(session.activeId, savedShots()[0].id);
+  await first.unmount();
+  const second = await workspace(t, undefined, { keepStorage: true }); await readyTerrain();
+  assert.equal(value('焦距'), 120); assert.equal(value('方位角'), 200);
+  assert.match(document.querySelector('.timezone-trigger').textContent, /北京/);
+  assert.equal(shotButton().textContent.trim(), '恢复测试'); assert.ok(document.querySelector('.shot-modified'), 'azimuth changed after saving');
+  await second.unmount();
+  dom.window.localStorage.setItem('tamatamatori.session.v1', '{"version":1,"shot":{"format":"tamatamatori.shot"}}');
+  await workspace(t, undefined, { keepStorage: true }); await readyTerrain();
+  assert.equal(value('焦距'), 35); assert.equal(shotButton().textContent.trim(), '未保存的机位');
+  assert.equal(savedShots().length, 1, 'saved shots are untouched');
+});
+
+test('本地存储不可用时说明无法保存、禁用保存，分享与仅应用仍可用', async t => {
+  dom.window.localStorage.clear();
+  const own = Object.getOwnPropertyDescriptor(dom.window, 'localStorage');
+  Object.defineProperty(dom.window, 'localStorage', { configurable: true, get() { throw new Error('blocked'); } });
+  t.after(() => { if (own) Object.defineProperty(dom.window, 'localStorage', own); else delete dom.window.localStorage; });
+  await workspace(t, undefined, { keepStorage: true }); await readyTerrain();
+  await openShots();
+  assert.match(document.querySelector('.shot-warning').textContent, /无法使用本地存储/);
+  assert.equal(panelButton('保存为机位').disabled, true);
+  await settle(() => panelButton('分享').click());
+  assert.match(document.querySelector('.shot-dialog[open] [aria-label="分享码"]').value, /^tmt1:/);
+  await settle(() => document.querySelector('.shot-dialog[open] header button').click());
+  await openShots(); await settle(() => panelButton('导入机位').click());
+  const dialog = document.querySelector('.shot-dialog[open]');
+  await settle(() => setControl(dialog.querySelector('textarea'), JSON.stringify({ format: 'tamatamatori.shot', version: 1, position: { latitude: 35, longitude: 139 }, view: { azimuth: 10 }, time: { instant: '2026-11-04T08:00:00Z' } })));
+  const [only, keep] = dialog.querySelectorAll('footer button');
+  assert.equal(keep.disabled, true); assert.equal(only.disabled, false);
+  await settle(() => only.click());
+  assert.equal(value('方位角'), 10); assert.equal(shotButton().textContent.trim(), '未保存的机位');
+});
+
+test('拍摄时间：微调按钮跨午夜，前后一天保留钟点，夏令时缺失钟点报错并保留原时刻', async t => {
+  await workspace(t); await readyTerrain();
+  const press = (label) => settle(() => document.querySelector(`[aria-label="${label}"]`).click());
+  await setShootingDateTime('2026-11-04T23:55');
+  await press('推后 10 分钟');
+  assert.equal(shootingDateTime(), '2026-11-05T00:05');
+  await press('前一天');
+  assert.equal(shootingDateTime(), '2026-11-04T00:05');
+  await press('提前 1 小时');
+  assert.equal(shootingDateTime(), '2026-11-03T23:05');
+  await press('推后 1 分钟'); await press('推后 1 小时');
+  assert.equal(shootingDateTime(), '2026-11-04T00:06');
+  assert.equal(document.querySelector('.date-field .field-label small').textContent, '周三');
+  const slider = document.querySelector('input[aria-label="24 小时时间滑杆"]');
+  assert.match(slider.getAttribute('aria-valuetext'), /^00:06:00 Asia\/Tokyo · 夜间$/);
+  assert.ok(document.querySelector('.time-band').style.background.includes('linear-gradient'), 'daylight band painted');
+  await chooseTimeZone('America/New_York');
+  await setShootingDateTime('2026-03-07T02:30');
+  await press('后一天');
+  assert.equal(shootingDateTime(), '2026-03-07T02:30', '02:30 does not exist on 8 March');
+  assert.match(document.getElementById('time-error').textContent, /夏令时/);
+  await press('推后 1 小时');
+  assert.equal(shootingDateTime(), '2026-03-07T03:30');
+  assert.equal(document.getElementById('time-error'), null);
+});
+
+test('日月时刻按当地日期列出，点击跳到该时刻；极夜无日出时按钮禁用并说明', async t => {
+  await workspace(t); await readyTerrain();
+  await setShootingDateTime('2026-11-04T12:00');
+  const plan = { latitude: value('纬度'), longitude: value('经度'), timeZone: 'Asia/Tokyo', refraction: 'standard', instant: '2026-11-04T03:00:00Z' };
+  const expected = Object.fromEntries(dayEvents(plan).map((event) => [event.id, event]));
+  const chip = (id) => document.querySelector(`.time-events [data-event="${id}"]`);
+  assert.deepEqual([...document.querySelectorAll('.time-events button')].map((b) => b.dataset.event), ['dawn', 'sunrise', 'sunset', 'dusk', 'moonrise', 'moonset']);
+  const local = (instant) => new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).format(new Date(instant));
+  assert.equal(chip('sunset').querySelector('strong').textContent, local(expected.sunset.instant).slice(0, 5));
+  assert.match(chip('sunset').title, /标准折射.*不含地形遮挡/);
+  await settle(() => chip('sunset').click());
+  assert.equal(document.querySelector('input[type="time"]').value, local(expected.sunset.instant));
+  assert.ok(chip('sunset').classList.contains('is-current'));
+  await settle(() => chip('dawn').click());
+  assert.equal(document.querySelector('input[type="time"]').value, local(expected.dawn.instant));
+  assert.ok(!chip('sunset').classList.contains('is-current'));
+  // Switching refraction changes the rise/set definition, not twilight.
+  await settle(() => setControl(document.querySelector('select[aria-label="大气折射模型"]'), 'none'));
+  assert.match(chip('sunrise').title, /无折射/);
+  assert.equal(chip('dawn').querySelector('strong').textContent, local(expected.dawn.instant).slice(0, 5));
+  // Polar night: no sunrise on the local date.
+  await settle(() => setControl(input('纬度'), 78.2232));
+  await settle(() => setControl(input('经度'), 15.6267));
+  await chooseTimeZone('Arctic/Longyearbyen', 'Longyearbyen');
+  await setShootingDateTime('2026-12-15T12:00');
+  assert.equal(chip('sunrise').disabled, true);
+  assert.equal(chip('sunrise').querySelector('strong').textContent, '—');
+  assert.equal(chip('sunrise').getAttribute('aria-label'), '当地日期内没有日出');
+});
+
+test('离地高度滑条按对数刻度同步数值框，方向键按 0.1 m / 1 m 微调', async t => {
+  await workspace(t); await readyTerrain();
+  const slider = document.querySelector('input[aria-label="相机离地高度滑块"]');
+  await settle(() => setControl(slider, cameraHeightSlider.toPosition(10)));
+  assert.equal(value('相机离地高度'), 10);
+  assert.equal(slider.getAttribute('aria-valuetext'), '10 m');
+  await settle(() => keydown(slider, 'ArrowLeft'));
+  assert.equal(value('相机离地高度'), 9.9);
+  await settle(() => setControl(slider, cameraHeightSlider.max));
+  assert.equal(value('相机离地高度'), 100);
+  await settle(() => keydown(slider, 'ArrowUp'));
+  assert.equal(value('相机离地高度'), 100);
+  await settle(() => setControl(input('相机离地高度'), 1.5));
+  assert.equal(slider.value, String(cameraHeightSlider.toPosition(1.5)));
+  await settle(() => keydown(slider, 'ArrowRight'));
+  assert.equal(value('相机离地高度'), 1.6);
 });

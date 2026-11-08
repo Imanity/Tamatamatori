@@ -1,0 +1,192 @@
+{
+ "resources": [
+  "index-uJKScIgJ.js",
+  "index-EIrbc03h.css"
+ ],
+ "log": [
+  {
+   "step": "time-steps",
+   "start": "2026-11-04 23:55",
+   "steps": [
+    {
+     "label": "推后 10 分钟",
+     "time": "2026-11-05 00:05:00"
+    },
+    {
+     "label": "前一天",
+     "time": "2026-11-04 00:05:00"
+    },
+    {
+     "label": "提前 1 小时",
+     "time": "2026-11-03 23:05:00"
+    },
+    {
+     "label": "推后 1 分钟",
+     "time": "2026-11-03 23:06:00"
+    },
+    {
+     "label": "后一天",
+     "time": "2026-11-04 23:06:00"
+    },
+    {
+     "label": "提前 10 分钟",
+     "time": "2026-11-04 22:56:00"
+    }
+   ]
+  },
+  {
+   "step": "time-now",
+   "time": "2026-11-09 00:59:00",
+   "weekday": "周一"
+  },
+  {
+   "step": "event-chips",
+   "chips": [
+    {
+     "id": "dawn",
+     "text": "晨光 04:42",
+     "title": "天文晨光始：太阳中心升至地平下 18°",
+     "disabled": false
+    },
+    {
+     "id": "sunrise",
+     "text": "日出 06:08",
+     "title": "太阳上缘升至海平面地平（标准折射），不含地形遮挡",
+     "disabled": false
+    },
+    {
+     "id": "sunset",
+     "text": "日落 16:47",
+     "title": "太阳上缘降至海平面地平（标准折射），不含地形遮挡",
+     "disabled": false
+    },
+    {
+     "id": "dusk",
+     "text": "昏影 18:13",
+     "title": "天文昏影终：太阳中心降至地平下 18°",
+     "disabled": false
+    },
+    {
+     "id": "moonrise",
+     "text": "月出 00:49",
+     "title": "月亮上缘升至海平面地平（标准折射），不含地形遮挡",
+     "disabled": false
+    },
+    {
+     "id": "moonset",
+     "text": "月落 13:57",
+     "title": "月亮上缘降至海平面地平（标准折射），不含地形遮挡",
+     "disabled": false
+    }
+   ],
+   "afterSunset": "2026-11-04 16:47:30",
+   "current": [
+    "sunset"
+   ],
+   "valuetext": "16:47:30 Asia/Tokyo · 民用暮光"
+  },
+  {
+   "step": "time-drag",
+   "bandWidth": 262.8125,
+   "minutesPerPixel": 5.48,
+   "value": "360",
+   "time": "2026-11-04 06:00:00"
+  },
+  {
+   "step": "height-slider",
+   "afterClick": "10",
+   "keys": [
+    {
+     "k": "ArrowRight",
+     "value": "11"
+    },
+    {
+     "k": "ArrowRight",
+     "value": "12"
+    },
+    {
+     "k": "ArrowLeft",
+     "value": "11"
+    },
+    {
+     "k": "ArrowLeft",
+     "value": "10"
+    },
+    {
+     "k": "ArrowLeft",
+     "value": "9.9"
+    }
+   ],
+   "typed16Position": "241",
+   "ticks": [
+    "0.1",
+    "1",
+    "10",
+    "100 m"
+   ]
+  },
+  {
+   "step": "timezone-list",
+   "groups": [
+    "常用"
+   ],
+   "dividers": 1,
+   "options": 424
+  },
+  {
+   "step": "share-widths",
+   "code": 510,
+   "json": 510
+  },
+  {
+   "step": "about-landmarks",
+   "cards": 21,
+   "headings": 21,
+   "details": 21,
+   "downloads": 42,
+   "nc": [
+    "oriental-pearl"
+   ],
+   "first": [
+    "伊丽莎白塔（大本钟）",
+    "",
+    "Clock Tower (Big Ben) · ManySince910",
+    ""
+   ]
+  },
+  {
+   "step": "mobile-time",
+   "pageOverflow": 0,
+   "panelOverflow": 0,
+   "clipped": [],
+   "steps": {
+    "x": 30,
+    "y": 283.390625,
+    "width": 330,
+    "height": 22.796875
+   },
+   "events": {
+    "x": 30,
+    "y": 314.1875,
+    "width": 330,
+    "height": 32.59375
+   },
+   "band": {
+    "x": 38,
+    "y": 248.390625,
+    "width": 314,
+    "height": 8
+   }
+  },
+  {
+   "step": "mobile-about",
+   "overflow": 0,
+   "card": {
+    "x": 33,
+    "y": 193.3125,
+    "width": 324,
+    "height": 601.640625
+   }
+  }
+ ]
+}
