@@ -66,23 +66,72 @@ export function PreviewPanel({
     actualPitch: null,
     adjusted: false,
   });
+  // Global information starts open; each layer group starts in step with its
+  // layer and then follows the left switches (see App.toggleLayer).
   const [expanded, setExpanded] = useState<
     Partial<Record<InfoGroupId, boolean>>
-  >({});
+  >(() => ({
+    global: true,
+    buildings: plan.layers.buildings,
+    sun: plan.layers.sun,
+    moon: plan.layers.moon,
+    stars: plan.layers.stars,
+    milkyWay: plan.layers.milkyWay,
+    deepSky: plan.layers.deepSky,
+    stations: plan.layers.stations,
+  }));
   const toggleGroup = (id: InfoGroupId) =>
     setExpanded((current) => ({ ...current, [id]: !current[id] }));
+  // Scroll the information rail itself so the group starts at its top; a
+  // hidden rail (closed mobile drawer, collapsed desktop rail) reveals the
+  // group as soon as it gains a size.
+  const pendingReveal = useRef<InfoGroupId | null>(null);
+  const reveal = (host: HTMLElement, id: InfoGroupId) => {
+    const group = host.querySelector(`#info-${id}`)?.closest(".info-group");
+    if (!group || !host.getClientRects().length) return false;
+    const top =
+      group.getBoundingClientRect().top -
+      host.getBoundingClientRect().top +
+      host.scrollTop;
+    const behavior = window.matchMedia?.("(prefers-reduced-motion: reduce)")
+      ?.matches
+      ? "auto"
+      : "smooth";
+    if (typeof host.scrollTo === "function") host.scrollTo({ top, behavior });
+    else host.scrollTop = top;
+    return true;
+  };
+  // Expand first; scroll only after the expanded content has been committed,
+  // otherwise the rail is still too short to reach the group.
+  const [revealing, setRevealing] = useState<InfoGroupId | null>(null);
   useEffect(() => {
-    if (!infoNavigation || !infoHost) return;
-    setExpanded((current) => ({ ...current, [infoNavigation.id]: true }));
+    if (!infoNavigation) return;
+    const { id, open } = infoNavigation;
+    setExpanded((current) => ({ ...current, [id]: open }));
+    if (open) setRevealing(id);
+    else {
+      // A collapsed group must not be scrolled to later.
+      if (pendingReveal.current === id) pendingReveal.current = null;
+      setRevealing((current) => (current === id ? null : current));
+    }
+  }, [infoNavigation]);
+  useEffect(() => {
+    if (!revealing || !infoHost || !expanded[revealing]) return;
     const frame = requestAnimationFrame(() => {
-      const heading = infoHost.querySelector<HTMLButtonElement>(
-        `#info-${infoNavigation.id}`,
-      );
-      heading?.scrollIntoView?.({ block: "nearest", behavior: "instant" });
-      heading?.focus({ preventScroll: true });
+      pendingReveal.current = reveal(infoHost, revealing) ? null : revealing;
+      setRevealing((current) => (current === revealing ? null : current));
     });
     return () => cancelAnimationFrame(frame);
-  }, [infoNavigation, infoHost]);
+  }, [revealing, infoHost, expanded]);
+  useEffect(() => {
+    if (!infoHost || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => {
+      const id = pendingReveal.current;
+      if (id && reveal(infoHost, id)) pendingReveal.current = null;
+    });
+    observer.observe(infoHost);
+    return () => observer.disconnect();
+  }, [infoHost]);
   useEffect(() => {
     const element = viewfinder.current;
     if (!element) return;
@@ -434,23 +483,23 @@ export function PreviewPanel({
                     <section className="info-section">
                       <h3>光照与天空</h3>
                       <p className="preview-lighting" aria-label="预览光照状态">
-                        {daylightPhase(sun.elevation)} · 太阳几何高度{" "}
+                        {daylightPhase(sun.elevation)} · 太阳高度{" "}
                         {sun.elevation.toFixed(1)}°
                         {sun.elevation < -6 && celestialScene.bodies && (
                           <span className="preview-moonlight">
-                            月光参考 · 亮面{" "}
+                            月亮亮面{" "}
                             {(
                               celestialScene.bodies.moon.illuminatedFraction *
                               100
                             ).toFixed(0)}
-                            % · 几何高度{" "}
+                            % · 高度{" "}
                             {celestialScene.bodies.moon.elevation.toFixed(1)}°
                           </span>
                         )}
                       </p>
                       {starScene.appearance && (
                         <p className="sky-appearance" role="status">
-                          明暗近似 · {skyAppearanceLabel(starScene.appearance)}
+                          天空明暗 · {skyAppearanceLabel(starScene.appearance)}
                         </p>
                       )}
                       <div
@@ -461,32 +510,23 @@ export function PreviewPanel({
                           {pollution.phase === "off"
                             ? "当地光污染已关闭"
                             : pollution.phase === "ready"
-                              ? `2015 天顶人工亮度 ≈ ${artificialMcd!.toFixed(3)} mcd/m²`
+                              ? `${lightPollutionAtlas.year} 天顶人工亮度 ≈ ${artificialMcd!.toFixed(3)} mcd/m²`
                               : pollution.phase === "loading"
                                 ? "正在读取当地光污染，效果待应用"
                                 : pollution.message}
                         </p>
-                        {plan.lightPollution && (
-                          <p>
-                            World Atlas {lightPollutionAtlas.year} · 约 2.8 km
-                            格网 · 历史模型与显示近似
-                          </p>
-                        )}
                         {pollution.phase === "error" && (
                           <button type="button" onClick={pollution.retry}>
                             重试光污染数据
                           </button>
                         )}
                       </div>
-                      <WeatherReadout feed={weatherFeed} plan={plan} update={update} />
-                      <p className="sky-limit">
-                        曲面构图 · 高程基准未核定 · 水面按 DEM
-                        近似。晴空与月光为构图参考。
-                      </p>
+                      <WeatherReadout feed={weatherFeed} update={update} />
                     </section>
                   </>,
                 )}
-                {group("buildings","建筑",<BuildingReadout status={buildingStatus} retry={()=>setBuildingAttempt(v=>v+1)} />)}
+                {group("buildings","建筑",<BuildingReadout status={buildingStatus} retry={()=>setBuildingAttempt(v=>v+1)}
+                  plan={plan} update={update} eyeAltitude={observerAltitude} cameraGround={terrainInfo.ground} />)}
                 {group(
                   "sun",
                   "太阳",

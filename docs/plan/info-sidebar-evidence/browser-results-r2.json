@@ -1,0 +1,287 @@
+{
+ "resources": [
+  "index-BjzU_TGO.js",
+  "index-D6W_-vxk.css"
+ ],
+ "log": [
+  {
+   "step": "defaults",
+   "groups": {
+    "global": true,
+    "buildings": false,
+    "sun": true,
+    "moon": true,
+    "stars": false,
+    "milkyWay": false,
+    "deepSky": false,
+    "stations": false
+   },
+   "switches": {
+    "显示建筑": false,
+    "显示太阳": true,
+    "显示月亮": true,
+    "显示星空": false,
+    "显示银河": false,
+    "显示深空天体": false,
+    "显示空间站": false
+   },
+   "settingsButtons": 0,
+   "layerRows": [
+    "layer-row layer-toggle h=48",
+    "layer-row layer-toggle h=48",
+    "layer-row layer-toggle h=48",
+    "layer-row layer-toggle h=48",
+    "layer-row layer-toggle h=48",
+    "layer-row layer-toggle h=48",
+    "layer-row layer-toggle h=48"
+   ],
+   "global": [
+    "取景参数",
+    "方位",
+    "247.0°",
+    "俯仰",
+    "4.0°",
+    "水平视场",
+    "54.4°",
+    "垂直视场",
+    "37.8°",
+    "光照与天空",
+    "",
+    "民用暮光 · 太阳高度 -3.3°",
+    "",
+    "当地光污染已关闭",
+    "",
+    "天气",
+    "",
+    "天气效果已关闭"
+   ]
+  },
+  {
+   "step": "enable-deepSky",
+   "group": {
+    "expanded": "true",
+    "offset": 0
+   },
+   "rail": {
+    "scrollTop": 820,
+    "height": 731,
+    "visible": true
+   },
+   "active": "显示深空天体"
+  },
+  {
+   "step": "enable-milkyWay",
+   "group": {
+    "expanded": "true",
+    "offset": 0
+   },
+   "rail": {
+    "scrollTop": 768,
+    "height": 731,
+    "visible": true
+   },
+   "active": "显示银河"
+  },
+  {
+   "step": "disable-milkyWay",
+   "expanded": "false",
+   "before": 768,
+   "after": 768,
+   "active": "显示银河"
+  },
+  {
+   "step": "disable-deepSky",
+   "expanded": "false",
+   "before": 768,
+   "after": 194,
+   "active": "显示深空天体"
+  },
+  {
+   "step": "disable-sun",
+   "groups": {
+    "global": true,
+    "buildings": false,
+    "sun": false,
+    "moon": true,
+    "stars": false,
+    "milkyWay": false,
+    "deepSky": false,
+    "stations": false
+   }
+  },
+  {
+   "step": "enable-sun",
+   "group": {
+    "expanded": "true",
+    "offset": 184
+   },
+   "rail": {
+    "scrollTop": 194,
+    "height": 731,
+    "visible": true
+   }
+  },
+  {
+   "step": "global-with-environment",
+   "weather": "outside",
+   "global": [
+    "取景参数",
+    "方位",
+    "247.0°",
+    "俯仰",
+    "4.0°",
+    "水平视场",
+    "54.4°",
+    "垂直视场",
+    "37.8°",
+    "光照与天空",
+    "",
+    "民用暮光 · 太阳高度 -3.3°",
+    "",
+    "2015 天顶人工亮度 ≈ 0.202 mcd/m²",
+    "",
+    "天气",
+    "",
+    "拍摄时间超出天气预报范围",
+    "",
+    "天气数据来自 Open-Meteo",
+    "",
+    "使用当前时间"
+   ]
+  },
+  {
+   "step": "buildings-ready",
+   "group": {
+    "expanded": "true",
+    "offset": 0
+   },
+   "text": [
+    "建筑已加载",
+    "",
+    "重新读取建筑",
+    "加载范围",
+    "",
+    "OSM 粗模：约 5.0 km 内，2 km 外只显示 20 m 以上的建筑",
+    "",
+    "地标精模：约 50 km 内",
+    "",
+    "此处建筑较密，已省略 35,835 个较小或较远的建筑。",
+    "",
+    "地标精模 · 已加载 2 / 2",
+    "晴空塔",
+    "5.1 km · 已加载",
+    "朝向",
+    "东京塔",
+    "5.8 km · 已加载",
+    "朝向",
+    "",
+    "精模为无纹理外观，位置与朝向为近似。",
+    "",
+    "建筑来自 OpenStreetMap，部分地区缺失，高度可能为估算，屋顶简化为平顶。"
+   ]
+  },
+  {
+   "step": "buildings-off",
+   "expanded": "false"
+  },
+  {
+   "step": "about",
+   "caveat": "地形按曲面构图绘制；高程数据的垂直基准尚未核定，水面高程按 DEM 近似，不含倒影、波纹或实际水位。"
+  },
+  {
+   "step": "mobile-enable",
+   "layerDrawer": true,
+   "infoDrawer": false,
+   "settingsButtons": 0
+  },
+  {
+   "step": "mobile-open-info",
+   "group": {
+    "expanded": "true",
+    "offset": 0
+   },
+   "rail": {
+    "scrollTop": 820,
+    "height": 681,
+    "visible": true
+   }
+  },
+  {
+   "step": "mobile-disable",
+   "expanded": "false",
+   "rail": {
+    "scrollTop": 244,
+    "height": 681,
+    "visible": true
+   }
+  },
+  {
+   "step": "sun-reveal",
+   "scroll": {
+    "top": 194,
+    "max": 194
+   },
+   "offset": 184
+  },
+  {
+   "step": "weather-ready",
+   "phase": "ready",
+   "global": [
+    "取景参数",
+    "方位",
+    "247.0°",
+    "俯仰",
+    "4.0°",
+    "水平视场",
+    "54.4°",
+    "垂直视场",
+    "37.8°",
+    "光照与天空",
+    "夜间 · 太阳高度 -59.7°",
+    "月亮亮面 1% · 高度 -68.0°",
+    "当地光污染已关闭",
+    "天气",
+    "天气已应用",
+    "总云量 19% · 低 14% / 中 12% / 高 15%",
+    "降水 0.0 mm/小时 · 概率 4% · 能见度 32.0 km",
+    "天气数据来自 Open-Meteo"
+   ]
+  },
+  {
+   "step": "environment-note",
+   "note": "第一次重测进度时测试窗口被其他窗口遮挡，document 为 hidden、动画帧为 0，预览样式初始化超时，建筑停在加载中；恢复窗口后重测，该次结果不计入。"
+  },
+  {
+   "step": "loading-text",
+   "text": [
+    "正在加载建筑 · 读取 OSM 建筑 45%",
+    "地标精模",
+    "晴空塔",
+    "5.1 km · 加载中",
+    "朝向",
+    "东京塔",
+    "5.8 km · 加载中",
+    "朝向",
+    "精模为无纹理外观，位置与朝向为近似。",
+    "建筑来自 OpenStreetMap，部分地区缺失，高度可能为估算，屋顶简化为平顶。"
+   ]
+  },
+  {
+   "step": "building-progress-r2",
+   "count": 9,
+   "first": {
+    "t": 0,
+    "value": 2,
+    "max": 62,
+    "text": "正在加载建筑 · 读取 OSM 建筑 3%"
+   },
+   "last": {
+    "t": 1200,
+    "value": 37,
+    "max": 62,
+    "text": "正在加载建筑 · 生成建筑体块 60%"
+   },
+   "monotonic": true
+  }
+ ]
+}

@@ -2,7 +2,7 @@ import type { CustomLayerInterface, CustomRenderMethodInput, Map as MapLibreMap 
 import type { ShootingPlan } from "../domain/plan.ts";
 import { buildingKey, emptyBuildings } from "../domain/buildings.ts";
 import { landmarkFrame } from "../domain/landmarks.ts";
-import type { BuildingStatus, BuildingMesh } from "../domain/buildings.ts";
+import type { BuildingStatus, BuildingMesh, BuildingProgress } from "../domain/buildings.ts";
 import { loadBuildings, clearBuildingCache } from "./buildings.ts";
 import { photoCameraMatrix, photoTileFrame } from "./terrain-perspective-math.ts";
 import { renderedCamera } from "./rendered-camera.ts";
@@ -75,7 +75,14 @@ export class BuildingLayer implements CustomLayerInterface {
     this.publish({...emptyBuildings,key:buildingKey(plan),phase:plan.layers.buildings?"loading":"off"});
     this.map?.triggerRepaint();
     if(!plan.layers.buildings)return;
-    void this.loader(plan,this.url,this.demUrl,controller.signal).then(result=>{
+    // Progress updates are throttled; they never invalidate occlusion.
+    let reported=0;
+    const progress=(value:BuildingProgress)=>{
+      const now=performance.now();
+      if(this.disposed||controller.signal.aborted||this.requestKey!==key||value.done<value.total&&now-reported<80)return;
+      reported=now;this.publish({...emptyBuildings,key:buildingKey(plan),phase:"loading",progress:value});
+    };
+    void this.loader(plan,this.url,this.demUrl,controller.signal,undefined,undefined,progress).then(result=>{
       if(this.disposed||controller.signal.aborted||this.requestKey!==key)return;
       this.pending=result.meshes;this.publish(result.status);this.map?.triggerRepaint();
     }).catch((error:unknown)=>{

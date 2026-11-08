@@ -34,8 +34,12 @@ export interface BuildingStatus {
   version?: string;
   fetchedAt?: string;
   message?: string;
-  landmarks?: Array<{id:string;phase:"applied"|"fallback";triangles?:number;distance:number;message:string}>;
+  /** Radius fully covered by the loaded ordinary building tiles. */
+  coverage?: number;
+  progress?: BuildingProgress;
+  landmarks?: Array<{id:string;phase:"applied"|"fallback";triangles?:number;distance:number;ground?:number;reason?:"budget"|"failed"|"unconfirmed";message:string}>;
 }
+export interface BuildingProgress { stage:"tiles"|"landmarks"|"geometry"; done:number; total:number }
 export const emptyBuildings: BuildingStatus = { key: "", phase: "off", limited: false, tiles: 0, polygons: 0, triangles: 0, bytes: 0, skipped: 0 };
 export const buildingKey = (plan: Pick<ShootingPlan,"longitude"|"latitude">) => `${plan.longitude}/${plan.latitude}`;
 
@@ -100,17 +104,21 @@ export function buildingTiles(point: Pick<ShootingPlan,"longitude"|"latitude">) 
   const tile = terrainTile(point,14), n=2**14;
   const width=40075016.686*Math.cos(point.latitude*Math.PI/180)/n;
   const radius=Math.ceil(BUILDING_RADIUS/width+0.5);
-  const all: Array<PhotoTile & { distance: number }> = [];
+  const all: Array<PhotoTile & { distance: number; near: number }> = [];
   for(let dy=-radius;dy<=radius;dy++) for(let dx=-radius;dx<=radius;dx++) {
     const x=tile.x+dx,y=tile.y+dy;
     if(y<0||y>=n) continue;
     const distance=Math.hypot(dx+0.5-tile.u,dy+0.5-tile.v)*width;
     // Include tiles whose bounding box intersects the requested circle.
     const near=Math.hypot(Math.max(0,Math.abs(dx+0.5-tile.u)-0.5),Math.max(0,Math.abs(dy+0.5-tile.v)-0.5))*width;
-    if(near<=BUILDING_RADIUS) all.push({z:14,x:(x%n+n)%n,y,distance});
+    if(near<=BUILDING_RADIUS) all.push({z:14,x:(x%n+n)%n,y,distance,near});
   }
   all.sort((a,b)=>a.distance-b.distance||a.y-b.y||a.x-b.x);
-  return { tiles: all.slice(0,BUILDING_MAX_TILES).map(({z,x,y})=>({z,x,y})), limited: all.length>BUILDING_MAX_TILES };
+  // When the tile cap truncates the window, the fully covered radius ends at
+  // the nearest edge of the first omitted tile.
+  const omitted=all.slice(BUILDING_MAX_TILES).map(t=>t.near);
+  return { tiles: all.slice(0,BUILDING_MAX_TILES).map(({z,x,y})=>({z,x,y})), limited: all.length>BUILDING_MAX_TILES,
+    coverage: omitted.length?Math.min(BUILDING_RADIUS,...omitted):BUILDING_RADIUS };
 }
 
 export function buildingHeights(properties: Record<string,unknown>) {

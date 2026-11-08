@@ -1,0 +1,252 @@
+{
+ "checkedAt": "2026-11-08",
+ "viewport": {
+  "desktop": "1440x900",
+  "mobile": "390x844@2x"
+ },
+ "build": "npm run build -- --base /Tamatamatori/ (vite preview)",
+ "resources": [
+  "index-BXG4hr0t.js",
+  "index-DC0XrLrB.css"
+ ],
+ "log": [
+  {
+   "step": "enable-stars",
+   "group": {
+    "expanded": "true",
+    "offset": 208
+   },
+   "rail": {
+    "scrollTop": 0,
+    "height": 731,
+    "visible": true
+   },
+   "active": "显示星空"
+  },
+  {
+   "step": "enable-deepSky",
+   "group": {
+    "expanded": "true",
+    "offset": 0
+   },
+   "rail": {
+    "scrollTop": 395,
+    "height": 731,
+    "visible": true
+   },
+   "active": "显示深空天体"
+  },
+  {
+   "step": "enable-milkyWay",
+   "group": {
+    "expanded": "true",
+    "offset": 0
+   },
+   "rail": {
+    "scrollTop": 343,
+    "height": 731,
+    "visible": true
+   },
+   "active": "显示银河"
+  },
+  {
+   "step": "disable-stars",
+   "before": 343,
+   "after": 332,
+   "stars": "true"
+  },
+  {
+   "step": "collapsed-reopen",
+   "collapsed": false,
+   "group": {
+    "expanded": "true",
+    "offset": 0
+   }
+  },
+  {
+   "step": "text-sun",
+   "text": [
+    "太阳",
+    "地平线下",
+    "253.4° / 视 -2.70°（几何 -3.33°）",
+    "朝向"
+   ]
+  },
+  {
+   "step": "text-moon",
+   "text": [
+    "月亮",
+    "地平线下",
+    "307.6° / 视 -34.05°（几何 -34.45°）",
+    "残月 · 亮面 24%",
+    "朝向"
+   ]
+  },
+  {
+   "step": "text-stars",
+   "text": [
+    "星座名称与连线",
+    "星空目标与朝向"
+   ]
+  },
+  {
+   "step": "text-milkyWay",
+   "text": [
+    "对比度",
+    "100%",
+    "重置",
+    "星空目标与朝向"
+   ]
+  },
+  {
+   "step": "text-deepSky",
+   "text": [
+    "深空目标与朝向",
+    "仙女座星系",
+    "M31 · 星系",
+    "视场外",
+    "61.4° / 几何 37.3° · 目录 177.83′ × 69.66′",
+    "朝向",
+    "猎户座大星云",
+    "M42 · 混合星云"
+   ]
+  },
+  {
+   "step": "text-stations",
+   "text": [
+    "空间站与轨道",
+    "轨道数据超过 6 小时未更新",
+    "轨道数据更新于 2026-11-06 12:18:31 UTC",
+    "检查轨道更新",
+    "使用当前时刻",
+    "拍摄时刻 2026-11-04 08:00:00 UTC",
+    "−10 秒",
+    "−1 秒",
+    "+1 秒"
+   ],
+   "group": {
+    "expanded": "true",
+    "offset": 175
+   }
+  },
+  {
+   "step": "building-progress",
+   "samples": [
+    {
+     "t": 0,
+     "value": 2,
+     "max": 62,
+     "text": "正在加载建筑 · 读取 OSM 建筑 3%"
+    },
+    {
+     "t": 600,
+     "value": 25,
+     "max": 62,
+     "text": "正在加载建筑 · 读取 OSM 建筑 40%"
+    },
+    {
+     "t": 1200,
+     "value": 34,
+     "max": 62,
+     "text": "正在加载建筑 · 生成建筑体块 55%"
+    }
+   ],
+   "monotonic": true,
+   "group": {
+    "expanded": "true",
+    "offset": 0
+   }
+  },
+  {
+   "step": "building-ready",
+   "text": [
+    "建筑已加载",
+    "重新读取建筑",
+    "加载范围",
+    "OSM 粗模：约 5.0 km 内，2 km 外只显示 20 m 以上的建筑",
+    "地标精模：约 50 km 内",
+    "此处建筑较密，已省略 35,835 个较小或较远的建筑。",
+    "地标精模 · 已加载 2 / 2",
+    "晴空塔",
+    "5.1 km · 已加载",
+    "朝向",
+    "东京塔",
+    "5.8 km · 已加载",
+    "朝向",
+    "精模为无纹理外观，位置与朝向为近似。",
+    "缓存",
+    "OSM 粗模 4.5 MiB / 16 MiB",
+    "晴空塔一带当前",
+    "35.710°N 139.755°E · 30 块 · 4.5 MiB",
+    "清理",
+    "地标精模 2 个 · 6.1 MiB / 8 MiB",
+    "清理全部缓存",
+    "缓存只保存在本页内存中，刷新页面后清空；清理不影响当前画面，下次加载时重新下载。",
+    "建筑来自 OpenStreetMap，部分地区缺失，高度可能为估算，屋顶简化为平顶。"
+   ]
+  },
+  {
+   "step": "aim-晴空塔",
+   "azimuth": "90.05",
+   "pitch": "2.29"
+  },
+  {
+   "step": "aim-东京塔",
+   "azimuth": "188.25",
+   "pitch": "0.68"
+  },
+  {
+   "step": "cache-two-regions",
+   "regions": [
+    "东方明珠一带当前 | 31.236°N 121.489°E · 29 块 · 0.6 MiB | 清理",
+    "晴空塔一带 | 35.710°N 139.755°E · 30 块 · 4.5 MiB | 清理"
+   ],
+   "text": [
+    "地标精模 · 已加载 3 / 3",
+    "缓存",
+    "OSM 粗模 5.1 MiB / 16 MiB",
+    "地标精模 4 个 · 6.1 MiB / 8 MiB",
+    "清理全部缓存",
+    "缓存只保存在本页内存中，刷新页面后清空；清理不影响当前画面，下次加载时重新下载。"
+   ]
+  },
+  {
+   "step": "cache-clear-region",
+   "cleared": "清理晴空塔一带的粗模缓存",
+   "regions": [
+    "东方明珠一带当前 | 31.236°N 121.489°E · 29 块 · 0.6 MiB | 清理"
+   ]
+  },
+  {
+   "step": "cache-clear-all",
+   "regions": [],
+   "text": [
+    "OSM 粗模 0 MiB / 16 MiB",
+    "地标精模 0 个 · 0 MiB / 8 MiB"
+   ],
+   "stillRendered": "ready"
+  },
+  {
+   "step": "mobile-enable",
+   "layerDrawer": true,
+   "infoDrawer": false,
+   "rail": {
+    "scrollTop": 0,
+    "height": 0,
+    "visible": false
+   }
+  },
+  {
+   "step": "mobile-open-info",
+   "group": {
+    "expanded": "true",
+    "offset": 0
+   },
+   "rail": {
+    "scrollTop": 925,
+    "height": 681,
+    "visible": true
+   }
+  }
+ ]
+}

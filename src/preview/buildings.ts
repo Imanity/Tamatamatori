@@ -4,7 +4,7 @@ import { buildingKey, buildingTiles, buildingHeights, buildingCoordinates, build
   buildingCost, selectBuildings, simplifyBuilding, BUILDING_MAX_POINTS, BUILDING_MAX_TRIANGLES, BUILDING_RADIUS, BUILDING_NEAR_RADIUS, BUILDING_FAR_MIN_HEIGHT } from "../domain/buildings.ts";
 import { landmarks, landmarksInRange, landmarkPart, landmarkPartKey } from "../domain/landmarks.ts";
 import { loadLandmark, clearLandmarkCache } from "./landmarks.ts";
-import type { BuildingPolygon, BuildingMesh, BuildingStatus, BuildingCandidate } from "../domain/buildings.ts";
+import type { BuildingPolygon, BuildingMesh, BuildingStatus, BuildingCandidate, BuildingProgress } from "../domain/buildings.ts";
 import type { ShootingPlan } from "../domain/plan.ts";
 import type { PhotoTile } from "./terrain-perspective-math.ts";
 import { groundElevation } from "./elevation.ts";
@@ -82,10 +82,14 @@ export function decodeBuildings(bytes:Uint8Array,maximumPoints=BUILDING_MAX_POIN
 }
 
 export async function loadBuildings(plan:Pick<ShootingPlan,"longitude"|"latitude">,url:string,demUrl:string,signal:AbortSignal,
-  elevation=groundElevation,landmarkLoader=loadLandmark):Promise<{meshes:BuildingMesh[];status:BuildingStatus}> {
-  const info=await source(url,signal),selection=buildingTiles(plan);
+  elevation=groundElevation,landmarkLoader=loadLandmark,onProgress?:(progress:BuildingProgress)=>void):Promise<{meshes:BuildingMesh[];status:BuildingStatus}> {
+  const info=await source(url,signal),selection=buildingTiles(plan),nearby=landmarksInRange(plan);
   const status:BuildingStatus={key:buildingKey(plan),phase:"empty",limited:selection.limited,tiles:0,polygons:0,triangles:0,bytes:0,skipped:0,
-    version:info.version,fetchedAt:new Date().toISOString()};
+    version:info.version,fetchedAt:new Date().toISOString(),coverage:selection.coverage};
+  // Tiles are read and later meshed; each nearby landmark is one more step.
+  const total=selection.tiles.length*2+nearby.length;let done=0;
+  const step=(stage:BuildingProgress["stage"])=>{done++;onProgress?.({stage,done,total});};
+  onProgress?.({stage:"tiles",done,total});
   const meshes:BuildingMesh[]=[];
   type Candidate = BuildingCandidate & {tileIndex:number;featureIndex:number;polygonIndex:number;distant:boolean;removedPoints:number;landmarkId?:string};
   const candidates:Candidate[]=[];
@@ -99,7 +103,7 @@ export async function loadBuildings(plan:Pick<ShootingPlan,"longitude"|"latitude
     if(sourceBytes>MAX_SOURCE_BYTES)throw new Error("建筑区域源数据超出读取预算");
     const layer=new VectorTile(new PbfReader(response.bytes)).layers.building;
     const tileIndex=tiles.length;tiles.push({tile,layer});status.tiles++;
-    if(!layer)continue;
+    if(!layer){step("tiles");continue;}
     if(!Number.isFinite(layer.extent)||layer.extent<=0||layer.length>100000)throw new Error("建筑瓦片结构异常");
     const eye=buildingCoordinates(tile,4096,4096),metresPerUnit=40075016.686*Math.cos(eye.latitude*Math.PI/180)/2**14/8192;
     const n=2**14,delta=(plan.longitude+180)/360*n-tile.x,
@@ -133,16 +137,17 @@ export async function loadBuildings(plan:Pick<ShootingPlan,"longitude"|"latitude
           footprint:Math.hypot(b.maxX-b.minX,b.maxY-b.minY)*metresPerUnit});
       }
     }
+    step("tiles");
   }
   signal.throwIfAborted();
   let available=candidates,remaining=BUILDING_MAX_TRIANGLES;
   status.landmarks=[];
-  for(const {target,distance} of landmarksInRange(plan)){
+  for(const {target,distance} of nearby){
     const overlap=distance<=BUILDING_RADIUS+target.bounds.horizontal;
     // Outside the ordinary window there are no coarse tower parts to replace.
     // Use the registered static model without fetching a remote city region.
     if(!overlap||target.parts.length>0&&target.parts.every(part=>confirmedParts.has(`${target.id}/${landmarkPartKey(part.tile??target.tile,part.id)}`))){
-      if(target.asset.triangles>remaining){status.limited=true;status.landmarks.push({id:target.id,phase:"fallback",distance,message:`${target.name}未应用：剩余三角面预算不足。${overlap?"保留粗体块。":"该距离未加载对应粗体块。"}`});continue;}
+      if(target.asset.triangles>remaining){status.limited=true;status.landmarks.push({id:target.id,phase:"fallback",distance,reason:"budget",message:`${target.name}未应用：剩余三角面预算不足。${overlap?"保留粗体块。":"该距离未加载对应粗体块。"}`});step("landmarks");continue;}
       try{
         const model=await landmarkLoader(target,signal),ground=(await elevation(target,demUrl,signal)).height;
         signal.throwIfAborted();
@@ -150,9 +155,10 @@ export async function loadBuildings(plan:Pick<ShootingPlan,"longitude"|"latitude
         meshes.push({tile:target.tile,...model,anchor:{longitude:target.longitude,latitude:target.latitude,ellipsoidalHeight:ground}});
         remaining-=model.indices.length/3;status.triangles+=model.indices.length/3;status.bytes+=model.vertices.byteLength+model.indices.byteLength;
         available=available.filter(c=>c.landmarkId!==target.id);
-        status.landmarks.push({id:target.id,phase:"applied",distance,triangles:model.indices.length/3,message:`${target.name}无纹理精细模型 · 定位与朝向近似${target.validation.visual==="pending"?" · 画面待验":""}`});
-      }catch{signal.throwIfAborted();status.landmarks.push({id:target.id,phase:"fallback",distance,message:overlap?`${target.name}精细模型未应用，保留粗体块；可重新读取建筑。`:`${target.name}精细模型未应用；该距离未加载对应粗体块，可重新读取建筑。`});}
-    }else status.landmarks.push({id:target.id,phase:"fallback",distance,message:`${target.name}粗分部对应关系未确认，保留源体块。`});
+        status.landmarks.push({id:target.id,phase:"applied",distance,ground,triangles:model.indices.length/3,message:`${target.name}无纹理精细模型 · 定位与朝向近似${target.validation.visual==="pending"?" · 画面待验":""}`});
+      }catch{signal.throwIfAborted();status.landmarks.push({id:target.id,phase:"fallback",distance,reason:"failed",message:overlap?`${target.name}精细模型未应用，保留粗体块；可重新读取建筑。`:`${target.name}精细模型未应用；该距离未加载对应粗体块，可重新读取建筑。`});}
+    }else status.landmarks.push({id:target.id,phase:"fallback",distance,reason:"unconfirmed",message:`${target.name}粗分部对应关系未确认，保留源体块。`});
+    step("landmarks");
   }
   const chosen=selectBuildings(available,BUILDING_MAX_POINTS,remaining);status.candidates=available.length;status.distantCandidates=available.filter(c=>c.distant).length;status.distant=0;status.removedPoints=0;status.limited ||= chosen.limited;
   const samples=new Map<string,number>();
@@ -162,7 +168,7 @@ export async function loadBuildings(plan:Pick<ShootingPlan,"longitude"|"latitude
   };
   for(let tileIndex=0;tileIndex<tiles.length;tileIndex++) {
     const {tile,layer}=tiles[tileIndex],selected=chosen.selected.filter(c=>c.tileIndex===tileIndex);
-    if(!selected.length)continue;
+    if(!selected.length){step("geometry");continue;}
     selected.sort((a,b)=>a.featureIndex-b.featureIndex||a.polygonIndex-b.polygonIndex);
     const data=new Float32Array(selected.reduce((sum,c)=>sum+c.triangles*18,0));let offset=0,previous=-1;
     let polygons:ReturnType<typeof classifyRings>=[];
@@ -182,6 +188,7 @@ export async function loadBuildings(plan:Pick<ShootingPlan,"longitude"|"latitude
       if(status.polygons%64===0)await new Promise(resolve=>setTimeout(resolve,0));
     }
     if(offset){const vertices=data.subarray(0,offset);meshes.push({tile,vertices});status.bytes+=vertices.byteLength;}
+    step("geometry");
   }
   signal.throwIfAborted();status.phase=status.polygons||status.landmarks.some(item=>item.phase==="applied")?"ready":"empty";
   return {meshes,status};

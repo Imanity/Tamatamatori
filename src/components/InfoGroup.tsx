@@ -12,6 +12,8 @@ export type InfoGroupId =
 export interface InfoNavigation {
   id: InfoGroupId;
   request: number;
+  /** Enabling a layer expands and reveals its group; disabling collapses it. */
+  open: boolean;
 }
 
 export function InfoGroup({

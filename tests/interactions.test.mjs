@@ -11,6 +11,7 @@ import { constellationScene } from "../src/domain/constellations.ts";
 import {deepSkyScene} from '../src/domain/deep-sky.ts';
 import { weatherResponse } from './fixtures/weather.mjs';
 import { parseWeather, WEATHER_TTL } from '../src/domain/weather.ts';
+import { ellipsoidalRay } from '../src/domain/geodesy.ts';
 
 // Exercise real React handlers and state with an SDK test double; no WebGL is
 // simulated, and these checks do not claim browser rendering verification.
@@ -1089,7 +1090,8 @@ test('星空与银河独立开关、朝向及实际相机反馈联动，不重�
   await settle(()=>document.querySelector('[aria-label="显示星空"]').click());
   await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
   assert.equal(map.cameraSolutions.length,poses);assert.equal(map.environments.length,environments);
-  assert.match(document.querySelector('.sky-readout').textContent,/925/);
+  assert.doesNotMatch(document.querySelector('#info-stars-body').textContent,/亮星目录|定位符号|按当前 DEM 遮挡/);
+  assert.doesNotMatch(document.querySelector('#info-milkyWay-body').textContent,/银河细节|全景衍生/);
   assert.ok(document.querySelector('[data-sky-status="银心"]'));
   await settle(()=>document.querySelector('[aria-label="朝向北极星"]').click());
   assert.ok(document.querySelector('[data-sky-label="北极星"]'));
@@ -1115,7 +1117,7 @@ test('银河对比度滑杆即时联动，重置/关闭重开/布局保留正确
   for (const percent of [25,200]) {
     await settle(()=>setControl(slider(),percent));assert.equal(layer.contrast,percent);
     assert.equal(slider().getAttribute('aria-valuetext'),`${percent}%`);
-    assert.match(document.querySelector('.sky-readout').textContent,new RegExp(`对比度 ${percent}%`));
+    assert.equal(document.querySelector('.galaxy-contrast output').textContent,`${percent}%`);
     assert.equal(layer.frame,originalFrame);assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
     assert.equal(map.cameraSolutions.length,poses);assert.equal(map.environments.length,environments);
     assert.deepEqual(['经度','纬度','焦距','相机离地高度','方位角','俯仰角'].map(value),fields);assert.equal(shootingDateTime(),time);
@@ -1142,7 +1144,8 @@ test('深空搜索开启与朝向，未改机/改机响应切换保留几何、�
   assert.equal(layer.cameraResponse,'ha-modified');assert.equal(layer.frame,originalFrame);assert.equal(groundRequests.length,requests);assert.equal(terrainMap(),map);assert.equal(map.cameraSolutions.length,poses);
   assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);assert.equal(shootingDateTime(),time);
   await settle(()=>document.querySelector('[aria-label="清除目标搜索"]').click());
-  assert.equal(document.querySelectorAll('[data-dso-status]').length,15);assert.match(document.querySelector('.sky-readout').textContent,/天文改机/);
+  assert.equal(document.querySelectorAll('[data-dso-status]').length,15);assert.match(document.querySelector('.preview-meta').textContent,/天文改机/);
+  assert.doesNotMatch(document.querySelector('#info-deepSky-body').textContent,/源图色彩|未作具体相机定标|遮挡按画面内/);
   await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());assert.equal(document.querySelector('[data-dso-label]'),null);
   await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());assert.equal(document.querySelector('[aria-label="深空相机响应"]').value,'ha-modified');
 });
@@ -1443,43 +1446,60 @@ test('侧栏收起、面板交换保留搜索，地平线下的未开启目标�
 });
 
 
-test('精简工作区与默认折叠分组，左栏入口展开定位并清除搜索', async t => {
+test('精简工作区：全局信息默认展开，图层分组随开关展开与折叠，左栏无跳转按钮', async t => {
   await workspace(t); const map = await readyTerrain(), requests = groundRequests.length;
   const layout = document.querySelector('.workgrid');
   assert.equal(layout.style.getPropertyValue('--upper-track'), '50fr');
   assert.equal(layout.style.getPropertyValue('--lower-track'), '50fr');
   assert.equal(document.querySelector('[aria-label="调整右侧面板高度"]').getAttribute('aria-valuenow'), '50');
-  for (const selector of ['.workspace-heading', '.workspace-footer', '.base-layer', '.sidebar-bottom', '.layer-hint', '.map-footer-note', '.viewfinder-label', '.viewfinder-focal', '.terrain-height', '.parameter-note', '.info-header'])
+  for (const selector of ['.workspace-heading', '.workspace-footer', '.base-layer', '.sidebar-bottom', '.layer-hint', '.map-footer-note', '.viewfinder-label', '.viewfinder-focal', '.terrain-height', '.parameter-note', '.info-header', '.layer-settings', '[aria-label$="设置与信息"]'])
     assert.equal(document.querySelector(selector), null, selector);
   const groups = [...document.querySelectorAll('.info-group h2 button')];
   assert.deepEqual(groups.map(group => group.id), ['info-global', 'info-buildings', 'info-sun', 'info-moon', 'info-stars', 'info-milkyWay', 'info-deepSky', 'info-stations']);
-  assert.ok(groups.every(group => group.getAttribute('aria-expanded') === 'false'));
-  await settle(() => document.querySelector('#info-global').click());
-  await settle(() => document.querySelector('[aria-label="太阳设置与信息"]').click());
-  assert.equal(document.querySelector('#info-global').getAttribute('aria-expanded'), 'true');
-  assert.equal(document.querySelector('#info-sun').getAttribute('aria-expanded'), 'true');
-  assert.equal(document.activeElement.id, 'info-sun');
+  // Global information is open; layer groups start in step with their switches.
+  // Groups unmount while a search is shown, so read them afresh each time.
+  const expanded = () => Object.fromEntries([...document.querySelectorAll('.info-group h2 button')].map(group => [group.id.slice(5), group.getAttribute('aria-expanded') === 'true']));
+  assert.deepEqual(expanded(), { global: true, buildings: false, sun: true, moon: true, stars: false, milkyWay: false, deepSky: false, stations: false });
   assert.equal(document.querySelector('#info-sun-body').hidden, false);
   assert.equal(document.querySelector('#info-sun-body [data-body-status="moon"]'), null);
-  await settle(() => setControl(document.querySelector('#target-search'), 'Vega'));
+  const global = document.querySelector('#info-global-body').textContent;
+  assert.match(global, /方位.*水平视场/s); assert.match(global, /太阳高度/);
+  for (const debug of [/曲面构图/, /高程基准/, /World Atlas/, /格网/, /几何高度/, /月光参考/, /明暗近似/])
+    assert.doesNotMatch(global, debug);
+  const moon = document.querySelector('[aria-label="显示月亮"]'), search = () => document.querySelector('#target-search');
+  const collapsed = () => document.querySelector('.info-sidebar').classList.contains('is-collapsed');
+  // Turning a layer off collapses its group without moving focus.
+  moon.focus(); await settle(() => moon.click());
+  assert.equal(moon.checked, false); assert.equal(expanded().moon, false); assert.equal(document.activeElement, moon);
+  // Turning it on clears the search, reopens the rail and expands the group.
+  await settle(() => setControl(search(), 'Vega'));
   await settle(() => document.querySelector('[aria-label="收起拍摄信息"]').click());
-  await settle(() => document.querySelector('[aria-label="月亮设置与信息"]').click());
-  assert.equal(document.querySelector('#target-search').value, '');
-  assert.equal(document.querySelector('.info-sidebar').classList.contains('is-collapsed'), false);
-  assert.equal(document.querySelector('#info-moon').getAttribute('aria-expanded'), 'true');
-  assert.equal(document.activeElement.id, 'info-moon');
+  await settle(() => moon.click());
+  assert.equal(search().value, ''); assert.equal(collapsed(), false);
+  assert.equal(expanded().moon, true); assert.equal(document.activeElement, moon);
+  // Turning it off leaves the search and a collapsed rail alone.
+  await settle(() => setControl(search(), 'Vega'));
+  await settle(() => document.querySelector('[aria-label="收起拍摄信息"]').click());
+  await settle(() => moon.click());
+  assert.equal(search().value, 'Vega'); assert.equal(collapsed(), true);
+  await settle(() => document.querySelector('[aria-label="展开拍摄信息"]').click());
+  await settle(() => setControl(search(), ''));
+  assert.equal(expanded().moon, false);
+  await settle(() => moon.click()); assert.equal(expanded().moon, true);
+  // Group headers still collapse or expand by hand without changing the layer.
   await settle(() => document.querySelector('#info-moon').click());
-  await settle(() => document.querySelector('[aria-label="月亮设置与信息"]').click());
-  assert.equal(document.querySelector('#info-moon').getAttribute('aria-expanded'), 'true');
+  assert.equal(expanded().moon, false); assert.equal(moon.checked, true);
+  await settle(() => document.querySelector('#info-global').click());
+  assert.equal(expanded().global, false);
   assert.equal(terrainMap(), map); assert.equal(groundRequests.length, requests);
 });
 
 test('建筑入口联动右栏、转向调焦复用几何，失败独立重试且不重建 DEM', async t => {
   await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
   const toggle=document.querySelector('[aria-label="显示建筑"]');assert.equal(toggle.checked,false);
-  await settle(()=>document.querySelector('[aria-label="建筑设置与信息"]').click());
-  assert.equal(document.querySelector('#info-buildings').getAttribute('aria-expanded'),'true');
+  assert.equal(document.querySelector('#info-buildings').getAttribute('aria-expanded'),'false');
   await settle(()=>toggle.click());
+  assert.equal(document.querySelector('#info-buildings').getAttribute('aria-expanded'),'true');
   const layer=map.customLayers.find(l=>l.id==='preview-buildings');
   assert.equal(document.querySelector('.building-readout').dataset.buildingPhase,'ready');
   const loads=layer.loads;
@@ -1491,7 +1511,72 @@ test('建筑入口联动右栏、转向调焦复用几何，失败独立重试�
   await settle(()=>[...document.querySelectorAll('.building-readout button')].find(b=>b.textContent==='重新读取建筑').click());
   assert.equal(layer.loads,loads+1);assert.equal(document.querySelector('.building-readout').dataset.buildingPhase,'ready');
   await settle(()=>toggle.click());assert.equal(document.querySelector('.building-readout').dataset.buildingPhase,'off');
+  assert.equal(document.querySelector('#info-buildings').getAttribute('aria-expanded'),'false');
   assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
+});
+
+test('左栏开启图层展开并滚动到对应分组且不移动焦点，关闭即折叠不滚动，隐藏的信息栏显示后再定位', async t => {
+  await workspace(t); await readyTerrain();
+  const body=document.querySelector('.info-body'),scrolls=[],tops={stars:460,milkyWay:520};
+  const proto=dom.window.HTMLElement.prototype,original=proto.getBoundingClientRect;
+  proto.getBoundingClientRect=function(){return {top:this===body?100:tops[this.dataset.infoGroup]??0};};
+  t.after(()=>{proto.getBoundingClientRect=original;});
+  body.getClientRects=()=>[{}];body.scrollTo=options=>scrolls.push(options);
+  await settle(()=>setControl(document.querySelector('#target-search'),'Vega'));
+  await settle(()=>document.querySelector('[aria-label="收起拍摄信息"]').click());
+  const stars=document.querySelector('[aria-label="显示星空"]');stars.focus();
+  await settle(()=>stars.click());
+  assert.equal(document.querySelector('.info-sidebar').classList.contains('is-collapsed'),false);
+  assert.equal(document.querySelector('#target-search').value,'');
+  assert.equal(document.querySelector('#info-stars').getAttribute('aria-expanded'),'true');
+  assert.equal(document.activeElement,stars);
+  assert.deepEqual(scrolls.at(-1),{top:360,behavior:'smooth'});
+  const count=scrolls.length;await settle(()=>stars.click());
+  assert.equal(stars.checked,false);assert.equal(document.querySelector('#info-stars').getAttribute('aria-expanded'),'false');assert.equal(scrolls.length,count);
+  // Hidden rail: the reveal waits for a size; switching off first cancels it.
+  const observe=()=>resizeObservers.filter(observer=>observer.target===body).forEach(observer=>observer.callback([]));
+  const milkyWay=document.querySelector('[aria-label="显示银河"]');
+  body.getClientRects=()=>[];
+  await settle(()=>milkyWay.click());
+  assert.equal(document.querySelector('#info-milkyWay').getAttribute('aria-expanded'),'true');assert.equal(scrolls.length,count);
+  await settle(()=>milkyWay.click());
+  assert.equal(document.querySelector('#info-milkyWay').getAttribute('aria-expanded'),'false');
+  body.getClientRects=()=>[{}];
+  await settle(observe);assert.equal(scrolls.length,count);
+  body.getClientRects=()=>[];
+  await settle(()=>milkyWay.click());
+  body.getClientRects=()=>[{}];
+  await settle(observe);
+  assert.deepEqual(scrolls.at(-1),{top:420,behavior:'smooth'});
+});
+
+test('建筑分组显示加载进度、范围与精模朝向，不显示缓存和调试计数', async t => {
+  await workspace(t);
+  const catalog=JSON.parse(readFileSync(new URL('../src/data/landmarks.generated.json', import.meta.url),'utf8'));
+  const skytree=catalog.find(target=>target.id==='tokyo-skytree');
+  const longitude=Number((skytree.longitude-0.05).toFixed(4)),latitude=Number(skytree.latitude.toFixed(4));
+  await settle(()=>setControl(input('经度'),longitude));await settle(()=>setControl(input('纬度'),latitude));
+  const map=await readyTerrain();
+  await settle(()=>document.querySelector('[aria-label="显示建筑"]').click());
+  assert.equal(document.querySelector('#info-buildings').getAttribute('aria-expanded'),'true');
+  const layer=map.customLayers.find(l=>l.id==='preview-buildings'),readout=()=>document.querySelector('.building-readout');
+  await settle(()=>layer.report({...layer.status,phase:'loading',progress:{stage:'tiles',done:12,total:48}}));
+  const bar=readout().querySelector('progress');assert.equal(bar.value,12);assert.equal(bar.max,48);
+  assert.match(readout().textContent,/读取 OSM 建筑 25%/);
+  assert.match(readout().querySelector('[data-landmark-id="tokyo-skytree"]').textContent,/加载中/);
+  await settle(()=>layer.report({...layer.status,phase:'ready',progress:undefined,coverage:3200,candidates:500,polygons:200,
+    landmarks:[{id:'tokyo-skytree',phase:'applied',distance:4500,ground:5,triangles:88581,message:''},{id:'tokyo-tower',phase:'fallback',reason:'budget',distance:9000,message:''}]}));
+  const text=readout().textContent;
+  assert.equal(readout().querySelector('progress'),null);
+  assert.match(text,/约 3\.2 km 内（已达瓦片数量上限）/);assert.match(text,/已省略 300 个/);assert.match(text,/已加载 1 \/ 2/);
+  assert.match(readout().querySelector('[data-landmark-id="tokyo-skytree"]').textContent,/已加载/);
+  assert.match(readout().querySelector('[data-landmark-id="tokyo-tower"]').textContent,/超出绘制上限/);
+  for(const debug of [/已读取瓦片/,/三角面/,/来源版本/,/本次载入/,/分块体块/,/test-fixture/])assert.doesNotMatch(text,debug);
+  await settle(()=>document.querySelector(`[aria-label="朝向${skytree.name}"]`).click());
+  const [east,north,up]=ellipsoidalRay({longitude,latitude,ellipsoidalHeight:1001.6},{longitude:skytree.longitude,latitude:skytree.latitude,ellipsoidalHeight:5+skytree.bounds.height/2});
+  assert.ok(Math.abs(value('方位角')-(Math.atan2(east,north)*180/Math.PI+360)%360)<0.06,`方位 ${value('方位角')}`);
+  assert.ok(Math.abs(value('俯仰角')-Math.atan2(up,Math.hypot(east,north))*180/Math.PI)<0.06,`俯仰 ${value('俯仰角')}`);
+  for(const removed of [/缓存/,/清理/])assert.doesNotMatch(readout().textContent,removed);
 });
 
 test('星座和银河子设置位于右栏，预览信息与时间配置位于画布外', async t => {
@@ -1665,7 +1750,9 @@ test('天气按需开启，数据与环境联动，时间和镜头复用机位�
   await settle(() => button.click());
   await waitUntil(() => document.querySelector('[data-weather-phase="ready"]'));
   assert.equal(layer.frame.weather.low, 1); assert.notDeepEqual(map.environments.at(-1), before);
-  assert.match(document.querySelector('.weather-readout').textContent, /云层与降水示意/);
+  assert.match(document.querySelector('.weather-readout').textContent, /天气已应用.*总云量.*降水.*Open-Meteo/s);
+  for (const debug of [/起报批次/, /点位云量/, /云高与形态/, /模型 /, /获取 /, /预报 /])
+    assert.doesNotMatch(document.querySelector('.weather-readout').textContent, debug);
   assert.equal(document.querySelector('.weather-status'), null);
   await setShootingDateTime('2026-11-05T01:00');
   await settle(() => document.querySelector('[aria-label="显示星空"]').click());
@@ -1744,6 +1831,7 @@ test('环境分组保留关闭时的模型选择，切换模型取消旧数据�
   const raw = weatherResponse(); raw.hourly.visibility.fill(null);
   await settle(() => pending[1].resolve(parseWeather(raw, Date.now())));
   assert.ok(document.querySelector('[data-weather-phase="ready"]'));
-  assert.match(document.querySelector('.weather-readout').textContent, /ECMWF IFS.*模型未提供/);
+  assert.equal(pending[1].model, 'ecmwf_ifs025');
+  assert.match(document.querySelector('.weather-readout').textContent, /能见度 模型未提供/);
   assert.equal(terrainMap(), map); assert.equal(groundRequests.length, ground);
 });

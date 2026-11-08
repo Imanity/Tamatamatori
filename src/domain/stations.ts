@@ -54,7 +54,7 @@ export function stationScene(plan: ShootingPlan, snapshot: OrbitSnapshot | null,
     const element = snapshot?.objects.find((entry) => entry.NORAD_CAT_ID === station.noradId);
     if (!element) return { ...station, message: "缺少轨道数据" };
     const window = orbitWindow(element.EPOCH, plan.instant);
-    if (window.state === "expired") return { ...station, epoch: element.EPOCH, message: "超出轨道历元 ±72 小时，停止绘制" };
+    if (window.state === "expired") return { ...station, epoch: element.EPOCH, message: "轨道数据超过 72 小时，已停止绘制" };
     try {
       const point = stationPosition(plan, element, altitude);
       points.push(point);
@@ -65,7 +65,7 @@ export function stationScene(plan: ShootingPlan, snapshot: OrbitSnapshot | null,
         const sample = stationPosition({ ...plan, instant }, element, altitude);
         trail.push({ ...sample, name: undefined, id: `${station.id}-trail-${seconds}`, magnitude: 4 });
       }
-      return { ...station, point, epoch: element.EPOCH, message: window.state === "warning" ? "距历元超过 24 小时 · 低可信参考" : "SGP4 位置参考" };
+      return { ...station, point, epoch: element.EPOCH, message: window.state === "warning" ? "轨道数据较旧，位置仅供参考" : "" };
     } catch {
       return { ...station, epoch: element.EPOCH, message: "轨道传播失败，停止绘制" };
     }

@@ -620,6 +620,23 @@ p {
 .weather-readout { margin-top: 14px; font-size: 10px; line-height: 1.8; color: #788368; }
 .building-readout { font-size: 10px; line-height: 1.8; color: #788368; }
 .building-readout button { border: 1px solid #d6dfcc; border-radius: 4px; background: #f7f9f2; color: #647c57; font-size: 10px; padding: 2px 7px; }
+.building-readout button:disabled { opacity: .5; cursor: default; }
+.building-readout p { margin: 0 0 4px; }
+.building-readout .building-phase { font-size: 11px; color: #506649; }
+.building-readout > button { margin-top: 4px; }
+.building-progress { display: block; width: 100%; height: 6px; margin: 6px 0 4px; border: 0; border-radius: 3px; background: #e3e9da; color: var(--green); accent-color: var(--green); overflow: hidden; }
+.building-progress::-webkit-progress-bar { background: #e3e9da; border-radius: 3px; }
+.building-progress::-webkit-progress-value { background: var(--green); border-radius: 3px; transition: width .2s ease; }
+.building-progress::-moz-progress-bar { background: var(--green); border-radius: 3px; }
+.building-section { margin-top: 14px; padding-top: 10px; border-top: 1px solid #e8ecdf; }
+.building-section h3 { margin: 0 0 6px; font-size: 10px; font-weight: 550; letter-spacing: .4px; color: #7a8971; }
+.building-landmark { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 5px 0; }
+.building-landmark > span { display: flex; flex-direction: column; min-width: 0; line-height: 1.5; }
+.building-landmark strong { font-size: 11px; font-weight: 550; color: #506649; overflow-wrap: anywhere; }
+.building-landmark small { font-size: 10px; color: #8a947f; }
+.building-landmark button { flex-shrink: 0; }
+.building-readout .building-note { margin-top: 8px; font-size: 10px; color: #8f9886; }
+.station-warning { color: #966538; }
 .weather-status { flex-shrink: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 7px; color: #966538; font-size: 10px; }
 .weather-status button, .weather-readout button { border: 1px solid #d6dfcc; border-radius: 4px; background: #f7f9f2; color: #647c57; font-size: 10px; padding: 2px 7px; }
 .pollution-status button, .pollution-readout button { border: 1px solid #d6dfcc; border-radius: 4px; background: #f7f9f2; color: #647c57; font-size: 10px; padding: 2px 7px; }
@@ -1241,9 +1258,6 @@ input[aria-invalid="true"] {
 
 /* Controls and scene details stay outside the photographic frame. */
 .main-content { padding-top: 16px; padding-bottom: 16px; }
-.layer-item { display: flex; align-items: center; gap: 2px; }
-.layer-item .layer-row { flex: 1; min-width: 0; padding: 11px 3px; gap: 7px; }
-.layer-settings { flex-shrink: 0; width: 28px; height: 32px; }
 .sidebar-intro { display: flex; align-items: center; justify-content: space-between; }
 .layer-close { display: none; margin-bottom: 18px; }
 .preview-meta { height: auto; min-height: 63px; gap: 8px; padding: 9px 0; align-items: flex-start; }
@@ -1282,7 +1296,6 @@ input[aria-invalid="true"] {
   .preview-meta { height: auto; min-height: 66px; }
   .info-close-mobile { display: inline-flex; }
   .time-row { grid-template-columns: minmax(112px, .85fr) minmax(0, 1.4fr); }
-  .layer-settings { width: 34px; height: 38px; }
 }
 @media (max-width: 599px) {
   .info-sidebar { top: 61px; }

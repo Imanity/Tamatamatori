@@ -4,7 +4,6 @@ import {
   emptySkyVisibility,
   skyPointView,
   skyReference,
-  starCount,
 } from "../domain/starfield";
 import type { SkyVisibility } from "../domain/starfield";
 import type { SkyPoint } from "../domain/starfield";
@@ -14,17 +13,10 @@ import { refractDirection } from "../domain/refraction";
 import {
   deepSkyScene,
   deepSkyView,
-  deepSkyCount,
   deepSkyKinds,
-  deepSkyResponseLabel,
-  deepSkyImageSource,
-  deepSkySourceNote,
 } from "../domain/deep-sky";
 import type { DeepSkyTarget } from "../domain/deep-sky";
-import {
-  constellationScene,
-  constellationCount,
-} from "../domain/constellations";
+import { constellationScene } from "../domain/constellations";
 import { celestialPlanKey, skyLabelKey, occlusionText } from "../domain/visibility";
 import {
   skyAppearance,
@@ -245,7 +237,6 @@ export function StarReadout({
     !plan.layers.deepSky
   )
     return null;
-  const core = scene.targets.find((t) => t.point.id === "galactic-center");
   return (
     <div className="sky-readout" aria-label="星空与银河状态">
       {scene.error && (
@@ -253,30 +244,8 @@ export function StarReadout({
           {scene.error}
         </p>
       )}
-      {stars && plan.layers.stars && (
-        <p>星空 · 亮星目录 {starCount} 颗及金星、木星 · 星点为定位符号</p>
-      )}
-      {galaxy && plan.layers.milkyWay && (
-        <p>
-          银河细节 · 对比度 {plan.milkyWayContrast ?? 100}% · 全景衍生 · 银心
-          {core?.state === "画面内"
-            ? core.occlusion === "clear" && core.cloudHidden ? "云层遮蔽 · 显示近似" : occlusionText(core.occlusion,plan)
-            : (core?.state ?? "计算中")}
-        </p>
-      )}
-      {stars && plan.layers.constellations && (
-        <p>星座参考 · {constellationCount} 座 · 名称与连线仅作定位</p>
-      )}
       {deep && plan.layers.deepSky && (
         <>
-          <p>
-            深空轮廓 · {deepSkyCount} 个目标 ·{" "}
-            {deepSkyResponseLabel(plan.cameraResponse)}
-          </p>
-            <p>源图色彩与红光增强示意 · 非实测 Hα、器材色彩或曝光预测</p>
-          <p>
-              {deepSkyCount} 个目标使用影像结构参考；未作具体相机定标。
-          </p>
           <details open>
             <summary>深空目标与朝向</summary>
             {scene.deep.map(
@@ -290,11 +259,6 @@ export function StarReadout({
                     {point.name}
                     <small>
                       {entry.aliases[0]} · {deepSkyKinds[entry.model]}
-                      {" · "}
-                      {deepSkyImageSource(entry.catalogId)
-                        ? "影像结构参考"
-                        : "目录轮廓"}
-                      {deepSkySourceNote(entry.catalogId) && ` · ${deepSkySourceNote(entry.catalogId)}`}
                     </small>
                   </span>
                   <span>
@@ -302,7 +266,7 @@ export function StarReadout({
                       ? resource?.phase === "error" ? "深空轮廓加载失败"
                         : resource?.phase === "loading" ? "正在加载影像"
                         : occlusion === "clear" && opacity < STAR_LABEL_ALPHA
-                        ? cloudHidden ? "云层遮蔽 · 显示近似" : "天空较亮 · 轮廓隐藏"
+                        ? cloudHidden ? "云层遮蔽" : "天空较亮 · 轮廓隐藏"
                         : `${partialFrame ? "部分入画 · " : ""}${occlusionText(occlusion,plan)}`
                       : state}
                   </span>
@@ -330,9 +294,6 @@ export function StarReadout({
               ),
             )}
           </details>
-          <p className="sky-limit">
-            遮挡按画面内发光轮廓；影像覆盖有限，照片星点仅作外观参考。外轮廓可包含周边云气，目录尺寸为参考。
-          </p>
         </>
       )}
       {scene.targets.some(t => t.point.id === "galactic-center" ? galaxy : stars) && (
@@ -352,7 +313,7 @@ export function StarReadout({
                   : occlusion !== "clear"
                     ? occlusionText(occlusion,plan)
                     : opacity < STAR_LABEL_ALPHA
-                      ? cloudHidden ? "云层遮蔽 · 显示近似" : "天空较亮 · 星点隐藏"
+                      ? cloudHidden ? "云层遮蔽" : "天空较亮 · 星点隐藏"
                       : occlusionText(occlusion,plan)}
               </span>
               <span>
@@ -410,9 +371,6 @@ export function StarReadout({
           ))}
         </details>
       )}
-      <p className="sky-limit">
-        按当前 DEM 遮挡 · 方向标记为构图参考 · 晴空与显示对比度近似
-      </p>
     </div>
   );
 }

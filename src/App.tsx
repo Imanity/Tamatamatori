@@ -227,16 +227,12 @@ export default function App() {
   const [infoNavigation, setInfoNavigation] = useState<InfoNavigation | null>(
     null,
   );
-  const openInfo = (id: InfoGroupId) => {
-    setInfoCollapsed(false);
-    setInfoOpen(true);
-    setLayersOpen(false);
-    setInfoQuery("");
+  const navigateInfo = (id: InfoGroupId, open: boolean) =>
     setInfoNavigation((current) => ({
       id,
+      open,
       request: (current?.request ?? 0) + 1,
     }));
-  };
   const [announcement, setAnnouncement] = useState("");
   const workspaceRef = useRef<HTMLDivElement>(null);
   const secondaryRef = useRef<HTMLDivElement>(null);
@@ -251,7 +247,17 @@ export default function App() {
       setPlan((current) => ({ ...current, ...patch })),
     [],
   );
-  const toggleLayer = (id: keyof ShootingPlan["layers"]) =>
+  const toggleLayer = (id: (typeof skyLayers)[number]["id"]) => {
+    // The information group follows its layer: enabling expands and reveals
+    // it without moving focus, disabling collapses it. On narrow screens the
+    // layer drawer stays open; the group is revealed when the information
+    // drawer is next opened.
+    const enabling = !plan.layers[id];
+    if (enabling) {
+      setInfoCollapsed(false);
+      setInfoQuery("");
+    }
+    navigateInfo(id, enabling);
     setPlan((current) => ({
       ...current,
       layers: {
@@ -262,6 +268,7 @@ export default function App() {
           : {}),
       },
     }));
+  };
   const movePanel = (id: PanelId, destination: number) => {
     const next = [...panels];
     const source = next.indexOf(id);
@@ -338,27 +345,17 @@ export default function App() {
           </div>
           <div className="layer-list">
             {skyLayers.map(({ id, name, icon }) => (
-              <div className="layer-item" key={id}>
-                <label className="layer-row layer-toggle">
-                  <Icon name={icon} size={19} />
-                  <span>{name}</span>
-                  <input
-                    type="checkbox"
-                    role="switch"
-                    aria-label={`显示${name}`}
-                    checked={plan.layers[id]}
-                    onChange={() => toggleLayer(id)}
-                  />
-                </label>
-                <button
-                  className="icon-button layer-settings"
-                  aria-label={`${name}设置与信息`}
-                  title={`${name}设置与信息`}
-                  onClick={() => openInfo(id)}
-                >
-                  <Icon name="settings" size={15} />
-                </button>
-              </div>
+              <label className="layer-row layer-toggle" key={id}>
+                <Icon name={icon} size={19} />
+                <span>{name}</span>
+                <input
+                  type="checkbox"
+                  role="switch"
+                  aria-label={`显示${name}`}
+                  checked={plan.layers[id]}
+                  onChange={() => toggleLayer(id)}
+                />
+              </label>
             ))}
           </div>
           <EnvironmentSettings plan={plan} update={updatePlan} />

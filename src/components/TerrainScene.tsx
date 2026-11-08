@@ -379,7 +379,10 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
           catch { fail("地形坐标桥接无法启动，请重新安装依赖后重试。"); return; }
           buildings = new buildingModule.BuildingLayer((status)=>{
             if(disposed)return;
+            // Progress within one load only refreshes the readout.
+            const progressOnly=status.phase==="loading"&&buildingState.phase==="loading"&&status.key===buildingState.key;
             buildingState=status;
+            if(progressOnly){latest.current.onBuildingsChange?.(status);return;}
             sourceRevision++;
             celestialLayer?.invalidate(true);starfield?.invalidate(true);
             latest.current.onBuildingsChange?.(status);schedule();

@@ -66,11 +66,10 @@ export function CelestialReadout({ scene, plan, update, bodyId, weather }: {
       {enabled && <>
         <span className="celestial-coordinates">{body.azimuth.toFixed(1)}° / 视 {visualElevation.toFixed(2)}°（几何 {body.elevation.toFixed(2)}°）</span>
         {body.id === "moon" && <span>{moonPhaseLabel(body.phaseAngle)} · 亮面 {(body.illuminatedFraction * 100).toFixed(0)}%</span>}
-        {weather && <span>云层透过约 {((1 - cloudOpacity(refractDirection(body.direction, plan.refraction), weatherClouds(weather, plan))) * 100).toFixed(0)}% · 显示近似</span>}
+        {weather && <span>云层透过约 {((1 - cloudOpacity(refractDirection(body.direction, plan.refraction), weatherClouds(weather, plan))) * 100).toFixed(0)}%</span>}
         <button aria-label={`朝向${name(body.id)}`} disabled={state === "地平线下"}
           onClick={() => update({ azimuth: body.azimuth, pitch: visualElevation })}>朝向</button>
       </>}
     </div>)}
-    {(plan.layers.sun || plan.layers.moon) && <p className="celestial-limit">{plan.layers.buildings?"遮挡按已载 DEM 与有限建筑体块":"遮挡仅按当前 DEM"} · {plan.refraction === "standard" ? "标准折射为固定大气近似" : "无大气折射"}</p>}
   </div>;
 }

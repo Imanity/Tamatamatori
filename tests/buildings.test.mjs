@@ -76,6 +76,25 @@ test("整窗超过16 MiB时只缓存建筑层避免重开抖动，原始响应�
   }finally{globalThis.fetch=original;clearBuildingCache();}
 });
 
+test("加载进度按读取、精模、生成单调推进至完成，覆盖半径随瓦片上限截断",async()=>{
+  assert.equal(buildingTiles({longitude:0,latitude:0}).coverage,BUILDING_RADIUS);
+  const polar=buildingTiles({longitude:0,latitude:80});assert.ok(polar.limited);assert.ok(polar.coverage>0&&polar.coverage<BUILDING_RADIUS);
+  const original=globalThis.fetch,bytes=fixture(),observer={longitude:skytree.longitude-0.05,latitude:skytree.latitude};
+  const metadata={maxzoom:14,tiles:["https://example.test/planet/progress/{z}/{x}/{y}.pbf"],vector_layers:[{id:"building"}]};
+  globalThis.fetch=async url=>new Response(String(url).endsWith("meta")?JSON.stringify(metadata):bytes);
+  try {
+    clearBuildingCache();const events=[];
+    const result=await loadBuildings(observer,"https://example.test/meta","dem",new AbortController().signal,async()=>({height:0}),async item=>registeredModels.get(item.id).model,value=>events.push(value));
+    const tiles=buildingTiles(observer).tiles.length,nearby=landmarksInRange(observer).length;
+    assert.ok(nearby>0);assert.equal(result.status.coverage,BUILDING_RADIUS);
+    assert.deepEqual(events[0],{stage:"tiles",done:0,total:tiles*2+nearby});assert.deepEqual(events.at(-1),{stage:"geometry",done:tiles*2+nearby,total:tiles*2+nearby});
+    assert.ok(events.every((e,i)=>!i||e.done===events[i-1].done+1));
+    const order=events.slice(1).map(e=>e.stage);
+    assert.deepEqual([...new Set(order)],["tiles","landmarks","geometry"]);
+    assert.equal(order.filter(stage=>stage==="tiles").length,tiles);assert.equal(order.filter(stage=>stage==="landmarks").length,nearby);
+  }finally{globalThis.fetch=original;clearBuildingCache();}
+});
+
 test("建筑窗口有界、穿越日期线仍使用合法瓦片，高纬明确截断",()=>{
   for(const point of [initialPlan,{longitude:179.999,latitude:0},{longitude:-179.999,latitude:0},{longitude:0,latitude:80}]){
     const selected=buildingTiles(point);assert.ok(selected.tiles.length>0&&selected.tiles.length<=BUILDING_MAX_TILES);
@@ -405,9 +424,11 @@ test('东京塔替换七类塔身但保留 FootTown，晴空塔可在同一场�
     clearBuildingCache();const result=await loadBuildings(target,'https://example.test/meta','dem',new AbortController().signal,async()=>({height:12}),async item=>registeredModels.get(item.id).model);
     assert.equal(landmarkStatus(result,target).phase,'applied');assert.equal(landmarkStatus(result,target).message.includes('画面待验'),target.validation.visual==='pending');
     assert.equal(landmarkStatus(result,skytree).phase,'applied');assert.equal(result.meshes.filter(m=>m.anchor).length,2);assert.equal(result.status.polygons,1,'FootTown is retained');
+    assert.equal(landmarkStatus(result,target).ground,12);assert.equal(landmarkStatus(result,target).reason,undefined);
     assert.ok(!landmarkPart(target,target.tile,42473133,20,0,target));assert.ok(result.status.triangles<=BUILDING_MAX_TRIANGLES);
     const failed=await loadBuildings(target,'https://example.test/meta','dem',new AbortController().signal,async()=>({height:12}),async item=>{if(item.id===target.id)throw Error('Tokyo only');return registeredModels.get(item.id).model;});
     assert.equal(landmarkStatus(failed,target).phase,'fallback');assert.equal(landmarkStatus(failed,skytree).phase,'applied');assert.equal(failed.status.polygons,parts.length);
+    assert.equal(landmarkStatus(failed,target).reason,'failed');assert.equal(landmarkStatus(failed,target).ground,undefined);
   }finally{globalThis.fetch=original;clearBuildingCache();}
 });
 
@@ -419,10 +440,12 @@ test('没有粗分部映射时近处保留源数据；预算不足的远景模�
   try{
     target.parts=[];clearBuildingCache();let result=await loadBuildings(target,'https://example.test/meta','dem',new AbortController().signal,async()=>({height:0}),loader);
     assert.equal(landmarkStatus(result,target).phase,'fallback');assert.match(landmarkStatus(result,target).message,/对应关系未确认/);assert.ok(!calls.includes(target.id));
+    assert.equal(landmarkStatus(result,target).reason,'unconfirmed');
     target.parts=parts;target.asset.triangles=BUILDING_MAX_TRIANGLES;calls.length=0;clearBuildingCache();
     // East of both towers: Skytree is nearer, receives budget first.
     result=await loadBuildings({longitude:139.95,latitude:skytree.latitude},'https://example.test/meta','dem',new AbortController().signal,async()=>({height:0}),loader);
     assert.equal(landmarkStatus(result,skytree).phase,'applied');assert.match(landmarkStatus(result,target).message,/预算不足/);assert.ok(!calls.includes(target.id));assert.ok(result.status.limited);
+    assert.equal(landmarkStatus(result,target).reason,'budget');
   }finally{target.parts=parts;target.asset.triangles=triangles;globalThis.fetch=original;clearBuildingCache();}
 });
 

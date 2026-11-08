@@ -55,20 +55,18 @@ export function StationReadout({ plan, scene, visibility, feed, query, update }:
     <section className="info-section station-readout" aria-label="空间站与轨道数据">
       <h3>空间站与轨道</h3>
       <div className="station-feed-status" role="status">
-        {feed.phase === "loading" && <p>正在检查已发布轨道快照…</p>}
-        {feed.error && <p className="sky-limit">{feed.error}{source && " · 使用本地有效快照"}</p>}
-        {source?.error && <p className="sky-limit">{source.error}</p>}
-        {source?.status === "seed" && <p className="sky-limit">随版本附带快照 · 上游检查时间未记录</p>}
-        {sourceOld && <p className="sky-limit">上游超过 6 小时未成功检查，请核对更新状态</p>}
-        <p>上游成功检查 {utc(source?.fetchedAt ?? null)}</p>
-        {source?.status === "error" && <p>上游最近尝试 {utc(source.attemptedAt)}</p>}
-        <p>网页成功检查 {utc(feed.checkedAt)}</p>
+        {feed.phase === "loading" && <p>正在检查轨道数据…</p>}
+        {feed.error && <p className="station-warning">{feed.error}{source && "，暂用已保存的轨道数据"}</p>}
+        {source?.error && <p className="station-warning">{source.error}</p>}
+        {source?.status === "seed" && <p>使用网页附带的轨道数据</p>}
+        {sourceOld && <p className="station-warning">轨道数据超过 6 小时未更新</p>}
+        {source?.fetchedAt && <p>轨道数据更新于 {utc(source.fetchedAt)}</p>}
       </div>
       <div className="station-actions">
-        <button type="button" disabled={!feed.canRefresh || feed.phase === "loading"} onClick={feed.refresh}>检查已发布快照</button>
+        <button type="button" disabled={!feed.canRefresh || feed.phase === "loading"} onClick={feed.refresh}>检查轨道更新</button>
         <button type="button" onClick={() => update({ instant: new Date(Math.floor(Date.now() / 1000) * 1000).toISOString() })}>使用当前时刻</button>
       </div>
-      <p className="station-instant">拍摄参考 {utc(plan.instant)}</p>
+      <p className="station-instant">拍摄时刻 {utc(plan.instant)}</p>
       <div className="station-actions" aria-label="空间站时间微调">
         {[-10, -1, 1, 10].map((seconds) => (
           <button key={seconds} type="button" onClick={() => update({ instant: new Date(Date.parse(plan.instant) + seconds * 1000).toISOString() })}>
@@ -84,12 +82,11 @@ export function StationReadout({ plan, scene, visibility, feed, query, update }:
         return (
           <div className="station-row" data-station-status={row.id} key={row.id}>
             <strong>{row.name}</strong>
-            <p>{row.message}</p>
-            {row.epoch && <p>轨道历元 {utc(row.epoch)}</p>}
+            {row.message && <p className="station-warning">{row.message}</p>}
             {point && <>
               <p>{!plan.layers.stations && "图层已关闭 · "}{state}</p>
               <p>方位 {point.azimuth.toFixed(1)}° · 几何高度 {point.elevation.toFixed(1)}° · 距离 {point.rangeKm.toFixed(0)} km</p>
-              <p>{point.shadow > 0.99 ? "地影中" : point.shadow > 0.01 ? "地球半影中" : "太阳照明中"} · 日照与可拍摄性分别判断</p>
+              <p>{point.shadow > 0.99 ? "地影中" : point.shadow > 0.01 ? "地球半影中" : "太阳照明中"}</p>
             </>}
             <button type="button" aria-label={`${action}${row.name}`}
               disabled={!!plan.layers.stations && (!point || point.elevation <= 0)}
@@ -102,7 +99,6 @@ export function StationReadout({ plan, scene, visibility, feed, query, update }:
           </div>
         );
       })}
-      <p className="sky-limit">标记与轨迹点为构图辅助，范围 ±3 分钟、间隔 10 秒。变轨后需等待新轨道解，拍摄前重新检查。上游计划每 3 小时检查，最短请求间隔 2 小时，网页检查不会触发上游下载。</p>
     </section>
   );
 }
