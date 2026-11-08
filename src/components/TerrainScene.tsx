@@ -14,6 +14,8 @@ import { applyEnvironment, environmentForSky } from "../preview/environment";
 import type { CelestialLayer } from "../preview/celestial-layer";
 import { celestialBodies } from "../domain/ephemeris";
 import { bodyPolygons } from "../domain/celestial-projection";
+import { bodyPath, pathView } from "../domain/body-paths";
+import type { BodyPath } from "../domain/body-paths";
 import { celestialPlanKey } from "../domain/visibility";
 import type { VisibilitySnapshot } from "../domain/visibility";
 import type { CalibrationSnapshot } from "../preview/calibration";
@@ -141,6 +143,7 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
     let buildingState: BuildingStatus = emptyBuildings;
     let sourceRevision = 0;
     let lastCelestialFrame = "";
+    let pathCache: { key: string; paths: BodyPath[] } = { key: "", paths: [] };
     let createCamera: typeof terrainCamera | undefined;
     let observer: ResizeObserver | undefined;
     let frame = 0;
@@ -313,14 +316,23 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
         const buildingReady = !current.plan.layers.buildings || (buildingState.key===current.key && (buildingState.phase==="ready" || buildingState.phase==="empty"));
         const ready = buildingReady && map.areTilesLoaded() && map.isSourceLoaded(TERRAIN_SOURCE) && map.isSourceLoaded(WATER_SOURCE);
         const renderView = { azimuth: (map.getBearing() % 360 + 360) % 360, pitch: map.getPitch() - 90 };
-        const frameKey = `${poseKey}/${planKey}/${sourceRevision}/${ready}/${renderView.azimuth}/${renderView.pitch}/${current.stations?.key ?? ""}/${current.artificialMcd ?? 0}/${weatherKey}`;
+        // Whole local hours depend on the time zone, which the plan key leaves out.
+        const pathIds = (["sun", "moon"] as const).filter((id) => current.plan.layers[id] && current.plan.layers[`${id}Path`]);
+        const pathKey = pathIds.length ? `${pathIds.join("+")}/${current.plan.timeZone}` : "";
+        const frameKey = `${poseKey}/${planKey}/${sourceRevision}/${ready}/${renderView.azimuth}/${renderView.pitch}/${current.stations?.key ?? ""}/${current.artificialMcd ?? 0}/${weatherKey}/${pathKey}`;
         if (celestialLayer && frameKey !== lastCelestialFrame) {
           lastCelestialFrame = frameKey;
           const bodies = Object.values(celestialBodies(current.plan))
             .filter((body) => current.plan.layers[body.id])
             .map((body) => ({ id: body.id, ...bodyPolygons({ ...current.plan, ...renderView }, body) }))
             .filter((body) => body.state === "画面内");
-          celestialLayer.setScene({ key: frameKey, planKey, ready, bodies, plan: current.plan, weather: current.weather, artificialMcd: current.artificialMcd });
+          const pathSource = `${pathKey}/${current.plan.latitude}/${current.plan.longitude}/${current.plan.instant}/${current.plan.refraction}`;
+          if (pathCache.key !== pathSource) pathCache = { key: pathSource, paths: pathIds.map((id) => bodyPath(current.plan, id)) };
+          const paths = pathCache.paths.map((path) => {
+            const view = pathView({ ...current.plan, ...renderView }, path);
+            return { id: path.id, runs: view.runs, markers: view.markers.map((marker) => marker.point) };
+          });
+          celestialLayer.setScene({ key: frameKey, planKey, ready, bodies, paths, plan: current.plan, weather: current.weather, artificialMcd: current.artificialMcd });
           starfield?.setScene({key:frameKey,planKey,ready,plan:current.plan,stations:current.stations,artificialMcd:current.artificialMcd});
         }
         markReady();

@@ -24,7 +24,11 @@ export interface ShootingPlan {
   layers: {
     buildings?: boolean;
     sun: boolean;
+    /** Sun path around the shooting instant; requires the Sun layer. */
+    sunPath?: boolean;
     moon: boolean;
+    /** Moon path around the shooting instant; requires the Moon layer. */
+    moonPath?: boolean;
     stars: boolean;
     milkyWay: boolean;
     constellations: boolean;
@@ -54,7 +58,9 @@ export const initialPlan: ShootingPlan = {
   layers: {
     buildings: false,
     sun: true,
+    sunPath: false,
     moon: true,
+    moonPath: false,
     stars: false,
     milkyWay: false,
     constellations: false,

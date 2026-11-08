@@ -4,10 +4,10 @@ import type { SkyBody, Vector3 } from "./ephemeris.ts";
 import { add, degrees, direction, dot, scale, unit } from "./ephemeris.ts";
 import { apparentElevation, refractDirection } from "./refraction.ts";
 
-type View = Pick<ShootingPlan, "azimuth" | "pitch" | "focalLength" | "sensor" | "aspectRatio" | "orientation"> & Partial<Pick<ShootingPlan, "refraction">>;
+export type View = Pick<ShootingPlan, "azimuth" | "pitch" | "focalLength" | "sensor" | "aspectRatio" | "orientation"> & Partial<Pick<ShootingPlan, "refraction">>;
 const cross = (a: Vector3, b: Vector3): Vector3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
 
-function cameraBasis(plan: View) {
+export function cameraBasis(plan: View) {
   const az = plan.azimuth * degrees, pitch = plan.pitch * degrees;
   const fov = fieldOfView(plan);
   return {

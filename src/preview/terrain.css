@@ -70,7 +70,20 @@
 .celestial-discs { overflow: hidden; }
 .viewfinder:has(.terrain-canvas[data-ready="false"]) .celestial-discs,
 .viewfinder:has(.terrain-canvas[data-ready="false"]) .celestial-label,
+.viewfinder:has(.terrain-canvas[data-ready="false"]) .path-labels,
 .viewfinder:has(.terrain-canvas[data-ready="false"]) .celestial-direction-group { visibility: hidden; }
+.path-labels { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.path-label {
+  position: absolute;
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow: 0 0 2px #0a1722, 0 1px 3px #0a1722;
+}
+.path-label-sun { color: #ffe2a3; }
+.path-label-moon { color: #d6e1fb; }
+.path-label small { margin-left: 1px; font-size: 7px; opacity: .8; vertical-align: super; }
 .celestial-label {
   position: absolute;
   transform: translate(-50%, -100%);

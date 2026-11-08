@@ -15,6 +15,7 @@ import { ellipsoidalRay } from '../src/domain/geodesy.ts';
 import { parseShotText } from '../src/domain/shot.ts';
 import { dayEvents } from '../src/domain/day-events.ts';
 import { cameraHeightSlider } from '../src/domain/plan.ts';
+import { bodyPath } from '../src/domain/body-paths.ts';
 
 // Exercise real React handlers and state with an SDK test double; no WebGL is
 // simulated, and these checks do not claim browser rendering verification.
@@ -2095,4 +2096,45 @@ test('离地高度滑条按对数刻度同步数值框，方向键按 0.1 m / 1 
   assert.equal(slider.value, String(cameraHeightSlider.toPosition(1.5)));
   await settle(() => keydown(slider, 'ArrowRight'));
   assert.equal(value('相机离地高度'), 1.6);
+});
+
+test('太阳、月亮分组各有运行轨迹开关：从属于天体图层，开启后预览得到轨迹线与整点标注', async t => {
+  await workspace(t); const map = await readyTerrain();
+  const layer = () => map.customLayers.find(l => l instanceof TestCelestialLayer);
+  const toggle = (body) => document.querySelector(`[data-info-group="${body}"] input[aria-label="显示${body === 'sun' ? '太阳' : '月亮'}运行轨迹"]`);
+  assert.ok(toggle('sun') && toggle('moon'), 'each switch sits in its own group');
+  assert.deepEqual([toggle('sun').checked, toggle('moon').checked], [false, false]);
+  assert.equal(document.querySelector('[data-path-marker]'), null);
+  await setShootingDateTime('2026-11-04T12:00');
+  await settle(() => document.querySelector('button[aria-label="朝向太阳"]').click());
+  const poses = map.cameraSolutions.length, requests = groundRequests.length, fields = ['经度', '纬度', '方位角', '俯仰角', '焦距'].map(value);
+  await settle(() => toggle('sun').click());
+  assert.equal(toggle('sun').checked, true);
+  assert.equal(document.querySelector('[data-path-status="sun"]').textContent, '本次出没 · 经过画面');
+  const sunLabels = [...document.querySelectorAll('[data-path-marker^="sun-"]')].map(e => e.dataset.pathMarker);
+  assert.ok(sunLabels.includes('sun-12:00') && sunLabels.length >= 2, sunLabels.join());
+  assert.deepEqual(layer().frame.paths.map(p => p.id), ['sun']);
+  assert.ok(layer().frame.paths[0].runs.flat().length > 10 && layer().frame.paths[0].markers.length === sunLabels.length);
+  // A display aid: no camera, ground or plan change.
+  assert.equal(map.cameraSolutions.length, poses); assert.equal(groundRequests.length, requests);
+  assert.deepEqual(['经度', '纬度', '方位角', '俯仰角', '焦距'].map(value), fields);
+  // Whole hours follow the selected time zone; the instant stays.
+  await chooseTimeZone('UTC');
+  assert.ok(document.querySelector('[data-path-marker="sun-03:00"]'), 'noon in Tokyo is 03:00 UTC');
+  assert.equal(document.querySelector('[data-path-marker="sun-12:00"]'), null);
+  await chooseTimeZone('Asia/Tokyo', 'Tokyo');
+  // The moon has its own pass and switch.
+  const moon = bodyPath({ latitude: value('纬度'), longitude: value('经度'), timeZone: 'Asia/Tokyo', refraction: 'standard', instant: '2026-11-04T03:00:00Z' }, 'moon');
+  await settle(() => toggle('moon').click());
+  assert.match(document.querySelector('[data-path-status="moon"]').textContent, new RegExp(`^${{ current: '本次', next: '下一次', previous: '上一次' }[moon.pass]}出没 · `));
+  assert.deepEqual(layer().frame.paths.map(p => p.id), ['sun', 'moon']);
+  // Switching the Sun off takes its path with it, and switching it on again does not restore it.
+  await settle(() => document.querySelector('input[aria-label="显示太阳"]').click());
+  assert.deepEqual([toggle('sun').checked, toggle('sun').disabled], [false, true]);
+  assert.equal(document.querySelector('[data-path-marker^="sun-"]'), null);
+  assert.equal(document.querySelector('[data-path-status="sun"]'), null);
+  assert.deepEqual(layer().frame.paths.map(p => p.id), ['moon']);
+  await settle(() => document.querySelector('input[aria-label="显示太阳"]').click());
+  assert.deepEqual([toggle('sun').checked, toggle('sun').disabled], [false, false]);
+  assert.equal(toggle('moon').checked, true);
 });

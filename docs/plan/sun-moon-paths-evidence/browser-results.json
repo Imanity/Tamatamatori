@@ -1,0 +1,306 @@
+{
+  "generatedAt": "2026-11-08T18:09:30.379Z",
+  "log": [
+    {
+      "step": "build",
+      "scripts": [
+        "index-BCSpx0wa.js"
+      ],
+      "url": "http://localhost:5181/Tamatamatori/"
+    },
+    {
+      "step": "default",
+      "toggles": [
+        {
+          "name": "太阳",
+          "group": "sun",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "name": "月亮",
+          "group": "moon",
+          "checked": false,
+          "disabled": false
+        }
+      ],
+      "labels": 0
+    },
+    {
+      "step": "switched-on",
+      "toggles": [
+        {
+          "name": "太阳",
+          "group": "sun",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "name": "月亮",
+          "group": "moon",
+          "checked": true,
+          "disabled": false
+        }
+      ],
+      "status": {
+        "sun": "本次出没 · 经过画面",
+        "moon": "本次出没 · 经过画面"
+      }
+    },
+    {
+      "step": "ridge-135mm",
+      "status": {
+        "sun": "本次出没 · 经过画面",
+        "moon": "上一次出没 · 在视场外"
+      },
+      "labels": [
+        "sun-16:00"
+      ],
+      "analysis": {
+        "size": [
+          1138,
+          759
+        ],
+        "changed": 4212,
+        "angle": 48.82,
+        "rmsPx": 2.8,
+        "sky": {
+          "steps": 373,
+          "coverage": 1,
+          "meanDelta": 115.9
+        },
+        "terrain": {
+          "steps": 624,
+          "coverage": 0.537,
+          "meanDelta": 44.4
+        },
+        "centreOffsetPx": 1.17
+      }
+    },
+    {
+      "step": "noon-135mm-through-disc",
+      "analysis": {
+        "size": [
+          1138,
+          759
+        ],
+        "changed": 8884,
+        "angle": 8.38,
+        "rmsPx": 3.89,
+        "sky": {
+          "steps": 1103,
+          "coverage": 1,
+          "meanDelta": 126.2
+        },
+        "terrain": {
+          "steps": 39,
+          "coverage": 0,
+          "meanDelta": 0
+        },
+        "centreOffsetPx": 1.79,
+        "disc": {
+          "pixels": 1110,
+          "radiusPx": 18.8,
+          "centre": [
+            568.5,
+            377.5
+          ],
+          "wholeFrameLineDistancePx": 3.72,
+          "localPixels": 1021,
+          "localLineDistancePx": 0.18
+        }
+      }
+    },
+    {
+      "step": "wide-day-14mm",
+      "status": {
+        "sun": "本次出没 · 经过画面",
+        "moon": "本次出没 · 经过画面"
+      },
+      "labels": [
+        "sun-07:00",
+        "sun-08:00",
+        "sun-09:00",
+        "sun-11:00",
+        "sun-12:00",
+        "sun-13:00",
+        "moon-04:00",
+        "moon-05:00",
+        "moon-06:00",
+        "moon-07:00",
+        "moon-08:00"
+      ],
+      "sunDotsAtLabelAnchors": [
+        {
+          "id": "sun-07:00",
+          "anchor": [
+            131,
+            520.1
+          ],
+          "transform": "translate(calc(-50% - 9.6px), calc(-50% - 8.8px))",
+          "changedWithin4px": 49,
+          "nearestChangedPx": 0
+        },
+        {
+          "id": "sun-08:00",
+          "anchor": [
+            295.3,
+            434.6
+          ],
+          "transform": "translate(calc(-50% - 8.7px), calc(-50% - 9px))",
+          "changedWithin4px": 49,
+          "nearestChangedPx": 0
+        },
+        {
+          "id": "sun-09:00",
+          "anchor": [
+            419.9,
+            378.8
+          ],
+          "transform": "translate(calc(-50% - 7.5px), calc(-50% - 9.3px))",
+          "changedWithin4px": 49,
+          "nearestChangedPx": 0
+        },
+        {
+          "id": "sun-11:00",
+          "anchor": [
+            638.3,
+            306.3
+          ],
+          "transform": "translate(calc(-50% - 4.9px), calc(-50% - 9.7px))",
+          "changedWithin4px": 49,
+          "nearestChangedPx": 0
+        },
+        {
+          "id": "sun-12:00",
+          "anchor": [
+            760.5,
+            279.5
+          ],
+          "transform": "translate(calc(-50% - 3.6px), calc(-50% - 9.8px))",
+          "changedWithin4px": 49,
+          "nearestChangedPx": 0
+        },
+        {
+          "id": "sun-13:00",
+          "anchor": [
+            916.8,
+            255.4
+          ],
+          "transform": "translate(calc(-50% - 2.5px), calc(-50% - 9.9px))",
+          "changedWithin4px": 49,
+          "nearestChangedPx": 0
+        }
+      ],
+      "nameCollisions": []
+    },
+    {
+      "step": "sunrise-next-pass",
+      "status": {
+        "sun": "下一次出没 · 经过画面",
+        "moon": "本次出没 · 经过画面"
+      },
+      "labels": [
+        "sun-07:00",
+        "sun-08:00",
+        "sun-09:00",
+        "sun-10:00",
+        "moon-01:00",
+        "moon-02:00",
+        "moon-03:00",
+        "moon-04:00",
+        "moon-05:00"
+      ]
+    },
+    {
+      "step": "moon-night",
+      "status": {
+        "sun": "下一次出没 · 经过画面",
+        "moon": "本次出没 · 经过画面"
+      },
+      "labels": [
+        "sun-07:00",
+        "sun-08:00",
+        "sun-09:00",
+        "moon-02:00",
+        "moon-03:00",
+        "moon-04:00",
+        "moon-05:00"
+      ],
+      "moonRow": "月亮\n当前 DEM 未遮挡\n95.9° / 视 12.12°（几何 12.05°）\n残月 · 亮面 20%\n朝向"
+    },
+    {
+      "step": "sun-layer-off",
+      "toggles": [
+        {
+          "name": "太阳",
+          "group": "sun",
+          "checked": false,
+          "disabled": true
+        },
+        {
+          "name": "月亮",
+          "group": "moon",
+          "checked": true,
+          "disabled": false
+        }
+      ],
+      "sunLabels": 0
+    },
+    {
+      "step": "sun-layer-on-again",
+      "toggles": [
+        {
+          "name": "太阳",
+          "group": "sun",
+          "checked": false,
+          "disabled": false
+        },
+        {
+          "name": "月亮",
+          "group": "moon",
+          "checked": true,
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "step": "slider-sweep-60-steps-ms",
+      "pathsOn": [
+        924,
+        850
+      ],
+      "pathsOff": [
+        847,
+        833
+      ]
+    },
+    {
+      "step": "phone",
+      "toggles": [
+        {
+          "name": "太阳",
+          "group": "sun",
+          "checked": true,
+          "disabled": false
+        },
+        {
+          "name": "月亮",
+          "group": "moon",
+          "checked": true,
+          "disabled": false
+        }
+      ],
+      "status": {
+        "sun": "本次出没 · 经过画面",
+        "moon": "本次出没 · 经过画面"
+      },
+      "labels": 11,
+      "overflow": 0,
+      "switchesVisible": [
+        true,
+        true
+      ]
+    }
+  ]
+}

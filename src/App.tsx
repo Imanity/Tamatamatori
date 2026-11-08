@@ -320,6 +320,9 @@ export default function App() {
         ...(id === "stars" && current.layers.stars
           ? { constellations: false }
           : {}),
+        // A path belongs to its body, like the constellation figures to the stars.
+        ...(id === "sun" && current.layers.sun ? { sunPath: false } : {}),
+        ...(id === "moon" && current.layers.moon ? { moonPath: false } : {}),
       },
     }));
   };

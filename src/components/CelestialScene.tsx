@@ -1,5 +1,8 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ShootingPlan } from "../domain/plan";
+import { frameAspectRatio } from "../domain/plan";
+import { bodyPath, pathView, PATH_SEARCH_HOURS } from "../domain/body-paths";
+import type { PathPass } from "../domain/body-paths";
 import { celestialBodies, moonPhaseLabel } from "../domain/ephemeris";
 import { bodyPolygons } from "../domain/celestial-projection";
 import { celestialPlanKey, skyLabelKey, occlusionText } from "../domain/visibility";
@@ -13,13 +16,19 @@ export function useCelestialScene(plan: ShootingPlan, visibility: VisibilitySnap
     try { return { bodies: celestialBodies(plan), error: "" }; }
     catch { return { bodies: null, error: "日月计算失败，请检查机位与拍摄时刻。" }; }
   }, [plan.latitude, plan.longitude, plan.instant]);
+  const sunPath = plan.layers.sun && !!plan.layers.sunPath, moonPath = plan.layers.moon && !!plan.layers.moonPath;
+  const sources = useMemo(() => {
+    try { return (["sun", "moon"] as const).filter((id) => (id === "sun" ? sunPath : moonPath)).map((id) => bodyPath(plan, id)); }
+    catch { return []; }
+  }, [plan.latitude, plan.longitude, plan.instant, plan.timeZone, plan.refraction, sunPath, moonPath]);
+  const paths = sources.map((path) => pathView({ ...plan, ...renderView }, path));
   const views = result.bodies ? [result.bodies.sun, result.bodies.moon].map((body) => ({
     body, ...bodyPolygons({ ...plan, ...renderView }, body), enabled: plan.layers[body.id],
     occlusion: visibility.planKey === celestialPlanKey(plan) ? visibility.states[body.id] : "waiting" as const,
     labelOcclusion: visibility.labelKey === skyLabelKey(plan) && !visibility.message
       ? visibility.labelStates?.[body.id] : visibility.planKey === celestialPlanKey(plan) ? visibility.states[body.id] : "waiting",
   })) : [];
-  return { ...result, views };
+  return { ...result, views, paths };
 }
 type CelestialScene = ReturnType<typeof useCelestialScene>;
 const name = (id: "sun" | "moon") => id === "sun" ? "太阳" : "月亮";
@@ -52,6 +61,69 @@ export function CelestialDiscs({ scene, weather, plan }: { scene: CelestialScene
         </span>)}
       </div>;
     })}</div>
+  </>;
+}
+
+/**
+ * Whole-hour times along the paths. Labels sit beside the line, the Sun's to
+ * the left of its travel and the Moon's to the right, so the two stay apart
+ * near conjunction. They mark directions and do not test terrain occlusion;
+ * the line itself is dashed where terrain hides it.
+ */
+export function CelestialPathLabels({ scene, plan }: { scene: CelestialScene; plan: ShootingPlan }) {
+  const aspect = frameAspectRatio(plan);
+  const host = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  useEffect(() => {
+    const element = host.current;
+    if (!element || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry) setSize({ width: entry.contentRect.width, height: entry.contentRect.height });
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+  const pixel = (x: number, y: number) => ({ x: (x + 1) / 2 * size.width, y: (y + 1) / 2 * size.height });
+  // The disc name ends 4 px above the disc and is about 30 × 21 CSS px; an hour label (about 24 × 9) there would hide it.
+  const names = scene.views.filter((view) => view.enabled && view.state === "画面内" && view.outline.length)
+    .map((view) => pixel(view.centre?.x ?? 0, Math.min(...view.outline.map((p) => p.y))));
+  return <div className="path-labels" aria-hidden="true" ref={host}>{scene.paths.flatMap((path) => path.markers.map((marker) => {
+    let nx = 0, ny = path.id === "sun" ? -1 : 1;
+    if (marker.tangent) {
+      // Normalised device units to proportional pixels: the frame is `aspect` wide per unit height.
+      const tx = marker.tangent.x * aspect, ty = marker.tangent.y, length = Math.hypot(tx, ty);
+      if (length > 1e-9) [nx, ny] = path.id === "sun" ? [ty / length, -tx / length] : [-ty / length, tx / length];
+    }
+    const at = pixel(marker.point.x, marker.point.y), label = { x: at.x + nx * 20, y: at.y + ny * 10 };
+    if (size.width && names.some((name) => Math.abs(label.x - name.x) < 28 && label.y > name.y - 30 && label.y < name.y + 1)) return [];
+    return <span key={`${path.id}-${marker.time}`} className={`path-label path-label-${path.id}`}
+      data-path-marker={`${path.id}-${marker.label}`} data-path-day={marker.day}
+      style={{ left: `${(marker.point.x + 1) * 50}%`, top: `${(marker.point.y + 1) * 50}%`,
+        transform: `translate(calc(-50% + ${(nx * 20).toFixed(1)}px), calc(-50% + ${(ny * 10).toFixed(1)}px))` }}>
+      {marker.label}{marker.day !== 0 && <small>{marker.day > 0 ? "+1" : "−1"}</small>}
+    </span>;
+  }))}</div>;
+}
+
+const passNames: Record<PathPass, string> = { current: "本次出没", next: "下一次出没", previous: "上一次出没", long: "不落，显示 24 小时" };
+
+/** Path switch for a body's information group; the path belongs to its body layer. */
+export function PathToggle({ scene, plan, update, bodyId }: {
+  scene: CelestialScene; plan: ShootingPlan; update: (patch: Partial<ShootingPlan>) => void; bodyId: "sun" | "moon";
+}) {
+  const key = bodyId === "sun" ? "sunPath" : "moonPath";
+  const available = plan.layers[bodyId], on = available && !!plan.layers[key];
+  const view = scene.paths.find((path) => path.id === bodyId);
+  return <>
+    <label className="subsetting-toggle layer-toggle">
+      <span>运行轨迹</span>
+      <input type="checkbox" role="switch" aria-label={`显示${name(bodyId)}运行轨迹`} checked={on} disabled={!available}
+        onChange={() => update({ layers: { ...plan.layers, [key]: !on } })} />
+    </label>
+    {on && !scene.error && <p className="path-status" data-path-status={bodyId}>
+      {!view ? "轨迹计算失败" : !view.pass ? `前后 ${PATH_SEARCH_HOURS} 小时均在地平线下`
+        : `${passNames[view.pass]} · ${view.state === "画面内" ? "经过画面" : "在视场外"}`}
+    </p>}
   </>;
 }
 

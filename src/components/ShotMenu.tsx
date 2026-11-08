@@ -21,7 +21,9 @@ import type { SavedShot } from "../domain/shot-library";
 const layerNames: Record<keyof Shot["layers"], string> = {
   buildings: "建筑",
   sun: "太阳",
+  sunPath: "太阳轨迹",
   moon: "月亮",
+  moonPath: "月亮轨迹",
   stars: "星空",
   constellations: "星座",
   milkyWay: "银河",

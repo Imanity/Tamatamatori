@@ -88,7 +88,8 @@ function fakeGL() {
   gl.blendFuncSeparate=(...values)=>['BLEND_SRC_RGB','BLEND_DST_RGB','BLEND_SRC_ALPHA','BLEND_DST_ALPHA'].forEach((name,i)=>state.set(gl[name],values[i]));
   gl.createQuery=()=>{const query={available:false}; queries.add(query);return query;};gl.deleteQuery=(query)=>queries.delete(query);
   gl.beginQuery=(_,query)=>{query.result=gl.results.shift();};gl.endQuery=()=>{};
-  gl.drawArrays=(mode,_,count)=>gl.draws.push({mode,count,probe:uniforms.get('u_probe'),haGain:uniforms.get('u_ha_gain'),dark:uniforms.get('u_dark'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK),colorMask:[...state.get(gl.COLOR_WRITEMASK)],weatherMode:uniforms.get('u_mode'),depthTest:enabled.has(gl.DEPTH_TEST),clouds:uniforms.get('u_layers'),animationTime:uniforms.get('u_time')});
+  gl.uniform4fv=(name,value)=>uniforms.set(name,Array.from(value));
+  gl.drawArrays=(mode,_,count)=>gl.draws.push({mode,count,color:uniforms.get('u_color'),dash:uniforms.get('u_dash'),probe:uniforms.get('u_probe'),haGain:uniforms.get('u_ha_gain'),dark:uniforms.get('u_dark'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK),colorMask:[...state.get(gl.COLOR_WRITEMASK)],weatherMode:uniforms.get('u_mode'),depthTest:enabled.has(gl.DEPTH_TEST),clouds:uniforms.get('u_layers'),animationTime:uniforms.get('u_time')});
   gl.drawElements=(mode,count)=>gl.draws.push({mode,count,strength:uniforms.get('u_strength'),depth:state.get(gl.DEPTH_FUNC),write:state.get(gl.DEPTH_WRITEMASK)});
   gl.getQueryParameter=(query,key)=>key===gl.QUERY_RESULT_AVAILABLE?query.available:query.result;
   gl.complete=()=>queries.forEach(query=>query.available=true);
@@ -109,6 +110,32 @@ test('天气云层使用天空深度，降水可覆盖前景且不写深度，�
   assert.deepEqual(state,previous);assert.deepEqual(enabled,previousEnabled);
   const count=gl.draws.length;layer.setScene({...frame('off',false),plan:initialPlan});layer.render(gl);
   assert.equal(gl.draws.length-count,2);layer.onRemove();assert.equal(resources.size,0);
+});
+
+test('日月轨迹先画被遮挡的淡色虚线，再画开阔天空的晕边与实线；不写深度并恢复宿主状态', () => {
+  const {gl,resources,state,enabled} = fakeGL();
+  gl.drawingBufferWidth = 1200; gl.drawingBufferHeight = 800;
+  const previous=new Map(state), previousEnabled=new Set(enabled);
+  const layer=new CelestialLayer(()=>{});
+  layer.onAdd({triggerRepaint(){},getContainer:()=>({clientWidth:600})},gl);
+  const run=[{x:-0.8,y:0.2},{x:-0.2,y:-0.1},{x:0.4,y:-0.3}];
+  layer.setScene({...frame('path',false),bodies:[],paths:[{id:'sun',runs:[run],markers:[{x:-0.2,y:-0.1}]},{id:'moon',runs:[],markers:[]}]});
+  layer.render(gl);
+  // Two segments make 12 strip vertices; a marker is a 12-triangle fan (36 vertices).
+  assert.deepEqual(gl.draws.map(d=>[d.depth,d.count,d.dash>0]),[
+    [gl.GREATER,12,true],[gl.GREATER,36,false],
+    [gl.LEQUAL,12,false],[gl.LEQUAL,36,false],
+    [gl.LEQUAL,12,false],[gl.LEQUAL,36,false],
+  ]);
+  assert.equal(gl.draws[0].dash,8,'4 CSS px dashes at a pixel ratio of 2');
+  assert.ok(gl.draws[0].color[3]<0.5&&gl.draws[4].color[3]>0.8,'hidden stretch is faint, open sky is solid');
+  assert.ok(gl.draws.every(d=>d.write===false&&d.mode===gl.TRIANGLES));
+  assert.deepEqual(state,previous);assert.deepEqual(enabled,previousEnabled);
+  const uploads=gl.uploads.length;layer.render(gl);
+  assert.equal(gl.uploads.length,uploads,'unchanged frame and buffer size reuse the uploaded strips');
+  const count=gl.draws.length;layer.setScene({...frame('plain',false),bodies:[]});layer.render(gl);
+  assert.equal(gl.draws.length,count,'no path draws without paths');
+  layer.onRemove();assert.equal(resources.size,0);
 });
 
 test('雨雪使用独立播放时钟，隐藏、减少动态、关闭与卸载暂停且恢复不跳时', t => {

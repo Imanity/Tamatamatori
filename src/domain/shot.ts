@@ -28,7 +28,9 @@ export const shotLimits = {
 export const shotLayerKeys = [
   "buildings",
   "sun",
+  "sunPath",
   "moon",
+  "moonPath",
   "stars",
   "constellations",
   "milkyWay",
@@ -379,6 +381,8 @@ export function parseShot(value: unknown): ShotParse {
     shotLayerKeys.map((key) => [key, flag(layers, `layers.${key}`, !!initialPlan.layers[key])]),
   ) as Shot["layers"];
   if (layerValues.constellations && !layerValues.stars) errors.push("layers.constellations：需要同时开启 layers.stars");
+  if (layerValues.sunPath && !layerValues.sun) errors.push("layers.sunPath：需要同时开启 layers.sun");
+  if (layerValues.moonPath && !layerValues.moon) errors.push("layers.moonPath：需要同时开启 layers.moon");
   const sky = group("sky", false);
   const milkyWayContrast = number(sky, "sky.milkyWayContrast", initialPlan.milkyWayContrast, shotLimits.milkyWayContrast);
   const environment = group("environment", false);

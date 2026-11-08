@@ -26,9 +26,14 @@ export function observerContext(plan: PositionInput) {
   return { date: new Date(timestamp), observer: new Observer(plan.latitude, plan.longitude, 0) };
 }
 
+/** Topocentric geometric position without refraction; discs and paths share it. */
+export function topocentric(body: Body.Sun | Body.Moon, date: Date, observer: Observer) {
+  const equator = Equator(body, date, observer, true, true);
+  return { equator, horizon: Horizon(date, observer, equator.ra, equator.dec) };
+}
+
 function position(body: Body.Sun | Body.Moon, ctx: ReturnType<typeof observerContext>) {
-  const equator = Equator(body, ctx.date, ctx.observer, true, true);
-  const horizon = Horizon(ctx.date, ctx.observer, equator.ra, equator.dec);
+  const { equator, horizon } = topocentric(body, ctx.date, ctx.observer);
   const distanceKm = equator.dist * KM_PER_AU;
   const radiusKm = body === Body.Sun ? 695700 : 1737.4;
   return {

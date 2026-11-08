@@ -19,7 +19,9 @@ import { solarPosition, daylightPhase } from "../domain/solar";
 import { skyAppearanceLabel } from "../domain/sky-appearance";
 import {
   CelestialDiscs,
+  CelestialPathLabels,
   CelestialReadout,
+  PathToggle,
   useCelestialScene,
 } from "./CelestialScene";
 import { celestialPlanKey, emptyVisibility } from "../domain/visibility";
@@ -401,6 +403,7 @@ export function PreviewPanel({
             onBuildingsChange={setBuildings}
             buildingAttempt={buildingAttempt}
           />
+          <CelestialPathLabels scene={celestialScene} plan={plan} />
           <CelestialDiscs scene={celestialScene} weather={weather} plan={plan} />
           <StarLabels scene={starScene} />
           <StationLabels
@@ -546,24 +549,40 @@ export function PreviewPanel({
                 {group(
                   "sun",
                   "太阳",
-                  <CelestialReadout
-                    scene={celestialScene}
-                    plan={plan}
-                    update={update}
-                    bodyId="sun"
-                    weather={weather}
-                  />,
+                  <>
+                    <PathToggle
+                      scene={celestialScene}
+                      plan={plan}
+                      update={update}
+                      bodyId="sun"
+                    />
+                    <CelestialReadout
+                      scene={celestialScene}
+                      plan={plan}
+                      update={update}
+                      bodyId="sun"
+                      weather={weather}
+                    />
+                  </>,
                 )}
                 {group(
                   "moon",
                   "月亮",
-                  <CelestialReadout
-                    scene={celestialScene}
-                    plan={plan}
-                    update={update}
-                    bodyId="moon"
-                    weather={weather}
-                  />,
+                  <>
+                    <PathToggle
+                      scene={celestialScene}
+                      plan={plan}
+                      update={update}
+                      bodyId="moon"
+                    />
+                    <CelestialReadout
+                      scene={celestialScene}
+                      plan={plan}
+                      update={update}
+                      bodyId="moon"
+                      weather={weather}
+                    />
+                  </>,
                 )}
                 {group(
                   "stars",

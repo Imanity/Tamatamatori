@@ -14,7 +14,7 @@ import { searchTimeZones, zoneOffset, allTimeZones } from "../src/domain/time-zo
 const varied = {
   latitude: -33.8568, longitude: 151.2153, azimuth: 123.456789, pitch: -7.25, cameraHeight: 42.5, focalLength: 600.3,
   sensor: "aps-c", aspectRatio: "16:9", orientation: "portrait", instant: "2026-12-14T09:31:12Z", timeZone: "Australia/Sydney",
-  layers: { buildings: true, sun: false, moon: false, stars: true, milkyWay: true, constellations: true, deepSky: true, stations: true },
+  layers: { buildings: true, sun: false, sunPath: false, moon: false, moonPath: false, stars: true, milkyWay: true, constellations: true, deepSky: true, stations: true },
   refraction: "none", milkyWayContrast: 135, cameraResponse: "ha-modified", lightPollution: true, weather: true, weatherModel: "ecmwf_ifs025",
 };
 const minimal = (extra = {}) => ({ format: "tamatamatori.shot", version: 1, position: { latitude: 35, longitude: 139 }, view: { azimuth: 90 }, time: { instant: "2026-11-04T08:00:00Z" }, ...extra });
@@ -39,6 +39,16 @@ test("机位覆盖全部拍摄计划字段，JSON、分享码与链接往返无�
   assert.ok(shareCode(shot).length < 1500);
   assert.equal(planSignature(varied), shotSignature(shot), "name and note do not count as picture changes");
   assert.notEqual(planSignature({ ...varied, azimuth: 123.45679 }), planSignature(varied));
+  // Paths depend on their bodies, so they vary in a plan of their own.
+  const paths = { ...varied, layers: { ...varied.layers, sun: true, sunPath: true, moon: true, moonPath: true } };
+  assert.deepEqual(parseShotText(shareCode(shotFromPlan(paths))).plan, paths);
+  assert.notEqual(planSignature(paths), planSignature({ ...paths, layers: { ...paths.layers, moonPath: false } }));
+  // Shots saved before the path switches existed open with both paths off.
+  const older = shotFromPlan(initialPlan);
+  delete older.layers.sunPath; delete older.layers.moonPath;
+  const reopened = parseShot(older);
+  assert.deepEqual([reopened.plan.layers.sunPath, reopened.plan.layers.moonPath], [false, false]);
+  assert.deepEqual(reopened.defaults, ["layers.sunPath", "layers.moonPath"]);
   // The initial plan has no stored model; it round-trips as the default model.
   assert.deepEqual(planFromShot(shotFromPlan(initialPlan)), { ...initialPlan, weatherModel: "best_match" });
 });
@@ -57,6 +67,9 @@ test("机位校验一次列出全部问题并带字段路径，未知字段和�
     "layers.aurora：未知字段", "layers.constellations：需要同时开启", "sky.milkyWayContrast", "environment.weather：应为 true 或 false",
     "environment.weatherModel", "name：最多 40 字"])
     assert.ok(text.includes(path), `${path}\n${text}`);
+  const orphanPaths = errorsOf(minimal({ layers: { sun: false, sunPath: true, moon: false, moonPath: true } }));
+  assert.match(orphanPaths, /layers\.sunPath：需要同时开启 layers\.sun/);
+  assert.match(orphanPaths, /layers\.moonPath：需要同时开启 layers\.moon/);
   assert.match(errorsOf({ ...minimal(), version: 2 }), /更新版本/);
   assert.match(errorsOf({ ...minimal(), format: "other" }), /format：应为 "tamatamatori.shot"/);
   assert.match(errorsOf({ format: "tamatamatori.shot", version: 1 }), /position：缺少该字段[\s\S]*view：缺少该字段[\s\S]*time：缺少该字段/);

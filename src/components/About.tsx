@@ -190,6 +190,7 @@ export function About() {
                 <a href={deepSkyCatalogUrl} download="tamatamatori-deep-sky.json">下载深空数据及来源清单</a>
               </li>
             </ul>
+            <p>日月位置、出没时刻与运行轨迹由 Astronomy Engine 在本机计算。轨迹取拍摄时刻所在的一次出没，在地平线下时取前后 36 小时内最近的一次；每 5 分钟取一点连线，中心落到海平面地平以下的部分不绘制。整点标注按所选时区，只标方向、不判断遮挡；山体或建筑后方的轨迹以淡色虚线表示。</p>
           </section>
 
           <section aria-labelledby="about-stations-title">
