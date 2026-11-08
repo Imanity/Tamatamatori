@@ -176,7 +176,7 @@ Chrome 连接已恢复，三组固定场景完成基础 GPU 画面检查，覆�
 
 ## 地标批量制作
 
-[18 份集中下载清单](docs/plan/landmark-downloads.md)及[CSV](docs/plan/landmark-downloads.csv)已整理。原始 GLB 留在本地，先检查来源、轴向、尺度和锚点，再用 JSON 配方批量制作；详细步骤见[操作与东京塔样例](docs/plan/landmark-pipeline.md)。
+[18 份集中下载清单](docs/plan/landmark-downloads.md)及[CSV](docs/plan/landmark-downloads.csv)已全部下载并接入，目录现有 21 处无纹理地标（上海、台北、大阪、东京、首尔、吉隆坡、迪拜、巴黎、伦敦、悉尼、纽约、多伦多、芝加哥）。原始 GLB 留在本地，先检查来源、轴向、尺度和锚点，再用 JSON 配方批量制作；详细步骤见[操作与东京塔样例](docs/plan/landmark-pipeline.md)，本轮注册、偏差与画面验收见[批量接入记录](docs/plan/landmark-batch.md)。社区模型的造型误差不手改生成文件；偏差明确且有参考尺寸时，在配方 `corrections` 中登记可复现的修正（缩放、沿轴分段重映射、按节点平移）。世贸一号楼屋顶、大本钟塔身宽度、双子塔间距与天桥高度已按此修正，见[造型修正](docs/plan/landmark-batch.md#造型修正v2)。定位与朝向仍为近似。东方明珠已换为用户另行下载的 drosovila 模型（v2），球体高度与 OSM 分层基本一致；该模型为 CC BY-NC 4.0，仅限非商业使用，About 与署名文件随许可标注限制。配方许可现接受 CC BY 4.0、CC0 1.0 与 CC BY-NC 4.0。
 
 ```powershell
 npm run landmarks -- inspect --input-dir C:/Users/TangRJ/Downloads
@@ -187,4 +187,4 @@ npm run landmarks -- integrate --all --allow-pending-visual
 npm run landmarks:verify
 ```
 
-`--all` 只包含人工核查完成的配方，候选不会自动进入应用。新模型默认画面待验；`--allow-pending-visual` 明确允许先集成待验资产。目录、About 署名和下载入口自动生成，构建在 CI 中强制验证一致性，无需原始下载。东京塔已完成 CPU 与 GL 替身检查，本轮按用户要求未进行浏览器验收；晴空塔与上海中心迁入同一流程后几何字节保持。
+`--all` 只包含人工核查完成的配方，候选不会自动进入应用。新模型默认画面待验；`--allow-pending-visual` 明确允许先集成待验资产。目录、About 署名和下载入口自动生成，构建在 CI 中强制验证一致性，无需原始下载。21 处地标均已完成真实 Chrome GPU 画面验收（近景、远景、OSM 粗体块回退对照），晴空塔与上海中心迁入同一流程后几何字节保持。

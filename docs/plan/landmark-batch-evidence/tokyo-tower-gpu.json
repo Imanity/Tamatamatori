@@ -1,0 +1,98 @@
+{
+ "id": "tokyo-tower",
+ "assetSha256": "949cdec080264efd466e8acb2057ef2b3e6d945536744d6e3f6d8c952a7f088b",
+ "placementHash": "5176da3bc5ed4d5e4999fe2b4a2b21b42410bdbbd9e1daa18c24585e9bb7dab9",
+ "gpuPassed": true,
+ "recordedAt": "2026-11-08",
+ "build": "Production /Tamatamatori/ subpath via vite preview on 127.0.0.1:5181; Chrome 157 on this Windows machine with native GPU, occlusion throttling disabled, viewport emulated 2000×1250",
+ "screenshots": [
+  "docs/plan/landmark-batch-evidence/tokyo-tower-gpu.jpg"
+ ],
+ "scenes": [
+  {
+   "kind": "n1",
+   "observer": {
+    "latitude": 35.649007609880535,
+    "longitude": 139.7454446554184
+   },
+   "azimuth": 0,
+   "pitch": 3.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1065.6000000000001,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "东京塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.1 km · 74,767 面",
+   "sameScene": [
+    "tokyo-skytree:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 5.0 m · 离地 100 m"
+  },
+  {
+   "kind": "n2",
+   "observer": {
+    "latitude": 35.6585901926696,
+    "longitude": 139.75723923771534
+   },
+   "azimuth": 270,
+   "pitch": 3.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1065.6000000000001,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "东京塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.1 km · 74,767 面",
+   "sameScene": [
+    "tokyo-skytree:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 1.5 m · 离地 100 m"
+  },
+  {
+   "kind": "f1",
+   "observer": {
+    "latitude": 35.49945415695043,
+    "longitude": 139.55016806651633
+   },
+   "azimuth": 44.9,
+   "pitch": 0.1,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "东京塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 74,767 面",
+   "sameScene": [
+    "tokyo-skytree:applied"
+   ],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 70.0 m · 离地 100 m"
+  },
+  {
+   "kind": "b1",
+   "observer": {
+    "latitude": 35.649007609880535,
+    "longitude": 139.7454446554184
+   },
+   "azimuth": 0,
+   "pitch": 3.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1065.6000000000001,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": true,
+   "landmarkPhase": "fallback",
+   "landmarkStatus": "东京塔精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.1 km",
+   "sameScene": [
+    "tokyo-skytree:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 5.0 m · 离地 100 m"
+  }
+ ],
+ "observations": "南、东近景塔身完整；拦截后同位置为 OSM 塔体；25 km 远景与晴空塔同框。此前待验项本轮在真实 GPU 下完成。",
+ "limitations": [
+  "画面验收确认渲染位置、尺度、朝向与同机位 OSM 粗体块对照一致，以及远景着地和失败回退；不代表实景测绘精度。",
+  "未测实体手机与 GPU 帧耗时。"
+ ]
+}

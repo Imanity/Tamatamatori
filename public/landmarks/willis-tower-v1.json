@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "pipelineVersion": 1,
+  "id": "willis-tower",
+  "name": "威利斯大厦",
+  "version": 1,
+  "recipeHash": "3317705a33ca23ad3f1c4a9bc54af7052611cf4daec4d2dee92f74caf59a7428",
+  "format": "TTLM 1; float32 ENU+normal stride6, uint32 indices; little-endian; gzip",
+  "source": {
+    "sha256": "593bd727fb64677d3c2a7a998e82d606b80cd53a4fc0c98bc972b9cfa64750a1",
+    "filename": "sears_willis_tower.glb",
+    "title": "Sears (Willis) Tower",
+    "author": "NanoRay",
+    "authorPage": "https://sketchfab.com/NanoRay",
+    "page": "https://sketchfab.com/3d-models/sears-willis-tower-67d445f8cab84e75af0a6f031fc55e45",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。",
+    "bytes": 1290676,
+    "vertices": 39126,
+    "triangles": 28948
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": [
+      0,
+      -104.24997711181638
+    ],
+    "height": 527,
+    "heightReference": "https://en.wikipedia.org/wiki/Willis_Tower",
+    "yawDegrees": 1.6,
+    "requireSharedTransform": false,
+    "normalizeNormals": true,
+    "minimum": [
+      -15,
+      -119.2499771118164,
+      -104.24998474121097
+    ],
+    "maximum": [
+      15,
+      -89.24997711181638,
+      104.25001525878903
+    ],
+    "scale": 2.52757793764988
+  },
+  "processing": {
+    "targetTriangles": 20000,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true,
+    "reportedError": 0.04913599044084549
+  },
+  "geo": {
+    "latitude": 41.878887,
+    "longitude": -87.635868344,
+    "partRadius": 40.9,
+    "parts": [
+      {
+        "id": 173713230,
+        "height": 5,
+        "base": 0
+      },
+      {
+        "id": 5905361520,
+        "height": 10,
+        "base": 0
+      },
+      {
+        "id": 1371622900,
+        "height": 200,
+        "base": 0
+      },
+      {
+        "id": 11782439700,
+        "height": 205,
+        "base": 0
+      },
+      {
+        "id": 1371622890,
+        "height": 260,
+        "base": 0
+      },
+      {
+        "id": 11782439710,
+        "height": 265,
+        "base": 0
+      },
+      {
+        "id": 1371622950,
+        "height": 355,
+        "base": 0
+      },
+      {
+        "id": 1371622962,
+        "height": 442,
+        "base": 0
+      },
+      {
+        "id": 2339181410,
+        "height": 527,
+        "base": 0
+      },
+      {
+        "id": 11782129920,
+        "height": 10,
+        "base": 0
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 1.60°，各层 IoU 0.27–0.84，地面层尺度比约 1.09；次优候选 181.50°（得分 0.647，最优 0.750）。九筒高度差使朝向较确定；平面约比 OSM 大 9%。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "bounds": {
+    "horizontal": 40,
+    "height": 527
+  },
+  "asset": {
+    "file": "willis-tower-v1.ttlm.gz",
+    "sha256": "f5d6015471279f82dfcaa7e4203373df4da31ee338425ab232d59a02f22f9ee3",
+    "decodedSha256": "95b69f5c5dbb55def7db50c868e2dcac78b4ed0c611e5e672511e9eefdd6f63a",
+    "bytes": 280724,
+    "decodedBytes": 1108784,
+    "vertices": 33799,
+    "triangles": 24798
+  },
+  "tools": {
+    "@gltf-transform/core": "4.5.0",
+    "meshoptimizer": "1.3.0"
+  },
+  "limitations": [
+    "社区外观模型，定位与朝向近似，不提供测绘精度。",
+    "无纹理、不透明共享光照，不模拟玻璃或夜景灯光。",
+    "地面沿用同源 DEM，不套固定高程偏移。"
+  ]
+}

@@ -1,0 +1,90 @@
+{
+ "id": "osaka-castle",
+ "assetSha256": "ae6087d3a8a6a4970e18cc91987e8e1e209639798fb3f7d91a9267b3f71d4d25",
+ "placementHash": "a5fb8d8a2b7a65c64002ef86384a49c0a9e868255ba497fcf98bc0881bd86009",
+ "gpuPassed": true,
+ "recordedAt": "2026-11-08",
+ "build": "Production /Tamatamatori/ subpath via vite preview on 127.0.0.1:5181; Chrome 157 on this Windows machine with native GPU, occlusion throttling disabled, viewport emulated 2000×1250",
+ "screenshots": [
+  "docs/plan/landmark-batch-evidence/osaka-castle-gpu.jpg"
+ ],
+ "scenes": [
+  {
+   "kind": "n1",
+   "observer": {
+    "latitude": 34.68384917661785,
+    "longitude": 135.52586383799996
+   },
+   "azimuth": 0,
+   "pitch": -0.4,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 100,
+   "distanceMetres": 380,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "大阪城天守阁无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.4 km · 49,994 面",
+   "sameScene": [],
+   "facts": "100 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 23.8 m · 离地 30 m"
+  },
+  {
+   "kind": "n2",
+   "observer": {
+    "latitude": 34.68726652346336,
+    "longitude": 135.53001991221777
+   },
+   "azimuth": 270,
+   "pitch": -0.4,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 100,
+   "distanceMetres": 380,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "大阪城天守阁无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.4 km · 49,994 面",
+   "sameScene": [],
+   "facts": "100 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 6.7 m · 离地 30 m"
+  },
+  {
+   "kind": "f1",
+   "observer": {
+    "latitude": 34.52813555782615,
+    "longitude": 135.3328928239846
+   },
+   "azimuth": 44.9,
+   "pitch": -0.1,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "大阪城天守阁无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 49,994 面",
+   "sameScene": [],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 0.0 m · 离地 30 m"
+  },
+  {
+   "kind": "b1",
+   "observer": {
+    "latitude": 34.68384917661785,
+    "longitude": 135.52586383799996
+   },
+   "azimuth": 0,
+   "pitch": -0.4,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 100,
+   "distanceMetres": 380,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": true,
+   "landmarkPhase": "fallback",
+   "landmarkStatus": "大阪城天守阁精细模型未应用，保留粗体块；可重新读取建筑。 · 约 0.4 km",
+   "sameScene": [],
+   "facts": "100 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 23.8 m · 离地 30 m"
+  }
+ ],
+ "observations": "天守坐落在天守台石垣上，南侧小天守台方向与 OSM 对照一致；25 km 远景在雾中可辨；拦截后保留 OSM 阶梯体块。",
+ "limitations": [
+  "画面验收确认渲染位置、尺度、朝向与同机位 OSM 粗体块对照一致，以及远景着地和失败回退；不代表实景测绘精度。",
+  "未测实体手机与 GPU 帧耗时。"
+ ]
+}

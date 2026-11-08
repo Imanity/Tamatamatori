@@ -2,7 +2,7 @@ import {readFile,writeFile,mkdir,readdir,stat,rename,unlink} from 'node:fs/promi
 import {resolve,relative,dirname,isAbsolute,basename} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {randomUUID} from 'node:crypto';
-import {convertModel,inspectModel,validateRecipe,validateAsset,identity,hash,MAX_SOURCE_BYTES,PIPELINE_VERSION} from './lib/landmark-model.mjs';
+import {convertModel,inspectModel,validateRecipe,validateAsset,identity,hash,MAX_SOURCE_BYTES,PIPELINE_VERSION,LICENSES} from './lib/landmark-model.mjs';
 import {compareCoverage} from './lib/landmark-coverage.mjs';
 
 const defaultRoot=fileURLToPath(new URL('../',import.meta.url));
@@ -13,7 +13,8 @@ function manifestMatches(m,r){
   const frame=Object.fromEntries(Object.keys(r.frame).map(k=>[k,k==='center'&&r.frame.center==='base-bounds'?r.frame.center:m.frame?.[k]]));
   if(m.schemaVersion!==1||m.pipelineVersion!==PIPELINE_VERSION||m.id!==r.id||m.name!==r.name||m.version!==r.version||m.recipeHash!==identity(r)||m.asset?.file!==assetFile(r)||identity(m.geo)!==identity(r.geo)||identity(frame)!==identity(r.frame)||m.bounds?.height!==r.frame.height||!Number.isFinite(m.bounds?.horizontal)||m.bounds.horizontal<=0||m.bounds.horizontal>2000)throw Error(`产物与配方不符：${r.id}`);
   for(const [key,value] of Object.entries(r.source))if(m.source?.[key]!==value)throw Error(`产物来源漂移：${r.id}`);
-  for(const [key,value] of Object.entries(r.processing))if(m.processing?.[key]!==value)throw Error(`产物处理参数漂移：${r.id}`);
+  for(const [key,value] of Object.entries(r.processing))if(m.processing?.[key]===undefined||identity([m.processing[key]])!==identity([value]))throw Error(`产物处理参数漂移：${r.id}`);
+  if(identity([m.corrections??null])!==identity([r.corrections??null])||Boolean(m.correctionStats)!==Boolean(r.corrections))throw Error(`产物造型修正漂移：${r.id}`);
 }
 export function inside(root,path){const full=resolve(root,path),rel=relative(resolve(root),full);if(!rel||rel==='..'||rel.startsWith('..'+(process.platform==='win32'?'\\':'/'))||isAbsolute(rel))throw Error('写入路径不在工作区内');return full;}
 export async function transaction(root,files){
@@ -42,11 +43,11 @@ export function generateCatalog(items){
     if(ids.has(r.id)||assets.has(m.asset.file))throw Error('重复模型或资源文件名');ids.add(r.id);assets.add(m.asset.file);
     const n=2**14,x=Math.floor((r.geo.longitude+180)/360*n)%n,y=Math.floor((1-Math.asinh(Math.tan(r.geo.latitude*Math.PI/180))/Math.PI)/2*n);
     return {id:r.id,name:r.name,latitude:r.geo.latitude,longitude:r.geo.longitude,tile:{z:14,x,y},parts:r.geo.parts,partRadius:r.geo.partRadius,bounds:m.bounds,asset:m.asset,
-      credit:{title:r.source.title,author:r.source.author,authorPage:r.source.authorPage,page:r.source.page,license:r.source.license,licenseUrl:r.source.licenseUrl,changes:'无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。',registration:r.geo.registration,references:r.geo.references},
+      credit:{title:r.source.title,author:r.source.author,authorPage:r.source.authorPage,page:r.source.page,license:r.source.license,licenseUrl:r.source.licenseUrl,...(LICENSES[r.source.license].use?{use:LICENSES[r.source.license].use}:{}),changes:`无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向${r.corrections?`，按参考尺寸修正造型（${r.corrections.map(c=>c.reason).join('；')}）`:''}${m.asset.triangles<m.source.triangles?'并减面':''}。`,registration:r.geo.registration,references:r.geo.references},
       validation:{cpu:'passed',visual:entry.visual}};
   }).sort((a,b)=>a.id.localeCompare(b.id));
 }
-export function generateCredits(catalog){return 'Tamatamatori 地标模型署名（自动生成）\n\n'+catalog.map(m=>`${m.name} / ${m.credit.title}\n作者：${m.credit.author}\n作者页：${m.credit.authorPage}\n来源：${m.credit.page}\n许可：${m.credit.license} ${m.credit.licenseUrl}\n加工：${m.credit.changes}\n注册：${m.credit.registration}\n参考：${m.credit.references.map(r=>r.title+' '+r.url).join('；')}\n清单：${m.asset.file.replace('.ttlm.gz','.json')}\n资源 SHA-256：${m.asset.sha256}\n画面：${m.validation.visual==='verified'?'已有独立验收记录':'待验证，CPU 检查不替代画面验收'}\n`).join('\n');}
+export function generateCredits(catalog){return 'Tamatamatori 地标模型署名（自动生成）\n\n'+catalog.map(m=>`${m.name} / ${m.credit.title}\n作者：${m.credit.author}\n作者页：${m.credit.authorPage}\n来源：${m.credit.page}\n许可：${m.credit.license} ${m.credit.licenseUrl}${m.credit.use?`（${m.credit.use}）`:''}\n加工：${m.credit.changes}\n注册：${m.credit.registration}\n参考：${m.credit.references.map(r=>r.title+' '+r.url).join('；')}\n清单：${m.asset.file.replace('.ttlm.gz','.json')}\n资源 SHA-256：${m.asset.sha256}\n画面：${m.validation.visual==='verified'?'已有独立验收记录':'待验证，CPU 检查不替代画面验收'}\n`).join('\n');}
 async function registeredItems(root,registry,known,overrides=new Map()){
   if(registry.schemaVersion!==1||!Array.isArray(registry.entries)||new Set(registry.entries.map(e=>e.id)).size!==registry.entries.length)throw Error('注册表格式或 ID 无效');
   const items=[];
@@ -83,7 +84,9 @@ export async function run(argv,{root=defaultRoot,log=console.log}={}){
     const candidates=await readJson(inside(root,'landmarks/downloads.json')),candidate=candidates.models.find(m=>m.id===options.id);if(!candidate)throw Error('候选列表没有此 ID');
     const input=resolve(options.input);if((await stat(input)).size>MAX_SOURCE_BYTES)throw Error('输入超过 200 MiB');
     const bytes=await readFile(input),inspection=await inspectModel(bytes);
-    const draft={schemaVersion:1,id:candidate.id,name:candidate.name,version:1,source:{sha256:inspection.sourceSha256,filename:basename(options.input),title:candidate.modelTitle,author:candidate.author,authorPage:candidate.authorUrl,page:candidate.url,license:'CC BY 4.0',licenseUrl:'https://creativecommons.org/licenses/by/4.0/',upstreamNotes:'待核查来源声明'},frame:{space:null,axes:null,center:null,height:null,heightReference:null,yawDegrees:null,requireSharedTransform:true,normalizeNormals:true},processing:{targetTriangles:40000,maxErrorMetres:.05,normalWeight:.01,weld:true},geo:{latitude:null,longitude:null,partRadius:null,parts:[],registration:null,references:[]},review:{license:false,geometry:false,registration:false}};
+    // Pre-fill only licences the pipeline accepts, from the candidate's Sketchfab slug; anything else stays blank for manual review.
+    const license=({by:'CC BY 4.0','by-nc':'CC BY-NC 4.0',cc0:'CC0 1.0'})[candidate.license?.slug]??null;
+    const draft={schemaVersion:1,id:candidate.id,name:candidate.name,version:1,source:{sha256:inspection.sourceSha256,filename:basename(options.input),title:candidate.modelTitle,author:candidate.author,authorPage:candidate.authorUrl,page:candidate.url,license,licenseUrl:license&&LICENSES[license].url,upstreamNotes:'待核查来源声明'},frame:{space:null,axes:null,center:null,height:null,heightReference:null,yawDegrees:null,requireSharedTransform:true,normalizeNormals:true},processing:{targetTriangles:40000,maxErrorMetres:.05,normalWeight:.01,weld:true},geo:{latitude:null,longitude:null,partRadius:null,parts:[],registration:null,references:[]},review:{license:false,geometry:false,registration:false}};
     const path=inside(root,`.cache/landmarks/drafts/${candidate.id}.json`);await mkdir(dirname(path),{recursive:true});try{await writeFile(path,json(draft),{flag:'wx'});}catch(e){if(e.code==='EEXIST')throw Error('草稿已存在，不覆盖已有核查');throw e;}
     log(json({ok:true,draft:relative(root,path),inspection}));return{ok:true,draft};
   }

@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-11-07T18:02:20.541Z",
-  "status": "download-candidates-only",
+  "checkedAt": "2026-11-07T20:50:49.875Z",
+  "status": "downloaded-and-integrated",
   "format": "优先 Converted GLB；纹理选最小档，本项目不使用纹理。",
   "alreadyDownloaded": [
     "tokyo-skytree",
@@ -12,29 +12,37 @@
       "id": "oriental-pearl",
       "name": "东方明珠",
       "city": "上海",
-      "uid": "0bc2d057bbbb4ef0a753ccc02bd862e5",
-      "modelTitle": "Oriental Pearl Tower",
-      "url": "https://sketchfab.com/models/0bc2d057bbbb4ef0a753ccc02bd862e5",
-      "author": "Nancy.Z",
-      "authorUrl": "https://sketchfab.com/nancy.Z",
+      "uid": "a80155b3f47240ce9a2f79fb8bff9024",
+      "modelTitle": "Oriental Pearl, Shanghai.",
+      "url": "https://sketchfab.com/models/a80155b3f47240ce9a2f79fb8bff9024",
+      "author": "drosovila",
+      "authorUrl": "https://sketchfab.com/Drosovila",
       "license": {
-        "uri": "https://api.sketchfab.com/v3/licenses/322a749bcfa841b29dff1e8a1bb74b0b",
-        "label": "CC Attribution",
-        "fullName": "Creative Commons Attribution",
-        "requirements": "Author must be credited. Commercial use is allowed.",
-        "url": "http://creativecommons.org/licenses/by/4.0/",
-        "slug": "by"
+        "uri": "https://api.sketchfab.com/v3/licenses/bbfe3f7dbcdd4122b966b85b9786a989",
+        "label": "CC Attribution-NonCommercial",
+        "fullName": "Creative Commons Attribution-NonCommercial",
+        "requirements": "Author must be credited. No commercial use.",
+        "url": "http://creativecommons.org/licenses/by-nc/4.0/",
+        "slug": "by-nc"
       },
       "downloadable": true,
-      "triangles": 9680,
-      "vertices": 4912,
-      "textures": 0,
-      "description": "For this project I model the Oriental Pearl Tower in Shanghai, China. The shapes I use the most to model this is cylinder and circle. The challenge I encounter is it hard to see in the middle that if I need 3 cylinder or 2 cylinder for the base as it hard to tell in the reference image.",
-      "updatedAt": "2022-09-08T00:21:25.793072",
-      "status": "download-candidate",
+      "triangles": 3107,
+      "vertices": 2878,
+      "textures": 2,
+      "description": "Some textures are a bit different to the real thing but I really wanted t o stack these textures without distortion (on the spheres)",
+      "updatedAt": "2016-09-11T13:27:59.768952",
+      "status": "integrated",
       "suggestedFile": "oriental-pearl.glb",
       "priority": "A",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "replacedCandidate": {
+        "uid": "0bc2d057bbbb4ef0a753ccc02bd862e5",
+        "author": "Nancy.Z",
+        "url": "https://sketchfab.com/models/0bc2d057bbbb4ef0a753ccc02bd862e5",
+        "note": "v1 曾按 Nancy.Z 的 CC BY 4.0 学习练习模型集成（未发布）；与 OSM 分层相比球体偏高约 45–50 m、下球偏大、三腿外张，用户另行下载本模型替换为 v2。"
+      },
+      "downloadedFile": "oriental_pearl_shanghai..glb",
+      "recipe": "landmarks/recipes/oriental-pearl.json",
+      "review": "来源（CC BY-NC 4.0，仅限非商业使用）、几何与定位已核查并集成为 v2；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "shanghai-wfc",
@@ -59,10 +67,12 @@
       "textures": 0,
       "description": "Shanghai WFC is a skyscraper that is located in Shanghai, China, where the megatall Shanghai Tower is standing. It is part of the Trio skyscrapers group which includes the Shanghai Tower and Jin Mao Tower. It's 1,614 feet (492 meters) tall, started construction in 1999 and completed in 2008 as the world's 2nd tallest building at the time. As of 2021, it is the 12th tallest building in the world, just behind Taipei 101.",
       "updatedAt": "2022-07-16T04:31:52.644415",
-      "status": "download-candidate",
+      "status": "integrated",
       "suggestedFile": "shanghai-wfc.glb",
       "priority": "A",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "downloadedFile": "shanghai_wfc.glb",
+      "recipe": "landmarks/recipes/shanghai-wfc.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "taipei-101",
@@ -87,10 +97,12 @@
       "textures": 0,
       "description": "Located in Taipei, Taiwan. Standing at 1,667 feet (508 meters) tall, it was the world's tallest building from 2004 to 2010 when it was surpassed by Burj Khalifa.",
       "updatedAt": "2022-07-21T07:26:06.173486",
-      "status": "download-candidate",
+      "status": "integrated",
       "suggestedFile": "taipei-101.glb",
       "priority": "A",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "downloadedFile": "taipei_101.glb",
+      "recipe": "landmarks/recipes/taipei-101.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "osaka-castle",
@@ -115,20 +127,22 @@
       "textures": 12,
       "description": "Osaka Castle is a Japanese castle in Chūō-ku, Osaka, Japan. The castle is one of Japan's most famous landmarks and it played a major role in the unification of Japan during the sixteenth century of the Azuchi-Momoyama period",
       "updatedAt": "2023-05-24T15:25:40.634349",
-      "status": "download-candidate",
+      "status": "integrated",
       "suggestedFile": "osaka-castle.glb",
       "priority": "A",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "downloadedFile": "osaka-jo_castle_japan_-_toshueyi.glb",
+      "recipe": "landmarks/recipes/osaka-castle.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "eiffel-tower",
       "name": "埃菲尔铁塔",
       "city": "巴黎",
-      "uid": "a68b9ffb898d4aa7a44505926a536ce3",
-      "modelTitle": "Eiffel Tower, Paris, France",
-      "url": "https://sketchfab.com/models/a68b9ffb898d4aa7a44505926a536ce3",
-      "author": "Brian Trepanier",
-      "authorUrl": "https://sketchfab.com/CMBC",
+      "uid": "ba8a39a7219447a0b734a3d17b076d4f",
+      "modelTitle": "Eiffel Tower (night lit)",
+      "url": "https://sketchfab.com/models/ba8a39a7219447a0b734a3d17b076d4f",
+      "author": "Dimiter",
+      "authorUrl": "https://sketchfab.com/Dimitera",
       "license": {
         "uri": "https://api.sketchfab.com/v3/licenses/322a749bcfa841b29dff1e8a1bb74b0b",
         "label": "CC Attribution",
@@ -138,15 +152,23 @@
         "slug": "by"
       },
       "downloadable": true,
-      "triangles": 1419054,
-      "vertices": 874489,
+      "triangles": 99944,
+      "vertices": 41481,
       "textures": 1,
-      "description": "Eiffel Tower, Paris, France",
-      "updatedAt": "2022-07-20T07:11:18.789502",
-      "status": "download-candidate",
+      "description": "Eiffel Tower, Paris - night-lit version (warm floodlights baked as emission). Generated with Meshy AI by the author and prepared for the browser city-builder game \"Stroitelna Imperia\" (Building Empire). Free to use under CC BY - please credit @Dimitera.",
+      "updatedAt": "2026-10-20T08:02:35.686672",
+      "status": "integrated",
       "suggestedFile": "eiffel-tower.glb",
       "priority": "B",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "replacedCandidate": {
+        "uid": "a68b9ffb898d4aa7a44505926a536ce3",
+        "author": "Brian Trepanier",
+        "url": "https://sketchfab.com/models/a68b9ffb898d4aa7a44505926a536ce3",
+        "note": "用户实际下载并交付的是同名地标的另一份 CC BY 4.0 模型；以文件内嵌元数据与公开 API 核对后按实际文件登记。"
+      },
+      "downloadedFile": "eiffel_tower_night_lit.glb",
+      "recipe": "landmarks/recipes/eiffel-tower.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "big-ben",
@@ -171,20 +193,22 @@
       "textures": 1,
       "description": "Big Ben is the nickname for the Great Bell of the clock at the north end of the Palace of Westminster in London and is usually extended to refer to both the clock and the clock tower. The official name of the tower in which Big Ben is located was originally the Clock Tower, but it was renamed Elizabeth Tower in 2012 to mark the Diamond Jubilee of Elizabeth II.",
       "updatedAt": "2022-07-21T00:02:54.187305",
-      "status": "download-candidate",
+      "status": "integrated",
       "suggestedFile": "big-ben.glb",
       "priority": "A",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "downloadedFile": "clock_tower_big_ben.glb",
+      "recipe": "landmarks/recipes/big-ben.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "sydney-opera-house",
       "name": "悉尼歌剧院",
       "city": "悉尼",
-      "uid": "73267b70f8fd46a8a175bd51f1c77b1c",
-      "modelTitle": "Sydney Opera House, Sydney, Australia",
-      "url": "https://sketchfab.com/models/73267b70f8fd46a8a175bd51f1c77b1c",
-      "author": "Brian Trepanier",
-      "authorUrl": "https://sketchfab.com/CMBC",
+      "uid": "317b2d540f0a4f7e8d87dd3b0372712d",
+      "modelTitle": "Sydney Opera House",
+      "url": "https://sketchfab.com/models/317b2d540f0a4f7e8d87dd3b0372712d",
+      "author": "Nick Reinhardt",
+      "authorUrl": "https://sketchfab.com/Nickardiamond",
       "license": {
         "uri": "https://api.sketchfab.com/v3/licenses/322a749bcfa841b29dff1e8a1bb74b0b",
         "label": "CC Attribution",
@@ -194,15 +218,23 @@
         "slug": "by"
       },
       "downloadable": true,
-      "triangles": 1085036,
-      "vertices": 679176,
+      "triangles": 62424,
+      "vertices": 31593,
       "textures": 1,
-      "description": "Sydney Opera House, Sydney, Australia",
-      "updatedAt": "2023-02-14T19:40:45.072305",
-      "status": "download-candidate",
+      "description": "Worked on this piece for the Stylized Station's Guntlet challenge on their Discord channel. The theme was taking about diving into different cultures and this grand architecture is one of my most favorite places I have visited. \n\nModeled in Blender, textured in Substance Painter using a PBR workflow.",
+      "updatedAt": "2020-04-04T02:13:59.106103",
+      "status": "integrated",
       "suggestedFile": "sydney-opera-house.glb",
       "priority": "B",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "replacedCandidate": {
+        "uid": "73267b70f8fd46a8a175bd51f1c77b1c",
+        "author": "Brian Trepanier",
+        "url": "https://sketchfab.com/models/73267b70f8fd46a8a175bd51f1c77b1c",
+        "note": "用户实际下载并交付的是同名地标的另一份 CC BY 4.0 模型；以文件内嵌元数据与公开 API 核对后按实际文件登记。"
+      },
+      "downloadedFile": "sydney_opera_house.glb",
+      "recipe": "landmarks/recipes/sydney-opera-house.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "petronas-towers",
@@ -229,7 +261,10 @@
       "updatedAt": "2023-01-15T16:43:57.676737",
       "suggestedFile": "petronas-towers.glb",
       "priority": "A",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "status": "integrated",
+      "downloadedFile": "petronas_twin_towers.glb",
+      "recipe": "landmarks/recipes/petronas-towers.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "burj-khalifa",
@@ -254,10 +289,12 @@
       "textures": 1,
       "description": "The Burj Khalifa, known as the Burj Dubai prior to its inauguration in 2010, is a skyscraper in Dubai, United Arab Emirates. With a total height of 829.8 m and a roof height of 828 m, the Burj Khalifa has been the tallest structure and building in the world since its topping out in late 2008.",
       "updatedAt": "2022-07-20T01:36:56.616664",
-      "status": "download-candidate",
+      "status": "integrated",
       "suggestedFile": "burj-khalifa.glb",
       "priority": "A",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "downloadedFile": "burj_khalifa.glb",
+      "recipe": "landmarks/recipes/burj-khalifa.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "burj-al-arab",
@@ -282,20 +319,22 @@
       "textures": 0,
       "description": "burl-al-arab-jumeirah is a modern hotel in Dubai . this model is a replica of the bur-arab-tower located in UAE",
       "updatedAt": "2022-07-21T12:27:34.875461",
-      "status": "download-candidate",
+      "status": "integrated",
       "suggestedFile": "burj-al-arab.glb",
       "priority": "A",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "downloadedFile": "18-burj-al-arab-jumeirah.glb",
+      "recipe": "landmarks/recipes/burj-al-arab.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "empire-state-building",
       "name": "帝国大厦",
       "city": "纽约",
-      "uid": "ea4915140d774717ada3cf61d4ef201c",
+      "uid": "2174e71baa1d43e896461ed149dad54a",
       "modelTitle": "Empire State Building",
-      "url": "https://sketchfab.com/models/ea4915140d774717ada3cf61d4ef201c",
-      "author": "mohamedhussien",
-      "authorUrl": "https://sketchfab.com/mohamedhussien",
+      "url": "https://sketchfab.com/models/2174e71baa1d43e896461ed149dad54a",
+      "author": "NanoRay",
+      "authorUrl": "https://sketchfab.com/NanoRay",
       "license": {
         "uri": "https://api.sketchfab.com/v3/licenses/322a749bcfa841b29dff1e8a1bb74b0b",
         "label": "CC Attribution",
@@ -305,15 +344,23 @@
         "slug": "by"
       },
       "downloadable": true,
-      "triangles": 439857,
-      "vertices": 309678,
+      "triangles": 247588,
+      "vertices": 185833,
       "textures": 1,
-      "description": "The Empire State Building is a 102-story Art Deco skyscraper in Midtown Manhattan in New York City, United States. It was designed by Shreve, Lamb & Harmon and built from 1930 to 1931. Its name is derived from \"Empire State\", the nickname of the state of New York. The building has a roof height of 1,250 feet (380 m) and stands a total of 1,454 feet (443.2 m) tall, including its antenna. \n\n\nKindly support me on [Patreon](http:///www.patreon.com/HUSSEN?fan_landing=true) and [Artsation](http://www.artstation.com/mohamedhussien1)\n\nI really need  your support to continue. 😁",
-      "updatedAt": "2022-07-21T11:14:00.409592",
-      "status": "download-candidate",
+      "description": "Empire State Building, the world's most iconic building, simply known for once being the world's tallest building for 40 years, from 1931 to 1971 when it was surpassed by the World Trade Center North Tower. It is standing at 1,250 feet tall for the roof and 1,454 feet tall for the overall height with its radio-cast TV antenna. It is located in New York City, at 5th Avenue and between 33rd and 34th Street, near Herald Square.",
+      "updatedAt": "2021-07-07T16:28:55.326514",
+      "status": "integrated",
       "suggestedFile": "empire-state-building.glb",
       "priority": "B",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "replacedCandidate": {
+        "uid": "ea4915140d774717ada3cf61d4ef201c",
+        "author": "mohamedhussien",
+        "url": "https://sketchfab.com/models/ea4915140d774717ada3cf61d4ef201c",
+        "note": "用户实际下载并交付的是同名地标的另一份 CC BY 4.0 模型；以文件内嵌元数据与公开 API 核对后按实际文件登记。"
+      },
+      "downloadedFile": "empire_state_building.glb",
+      "recipe": "landmarks/recipes/empire-state-building.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "one-world-trade-center",
@@ -338,10 +385,12 @@
       "textures": 0,
       "description": "One World Trade Center, originally known as the Freedom Tower, is the tallest building in the Western Hemisphere located in New York City. It's standing at 1,776 feet (541 meters) tall, and it still hold the title as the tallest building in the Western Hemisphere since it topped out on May 10, 2013. It is currently the 6th tallest building in the world and it opened on November 3, 2014.",
       "updatedAt": "2022-07-20T19:52:53.812701",
-      "status": "download-candidate",
+      "status": "integrated",
       "suggestedFile": "one-world-trade-center.glb",
       "priority": "A",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "downloadedFile": "one_world_trade_center.glb",
+      "recipe": "landmarks/recipes/one-world-trade-center.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "chrysler-building",
@@ -366,10 +415,12 @@
       "textures": 0,
       "description": "Chrysler Building is a 1,046-foot tall Art-Deco skyscraper located in Midtown Manhattan. It was built in 1930 and was the world's tallest building from its completion until the Empire State Building surpassed it in spring 1931. The Chrysler Building itself was built to beat 40 Wall Street (aka. the Trump Building) by 119 feet with its spire in a top-secret way.",
       "updatedAt": "2022-07-21T12:30:46.008882",
-      "status": "download-candidate",
+      "status": "integrated",
       "suggestedFile": "chrysler-building.glb",
       "priority": "A",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "downloadedFile": "chrysler_building.glb",
+      "recipe": "landmarks/recipes/chrysler-building.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "cn-tower",
@@ -394,10 +445,12 @@
       "textures": 2,
       "description": "WIP High Poly Model of CN Tower. Currently no textures.\n\nif you use this model, please give credit to canada for building a real version of it  it ;)",
       "updatedAt": "2022-07-20T17:09:19.794140",
-      "status": "download-candidate",
+      "status": "integrated",
       "suggestedFile": "cn-tower.glb",
       "priority": "A",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "downloadedFile": "cn_tower.glb",
+      "recipe": "landmarks/recipes/cn-tower.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "lotte-world-tower",
@@ -422,10 +475,12 @@
       "textures": 0,
       "description": "World's 5th tallest building (tourist attraction) located in Seoul, South Korea. It is standing 1,821 feet tall and was completed in 2017.",
       "updatedAt": "2022-07-20T06:40:13.593460",
-      "status": "download-candidate",
+      "status": "integrated",
       "suggestedFile": "lotte-world-tower.glb",
       "priority": "A",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "downloadedFile": "lotte_world_tower.glb",
+      "recipe": "landmarks/recipes/lotte-world-tower.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "willis-tower",
@@ -450,10 +505,12 @@
       "textures": 0,
       "description": "Formerly known as the Sears Tower, it is the tallest building in Chicago. It was once the world's tallest building from its completion in 1974 to 1998 when the Petronas Towers in Kuala Lumpur, Malaysia surpassed it.",
       "updatedAt": "2022-07-20T05:39:16.483213",
-      "status": "download-candidate",
+      "status": "integrated",
       "suggestedFile": "willis-tower.glb",
       "priority": "A",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "downloadedFile": "sears_willis_tower.glb",
+      "recipe": "landmarks/recipes/willis-tower.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "three-world-trade-center",
@@ -478,10 +535,12 @@
       "textures": 0,
       "description": "3 World Trade Center is a 1,079-foot tall skyscraper which is located in the World Trade Center district and part of that complex, where One World Trade Center is located. It opened on June 2018 as the fifth tallest office tower in New York.",
       "updatedAt": "2024-03-24T16:57:14.869215",
-      "status": "download-candidate",
+      "status": "integrated",
       "suggestedFile": "three-world-trade-center.glb",
       "priority": "A",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "downloadedFile": "3_world_trade_center.glb",
+      "recipe": "landmarks/recipes/three-world-trade-center.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     },
     {
       "id": "metlife-building",
@@ -506,10 +565,12 @@
       "textures": 0,
       "description": "MetLife Building, also known as 200 Park Avenue, is a 808-foot tall skyscraper located right behind Grand Central Terminal in between 42nd Street and 43rd Street, close to One Vanderbilt and Chrysler Building. It was built in 1963 and originally called \"Panam\" building, it was the largest office tower in the world at the time. It unique design defined Manhattan and its skyline as well, it became a landmark after some time it was completed and still very famous and historic to this day. But, did you know that MetLife Building showed up as the Stark Avengers Tower? That's why we think it's not there but actually served as a partially demolished building as a base for the tower itself.",
       "updatedAt": "2024-09-14T17:54:03.769321",
-      "status": "download-candidate",
+      "status": "integrated",
       "suggestedFile": "metlife-building.glb",
       "priority": "B",
-      "review": "公开元数据许可/可下载性已核查；源几何、上游资料和定位仍待准入"
+      "downloadedFile": "metlife_building.glb",
+      "recipe": "landmarks/recipes/metlife-building.json",
+      "review": "来源、几何与定位已逐份核查并集成；CPU 检查通过，真实画面验收见 landmark-batch.md"
     }
   ]
 }

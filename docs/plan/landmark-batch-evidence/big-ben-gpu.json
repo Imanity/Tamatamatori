@@ -1,0 +1,126 @@
+{
+ "id": "big-ben",
+ "assetSha256": "8195d206baede79e7938c4cfcb285c1b8160d35b2f8af16b061fb096e2a85332",
+ "placementHash": "3b64d31e0b5945098fa5fa8d7fada457f0e26aa3b381062fb9216c96e6f187e4",
+ "gpuPassed": true,
+ "recordedAt": "2026-11-08",
+ "build": "Production /Tamatamatori/ subpath via vite preview on 127.0.0.1:5181; Chrome 157 on this Windows machine with native GPU, occlusion throttling disabled, viewport emulated 2000×1250",
+ "screenshots": [
+  "docs/plan/landmark-batch-evidence/big-ben-gpu.jpg"
+ ],
+ "scenes": [
+  {
+   "kind": "n1",
+   "observer": {
+    "latitude": 51.49728352361785,
+    "longitude": -0.12457385599998361
+   },
+   "azimuth": 0,
+   "pitch": 2.7,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 57,
+   "distanceMetres": 380,
+   "utc": "2026-11-04T10:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "伊丽莎白塔（大本钟）无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.4 km · 25,000 面",
+   "sameScene": [],
+   "facts": "57 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 4.5 m · 离地 30 m"
+  },
+  {
+   "kind": "n2",
+   "observer": {
+    "latitude": 51.50070081287051,
+    "longitude": -0.11908407353507755
+   },
+   "azimuth": 270,
+   "pitch": 2.7,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 57,
+   "distanceMetres": 380,
+   "utc": "2026-11-04T10:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "伊丽莎白塔（大本钟）无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.4 km · 25,000 面",
+   "sameScene": [],
+   "facts": "57 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 2.0 m · 离地 30 m"
+  },
+  {
+   "kind": "f1",
+   "observer": {
+    "latitude": 51.3414459380371,
+    "longitude": -0.3790713864166264
+   },
+   "azimuth": 44.8,
+   "pitch": -0.1,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T10:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "伊丽莎白塔（大本钟）无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 25,000 面",
+   "sameScene": [],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 59.3 m · 离地 30 m"
+  },
+  {
+   "kind": "b1",
+   "observer": {
+    "latitude": 51.49728352361785,
+    "longitude": -0.12457385599998361
+   },
+   "azimuth": 0,
+   "pitch": 2.7,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 57,
+   "distanceMetres": 380,
+   "utc": "2026-11-04T10:30:00Z",
+   "modelRequestsBlocked": true,
+   "landmarkPhase": "fallback",
+   "landmarkStatus": "伊丽莎白塔（大本钟）精细模型未应用，保留粗体块；可重新读取建筑。 · 约 0.4 km",
+   "sameScene": [],
+   "facts": "57 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 4.5 m · 离地 30 m"
+  },
+  {
+   "kind": "k2",
+   "observer": {
+    "latitude": 51.49689803879039,
+    "longitude": -0.1267971633360503
+   },
+   "azimuth": 20,
+   "pitch": 2.5,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 100,
+   "distanceMetres": 450,
+   "utc": "2026-11-04T10:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "伊丽莎白塔（大本钟）无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.5 km · 25,000 面",
+   "sameScene": [],
+   "facts": "100 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 4.0 m · 离地 30 m"
+  },
+  {
+   "kind": "k1",
+   "observer": {
+    "latitude": 51.501399150202396,
+    "longitude": -0.12038743185462408
+   },
+   "azimuth": 255,
+   "pitch": 3.8,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 70,
+   "distanceMetres": 300,
+   "utc": "2026-11-04T10:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "伊丽莎白塔（大本钟）无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.3 km · 25,000 面",
+   "sameScene": [],
+   "facts": "70 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 3.0 m · 离地 30 m"
+  }
+ ],
+ "observations": "v2 造型修正（水平 0.80）。西敏桥、南西南与南侧近景中塔身修长，宽度与拦截后同机位 OSM 粗体块一致（修正前约宽 25%）；钟楼、尖顶与宫殿 OSM 体块衔接正常，25 km 远景与东侧近景着地正常，回退正常。",
+ "limitations": [
+  "画面验收确认渲染位置、尺度、朝向与同机位 OSM 粗体块对照一致，以及远景着地和失败回退；不代表实景测绘精度。",
+  "未测实体手机与 GPU 帧耗时。"
+ ]
+}

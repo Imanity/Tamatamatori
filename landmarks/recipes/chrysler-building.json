@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "id": "chrysler-building",
+  "name": "克莱斯勒大厦",
+  "version": 1,
+  "source": {
+    "sha256": "4285460ff234916b8c0fc442318124b4dd3df9d21dacd83fdabae5ac96981c2e",
+    "filename": "chrysler_building.glb",
+    "title": "Chrysler Building",
+    "author": "NanoRay",
+    "authorPage": "https://sketchfab.com/NanoRay",
+    "page": "https://sketchfab.com/3d-models/chrysler-building-26be9287b12d4234af009e4162135897",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。"
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": "base-bounds",
+    "height": 318.9,
+    "heightReference": "https://en.wikipedia.org/wiki/Chrysler_Building",
+    "yawDegrees": 242.75,
+    "requireSharedTransform": false,
+    "normalizeNormals": true
+  },
+  "processing": {
+    "targetTriangles": 15000,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true
+  },
+  "geo": {
+    "latitude": 40.751599222,
+    "longitude": -73.975332345,
+    "partRadius": 23,
+    "parts": [
+      {
+        "id": 1450385020,
+        "height": 80,
+        "base": 0
+      },
+      {
+        "id": 2609040690,
+        "height": 90,
+        "base": 0
+      },
+      {
+        "id": 2609041080,
+        "height": 185,
+        "base": 0
+      },
+      {
+        "id": 1966474162,
+        "height": 199,
+        "base": 0
+      },
+      {
+        "id": 2609040970,
+        "height": 227,
+        "base": 200
+      },
+      {
+        "id": 2609040900,
+        "height": 228,
+        "base": 200
+      },
+      {
+        "id": 2609040930,
+        "height": 229,
+        "base": 200
+      },
+      {
+        "id": 2609040940,
+        "height": 242,
+        "base": 200
+      },
+      {
+        "id": 2609040800,
+        "height": 249,
+        "base": 200
+      },
+      {
+        "id": 2609040890,
+        "height": 256,
+        "base": 200
+      },
+      {
+        "id": 2609040860,
+        "height": 262,
+        "base": 256
+      },
+      {
+        "id": 2609040920,
+        "height": 267,
+        "base": 262
+      },
+      {
+        "id": 2609040810,
+        "height": 272,
+        "base": 267
+      },
+      {
+        "id": 2609040722,
+        "height": 282,
+        "base": 0
+      },
+      {
+        "id": 1966474172,
+        "height": 319,
+        "base": 272
+      },
+      {
+        "id": 2609040820,
+        "height": 235,
+        "base": 224
+      },
+      {
+        "id": 2609040710,
+        "height": 15,
+        "base": 0
+      },
+      {
+        "id": 2609141220,
+        "height": 200,
+        "base": 198
+      },
+      {
+        "id": 2609041090,
+        "height": 70,
+        "base": 0
+      },
+      {
+        "id": 2609040910,
+        "height": 200,
+        "base": 199
+      },
+      {
+        "id": 2609141210,
+        "height": 186,
+        "base": 185
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 242.75°，各层 IoU 0.21–0.91，地面层尺度比约 0.90；次优候选 58.50°（得分 0.665，最优 0.667）。塔冠及 61 层装饰小分部一并替换；与 180° 翻转候选得分接近，底部裙房轮廓与 OSM 有差异。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  }
+}

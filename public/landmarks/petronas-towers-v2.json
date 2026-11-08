@@ -1,0 +1,327 @@
+{
+  "schemaVersion": 1,
+  "pipelineVersion": 1,
+  "id": "petronas-towers",
+  "name": "双子塔",
+  "version": 2,
+  "recipeHash": "65cae15c3c56451007bc9252186f40b8ae2b941afab7a3d36965b2d316bbf933",
+  "format": "TTLM 1; float32 ENU+normal stride6, uint32 indices; little-endian; gzip",
+  "source": {
+    "sha256": "3739ad4444330c151614b80ea65773726acf28b8f2089a98b060a5072f5aa29b",
+    "filename": "petronas_twin_towers.glb",
+    "title": "Petronas Twin Towers",
+    "author": "NanoRay",
+    "authorPage": "https://sketchfab.com/NanoRay",
+    "page": "https://sketchfab.com/3d-models/petronas-twin-towers-4111f3de53f24ab0a9547205723665b1",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。",
+    "bytes": 1854460,
+    "vertices": 53189,
+    "triangles": 47772
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": [
+      2.5889997482299805,
+      -90.2499542236328
+    ],
+    "height": 451.9,
+    "heightReference": "https://en.wikipedia.org/wiki/Petronas_Towers",
+    "yawDegrees": 220.25,
+    "requireSharedTransform": false,
+    "normalizeNormals": true,
+    "minimum": [
+      -24.82200050354004,
+      -103.62495422363283,
+      -93.62492370605472
+    ],
+    "maximum": [
+      30,
+      -76.8749542236328,
+      86.8750762939453
+    ],
+    "scale": 2.5036011080332408
+  },
+  "processing": {
+    "targetTriangles": 30000,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true,
+    "reportedError": 0.04972187429666519
+  },
+  "corrections": [
+    {
+      "op": "translate",
+      "nodes": [
+        "Object_4",
+        "Object_5"
+      ],
+      "offset": [
+        0,
+        0,
+        -57.32
+      ],
+      "reason": "天桥由约 227 m 降至官方 170 m（OSM 天桥分部 170–180 m）"
+    },
+    {
+      "op": "remap",
+      "axis": "x",
+      "points": [
+        [
+          -100,
+          -109.86
+        ],
+        [
+          -18,
+          -27.86
+        ],
+        [
+          18,
+          27.86
+        ],
+        [
+          100,
+          109.86
+        ]
+      ],
+      "reason": "两塔中心距由约 87.2 m 拉开至 OSM 约 106.9 m，天桥随之拉长"
+    }
+  ],
+  "correctionStats": [
+    {
+      "op": "translate",
+      "vertices": 255
+    },
+    {
+      "op": "remap",
+      "vertices": 53189
+    }
+  ],
+  "geo": {
+    "latitude": 3.157971564,
+    "longitude": 101.711750007,
+    "partRadius": 61,
+    "parts": [
+      {
+        "id": 1373963672,
+        "height": 370,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373963742,
+        "height": 380,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373963792,
+        "height": 390,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373963712,
+        "height": 400,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373963722,
+        "height": 410,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373963732,
+        "height": 452,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373312580,
+        "height": 370,
+        "base": 0
+      },
+      {
+        "id": 1373312630,
+        "height": 380,
+        "base": 0
+      },
+      {
+        "id": 1373312590,
+        "height": 390,
+        "base": 0
+      },
+      {
+        "id": 1373312600,
+        "height": 400,
+        "base": 0
+      },
+      {
+        "id": 1373312620,
+        "height": 410,
+        "base": 0
+      },
+      {
+        "id": 1373312610,
+        "height": 452,
+        "base": 0
+      },
+      {
+        "id": 1373963652,
+        "height": 180,
+        "base": 170,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373963652,
+        "height": 180,
+        "base": 170
+      },
+      {
+        "id": 1373312640,
+        "height": 355,
+        "base": 0
+      },
+      {
+        "id": 1373963812,
+        "height": 355,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373312530,
+        "height": 325,
+        "base": 0
+      },
+      {
+        "id": 1373963512,
+        "height": 325,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373312650,
+        "height": 295,
+        "base": 0
+      },
+      {
+        "id": 1373963832,
+        "height": 295,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373312520,
+        "height": 240,
+        "base": 0
+      },
+      {
+        "id": 1373312560,
+        "height": 175,
+        "base": 0
+      },
+      {
+        "id": 1373963482,
+        "height": 240,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373963622,
+        "height": 175,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。造型修正后重新做多高度层俯视轮廓 IoU 拟合，ENU 逆时针 220.25°，各层 IoU 0.42–0.85（均值 0.72，修正前 0.47），地面层尺度比约 0.93；次优候选 40.6°（得分 0.662）。源模型两塔中心距约 87.2 m、天桥约 227 m 高；已按 OSM 将两塔沿连线各外移 9.86 m（中心距约 106.9 m，塔身不变形），天桥节点降至官方 170 m 并随间距拉长（立面间约 57 m，官方 58.4 m）。不含 Suria KLCC 裙楼，保留其 OSM 体块。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      },
+      {
+        "title": "Wikipedia：Petronas Towers（天桥 170 m、长 58.4 m）",
+        "url": "https://en.wikipedia.org/wiki/Petronas_Towers"
+      }
+    ]
+  },
+  "bounds": {
+    "horizontal": 72,
+    "height": 451.9
+  },
+  "asset": {
+    "file": "petronas-towers-v2.ttlm.gz",
+    "sha256": "349e0143521403c7aa0721673d8f6799ba22014a0dddc49eb7bbfadaba2fc91e",
+    "decodedSha256": "dbaf0c1847f76ee4e884b72320eba20d4157298f2b66a021457912dc11d5dc02",
+    "bytes": 501548,
+    "decodedBytes": 1242464,
+    "vertices": 36158,
+    "triangles": 31220
+  },
+  "tools": {
+    "@gltf-transform/core": "4.5.0",
+    "meshoptimizer": "1.3.0"
+  },
+  "limitations": [
+    "社区外观模型，定位与朝向近似，不提供测绘精度。",
+    "无纹理、不透明共享光照，不模拟玻璃或夜景灯光。",
+    "地面沿用同源 DEM，不套固定高程偏移。",
+    "造型按登记的参考尺寸修正，仍为近似外观，不是测绘重建。"
+  ]
+}

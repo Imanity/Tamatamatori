@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "pipelineVersion": 1,
+  "id": "shanghai-wfc",
+  "name": "上海环球金融中心",
+  "version": 1,
+  "recipeHash": "196e0f811fce761e7a9cad190f11d8f0266d5314585dbf3ecc5c0acd8d900481",
+  "format": "TTLM 1; float32 ENU+normal stride6, uint32 indices; little-endian; gzip",
+  "source": {
+    "sha256": "9c4b79dfd2a4fa1e2c32a96f97b5cc35a764e833fe82b35dcad4100152d598a8",
+    "filename": "shanghai_wfc.glb",
+    "title": "Shanghai WFC",
+    "author": "NanoRay",
+    "authorPage": "https://sketchfab.com/NanoRay",
+    "page": "https://sketchfab.com/3d-models/shanghai-wfc-ce4389da68b54732b216fc04f765d4db",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。",
+    "bytes": 316064,
+    "vertices": 9592,
+    "triangles": 6950
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": [
+      -16.375500440597534,
+      -93.29911971092223
+    ],
+    "height": 492,
+    "heightReference": "https://en.wikipedia.org/wiki/Shanghai_World_Financial_Center",
+    "yawDegrees": 5,
+    "requireSharedTransform": false,
+    "normalizeNormals": true,
+    "minimum": [
+      -29.07699966430664,
+      -105.5651197433472,
+      -74.91501617431643
+    ],
+    "maximum": [
+      -3.6760001182556152,
+      -81.03512001037596,
+      111.68498992919919
+    ],
+    "scale": 2.636655862310449
+  },
+  "processing": {
+    "targetTriangles": 6950,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true,
+    "reportedError": 0
+  },
+  "geo": {
+    "latitude": 31.236572824,
+    "longitude": 121.503035774,
+    "partRadius": 38,
+    "parts": [
+      {
+        "id": 2799428960,
+        "height": 430,
+        "base": 0
+      },
+      {
+        "id": 2799428930,
+        "height": 470,
+        "base": 0
+      },
+      {
+        "id": 2799428922,
+        "height": 492,
+        "base": 470
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 5.00°，各层 IoU 0.43–0.86，地面层尺度比约 1.08；次优候选 184.75°（得分 0.753，最优 0.753）。方形平面，与 180° 翻转候选的轮廓得分几乎相同，顶部开口朝向存在歧义。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "bounds": {
+    "horizontal": 36,
+    "height": 492
+  },
+  "asset": {
+    "file": "shanghai-wfc-v1.ttlm.gz",
+    "sha256": "7872d007eba59d2cd07fff4ccd9a0e563df1e7ea54209cb714dc5b6d578d92df",
+    "decodedSha256": "12ce725f916ba065cdf2e7d62ee4911a7dda58cc177272fcb570626b5b356d07",
+    "bytes": 168233,
+    "decodedBytes": 309704,
+    "vertices": 9428,
+    "triangles": 6950
+  },
+  "tools": {
+    "@gltf-transform/core": "4.5.0",
+    "meshoptimizer": "1.3.0"
+  },
+  "limitations": [
+    "社区外观模型，定位与朝向近似，不提供测绘精度。",
+    "无纹理、不透明共享光照，不模拟玻璃或夜景灯光。",
+    "地面沿用同源 DEM，不套固定高程偏移。"
+  ]
+}

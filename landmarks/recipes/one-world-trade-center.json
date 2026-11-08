@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "id": "one-world-trade-center",
+  "name": "世贸中心一号楼",
+  "version": 2,
+  "source": {
+    "sha256": "440d028d051b2b3fcb20933e9daac208ef7ef52503c6be45d8979a6094377a51",
+    "filename": "one_world_trade_center.glb",
+    "title": "One World Trade Center",
+    "author": "NanoRay",
+    "authorPage": "https://sketchfab.com/NanoRay",
+    "page": "https://sketchfab.com/3d-models/one-world-trade-center-44e60b2d0d764fdab74d33703847d38e",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。"
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": "base-bounds",
+    "height": 541.3,
+    "heightReference": "https://en.wikipedia.org/wiki/One_World_Trade_Center",
+    "yawDegrees": 62.7,
+    "requireSharedTransform": false,
+    "normalizeNormals": true
+  },
+  "processing": {
+    "targetTriangles": 20000,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true
+  },
+  "corrections": [
+    {
+      "op": "remap",
+      "axis": "z",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          401.84,
+          417
+        ],
+        [
+          541.3,
+          541.3
+        ]
+      ],
+      "reason": "主体顶由 401.8 m 抬至官方屋顶 417 m（OSM 同为 417 m），塔尖顶保持 541.3 m"
+    }
+  ],
+  "geo": {
+    "latitude": 40.712997281,
+    "longitude": -74.013192447,
+    "partRadius": 36,
+    "parts": [
+      {
+        "id": 2410292530,
+        "height": 417,
+        "base": 0
+      },
+      {
+        "id": 2410292472,
+        "height": 541,
+        "base": 420
+      },
+      {
+        "id": 2410292482,
+        "height": 420,
+        "base": 417
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。造型修正后重新做多高度层俯视轮廓 IoU 拟合，ENU 逆时针 62.70°，各层 IoU 0.49–0.98（均值 0.78，修正前 0.71），地面层尺度比约 0.99；332.75° 与 242.95° 得分几乎相同，方形平面存在 90° 对称歧义。源模型按 541.3 m 塔尖缩放后主体顶约 401.8 m，已按官方与 OSM 的 417 m 竖向分段拉伸主体，塔尖段相应压缩，顶点仍为 541.3 m；平面尺寸未改。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      },
+      {
+        "title": "Wikipedia：One World Trade Center（屋顶 417 m、塔尖 541.3 m）",
+        "url": "https://en.wikipedia.org/wiki/One_World_Trade_Center"
+      }
+    ]
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  }
+}

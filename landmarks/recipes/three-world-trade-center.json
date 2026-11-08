@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "id": "three-world-trade-center",
+  "name": "世贸中心三号楼",
+  "version": 1,
+  "source": {
+    "sha256": "024adde29a7d7b51eab5207d079e9d300e3691aaf8c16b8f3ce5a3571d537fca",
+    "filename": "3_world_trade_center.glb",
+    "title": "3 World Trade Center",
+    "author": "NanoRay",
+    "authorPage": "https://sketchfab.com/NanoRay",
+    "page": "https://sketchfab.com/3d-models/3-world-trade-center-47d1943cfa97409e983a7acab4f109f1",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。"
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": "base-bounds",
+    "height": 328.9,
+    "heightReference": "https://en.wikipedia.org/wiki/3_World_Trade_Center",
+    "yawDegrees": 248.5,
+    "requireSharedTransform": false,
+    "normalizeNormals": true
+  },
+  "processing": {
+    "targetTriangles": 20000,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true
+  },
+  "geo": {
+    "latitude": 40.711026363,
+    "longitude": -74.011118793,
+    "partRadius": 75,
+    "parts": [
+      {
+        "id": 9601465092,
+        "height": 75,
+        "base": 0
+      },
+      {
+        "id": 2742858290,
+        "height": 220,
+        "base": 0
+      },
+      {
+        "id": 9601465102,
+        "height": 281,
+        "base": 0
+      },
+      {
+        "id": 9601465112,
+        "height": 352,
+        "base": 0
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 248.50°，各层 IoU 0.73–0.79，地面层尺度比约 1.14；次优候选 65.00°（得分 0.652，最优 0.754）。按 328.9 m 屋顶高度缩放；裙房与退台轮廓和 OSM 吻合，平面约大 14%。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  }
+}

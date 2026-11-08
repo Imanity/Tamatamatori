@@ -1,0 +1,98 @@
+{
+ "id": "burj-khalifa",
+ "assetSha256": "f84d2c285b08f6f289783298957fd9d24488a608e110640bf868a70c62456480",
+ "placementHash": "9ba47128f2c67bd491f8e7ef5dc4223c383bc9e42421918912ab00a70eb0162a",
+ "gpuPassed": true,
+ "recordedAt": "2026-11-08",
+ "build": "Production /Tamatamatori/ subpath via vite preview on 127.0.0.1:5181; Chrome 157 on this Windows machine with native GPU, occlusion throttling disabled, viewport emulated 2000×1250",
+ "screenshots": [
+  "docs/plan/landmark-batch-evidence/burj-khalifa-gpu.jpg"
+ ],
+ "scenes": [
+  {
+   "kind": "n1",
+   "observer": {
+    "latitude": 25.17909177372551,
+    "longitude": 55.27421520200005
+   },
+   "azimuth": 0,
+   "pitch": 8.9,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 35,
+   "distanceMetres": 2000,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "哈利法塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 2.0 km · 8,325 面",
+   "sameScene": [
+    "burj-al-arab:applied"
+   ],
+   "facts": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 4.6 m · 离地 100 m"
+  },
+  {
+   "kind": "n2",
+   "observer": {
+    "latitude": 25.197076852695385,
+    "longitude": 55.29409300684222
+   },
+   "azimuth": 270,
+   "pitch": 8.9,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 35,
+   "distanceMetres": 2000,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "哈利法塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 2.0 km · 8,325 面",
+   "sameScene": [
+    "burj-al-arab:applied"
+   ],
+   "facts": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 2.0 m · 离地 100 m"
+  },
+  {
+   "kind": "f1",
+   "observer": {
+    "latitude": 25.037995864163893,
+    "longitude": 55.0987472909909
+   },
+   "azimuth": 44.9,
+   "pitch": 0.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 435,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "哈利法塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 8,325 面",
+   "sameScene": [
+    "burj-al-arab:applied"
+   ],
+   "facts": "435 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 5.0 m · 离地 100 m"
+  },
+  {
+   "kind": "b1",
+   "observer": {
+    "latitude": 25.17909177372551,
+    "longitude": 55.27421520200005
+   },
+   "azimuth": 0,
+   "pitch": 8.9,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 35,
+   "distanceMetres": 2000,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": true,
+   "landmarkPhase": "fallback",
+   "landmarkStatus": "哈利法塔精细模型未应用，保留粗体块；可重新读取建筑。 · 约 2.0 km",
+   "sameScene": [
+    "burj-al-arab:fallback"
+   ],
+   "facts": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 4.6 m · 离地 100 m"
+  }
+ ],
+ "observations": "南、东近景与拦截后的 OSM 阶梯体块位置、高度一致；25 km 远景塔尖可见。",
+ "limitations": [
+  "画面验收确认渲染位置、尺度、朝向与同机位 OSM 粗体块对照一致，以及远景着地和失败回退；不代表实景测绘精度。",
+  "未测实体手机与 GPU 帧耗时。"
+ ]
+}

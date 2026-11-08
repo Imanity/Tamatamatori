@@ -1,0 +1,232 @@
+{
+  "schemaVersion": 1,
+  "id": "cn-tower",
+  "name": "加拿大国家电视塔",
+  "version": 1,
+  "source": {
+    "sha256": "2d590a01f72bb052e59e7841450a39a8996edf162cd4388af9cfc981a1abe20f",
+    "filename": "cn_tower.glb",
+    "title": "CN Tower",
+    "author": "zayshaa",
+    "authorPage": "https://sketchfab.com/zayshaa",
+    "page": "https://sketchfab.com/3d-models/cn-tower-532b6478637c4f6894d9070719a45aaa",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。"
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": [
+      2.72,
+      -1.65
+    ],
+    "height": 553.3,
+    "heightReference": "https://en.wikipedia.org/wiki/CN_Tower",
+    "yawDegrees": 312.75,
+    "requireSharedTransform": false,
+    "normalizeNormals": true
+  },
+  "processing": {
+    "targetTriangles": 40000,
+    "maxErrorMetres": 0.1,
+    "normalWeight": 0.01,
+    "weld": true,
+    "positionMergeTolerance": 0.0001,
+    "normalMergeTolerance": 0.001,
+    "permissive": true,
+    "excludeNodes": [
+      "Ground_Material #67_0",
+      "Untitled2_Material #95_0",
+      "Object001_Material #94_0"
+    ]
+  },
+  "geo": {
+    "latitude": 43.642593936,
+    "longitude": -79.387087553,
+    "partRadius": 24,
+    "parts": [
+      {
+        "id": 2882734580,
+        "height": 330,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882737932,
+        "height": 338,
+        "base": 330,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882737952,
+        "height": 360,
+        "base": 338,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734612,
+        "height": 440,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734522,
+        "height": 495,
+        "base": 370,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734580,
+        "height": 330,
+        "base": 0
+      },
+      {
+        "id": 2882737932,
+        "height": 338,
+        "base": 330
+      },
+      {
+        "id": 2882737952,
+        "height": 360,
+        "base": 338
+      },
+      {
+        "id": 2882734612,
+        "height": 440,
+        "base": 0
+      },
+      {
+        "id": 2882734522,
+        "height": 495,
+        "base": 370
+      },
+      {
+        "id": 2882737942,
+        "height": 370,
+        "base": 360,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882737942,
+        "height": 370,
+        "base": 360
+      },
+      {
+        "id": 2882734562,
+        "height": 553,
+        "base": 510,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734562,
+        "height": 553,
+        "base": 510
+      },
+      {
+        "id": 2882734542,
+        "height": 457,
+        "base": 440,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734542,
+        "height": 457,
+        "base": 440
+      },
+      {
+        "id": 2882734532,
+        "height": 540,
+        "base": 510,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734532,
+        "height": 540,
+        "base": 510
+      },
+      {
+        "id": 2882734512,
+        "height": 510,
+        "base": 490,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734512,
+        "height": 510,
+        "base": 490
+      },
+      {
+        "id": 2882734552,
+        "height": 530,
+        "base": 505,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734552,
+        "height": 530,
+        "base": 505
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 312.75°，各层 IoU 0.27–0.89，地面层尺度比约 1.07；次优候选 194.90°（得分 0.732，最优 0.733）。已排除地面、地形与湖面网格；三支腿与 OSM 对齐，三重对称存在 120° 歧义。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  }
+}

@@ -9,7 +9,7 @@ export interface LandmarkDefinition {
   partRadius:number;
   bounds:{horizontal:number;height:number};
   asset:{file:string;sha256:string;decodedSha256:string;bytes:number;decodedBytes:number;vertices:number;triangles:number};
-  credit:{title:string;author:string;authorPage:string;page:string;license:string;licenseUrl:string;changes:string;registration:string;references:readonly {title:string;url:string}[]};
+  credit:{title:string;author:string;authorPage:string;page:string;license:string;licenseUrl:string;use?:string;changes:string;registration:string;references:readonly {title:string;url:string}[]};
   validation:{cpu:string;visual:string};
 }
 /** Generated offline from reviewed recipes; never edit individual entries here. */

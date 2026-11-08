@@ -12,12 +12,20 @@ export function compareCoverage(source,fine,heightMetres){
       for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const u=((bx-x-.5)*(cy-y-.5)-(by-y-.5)*(cx-x-.5))/area,v=((cx-x-.5)*(ay-y-.5)-(cy-y-.5)*(ax-x-.5))/area;if(u>=-1e-6&&v>=-1e-6&&1-u-v>=-1e-6)pixels[y*width+x]=1;}
     }return pixels;
   }
+  // Exact Euclidean distance transform (Felzenszwalb-Huttenlocher), so the
+  // documented 1 m tolerance holds at any raster scale without a fixed window.
+  const span=Math.max(width,height),f1=new Float64Array(span),d1=new Float64Array(span),v1=new Int32Array(span),z1=new Float64Array(span+1);
+  function line(n){let k=0;v1[0]=0;z1[0]=-Infinity;z1[1]=Infinity;
+    for(let q=1;q<n;q++){let s=((f1[q]+q*q)-(f1[v1[k]]+v1[k]*v1[k]))/(2*q-2*v1[k]);while(s<=z1[k]){k--;s=((f1[q]+q*q)-(f1[v1[k]]+v1[k]*v1[k]))/(2*q-2*v1[k]);}k++;v1[k]=q;z1[k]=s;z1[k+1]=Infinity;}
+    k=0;for(let q=0;q<n;q++){while(z1[k+1]<q)k++;d1[q]=(q-v1[k])**2+f1[v1[k]];}}
+  function distance(pixels){const out=new Float64Array(width*height);if(!pixels.some(Boolean))return out.fill(Infinity);
+    for(let x=0;x<width;x++){for(let y=0;y<height;y++)f1[y]=pixels[y*width+x]?0:1e20;line(height);for(let y=0;y<height;y++)out[y*width+x]=d1[y];}
+    for(let y=0;y<height;y++){for(let x=0;x<width;x++)f1[x]=out[y*width+x];line(width);for(let x=0;x<width;x++)out[y*width+x]=Math.sqrt(d1[x]);}
+    return out;}
   const records=[];
   for(const azimuth of [0,60,120,180,240,300]){
-    const a=mask(source.positions,source.indices,3,azimuth),b=mask(fine.vertices,fine.indices,6,azimuth);let union=0,intersection=0,changed=0,maxDistance=0;
-    for(let i=0;i<a.length;i++){union+=a[i]|b[i];intersection+=a[i]&b[i];if(a[i]===b[i])continue;changed++;const x=i%width,y=Math.floor(i/width),other=a[i]?b:a;let distance=Infinity;
-      for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++)if(x+dx>=0&&x+dx<width&&y+dy>=0&&y+dy<height&&other[(y+dy)*width+x+dx])distance=Math.min(distance,Math.hypot(dx,dy));maxDistance=Math.max(maxDistance,distance/scale);
-    }
+    const a=mask(source.positions,source.indices,3,azimuth),b=mask(fine.vertices,fine.indices,6,azimuth),toA=distance(a),toB=distance(b);let union=0,intersection=0,changed=0,maxDistance=0;
+    for(let i=0;i<a.length;i++){union+=a[i]|b[i];intersection+=a[i]&b[i];if(a[i]===b[i])continue;changed++;maxDistance=Math.max(maxDistance,(a[i]?toB[i]:toA[i])/scale);}
     records.push({azimuth,intersectionOverUnion:union?intersection/union:1,changedPixels:changed,maxRasterCoverageDistanceMetres:Number.isFinite(maxDistance)?maxDistance:null,passed:(!union||intersection/union>=.98)&&maxDistance<=1});
   }
   return {kind:'CPU triangle union, not GPU or survey verification',metresPerPixel:1/scale,width,height,sourceTriangles:source.indices.length/3,fineTriangles:fine.indices.length/3,records,passed:records.every(r=>r.passed)};

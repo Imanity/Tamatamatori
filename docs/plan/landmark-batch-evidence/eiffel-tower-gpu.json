@@ -1,0 +1,90 @@
+{
+ "id": "eiffel-tower",
+ "assetSha256": "e9f2a9b0d10bbe481dc2d7c3bbbe716fff3357c2d215470552c25addf342ad6d",
+ "placementHash": "37a4b67831b807ba92ef42711643d7e909c180338497656efa124b90b6512d31",
+ "gpuPassed": true,
+ "recordedAt": "2026-11-08",
+ "build": "Production /Tamatamatori/ subpath via vite preview on 127.0.0.1:5181; Chrome 157 on this Windows machine with native GPU, occlusion throttling disabled, viewport emulated 2000×1250",
+ "screenshots": [
+  "docs/plan/landmark-batch-evidence/eiffel-tower-gpu.jpg"
+ ],
+ "scenes": [
+  {
+   "kind": "n1",
+   "observer": {
+    "latitude": 48.84876694495906,
+    "longitude": 2.2944879249999985
+   },
+   "azimuth": 0,
+   "pitch": 3.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1056,
+   "utc": "2026-11-04T09:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "埃菲尔铁塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.1 km · 98,633 面",
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 34.7 m · 离地 100 m"
+  },
+  {
+   "kind": "n2",
+   "observer": {
+    "latitude": 48.85826286710962,
+    "longitude": 2.3089224539539828
+   },
+   "azimuth": 270,
+   "pitch": 3.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1056,
+   "utc": "2026-11-04T09:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "埃菲尔铁塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.1 km · 98,633 面",
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 33.4 m · 离地 100 m"
+  },
+  {
+   "kind": "f1",
+   "observer": {
+    "latitude": 48.69903342796164,
+    "longitude": 2.053615973903561
+   },
+   "azimuth": 44.8,
+   "pitch": 0.1,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T09:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "埃菲尔铁塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 98,633 面",
+   "sameScene": [],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 112.3 m · 离地 100 m"
+  },
+  {
+   "kind": "b1",
+   "observer": {
+    "latitude": 48.84876694495906,
+    "longitude": 2.2944879249999985
+   },
+   "azimuth": 0,
+   "pitch": 3.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1056,
+   "utc": "2026-11-04T09:30:00Z",
+   "modelRequestsBlocked": true,
+   "landmarkPhase": "fallback",
+   "landmarkStatus": "埃菲尔铁塔精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.1 km",
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 34.7 m · 离地 100 m"
+  }
+ ],
+ "observations": "南侧近景为对角视角（三条腿脚可见），与 OSM 四个桩基位于正方位一致；塞纳河在塔后；25 km 远景桁架可辨；拦截后为 OSM 分层体块。",
+ "limitations": [
+  "画面验收确认渲染位置、尺度、朝向与同机位 OSM 粗体块对照一致，以及远景着地和失败回退；不代表实景测绘精度。",
+  "未测实体手机与 GPU 帧耗时。"
+ ]
+}

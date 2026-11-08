@@ -1,0 +1,2062 @@
+{
+ "kind": "Real Chrome GPU scenes on the production /Tamatamatori/ build; status text read from the building readout DOM",
+ "chrome": "157 on Windows, native GPU, occlusion throttling disabled, viewport emulated 2000x1250",
+ "scenes": [
+  {
+   "id": "big-ben",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "伊丽莎白塔（大本钟）精细模型未应用，保留粗体块；可重新读取建筑。 · 约 0.4 km",
+   "observer": {
+    "latitude": 51.49728548261783,
+    "longitude": -0.12457208000000719
+   },
+   "azimuth": 0,
+   "pitch": 2.7,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 57,
+   "distanceMetres": 380,
+   "utc": "2026-11-04T10:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [],
+   "facts": "57 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 4.5 m · 离地 30 m"
+  },
+  {
+   "id": "big-ben",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "伊丽莎白塔（大本钟）无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 25,000 面",
+   "observer": {
+    "latitude": 51.341447897017765,
+    "longitude": -0.37906962129409294
+   },
+   "azimuth": 44.8,
+   "pitch": -0.1,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T10:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 59.3 m · 离地 30 m"
+  },
+  {
+   "id": "big-ben",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "伊丽莎白塔（大本钟）无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.4 km · 25,000 面",
+   "observer": {
+    "latitude": 51.49728548261783,
+    "longitude": -0.12457208000000719
+   },
+   "azimuth": 0,
+   "pitch": 2.7,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 57,
+   "distanceMetres": 380,
+   "utc": "2026-11-04T10:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "57 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 4.5 m · 离地 30 m"
+  },
+  {
+   "id": "big-ben",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "伊丽莎白塔（大本钟）无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.4 km · 25,000 面",
+   "observer": {
+    "latitude": 51.500702771870486,
+    "longitude": -0.11908229729908726
+   },
+   "azimuth": 270,
+   "pitch": 2.7,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 57,
+   "distanceMetres": 380,
+   "utc": "2026-11-04T10:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "57 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 2.0 m · 离地 30 m"
+  },
+  {
+   "id": "burj-al-arab",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "帆船酒店精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.0 km",
+   "observer": {
+    "latitude": 25.132043219223817,
+    "longitude": 55.185401903999946
+   },
+   "azimuth": 0,
+   "pitch": 3.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1027.2,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [
+    "burj-khalifa:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 8.5 m · 离地 100 m"
+  },
+  {
+   "id": "burj-al-arab",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "帆船酒店无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 29,999 面",
+   "observer": {
+    "latitude": 24.982198982701647,
+    "longitude": 55.010013693315614
+   },
+   "azimuth": 44.9,
+   "pitch": 0,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "burj-khalifa:applied"
+   ],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 0.0 m · 离地 100 m"
+  },
+  {
+   "id": "burj-al-arab",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "帆船酒店无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.0 km · 29,999 面",
+   "observer": {
+    "latitude": 25.132043219223817,
+    "longitude": 55.185401903999946
+   },
+   "azimuth": 0,
+   "pitch": 3.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1027.2,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "burj-khalifa:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 8.5 m · 离地 100 m"
+  },
+  {
+   "id": "burj-al-arab",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "帆船酒店无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.0 km · 29,999 面",
+   "observer": {
+    "latitude": 25.14128068849858,
+    "longitude": 55.19560647377364
+   },
+   "azimuth": 270,
+   "pitch": 3.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1027.2,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "burj-khalifa:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 8.5 m · 离地 100 m"
+  },
+  {
+   "id": "burj-khalifa",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "哈利法塔精细模型未应用，保留粗体块；可重新读取建筑。 · 约 2.0 km",
+   "observer": {
+    "latitude": 25.17909177372551,
+    "longitude": 55.27421520200005
+   },
+   "azimuth": 0,
+   "pitch": 8.9,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 35,
+   "distanceMetres": 2000,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [
+    "burj-al-arab:fallback"
+   ],
+   "facts": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 4.6 m · 离地 100 m"
+  },
+  {
+   "id": "burj-khalifa",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "哈利法塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 8,325 面",
+   "observer": {
+    "latitude": 25.037995864163893,
+    "longitude": 55.0987472909909
+   },
+   "azimuth": 44.9,
+   "pitch": 0.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 435,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "burj-al-arab:applied"
+   ],
+   "facts": "435 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 5.0 m · 离地 100 m"
+  },
+  {
+   "id": "burj-khalifa",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "哈利法塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 2.0 km · 8,325 面",
+   "observer": {
+    "latitude": 25.17909177372551,
+    "longitude": 55.27421520200005
+   },
+   "azimuth": 0,
+   "pitch": 8.9,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 35,
+   "distanceMetres": 2000,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "burj-al-arab:applied"
+   ],
+   "facts": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 4.6 m · 离地 100 m"
+  },
+  {
+   "id": "burj-khalifa",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "哈利法塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 2.0 km · 8,325 面",
+   "observer": {
+    "latitude": 25.197076852695385,
+    "longitude": 55.29409300684222
+   },
+   "azimuth": 270,
+   "pitch": 8.9,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 35,
+   "distanceMetres": 2000,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "burj-al-arab:applied"
+   ],
+   "facts": "35 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 2.0 m · 离地 100 m"
+  },
+  {
+   "id": "chrysler-building",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "克莱斯勒大厦精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.0 km",
+   "observer": {
+    "latitude": 40.74242183755226,
+    "longitude": -73.97533234499997
+   },
+   "azimuth": 0,
+   "pitch": 3.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1020.48,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [
+    "empire-state-building:fallback",
+    "metlife-building:fallback",
+    "one-world-trade-center:fallback",
+    "three-world-trade-center:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 8.0 m · 离地 100 m"
+  },
+  {
+   "id": "chrysler-building",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "克莱斯勒大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 17,343 面",
+   "observer": {
+    "latitude": 40.59243093967903,
+    "longitude": -74.18469206764331
+   },
+   "azimuth": 44.9,
+   "pitch": 0,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "three-world-trade-center:applied",
+    "one-world-trade-center:applied",
+    "empire-state-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 5.5 m · 离地 100 m"
+  },
+  {
+   "id": "chrysler-building",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "克莱斯勒大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.0 km · 17,343 面",
+   "observer": {
+    "latitude": 40.74242183755226,
+    "longitude": -73.97533234499997
+   },
+   "azimuth": 0,
+   "pitch": 3.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1020.48,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "empire-state-building:applied",
+    "metlife-building:applied",
+    "one-world-trade-center:applied",
+    "three-world-trade-center:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 8.0 m · 离地 100 m"
+  },
+  {
+   "id": "chrysler-building",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "克莱斯勒大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.0 km · 17,343 面",
+   "observer": {
+    "latitude": 40.75159858865082,
+    "longitude": -73.96321773396869
+   },
+   "azimuth": 270,
+   "pitch": 3.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1020.48,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "metlife-building:applied",
+    "empire-state-building:applied",
+    "one-world-trade-center:applied",
+    "three-world-trade-center:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ -1.5 m · 离地 100 m"
+  },
+  {
+   "id": "chrysler-building",
+   "kind": "r1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "克莱斯勒大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 2.6 km · 17,343 面",
+   "observer": {
+    "latitude": 40.74753493610801,
+    "longitude": -73.94493726780638
+   },
+   "azimuth": 280,
+   "pitch": 1.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 117,
+   "distanceMetres": 2600,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "metlife-building:applied",
+    "empire-state-building:applied",
+    "three-world-trade-center:applied",
+    "one-world-trade-center:applied"
+   ],
+   "facts": "117 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 5.0 m · 离地 100 m"
+  },
+  {
+   "id": "cn-tower",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "加拿大国家电视塔精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.8 km",
+   "observer": {
+    "latitude": 43.62667092936803,
+    "longitude": -79.38708755300001
+   },
+   "azimuth": 0,
+   "pitch": 5.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1770.56,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 75.0 m · 离地 100 m"
+  },
+  {
+   "id": "cn-tower",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "加拿大国家电视塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 39,801 面",
+   "observer": {
+    "latitude": 43.483405463590834,
+    "longitude": -79.6061953563883
+   },
+   "azimuth": 44.8,
+   "pitch": 0.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 651,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "651 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 75.0 m · 离地 100 m"
+  },
+  {
+   "id": "cn-tower",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "加拿大国家电视塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.8 km · 39,801 面",
+   "observer": {
+    "latitude": 43.62667092936803,
+    "longitude": -79.38708755300001
+   },
+   "azimuth": 0,
+   "pitch": 5.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1770.56,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 75.0 m · 离地 100 m"
+  },
+  {
+   "id": "cn-tower",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "加拿大国家电视塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.8 km · 39,801 面",
+   "observer": {
+    "latitude": 43.64259182585698,
+    "longitude": -79.365084086774
+   },
+   "azimuth": 270,
+   "pitch": 5.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1770.56,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 75.0 m · 离地 100 m"
+  },
+  {
+   "id": "eiffel-tower",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "埃菲尔铁塔精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.1 km",
+   "observer": {
+    "latitude": 48.84876694495906,
+    "longitude": 2.2944879249999985
+   },
+   "azimuth": 0,
+   "pitch": 3.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1056,
+   "utc": "2026-11-04T09:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 34.7 m · 离地 100 m"
+  },
+  {
+   "id": "eiffel-tower",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "埃菲尔铁塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 98,633 面",
+   "observer": {
+    "latitude": 48.69903342796164,
+    "longitude": 2.053615973903561
+   },
+   "azimuth": 44.8,
+   "pitch": 0.1,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T09:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 112.3 m · 离地 100 m"
+  },
+  {
+   "id": "eiffel-tower",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "埃菲尔铁塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.1 km · 98,633 面",
+   "observer": {
+    "latitude": 48.84876694495906,
+    "longitude": 2.2944879249999985
+   },
+   "azimuth": 0,
+   "pitch": 3.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1056,
+   "utc": "2026-11-04T09:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 34.7 m · 离地 100 m"
+  },
+  {
+   "id": "eiffel-tower",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "埃菲尔铁塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.1 km · 98,633 面",
+   "observer": {
+    "latitude": 48.85826286710962,
+    "longitude": 2.3089224539539828
+   },
+   "azimuth": 270,
+   "pitch": 3.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1056,
+   "utc": "2026-11-04T09:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 33.4 m · 离地 100 m"
+  },
+  {
+   "id": "empire-state-building",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "帝国大厦精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.4 km",
+   "observer": {
+    "latitude": 40.73572811887351,
+    "longitude": -73.98577633600001
+   },
+   "azimuth": 0,
+   "pitch": 4.9,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1418.24,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [
+    "chrysler-building:fallback",
+    "metlife-building:fallback",
+    "one-world-trade-center:fallback",
+    "three-world-trade-center:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 9.4 m · 离地 100 m"
+  },
+  {
+   "id": "empire-state-building",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "帝国大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 37,513 面",
+   "observer": {
+    "latitude": 40.58931437848408,
+    "longitude": -74.19512630130635
+   },
+   "azimuth": 44.9,
+   "pitch": 0.2,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 812,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "three-world-trade-center:applied",
+    "one-world-trade-center:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "812 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 5.1 m · 离地 100 m"
+  },
+  {
+   "id": "empire-state-building",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "帝国大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.4 km · 37,513 面",
+   "observer": {
+    "latitude": 40.73572811887351,
+    "longitude": -73.98577633600001
+   },
+   "azimuth": 0,
+   "pitch": 4.9,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1418.24,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "chrysler-building:applied",
+    "metlife-building:applied",
+    "one-world-trade-center:applied",
+    "three-world-trade-center:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 9.4 m · 离地 100 m"
+  },
+  {
+   "id": "empire-state-building",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "帝国大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.4 km · 37,513 面",
+   "observer": {
+    "latitude": 40.7484814168326,
+    "longitude": -73.96894051307157
+   },
+   "azimuth": 270,
+   "pitch": 4.9,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1418.24,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "chrysler-building:applied",
+    "metlife-building:applied",
+    "one-world-trade-center:applied",
+    "three-world-trade-center:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 8.5 m · 离地 100 m"
+  },
+  {
+   "id": "empire-state-building",
+   "kind": "r1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "帝国大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 4.0 km · 37,513 面",
+   "observer": {
+    "latitude": 40.74533774734277,
+    "longitude": -73.9384755535358
+   },
+   "azimuth": 275,
+   "pitch": 1.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 130,
+   "distanceMetres": 4000,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "chrysler-building:applied",
+    "metlife-building:applied",
+    "three-world-trade-center:applied",
+    "one-world-trade-center:applied"
+   ],
+   "facts": "130 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 4.0 m · 离地 100 m"
+  },
+  {
+   "id": "lotte-world-tower",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "乐天世界塔精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.8 km",
+   "observer": {
+    "latitude": 37.49656867134025,
+    "longitude": 127.10265793899998
+   },
+   "azimuth": 0,
+   "pitch": 5.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1776,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 20.0 m · 离地 100 m"
+  },
+  {
+   "id": "lotte-world-tower",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "乐天世界塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 9,766 面",
+   "observer": {
+    "latitude": 37.35339296425379,
+    "longitude": 126.90266157248459
+   },
+   "azimuth": 44.9,
+   "pitch": 0.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 649,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "649 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 281.7 m · 离地 100 m"
+  },
+  {
+   "id": "lotte-world-tower",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "乐天世界塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.8 km · 9,766 面",
+   "observer": {
+    "latitude": 37.49656867134025,
+    "longitude": 127.10265793899998
+   },
+   "azimuth": 0,
+   "pitch": 5.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1776,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 20.0 m · 离地 100 m"
+  },
+  {
+   "id": "lotte-world-tower",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "乐天世界塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.8 km · 9,766 面",
+   "observer": {
+    "latitude": 37.51253889201039,
+    "longitude": 127.12279349764697
+   },
+   "azimuth": 270,
+   "pitch": 5.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1776,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 33.2 m · 离地 100 m"
+  },
+  {
+   "id": "metlife-building",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "大都会人寿大厦精细模型未应用，保留粗体块；可重新读取建筑。 · 约 0.8 km",
+   "observer": {
+    "latitude": 40.74649049862128,
+    "longitude": -73.976608495
+   },
+   "azimuth": 0,
+   "pitch": 1.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 788.1600000000001,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [
+    "chrysler-building:fallback",
+    "empire-state-building:fallback",
+    "one-world-trade-center:fallback",
+    "three-world-trade-center:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 7.4 m · 离地 100 m"
+  },
+  {
+   "id": "metlife-building",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "大都会人寿大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 77,108 面",
+   "observer": {
+    "latitude": 40.594410286464615,
+    "longitude": -74.18597441538071
+   },
+   "azimuth": 44.9,
+   "pitch": 0,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "three-world-trade-center:applied",
+    "one-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied"
+   ],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 8.2 m · 离地 100 m"
+  },
+  {
+   "id": "metlife-building",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "大都会人寿大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.8 km · 77,108 面",
+   "observer": {
+    "latitude": 40.74649049862128,
+    "longitude": -73.976608495
+   },
+   "azimuth": 0,
+   "pitch": 1.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 788.1600000000001,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "chrysler-building:applied",
+    "empire-state-building:applied",
+    "one-world-trade-center:applied",
+    "three-world-trade-center:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 7.4 m · 离地 100 m"
+  },
+  {
+   "id": "metlife-building",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "大都会人寿大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.8 km · 77,108 面",
+   "observer": {
+    "latitude": 40.753578204172705,
+    "longitude": -73.9672515883401
+   },
+   "azimuth": 270,
+   "pitch": 1.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 788.1600000000001,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "chrysler-building:applied",
+    "empire-state-building:applied",
+    "one-world-trade-center:applied",
+    "three-world-trade-center:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 7.4 m · 离地 100 m"
+  },
+  {
+   "id": "metlife-building",
+   "kind": "r1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "大都会人寿大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 3.0 km · 77,108 面",
+   "observer": {
+    "latitude": 40.75122172180338,
+    "longitude": -73.94112976980273
+   },
+   "azimuth": 275,
+   "pitch": 0.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 175,
+   "distanceMetres": 3000,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "chrysler-building:applied",
+    "empire-state-building:applied",
+    "three-world-trade-center:applied",
+    "one-world-trade-center:applied"
+   ],
+   "facts": "175 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 7.1 m · 离地 100 m"
+  },
+  {
+   "id": "one-world-trade-center",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "世贸中心一号楼精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.7 km",
+   "observer": {
+    "latitude": 40.697419613387716,
+    "longitude": -74.013192447
+   },
+   "azimuth": 0,
+   "pitch": 5.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1732.1599999999999,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [
+    "three-world-trade-center:fallback",
+    "empire-state-building:fallback",
+    "chrysler-building:fallback",
+    "metlife-building:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ -1.5 m · 离地 100 m"
+  },
+  {
+   "id": "one-world-trade-center",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "世贸中心一号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 22,663 面",
+   "observer": {
+    "latitude": 40.553829256233506,
+    "longitude": -74.22243142313903
+   },
+   "azimuth": 44.9,
+   "pitch": 0.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 665,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "three-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "665 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 6.1 m · 离地 100 m"
+  },
+  {
+   "id": "one-world-trade-center",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "世贸中心一号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.7 km · 22,663 面",
+   "observer": {
+    "latitude": 40.697419613387716,
+    "longitude": -74.013192447
+   },
+   "azimuth": 0,
+   "pitch": 5.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1732.1599999999999,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "three-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ -1.5 m · 离地 100 m"
+  },
+  {
+   "id": "one-world-trade-center",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "世贸中心一号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.7 km · 22,663 面",
+   "observer": {
+    "latitude": 40.71299545870591,
+    "longitude": -73.99264106572343
+   },
+   "azimuth": 270,
+   "pitch": 5.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1732.1599999999999,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "three-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 10.1 m · 离地 100 m"
+  },
+  {
+   "id": "one-world-trade-center",
+   "kind": "r1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "世贸中心一号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 2.2 km · 22,663 面",
+   "observer": {
+    "latitude": 40.71299434140287,
+    "longitude": -74.0392945612981
+   },
+   "azimuth": 90,
+   "pitch": 4.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 59,
+   "distanceMetres": 2200,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "three-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "59 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 6.0 m · 离地 100 m"
+  },
+  {
+   "id": "oriental-pearl",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "东方明珠精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.5 km",
+   "observer": {
+    "latitude": 31.228423261232855,
+    "longitude": 121.495273043
+   },
+   "azimuth": 0,
+   "pitch": 5.1,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1497.6000000000001,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [
+    "shanghai-tower:fallback",
+    "shanghai-wfc:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 9.7 m · 离地 100 m"
+  },
+  {
+   "id": "oriental-pearl",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "东方明珠无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 9,600 面",
+   "observer": {
+    "latitude": 31.08277923317104,
+    "longitude": 121.30964178020918
+   },
+   "azimuth": 44.9,
+   "pitch": 0.2,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 769,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "shanghai-tower:applied",
+    "shanghai-wfc:applied"
+   ],
+   "facts": "769 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 3.7 m · 离地 100 m"
+  },
+  {
+   "id": "oriental-pearl",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "东方明珠无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.5 km · 9,600 面",
+   "observer": {
+    "latitude": 31.228423261232855,
+    "longitude": 121.495273043
+   },
+   "azimuth": 0,
+   "pitch": 5.1,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1497.6000000000001,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "shanghai-tower:applied",
+    "shanghai-wfc:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 9.7 m · 离地 100 m"
+  },
+  {
+   "id": "oriental-pearl",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "东方明珠无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.5 km · 9,600 面",
+   "observer": {
+    "latitude": 31.241890522747312,
+    "longitude": 121.51102562027302
+   },
+   "azimuth": 270,
+   "pitch": 5.1,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1497.6000000000001,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "shanghai-wfc:applied",
+    "shanghai-tower:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 3.6 m · 离地 100 m"
+  },
+  {
+   "id": "osaka-castle",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "大阪城天守阁精细模型未应用，保留粗体块；可重新读取建筑。 · 约 0.4 km",
+   "observer": {
+    "latitude": 34.68384917661785,
+    "longitude": 135.52586383799996
+   },
+   "azimuth": 0,
+   "pitch": -0.4,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 100,
+   "distanceMetres": 380,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [],
+   "facts": "100 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 23.8 m · 离地 30 m"
+  },
+  {
+   "id": "osaka-castle",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "大阪城天守阁无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 49,994 面",
+   "observer": {
+    "latitude": 34.52813555782615,
+    "longitude": 135.3328928239846
+   },
+   "azimuth": 44.9,
+   "pitch": -0.1,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 0.0 m · 离地 30 m"
+  },
+  {
+   "id": "osaka-castle",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "大阪城天守阁无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.4 km · 49,994 面",
+   "observer": {
+    "latitude": 34.68384917661785,
+    "longitude": 135.52586383799996
+   },
+   "azimuth": 0,
+   "pitch": -0.4,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 100,
+   "distanceMetres": 380,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "100 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 23.8 m · 离地 30 m"
+  },
+  {
+   "id": "osaka-castle",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "大阪城天守阁无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.4 km · 49,994 面",
+   "observer": {
+    "latitude": 34.68726652346336,
+    "longitude": 135.53001991221777
+   },
+   "azimuth": 270,
+   "pitch": -0.4,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 100,
+   "distanceMetres": 380,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "100 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 6.7 m · 离地 30 m"
+  },
+  {
+   "id": "petronas-towers",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "双子塔精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.4 km",
+   "observer": {
+    "latitude": 3.144965129084252,
+    "longitude": 101.71175125599996
+   },
+   "azimuth": 0,
+   "pitch": 5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1446.08,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 63.5 m · 离地 100 m"
+  },
+  {
+   "id": "petronas-towers",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "双子塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 24.9 km · 30,472 面",
+   "observer": {
+    "latitude": 2.998979175981641,
+    "longitude": 101.55255455239376
+   },
+   "azimuth": 45,
+   "pitch": 0.2,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 797,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "797 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 8.8 m · 离地 100 m"
+  },
+  {
+   "id": "petronas-towers",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "双子塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.4 km · 30,472 面",
+   "observer": {
+    "latitude": 3.144965129084252,
+    "longitude": 101.71175125599996
+   },
+   "azimuth": 0,
+   "pitch": 5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1446.08,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 63.5 m · 离地 100 m"
+  },
+  {
+   "id": "petronas-towers",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "双子塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.4 km · 30,472 面",
+   "observer": {
+    "latitude": 3.1579699395696457,
+    "longitude": 101.72477592660607
+   },
+   "azimuth": 270,
+   "pitch": 5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1446.08,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 41.6 m · 离地 100 m"
+  },
+  {
+   "id": "shanghai-tower",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "上海中心精细模型未应用，保留粗体块；可重新读取建筑。 · 约 2.0 km",
+   "observer": {
+    "latitude": 31.217524773447437,
+    "longitude": 121.50132179260254
+   },
+   "azimuth": 0,
+   "pitch": 6.2,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 2000,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [
+    "shanghai-wfc:fallback",
+    "oriental-pearl:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 4.0 m · 离地 100 m"
+  },
+  {
+   "id": "shanghai-tower",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "上海中心无纹理精细模型 · 定位与朝向近似 · 约 25.0 km · 54,682 面",
+   "observer": {
+    "latitude": 31.07639896437709,
+    "longitude": 121.31570298911174
+   },
+   "azimuth": 44.9,
+   "pitch": 0.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 570,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "oriental-pearl:applied",
+    "shanghai-wfc:applied"
+   ],
+   "facts": "570 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 7.5 m · 离地 100 m"
+  },
+  {
+   "id": "shanghai-tower",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "上海中心无纹理精细模型 · 定位与朝向近似 · 约 2.0 km · 54,682 面",
+   "observer": {
+    "latitude": 31.217524773447437,
+    "longitude": 121.50132179260254
+   },
+   "azimuth": 0,
+   "pitch": 6.2,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 2000,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "shanghai-wfc:applied",
+    "oriental-pearl:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 4.0 m · 离地 100 m"
+  },
+  {
+   "id": "shanghai-tower",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "上海中心无纹理精细模型 · 定位与朝向近似 · 约 2.0 km · 54,682 面",
+   "observer": {
+    "latitude": 31.2355094685602,
+    "longitude": 121.52235746734311
+   },
+   "azimuth": 270,
+   "pitch": 6.2,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 2000,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "shanghai-wfc:applied",
+    "oriental-pearl:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 8.4 m · 离地 100 m"
+  },
+  {
+   "id": "shanghai-wfc",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "上海环球金融中心精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.6 km",
+   "observer": {
+    "latitude": 31.22241392419352,
+    "longitude": 121.50303577399995
+   },
+   "azimuth": 0,
+   "pitch": 5.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1574.4,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [
+    "shanghai-tower:fallback",
+    "oriental-pearl:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 0.0 m · 离地 100 m"
+  },
+  {
+   "id": "shanghai-wfc",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "上海环球金融中心无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 6,950 面",
+   "observer": {
+    "latitude": 31.07746060208392,
+    "longitude": 121.31741489763351
+   },
+   "azimuth": 44.9,
+   "pitch": 0.2,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 732,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "shanghai-tower:applied",
+    "oriental-pearl:applied"
+   ],
+   "facts": "732 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 3.0 m · 离地 100 m"
+  },
+  {
+   "id": "shanghai-wfc",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "上海环球金融中心无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.6 km · 6,950 面",
+   "observer": {
+    "latitude": 31.22241392419352,
+    "longitude": 121.50303577399995
+   },
+   "azimuth": 0,
+   "pitch": 5.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1574.4,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "shanghai-tower:applied",
+    "oriental-pearl:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 0.0 m · 离地 100 m"
+  },
+  {
+   "id": "shanghai-wfc",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "上海环球金融中心无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.6 km · 6,950 面",
+   "observer": {
+    "latitude": 31.236571762956693,
+    "longitude": 121.51959524331949
+   },
+   "azimuth": 270,
+   "pitch": 5.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1574.4,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "shanghai-tower:applied",
+    "oriental-pearl:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 10.7 m · 离地 100 m"
+  },
+  {
+   "id": "sydney-opera-house",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "悉尼歌剧院精细模型未应用，保留粗体块；可重新读取建筑。 · 约 0.4 km",
+   "observer": {
+    "latitude": -33.86052750138216,
+    "longitude": 151.21506512999997
+   },
+   "azimuth": 0,
+   "pitch": 0.4,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 84,
+   "distanceMetres": 380,
+   "utc": "2026-11-03T23:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [],
+   "facts": "84 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 16.0 m · 离地 30 m"
+  },
+  {
+   "id": "sydney-opera-house",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "悉尼歌剧院无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 30,022 面",
+   "observer": {
+    "latitude": -34.01594051495587,
+    "longitude": 151.02326608313092
+   },
+   "azimuth": 45.1,
+   "pitch": -0.1,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-03T23:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 85.8 m · 离地 30 m"
+  },
+  {
+   "id": "sydney-opera-house",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "悉尼歌剧院无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.4 km · 30,022 面",
+   "observer": {
+    "latitude": -33.86052750138216,
+    "longitude": 151.21506512999997
+   },
+   "azimuth": 0,
+   "pitch": 0.4,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 84,
+   "distanceMetres": 380,
+   "utc": "2026-11-03T23:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "84 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 16.0 m · 离地 30 m"
+  },
+  {
+   "id": "sydney-opera-house",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "悉尼歌剧院无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.4 km · 30,022 面",
+   "observer": {
+    "latitude": -33.857110015625814,
+    "longitude": 151.21918037050796
+   },
+   "azimuth": 270,
+   "pitch": 0.4,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 84,
+   "distanceMetres": 380,
+   "utc": "2026-11-03T23:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "84 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 6.0 m · 离地 30 m"
+  },
+  {
+   "id": "sydney-opera-house",
+   "kind": "r1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "悉尼歌剧院无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 2.5 km · 30,022 面",
+   "observer": {
+    "latitude": -33.84586636040502,
+    "longitude": 151.2385087731467
+   },
+   "azimuth": 240,
+   "pitch": 0,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 554,
+   "distanceMetres": 2500,
+   "utc": "2026-11-03T23:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "554 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 1.3 m · 离地 30 m"
+  },
+  {
+   "id": "taipei-101",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "台北101精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.6 km",
+   "observer": {
+    "latitude": 25.019050412167292,
+    "longitude": 121.564797225
+   },
+   "azimuth": 0,
+   "pitch": 5.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1625.6000000000001,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 140.5 m · 离地 100 m"
+  },
+  {
+   "id": "taipei-101",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "台北101无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 2,894 面",
+   "observer": {
+    "latitude": 24.874588212438354,
+    "longitude": 121.38956205238037
+   },
+   "azimuth": 44.9,
+   "pitch": 0.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 709,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "709 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 156.0 m · 离地 100 m"
+  },
+  {
+   "id": "taipei-101",
+   "kind": "f2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "台北101无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 15.0 km · 2,894 面",
+   "observer": {
+    "latitude": 25.129019937822587,
+    "longitude": 121.45943809162918
+   },
+   "azimuth": 135,
+   "pitch": 0.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 425,
+   "distanceMetres": 15000,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "425 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 5.9 m · 离地 100 m"
+  },
+  {
+   "id": "taipei-101",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "台北101无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.6 km · 2,894 面",
+   "observer": {
+    "latitude": 25.019050412167292,
+    "longitude": 121.564797225
+   },
+   "azimuth": 0,
+   "pitch": 5.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1625.6000000000001,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 140.5 m · 离地 100 m"
+  },
+  {
+   "id": "taipei-101",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "台北101无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.6 km · 2,894 面",
+   "observer": {
+    "latitude": 25.0336688929519,
+    "longitude": 121.58093231912824
+   },
+   "azimuth": 270,
+   "pitch": 5.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1625.6000000000001,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 13.1 m · 离地 100 m"
+  },
+  {
+   "id": "three-world-trade-center",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "世贸中心三号楼精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.1 km",
+   "observer": {
+    "latitude": 40.70156119603587,
+    "longitude": -74.01111879299998
+   },
+   "azimuth": 0,
+   "pitch": 3.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1052.48,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [
+    "one-world-trade-center:fallback",
+    "empire-state-building:fallback",
+    "chrysler-building:fallback",
+    "metlife-building:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 1.5 m · 离地 100 m"
+  },
+  {
+   "id": "three-world-trade-center",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "世贸中心三号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 20,000 面",
+   "observer": {
+    "latitude": 40.551858351375614,
+    "longitude": -74.22035161041106
+   },
+   "azimuth": 44.9,
+   "pitch": 0,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "one-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 9.4 m · 离地 100 m"
+  },
+  {
+   "id": "three-world-trade-center",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "世贸中心三号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.1 km · 20,000 面",
+   "observer": {
+    "latitude": 40.70156119603587,
+    "longitude": -74.01111879299998
+   },
+   "azimuth": 0,
+   "pitch": 3.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1052.48,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "one-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 1.5 m · 离地 100 m"
+  },
+  {
+   "id": "three-world-trade-center",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "世贸中心三号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.1 km · 20,000 面",
+   "observer": {
+    "latitude": 40.71102569027131,
+    "longitude": -73.99863191085808
+   },
+   "azimuth": 270,
+   "pitch": 3.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1052.48,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "one-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 3.4 m · 离地 100 m"
+  },
+  {
+   "id": "three-world-trade-center",
+   "kind": "r1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "世贸中心三号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 2.2 km · 20,000 面",
+   "observer": {
+    "latitude": 40.70826993423071,
+    "longitude": -74.03696504943207
+   },
+   "azimuth": 82,
+   "pitch": 1.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 96,
+   "distanceMetres": 2200,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "one-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "96 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 2.0 m · 离地 100 m"
+  },
+  {
+   "id": "tokyo-skytree",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "晴空塔精细模型未应用，保留粗体块；可重新读取建筑。 · 约 2.0 km",
+   "observer": {
+    "latitude": 35.69205867516086,
+    "longitude": 139.81071889400482
+   },
+   "azimuth": 0,
+   "pitch": 6.2,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 45,
+   "distanceMetres": 2000,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [
+    "tokyo-tower:fallback"
+   ],
+   "facts": "45 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 0.5 m · 离地 100 m"
+  },
+  {
+   "id": "tokyo-skytree",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "晴空塔无纹理精细模型 · 定位与朝向近似 · 约 25.0 km · 88,581 面",
+   "observer": {
+    "latitude": 35.550908172672436,
+    "longitude": 139.61531706037238
+   },
+   "azimuth": 44.9,
+   "pitch": 0.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 568,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "tokyo-tower:applied"
+   ],
+   "facts": "568 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 6.5 m · 离地 100 m"
+  },
+  {
+   "id": "tokyo-skytree",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "晴空塔无纹理精细模型 · 定位与朝向近似 · 约 2.0 km · 88,581 面",
+   "observer": {
+    "latitude": 35.69205867516086,
+    "longitude": 139.81071889400482
+   },
+   "azimuth": 0,
+   "pitch": 6.2,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 45,
+   "distanceMetres": 2000,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "tokyo-tower:applied"
+   ],
+   "facts": "45 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 0.5 m · 离地 100 m"
+  },
+  {
+   "id": "tokyo-skytree",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "晴空塔无纹理精细模型 · 定位与朝向近似 · 约 2.0 km · 88,581 面",
+   "observer": {
+    "latitude": 35.71004305303512,
+    "longitude": 139.83287015414442
+   },
+   "azimuth": 270,
+   "pitch": 6.2,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 45,
+   "distanceMetres": 2000,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "tokyo-tower:applied"
+   ],
+   "facts": "45 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ -2.0 m · 离地 100 m"
+  },
+  {
+   "id": "tokyo-tower",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "东京塔精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.1 km",
+   "observer": {
+    "latitude": 35.649007609880535,
+    "longitude": 139.7454446554184
+   },
+   "azimuth": 0,
+   "pitch": 3.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1065.6000000000001,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [
+    "tokyo-skytree:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 5.0 m · 离地 100 m"
+  },
+  {
+   "id": "tokyo-tower",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "东京塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 74,767 面",
+   "observer": {
+    "latitude": 35.49945415695043,
+    "longitude": 139.55016806651633
+   },
+   "azimuth": 44.9,
+   "pitch": 0.1,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "tokyo-skytree:applied"
+   ],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 70.0 m · 离地 100 m"
+  },
+  {
+   "id": "tokyo-tower",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "东京塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.1 km · 74,767 面",
+   "observer": {
+    "latitude": 35.649007609880535,
+    "longitude": 139.7454446554184
+   },
+   "azimuth": 0,
+   "pitch": 3.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1065.6000000000001,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "tokyo-skytree:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 5.0 m · 离地 100 m"
+  },
+  {
+   "id": "tokyo-tower",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "东京塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.1 km · 74,767 面",
+   "observer": {
+    "latitude": 35.6585901926696,
+    "longitude": 139.75723923771534
+   },
+   "azimuth": 270,
+   "pitch": 3.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1065.6000000000001,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [
+    "tokyo-skytree:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 1.5 m · 离地 100 m"
+  },
+  {
+   "id": "willis-tower",
+   "kind": "b1",
+   "phase": "ready",
+   "landmarkPhase": "fallback",
+   "status": "威利斯大厦精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.7 km",
+   "observer": {
+    "latitude": 41.86372086138614,
+    "longitude": -87.63586834400002
+   },
+   "azimuth": 0,
+   "pitch": 5.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1686.4,
+   "utc": "2026-11-04T16:30:00Z",
+   "modelRequestsBlocked": true,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 179.3 m · 离地 100 m"
+  },
+  {
+   "id": "willis-tower",
+   "kind": "f1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "威利斯大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 24,798 面",
+   "observer": {
+    "latitude": 41.71971106195177,
+    "longitude": -87.84885985357505
+   },
+   "azimuth": 44.9,
+   "pitch": 0.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 683,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T16:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "683 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 216.7 m · 离地 100 m"
+  },
+  {
+   "id": "willis-tower",
+   "kind": "n1",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "威利斯大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.7 km · 24,798 面",
+   "observer": {
+    "latitude": 41.86372086138614,
+    "longitude": -87.63586834400002
+   },
+   "azimuth": 0,
+   "pitch": 5.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1686.4,
+   "utc": "2026-11-04T16:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 179.3 m · 离地 100 m"
+  },
+  {
+   "id": "willis-tower",
+   "kind": "n2",
+   "phase": "ready",
+   "landmarkPhase": "applied",
+   "status": "威利斯大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.7 km · 24,798 面",
+   "observer": {
+    "latitude": 41.878885200349075,
+    "longitude": -87.61549901513979
+   },
+   "azimuth": 270,
+   "pitch": 5.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1686.4,
+   "utc": "2026-11-04T16:30:00Z",
+   "modelRequestsBlocked": false,
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 175.5 m · 离地 100 m"
+  }
+ ],
+ "mobile": {
+  "viewport": "390x844 @2x",
+  "shanghai": {
+   "phase": "ready",
+   "landmarks": [
+    {
+     "id": "shanghai-tower",
+     "phase": "applied",
+     "text": "上海中心无纹理精细模型 · 定位与朝向近似 · 约 1.5 km · 54,682 面"
+    },
+    {
+     "id": "shanghai-wfc",
+     "phase": "applied",
+     "text": "上海环球金融中心无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.6 km · 6,950 面"
+    },
+    {
+     "id": "oriental-pearl",
+     "phase": "applied",
+     "text": "东方明珠无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 2.3 km · 9,600 面"
+    }
+   ],
+   "restored": [
+    "shanghai-tower:applied",
+    "shanghai-wfc:applied",
+    "oriental-pearl:applied"
+   ]
+  },
+  "restoredAfterTabSwitch": [
+   "shanghai-tower:applied",
+   "shanghai-wfc:applied",
+   "oriental-pearl:applied"
+  ]
+ },
+ "about": {
+  "missingNames": [],
+  "missingAuthors": [],
+  "landmarkDownloadLinks": 42
+ },
+ "consoleWarningsOrErrors": [
+  "log warning: layers[highway-shield-non-us].filter[1]: Expected value to be of type number, but found null instead. Falling back to false. http://127.0.0.1:5181/Tamatamatori/assets/maplibre-gl-worker-BslLc_p7.js",
+  "log warning: layers[highway-shield-us-interstate].filter[1]: Expected value to be of type number, but found null instead. Falling back to false. http://127.0.0.1:5181/Tamatamatori/assets/maplibre-gl-worker-BslLc_p7.js",
+  "log warning: layers[road_shield_us].filter[1]: Expected value to be of type number, but found null instead. Falling back to false. http://127.0.0.1:5181/Tamatamatori/assets/maplibre-gl-worker-BslLc_p7.js"
+ ]
+}

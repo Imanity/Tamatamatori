@@ -1,0 +1,133 @@
+{
+ "id": "three-world-trade-center",
+ "assetSha256": "353ed72bc4e9018a6d358bdb00f5068c50c6812251f42481a1d8c3426b61d84a",
+ "placementHash": "71646788a6cb02c9c5b0755ee9d23bc311959bff47fa309bfbc6de31ae0adfa8",
+ "gpuPassed": true,
+ "recordedAt": "2026-11-08",
+ "build": "Production /Tamatamatori/ subpath via vite preview on 127.0.0.1:5181; Chrome 157 on this Windows machine with native GPU, occlusion throttling disabled, viewport emulated 2000×1250",
+ "screenshots": [
+  "docs/plan/landmark-batch-evidence/three-world-trade-center-gpu.jpg"
+ ],
+ "scenes": [
+  {
+   "kind": "n1",
+   "observer": {
+    "latitude": 40.70156119603587,
+    "longitude": -74.01111879299998
+   },
+   "azimuth": 0,
+   "pitch": 3.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1052.48,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "世贸中心三号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.1 km · 20,000 面",
+   "sameScene": [
+    "one-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 1.5 m · 离地 100 m"
+  },
+  {
+   "kind": "n2",
+   "observer": {
+    "latitude": 40.71102569027131,
+    "longitude": -73.99863191085808
+   },
+   "azimuth": 270,
+   "pitch": 3.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1052.48,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "世贸中心三号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.1 km · 20,000 面",
+   "sameScene": [
+    "one-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 3.4 m · 离地 100 m"
+  },
+  {
+   "kind": "f1",
+   "observer": {
+    "latitude": 40.551858351375614,
+    "longitude": -74.22035161041106
+   },
+   "azimuth": 44.9,
+   "pitch": 0,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "世贸中心三号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 20,000 面",
+   "sameScene": [
+    "one-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 9.4 m · 离地 100 m"
+  },
+  {
+   "kind": "b1",
+   "observer": {
+    "latitude": 40.70156119603587,
+    "longitude": -74.01111879299998
+   },
+   "azimuth": 0,
+   "pitch": 3.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1052.48,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": true,
+   "landmarkPhase": "fallback",
+   "landmarkStatus": "世贸中心三号楼精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.1 km",
+   "sameScene": [
+    "one-world-trade-center:fallback",
+    "empire-state-building:fallback",
+    "chrysler-building:fallback",
+    "metlife-building:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 1.5 m · 离地 100 m"
+  },
+  {
+   "kind": "r1",
+   "observer": {
+    "latitude": 40.70826993423071,
+    "longitude": -74.03696504943207
+   },
+   "azimuth": 82,
+   "pitch": 1.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 96,
+   "distanceMetres": 2200,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "世贸中心三号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 2.2 km · 20,000 面",
+   "sameScene": [
+    "one-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "96 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 2.0 m · 离地 100 m"
+  }
+ ],
+ "observations": "泽西城跨河视角可见立面斜撑，与一号楼相对位置正确；下城内部近景遮挡较多；远景同框正常。",
+ "limitations": [
+  "画面验收确认渲染位置、尺度、朝向与同机位 OSM 粗体块对照一致，以及远景着地和失败回退；不代表实景测绘精度。",
+  "未测实体手机与 GPU 帧耗时。"
+ ]
+}

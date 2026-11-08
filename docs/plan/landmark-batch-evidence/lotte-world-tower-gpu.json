@@ -1,0 +1,90 @@
+{
+ "id": "lotte-world-tower",
+ "assetSha256": "a77d5ec57828da9fd5ab35088ae9be5aa2e41ca4b02480927ecb5a049021fa9f",
+ "placementHash": "b854e9c67e72780e2726d554d7fac556efbf4b4d883cc6970601ad6390541810",
+ "gpuPassed": true,
+ "recordedAt": "2026-11-08",
+ "build": "Production /Tamatamatori/ subpath via vite preview on 127.0.0.1:5181; Chrome 157 on this Windows machine with native GPU, occlusion throttling disabled, viewport emulated 2000×1250",
+ "screenshots": [
+  "docs/plan/landmark-batch-evidence/lotte-world-tower-gpu.jpg"
+ ],
+ "scenes": [
+  {
+   "kind": "n1",
+   "observer": {
+    "latitude": 37.49656867134025,
+    "longitude": 127.10265793899998
+   },
+   "azimuth": 0,
+   "pitch": 5.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1776,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "乐天世界塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.8 km · 9,766 面",
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 20.0 m · 离地 100 m"
+  },
+  {
+   "kind": "n2",
+   "observer": {
+    "latitude": 37.51253889201039,
+    "longitude": 127.12279349764697
+   },
+   "azimuth": 270,
+   "pitch": 5.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1776,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "乐天世界塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.8 km · 9,766 面",
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 33.2 m · 离地 100 m"
+  },
+  {
+   "kind": "f1",
+   "observer": {
+    "latitude": 37.35339296425379,
+    "longitude": 126.90266157248459
+   },
+   "azimuth": 44.9,
+   "pitch": 0.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 649,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "乐天世界塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 9,766 面",
+   "sameScene": [],
+   "facts": "649 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 281.7 m · 离地 100 m"
+  },
+  {
+   "kind": "b1",
+   "observer": {
+    "latitude": 37.49656867134025,
+    "longitude": 127.10265793899998
+   },
+   "azimuth": 0,
+   "pitch": 5.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1776,
+   "utc": "2026-11-04T01:30:00Z",
+   "modelRequestsBlocked": true,
+   "landmarkPhase": "fallback",
+   "landmarkStatus": "乐天世界塔精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.8 km",
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 20.0 m · 离地 100 m"
+  }
+ ],
+ "observations": "南、东近景与拦截后的 OSM 棱柱位置/高度一致；25 km 远景机位在 282 m 高山上，塔基低于画框，可见山体均在塔后。",
+ "limitations": [
+  "画面验收确认渲染位置、尺度、朝向与同机位 OSM 粗体块对照一致，以及远景着地和失败回退；不代表实景测绘精度。",
+  "未测实体手机与 GPU 帧耗时。"
+ ]
+}

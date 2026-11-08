@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "pipelineVersion": 1,
+  "id": "taipei-101",
+  "name": "台北101",
+  "version": 1,
+  "recipeHash": "6839bfa21af6704f67ce07e19fb66256f1628e5a484eb0a387d76c2b7fa26e55",
+  "format": "TTLM 1; float32 ENU+normal stride6, uint32 indices; little-endian; gzip",
+  "source": {
+    "sha256": "96b0a437e5c200f5656b410fb6ec1f7c4be98c623ae6121e9070dc1ec7718bd7",
+    "filename": "taipei_101.glb",
+    "title": "Taipei 101",
+    "author": "NanoRay",
+    "authorPage": "https://sketchfab.com/NanoRay",
+    "page": "https://sketchfab.com/3d-models/taipei-101-3ad8ae3d456f425a9602166f35bf0d6e",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。",
+    "bytes": 118984,
+    "vertices": 3286,
+    "triangles": 2894
+  },
+  "frame": {
+    "space": "local",
+    "axes": [
+      "+x",
+      "+z",
+      "-y"
+    ],
+    "center": [
+      0,
+      0
+    ],
+    "height": 508,
+    "heightReference": "https://en.wikipedia.org/wiki/Taipei_101",
+    "yawDegrees": 88.65,
+    "requireSharedTransform": true,
+    "normalizeNormals": true,
+    "minimum": [
+      -10,
+      -10,
+      0
+    ],
+    "maximum": [
+      10,
+      10,
+      168.6060028076172
+    ],
+    "scale": 3.012941363538747
+  },
+  "processing": {
+    "targetTriangles": 2894,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true,
+    "reportedError": 0
+  },
+  "geo": {
+    "latitude": 25.033669764,
+    "longitude": 121.564797225,
+    "partRadius": 34,
+    "parts": [
+      {
+        "id": 13394877180,
+        "height": 151,
+        "base": 0
+      },
+      {
+        "id": 13394877172,
+        "height": 337,
+        "base": 0
+      },
+      {
+        "id": 1986379692,
+        "height": 386,
+        "base": 0
+      },
+      {
+        "id": 6151836212,
+        "height": 391,
+        "base": 386
+      },
+      {
+        "id": 6151836222,
+        "height": 439,
+        "base": 390
+      },
+      {
+        "id": 6151842692,
+        "height": 448,
+        "base": 439
+      },
+      {
+        "id": 6151836232,
+        "height": 508,
+        "base": 448
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 88.65°，各层 IoU 0.02–0.95，地面层尺度比约 1.12；次优候选 268.15°（得分 0.787，最优 0.788）。使用共享局部框架，去除作者场景约 2.3° 倾斜；方形塔身存在 90° 对称歧义。模型不含裙楼购物中心，保留其 OSM 体块；塔底外扩处约大 12%。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "bounds": {
+    "horizontal": 31,
+    "height": 508
+  },
+  "asset": {
+    "file": "taipei-101-v1.ttlm.gz",
+    "sha256": "3372e70173e69d678f375f77082fca6bb1835a00a04b1294cf5f53a3a4de1e2c",
+    "decodedSha256": "70b58e702c34c84cee68bd81312b8749559eb620ee7fba10f243e34bf4b6a00a",
+    "bytes": 48992,
+    "decodedBytes": 113624,
+    "vertices": 3286,
+    "triangles": 2894
+  },
+  "tools": {
+    "@gltf-transform/core": "4.5.0",
+    "meshoptimizer": "1.3.0"
+  },
+  "limitations": [
+    "社区外观模型，定位与朝向近似，不提供测绘精度。",
+    "无纹理、不透明共享光照，不模拟玻璃或夜景灯光。",
+    "地面沿用同源 DEM，不套固定高程偏移。"
+  ]
+}

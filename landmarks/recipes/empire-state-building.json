@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "id": "empire-state-building",
+  "name": "帝国大厦",
+  "version": 1,
+  "source": {
+    "sha256": "a7c649647504a08d32a4b7c99b9d60826361bc39266da22e079fa1e42df44d16",
+    "filename": "empire_state_building.glb",
+    "title": "Empire State Building",
+    "author": "NanoRay",
+    "authorPage": "https://sketchfab.com/NanoRay",
+    "page": "https://sketchfab.com/3d-models/empire-state-building-2174e71baa1d43e896461ed149dad54a",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。"
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": "base-bounds",
+    "height": 443.2,
+    "heightReference": "https://en.wikipedia.org/wiki/Empire_State_Building",
+    "yawDegrees": 150.7,
+    "requireSharedTransform": false,
+    "normalizeNormals": true
+  },
+  "processing": {
+    "targetTriangles": 30000,
+    "maxErrorMetres": 0.1,
+    "normalWeight": 0.01,
+    "weld": true,
+    "positionMergeTolerance": 0.0001,
+    "normalMergeTolerance": 0.001,
+    "permissive": true
+  },
+  "geo": {
+    "latitude": 40.74848264,
+    "longitude": -73.985776336,
+    "partRadius": 20,
+    "parts": [
+      {
+        "id": 1374251292,
+        "height": 290,
+        "base": 255
+      },
+      {
+        "id": 1374251252,
+        "height": 310,
+        "base": 290
+      },
+      {
+        "id": 1374251442,
+        "height": 320,
+        "base": 0
+      },
+      {
+        "id": 1374251422,
+        "height": 330,
+        "base": 0
+      },
+      {
+        "id": 2659326182,
+        "height": 390,
+        "base": 330
+      },
+      {
+        "id": 1374251452,
+        "height": 444,
+        "base": 330
+      },
+      {
+        "id": 1374251312,
+        "height": 75,
+        "base": 18
+      },
+      {
+        "id": 1374251282,
+        "height": 115,
+        "base": 90
+      },
+      {
+        "id": 1374251272,
+        "height": 255,
+        "base": 115
+      },
+      {
+        "id": 108720540,
+        "height": 17,
+        "base": 0
+      },
+      {
+        "id": 1374251332,
+        "height": 90,
+        "base": 75
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 150.70°，各层 IoU 0.05–0.86，地面层尺度比约 1.02；次优候选 331.00°（得分 0.668，最优 0.669）。与 180° 翻转候选得分接近，前后立面存在歧义；中段各层 IoU 约 0.83。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  }
+}

@@ -1,0 +1,133 @@
+{
+ "id": "empire-state-building",
+ "assetSha256": "b5d8df10a0ee579cc82dd35d3a1d94b40d13518b0a79dd4300b35fa2e586199f",
+ "placementHash": "eed9e1e27392a722a1d6bd48d6e67fb06a7301c30368ccd5f692187addda0d81",
+ "gpuPassed": true,
+ "recordedAt": "2026-11-08",
+ "build": "Production /Tamatamatori/ subpath via vite preview on 127.0.0.1:5181; Chrome 157 on this Windows machine with native GPU, occlusion throttling disabled, viewport emulated 2000×1250",
+ "screenshots": [
+  "docs/plan/landmark-batch-evidence/empire-state-building-gpu.jpg"
+ ],
+ "scenes": [
+  {
+   "kind": "n1",
+   "observer": {
+    "latitude": 40.73572811887351,
+    "longitude": -73.98577633600001
+   },
+   "azimuth": 0,
+   "pitch": 4.9,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1418.24,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "帝国大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.4 km · 37,513 面",
+   "sameScene": [
+    "chrysler-building:applied",
+    "metlife-building:applied",
+    "one-world-trade-center:applied",
+    "three-world-trade-center:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 9.4 m · 离地 100 m"
+  },
+  {
+   "kind": "n2",
+   "observer": {
+    "latitude": 40.7484814168326,
+    "longitude": -73.96894051307157
+   },
+   "azimuth": 270,
+   "pitch": 4.9,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1418.24,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "帝国大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.4 km · 37,513 面",
+   "sameScene": [
+    "chrysler-building:applied",
+    "metlife-building:applied",
+    "one-world-trade-center:applied",
+    "three-world-trade-center:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 8.5 m · 离地 100 m"
+  },
+  {
+   "kind": "f1",
+   "observer": {
+    "latitude": 40.58931437848408,
+    "longitude": -74.19512630130635
+   },
+   "azimuth": 44.9,
+   "pitch": 0.2,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 812,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "帝国大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 37,513 面",
+   "sameScene": [
+    "three-world-trade-center:applied",
+    "one-world-trade-center:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "812 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 5.1 m · 离地 100 m"
+  },
+  {
+   "kind": "b1",
+   "observer": {
+    "latitude": 40.73572811887351,
+    "longitude": -73.98577633600001
+   },
+   "azimuth": 0,
+   "pitch": 4.9,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1418.24,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": true,
+   "landmarkPhase": "fallback",
+   "landmarkStatus": "帝国大厦精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.4 km",
+   "sameScene": [
+    "chrysler-building:fallback",
+    "metlife-building:fallback",
+    "one-world-trade-center:fallback",
+    "three-world-trade-center:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 9.4 m · 离地 100 m"
+  },
+  {
+   "kind": "r1",
+   "observer": {
+    "latitude": 40.74533774734277,
+    "longitude": -73.9384755535358
+   },
+   "azimuth": 275,
+   "pitch": 1.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 130,
+   "distanceMetres": 4000,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "帝国大厦无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 4.0 km · 37,513 面",
+   "sameScene": [
+    "chrysler-building:applied",
+    "metlife-building:applied",
+    "three-world-trade-center:applied",
+    "one-world-trade-center:applied"
+   ],
+   "facts": "130 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 4.0 m · 离地 100 m"
+  }
+ ],
+ "observations": "东河对岸 4 km 跨河视角清晰，与克莱斯勒同框；南侧近景与拦截后的 OSM 体块位置/高度一致；25 km 远景与大都会人寿、克莱斯勒同框。",
+ "limitations": [
+  "画面验收确认渲染位置、尺度、朝向与同机位 OSM 粗体块对照一致，以及远景着地和失败回退；不代表实景测绘精度。",
+  "未测实体手机与 GPU 帧耗时。"
+ ]
+}

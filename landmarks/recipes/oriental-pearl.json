@@ -1,0 +1,229 @@
+{
+  "schemaVersion": 1,
+  "id": "oriental-pearl",
+  "name": "东方明珠",
+  "version": 2,
+  "source": {
+    "sha256": "e86964a0cd4fe0821a7384ad85eba07a9ccf367c761a1478062a9c9f478f5cb7",
+    "filename": "oriental_pearl_shanghai..glb",
+    "title": "Oriental Pearl, Shanghai.",
+    "author": "drosovila",
+    "authorPage": "https://sketchfab.com/Drosovila",
+    "page": "https://sketchfab.com/3d-models/oriental-pearl-shanghai-a80155b3f47240ce9a2f79fb8bff9024",
+    "license": "CC BY-NC 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "upstreamNotes": "作者说明部分纹理与实物不同（为避免球面纹理变形）；参考资料未注明。原模型含 alpha 镂空纹理，去纹理后镂空段为实心。许可禁止商业使用；不作为测绘或设计资料。"
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": [
+      0,
+      1083.8984375
+    ],
+    "height": 468,
+    "heightReference": "https://en.wikipedia.org/wiki/Oriental_Pearl_Tower",
+    "yawDegrees": 99.25,
+    "requireSharedTransform": false,
+    "normalizeNormals": true
+  },
+  "processing": {
+    "targetTriangles": 5063,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true
+  },
+  "geo": {
+    "latitude": 31.241893518,
+    "longitude": 121.495260006,
+    "partRadius": 58,
+    "parts": [
+      {
+        "id": 5241958400,
+        "height": 55,
+        "base": 43
+      },
+      {
+        "id": 5241958420,
+        "height": 65,
+        "base": 52
+      },
+      {
+        "id": 5241958360,
+        "height": 74,
+        "base": 61
+      },
+      {
+        "id": 5241958410,
+        "height": 83,
+        "base": 70
+      },
+      {
+        "id": 5241958350,
+        "height": 92,
+        "base": 79
+      },
+      {
+        "id": 5241958992,
+        "height": 103,
+        "base": 89
+      },
+      {
+        "id": 5241958932,
+        "height": 110,
+        "base": 83
+      },
+      {
+        "id": 5241958852,
+        "height": 115,
+        "base": 78
+      },
+      {
+        "id": 5241958962,
+        "height": 119,
+        "base": 74
+      },
+      {
+        "id": 5241958882,
+        "height": 121,
+        "base": 72
+      },
+      {
+        "id": 5241958842,
+        "height": 127,
+        "base": 118
+      },
+      {
+        "id": 5241958832,
+        "height": 149,
+        "base": 141
+      },
+      {
+        "id": 5241958822,
+        "height": 172,
+        "base": 163
+      },
+      {
+        "id": 5241958812,
+        "height": 194,
+        "base": 185
+      },
+      {
+        "id": 5241958802,
+        "height": 217,
+        "base": 208
+      },
+      {
+        "id": 5241958792,
+        "height": 239,
+        "base": 230
+      },
+      {
+        "id": 5209901940,
+        "height": 275,
+        "base": 0
+      },
+      {
+        "id": 5256172182,
+        "height": 275,
+        "base": 258
+      },
+      {
+        "id": 5256172192,
+        "height": 275,
+        "base": 255
+      },
+      {
+        "id": 5256172202,
+        "height": 275,
+        "base": 252
+      },
+      {
+        "id": 5241959142,
+        "height": 287,
+        "base": 263
+      },
+      {
+        "id": 5241959112,
+        "height": 292,
+        "base": 275
+      },
+      {
+        "id": 5241959072,
+        "height": 295,
+        "base": 275
+      },
+      {
+        "id": 5241959032,
+        "height": 298,
+        "base": 275
+      },
+      {
+        "id": 5242706432,
+        "height": 348,
+        "base": 275
+      },
+      {
+        "id": 5242706452,
+        "height": 354,
+        "base": 342
+      },
+      {
+        "id": 5242706442,
+        "height": 355,
+        "base": 340
+      },
+      {
+        "id": 5242706422,
+        "height": 407,
+        "base": 347
+      },
+      {
+        "id": 5242706412,
+        "height": 468,
+        "base": 406
+      },
+      {
+        "id": 5241958340,
+        "height": 46,
+        "base": 33
+      },
+      {
+        "id": 5241958330,
+        "height": 28,
+        "base": 15
+      },
+      {
+        "id": 5241958380,
+        "height": 37,
+        "base": 24
+      },
+      {
+        "id": 5241958390,
+        "height": 10,
+        "base": 0
+      },
+      {
+        "id": 5241958370,
+        "height": 19,
+        "base": 6
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。网格原点即塔轴，锚点取 OSM 立柱与球体分层的共同中心；三根立柱与三根斜撑脚的方位拟合 ENU 逆时针 99.25°，残差约 ±3°。多高度层俯视轮廓 IoU 0.31–0.86（均值约 0.66），地面层因塔座平台与斜撑外张尺度比约 1.79。主体三重对称，219.25° 与 339.25° 得分相同，模型塔座入口坡道的朝向无法由 OSM 核实。与 OSM 分层相比，下球约 70–125 m、直径约 52 m（OSM 72–121 m、约 48 m），上球约 250–300 m，太空舱直径约 19 m 偏大，斜撑落地半径约 60 m（OSM 约 55 m）；原 alpha 镂空的上部筒身与天线段去纹理后为实心。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  }
+}

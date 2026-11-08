@@ -2,6 +2,123 @@
   "schemaVersion": 1,
   "entries": [
     {
+      "id": "big-ben",
+      "version": 2,
+      "recipeHash": "564b61d5aa751f5947c3647a79a7a9b702e2007d2cde1d88e4f1be70b2bd42a2",
+      "assetSha256": "8195d206baede79e7938c4cfcb285c1b8160d35b2f8af16b061fb096e2a85332",
+      "placementHash": "3b64d31e0b5945098fa5fa8d7fada457f0e26aa3b381062fb9216c96e6f187e4",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/big-ben-gpu.json"
+    },
+    {
+      "id": "burj-al-arab",
+      "version": 1,
+      "recipeHash": "86987f27f115e8df6a39fb0d314c1ac4350f45745f25de26c5f17a65494c6e1f",
+      "assetSha256": "dfc7d4e4237b69cf091aeca97aa55454f3641419da4614af5fee3ddfa7fd6d1b",
+      "placementHash": "fe70022513246a9a0d6c62dba41538a335366f64d14d53d3e3133056003d74dc",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/burj-al-arab-gpu.json"
+    },
+    {
+      "id": "burj-khalifa",
+      "version": 1,
+      "recipeHash": "8b4bd8b19e40ba3d883a6286cbbc2dc2f56c0c0ef7a1b74d559a2ec9cecfddf6",
+      "assetSha256": "f84d2c285b08f6f289783298957fd9d24488a608e110640bf868a70c62456480",
+      "placementHash": "9ba47128f2c67bd491f8e7ef5dc4223c383bc9e42421918912ab00a70eb0162a",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/burj-khalifa-gpu.json"
+    },
+    {
+      "id": "chrysler-building",
+      "version": 1,
+      "recipeHash": "712b4707bebad84f17207f2eadbd02a63fb15bf4aab719c809623b8104d2269d",
+      "assetSha256": "feb86f03df22e2f3aca0b6e77a164c9579f84f0cdabced4f666819a90d9f99fb",
+      "placementHash": "818b5f4089828e68aeafd28599e5f4160d53c50c008bdd6debc2a8f88bef4667",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/chrysler-building-gpu.json"
+    },
+    {
+      "id": "cn-tower",
+      "version": 1,
+      "recipeHash": "2f54e2680bb88cec3c62d2b7996f43fb1f3b14294aa6452e52f5fdbf65d71611",
+      "assetSha256": "cafaaa8a0c6ec84eebee83d385f9e3a1394bcd93e396236dfc4c8ab0538207a2",
+      "placementHash": "fc15436b099f22f8a7573f6f194255a86eeec0507d1cc6ffeed62629ff4abf58",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/cn-tower-gpu.json"
+    },
+    {
+      "id": "eiffel-tower",
+      "version": 1,
+      "recipeHash": "5c29fe2b94f33060bc2dc24ba44cc7b268aefa489230ef85a35a7cd1bd7e7d33",
+      "assetSha256": "e9f2a9b0d10bbe481dc2d7c3bbbe716fff3357c2d215470552c25addf342ad6d",
+      "placementHash": "37a4b67831b807ba92ef42711643d7e909c180338497656efa124b90b6512d31",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/eiffel-tower-gpu.json"
+    },
+    {
+      "id": "empire-state-building",
+      "version": 1,
+      "recipeHash": "5244503fc691ac55333d936bb40ead03e90a637b5c4aff7ce6c620b7c411fccd",
+      "assetSha256": "b5d8df10a0ee579cc82dd35d3a1d94b40d13518b0a79dd4300b35fa2e586199f",
+      "placementHash": "eed9e1e27392a722a1d6bd48d6e67fb06a7301c30368ccd5f692187addda0d81",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/empire-state-building-gpu.json"
+    },
+    {
+      "id": "lotte-world-tower",
+      "version": 1,
+      "recipeHash": "a8b37af21ca6081694a1388c4fdbc0bc8ac5923acf2cff575948d8b6dc9d0d9a",
+      "assetSha256": "a77d5ec57828da9fd5ab35088ae9be5aa2e41ca4b02480927ecb5a049021fa9f",
+      "placementHash": "b854e9c67e72780e2726d554d7fac556efbf4b4d883cc6970601ad6390541810",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/lotte-world-tower-gpu.json"
+    },
+    {
+      "id": "metlife-building",
+      "version": 1,
+      "recipeHash": "a74f84f46ffd39863b2cbddc5fcc9fbac5a4a2ddd47e01fa5baed7d19a1b52e3",
+      "assetSha256": "2099ee34ec83c2ca1929f2369dc7e7fb5059fb7da324b18bea24b7e22a6ce4c6",
+      "placementHash": "6cbc36c76d32f99942d7ff655046350ef366f255bdbc024835f824ae47c34ec5",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/metlife-building-gpu.json"
+    },
+    {
+      "id": "one-world-trade-center",
+      "version": 2,
+      "recipeHash": "f2378a8bf727918d57d3a281b007a6883b2a62bc08948b1daf34f5b1e8d952b6",
+      "assetSha256": "9ec59b00eeed36930a4760bd0f1ded842c6a627be3878e181788e3b459077631",
+      "placementHash": "bdfbe6fc8c4ae604bc4441c48f63148d64a208b72c96f3ccf4bff8b7a5d90f16",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/one-world-trade-center-gpu.json"
+    },
+    {
+      "id": "oriental-pearl",
+      "version": 2,
+      "recipeHash": "3e69417ce05059f3a34d2448de8d7a709264e6e3e22df3469bc53b4b22d7df64",
+      "assetSha256": "36156fb7b30484326a4004a83c4c8fc769d7f5e1bb7a1760e2c2579be709d87a",
+      "placementHash": "cc7e7e67a22a1a2c2e03a8cfb5f02d26c51472686e09fe67db02725be90b7a4b",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/oriental-pearl-gpu.json"
+    },
+    {
+      "id": "osaka-castle",
+      "version": 1,
+      "recipeHash": "107be00554723ae840312126e72964b507c1067ad2fc6dd605f9da7a0cbb4428",
+      "assetSha256": "ae6087d3a8a6a4970e18cc91987e8e1e209639798fb3f7d91a9267b3f71d4d25",
+      "placementHash": "a5fb8d8a2b7a65c64002ef86384a49c0a9e868255ba497fcf98bc0881bd86009",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/osaka-castle-gpu.json"
+    },
+    {
+      "id": "petronas-towers",
+      "version": 2,
+      "recipeHash": "65cae15c3c56451007bc9252186f40b8ae2b941afab7a3d36965b2d316bbf933",
+      "assetSha256": "349e0143521403c7aa0721673d8f6799ba22014a0dddc49eb7bbfadaba2fc91e",
+      "placementHash": "479af6db865224cc3a93e55bbd6bf9247be4e4e3826e974f8118d4cc62dbe624",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/petronas-towers-gpu.json"
+    },
+    {
       "id": "shanghai-tower",
       "version": 1,
       "recipeHash": "2db0fb36503335cb8f8fe66f857e5b310dbf53478736da4c499a65b8f9fe00d1",
@@ -9,6 +126,42 @@
       "placementHash": "0981de657abd5d335dd4b33cb76af9d05f2f4ba477d9dfb6ee45136fc484403f",
       "visual": "verified",
       "visualEvidence": "docs/plan/landmark-expansion.md"
+    },
+    {
+      "id": "shanghai-wfc",
+      "version": 1,
+      "recipeHash": "196e0f811fce761e7a9cad190f11d8f0266d5314585dbf3ecc5c0acd8d900481",
+      "assetSha256": "7872d007eba59d2cd07fff4ccd9a0e563df1e7ea54209cb714dc5b6d578d92df",
+      "placementHash": "02857f2a4fa1bf95737e6dcffc7421a79dd51fa3ade4c88e8bb80243780c6a93",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/shanghai-wfc-gpu.json"
+    },
+    {
+      "id": "sydney-opera-house",
+      "version": 1,
+      "recipeHash": "0ac5807fb364ef7f209951b77b53816658290bf3740b7ae74b06a816615a1c51",
+      "assetSha256": "73ffa5b2d6329f2e2f3360ada2f0140006f87ff8969e9fdf718bf2f252f0c0ed",
+      "placementHash": "9ff15e5bac6b5a11aa0e59cec183ea10f6e78d390c44f447f04a02c63b820186",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/sydney-opera-house-gpu.json"
+    },
+    {
+      "id": "taipei-101",
+      "version": 1,
+      "recipeHash": "6839bfa21af6704f67ce07e19fb66256f1628e5a484eb0a387d76c2b7fa26e55",
+      "assetSha256": "3372e70173e69d678f375f77082fca6bb1835a00a04b1294cf5f53a3a4de1e2c",
+      "placementHash": "1fc129eed4d3392c25e40923646a9c08a6ee9c712a8d65b5816499bd0ac7d8a9",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/taipei-101-gpu.json"
+    },
+    {
+      "id": "three-world-trade-center",
+      "version": 1,
+      "recipeHash": "a64333f1560f9c2fa17d2334da9531cf718419ab801f885cc0f96d9ddeadeed1",
+      "assetSha256": "353ed72bc4e9018a6d358bdb00f5068c50c6812251f42481a1d8c3426b61d84a",
+      "placementHash": "71646788a6cb02c9c5b0755ee9d23bc311959bff47fa309bfbc6de31ae0adfa8",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/three-world-trade-center-gpu.json"
     },
     {
       "id": "tokyo-skytree",
@@ -25,7 +178,17 @@
       "recipeHash": "78fb88ee03ce95cce05acff97ef6874c7ef9d3f31860b31fed87dc1f7cc1161f",
       "assetSha256": "949cdec080264efd466e8acb2057ef2b3e6d945536744d6e3f6d8c952a7f088b",
       "placementHash": "5176da3bc5ed4d5e4999fe2b4a2b21b42410bdbbd9e1daa18c24585e9bb7dab9",
-      "visual": "pending"
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/tokyo-tower-gpu.json"
+    },
+    {
+      "id": "willis-tower",
+      "version": 1,
+      "recipeHash": "3317705a33ca23ad3f1c4a9bc54af7052611cf4daec4d2dee92f74caf59a7428",
+      "assetSha256": "f5d6015471279f82dfcaa7e4203373df4da31ee338425ab232d59a02f22f9ee3",
+      "placementHash": "4e3451f44819d9e4f8ef28e3f94ac9ee96bbfe95dc4404aab8e7eeed3a1a9023",
+      "visual": "verified",
+      "visualEvidence": "docs/plan/landmark-batch-evidence/willis-tower-gpu.json"
     }
   ]
 }

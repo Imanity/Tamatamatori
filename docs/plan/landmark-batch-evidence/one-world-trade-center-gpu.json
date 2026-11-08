@@ -1,0 +1,179 @@
+{
+ "id": "one-world-trade-center",
+ "assetSha256": "9ec59b00eeed36930a4760bd0f1ded842c6a627be3878e181788e3b459077631",
+ "placementHash": "bdfbe6fc8c4ae604bc4441c48f63148d64a208b72c96f3ccf4bff8b7a5d90f16",
+ "gpuPassed": true,
+ "recordedAt": "2026-11-08",
+ "build": "Production /Tamatamatori/ subpath via vite preview on 127.0.0.1:5181; Chrome 157 on this Windows machine with native GPU, occlusion throttling disabled, viewport emulated 2000×1250",
+ "screenshots": [
+  "docs/plan/landmark-batch-evidence/one-world-trade-center-gpu.jpg"
+ ],
+ "scenes": [
+  {
+   "kind": "n1",
+   "observer": {
+    "latitude": 40.697419613387716,
+    "longitude": -74.013192447
+   },
+   "azimuth": 0,
+   "pitch": 5.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1732.1599999999999,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "世贸中心一号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.7 km · 22,793 面",
+   "sameScene": [
+    "three-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ -1.5 m · 离地 100 m"
+  },
+  {
+   "kind": "n2",
+   "observer": {
+    "latitude": 40.71299545870591,
+    "longitude": -73.99264106572343
+   },
+   "azimuth": 270,
+   "pitch": 5.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1732.1599999999999,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "世贸中心一号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.7 km · 22,793 面",
+   "sameScene": [
+    "three-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 10.1 m · 离地 100 m"
+  },
+  {
+   "kind": "f1",
+   "observer": {
+    "latitude": 40.553829256233506,
+    "longitude": -74.22243142313903
+   },
+   "azimuth": 44.9,
+   "pitch": 0.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 665,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "世贸中心一号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 22,793 面",
+   "sameScene": [
+    "three-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "665 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 6.1 m · 离地 100 m"
+  },
+  {
+   "kind": "b1",
+   "observer": {
+    "latitude": 40.697419613387716,
+    "longitude": -74.013192447
+   },
+   "azimuth": 0,
+   "pitch": 5.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1732.1599999999999,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": true,
+   "landmarkPhase": "fallback",
+   "landmarkStatus": "世贸中心一号楼精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.7 km",
+   "sameScene": [
+    "three-world-trade-center:fallback",
+    "empire-state-building:fallback",
+    "chrysler-building:fallback",
+    "metlife-building:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ -1.5 m · 离地 100 m"
+  },
+  {
+   "kind": "r1",
+   "observer": {
+    "latitude": 40.71299434140287,
+    "longitude": -74.0392945612981
+   },
+   "azimuth": 90,
+   "pitch": 4.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 59,
+   "distanceMetres": 2200,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "世贸中心一号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 2.2 km · 22,793 面",
+   "sameScene": [
+    "three-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "59 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 6.0 m · 离地 100 m"
+  },
+  {
+   "kind": "k1",
+   "observer": {
+    "latitude": 40.68519920814338,
+    "longitude": -74.00337003872266
+   },
+   "azimuth": 345,
+   "pitch": 5.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 300,
+   "distanceMetres": 3200,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "世贸中心一号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 3.2 km · 22,793 面",
+   "sameScene": [
+    "three-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "300 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 3.8 m · 离地 100 m"
+  },
+  {
+   "kind": "k2",
+   "observer": {
+    "latitude": 40.68519920814338,
+    "longitude": -74.00337003872266
+   },
+   "azimuth": 345,
+   "pitch": 3.6,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 85,
+   "distanceMetres": 3200,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "世贸中心一号楼无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 3.2 km · 22,793 面",
+   "sameScene": [
+    "three-world-trade-center:applied",
+    "empire-state-building:applied",
+    "chrysler-building:applied",
+    "metlife-building:applied"
+   ],
+   "facts": "85 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 3.8 m · 离地 100 m"
+  }
+ ],
+ "observations": "v2 造型修正（主体顶 417 m，塔尖顶 541.3 m）。南侧港湾 85/300 mm 中主体、塔尖底座环与天线比例正常，主体顶与塔尖无断裂；哈德逊河对岸机位被泽西城高楼遮挡，已改用港湾机位；纽约五座同场仍全部应用，回退正常。",
+ "limitations": [
+  "画面验收确认渲染位置、尺度、朝向与同机位 OSM 粗体块对照一致，以及远景着地和失败回退；不代表实景测绘精度。",
+  "未测实体手机与 GPU 帧耗时。"
+ ]
+}

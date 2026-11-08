@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "pipelineVersion": 1,
+  "id": "big-ben",
+  "name": "伊丽莎白塔（大本钟）",
+  "version": 2,
+  "recipeHash": "564b61d5aa751f5947c3647a79a7a9b702e2007d2cde1d88e4f1be70b2bd42a2",
+  "format": "TTLM 1; float32 ENU+normal stride6, uint32 indices; little-endian; gzip",
+  "source": {
+    "sha256": "727448eac6dae84491d42aa33eec9ff5d346917e01c4d4ce5892ada052d5dab0",
+    "filename": "clock_tower_big_ben.glb",
+    "title": "Clock Tower (Big Ben)",
+    "author": "ManySince910",
+    "authorPage": "https://sketchfab.com/noears6",
+    "page": "https://sketchfab.com/3d-models/clock-tower-big-ben-9a1c691fac774bcca4e2ba565c4c9d9b",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。",
+    "bytes": 2561624,
+    "vertices": 35821,
+    "triangles": 38540
+  },
+  "frame": {
+    "space": "local",
+    "axes": [
+      "+x",
+      "+z",
+      "-y"
+    ],
+    "center": [
+      -0.00006103515625,
+      -0.004547119140625
+    ],
+    "height": 96,
+    "heightReference": "https://en.wikipedia.org/wiki/Big_Ben",
+    "yawDegrees": 353,
+    "requireSharedTransform": true,
+    "normalizeNormals": true,
+    "minimum": [
+      -826.272216796875,
+      -826.2767944335938,
+      -0.00019999999494757503
+    ],
+    "maximum": [
+      826.272216796875,
+      826.2677001953125,
+      9341.67578125
+    ],
+    "scale": 0.010276528557903845
+  },
+  "processing": {
+    "targetTriangles": 25000,
+    "maxErrorMetres": 0.02,
+    "normalWeight": 0.01,
+    "weld": true,
+    "reportedError": 0.002990634646266699
+  },
+  "corrections": [
+    {
+      "op": "scale",
+      "factors": [
+        0.8,
+        0.8,
+        1
+      ],
+      "about": [
+        0,
+        0,
+        0
+      ],
+      "reason": "水平收窄至 0.80，使塔身约 12.4 m（官方底座 12 m 见方，OSM 塔身面积比约 0.80）"
+    }
+  ],
+  "correctionStats": [
+    {
+      "op": "scale",
+      "vertices": 35821
+    }
+  ],
+  "geo": {
+    "latitude": 51.500700941,
+    "longitude": -0.124573856,
+    "partRadius": 10,
+    "parts": [
+      {
+        "id": 3641974102,
+        "height": 3,
+        "base": 0
+      },
+      {
+        "id": 11417644930,
+        "height": 6,
+        "base": 0
+      },
+      {
+        "id": 11346294020,
+        "height": 7,
+        "base": 0
+      },
+      {
+        "id": 11346293980,
+        "height": 20,
+        "base": 0
+      },
+      {
+        "id": 3676426730,
+        "height": 24,
+        "base": 0
+      },
+      {
+        "id": 3637012242,
+        "height": 51,
+        "base": 0
+      },
+      {
+        "id": 11417644840,
+        "height": 53,
+        "base": 51
+      },
+      {
+        "id": 11397693130,
+        "height": 54,
+        "base": 51
+      },
+      {
+        "id": 11397693120,
+        "height": 57,
+        "base": 51
+      },
+      {
+        "id": 14532483910,
+        "height": 57,
+        "base": 55
+      },
+      {
+        "id": 11397693300,
+        "height": 60,
+        "base": 52
+      },
+      {
+        "id": 3632752402,
+        "height": 61,
+        "base": 48
+      },
+      {
+        "id": 11264953020,
+        "height": 61,
+        "base": 51
+      },
+      {
+        "id": 3632770930,
+        "height": 68,
+        "base": 66
+      },
+      {
+        "id": 3638675240,
+        "height": 71,
+        "base": 68
+      },
+      {
+        "id": 3637445742,
+        "height": 82,
+        "base": 60
+      },
+      {
+        "id": 3632752372,
+        "height": 88,
+        "base": 72
+      },
+      {
+        "id": 11397693192,
+        "height": 91,
+        "base": 82
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。造型修正后重新做多高度层俯视轮廓 IoU 拟合，ENU 逆时针 353.00°，塔身各层 IoU 0.97，钟楼层 0.83（均值 0.81，修正前 0.58），地面层尺度比约 1.00；方形平面存在 90° 对称歧义，83°、173°、264.25° 得分相同，取与原登记同一象限。使用共享局部框架去除约 0.2° 倾斜；仅含钟楼，不含威斯敏斯特宫，保留宫殿 OSM 体块。源模型塔身外廓约 15.5 m，已水平收窄至 0.80（约 12.4 m，官方底座 12 m 见方），高度未改；模型钟楼加宽段约 51–65 m，比 OSM 48–61 m 略高，因钟盘仅为纹理无法定位，未作竖向修正。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      },
+      {
+        "title": "Wikipedia：Big Ben（底座 12 m 见方、钟盘中心 54.9 m）",
+        "url": "https://en.wikipedia.org/wiki/Big_Ben"
+      }
+    ]
+  },
+  "bounds": {
+    "horizontal": 8,
+    "height": 96
+  },
+  "asset": {
+    "file": "big-ben-v2.ttlm.gz",
+    "sha256": "8195d206baede79e7938c4cfcb285c1b8160d35b2f8af16b061fb096e2a85332",
+    "decodedSha256": "0f39f3cbc6e0f049383c7ed25ea7cc5d5eb253c1bc7f24ff3cfef6b281373d98",
+    "bytes": 402772,
+    "decodedBytes": 913760,
+    "vertices": 25572,
+    "triangles": 25000
+  },
+  "tools": {
+    "@gltf-transform/core": "4.5.0",
+    "meshoptimizer": "1.3.0"
+  },
+  "limitations": [
+    "社区外观模型，定位与朝向近似，不提供测绘精度。",
+    "无纹理、不透明共享光照，不模拟玻璃或夜景灯光。",
+    "地面沿用同源 DEM，不套固定高程偏移。",
+    "造型按登记的参考尺寸修正，仍为近似外观，不是测绘重建。"
+  ]
+}

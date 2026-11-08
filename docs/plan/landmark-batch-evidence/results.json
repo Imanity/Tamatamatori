@@ -1,0 +1,474 @@
+{
+ "kind": "Offline batch results; CPU orthographic coverage, not GPU or survey verification",
+ "pipelineVersion": 1,
+ "models": {
+  "oriental-pearl": {
+   "metresPerPixel": 0.234,
+   "minIoU": 1,
+   "maxRasterDistanceMetres": 0,
+   "passed": true,
+   "source": {
+    "vertices": 6245,
+    "triangles": 9600
+   },
+   "selection": {
+    "excludedNodes": 1,
+    "excludedTriangles": 80,
+    "ignoredLinePrimitives": 0
+   },
+   "asset": {
+    "file": "oriental-pearl-v1.ttlm.gz",
+    "sha256": "933ecca6d3b4a3c8c0865f92d7c64c2554f7cfc6f1891379549ea6c55bbee97d",
+    "decodedSha256": "9bba36d0c03a1fde27bb854010a486d5ee1246e7258b22c7a229eb198e06ef3f",
+    "bytes": 90642,
+    "decodedBytes": 248816,
+    "vertices": 5566,
+    "triangles": 9600
+   },
+   "reportedError": 0
+  },
+  "shanghai-wfc": {
+   "metresPerPixel": 0.246,
+   "minIoU": 1,
+   "maxRasterDistanceMetres": 0,
+   "passed": true,
+   "source": {
+    "vertices": 9592,
+    "triangles": 6950
+   },
+   "selection": null,
+   "asset": {
+    "file": "shanghai-wfc-v1.ttlm.gz",
+    "sha256": "7872d007eba59d2cd07fff4ccd9a0e563df1e7ea54209cb714dc5b6d578d92df",
+    "decodedSha256": "12ce725f916ba065cdf2e7d62ee4911a7dda58cc177272fcb570626b5b356d07",
+    "bytes": 168233,
+    "decodedBytes": 309704,
+    "vertices": 9428,
+    "triangles": 6950
+   },
+   "reportedError": 0
+  },
+  "taipei-101": {
+   "metresPerPixel": 0.254,
+   "minIoU": 1,
+   "maxRasterDistanceMetres": 0,
+   "passed": true,
+   "source": {
+    "vertices": 3286,
+    "triangles": 2894
+   },
+   "selection": null,
+   "asset": {
+    "file": "taipei-101-v1.ttlm.gz",
+    "sha256": "3372e70173e69d678f375f77082fca6bb1835a00a04b1294cf5f53a3a4de1e2c",
+    "decodedSha256": "70b58e702c34c84cee68bd81312b8749559eb620ee7fba10f243e34bf4b6a00a",
+    "bytes": 48992,
+    "decodedBytes": 113624,
+    "vertices": 3286,
+    "triangles": 2894
+   },
+   "reportedError": 0
+  },
+  "osaka-castle": {
+   "metresPerPixel": 0.0404,
+   "minIoU": 0.999947,
+   "maxRasterDistanceMetres": 0.04,
+   "passed": true,
+   "source": {
+    "vertices": 157328,
+    "triangles": 66295
+   },
+   "selection": {
+    "excludedNodes": 0,
+    "excludedTriangles": 0,
+    "ignoredLinePrimitives": 4,
+    "duplicateTriangles": 66321
+   },
+   "asset": {
+    "file": "osaka-castle-v1.ttlm.gz",
+    "sha256": "ae6087d3a8a6a4970e18cc91987e8e1e209639798fb3f7d91a9267b3f71d4d25",
+    "decodedSha256": "f0507fa5b831d2c7046a5b53ac6a59110d3e2290682ada3a985bd9283744941f",
+    "bytes": 707947,
+    "decodedBytes": 1984952,
+    "vertices": 57708,
+    "triangles": 49994
+   },
+   "reportedError": 0.006240749265998602
+  },
+  "eiffel-tower": {
+   "metresPerPixel": 0.165,
+   "minIoU": 1,
+   "maxRasterDistanceMetres": 0,
+   "passed": true,
+   "source": {
+    "vertices": 124298,
+    "triangles": 98633
+   },
+   "selection": {
+    "excludedNodes": 0,
+    "excludedTriangles": 0,
+    "ignoredLinePrimitives": 0,
+    "duplicateTriangles": 1294
+   },
+   "asset": {
+    "file": "eiffel-tower-v1.ttlm.gz",
+    "sha256": "e9f2a9b0d10bbe481dc2d7c3bbbe716fff3357c2d215470552c25addf342ad6d",
+    "decodedSha256": "7cf00c0f4d7963b3f67f70c5e95a0e046b3c219a1245d7de743895716388df29",
+    "bytes": 1320292,
+    "decodedBytes": 2179292,
+    "vertices": 41486,
+    "triangles": 98633
+   },
+   "reportedError": 0
+  },
+  "big-ben": {
+   "metresPerPixel": 0.048,
+   "minIoU": 0.999872,
+   "maxRasterDistanceMetres": 0.048,
+   "passed": true,
+   "source": {
+    "vertices": 35821,
+    "triangles": 38540
+   },
+   "selection": null,
+   "asset": {
+    "file": "big-ben-v1.ttlm.gz",
+    "sha256": "359060d0283208cd79f0dae52e5d5a802e3ddd610779c17ab3003f759fcd402e",
+    "decodedSha256": "a23db7470550ab3e37e3974acf8acaaf2655a6d807a70a73d615ebd2beaf3749",
+    "bytes": 405985,
+    "decodedBytes": 914336,
+    "vertices": 25596,
+    "triangles": 25000
+   },
+   "reportedError": 0.003916577901691198
+  },
+  "sydney-opera-house": {
+   "metresPerPixel": 0.1016,
+   "minIoU": 0.999864,
+   "maxRasterDistanceMetres": 0.102,
+   "passed": true,
+   "source": {
+    "vertices": 28763,
+    "triangles": 44052
+   },
+   "selection": {
+    "excludedNodes": 5,
+    "excludedTriangles": 18368,
+    "ignoredLinePrimitives": 0
+   },
+   "asset": {
+    "file": "sydney-opera-house-v1.ttlm.gz",
+    "sha256": "73ffa5b2d6329f2e2f3360ada2f0140006f87ff8969e9fdf718bf2f252f0c0ed",
+    "decodedSha256": "afafcbe62c692c42ff27d62e11e648859c7eb518827d59736760e2f467bd1f40",
+    "bytes": 509035,
+    "decodedBytes": 849896,
+    "vertices": 20400,
+    "triangles": 30022
+   },
+   "reportedError": 0.029837077483534813
+  },
+  "petronas-towers": {
+   "metresPerPixel": 0.2259,
+   "minIoU": 0.999936,
+   "maxRasterDistanceMetres": 0.226,
+   "passed": true,
+   "source": {
+    "vertices": 53189,
+    "triangles": 47772
+   },
+   "selection": null,
+   "asset": {
+    "file": "petronas-towers-v1.ttlm.gz",
+    "sha256": "54167b1041017699dacc40f4de3b46a49bf3a3bd6e3505756ba7447e1d0cfa68",
+    "decodedSha256": "3fdf98c2a0f94a737870fa49790b19e6c4f852bf00d9858aeeab36e445c92b9e",
+    "bytes": 487261,
+    "decodedBytes": 1217960,
+    "vertices": 35511,
+    "triangles": 30472
+   },
+   "reportedError": 0.049732379615306854
+  },
+  "burj-khalifa": {
+   "metresPerPixel": 0.414,
+   "minIoU": 1,
+   "maxRasterDistanceMetres": 0,
+   "passed": true,
+   "source": {
+    "vertices": 23683,
+    "triangles": 8325
+   },
+   "selection": {
+    "excludedNodes": 0,
+    "excludedTriangles": 0,
+    "ignoredLinePrimitives": 0,
+    "duplicateTriangles": 8325
+   },
+   "asset": {
+    "file": "burj-khalifa-v1.ttlm.gz",
+    "sha256": "f84d2c285b08f6f289783298957fd9d24488a608e110640bf868a70c62456480",
+    "decodedSha256": "0165e1ed18b9e43af8b684154013395cdbd9e3c774ccc45f8836d05862720473",
+    "bytes": 126426,
+    "decodedBytes": 291452,
+    "vertices": 7980,
+    "triangles": 8325
+   },
+   "reportedError": 0
+  },
+  "burj-al-arab": {
+   "metresPerPixel": 0.1605,
+   "minIoU": 0.999959,
+   "maxRasterDistanceMetres": 0.161,
+   "passed": true,
+   "source": {
+    "vertices": 35306,
+    "triangles": 41687
+   },
+   "selection": null,
+   "asset": {
+    "file": "burj-al-arab-v1.ttlm.gz",
+    "sha256": "dfc7d4e4237b69cf091aeca97aa55454f3641419da4614af5fee3ddfa7fd6d1b",
+    "decodedSha256": "0abc69fd66ac2ccba0b6133924a32dbea509160207c1e06199b2da3ef68aa7da",
+    "bytes": 598567,
+    "decodedBytes": 927188,
+    "vertices": 23632,
+    "triangles": 29999
+   },
+   "reportedError": 0.010863476432859898
+  },
+  "empire-state-building": {
+   "metresPerPixel": 0.2216,
+   "minIoU": 0.999779,
+   "maxRasterDistanceMetres": 0.222,
+   "passed": true,
+   "source": {
+    "vertices": 270502,
+    "triangles": 246868
+   },
+   "selection": null,
+   "asset": {
+    "file": "empire-state-building-v1.ttlm.gz",
+    "sha256": "b5d8df10a0ee579cc82dd35d3a1d94b40d13518b0a79dd4300b35fa2e586199f",
+    "decodedSha256": "d9a742231a2168b16c86451318b1bd361628b2734e5a9bab724242089972925d",
+    "bytes": 527018,
+    "decodedBytes": 1623236,
+    "vertices": 48877,
+    "triangles": 37513
+   },
+   "reportedError": 0.09938543289899826
+  },
+  "one-world-trade-center": {
+   "metresPerPixel": 0.2707,
+   "minIoU": 0.999818,
+   "maxRasterDistanceMetres": 0.271,
+   "passed": true,
+   "source": {
+    "vertices": 42540,
+    "triangles": 34499
+   },
+   "selection": null,
+   "asset": {
+    "file": "one-world-trade-center-v1.ttlm.gz",
+    "sha256": "b897659cc74dfe02ff21d4629e675e4d2cf10c3100be5d6a7449cab8654e4a1a",
+    "decodedSha256": "b152632bb3057a9dcb0294f3b95ce3705d6c40a4bd4c61be33cc23f2289cf700",
+    "bytes": 499304,
+    "decodedBytes": 998660,
+    "vertices": 30278,
+    "triangles": 22663
+   },
+   "reportedError": 0.04954912140965462
+  },
+  "chrysler-building": {
+   "metresPerPixel": 0.1594,
+   "minIoU": 0.999966,
+   "maxRasterDistanceMetres": 0.159,
+   "passed": true,
+   "source": {
+    "vertices": 27131,
+    "triangles": 18949
+   },
+   "selection": null,
+   "asset": {
+    "file": "chrysler-building-v1.ttlm.gz",
+    "sha256": "feb86f03df22e2f3aca0b6e77a164c9579f84f0cdabced4f666819a90d9f99fb",
+    "decodedSha256": "89229602a256c68f1064a6a7a7eb69386aca264c7aa34964f73e4e1d8b99f90b",
+    "bytes": 222336,
+    "decodedBytes": 809348,
+    "vertices": 25050,
+    "triangles": 17343
+   },
+   "reportedError": 0.04957585409283638
+  },
+  "cn-tower": {
+   "metresPerPixel": 0.2767,
+   "minIoU": 0.999798,
+   "maxRasterDistanceMetres": 0.277,
+   "passed": true,
+   "source": {
+    "vertices": 190039,
+    "triangles": 138948
+   },
+   "selection": {
+    "excludedNodes": 3,
+    "excludedTriangles": 9846,
+    "ignoredLinePrimitives": 0
+   },
+   "asset": {
+    "file": "cn-tower-v1.ttlm.gz",
+    "sha256": "cafaaa8a0c6ec84eebee83d385f9e3a1394bcd93e396236dfc4c8ab0538207a2",
+    "decodedSha256": "e2734f463e1144da36f52570dd976bb0159f7ef4f1749a5d80dc1eb3cd5fbf3a",
+    "bytes": 854570,
+    "decodedBytes": 1658420,
+    "vertices": 49199,
+    "triangles": 39801
+   },
+   "reportedError": 0.07549306005239487
+  },
+  "lotte-world-tower": {
+   "metresPerPixel": 0.2775,
+   "minIoU": 1,
+   "maxRasterDistanceMetres": 0,
+   "passed": true,
+   "source": {
+    "vertices": 10631,
+    "triangles": 9766
+   },
+   "selection": null,
+   "asset": {
+    "file": "lotte-world-tower-v1.ttlm.gz",
+    "sha256": "a77d5ec57828da9fd5ab35088ae9be5aa2e41ca4b02480927ecb5a049021fa9f",
+    "decodedSha256": "c0a7486c02fe69992e90a5176a12a3519a2bb2f3f2b558e0c16a176b6956a08b",
+    "bytes": 206047,
+    "decodedBytes": 371456,
+    "vertices": 10593,
+    "triangles": 9766
+   },
+   "reportedError": 0
+  },
+  "willis-tower": {
+   "metresPerPixel": 0.2635,
+   "minIoU": 1,
+   "maxRasterDistanceMetres": 0,
+   "passed": true,
+   "source": {
+    "vertices": 39126,
+    "triangles": 28948
+   },
+   "selection": null,
+   "asset": {
+    "file": "willis-tower-v1.ttlm.gz",
+    "sha256": "f5d6015471279f82dfcaa7e4203373df4da31ee338425ab232d59a02f22f9ee3",
+    "decodedSha256": "95b69f5c5dbb55def7db50c868e2dcac78b4ed0c611e5e672511e9eefdd6f63a",
+    "bytes": 280724,
+    "decodedBytes": 1108784,
+    "vertices": 33799,
+    "triangles": 24798
+   },
+   "reportedError": 0.04913599044084549
+  },
+  "three-world-trade-center": {
+   "metresPerPixel": 0.1644,
+   "minIoU": 1,
+   "maxRasterDistanceMetres": 0,
+   "passed": true,
+   "source": {
+    "vertices": 49423,
+    "triangles": 36576
+   },
+   "selection": null,
+   "asset": {
+    "file": "three-world-trade-center-v1.ttlm.gz",
+    "sha256": "353ed72bc4e9018a6d358bdb00f5068c50c6812251f42481a1d8c3426b61d84a",
+    "decodedSha256": "b8d16af13428ad5c3d55210437d85ad9c5c4adf4353d8e4889a364b5f8cf5b1a",
+    "bytes": 243116,
+    "decodedBytes": 767936,
+    "vertices": 21996,
+    "triangles": 20000
+   },
+   "reportedError": 0.0200697910040617
+  },
+  "metlife-building": {
+   "metresPerPixel": 0.1232,
+   "minIoU": 0.997587,
+   "maxRasterDistanceMetres": 0.493,
+   "passed": true,
+   "source": {
+    "vertices": 563556,
+    "triangles": 368306
+   },
+   "selection": null,
+   "asset": {
+    "file": "metlife-building-v1.ttlm.gz",
+    "sha256": "2099ee34ec83c2ca1929f2369dc7e7fb5059fb7da324b18bea24b7e22a6ce4c6",
+    "decodedSha256": "12ec2f536d728eea76fc96fc6695673b281d36cb23bae8873f1fdac27c44bbd1",
+    "bytes": 1081953,
+    "decodedBytes": 3415088,
+    "vertices": 103740,
+    "triangles": 77108
+   },
+   "reportedError": 0.2968994379043579
+  },
+  "tokyo-skytree": {
+   "metresPerPixel": 0.317,
+   "minIoU": 0.99528,
+   "maxRasterDistanceMetres": 0.951,
+   "passed": true,
+   "source": {
+    "vertices": 166513,
+    "triangles": 285887
+   },
+   "selection": null,
+   "asset": {
+    "file": "skytree-v1.ttlm.gz",
+    "sha256": "4ee6a8d802db2ccf0538add4ff7f3b54e21237e4cd36267e7a487852305848cd",
+    "decodedSha256": "763e09e62f3a4e159a54e5a3df8ae6228529b6deee24fa675c5c31f4b1d868d3",
+    "bytes": 1236544,
+    "decodedBytes": 2636828,
+    "vertices": 65576,
+    "triangles": 88581
+   },
+   "reportedError": 0.09934128820896149
+  },
+  "tokyo-tower": {
+   "metresPerPixel": 0.1665,
+   "minIoU": 0.998903,
+   "maxRasterDistanceMetres": 0.372,
+   "passed": true,
+   "source": {
+    "vertices": 137537,
+    "triangles": 88707
+   },
+   "selection": null,
+   "asset": {
+    "file": "tokyo-tower-v1.ttlm.gz",
+    "sha256": "949cdec080264efd466e8acb2057ef2b3e6d945536744d6e3f6d8c952a7f088b",
+    "decodedSha256": "5af57bf65e18bc68d0d173d670d615b0fd5234832ef6465c9a0d723503d1d0a0",
+    "bytes": 1225486,
+    "decodedBytes": 3778604,
+    "vertices": 120057,
+    "triangles": 74767
+   },
+   "reportedError": 0.019992979243397713
+  },
+  "shanghai-tower": {
+   "metresPerPixel": 0.316,
+   "minIoU": 0.999741,
+   "maxRasterDistanceMetres": 0.316,
+   "passed": true,
+   "source": {
+    "vertices": 126971,
+    "triangles": 121254
+   },
+   "selection": null,
+   "asset": {
+    "file": "shanghai-tower-v1.ttlm.gz",
+    "sha256": "33a86c8ec1d446134e1d09c601ebb736158112559fc7393eeaa384c61d57f2de",
+    "decodedSha256": "14d1d4ff42588184d525a538edf8520fb6b1b9ddb0d79eed1098862dcdbd250d",
+    "bytes": 975220,
+    "decodedBytes": 2089040,
+    "vertices": 59701,
+    "triangles": 54682
+   },
+   "reportedError": 0.09986702352762222
+  }
+ }
+}

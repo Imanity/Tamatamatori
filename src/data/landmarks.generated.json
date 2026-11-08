@@ -1,5 +1,1749 @@
 [
   {
+    "id": "big-ben",
+    "name": "伊丽莎白塔（大本钟）",
+    "latitude": 51.500700941,
+    "longitude": -0.124573856,
+    "tile": {
+      "z": 14,
+      "x": 8186,
+      "y": 5448
+    },
+    "parts": [
+      {
+        "id": 3641974102,
+        "height": 3,
+        "base": 0
+      },
+      {
+        "id": 11417644930,
+        "height": 6,
+        "base": 0
+      },
+      {
+        "id": 11346294020,
+        "height": 7,
+        "base": 0
+      },
+      {
+        "id": 11346293980,
+        "height": 20,
+        "base": 0
+      },
+      {
+        "id": 3676426730,
+        "height": 24,
+        "base": 0
+      },
+      {
+        "id": 3637012242,
+        "height": 51,
+        "base": 0
+      },
+      {
+        "id": 11417644840,
+        "height": 53,
+        "base": 51
+      },
+      {
+        "id": 11397693130,
+        "height": 54,
+        "base": 51
+      },
+      {
+        "id": 11397693120,
+        "height": 57,
+        "base": 51
+      },
+      {
+        "id": 14532483910,
+        "height": 57,
+        "base": 55
+      },
+      {
+        "id": 11397693300,
+        "height": 60,
+        "base": 52
+      },
+      {
+        "id": 3632752402,
+        "height": 61,
+        "base": 48
+      },
+      {
+        "id": 11264953020,
+        "height": 61,
+        "base": 51
+      },
+      {
+        "id": 3632770930,
+        "height": 68,
+        "base": 66
+      },
+      {
+        "id": 3638675240,
+        "height": 71,
+        "base": 68
+      },
+      {
+        "id": 3637445742,
+        "height": 82,
+        "base": 60
+      },
+      {
+        "id": 3632752372,
+        "height": 88,
+        "base": 72
+      },
+      {
+        "id": 11397693192,
+        "height": 91,
+        "base": 82
+      }
+    ],
+    "partRadius": 10,
+    "bounds": {
+      "horizontal": 8,
+      "height": 96
+    },
+    "asset": {
+      "file": "big-ben-v2.ttlm.gz",
+      "sha256": "8195d206baede79e7938c4cfcb285c1b8160d35b2f8af16b061fb096e2a85332",
+      "decodedSha256": "0f39f3cbc6e0f049383c7ed25ea7cc5d5eb253c1bc7f24ff3cfef6b281373d98",
+      "bytes": 402772,
+      "decodedBytes": 913760,
+      "vertices": 25572,
+      "triangles": 25000
+    },
+    "credit": {
+      "title": "Clock Tower (Big Ben)",
+      "author": "ManySince910",
+      "authorPage": "https://sketchfab.com/noears6",
+      "page": "https://sketchfab.com/3d-models/clock-tower-big-ben-9a1c691fac774bcca4e2ba565c4c9d9b",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向，按参考尺寸修正造型（水平收窄至 0.80，使塔身约 12.4 m（官方底座 12 m 见方，OSM 塔身面积比约 0.80））并减面。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。造型修正后重新做多高度层俯视轮廓 IoU 拟合，ENU 逆时针 353.00°，塔身各层 IoU 0.97，钟楼层 0.83（均值 0.81，修正前 0.58），地面层尺度比约 1.00；方形平面存在 90° 对称歧义，83°、173°、264.25° 得分相同，取与原登记同一象限。使用共享局部框架去除约 0.2° 倾斜；仅含钟楼，不含威斯敏斯特宫，保留宫殿 OSM 体块。源模型塔身外廓约 15.5 m，已水平收窄至 0.80（约 12.4 m，官方底座 12 m 见方），高度未改；模型钟楼加宽段约 51–65 m，比 OSM 48–61 m 略高，因钟盘仅为纹理无法定位，未作竖向修正。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        {
+          "title": "Wikipedia：Big Ben（底座 12 m 见方、钟盘中心 54.9 m）",
+          "url": "https://en.wikipedia.org/wiki/Big_Ben"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "burj-al-arab",
+    "name": "帆船酒店",
+    "latitude": 25.141281038,
+    "longitude": 55.185401904,
+    "tile": {
+      "z": 14,
+      "x": 10703,
+      "y": 7009
+    },
+    "parts": [
+      {
+        "id": 127005462,
+        "height": 321,
+        "base": 0
+      }
+    ],
+    "partRadius": 20,
+    "bounds": {
+      "horizontal": 84,
+      "height": 321
+    },
+    "asset": {
+      "file": "burj-al-arab-v1.ttlm.gz",
+      "sha256": "dfc7d4e4237b69cf091aeca97aa55454f3641419da4614af5fee3ddfa7fd6d1b",
+      "decodedSha256": "0abc69fd66ac2ccba0b6133924a32dbea509160207c1e06199b2da3ef68aa7da",
+      "bytes": 598567,
+      "decodedBytes": 927188,
+      "vertices": 23632,
+      "triangles": 29999
+    },
+    "credit": {
+      "title": "18-burj-al-arab-jumeirah",
+      "author": "Success isaac",
+      "authorPage": "https://sketchfab.com/Succeisaac",
+      "page": "https://sketchfab.com/3d-models/18-burj-al-arab-jumeirah-70302a0ddc804715ae3aa61db8a7d444",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 246.25°，各层 IoU 0.01–0.62，地面层尺度比约 1.48；次优候选 218.50°（得分 0.373，最优 0.373）。OSM 仅有单一扇形棱柱，外骨架与顶部结构超出其轮廓，朝向不确定度约 ±15°；保留人工岛上 5 m 低层体块。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "burj-khalifa",
+    "name": "哈利法塔",
+    "latitude": 25.197078181,
+    "longitude": 55.274215202,
+    "tile": {
+      "z": 14,
+      "x": 10707,
+      "y": 7006
+    },
+    "parts": [
+      {
+        "id": 1371403310,
+        "height": 35,
+        "base": 0
+      },
+      {
+        "id": 1371403662,
+        "height": 130,
+        "base": 0
+      },
+      {
+        "id": 1371403552,
+        "height": 235,
+        "base": 0
+      },
+      {
+        "id": 1371403742,
+        "height": 270,
+        "base": 0
+      },
+      {
+        "id": 1371403712,
+        "height": 315,
+        "base": 0
+      },
+      {
+        "id": 1371403682,
+        "height": 360,
+        "base": 0
+      },
+      {
+        "id": 1371403482,
+        "height": 405,
+        "base": 0
+      },
+      {
+        "id": 1371403632,
+        "height": 460,
+        "base": 0
+      },
+      {
+        "id": 1371403612,
+        "height": 520,
+        "base": 0
+      },
+      {
+        "id": 1371531392,
+        "height": 545,
+        "base": 0
+      },
+      {
+        "id": 1371531412,
+        "height": 560,
+        "base": 0
+      },
+      {
+        "id": 1371531402,
+        "height": 580,
+        "base": 0
+      },
+      {
+        "id": 1371531382,
+        "height": 605,
+        "base": 0
+      },
+      {
+        "id": 1371531372,
+        "height": 625,
+        "base": 0
+      },
+      {
+        "id": 1371531352,
+        "height": 645,
+        "base": 0
+      },
+      {
+        "id": 6179123952,
+        "height": 660,
+        "base": 0
+      },
+      {
+        "id": 1371531362,
+        "height": 680,
+        "base": 0
+      },
+      {
+        "id": 1371531312,
+        "height": 700,
+        "base": 0
+      },
+      {
+        "id": 1371477122,
+        "height": 710,
+        "base": 0
+      },
+      {
+        "id": 1371531432,
+        "height": 720,
+        "base": 0
+      },
+      {
+        "id": 1371531422,
+        "height": 740,
+        "base": 0
+      },
+      {
+        "id": 1371531442,
+        "height": 760,
+        "base": 0
+      },
+      {
+        "id": 1371477152,
+        "height": 828,
+        "base": 0
+      },
+      {
+        "id": 1371403542,
+        "height": 200,
+        "base": 0
+      },
+      {
+        "id": 1371403582,
+        "height": 70,
+        "base": 0
+      },
+      {
+        "id": 1371403402,
+        "height": 160,
+        "base": 0
+      },
+      {
+        "id": 1371403452,
+        "height": 105,
+        "base": 0
+      }
+    ],
+    "partRadius": 71,
+    "bounds": {
+      "horizontal": 78,
+      "height": 828
+    },
+    "asset": {
+      "file": "burj-khalifa-v1.ttlm.gz",
+      "sha256": "f84d2c285b08f6f289783298957fd9d24488a608e110640bf868a70c62456480",
+      "decodedSha256": "0165e1ed18b9e43af8b684154013395cdbd9e3c774ccc45f8836d05862720473",
+      "bytes": 126426,
+      "decodedBytes": 291452,
+      "vertices": 7980,
+      "triangles": 8325
+    },
+    "credit": {
+      "title": "Burj Khalifa",
+      "author": "ManySince910",
+      "authorPage": "https://sketchfab.com/noears6",
+      "page": "https://sketchfab.com/3d-models/burj-khalifa-59e6dd74e5f647158de568b5a7f9cab7",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 3.85°，各层 IoU 0.36–0.89，地面层尺度比约 1.45；次优候选 122.35°（得分 0.691，最优 0.730）。Y 形平面在 120° 候选中得分明显较低，朝向较确定；保留 15 m 低层裙房 OSM 体块。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "chrysler-building",
+    "name": "克莱斯勒大厦",
+    "latitude": 40.751599222,
+    "longitude": -73.975332345,
+    "tile": {
+      "z": 14,
+      "x": 4825,
+      "y": 6157
+    },
+    "parts": [
+      {
+        "id": 1450385020,
+        "height": 80,
+        "base": 0
+      },
+      {
+        "id": 2609040690,
+        "height": 90,
+        "base": 0
+      },
+      {
+        "id": 2609041080,
+        "height": 185,
+        "base": 0
+      },
+      {
+        "id": 1966474162,
+        "height": 199,
+        "base": 0
+      },
+      {
+        "id": 2609040970,
+        "height": 227,
+        "base": 200
+      },
+      {
+        "id": 2609040900,
+        "height": 228,
+        "base": 200
+      },
+      {
+        "id": 2609040930,
+        "height": 229,
+        "base": 200
+      },
+      {
+        "id": 2609040940,
+        "height": 242,
+        "base": 200
+      },
+      {
+        "id": 2609040800,
+        "height": 249,
+        "base": 200
+      },
+      {
+        "id": 2609040890,
+        "height": 256,
+        "base": 200
+      },
+      {
+        "id": 2609040860,
+        "height": 262,
+        "base": 256
+      },
+      {
+        "id": 2609040920,
+        "height": 267,
+        "base": 262
+      },
+      {
+        "id": 2609040810,
+        "height": 272,
+        "base": 267
+      },
+      {
+        "id": 2609040722,
+        "height": 282,
+        "base": 0
+      },
+      {
+        "id": 1966474172,
+        "height": 319,
+        "base": 272
+      },
+      {
+        "id": 2609040820,
+        "height": 235,
+        "base": 224
+      },
+      {
+        "id": 2609040710,
+        "height": 15,
+        "base": 0
+      },
+      {
+        "id": 2609141220,
+        "height": 200,
+        "base": 198
+      },
+      {
+        "id": 2609041090,
+        "height": 70,
+        "base": 0
+      },
+      {
+        "id": 2609040910,
+        "height": 200,
+        "base": 199
+      },
+      {
+        "id": 2609141210,
+        "height": 186,
+        "base": 185
+      }
+    ],
+    "partRadius": 23,
+    "bounds": {
+      "horizontal": 33,
+      "height": 318.9
+    },
+    "asset": {
+      "file": "chrysler-building-v1.ttlm.gz",
+      "sha256": "feb86f03df22e2f3aca0b6e77a164c9579f84f0cdabced4f666819a90d9f99fb",
+      "decodedSha256": "89229602a256c68f1064a6a7a7eb69386aca264c7aa34964f73e4e1d8b99f90b",
+      "bytes": 222336,
+      "decodedBytes": 809348,
+      "vertices": 25050,
+      "triangles": 17343
+    },
+    "credit": {
+      "title": "Chrysler Building",
+      "author": "NanoRay",
+      "authorPage": "https://sketchfab.com/NanoRay",
+      "page": "https://sketchfab.com/3d-models/chrysler-building-26be9287b12d4234af009e4162135897",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 242.75°，各层 IoU 0.21–0.91，地面层尺度比约 0.90；次优候选 58.50°（得分 0.665，最优 0.667）。塔冠及 61 层装饰小分部一并替换；与 180° 翻转候选得分接近，底部裙房轮廓与 OSM 有差异。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "cn-tower",
+    "name": "加拿大国家电视塔",
+    "latitude": 43.642593936,
+    "longitude": -79.387087553,
+    "tile": {
+      "z": 14,
+      "x": 4579,
+      "y": 5980
+    },
+    "parts": [
+      {
+        "id": 2882734580,
+        "height": 330,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882737932,
+        "height": 338,
+        "base": 330,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882737952,
+        "height": 360,
+        "base": 338,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734612,
+        "height": 440,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734522,
+        "height": 495,
+        "base": 370,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734580,
+        "height": 330,
+        "base": 0
+      },
+      {
+        "id": 2882737932,
+        "height": 338,
+        "base": 330
+      },
+      {
+        "id": 2882737952,
+        "height": 360,
+        "base": 338
+      },
+      {
+        "id": 2882734612,
+        "height": 440,
+        "base": 0
+      },
+      {
+        "id": 2882734522,
+        "height": 495,
+        "base": 370
+      },
+      {
+        "id": 2882737942,
+        "height": 370,
+        "base": 360,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882737942,
+        "height": 370,
+        "base": 360
+      },
+      {
+        "id": 2882734562,
+        "height": 553,
+        "base": 510,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734562,
+        "height": 553,
+        "base": 510
+      },
+      {
+        "id": 2882734542,
+        "height": 457,
+        "base": 440,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734542,
+        "height": 457,
+        "base": 440
+      },
+      {
+        "id": 2882734532,
+        "height": 540,
+        "base": 510,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734532,
+        "height": 540,
+        "base": 510
+      },
+      {
+        "id": 2882734512,
+        "height": 510,
+        "base": 490,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734512,
+        "height": 510,
+        "base": 490
+      },
+      {
+        "id": 2882734552,
+        "height": 530,
+        "base": 505,
+        "tile": {
+          "z": 14,
+          "x": 4578,
+          "y": 5980
+        }
+      },
+      {
+        "id": 2882734552,
+        "height": 530,
+        "base": 505
+      }
+    ],
+    "partRadius": 24,
+    "bounds": {
+      "horizontal": 32,
+      "height": 553.3
+    },
+    "asset": {
+      "file": "cn-tower-v1.ttlm.gz",
+      "sha256": "cafaaa8a0c6ec84eebee83d385f9e3a1394bcd93e396236dfc4c8ab0538207a2",
+      "decodedSha256": "e2734f463e1144da36f52570dd976bb0159f7ef4f1749a5d80dc1eb3cd5fbf3a",
+      "bytes": 854570,
+      "decodedBytes": 1658420,
+      "vertices": 49199,
+      "triangles": 39801
+    },
+    "credit": {
+      "title": "CN Tower",
+      "author": "zayshaa",
+      "authorPage": "https://sketchfab.com/zayshaa",
+      "page": "https://sketchfab.com/3d-models/cn-tower-532b6478637c4f6894d9070719a45aaa",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 312.75°，各层 IoU 0.27–0.89，地面层尺度比约 1.07；次优候选 194.90°（得分 0.732，最优 0.733）。已排除地面、地形与湖面网格；三支腿与 OSM 对齐，三重对称存在 120° 歧义。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "eiffel-tower",
+    "name": "埃菲尔铁塔",
+    "latitude": 48.858263768,
+    "longitude": 2.294487925,
+    "tile": {
+      "z": 14,
+      "x": 8296,
+      "y": 5636
+    },
+    "parts": [
+      {
+        "id": 41148393,
+        "height": 61,
+        "base": 57
+      },
+      {
+        "id": 3081452390,
+        "height": 64,
+        "base": 57
+      },
+      {
+        "id": 3086877440,
+        "height": 116,
+        "base": 57
+      },
+      {
+        "id": 41148423,
+        "height": 120,
+        "base": 115
+      },
+      {
+        "id": 3086877450,
+        "height": 277,
+        "base": 115
+      },
+      {
+        "id": 14625977622,
+        "height": 330,
+        "base": 300
+      },
+      {
+        "id": 3086891640,
+        "height": 58,
+        "base": 4
+      },
+      {
+        "id": 3080213892,
+        "height": 300,
+        "base": 276
+      },
+      {
+        "id": 690341270,
+        "height": 4,
+        "base": 0
+      }
+    ],
+    "partRadius": 77,
+    "bounds": {
+      "horizontal": 104,
+      "height": 330
+    },
+    "asset": {
+      "file": "eiffel-tower-v1.ttlm.gz",
+      "sha256": "e9f2a9b0d10bbe481dc2d7c3bbbe716fff3357c2d215470552c25addf342ad6d",
+      "decodedSha256": "7cf00c0f4d7963b3f67f70c5e95a0e046b3c219a1245d7de743895716388df29",
+      "bytes": 1320292,
+      "decodedBytes": 2179292,
+      "vertices": 41486,
+      "triangles": 98633
+    },
+    "credit": {
+      "title": "Eiffel Tower (night lit)",
+      "author": "Dimiter",
+      "authorPage": "https://sketchfab.com/Dimitera",
+      "page": "https://sketchfab.com/3d-models/eiffel-tower-night-lit-ba8a39a7219447a0b734a3d17b076d4f",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 134.90°，各层 IoU 0.31–0.83，地面层尺度比约 1.16；次优候选 45.20°（得分 0.625，最优 0.625）。四重对称，90° 旋转候选得分相同；保留塔下售票亭等低层 OSM 体块。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "empire-state-building",
+    "name": "帝国大厦",
+    "latitude": 40.74848264,
+    "longitude": -73.985776336,
+    "tile": {
+      "z": 14,
+      "x": 4824,
+      "y": 6157
+    },
+    "parts": [
+      {
+        "id": 1374251292,
+        "height": 290,
+        "base": 255
+      },
+      {
+        "id": 1374251252,
+        "height": 310,
+        "base": 290
+      },
+      {
+        "id": 1374251442,
+        "height": 320,
+        "base": 0
+      },
+      {
+        "id": 1374251422,
+        "height": 330,
+        "base": 0
+      },
+      {
+        "id": 2659326182,
+        "height": 390,
+        "base": 330
+      },
+      {
+        "id": 1374251452,
+        "height": 444,
+        "base": 330
+      },
+      {
+        "id": 1374251312,
+        "height": 75,
+        "base": 18
+      },
+      {
+        "id": 1374251282,
+        "height": 115,
+        "base": 90
+      },
+      {
+        "id": 1374251272,
+        "height": 255,
+        "base": 115
+      },
+      {
+        "id": 108720540,
+        "height": 17,
+        "base": 0
+      },
+      {
+        "id": 1374251332,
+        "height": 90,
+        "base": 75
+      }
+    ],
+    "partRadius": 20,
+    "bounds": {
+      "horizontal": 84,
+      "height": 443.2
+    },
+    "asset": {
+      "file": "empire-state-building-v1.ttlm.gz",
+      "sha256": "b5d8df10a0ee579cc82dd35d3a1d94b40d13518b0a79dd4300b35fa2e586199f",
+      "decodedSha256": "d9a742231a2168b16c86451318b1bd361628b2734e5a9bab724242089972925d",
+      "bytes": 527018,
+      "decodedBytes": 1623236,
+      "vertices": 48877,
+      "triangles": 37513
+    },
+    "credit": {
+      "title": "Empire State Building",
+      "author": "NanoRay",
+      "authorPage": "https://sketchfab.com/NanoRay",
+      "page": "https://sketchfab.com/3d-models/empire-state-building-2174e71baa1d43e896461ed149dad54a",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 150.70°，各层 IoU 0.05–0.86，地面层尺度比约 1.02；次优候选 331.00°（得分 0.668，最优 0.669）。与 180° 翻转候选得分接近，前后立面存在歧义；中段各层 IoU 约 0.83。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "lotte-world-tower",
+    "name": "乐天世界塔",
+    "latitude": 37.512540601,
+    "longitude": 127.102657939,
+    "tile": {
+      "z": 14,
+      "x": 13976,
+      "y": 6347
+    },
+    "parts": [
+      {
+        "id": 8886054722,
+        "height": 290,
+        "base": 0
+      },
+      {
+        "id": 8886054712,
+        "height": 392,
+        "base": 311
+      },
+      {
+        "id": 8797987162,
+        "height": 432,
+        "base": 391
+      },
+      {
+        "id": 8886054702,
+        "height": 440,
+        "base": 431
+      },
+      {
+        "id": 6350734622,
+        "height": 520,
+        "base": 0
+      },
+      {
+        "id": 6350734690,
+        "height": 555,
+        "base": 0
+      },
+      {
+        "id": 8797987172,
+        "height": 312,
+        "base": 289
+      },
+      {
+        "id": 8797986960,
+        "height": 555,
+        "base": 0
+      },
+      {
+        "id": 8797987040,
+        "height": 520,
+        "base": 0
+      },
+      {
+        "id": 8795717502,
+        "height": 183,
+        "base": 153
+      },
+      {
+        "id": 8795717522,
+        "height": 200,
+        "base": 0
+      },
+      {
+        "id": 8886054732,
+        "height": 154,
+        "base": 146
+      }
+    ],
+    "partRadius": 35,
+    "bounds": {
+      "horizontal": 31,
+      "height": 555
+    },
+    "asset": {
+      "file": "lotte-world-tower-v1.ttlm.gz",
+      "sha256": "a77d5ec57828da9fd5ab35088ae9be5aa2e41ca4b02480927ecb5a049021fa9f",
+      "decodedSha256": "c0a7486c02fe69992e90a5176a12a3519a2bb2f3f2b558e0c16a176b6956a08b",
+      "bytes": 206047,
+      "decodedBytes": 371456,
+      "vertices": 10593,
+      "triangles": 9766
+    },
+    "credit": {
+      "title": "Lotte World Tower",
+      "author": "NanoRay",
+      "authorPage": "https://sketchfab.com/NanoRay",
+      "page": "https://sketchfab.com/3d-models/lotte-world-tower-a1fffe81ef5b419a92e423f59cd32f10",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 340.50°，各层 IoU 0.19–0.74，地面层尺度比约 0.86；次优候选 160.00°（得分 0.541，最优 0.541）。塔底截面约比 OSM 小 14%；圆角方形平面存在 90° 对称歧义，顶部开缝朝向未独立核实。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "metlife-building",
+    "name": "大都会人寿大厦",
+    "latitude": 40.753578582,
+    "longitude": -73.976608495,
+    "tile": {
+      "z": 14,
+      "x": 4825,
+      "y": 6157
+    },
+    "parts": [
+      {
+        "id": 1375652952,
+        "height": 38,
+        "base": 30
+      },
+      {
+        "id": 14879627890,
+        "height": 38,
+        "base": 30
+      },
+      {
+        "id": 1375646412,
+        "height": 246,
+        "base": 38
+      },
+      {
+        "id": 14879627932,
+        "height": 30,
+        "base": 0
+      }
+    ],
+    "partRadius": 61,
+    "bounds": {
+      "horizontal": 77,
+      "height": 246.3
+    },
+    "asset": {
+      "file": "metlife-building-v1.ttlm.gz",
+      "sha256": "2099ee34ec83c2ca1929f2369dc7e7fb5059fb7da324b18bea24b7e22a6ce4c6",
+      "decodedSha256": "12ec2f536d728eea76fc96fc6695673b281d36cb23bae8873f1fdac27c44bbd1",
+      "bytes": 1081953,
+      "decodedBytes": 3415088,
+      "vertices": 103740,
+      "triangles": 77108
+    },
+    "credit": {
+      "title": "MetLife Building",
+      "author": "NanoRay",
+      "authorPage": "https://sketchfab.com/NanoRay",
+      "page": "https://sketchfab.com/3d-models/metlife-building-32d3a4a1810a4d64abb9547bb661f7f3",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 331.75°，各层 IoU 0.53–0.93，地面层尺度比约 1.05；次优候选 150.90°（得分 0.821，最优 0.859）。塔楼与裙房均与 OSM 吻合，朝向较确定。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "one-world-trade-center",
+    "name": "世贸中心一号楼",
+    "latitude": 40.712997281,
+    "longitude": -74.013192447,
+    "tile": {
+      "z": 14,
+      "x": 4823,
+      "y": 6160
+    },
+    "parts": [
+      {
+        "id": 2410292530,
+        "height": 417,
+        "base": 0
+      },
+      {
+        "id": 2410292472,
+        "height": 541,
+        "base": 420
+      },
+      {
+        "id": 2410292482,
+        "height": 420,
+        "base": 417
+      }
+    ],
+    "partRadius": 36,
+    "bounds": {
+      "horizontal": 44,
+      "height": 541.3
+    },
+    "asset": {
+      "file": "one-world-trade-center-v2.ttlm.gz",
+      "sha256": "9ec59b00eeed36930a4760bd0f1ded842c6a627be3878e181788e3b459077631",
+      "decodedSha256": "00fa88c69d0bc1507837506a8ef660e33a15b3b4c4c232fd987b116c8940474e",
+      "bytes": 502735,
+      "decodedBytes": 1003148,
+      "vertices": 30400,
+      "triangles": 22793
+    },
+    "credit": {
+      "title": "One World Trade Center",
+      "author": "NanoRay",
+      "authorPage": "https://sketchfab.com/NanoRay",
+      "page": "https://sketchfab.com/3d-models/one-world-trade-center-44e60b2d0d764fdab74d33703847d38e",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向，按参考尺寸修正造型（主体顶由 401.8 m 抬至官方屋顶 417 m（OSM 同为 417 m），塔尖顶保持 541.3 m）并减面。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。造型修正后重新做多高度层俯视轮廓 IoU 拟合，ENU 逆时针 62.70°，各层 IoU 0.49–0.98（均值 0.78，修正前 0.71），地面层尺度比约 0.99；332.75° 与 242.95° 得分几乎相同，方形平面存在 90° 对称歧义。源模型按 541.3 m 塔尖缩放后主体顶约 401.8 m，已按官方与 OSM 的 417 m 竖向分段拉伸主体，塔尖段相应压缩，顶点仍为 541.3 m；平面尺寸未改。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        {
+          "title": "Wikipedia：One World Trade Center（屋顶 417 m、塔尖 541.3 m）",
+          "url": "https://en.wikipedia.org/wiki/One_World_Trade_Center"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "oriental-pearl",
+    "name": "东方明珠",
+    "latitude": 31.241893518,
+    "longitude": 121.495260006,
+    "tile": {
+      "z": 14,
+      "x": 13721,
+      "y": 6693
+    },
+    "parts": [
+      {
+        "id": 5241958400,
+        "height": 55,
+        "base": 43
+      },
+      {
+        "id": 5241958420,
+        "height": 65,
+        "base": 52
+      },
+      {
+        "id": 5241958360,
+        "height": 74,
+        "base": 61
+      },
+      {
+        "id": 5241958410,
+        "height": 83,
+        "base": 70
+      },
+      {
+        "id": 5241958350,
+        "height": 92,
+        "base": 79
+      },
+      {
+        "id": 5241958992,
+        "height": 103,
+        "base": 89
+      },
+      {
+        "id": 5241958932,
+        "height": 110,
+        "base": 83
+      },
+      {
+        "id": 5241958852,
+        "height": 115,
+        "base": 78
+      },
+      {
+        "id": 5241958962,
+        "height": 119,
+        "base": 74
+      },
+      {
+        "id": 5241958882,
+        "height": 121,
+        "base": 72
+      },
+      {
+        "id": 5241958842,
+        "height": 127,
+        "base": 118
+      },
+      {
+        "id": 5241958832,
+        "height": 149,
+        "base": 141
+      },
+      {
+        "id": 5241958822,
+        "height": 172,
+        "base": 163
+      },
+      {
+        "id": 5241958812,
+        "height": 194,
+        "base": 185
+      },
+      {
+        "id": 5241958802,
+        "height": 217,
+        "base": 208
+      },
+      {
+        "id": 5241958792,
+        "height": 239,
+        "base": 230
+      },
+      {
+        "id": 5209901940,
+        "height": 275,
+        "base": 0
+      },
+      {
+        "id": 5256172182,
+        "height": 275,
+        "base": 258
+      },
+      {
+        "id": 5256172192,
+        "height": 275,
+        "base": 255
+      },
+      {
+        "id": 5256172202,
+        "height": 275,
+        "base": 252
+      },
+      {
+        "id": 5241959142,
+        "height": 287,
+        "base": 263
+      },
+      {
+        "id": 5241959112,
+        "height": 292,
+        "base": 275
+      },
+      {
+        "id": 5241959072,
+        "height": 295,
+        "base": 275
+      },
+      {
+        "id": 5241959032,
+        "height": 298,
+        "base": 275
+      },
+      {
+        "id": 5242706432,
+        "height": 348,
+        "base": 275
+      },
+      {
+        "id": 5242706452,
+        "height": 354,
+        "base": 342
+      },
+      {
+        "id": 5242706442,
+        "height": 355,
+        "base": 340
+      },
+      {
+        "id": 5242706422,
+        "height": 407,
+        "base": 347
+      },
+      {
+        "id": 5242706412,
+        "height": 468,
+        "base": 406
+      },
+      {
+        "id": 5241958340,
+        "height": 46,
+        "base": 33
+      },
+      {
+        "id": 5241958330,
+        "height": 28,
+        "base": 15
+      },
+      {
+        "id": 5241958380,
+        "height": 37,
+        "base": 24
+      },
+      {
+        "id": 5241958390,
+        "height": 10,
+        "base": 0
+      },
+      {
+        "id": 5241958370,
+        "height": 19,
+        "base": 6
+      }
+    ],
+    "partRadius": 58,
+    "bounds": {
+      "horizontal": 64,
+      "height": 468
+    },
+    "asset": {
+      "file": "oriental-pearl-v2.ttlm.gz",
+      "sha256": "36156fb7b30484326a4004a83c4c8fc769d7f5e1bb7a1760e2c2579be709d87a",
+      "decodedSha256": "5411bde7ec2e28f89b998e6d0ba216995f7cf5c99dc5c7567ef17331463bb870",
+      "bytes": 79422,
+      "decodedBytes": 200204,
+      "vertices": 5809,
+      "triangles": 5063
+    },
+    "credit": {
+      "title": "Oriental Pearl, Shanghai.",
+      "author": "drosovila",
+      "authorPage": "https://sketchfab.com/Drosovila",
+      "page": "https://sketchfab.com/3d-models/oriental-pearl-shanghai-a80155b3f47240ce9a2f79fb8bff9024",
+      "license": "CC BY-NC 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "use": "仅限非商业使用",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。网格原点即塔轴，锚点取 OSM 立柱与球体分层的共同中心；三根立柱与三根斜撑脚的方位拟合 ENU 逆时针 99.25°，残差约 ±3°。多高度层俯视轮廓 IoU 0.31–0.86（均值约 0.66），地面层因塔座平台与斜撑外张尺度比约 1.79。主体三重对称，219.25° 与 339.25° 得分相同，模型塔座入口坡道的朝向无法由 OSM 核实。与 OSM 分层相比，下球约 70–125 m、直径约 52 m（OSM 72–121 m、约 48 m），上球约 250–300 m，太空舱直径约 19 m 偏大，斜撑落地半径约 60 m（OSM 约 55 m）；原 alpha 镂空的上部筒身与天线段去纹理后为实心。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "osaka-castle",
+    "name": "大阪城天守阁",
+    "latitude": 34.687266594,
+    "longitude": 135.525863838,
+    "tile": {
+      "z": 14,
+      "x": 14359,
+      "y": 6507
+    },
+    "parts": [
+      {
+        "id": 22635910,
+        "height": 5,
+        "base": 0
+      },
+      {
+        "id": 33024490,
+        "height": 15,
+        "base": 0
+      },
+      {
+        "id": 1700871210,
+        "height": 19,
+        "base": 0
+      },
+      {
+        "id": 1716898960,
+        "height": 22,
+        "base": 0
+      },
+      {
+        "id": 1701478620,
+        "height": 30,
+        "base": 0
+      },
+      {
+        "id": 30136730,
+        "height": 5,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 14359,
+          "y": 6506
+        }
+      },
+      {
+        "id": 1621739540,
+        "height": 15,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 14359,
+          "y": 6506
+        }
+      },
+      {
+        "id": 1802031630,
+        "height": 19,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 14359,
+          "y": 6506
+        }
+      },
+      {
+        "id": 1789244830,
+        "height": 22,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 14359,
+          "y": 6506
+        }
+      },
+      {
+        "id": 1616214090,
+        "height": 30,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 14359,
+          "y": 6506
+        }
+      }
+    ],
+    "partRadius": 29,
+    "bounds": {
+      "horizontal": 37,
+      "height": 54.8
+    },
+    "asset": {
+      "file": "osaka-castle-v1.ttlm.gz",
+      "sha256": "ae6087d3a8a6a4970e18cc91987e8e1e209639798fb3f7d91a9267b3f71d4d25",
+      "decodedSha256": "f0507fa5b831d2c7046a5b53ac6a59110d3e2290682ada3a985bd9283744941f",
+      "bytes": 707947,
+      "decodedBytes": 1984952,
+      "vertices": 57708,
+      "triangles": 49994
+    },
+    "credit": {
+      "title": "Osaka-jo Castle Japan - Toshueyi",
+      "author": "Joanthan To",
+      "authorPage": "https://sketchfab.com/jonathanto99",
+      "page": "https://sketchfab.com/3d-models/osaka-jo-castle-japan-toshueyi-f0aa96d7efd841e2b99c853f8cb08d64",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 1.20°，各层 IoU 0.06–0.94，地面层尺度比约 1.05；次优候选 180.00°（得分 0.547，最优 0.599）。总高 54.8 m 含天守台石垣与鯱；忽略 4 个 SketchUp 边线图元，删除双面导出的重合反向面（优先保留非 Back 材质）。朝向以 OSM 天守外轮廓及南侧小天守台轮廓拟合，上部各层与 OSM 简化棱柱不可直接比较。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "petronas-towers",
+    "name": "双子塔",
+    "latitude": 3.157971564,
+    "longitude": 101.711750007,
+    "tile": {
+      "z": 14,
+      "x": 12821,
+      "y": 8048
+    },
+    "parts": [
+      {
+        "id": 1373963672,
+        "height": 370,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373963742,
+        "height": 380,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373963792,
+        "height": 390,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373963712,
+        "height": 400,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373963722,
+        "height": 410,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373963732,
+        "height": 452,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373312580,
+        "height": 370,
+        "base": 0
+      },
+      {
+        "id": 1373312630,
+        "height": 380,
+        "base": 0
+      },
+      {
+        "id": 1373312590,
+        "height": 390,
+        "base": 0
+      },
+      {
+        "id": 1373312600,
+        "height": 400,
+        "base": 0
+      },
+      {
+        "id": 1373312620,
+        "height": 410,
+        "base": 0
+      },
+      {
+        "id": 1373312610,
+        "height": 452,
+        "base": 0
+      },
+      {
+        "id": 1373963652,
+        "height": 180,
+        "base": 170,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373963652,
+        "height": 180,
+        "base": 170
+      },
+      {
+        "id": 1373312640,
+        "height": 355,
+        "base": 0
+      },
+      {
+        "id": 1373963812,
+        "height": 355,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373312530,
+        "height": 325,
+        "base": 0
+      },
+      {
+        "id": 1373963512,
+        "height": 325,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373312650,
+        "height": 295,
+        "base": 0
+      },
+      {
+        "id": 1373963832,
+        "height": 295,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373312520,
+        "height": 240,
+        "base": 0
+      },
+      {
+        "id": 1373312560,
+        "height": 175,
+        "base": 0
+      },
+      {
+        "id": 1373963482,
+        "height": 240,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      },
+      {
+        "id": 1373963622,
+        "height": 175,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 12820,
+          "y": 8048
+        }
+      }
+    ],
+    "partRadius": 61,
+    "bounds": {
+      "horizontal": 72,
+      "height": 451.9
+    },
+    "asset": {
+      "file": "petronas-towers-v2.ttlm.gz",
+      "sha256": "349e0143521403c7aa0721673d8f6799ba22014a0dddc49eb7bbfadaba2fc91e",
+      "decodedSha256": "dbaf0c1847f76ee4e884b72320eba20d4157298f2b66a021457912dc11d5dc02",
+      "bytes": 501548,
+      "decodedBytes": 1242464,
+      "vertices": 36158,
+      "triangles": 31220
+    },
+    "credit": {
+      "title": "Petronas Twin Towers",
+      "author": "NanoRay",
+      "authorPage": "https://sketchfab.com/NanoRay",
+      "page": "https://sketchfab.com/3d-models/petronas-twin-towers-4111f3de53f24ab0a9547205723665b1",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向，按参考尺寸修正造型（天桥由约 227 m 降至官方 170 m（OSM 天桥分部 170–180 m）；两塔中心距由约 87.2 m 拉开至 OSM 约 106.9 m，天桥随之拉长）并减面。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。造型修正后重新做多高度层俯视轮廓 IoU 拟合，ENU 逆时针 220.25°，各层 IoU 0.42–0.85（均值 0.72，修正前 0.47），地面层尺度比约 0.93；次优候选 40.6°（得分 0.662）。源模型两塔中心距约 87.2 m、天桥约 227 m 高；已按 OSM 将两塔沿连线各外移 9.86 m（中心距约 106.9 m，塔身不变形），天桥节点降至官方 170 m 并随间距拉长（立面间约 57 m，官方 58.4 m）。不含 Suria KLCC 裙楼，保留其 OSM 体块。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        {
+          "title": "Wikipedia：Petronas Towers（天桥 170 m、长 58.4 m）",
+          "url": "https://en.wikipedia.org/wiki/Petronas_Towers"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
     "id": "shanghai-tower",
     "name": "上海中心",
     "latitude": 31.235511180721932,
@@ -52,6 +1796,279 @@
       "references": [
         {
           "title": "© OpenStreetMap contributors，WGS84 建筑轮廓",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "shanghai-wfc",
+    "name": "上海环球金融中心",
+    "latitude": 31.236572824,
+    "longitude": 121.503035774,
+    "tile": {
+      "z": 14,
+      "x": 13721,
+      "y": 6694
+    },
+    "parts": [
+      {
+        "id": 2799428960,
+        "height": 430,
+        "base": 0
+      },
+      {
+        "id": 2799428930,
+        "height": 470,
+        "base": 0
+      },
+      {
+        "id": 2799428922,
+        "height": 492,
+        "base": 470
+      }
+    ],
+    "partRadius": 38,
+    "bounds": {
+      "horizontal": 36,
+      "height": 492
+    },
+    "asset": {
+      "file": "shanghai-wfc-v1.ttlm.gz",
+      "sha256": "7872d007eba59d2cd07fff4ccd9a0e563df1e7ea54209cb714dc5b6d578d92df",
+      "decodedSha256": "12ce725f916ba065cdf2e7d62ee4911a7dda58cc177272fcb570626b5b356d07",
+      "bytes": 168233,
+      "decodedBytes": 309704,
+      "vertices": 9428,
+      "triangles": 6950
+    },
+    "credit": {
+      "title": "Shanghai WFC",
+      "author": "NanoRay",
+      "authorPage": "https://sketchfab.com/NanoRay",
+      "page": "https://sketchfab.com/3d-models/shanghai-wfc-ce4389da68b54732b216fc04f765d4db",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 5.00°，各层 IoU 0.43–0.86，地面层尺度比约 1.08；次优候选 184.75°（得分 0.753，最优 0.753）。方形平面，与 180° 翻转候选的轮廓得分几乎相同，顶部开口朝向存在歧义。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "sydney-opera-house",
+    "name": "悉尼歌剧院",
+    "latitude": -33.857110084,
+    "longitude": 151.21506513,
+    "tile": {
+      "z": 14,
+      "x": 15073,
+      "y": 9831
+    },
+    "parts": [
+      {
+        "id": 95968730,
+        "height": 5,
+        "base": 0
+      },
+      {
+        "id": 95968730,
+        "height": 5,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 15074,
+          "y": 9831
+        }
+      }
+    ],
+    "partRadius": 59,
+    "bounds": {
+      "horizontal": 103,
+      "height": 65
+    },
+    "asset": {
+      "file": "sydney-opera-house-v1.ttlm.gz",
+      "sha256": "73ffa5b2d6329f2e2f3360ada2f0140006f87ff8969e9fdf718bf2f252f0c0ed",
+      "decodedSha256": "afafcbe62c692c42ff27d62e11e648859c7eb518827d59736760e2f467bd1f40",
+      "bytes": 509035,
+      "decodedBytes": 849896,
+      "vertices": 20400,
+      "triangles": 30022
+    },
+    "credit": {
+      "title": "Sydney Opera House",
+      "author": "Nick Reinhardt",
+      "authorPage": "https://sketchfab.com/Nickardiamond",
+      "page": "https://sketchfab.com/3d-models/sydney-opera-house-317b2d540f0a4f7e8d87dd3b0372712d",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 66.85°，各层 IoU 0.52–0.56，地面层尺度比约 1.33；次优候选 72.00°（得分 0.531，最优 0.533）。已排除水面、背景竖板、标记面以及灯杆/灯具网格。朝向以 OSM 中壳体所在低层分部拟合，OSM 无壳体高度，台基外轮廓仅近似。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "taipei-101",
+    "name": "台北101",
+    "latitude": 25.033669764,
+    "longitude": 121.564797225,
+    "tile": {
+      "z": 14,
+      "x": 13724,
+      "y": 7014
+    },
+    "parts": [
+      {
+        "id": 13394877180,
+        "height": 151,
+        "base": 0
+      },
+      {
+        "id": 13394877172,
+        "height": 337,
+        "base": 0
+      },
+      {
+        "id": 1986379692,
+        "height": 386,
+        "base": 0
+      },
+      {
+        "id": 6151836212,
+        "height": 391,
+        "base": 386
+      },
+      {
+        "id": 6151836222,
+        "height": 439,
+        "base": 390
+      },
+      {
+        "id": 6151842692,
+        "height": 448,
+        "base": 439
+      },
+      {
+        "id": 6151836232,
+        "height": 508,
+        "base": 448
+      }
+    ],
+    "partRadius": 34,
+    "bounds": {
+      "horizontal": 31,
+      "height": 508
+    },
+    "asset": {
+      "file": "taipei-101-v1.ttlm.gz",
+      "sha256": "3372e70173e69d678f375f77082fca6bb1835a00a04b1294cf5f53a3a4de1e2c",
+      "decodedSha256": "70b58e702c34c84cee68bd81312b8749559eb620ee7fba10f243e34bf4b6a00a",
+      "bytes": 48992,
+      "decodedBytes": 113624,
+      "vertices": 3286,
+      "triangles": 2894
+    },
+    "credit": {
+      "title": "Taipei 101",
+      "author": "NanoRay",
+      "authorPage": "https://sketchfab.com/NanoRay",
+      "page": "https://sketchfab.com/3d-models/taipei-101-3ad8ae3d456f425a9602166f35bf0d6e",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 88.65°，各层 IoU 0.02–0.95，地面层尺度比约 1.12；次优候选 268.15°（得分 0.787，最优 0.788）。使用共享局部框架，去除作者场景约 2.3° 倾斜；方形塔身存在 90° 对称歧义。模型不含裙楼购物中心，保留其 OSM 体块；塔底外扩处约大 12%。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "three-world-trade-center",
+    "name": "世贸中心三号楼",
+    "latitude": 40.711026363,
+    "longitude": -74.011118793,
+    "tile": {
+      "z": 14,
+      "x": 4823,
+      "y": 6160
+    },
+    "parts": [
+      {
+        "id": 9601465092,
+        "height": 75,
+        "base": 0
+      },
+      {
+        "id": 2742858290,
+        "height": 220,
+        "base": 0
+      },
+      {
+        "id": 9601465102,
+        "height": 281,
+        "base": 0
+      },
+      {
+        "id": 9601465112,
+        "height": 352,
+        "base": 0
+      }
+    ],
+    "partRadius": 75,
+    "bounds": {
+      "horizontal": 100,
+      "height": 328.9
+    },
+    "asset": {
+      "file": "three-world-trade-center-v1.ttlm.gz",
+      "sha256": "353ed72bc4e9018a6d358bdb00f5068c50c6812251f42481a1d8c3426b61d84a",
+      "decodedSha256": "b8d16af13428ad5c3d55210437d85ad9c5c4adf4353d8e4889a364b5f8cf5b1a",
+      "bytes": 243116,
+      "decodedBytes": 767936,
+      "vertices": 21996,
+      "triangles": 20000
+    },
+    "credit": {
+      "title": "3 World Trade Center",
+      "author": "NanoRay",
+      "authorPage": "https://sketchfab.com/NanoRay",
+      "page": "https://sketchfab.com/3d-models/3-world-trade-center-47d1943cfa97409e983a7acab4f109f1",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 248.50°，各层 IoU 0.73–0.79，地面层尺度比约 1.14；次优候选 65.00°（得分 0.652，最优 0.754）。按 328.9 m 屋顶高度缩放；裙房与退台轮廓和 OSM 吻合，平面约大 14%。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
           "url": "https://www.openstreetmap.org/copyright"
         }
       ]
@@ -202,7 +2219,104 @@
     },
     "validation": {
       "cpu": "passed",
-      "visual": "pending"
+      "visual": "verified"
+    }
+  },
+  {
+    "id": "willis-tower",
+    "name": "威利斯大厦",
+    "latitude": 41.878887,
+    "longitude": -87.635868344,
+    "tile": {
+      "z": 14,
+      "x": 4203,
+      "y": 6089
+    },
+    "parts": [
+      {
+        "id": 173713230,
+        "height": 5,
+        "base": 0
+      },
+      {
+        "id": 5905361520,
+        "height": 10,
+        "base": 0
+      },
+      {
+        "id": 1371622900,
+        "height": 200,
+        "base": 0
+      },
+      {
+        "id": 11782439700,
+        "height": 205,
+        "base": 0
+      },
+      {
+        "id": 1371622890,
+        "height": 260,
+        "base": 0
+      },
+      {
+        "id": 11782439710,
+        "height": 265,
+        "base": 0
+      },
+      {
+        "id": 1371622950,
+        "height": 355,
+        "base": 0
+      },
+      {
+        "id": 1371622962,
+        "height": 442,
+        "base": 0
+      },
+      {
+        "id": 2339181410,
+        "height": 527,
+        "base": 0
+      },
+      {
+        "id": 11782129920,
+        "height": 10,
+        "base": 0
+      }
+    ],
+    "partRadius": 40.9,
+    "bounds": {
+      "horizontal": 40,
+      "height": 527
+    },
+    "asset": {
+      "file": "willis-tower-v1.ttlm.gz",
+      "sha256": "f5d6015471279f82dfcaa7e4203373df4da31ee338425ab232d59a02f22f9ee3",
+      "decodedSha256": "95b69f5c5dbb55def7db50c868e2dcac78b4ed0c611e5e672511e9eefdd6f63a",
+      "bytes": 280724,
+      "decodedBytes": 1108784,
+      "vertices": 33799,
+      "triangles": 24798
+    },
+    "credit": {
+      "title": "Sears (Willis) Tower",
+      "author": "NanoRay",
+      "authorPage": "https://sketchfab.com/NanoRay",
+      "page": "https://sketchfab.com/3d-models/sears-willis-tower-67d445f8cab84e75af0a6f031fc55e45",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "无纹理、不透明共享光照，转换坐标与尺度、近似注册朝向并减面。",
+      "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 1.60°，各层 IoU 0.27–0.84，地面层尺度比约 1.09；次优候选 181.50°（得分 0.647，最优 0.750）。九筒高度差使朝向较确定；平面约比 OSM 大 9%。属近似注册，不提供测绘精度。",
+      "references": [
+        {
+          "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ]
+    },
+    "validation": {
+      "cpu": "passed",
+      "visual": "verified"
     }
   }
 ]

@@ -131,12 +131,12 @@ export function About() {
             <p>社区外观模型，定位和朝向近似；无纹理、不透明共享光照，不提供测绘精度、玻璃透光或夜景灯光。</p>
             {landmarks.map(model=><div key={model.id} data-landmark-credit={model.id}>
               <a href={model.credit.page} target="_blank" rel="noreferrer">{model.name} · {model.credit.title} · {model.credit.author}</a>
-              <p><a href={model.credit.authorPage} target="_blank" rel="noreferrer">{model.credit.author}</a> · <a href={model.credit.licenseUrl} target="_blank" rel="noreferrer">{model.credit.license}</a> · {model.credit.changes}</p>
+              <p><a href={model.credit.authorPage} target="_blank" rel="noreferrer">{model.credit.author}</a> · <a href={model.credit.licenseUrl} target="_blank" rel="noreferrer">{model.credit.license}</a>{model.credit.use&&<>，{model.credit.use}</>} · {model.credit.changes}</p>
               <p>{model.credit.registration}</p>
               <p>{model.credit.references.map(ref=><a key={ref.url} href={ref.url} target="_blank" rel="noreferrer">{ref.title} </a>)}</p>
               {model.validation.visual==="pending"&&<p>已完成 CPU 检查，画面待验证。</p>}
               <div className="about-downloads">
-                <a href={`${import.meta.env.BASE_URL}landmarks/${model.asset.file}`} download>下载{model.name}无纹理衍生模型 · {model.credit.license}</a>
+                <a href={`${import.meta.env.BASE_URL}landmarks/${model.asset.file}`} download>下载{model.name}无纹理衍生模型 · {model.credit.license}{model.credit.use&&`，${model.credit.use}`}</a>
                 <a href={`${import.meta.env.BASE_URL}landmarks/${model.asset.file.replace('.ttlm.gz','.json')}`} download>下载{model.name}来源、校验与处理记录</a>
               </div>
             </div>)}

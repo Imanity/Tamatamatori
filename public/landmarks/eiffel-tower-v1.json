@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "pipelineVersion": 1,
+  "id": "eiffel-tower",
+  "name": "埃菲尔铁塔",
+  "version": 1,
+  "recipeHash": "5c29fe2b94f33060bc2dc24ba44cc7b268aefa489230ef85a35a7cd1bd7e7d33",
+  "format": "TTLM 1; float32 ENU+normal stride6, uint32 indices; little-endian; gzip",
+  "source": {
+    "sha256": "6191c29942c242c4d60005747de5b29332568fef47d77f46e2bfdf5a079ddcc4",
+    "filename": "eiffel_tower_night_lit.glb",
+    "title": "Eiffel Tower (night lit)",
+    "author": "Dimiter",
+    "authorPage": "https://sketchfab.com/Dimitera",
+    "page": "https://sketchfab.com/3d-models/eiffel-tower-night-lit-ba8a39a7219447a0b734a3d17b076d4f",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "作者说明使用 Meshy AI 生成并为浏览器游戏整理（夜景版，发光烘焙于纹理）；本项目去除纹理与发光，几何未经独立认证。",
+    "bytes": 13217780,
+    "vertices": 124298,
+    "triangles": 98633
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": [
+      -0.0015869141202458081,
+      0.007141307256208318
+    ],
+    "height": 330,
+    "heightReference": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+    "yawDegrees": 134.9,
+    "requireSharedTransform": false,
+    "normalizeNormals": true,
+    "minimum": [
+      -5.788049193239662,
+      -5.791223021480153,
+      0.29999960710426876
+    ],
+    "maximum": [
+      5.788049193239662,
+      5.791223021480153,
+      26.30000055320977
+    ],
+    "scale": 12.692307230451473
+  },
+  "processing": {
+    "targetTriangles": 100000,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true,
+    "dropDuplicateTriangles": true,
+    "reportedError": 0
+  },
+  "selection": {
+    "excludedNodes": 0,
+    "excludedTriangles": 0,
+    "ignoredLinePrimitives": 0,
+    "duplicateTriangles": 1294
+  },
+  "geo": {
+    "latitude": 48.858263768,
+    "longitude": 2.294487925,
+    "partRadius": 77,
+    "parts": [
+      {
+        "id": 41148393,
+        "height": 61,
+        "base": 57
+      },
+      {
+        "id": 3081452390,
+        "height": 64,
+        "base": 57
+      },
+      {
+        "id": 3086877440,
+        "height": 116,
+        "base": 57
+      },
+      {
+        "id": 41148423,
+        "height": 120,
+        "base": 115
+      },
+      {
+        "id": 3086877450,
+        "height": 277,
+        "base": 115
+      },
+      {
+        "id": 14625977622,
+        "height": 330,
+        "base": 300
+      },
+      {
+        "id": 3086891640,
+        "height": 58,
+        "base": 4
+      },
+      {
+        "id": 3080213892,
+        "height": 300,
+        "base": 276
+      },
+      {
+        "id": 690341270,
+        "height": 4,
+        "base": 0
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 134.90°，各层 IoU 0.31–0.83，地面层尺度比约 1.16；次优候选 45.20°（得分 0.625，最优 0.625）。四重对称，90° 旋转候选得分相同；保留塔下售票亭等低层 OSM 体块。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "bounds": {
+    "horizontal": 104,
+    "height": 330
+  },
+  "asset": {
+    "file": "eiffel-tower-v1.ttlm.gz",
+    "sha256": "e9f2a9b0d10bbe481dc2d7c3bbbe716fff3357c2d215470552c25addf342ad6d",
+    "decodedSha256": "7cf00c0f4d7963b3f67f70c5e95a0e046b3c219a1245d7de743895716388df29",
+    "bytes": 1320292,
+    "decodedBytes": 2179292,
+    "vertices": 41486,
+    "triangles": 98633
+  },
+  "tools": {
+    "@gltf-transform/core": "4.5.0",
+    "meshoptimizer": "1.3.0"
+  },
+  "limitations": [
+    "社区外观模型，定位与朝向近似，不提供测绘精度。",
+    "无纹理、不透明共享光照，不模拟玻璃或夜景灯光。",
+    "地面沿用同源 DEM，不套固定高程偏移。"
+  ]
+}

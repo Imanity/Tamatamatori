@@ -1,0 +1,588 @@
+{
+ "kind": "Shape corrections registered in recipes (model-frame metres, before yaw); CPU registration against OpenFreeMap 20261101_080013_pt building parts; not survey reconstruction",
+ "recordedAt": "2026-11-08",
+ "references": {
+  "one-world-trade-center": "https://en.wikipedia.org/wiki/One_World_Trade_Center — \"The top floor of One World Trade Center is 1,368 feet (417 m) above ground level\"; \"pinnacle height of 1,776 feet (541 m)\"; OSM part 2410292530 height 417",
+  "big-ben": "https://en.wikipedia.org/wiki/Big_Ben — \"Its base is square, measuring 40 feet (12 m) on each side\"; \"Its dials (at the centre) are 180 feet (54.9 m) above ground level\"; OSM shaft part 3637012242 area 131.1 m² (0–51 m)",
+  "petronas-towers": "https://en.wikipedia.org/wiki/Petronas_Towers — \"The bridge is 170 m (558 ft) above the ground and 58.4 m (192 ft) long\"; OSM tower parts centred about 106.9 m apart, skybridge part 1373963652 base 170 m"
+ },
+ "measured": {
+  "one-world-trade-center": {
+   "before": {
+    "bodyTopMetres": 401.84,
+    "spireTipMetres": 541.3,
+    "bodyWidthMetres": 64.1
+   },
+   "after": {
+    "bodyTopMetres": 417,
+    "spireTipMetres": 541.3,
+    "bodyWidthMetres": 64.1
+   }
+  },
+  "big-ben": {
+   "before": {
+    "shaftOuterWidthMetres": 15.53,
+    "clockStageWidthMetres": 16.92
+   },
+   "after": {
+    "shaftOuterWidthMetres": 12.43,
+    "clockStageWidthMetres": 13.53
+   },
+   "notCorrected": "模型钟楼加宽段约 51–65 m，OSM 48–61 m；钟盘仅为纹理，无法定位中心，未作竖向修正"
+  },
+  "petronas-towers": {
+   "before": {
+    "towerCentreDistanceMetres": 87.2,
+    "skybridgeDeckBottomMetres": 227.32,
+    "facadeGapAt100mMetres": 37.2
+   },
+   "after": {
+    "towerCentreDistanceMetres": 106.9,
+    "skybridgeDeckBottomMetres": 170,
+    "facadeGapAt100mMetres": 56.9
+   },
+   "skybridgeNodes": [
+    "Object_4",
+    "Object_5"
+   ]
+  }
+ },
+ "registration": {
+  "one-world-trade-center": {
+   "before": {
+    "yawDegrees": 62.6,
+    "anchor": {
+     "latitude": 40.71299728147888,
+     "longitude": -74.01319244652076
+    },
+    "meanIoU": 0.7118,
+    "levels": [
+     {
+      "height": 0.5,
+      "iou": 0.9822
+     },
+     {
+      "height": 81.1,
+      "iou": 0.9761
+     },
+     {
+      "height": 162.3,
+      "iou": 0.9256
+     },
+     {
+      "height": 243.5,
+      "iou": 0.8179
+     },
+     {
+      "height": 324.6,
+      "iou": 0.6553
+     },
+     {
+      "height": 405.8,
+      "iou": 0.0775
+     },
+     {
+      "height": 486.9,
+      "iou": 0.5477
+     }
+    ],
+    "groundScaleRatio": 0.991,
+    "peaks": [
+     {
+      "yaw": 62.6,
+      "score": 0.7118,
+      "translation": [
+       -0.46,
+       -0.3
+      ]
+     },
+     {
+      "yaw": 332.75,
+      "score": 0.7115,
+      "translation": [
+       -0.44,
+       0.44
+      ]
+     },
+     {
+      "yaw": 242.9,
+      "score": 0.7113,
+      "translation": [
+       0.06,
+       0.18
+      ]
+     },
+     {
+      "yaw": 152,
+      "score": 0.7103,
+      "translation": [
+       0.04,
+       -0.57
+      ]
+     }
+    ]
+   },
+   "after": {
+    "yawDegrees": 62.7,
+    "anchor": {
+     "latitude": 40.71299728147888,
+     "longitude": -74.01319244652076
+    },
+    "meanIoU": 0.7775,
+    "levels": [
+     {
+      "height": 0.5,
+      "iou": 0.9822,
+      "sizeRatio": 0.991
+     },
+     {
+      "height": 81.1,
+      "iou": 0.9773,
+      "sizeRatio": 0.989
+     },
+     {
+      "height": 162.3,
+      "iou": 0.9284,
+      "sizeRatio": 0.964
+     },
+     {
+      "height": 243.5,
+      "iou": 0.8309,
+      "sizeRatio": 0.912
+     },
+     {
+      "height": 324.6,
+      "iou": 0.6846,
+      "sizeRatio": 0.827
+     },
+     {
+      "height": 405.8,
+      "iou": 0.4912,
+      "sizeRatio": 0.701
+     },
+     {
+      "height": 486.9,
+      "iou": 0.5477,
+      "sizeRatio": 0.736
+     }
+    ],
+    "groundScaleRatio": 0.991,
+    "peaks": [
+     {
+      "yaw": 62.7,
+      "score": 0.7775,
+      "translation": [
+       -0.46,
+       -0.3
+      ]
+     },
+     {
+      "yaw": 332.75,
+      "score": 0.7772,
+      "translation": [
+       -0.44,
+       0.44
+      ]
+     },
+     {
+      "yaw": 242.95,
+      "score": 0.7771,
+      "translation": [
+       0.06,
+       0.18
+      ]
+     },
+     {
+      "yaw": 152,
+      "score": 0.776,
+      "translation": [
+       0.04,
+       -0.57
+      ]
+     }
+    ]
+   },
+   "corrections": [
+    {
+     "op": "remap",
+     "axis": "z",
+     "points": [
+      [
+       0,
+       0
+      ],
+      [
+       401.84,
+       417
+      ],
+      [
+       541.3,
+       541.3
+      ]
+     ],
+     "reason": "主体顶由 401.8 m 抬至官方屋顶 417 m（OSM 同为 417 m），塔尖顶保持 541.3 m"
+    }
+   ]
+  },
+  "big-ben": {
+   "before": {
+    "yawDegrees": 346,
+    "anchor": {
+     "latitude": 51.500702899558895,
+     "longitude": -0.12457208005509952
+    },
+    "meanIoU": 0.5787,
+    "levels": [
+     {
+      "height": 0.5,
+      "iou": 0.6456
+     },
+     {
+      "height": 13.7,
+      "iou": 0.6456
+     },
+     {
+      "height": 27.3,
+      "iou": 0.6421
+     },
+     {
+      "height": 41,
+      "iou": 0.6421
+     },
+     {
+      "height": 54.6,
+      "iou": 0.641
+     },
+     {
+      "height": 68.3,
+      "iou": 0.7984
+     },
+     {
+      "height": 81.9,
+      "iou": 0.036
+     }
+    ],
+    "groundScaleRatio": 1.246,
+    "peaks": [
+     {
+      "yaw": 346,
+      "score": 0.5787,
+      "translation": [
+       0.06,
+       0.32
+      ]
+     },
+     {
+      "yaw": 166,
+      "score": 0.5786,
+      "translation": [
+       -0.07,
+       0.24
+      ]
+     },
+     {
+      "yaw": 256,
+      "score": 0.5786,
+      "translation": [
+       0.04,
+       0.22
+      ]
+     },
+     {
+      "yaw": 76,
+      "score": 0.5785,
+      "translation": [
+       -0.04,
+       0.35
+      ]
+     }
+    ]
+   },
+   "after": {
+    "yawDegrees": 83,
+    "anchor": {
+     "latitude": 51.50070094052938,
+     "longitude": -0.12457385623214166
+    },
+    "meanIoU": 0.8195,
+    "levels": [
+     {
+      "height": 0.5,
+      "iou": 0.9769,
+      "sizeRatio": 0.999
+     },
+     {
+      "height": 13.7,
+      "iou": 0.9769,
+      "sizeRatio": 0.999
+     },
+     {
+      "height": 27.3,
+      "iou": 0.9742,
+      "sizeRatio": 1.001
+     },
+     {
+      "height": 41,
+      "iou": 0.9742,
+      "sizeRatio": 1.001
+     },
+     {
+      "height": 54.6,
+      "iou": 0.9742,
+      "sizeRatio": 1.002
+     },
+     {
+      "height": 68.3,
+      "iou": 0.8328,
+      "sizeRatio": 0.913
+     },
+     {
+      "height": 81.9,
+      "iou": 0.0276,
+      "sizeRatio": 0.166
+     }
+    ],
+    "groundScaleRatio": 0.999,
+    "peaks": [
+     {
+      "yaw": 83,
+      "score": 0.8195,
+      "translation": [
+       -0.06,
+       0.1
+      ]
+     },
+     {
+      "yaw": 173,
+      "score": 0.8191,
+      "translation": [
+       -0.07,
+       -0.03
+      ]
+     },
+     {
+      "yaw": 264.25,
+      "score": 0.8188,
+      "translation": [
+       0.06,
+       -0.04
+      ]
+     },
+     {
+      "yaw": 353.1,
+      "score": 0.8187,
+      "translation": [
+       0.07,
+       0.09
+      ]
+     }
+    ]
+   },
+   "corrections": [
+    {
+     "op": "scale",
+     "factors": [
+      0.8,
+      0.8,
+      1
+     ],
+     "about": [
+      0,
+      0,
+      0
+     ],
+     "reason": "水平收窄至 0.80，使塔身约 12.4 m（官方底座 12 m 见方，OSM 塔身面积比约 0.80）"
+    }
+   ],
+   "chosenYaw": {
+    "yaw": 353,
+    "score": 0.8137,
+    "note": "83° 等价（0.8136），取与原登记同一象限；原 346° 修正后为 0.7663"
+   }
+  },
+  "petronas-towers": {
+   "before": {
+    "yawDegrees": 220.6,
+    "anchor": {
+     "latitude": 3.1579700210767183,
+     "longitude": 101.71175125565526
+    },
+    "meanIoU": 0.4701,
+    "levels": [
+     {
+      "height": 0.5,
+      "iou": 0.5918,
+      "sizeRatio": 0.91
+     },
+     {
+      "height": 67.8,
+      "iou": 0.5917,
+      "sizeRatio": 0.91
+     },
+     {
+      "height": 135.6,
+      "iou": 0.5918,
+      "sizeRatio": 0.91
+     },
+     {
+      "height": 203.4,
+      "iou": 0.5079,
+      "sizeRatio": 0.92
+     },
+     {
+      "height": 271.1,
+      "iou": 0.5382,
+      "sizeRatio": 0.851
+     },
+     {
+      "height": 338.9,
+      "iou": 0.4692,
+      "sizeRatio": 1.056
+     },
+     {
+      "height": 406.7,
+      "iou": 0,
+      "sizeRatio": 1.531
+     }
+    ],
+    "groundScaleRatio": 0.91,
+    "peaks": [
+     {
+      "yaw": 220.6,
+      "score": 0.4701,
+      "translation": [
+       -4.48,
+       5.7
+      ]
+     },
+     {
+      "yaw": 41.35,
+      "score": 0.4261,
+      "translation": [
+       8.26,
+       -5.02
+      ]
+     }
+    ]
+   },
+   "after": {
+    "yawDegrees": 220.25,
+    "anchor": {
+     "latitude": 3.157971564457726,
+     "longitude": 101.71175000699645
+    },
+    "meanIoU": 0.7229,
+    "levels": [
+     {
+      "height": 0.5,
+      "iou": 0.7794,
+      "sizeRatio": 0.933
+     },
+     {
+      "height": 67.8,
+      "iou": 0.7794,
+      "sizeRatio": 0.933
+     },
+     {
+      "height": 135.6,
+      "iou": 0.7794,
+      "sizeRatio": 0.933
+     },
+     {
+      "height": 203.4,
+      "iou": 0.727,
+      "sizeRatio": 0.853
+     },
+     {
+      "height": 271.1,
+      "iou": 0.7248,
+      "sizeRatio": 0.852
+     },
+     {
+      "height": 338.9,
+      "iou": 0.8518,
+      "sizeRatio": 1.057
+     },
+     {
+      "height": 406.7,
+      "iou": 0.4188,
+      "sizeRatio": 1.55
+     }
+    ],
+    "groundScaleRatio": 0.933,
+    "peaks": [
+     {
+      "yaw": 220.25,
+      "score": 0.7229,
+      "translation": [
+       -4.62,
+       5.87
+      ]
+     },
+     {
+      "yaw": 40.6,
+      "score": 0.6615,
+      "translation": [
+       5.66,
+       -6.57
+      ]
+     },
+     {
+      "yaw": 40.6,
+      "score": 0.6615,
+      "translation": [
+       5.65,
+       -6.47
+      ]
+     },
+     {
+      "yaw": 40.5,
+      "score": 0.6614,
+      "translation": [
+       5.68,
+       -6.69
+      ]
+     }
+    ]
+   },
+   "corrections": [
+    {
+     "op": "translate",
+     "nodes": [
+      "Object_4",
+      "Object_5"
+     ],
+     "offset": [
+      0,
+      0,
+      -57.32
+     ],
+     "reason": "天桥由约 227 m 降至官方 170 m（OSM 天桥分部 170–180 m）"
+    },
+    {
+     "op": "remap",
+     "axis": "x",
+     "points": [
+      [
+       -100,
+       -109.86
+      ],
+      [
+       -18,
+       -27.86
+      ],
+      [
+       18,
+       27.86
+      ],
+      [
+       100,
+       109.86
+      ]
+     ],
+     "reason": "两塔中心距由约 87.2 m 拉开至 OSM 约 106.9 m，天桥随之拉长"
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "pipelineVersion": 1,
+  "id": "burj-khalifa",
+  "name": "哈利法塔",
+  "version": 1,
+  "recipeHash": "8b4bd8b19e40ba3d883a6286cbbc2dc2f56c0c0ef7a1b74d559a2ec9cecfddf6",
+  "format": "TTLM 1; float32 ENU+normal stride6, uint32 indices; little-endian; gzip",
+  "source": {
+    "sha256": "f33e61a8e948b83e6c93a77d0dd7cc5900ce119b28f22a9ca50d7b20c3e02d98",
+    "filename": "burj_khalifa.glb",
+    "title": "Burj Khalifa",
+    "author": "ManySince910",
+    "authorPage": "https://sketchfab.com/noears6",
+    "page": "https://sketchfab.com/3d-models/burj-khalifa-59e6dd74e5f647158de568b5a7f9cab7",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。",
+    "bytes": 962004,
+    "vertices": 23683,
+    "triangles": 8325
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": [
+      -884.30859375,
+      -3026.3642578125
+    ],
+    "height": 828,
+    "heightReference": "https://www.burjkhalifa.ae/",
+    "yawDegrees": 3.85,
+    "requireSharedTransform": false,
+    "normalizeNormals": true,
+    "minimum": [
+      -8142.599609375,
+      -9847.869140625,
+      -2.1866662126834857e-12
+    ],
+    "maximum": [
+      6373.982421875,
+      3795.140625,
+      82800
+    ],
+    "scale": 0.01
+  },
+  "processing": {
+    "targetTriangles": 16650,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true,
+    "dropDuplicateTriangles": true,
+    "reportedError": 0
+  },
+  "selection": {
+    "excludedNodes": 0,
+    "excludedTriangles": 0,
+    "ignoredLinePrimitives": 0,
+    "duplicateTriangles": 8325
+  },
+  "geo": {
+    "latitude": 25.197078181,
+    "longitude": 55.274215202,
+    "partRadius": 71,
+    "parts": [
+      {
+        "id": 1371403310,
+        "height": 35,
+        "base": 0
+      },
+      {
+        "id": 1371403662,
+        "height": 130,
+        "base": 0
+      },
+      {
+        "id": 1371403552,
+        "height": 235,
+        "base": 0
+      },
+      {
+        "id": 1371403742,
+        "height": 270,
+        "base": 0
+      },
+      {
+        "id": 1371403712,
+        "height": 315,
+        "base": 0
+      },
+      {
+        "id": 1371403682,
+        "height": 360,
+        "base": 0
+      },
+      {
+        "id": 1371403482,
+        "height": 405,
+        "base": 0
+      },
+      {
+        "id": 1371403632,
+        "height": 460,
+        "base": 0
+      },
+      {
+        "id": 1371403612,
+        "height": 520,
+        "base": 0
+      },
+      {
+        "id": 1371531392,
+        "height": 545,
+        "base": 0
+      },
+      {
+        "id": 1371531412,
+        "height": 560,
+        "base": 0
+      },
+      {
+        "id": 1371531402,
+        "height": 580,
+        "base": 0
+      },
+      {
+        "id": 1371531382,
+        "height": 605,
+        "base": 0
+      },
+      {
+        "id": 1371531372,
+        "height": 625,
+        "base": 0
+      },
+      {
+        "id": 1371531352,
+        "height": 645,
+        "base": 0
+      },
+      {
+        "id": 6179123952,
+        "height": 660,
+        "base": 0
+      },
+      {
+        "id": 1371531362,
+        "height": 680,
+        "base": 0
+      },
+      {
+        "id": 1371531312,
+        "height": 700,
+        "base": 0
+      },
+      {
+        "id": 1371477122,
+        "height": 710,
+        "base": 0
+      },
+      {
+        "id": 1371531432,
+        "height": 720,
+        "base": 0
+      },
+      {
+        "id": 1371531422,
+        "height": 740,
+        "base": 0
+      },
+      {
+        "id": 1371531442,
+        "height": 760,
+        "base": 0
+      },
+      {
+        "id": 1371477152,
+        "height": 828,
+        "base": 0
+      },
+      {
+        "id": 1371403542,
+        "height": 200,
+        "base": 0
+      },
+      {
+        "id": 1371403582,
+        "height": 70,
+        "base": 0
+      },
+      {
+        "id": 1371403402,
+        "height": 160,
+        "base": 0
+      },
+      {
+        "id": 1371403452,
+        "height": 105,
+        "base": 0
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 3.85°，各层 IoU 0.36–0.89，地面层尺度比约 1.45；次优候选 122.35°（得分 0.691，最优 0.730）。Y 形平面在 120° 候选中得分明显较低，朝向较确定；保留 15 m 低层裙房 OSM 体块。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "bounds": {
+    "horizontal": 78,
+    "height": 828
+  },
+  "asset": {
+    "file": "burj-khalifa-v1.ttlm.gz",
+    "sha256": "f84d2c285b08f6f289783298957fd9d24488a608e110640bf868a70c62456480",
+    "decodedSha256": "0165e1ed18b9e43af8b684154013395cdbd9e3c774ccc45f8836d05862720473",
+    "bytes": 126426,
+    "decodedBytes": 291452,
+    "vertices": 7980,
+    "triangles": 8325
+  },
+  "tools": {
+    "@gltf-transform/core": "4.5.0",
+    "meshoptimizer": "1.3.0"
+  },
+  "limitations": [
+    "社区外观模型，定位与朝向近似，不提供测绘精度。",
+    "无纹理、不透明共享光照，不模拟玻璃或夜景灯光。",
+    "地面沿用同源 DEM，不套固定高程偏移。"
+  ]
+}

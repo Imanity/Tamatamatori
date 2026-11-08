@@ -1,0 +1,90 @@
+{
+ "id": "cn-tower",
+ "assetSha256": "cafaaa8a0c6ec84eebee83d385f9e3a1394bcd93e396236dfc4c8ab0538207a2",
+ "placementHash": "fc15436b099f22f8a7573f6f194255a86eeec0507d1cc6ffeed62629ff4abf58",
+ "gpuPassed": true,
+ "recordedAt": "2026-11-08",
+ "build": "Production /Tamatamatori/ subpath via vite preview on 127.0.0.1:5181; Chrome 157 on this Windows machine with native GPU, occlusion throttling disabled, viewport emulated 2000×1250",
+ "screenshots": [
+  "docs/plan/landmark-batch-evidence/cn-tower-gpu.jpg"
+ ],
+ "scenes": [
+  {
+   "kind": "n1",
+   "observer": {
+    "latitude": 43.62667092936803,
+    "longitude": -79.38708755300001
+   },
+   "azimuth": 0,
+   "pitch": 5.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1770.56,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "加拿大国家电视塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.8 km · 39,801 面",
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 75.0 m · 离地 100 m"
+  },
+  {
+   "kind": "n2",
+   "observer": {
+    "latitude": 43.64259182585698,
+    "longitude": -79.365084086774
+   },
+   "azimuth": 270,
+   "pitch": 5.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1770.56,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "加拿大国家电视塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.8 km · 39,801 面",
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 75.0 m · 离地 100 m"
+  },
+  {
+   "kind": "f1",
+   "observer": {
+    "latitude": 43.483405463590834,
+    "longitude": -79.6061953563883
+   },
+   "azimuth": 44.8,
+   "pitch": 0.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 651,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "加拿大国家电视塔无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 39,801 面",
+   "sameScene": [],
+   "facts": "651 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 75.0 m · 离地 100 m"
+  },
+  {
+   "kind": "b1",
+   "observer": {
+    "latitude": 43.62667092936803,
+    "longitude": -79.38708755300001
+   },
+   "azimuth": 0,
+   "pitch": 5.7,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1770.56,
+   "utc": "2026-11-04T15:30:00Z",
+   "modelRequestsBlocked": true,
+   "landmarkPhase": "fallback",
+   "landmarkStatus": "加拿大国家电视塔精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.8 km",
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 75.0 m · 离地 100 m"
+  }
+ ],
+ "observations": "南侧隔湖近景、东侧近景与拦截后的 OSM 塔体位置/高度一致；无地面与湖面网格；25 km 远景完整。",
+ "limitations": [
+  "画面验收确认渲染位置、尺度、朝向与同机位 OSM 粗体块对照一致，以及远景着地和失败回退；不代表实景测绘精度。",
+  "未测实体手机与 GPU 帧耗时。"
+ ]
+}

@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "id": "willis-tower",
+  "name": "威利斯大厦",
+  "version": 1,
+  "source": {
+    "sha256": "593bd727fb64677d3c2a7a998e82d606b80cd53a4fc0c98bc972b9cfa64750a1",
+    "filename": "sears_willis_tower.glb",
+    "title": "Sears (Willis) Tower",
+    "author": "NanoRay",
+    "authorPage": "https://sketchfab.com/NanoRay",
+    "page": "https://sketchfab.com/3d-models/sears-willis-tower-67d445f8cab84e75af0a6f031fc55e45",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。"
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": "base-bounds",
+    "height": 527,
+    "heightReference": "https://en.wikipedia.org/wiki/Willis_Tower",
+    "yawDegrees": 1.6,
+    "requireSharedTransform": false,
+    "normalizeNormals": true
+  },
+  "processing": {
+    "targetTriangles": 20000,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true
+  },
+  "geo": {
+    "latitude": 41.878887,
+    "longitude": -87.635868344,
+    "partRadius": 40.9,
+    "parts": [
+      {
+        "id": 173713230,
+        "height": 5,
+        "base": 0
+      },
+      {
+        "id": 5905361520,
+        "height": 10,
+        "base": 0
+      },
+      {
+        "id": 1371622900,
+        "height": 200,
+        "base": 0
+      },
+      {
+        "id": 11782439700,
+        "height": 205,
+        "base": 0
+      },
+      {
+        "id": 1371622890,
+        "height": 260,
+        "base": 0
+      },
+      {
+        "id": 11782439710,
+        "height": 265,
+        "base": 0
+      },
+      {
+        "id": 1371622950,
+        "height": 355,
+        "base": 0
+      },
+      {
+        "id": 1371622962,
+        "height": 442,
+        "base": 0
+      },
+      {
+        "id": 2339181410,
+        "height": 527,
+        "base": 0
+      },
+      {
+        "id": 11782129920,
+        "height": 10,
+        "base": 0
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 1.60°，各层 IoU 0.27–0.84，地面层尺度比约 1.09；次优候选 181.50°（得分 0.647，最优 0.750）。九筒高度差使朝向较确定；平面约比 OSM 大 9%。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  }
+}

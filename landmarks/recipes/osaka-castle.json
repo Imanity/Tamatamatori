@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "id": "osaka-castle",
+  "name": "大阪城天守阁",
+  "version": 1,
+  "source": {
+    "sha256": "b766e301f100ba7b691df28ba49c7f9f2a8be9cc086ca5ae098364a07b349554",
+    "filename": "osaka-jo_castle_japan_-_toshueyi.glb",
+    "title": "Osaka-jo Castle Japan - Toshueyi",
+    "author": "Joanthan To",
+    "authorPage": "https://sketchfab.com/jonathanto99",
+    "page": "https://sketchfab.com/3d-models/osaka-jo-castle-japan-toshueyi-f0aa96d7efd841e2b99c853f8cb08d64",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。"
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": "base-bounds",
+    "height": 54.8,
+    "heightReference": "https://ja.wikipedia.org/wiki/%E5%A4%A7%E5%9D%82%E5%9F%8E",
+    "yawDegrees": 1.2,
+    "requireSharedTransform": false,
+    "normalizeNormals": true
+  },
+  "processing": {
+    "targetTriangles": 50000,
+    "maxErrorMetres": 0.01,
+    "normalWeight": 0.01,
+    "weld": true,
+    "positionMergeTolerance": 0.0001,
+    "normalMergeTolerance": 0.001,
+    "permissive": true,
+    "ignoreLinePrimitives": true,
+    "dropDuplicateTriangles": true,
+    "backMaterials": [
+      "Back"
+    ]
+  },
+  "geo": {
+    "latitude": 34.687266594,
+    "longitude": 135.525863838,
+    "partRadius": 29,
+    "parts": [
+      {
+        "id": 22635910,
+        "height": 5,
+        "base": 0
+      },
+      {
+        "id": 33024490,
+        "height": 15,
+        "base": 0
+      },
+      {
+        "id": 1700871210,
+        "height": 19,
+        "base": 0
+      },
+      {
+        "id": 1716898960,
+        "height": 22,
+        "base": 0
+      },
+      {
+        "id": 1701478620,
+        "height": 30,
+        "base": 0
+      },
+      {
+        "id": 30136730,
+        "height": 5,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 14359,
+          "y": 6506
+        }
+      },
+      {
+        "id": 1621739540,
+        "height": 15,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 14359,
+          "y": 6506
+        }
+      },
+      {
+        "id": 1802031630,
+        "height": 19,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 14359,
+          "y": 6506
+        }
+      },
+      {
+        "id": 1789244830,
+        "height": 22,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 14359,
+          "y": 6506
+        }
+      },
+      {
+        "id": 1616214090,
+        "height": 30,
+        "base": 0,
+        "tile": {
+          "z": 14,
+          "x": 14359,
+          "y": 6506
+        }
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 1.20°，各层 IoU 0.06–0.94，地面层尺度比约 1.05；次优候选 180.00°（得分 0.547，最优 0.599）。总高 54.8 m 含天守台石垣与鯱；忽略 4 个 SketchUp 边线图元，删除双面导出的重合反向面（优先保留非 Back 材质）。朝向以 OSM 天守外轮廓及南侧小天守台轮廓拟合，上部各层与 OSM 简化棱柱不可直接比较。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "pipelineVersion": 1,
+  "id": "lotte-world-tower",
+  "name": "乐天世界塔",
+  "version": 1,
+  "recipeHash": "a8b37af21ca6081694a1388c4fdbc0bc8ac5923acf2cff575948d8b6dc9d0d9a",
+  "format": "TTLM 1; float32 ENU+normal stride6, uint32 indices; little-endian; gzip",
+  "source": {
+    "sha256": "25628f19d2cb5e20cf2884b7303078b65451144210ab57931d8c0e641a9bb4cc",
+    "filename": "lotte_world_tower.glb",
+    "title": "Lotte World Tower",
+    "author": "NanoRay",
+    "authorPage": "https://sketchfab.com/NanoRay",
+    "page": "https://sketchfab.com/3d-models/lotte-world-tower-a1fffe81ef5b419a92e423f59cd32f10",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。",
+    "bytes": 376468,
+    "vertices": 10631,
+    "triangles": 9766
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": [
+      5.350799798965454,
+      -95.99979209899901
+    ],
+    "height": 555,
+    "heightReference": "https://en.wikipedia.org/wiki/Lotte_World_Tower",
+    "yawDegrees": 340.5,
+    "requireSharedTransform": false,
+    "normalizeNormals": true,
+    "minimum": [
+      -6.90500020980835,
+      -108.25409221649169,
+      -93.90905761718753
+    ],
+    "maximum": [
+      17.606599807739258,
+      -83.74549198150633,
+      98.09094238281247
+    ],
+    "scale": 2.890625
+  },
+  "processing": {
+    "targetTriangles": 9766,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true,
+    "reportedError": 0
+  },
+  "geo": {
+    "latitude": 37.512540601,
+    "longitude": 127.102657939,
+    "partRadius": 35,
+    "parts": [
+      {
+        "id": 8886054722,
+        "height": 290,
+        "base": 0
+      },
+      {
+        "id": 8886054712,
+        "height": 392,
+        "base": 311
+      },
+      {
+        "id": 8797987162,
+        "height": 432,
+        "base": 391
+      },
+      {
+        "id": 8886054702,
+        "height": 440,
+        "base": 431
+      },
+      {
+        "id": 6350734622,
+        "height": 520,
+        "base": 0
+      },
+      {
+        "id": 6350734690,
+        "height": 555,
+        "base": 0
+      },
+      {
+        "id": 8797987172,
+        "height": 312,
+        "base": 289
+      },
+      {
+        "id": 8797986960,
+        "height": 555,
+        "base": 0
+      },
+      {
+        "id": 8797987040,
+        "height": 520,
+        "base": 0
+      },
+      {
+        "id": 8795717502,
+        "height": 183,
+        "base": 153
+      },
+      {
+        "id": 8795717522,
+        "height": 200,
+        "base": 0
+      },
+      {
+        "id": 8886054732,
+        "height": 154,
+        "base": 146
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 340.50°，各层 IoU 0.19–0.74，地面层尺度比约 0.86；次优候选 160.00°（得分 0.541，最优 0.541）。塔底截面约比 OSM 小 14%；圆角方形平面存在 90° 对称歧义，顶部开缝朝向未独立核实。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "bounds": {
+    "horizontal": 31,
+    "height": 555
+  },
+  "asset": {
+    "file": "lotte-world-tower-v1.ttlm.gz",
+    "sha256": "a77d5ec57828da9fd5ab35088ae9be5aa2e41ca4b02480927ecb5a049021fa9f",
+    "decodedSha256": "c0a7486c02fe69992e90a5176a12a3519a2bb2f3f2b558e0c16a176b6956a08b",
+    "bytes": 206047,
+    "decodedBytes": 371456,
+    "vertices": 10593,
+    "triangles": 9766
+  },
+  "tools": {
+    "@gltf-transform/core": "4.5.0",
+    "meshoptimizer": "1.3.0"
+  },
+  "limitations": [
+    "社区外观模型，定位与朝向近似，不提供测绘精度。",
+    "无纹理、不透明共享光照，不模拟玻璃或夜景灯光。",
+    "地面沿用同源 DEM，不套固定高程偏移。"
+  ]
+}

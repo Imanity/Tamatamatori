@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "id": "lotte-world-tower",
+  "name": "乐天世界塔",
+  "version": 1,
+  "source": {
+    "sha256": "25628f19d2cb5e20cf2884b7303078b65451144210ab57931d8c0e641a9bb4cc",
+    "filename": "lotte_world_tower.glb",
+    "title": "Lotte World Tower",
+    "author": "NanoRay",
+    "authorPage": "https://sketchfab.com/NanoRay",
+    "page": "https://sketchfab.com/3d-models/lotte-world-tower-a1fffe81ef5b419a92e423f59cd32f10",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。"
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": "base-bounds",
+    "height": 555,
+    "heightReference": "https://en.wikipedia.org/wiki/Lotte_World_Tower",
+    "yawDegrees": 340.5,
+    "requireSharedTransform": false,
+    "normalizeNormals": true
+  },
+  "processing": {
+    "targetTriangles": 9766,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true
+  },
+  "geo": {
+    "latitude": 37.512540601,
+    "longitude": 127.102657939,
+    "partRadius": 35,
+    "parts": [
+      {
+        "id": 8886054722,
+        "height": 290,
+        "base": 0
+      },
+      {
+        "id": 8886054712,
+        "height": 392,
+        "base": 311
+      },
+      {
+        "id": 8797987162,
+        "height": 432,
+        "base": 391
+      },
+      {
+        "id": 8886054702,
+        "height": 440,
+        "base": 431
+      },
+      {
+        "id": 6350734622,
+        "height": 520,
+        "base": 0
+      },
+      {
+        "id": 6350734690,
+        "height": 555,
+        "base": 0
+      },
+      {
+        "id": 8797987172,
+        "height": 312,
+        "base": 289
+      },
+      {
+        "id": 8797986960,
+        "height": 555,
+        "base": 0
+      },
+      {
+        "id": 8797987040,
+        "height": 520,
+        "base": 0
+      },
+      {
+        "id": 8795717502,
+        "height": 183,
+        "base": 153
+      },
+      {
+        "id": 8795717522,
+        "height": 200,
+        "base": 0
+      },
+      {
+        "id": 8886054732,
+        "height": 154,
+        "base": 146
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 340.50°，各层 IoU 0.19–0.74，地面层尺度比约 0.86；次优候选 160.00°（得分 0.541，最优 0.541）。塔底截面约比 OSM 小 14%；圆角方形平面存在 90° 对称歧义，顶部开缝朝向未独立核实。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  }
+}

@@ -18,10 +18,12 @@ layout(location=0) in vec3 a_position;
 layout(location=1) in vec3 a_normal;
 out highp vec2 v_tile;
 out vec3 v_normal;
+out vec3 v_view;
 uniform float u_local;
 void main(){
- if(u_local>0.5){gl_Position=u_photo_camera*vec4(u_photo_base+u_photo_basis*a_position,1.0);v_photo_depth=gl_Position.w;v_tile=vec2(4096);}
- else{gl_Position=photoProject(a_position.xy,a_position.z);v_tile=a_position.xy;}
+ // Landmark vertices are in the observer ENU frame with the eye at the origin.
+ if(u_local>0.5){v_view=u_photo_base+u_photo_basis*a_position;gl_Position=u_photo_camera*vec4(v_view,1.0);v_photo_depth=gl_Position.w;v_tile=vec2(4096);}
+ else{gl_Position=photoProject(a_position.xy,a_position.z);v_tile=a_position.xy;v_view=vec3(0);}
  v_normal=u_photo_basis*a_normal;
 }`;
 const fragment=`#version 300 es
@@ -29,12 +31,16 @@ precision highp float;
 ${depth}
 in highp vec2 v_tile;
 in vec3 v_normal;
+in vec3 v_view;
 uniform vec3 u_surface;uniform vec3 u_fog;uniform vec3 u_sun;uniform float u_density;
 out vec4 color;
 void main(){
  if(any(lessThan(v_tile,vec2(0)))||any(greaterThanEqual(v_tile,vec2(8192))))discard;
  gl_FragDepth=photoFragmentDepth(v_photo_depth);
- float light=0.68+0.32*max(0.0,dot(normalize(v_normal),u_sun));
+ // Two-sided landmark lighting: open shells and coincident double-sided exports
+ // are lit on the side facing the observer. Ordinary blocks keep v_view at zero.
+ vec3 normal=normalize(v_normal);if(dot(normal,v_view)>0.0)normal=-normal;
+ float light=0.68+0.32*max(0.0,dot(normal,u_sun));
  float fog=clamp(1.0-exp(-max(0.0,v_photo_depth)*u_density),0.0,0.92);
  color=vec4(mix(u_surface*light,u_fog,fog),1.0);
 }`;

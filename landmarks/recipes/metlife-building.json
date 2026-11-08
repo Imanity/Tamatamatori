@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "id": "metlife-building",
+  "name": "大都会人寿大厦",
+  "version": 1,
+  "source": {
+    "sha256": "a32214c7865ff178063dcd31cdb794c6e193b856bbf2e1799f28bed368733b90",
+    "filename": "metlife_building.glb",
+    "title": "MetLife Building",
+    "author": "NanoRay",
+    "authorPage": "https://sketchfab.com/NanoRay",
+    "page": "https://sketchfab.com/3d-models/metlife-building-32d3a4a1810a4d64abb9547bb661f7f3",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。"
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": "base-bounds",
+    "height": 246.3,
+    "heightReference": "https://en.wikipedia.org/wiki/MetLife_Building",
+    "yawDegrees": 331.75,
+    "requireSharedTransform": false,
+    "normalizeNormals": true
+  },
+  "processing": {
+    "targetTriangles": 30000,
+    "maxErrorMetres": 0.3,
+    "normalWeight": 0.01,
+    "weld": true,
+    "positionMergeTolerance": 0.0001,
+    "normalMergeTolerance": 0.001,
+    "permissive": true
+  },
+  "geo": {
+    "latitude": 40.753578582,
+    "longitude": -73.976608495,
+    "partRadius": 61,
+    "parts": [
+      {
+        "id": 1375652952,
+        "height": 38,
+        "base": 30
+      },
+      {
+        "id": 14879627890,
+        "height": 38,
+        "base": 30
+      },
+      {
+        "id": 1375646412,
+        "height": 246,
+        "base": 38
+      },
+      {
+        "id": 14879627932,
+        "height": 30,
+        "base": 0
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 331.75°，各层 IoU 0.53–0.93，地面层尺度比约 1.05；次优候选 150.90°（得分 0.821，最优 0.859）。塔楼与裙房均与 OSM 吻合，朝向较确定。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  }
+}

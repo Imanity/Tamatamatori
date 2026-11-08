@@ -1269,7 +1269,11 @@ test('About 汇集所有署名与下载，开关图层和弹窗不重建地图�
   const landmarkSection=dialog.querySelector('[aria-labelledby="about-landmarks-title"]');
   assert.match(landmarkSection.textContent,/Noah.*CC BY 4.0/);
   assert.equal(landmarkSection.querySelectorAll('a[download]').length,2*landmarkCatalog.length);
-  for(const target of landmarkCatalog){const credit=landmarkSection.querySelector(`[data-landmark-credit="${target.id}"]`);assert.ok(credit);assert.ok(credit.textContent.includes(target.credit.author));assert.ok(credit.querySelector('a[href="'+target.credit.licenseUrl+'"]'));}
+  for(const target of landmarkCatalog){const credit=landmarkSection.querySelector(`[data-landmark-credit="${target.id}"]`);assert.ok(credit);assert.ok(credit.textContent.includes(target.credit.author));assert.ok(credit.querySelector('a[href="'+target.credit.licenseUrl+'"]'));
+    // Non-commercial terms must be visible next to the licence and on the download link, and only where they apply.
+    const restricted=target.credit.use==='仅限非商业使用';assert.equal(target.credit.license.includes('NC'),restricted);
+    assert.equal(credit.textContent.includes('仅限非商业使用'),restricted);if(restricted)assert.match(credit.querySelector('a[download]').textContent,/CC BY-NC 4\.0，仅限非商业使用/);}
+  assert.ok(landmarkCatalog.some(target=>target.credit.use),'catalogue carries at least one non-commercial landmark');
   assert.match(landmarkSection.textContent,/NanoRay.*CC BY 4.0/);
   assert.equal(new Set(downloads.map((link) => link.getAttribute('href'))).size, downloads.length);
   const fields = ['经度', '纬度', '焦距', '相机离地高度', '方位角', '俯仰角'];

@@ -1,0 +1,249 @@
+{
+ "id": "oriental-pearl",
+ "assetSha256": "36156fb7b30484326a4004a83c4c8fc769d7f5e1bb7a1760e2c2579be709d87a",
+ "placementHash": "cc7e7e67a22a1a2c2e03a8cfb5f02d26c51472686e09fe67db02725be90b7a4b",
+ "gpuPassed": true,
+ "recordedAt": "2026-11-08",
+ "build": "Production /Tamatamatori/ subpath via vite preview on 127.0.0.1:5181; Chrome 157 on this Windows machine with native GPU, occlusion throttling disabled, viewport emulated 2000×1250",
+ "screenshots": [
+  "docs/plan/landmark-batch-evidence/oriental-pearl-gpu.jpg"
+ ],
+ "scenes": [
+  {
+   "kind": "n1",
+   "observer": {
+    "latitude": 31.228425296232864,
+    "longitude": 121.49526000599997
+   },
+   "azimuth": 0,
+   "pitch": 5.1,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1497.6000000000001,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "东方明珠无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.5 km · 5,063 面",
+   "sameScene": [
+    "shanghai-tower:applied",
+    "shanghai-wfc:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 9.6 m · 离地 100 m"
+  },
+  {
+   "kind": "n2",
+   "observer": {
+    "latitude": 31.24189255774725,
+    "longitude": 121.51101258361246
+   },
+   "azimuth": 270,
+   "pitch": 5.1,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1497.6000000000001,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "东方明珠无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.5 km · 5,063 面",
+   "sameScene": [
+    "shanghai-wfc:applied",
+    "shanghai-tower:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 3.7 m · 离地 100 m"
+  },
+  {
+   "kind": "f1",
+   "observer": {
+    "latitude": 31.08278126816038,
+    "longitude": 121.30962873923465
+   },
+   "azimuth": 44.9,
+   "pitch": 0.2,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 769,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "东方明珠无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 5,063 面",
+   "sameScene": [
+    "shanghai-tower:applied",
+    "shanghai-wfc:applied"
+   ],
+   "facts": "769 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 3.7 m · 离地 100 m"
+  },
+  {
+   "kind": "b1",
+   "observer": {
+    "latitude": 31.228425296232864,
+    "longitude": 121.49526000599997
+   },
+   "azimuth": 0,
+   "pitch": 5.1,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1497.6000000000001,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": true,
+   "landmarkPhase": "fallback",
+   "landmarkStatus": "东方明珠精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.5 km",
+   "sameScene": [
+    "shanghai-tower:fallback",
+    "shanghai-wfc:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 9.6 m · 离地 100 m"
+  },
+  {
+   "kind": "r1",
+   "observer": {
+    "latitude": 31.23820194547176,
+    "longitude": 121.48339942702671
+   },
+   "azimuth": 70,
+   "pitch": 6.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 37,
+   "distanceMetres": 1200,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "东方明珠无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.2 km · 5,063 面",
+   "sameScene": [
+    "shanghai-tower:applied",
+    "shanghai-wfc:applied"
+   ],
+   "facts": "37 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 11.9 m · 离地 100 m"
+  },
+  {
+   "kind": "n3",
+   "observer": {
+    "latitude": 31.251416508723413,
+    "longitude": 121.48412012817346
+   },
+   "azimuth": 135,
+   "pitch": 5.1,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1497.6000000000001,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "东方明珠无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.5 km · 5,063 面",
+   "sameScene": [
+    "shanghai-tower:applied",
+    "shanghai-wfc:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 6.6 m · 离地 100 m"
+  },
+  {
+   "kind": "f2",
+   "observer": {
+    "latitude": 31.400738173579075,
+    "longitude": 121.30900277949183
+   },
+   "azimuth": 134.9,
+   "pitch": 0.2,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 769,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "东方明珠无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 5,063 面",
+   "sameScene": [
+    "shanghai-tower:applied",
+    "shanghai-wfc:applied"
+   ],
+   "facts": "769 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 6.1 m · 离地 100 m"
+  },
+  {
+   "kind": "c1",
+   "observer": {
+    "latitude": 31.23820194547176,
+    "longitude": 121.48339942702671
+   },
+   "azimuth": 70,
+   "pitch": -1.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 200,
+   "distanceMetres": 1200,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "东方明珠无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.2 km · 5,063 面",
+   "sameScene": [
+    "shanghai-tower:applied",
+    "shanghai-wfc:applied"
+   ],
+   "facts": "200 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 11.9 m · 离地 100 m"
+  },
+  {
+   "kind": "c2",
+   "observer": {
+    "latitude": 31.23820194547176,
+    "longitude": 121.48339942702671
+   },
+   "azimuth": 70,
+   "pitch": 10.8,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 200,
+   "distanceMetres": 1200,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "东方明珠无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.2 km · 5,063 面",
+   "sameScene": [
+    "shanghai-tower:applied",
+    "shanghai-wfc:applied"
+   ],
+   "facts": "200 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 11.9 m · 离地 100 m"
+  },
+  {
+   "kind": "c3",
+   "observer": {
+    "latitude": 31.23820194547176,
+    "longitude": 121.48339942702671
+   },
+   "azimuth": 70,
+   "pitch": -0.1,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 600,
+   "distanceMetres": 1200,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "东方明珠无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.2 km · 5,063 面",
+   "sameScene": [
+    "shanghai-tower:applied",
+    "shanghai-wfc:applied"
+   ],
+   "facts": "600 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 11.9 m · 离地 100 m"
+  },
+  {
+   "kind": "c4",
+   "observer": {
+    "latitude": 31.23175242937991,
+    "longitude": 121.49094340300621
+   },
+   "azimuth": 20,
+   "pitch": -0.1,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 600,
+   "distanceMetres": 1200,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "东方明珠无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.2 km · 5,063 面",
+   "sameScene": [
+    "shanghai-tower:applied",
+    "shanghai-wfc:applied"
+   ],
+   "facts": "600 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 2.3 m · 离地 100 m"
+  }
+ ],
+ "observations": "v2（drosovila 模型）。外滩隔江近景与 200 mm 长焦中三根斜撑与立柱着地，塔座平台贴地，下球、上球、太空舱与天线比例与同机位 OSM 分层一致；南侧近景与拦截模型后的 OSM 粗体块上球位置、大小重合，回退正常；25 km 远景完整着地。600 mm 下球环带上下各两圈为源模型平直法线，斜射阳光下可见斜向明暗条纹，几何无重叠或缺面。",
+ "limitations": [
+  "画面验收确认渲染位置、尺度、朝向与同机位 OSM 粗体块对照一致，以及远景着地和失败回退；不代表实景测绘精度。",
+  "未测实体手机与 GPU 帧耗时。"
+ ]
+}

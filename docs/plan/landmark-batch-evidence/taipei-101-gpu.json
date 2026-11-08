@@ -1,0 +1,108 @@
+{
+ "id": "taipei-101",
+ "assetSha256": "3372e70173e69d678f375f77082fca6bb1835a00a04b1294cf5f53a3a4de1e2c",
+ "placementHash": "1fc129eed4d3392c25e40923646a9c08a6ee9c712a8d65b5816499bd0ac7d8a9",
+ "gpuPassed": true,
+ "recordedAt": "2026-11-08",
+ "build": "Production /Tamatamatori/ subpath via vite preview on 127.0.0.1:5181; Chrome 157 on this Windows machine with native GPU, occlusion throttling disabled, viewport emulated 2000×1250",
+ "screenshots": [
+  "docs/plan/landmark-batch-evidence/taipei-101-gpu.jpg"
+ ],
+ "scenes": [
+  {
+   "kind": "n1",
+   "observer": {
+    "latitude": 25.019050412167292,
+    "longitude": 121.564797225
+   },
+   "azimuth": 0,
+   "pitch": 5.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1625.6000000000001,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "台北101无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.6 km · 2,894 面",
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 140.5 m · 离地 100 m"
+  },
+  {
+   "kind": "n2",
+   "observer": {
+    "latitude": 25.0336688929519,
+    "longitude": 121.58093231912824
+   },
+   "azimuth": 270,
+   "pitch": 5.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1625.6000000000001,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "台北101无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.6 km · 2,894 面",
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 13.1 m · 离地 100 m"
+  },
+  {
+   "kind": "f1",
+   "observer": {
+    "latitude": 24.874588212438354,
+    "longitude": 121.38956205238037
+   },
+   "azimuth": 44.9,
+   "pitch": 0.3,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 709,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "台北101无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 2,894 面",
+   "sameScene": [],
+   "facts": "709 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 156.0 m · 离地 100 m"
+  },
+  {
+   "kind": "b1",
+   "observer": {
+    "latitude": 25.019050412167292,
+    "longitude": 121.564797225
+   },
+   "azimuth": 0,
+   "pitch": 5.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1625.6000000000001,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": true,
+   "landmarkPhase": "fallback",
+   "landmarkStatus": "台北101精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.6 km",
+   "sameScene": [],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 140.5 m · 离地 100 m"
+  },
+  {
+   "kind": "f2",
+   "observer": {
+    "latitude": 25.129019937822587,
+    "longitude": 121.45943809162918
+   },
+   "azimuth": 135,
+   "pitch": 0.5,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 425,
+   "distanceMetres": 15000,
+   "utc": "2026-11-04T02:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "台北101无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 15.0 km · 2,894 面",
+   "sameScene": [],
+   "facts": "425 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 5.9 m · 离地 100 m"
+  }
+ ],
+ "observations": "南、东近景与 OSM 体块对照位置/高度一致；西南 25 km 机位被近处山坡遮挡，另补西北 15 km 远景可见塔身与山体背景。",
+ "limitations": [
+  "画面验收确认渲染位置、尺度、朝向与同机位 OSM 粗体块对照一致，以及远景着地和失败回退；不代表实景测绘精度。",
+  "未测实体手机与 GPU 帧耗时。"
+ ]
+}

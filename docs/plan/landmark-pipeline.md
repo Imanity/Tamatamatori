@@ -34,12 +34,17 @@ npm run landmarks -- draft --id=oriental-pearl --input=C:/Users/TangRJ/Downloads
 
 逐份完成必要的人工核查后，将草稿保存到 `landmarks/recipes/<id>.json`。可对照[东京塔完整配方](../../landmarks/recipes/tokyo-tower.json)，核查要点如下：
 
-- 来源：正式下载、作者、许可与上游声明；公开候选许可不能替代下载文件的核查。
+- 来源：正式下载、作者、许可与上游声明；公开候选许可不能替代下载文件的核查。配方许可仅接受 CC BY 4.0、CC0 1.0 与 CC BY-NC 4.0，链接须与许可一致；非商业许可的“仅限非商业使用”由生成目录带入 About 与署名文件，不逐模型手写。`draft` 只按候选的 Sketchfab 许可标识预填这三种，其他许可留空待人工处理。
 - 框架：`space` 选 `local` 或 `world`；`axes` 顺序表示 ENU 三轴来自源模型的哪一个有符号轴。`local` 只在网格共享已核实的作者放置时使用；其他模型要保留节点世界变换或先烘焙。
 - 尺度：`height` 对照官方尺寸；`center` 是轴变换后、统一缩放前的水平原点，或最低 0.01 源单位层的 `base-bounds` 中心。基座不等高的模型须显式给出中心，不能直接假定最低点可代表全基座。
 - 定位：WGS84 纬经度、ENU 平面逆时针 `yawDegrees`、位置/朝向参考、近似误差及歧义；不根据模型文件名自动定位。
 - 替换：按实际源瓦片核查 `id / height / base`；跨瓦片分部可单独填 `tile`。`parts: []` 的模型只能在普通建筑窗口之外应用，近处保留粗体块。避免把模型未包含的裙楼一起删掉。
 - 处理：面数是目标，不保证简化器在误差限制内达到目标。`permissive` 允许跨法线接缝简化，焊接容差必须显式登记；减面仍须通过轮廓和预算检查。核查完成才把三项 `review` 设为 `true`。
+- 非建筑几何：地面、水面、背景板用 `excludeNodes` 按节点名排除；SketchUp 边线用 `ignoreLinePrimitives`；双面导出的重合反向面用 `dropDuplicateTriangles`，可用 `backMaterials` 指定让位的背面材质。均须在核查后显式登记，数量写入清单。
+- 造型修正：来源模型与 OSM 分部或官方尺寸有明确偏差时，可在 `corrections` 中登记缩放、分段重映射或按节点平移，每条写明依据，不手改生成文件。先切片量出模型尺寸，与参考比对；修正后重新做多层轮廓注册，复核替换分部的覆盖率，提高版本号并重新做画面验收。参考资料无法定位的部分（例如只存在于纹理中的钟盘）不做猜测性修正。示例见[批量接入记录](landmark-batch.md#造型修正v2)。
+- 注册：同城跨瓦片的同一建筑在两侧瓦片中 ID 不同，需分别登记带 `tile` 的分部；OpenFreeMap 会把同高同属性的小建筑合并为多面要素，`partRadius` 必须落在应替换与应保留的同要素多边形之间。
+
+18 份下载的实际接入、注册方法和画面结果见[批量接入记录](landmark-batch.md)。
 
 完成多份配方后一次执行：
 
@@ -58,7 +63,7 @@ npm run build -- --base /Tamatamatori/
 
 `integrate` 不下载、不重新减面，只接受当前配方对应的暂存结果。它生成 `public/landmarks/*`、`landmarks/registry.json`、`src/data/landmarks.generated.json` 和 `public/landmarks/CREDITS.txt`，运行时目录、加载器和 About 无需逐模型手改。单文件通过临时文件替换，进程内写入异常会恢复此前文件；不保证进程被杀或断电时的跨文件事务。中断后先运行 `verify`，发现不一致时重新集成，不提交半套结果。
 
-没有画面验收的新模型必须显式传入 `--allow-pending-visual`，并在右栏与 About 保留待验状态。默认命令不会把 CPU 检查升级为画面通过。本轮已获得用户暂缓浏览器的指示，因此东京塔保留待验。
+没有画面验收的新模型必须显式传入 `--allow-pending-visual`，并在右栏与 About 保留待验状态。默认命令不会把 CPU 检查升级为画面通过。本轮已获得用户暂缓浏览器的指示，因此东京塔保留待验；后续已在[批量接入](landmark-batch.md)中完成真实 GPU 验收并登记。
 
 ## 更新与后续画面验收
 

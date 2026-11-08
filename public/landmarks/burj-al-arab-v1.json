@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "pipelineVersion": 1,
+  "id": "burj-al-arab",
+  "name": "帆船酒店",
+  "version": 1,
+  "recipeHash": "86987f27f115e8df6a39fb0d314c1ac4350f45745f25de26c5f17a65494c6e1f",
+  "format": "TTLM 1; float32 ENU+normal stride6, uint32 indices; little-endian; gzip",
+  "source": {
+    "sha256": "2740c27f0469555de0130d06b586ffdfb4da4d5c5f52f475a17d75d244442e40",
+    "filename": "18-burj-al-arab-jumeirah.glb",
+    "title": "18-burj-al-arab-jumeirah",
+    "author": "Success isaac",
+    "authorPage": "https://sketchfab.com/Succeisaac",
+    "page": "https://sketchfab.com/3d-models/18-burj-al-arab-jumeirah-70302a0ddc804715ae3aa61db8a7d444",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。",
+    "bytes": 1637200,
+    "vertices": 35306,
+    "triangles": 41687
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": [
+      0,
+      33.21232604980469
+    ],
+    "height": 321,
+    "heightReference": "https://en.wikipedia.org/wiki/Burj_Al_Arab",
+    "yawDegrees": 246.25,
+    "requireSharedTransform": false,
+    "normalizeNormals": true,
+    "minimum": [
+      -416.1647644042969,
+      -384.9237060546878,
+      -3.07516622543341
+    ],
+    "maximum": [
+      416.1647644042969,
+      419.03039550781244,
+      2007.482421875
+    ],
+    "scale": 0.15965720250931956
+  },
+  "processing": {
+    "targetTriangles": 30000,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true,
+    "reportedError": 0.010863476432859898
+  },
+  "geo": {
+    "latitude": 25.141281038,
+    "longitude": 55.185401904,
+    "partRadius": 20,
+    "parts": [
+      {
+        "id": 127005462,
+        "height": 321,
+        "base": 0
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 246.25°，各层 IoU 0.01–0.62，地面层尺度比约 1.48；次优候选 218.50°（得分 0.373，最优 0.373）。OSM 仅有单一扇形棱柱，外骨架与顶部结构超出其轮廓，朝向不确定度约 ±15°；保留人工岛上 5 m 低层体块。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "bounds": {
+    "horizontal": 84,
+    "height": 321
+  },
+  "asset": {
+    "file": "burj-al-arab-v1.ttlm.gz",
+    "sha256": "dfc7d4e4237b69cf091aeca97aa55454f3641419da4614af5fee3ddfa7fd6d1b",
+    "decodedSha256": "0abc69fd66ac2ccba0b6133924a32dbea509160207c1e06199b2da3ef68aa7da",
+    "bytes": 598567,
+    "decodedBytes": 927188,
+    "vertices": 23632,
+    "triangles": 29999
+  },
+  "tools": {
+    "@gltf-transform/core": "4.5.0",
+    "meshoptimizer": "1.3.0"
+  },
+  "limitations": [
+    "社区外观模型，定位与朝向近似，不提供测绘精度。",
+    "无纹理、不透明共享光照，不模拟玻璃或夜景灯光。",
+    "地面沿用同源 DEM，不套固定高程偏移。"
+  ]
+}

@@ -1,0 +1,98 @@
+{
+ "id": "burj-al-arab",
+ "assetSha256": "dfc7d4e4237b69cf091aeca97aa55454f3641419da4614af5fee3ddfa7fd6d1b",
+ "placementHash": "fe70022513246a9a0d6c62dba41538a335366f64d14d53d3e3133056003d74dc",
+ "gpuPassed": true,
+ "recordedAt": "2026-11-08",
+ "build": "Production /Tamatamatori/ subpath via vite preview on 127.0.0.1:5181; Chrome 157 on this Windows machine with native GPU, occlusion throttling disabled, viewport emulated 2000×1250",
+ "screenshots": [
+  "docs/plan/landmark-batch-evidence/burj-al-arab-gpu.jpg"
+ ],
+ "scenes": [
+  {
+   "kind": "n1",
+   "observer": {
+    "latitude": 25.132043219223817,
+    "longitude": 55.185401903999946
+   },
+   "azimuth": 0,
+   "pitch": 3.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1027.2,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "帆船酒店无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.0 km · 29,999 面",
+   "sameScene": [
+    "burj-khalifa:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 8.5 m · 离地 100 m"
+  },
+  {
+   "kind": "n2",
+   "observer": {
+    "latitude": 25.14128068849858,
+    "longitude": 55.19560647377364
+   },
+   "azimuth": 270,
+   "pitch": 3.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1027.2,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "帆船酒店无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 1.0 km · 29,999 面",
+   "sameScene": [
+    "burj-khalifa:applied"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 8.5 m · 离地 100 m"
+  },
+  {
+   "kind": "f1",
+   "observer": {
+    "latitude": 24.982198982701647,
+    "longitude": 55.010013693315614
+   },
+   "azimuth": 44.9,
+   "pitch": 0,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "帆船酒店无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 29,999 面",
+   "sameScene": [
+    "burj-khalifa:applied"
+   ],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 0.0 m · 离地 100 m"
+  },
+  {
+   "kind": "b1",
+   "observer": {
+    "latitude": 25.132043219223817,
+    "longitude": 55.185401903999946
+   },
+   "azimuth": 0,
+   "pitch": 3.4,
+   "cameraHeightMetres": 100,
+   "focalLengthMm": 46,
+   "distanceMetres": 1027.2,
+   "utc": "2026-11-04T06:30:00Z",
+   "modelRequestsBlocked": true,
+   "landmarkPhase": "fallback",
+   "landmarkStatus": "帆船酒店精细模型未应用，保留粗体块；可重新读取建筑。 · 约 1.0 km",
+   "sameScene": [
+    "burj-khalifa:fallback"
+   ],
+   "facts": "46 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 8.5 m · 离地 100 m"
+  }
+ ],
+ "observations": "模型立于人工岛上，拦截后同位置为 OSM 扇形棱柱；帆面朝向与扇形弧面同侧；25 km 远景在海雾中可见。",
+ "limitations": [
+  "画面验收确认渲染位置、尺度、朝向与同机位 OSM 粗体块对照一致，以及远景着地和失败回退；不代表实景测绘精度。",
+  "未测实体手机与 GPU 帧耗时。"
+ ]
+}

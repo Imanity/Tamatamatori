@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "id": "eiffel-tower",
+  "name": "埃菲尔铁塔",
+  "version": 1,
+  "source": {
+    "sha256": "6191c29942c242c4d60005747de5b29332568fef47d77f46e2bfdf5a079ddcc4",
+    "filename": "eiffel_tower_night_lit.glb",
+    "title": "Eiffel Tower (night lit)",
+    "author": "Dimiter",
+    "authorPage": "https://sketchfab.com/Dimitera",
+    "page": "https://sketchfab.com/3d-models/eiffel-tower-night-lit-ba8a39a7219447a0b734a3d17b076d4f",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "作者说明使用 Meshy AI 生成并为浏览器游戏整理（夜景版，发光烘焙于纹理）；本项目去除纹理与发光，几何未经独立认证。"
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": "base-bounds",
+    "height": 330,
+    "heightReference": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+    "yawDegrees": 134.9,
+    "requireSharedTransform": false,
+    "normalizeNormals": true
+  },
+  "processing": {
+    "targetTriangles": 100000,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true,
+    "dropDuplicateTriangles": true
+  },
+  "geo": {
+    "latitude": 48.858263768,
+    "longitude": 2.294487925,
+    "partRadius": 77,
+    "parts": [
+      {
+        "id": 41148393,
+        "height": 61,
+        "base": 57
+      },
+      {
+        "id": 3081452390,
+        "height": 64,
+        "base": 57
+      },
+      {
+        "id": 3086877440,
+        "height": 116,
+        "base": 57
+      },
+      {
+        "id": 41148423,
+        "height": 120,
+        "base": 115
+      },
+      {
+        "id": 3086877450,
+        "height": 277,
+        "base": 115
+      },
+      {
+        "id": 14625977622,
+        "height": 330,
+        "base": 300
+      },
+      {
+        "id": 3086891640,
+        "height": 58,
+        "base": 4
+      },
+      {
+        "id": 3080213892,
+        "height": 300,
+        "base": 276
+      },
+      {
+        "id": 690341270,
+        "height": 4,
+        "base": 0
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 134.90°，各层 IoU 0.31–0.83，地面层尺度比约 1.16；次优候选 45.20°（得分 0.625，最优 0.625）。四重对称，90° 旋转候选得分相同；保留塔下售票亭等低层 OSM 体块。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  }
+}

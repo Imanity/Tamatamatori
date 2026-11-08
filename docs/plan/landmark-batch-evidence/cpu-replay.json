@@ -1,0 +1,760 @@
+{
+ "kind": "CPU replay: cached real OpenFreeMap MVT for landmark tiles, empty responses elsewhere, synthetic 0 m DEM; not GPU or full-city coverage",
+ "version": "20261101_080013_pt",
+ "results": [
+  {
+   "id": "big-ben",
+   "observer": {
+    "latitude": 51.495297494594595,
+    "longitude": -0.12457208
+   },
+   "distance": 601.4,
+   "phase": "applied",
+   "message": "伊丽莎白塔（大本钟）无纹理精细模型 · 定位与朝向近似",
+   "parts": 18,
+   "landmarkMeshes": 1,
+   "ordinaryPolygons": 3161,
+   "triangles": 79042,
+   "limited": false,
+   "realTiles": 1,
+   "emptyTiles": 46,
+   "tiles": [
+    "8186/5448"
+   ],
+   "sameScene": [
+    {
+     "id": "big-ben",
+     "phase": "applied",
+     "distance": 601
+    }
+   ]
+  },
+  {
+   "id": "burj-al-arab",
+   "observer": {
+    "latitude": 25.135875632594594,
+    "longitude": 55.185401904
+   },
+   "distance": 598.8,
+   "phase": "applied",
+   "message": "帆船酒店无纹理精细模型 · 定位与朝向近似",
+   "parts": 1,
+   "landmarkMeshes": 2,
+   "ordinaryPolygons": 1245,
+   "triangles": 60923,
+   "limited": false,
+   "realTiles": 1,
+   "emptyTiles": 24,
+   "tiles": [
+    "10703/7009"
+   ],
+   "sameScene": [
+    {
+     "id": "burj-al-arab",
+     "phase": "applied",
+     "distance": 599
+    },
+    {
+     "id": "burj-khalifa",
+     "phase": "applied",
+     "distance": 11231
+    }
+   ]
+  },
+  {
+   "id": "burj-khalifa",
+   "observer": {
+    "latitude": 25.191672775594594,
+    "longitude": 55.274215202
+   },
+   "distance": 598.8,
+   "phase": "applied",
+   "message": "哈利法塔无纹理精细模型 · 定位与朝向近似",
+   "parts": 27,
+   "landmarkMeshes": 2,
+   "ordinaryPolygons": 1266,
+   "triangles": 68113,
+   "limited": false,
+   "realTiles": 1,
+   "emptyTiles": 23,
+   "tiles": [
+    "10707/7006"
+   ],
+   "sameScene": [
+    {
+     "id": "burj-khalifa",
+     "phase": "applied",
+     "distance": 599
+    },
+    {
+     "id": "burj-al-arab",
+     "phase": "applied",
+     "distance": 10551
+    }
+   ]
+  },
+  {
+   "id": "chrysler-building",
+   "observer": {
+    "latitude": 40.7461938165946,
+    "longitude": -73.975332345
+   },
+   "distance": 600.3,
+   "phase": "applied",
+   "message": "克莱斯勒大厦无纹理精细模型 · 定位与朝向近似",
+   "parts": 21,
+   "landmarkMeshes": 5,
+   "ordinaryPolygons": 6445,
+   "triangles": 299995,
+   "limited": true,
+   "realTiles": 6,
+   "emptyTiles": 28,
+   "tiles": [
+    "4823/6159",
+    "4823/6160",
+    "4824/6157",
+    "4824/6158",
+    "4825/6157",
+    "4825/6158"
+   ],
+   "sameScene": [
+    {
+     "id": "chrysler-building",
+     "phase": "applied",
+     "distance": 600
+    },
+    {
+     "id": "metlife-building",
+     "phase": "applied",
+     "distance": 827
+    },
+    {
+     "id": "empire-state-building",
+     "phase": "applied",
+     "distance": 918
+    },
+    {
+     "id": "one-world-trade-center",
+     "phase": "applied",
+     "distance": 4880
+    },
+    {
+     "id": "three-world-trade-center",
+     "phase": "applied",
+     "distance": 4939
+    }
+   ]
+  },
+  {
+   "id": "cn-tower",
+   "observer": {
+    "latitude": 43.63718853059459,
+    "longitude": -79.387087553
+   },
+   "distance": 600.6,
+   "phase": "applied",
+   "message": "加拿大国家电视塔无纹理精细模型 · 定位与朝向近似",
+   "parts": 22,
+   "landmarkMeshes": 1,
+   "ordinaryPolygons": 4873,
+   "triangles": 144837,
+   "limited": false,
+   "realTiles": 4,
+   "emptyTiles": 34,
+   "tiles": [
+    "4578/5979",
+    "4578/5980",
+    "4579/5979",
+    "4579/5980"
+   ],
+   "sameScene": [
+    {
+     "id": "cn-tower",
+     "phase": "applied",
+     "distance": 601
+    }
+   ]
+  },
+  {
+   "id": "eiffel-tower",
+   "observer": {
+    "latitude": 48.852858362594596,
+    "longitude": 2.294487925
+   },
+   "distance": 601.1,
+   "phase": "applied",
+   "message": "埃菲尔铁塔无纹理精细模型 · 定位与朝向近似",
+   "parts": 9,
+   "landmarkMeshes": 1,
+   "ordinaryPolygons": 2790,
+   "triangles": 174116,
+   "limited": false,
+   "realTiles": 1,
+   "emptyTiles": 41,
+   "tiles": [
+    "8296/5636"
+   ],
+   "sameScene": [
+    {
+     "id": "eiffel-tower",
+     "phase": "applied",
+     "distance": 601
+    }
+   ]
+  },
+  {
+   "id": "empire-state-building",
+   "observer": {
+    "latitude": 40.743077234594594,
+    "longitude": -73.985776336
+   },
+   "distance": 600.3,
+   "phase": "applied",
+   "message": "帝国大厦无纹理精细模型 · 定位与朝向近似",
+   "parts": 11,
+   "landmarkMeshes": 5,
+   "ordinaryPolygons": 6519,
+   "triangles": 299996,
+   "limited": true,
+   "realTiles": 6,
+   "emptyTiles": 27,
+   "tiles": [
+    "4823/6159",
+    "4823/6160",
+    "4824/6157",
+    "4824/6158",
+    "4825/6157",
+    "4825/6158"
+   ],
+   "sameScene": [
+    {
+     "id": "empire-state-building",
+     "phase": "applied",
+     "distance": 600
+    },
+    {
+     "id": "chrysler-building",
+     "phase": "applied",
+     "distance": 1294
+    },
+    {
+     "id": "metlife-building",
+     "phase": "applied",
+     "distance": 1400
+    },
+    {
+     "id": "one-world-trade-center",
+     "phase": "applied",
+     "distance": 4065
+    },
+    {
+     "id": "three-world-trade-center",
+     "phase": "applied",
+     "distance": 4154
+    }
+   ]
+  },
+  {
+   "id": "lotte-world-tower",
+   "observer": {
+    "latitude": 37.50713519559459,
+    "longitude": 127.102657939
+   },
+   "distance": 599.9,
+   "phase": "applied",
+   "message": "乐天世界塔无纹理精细模型 · 定位与朝向近似",
+   "parts": 12,
+   "landmarkMeshes": 1,
+   "ordinaryPolygons": 2192,
+   "triangles": 41794,
+   "limited": false,
+   "realTiles": 2,
+   "emptyTiles": 30,
+   "tiles": [
+    "13976/6347",
+    "13976/6348"
+   ],
+   "sameScene": [
+    {
+     "id": "lotte-world-tower",
+     "phase": "applied",
+     "distance": 600
+    }
+   ]
+  },
+  {
+   "id": "metlife-building",
+   "observer": {
+    "latitude": 40.7481731765946,
+    "longitude": -73.976608495
+   },
+   "distance": 600.3,
+   "phase": "applied",
+   "message": "大都会人寿大厦无纹理精细模型 · 定位与朝向近似",
+   "parts": 4,
+   "landmarkMeshes": 5,
+   "ordinaryPolygons": 6471,
+   "triangles": 299996,
+   "limited": true,
+   "realTiles": 6,
+   "emptyTiles": 27,
+   "tiles": [
+    "4823/6159",
+    "4823/6160",
+    "4824/6157",
+    "4824/6158",
+    "4825/6157",
+    "4825/6158"
+   ],
+   "sameScene": [
+    {
+     "id": "chrysler-building",
+     "phase": "applied",
+     "distance": 395
+    },
+    {
+     "id": "metlife-building",
+     "phase": "applied",
+     "distance": 600
+    },
+    {
+     "id": "empire-state-building",
+     "phase": "applied",
+     "distance": 775
+    },
+    {
+     "id": "one-world-trade-center",
+     "phase": "applied",
+     "distance": 4981
+    },
+    {
+     "id": "three-world-trade-center",
+     "phase": "applied",
+     "distance": 5051
+    }
+   ]
+  },
+  {
+   "id": "one-world-trade-center",
+   "observer": {
+    "latitude": 40.707591875594595,
+    "longitude": -74.013192447
+   },
+   "distance": 600.3,
+   "phase": "applied",
+   "message": "世贸中心一号楼无纹理精细模型 · 定位与朝向近似",
+   "parts": 3,
+   "landmarkMeshes": 5,
+   "ordinaryPolygons": 6461,
+   "triangles": 299996,
+   "limited": true,
+   "realTiles": 5,
+   "emptyTiles": 32,
+   "tiles": [
+    "4823/6159",
+    "4823/6160",
+    "4824/6157",
+    "4824/6158",
+    "4825/6158"
+   ],
+   "sameScene": [
+    {
+     "id": "three-world-trade-center",
+     "phase": "applied",
+     "distance": 420
+    },
+    {
+     "id": "one-world-trade-center",
+     "phase": "applied",
+     "distance": 600
+    },
+    {
+     "id": "empire-state-building",
+     "phase": "applied",
+     "distance": 5097
+    },
+    {
+     "id": "chrysler-building",
+     "phase": "applied",
+     "distance": 5841
+    },
+    {
+     "id": "metlife-building",
+     "phase": "applied",
+     "distance": 5969
+    }
+   ]
+  },
+  {
+   "id": "oriental-pearl",
+   "observer": {
+    "latitude": 31.236486077594595,
+    "longitude": 121.495273043
+   },
+   "distance": 599.3,
+   "phase": "applied",
+   "message": "东方明珠无纹理精细模型 · 定位与朝向近似",
+   "parts": 34,
+   "landmarkMeshes": 3,
+   "ordinaryPolygons": 1917,
+   "triangles": 108242,
+   "limited": false,
+   "realTiles": 4,
+   "emptyTiles": 25,
+   "tiles": [
+    "13721/6693",
+    "13721/6694",
+    "13722/6693",
+    "13722/6694"
+   ],
+   "sameScene": [
+    {
+     "id": "shanghai-tower",
+     "phase": "applied",
+     "distance": 586
+    },
+    {
+     "id": "oriental-pearl",
+     "phase": "applied",
+     "distance": 599
+    },
+    {
+     "id": "shanghai-wfc",
+     "phase": "applied",
+     "distance": 740
+    }
+   ]
+  },
+  {
+   "id": "osaka-castle",
+   "observer": {
+    "latitude": 34.681861188594596,
+    "longitude": 135.525863838
+   },
+   "distance": 599.6,
+   "phase": "applied",
+   "message": "大阪城天守阁无纹理精细模型 · 定位与朝向近似",
+   "parts": 10,
+   "landmarkMeshes": 1,
+   "ordinaryPolygons": 16425,
+   "triangles": 299978,
+   "limited": true,
+   "realTiles": 4,
+   "emptyTiles": 26,
+   "tiles": [
+    "14359/6506",
+    "14359/6507",
+    "14360/6506",
+    "14360/6507"
+   ],
+   "sameScene": [
+    {
+     "id": "osaka-castle",
+     "phase": "applied",
+     "distance": 600
+    }
+   ]
+  },
+  {
+   "id": "petronas-towers",
+   "observer": {
+    "latitude": 3.1525646155945948,
+    "longitude": 101.711751256
+   },
+   "distance": 597.7,
+   "phase": "applied",
+   "message": "双子塔无纹理精细模型 · 定位与朝向近似",
+   "parts": 24,
+   "landmarkMeshes": 1,
+   "ordinaryPolygons": 5375,
+   "triangles": 119927,
+   "limited": false,
+   "realTiles": 2,
+   "emptyTiles": 21,
+   "tiles": [
+    "12820/8048",
+    "12821/8048"
+   ],
+   "sameScene": [
+    {
+     "id": "petronas-towers",
+     "phase": "applied",
+     "distance": 598
+    }
+   ]
+  },
+  {
+   "id": "shanghai-tower",
+   "observer": {
+    "latitude": 31.230105775316527,
+    "longitude": 121.50132179260254
+   },
+   "distance": 599.3,
+   "phase": "applied",
+   "message": "上海中心无纹理精细模型 · 定位与朝向近似",
+   "parts": 3,
+   "landmarkMeshes": 3,
+   "ordinaryPolygons": 2332,
+   "triangles": 116474,
+   "limited": false,
+   "realTiles": 4,
+   "emptyTiles": 23,
+   "tiles": [
+    "13721/6693",
+    "13721/6694",
+    "13722/6693",
+    "13722/6694"
+   ],
+   "sameScene": [
+    {
+     "id": "shanghai-tower",
+     "phase": "applied",
+     "distance": 599
+    },
+    {
+     "id": "shanghai-wfc",
+     "phase": "applied",
+     "distance": 735
+    },
+    {
+     "id": "oriental-pearl",
+     "phase": "applied",
+     "distance": 1428
+    }
+   ]
+  },
+  {
+   "id": "shanghai-wfc",
+   "observer": {
+    "latitude": 31.231167418594595,
+    "longitude": 121.503035774
+   },
+   "distance": 599.3,
+   "phase": "applied",
+   "message": "上海环球金融中心无纹理精细模型 · 定位与朝向近似",
+   "parts": 3,
+   "landmarkMeshes": 3,
+   "ordinaryPolygons": 2520,
+   "triangles": 120355,
+   "limited": false,
+   "realTiles": 4,
+   "emptyTiles": 24,
+   "tiles": [
+    "13721/6693",
+    "13721/6694",
+    "13722/6693",
+    "13722/6694"
+   ],
+   "sameScene": [
+    {
+     "id": "shanghai-tower",
+     "phase": "applied",
+     "distance": 509
+    },
+    {
+     "id": "shanghai-wfc",
+     "phase": "applied",
+     "distance": 599
+    },
+    {
+     "id": "oriental-pearl",
+     "phase": "applied",
+     "distance": 1400
+    }
+   ]
+  },
+  {
+   "id": "sydney-opera-house",
+   "observer": {
+    "latitude": -33.8625154894054,
+    "longitude": 151.21506513
+   },
+   "distance": 599.6,
+   "phase": "applied",
+   "message": "悉尼歌剧院无纹理精细模型 · 定位与朝向近似",
+   "parts": 2,
+   "landmarkMeshes": 1,
+   "ordinaryPolygons": 2120,
+   "triangles": 72143,
+   "limited": false,
+   "realTiles": 2,
+   "emptyTiles": 27,
+   "tiles": [
+    "15073/9831",
+    "15074/9831"
+   ],
+   "sameScene": [
+    {
+     "id": "sydney-opera-house",
+     "phase": "applied",
+     "distance": 600
+    }
+   ]
+  },
+  {
+   "id": "taipei-101",
+   "observer": {
+    "latitude": 25.028264358594594,
+    "longitude": 121.564797225
+   },
+   "distance": 598.8,
+   "phase": "applied",
+   "message": "台北101无纹理精细模型 · 定位与朝向近似",
+   "parts": 7,
+   "landmarkMeshes": 1,
+   "ordinaryPolygons": 4830,
+   "triangles": 84191,
+   "limited": false,
+   "realTiles": 1,
+   "emptyTiles": 25,
+   "tiles": [
+    "13724/7014"
+   ],
+   "sameScene": [
+    {
+     "id": "taipei-101",
+     "phase": "applied",
+     "distance": 599
+    }
+   ]
+  },
+  {
+   "id": "three-world-trade-center",
+   "observer": {
+    "latitude": 40.7056209575946,
+    "longitude": -74.011118793
+   },
+   "distance": 600.3,
+   "phase": "applied",
+   "message": "世贸中心三号楼无纹理精细模型 · 定位与朝向近似",
+   "parts": 4,
+   "landmarkMeshes": 5,
+   "ordinaryPolygons": 6405,
+   "triangles": 299997,
+   "limited": true,
+   "realTiles": 5,
+   "emptyTiles": 30,
+   "tiles": [
+    "4823/6159",
+    "4823/6160",
+    "4824/6157",
+    "4824/6158",
+    "4825/6158"
+   ],
+   "sameScene": [
+    {
+     "id": "three-world-trade-center",
+     "phase": "applied",
+     "distance": 600
+    },
+    {
+     "id": "one-world-trade-center",
+     "phase": "applied",
+     "distance": 838
+    },
+    {
+     "id": "empire-state-building",
+     "phase": "applied",
+     "distance": 5219
+    },
+    {
+     "id": "chrysler-building",
+     "phase": "applied",
+     "distance": 5934
+    },
+    {
+     "id": "metlife-building",
+     "phase": "applied",
+     "distance": 6071
+    }
+   ]
+  },
+  {
+   "id": "tokyo-skytree",
+   "observer": {
+    "latitude": 35.70463967702994,
+    "longitude": 139.81071889400482
+   },
+   "distance": 599.7,
+   "phase": "fallback",
+   "message": "晴空塔粗分部对应关系未确认，保留源体块。",
+   "parts": 3,
+   "landmarkMeshes": 1,
+   "ordinaryPolygons": 0,
+   "triangles": 74767,
+   "limited": false,
+   "realTiles": 0,
+   "emptyTiles": 30,
+   "tiles": [],
+   "sameScene": [
+    {
+     "id": "tokyo-skytree",
+     "phase": "fallback",
+     "distance": 600
+    },
+    {
+     "id": "tokyo-tower",
+     "phase": "applied",
+     "distance": 7812
+    }
+   ]
+  },
+  {
+   "id": "tokyo-tower",
+   "observer": {
+    "latitude": 35.653185362270975,
+    "longitude": 139.7454446554184
+   },
+   "distance": 599.7,
+   "phase": "fallback",
+   "message": "东京塔粗分部对应关系未确认，保留源体块。",
+   "parts": 7,
+   "landmarkMeshes": 1,
+   "ordinaryPolygons": 0,
+   "triangles": 88581,
+   "limited": false,
+   "realTiles": 0,
+   "emptyTiles": 32,
+   "tiles": [],
+   "sameScene": [
+    {
+     "id": "tokyo-tower",
+     "phase": "fallback",
+     "distance": 600
+    },
+    {
+     "id": "tokyo-skytree",
+     "phase": "applied",
+     "distance": 8644
+    }
+   ]
+  },
+  {
+   "id": "willis-tower",
+   "observer": {
+    "latitude": 41.873481594594594,
+    "longitude": -87.635868344
+   },
+   "distance": 600.4,
+   "phase": "applied",
+   "message": "威利斯大厦无纹理精细模型 · 定位与朝向近似",
+   "parts": 10,
+   "landmarkMeshes": 1,
+   "ordinaryPolygons": 1346,
+   "triangles": 50380,
+   "limited": false,
+   "realTiles": 1,
+   "emptyTiles": 35,
+   "tiles": [
+    "4203/6089"
+   ],
+   "sameScene": [
+    {
+     "id": "willis-tower",
+     "phase": "applied",
+     "distance": 600
+    }
+   ]
+  }
+ ]
+}

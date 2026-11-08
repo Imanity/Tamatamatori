@@ -1,0 +1,7085 @@
+{
+ "kind": "Multi-level top-down footprint IoU registration against OpenFreeMap/OSM building parts; approximate, not survey accuracy",
+ "method": "Model geometry at yaw 0 is projected top-down for all triangles above each level; OSM reference parts above the same level are rasterised in local ENU. Yaw is searched in 2° steps with centroid translation, then the best peaks are refined to 0.1°/0.25 m. Coverage of each nearby OSM polygon uses model geometry above the polygon base.",
+ "tileVersion": "20261101_080013_pt",
+ "credit": "OpenFreeMap · © OpenStreetMap contributors · ODbL",
+ "models": [
+  {
+   "id": "oriental-pearl",
+   "sourceSha256": "e26f5d2f9693c3e5ea3befba96234d672ab9034da3b29067394db0b0113548c6",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": [
+     0.001,
+     -0.094
+    ],
+    "height": 468
+   },
+   "registrationProcessing": {
+    "excludeNodes": [
+     "pCylinder6_lambert1_0"
+    ],
+    "targetTriangles": 9000
+   },
+   "initial": {
+    "latitude": 31.24189,
+    "longitude": 121.495262
+   },
+   "anchor": {
+    "latitude": 31.24189148269195,
+    "longitude": 121.49527304291625
+   },
+   "yawDegrees": 42.05,
+   "translationMetres": [
+    1.05,
+    0.16
+   ],
+   "meanIoU": 0.3654,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.3036
+    },
+    {
+     "height": 70.2,
+     "iou": 0.3619
+    },
+    {
+     "height": 140.4,
+     "iou": 0.3529
+    },
+    {
+     "height": 210.6,
+     "iou": 0.5687
+    },
+    {
+     "height": 280.8,
+     "iou": 0.5687
+    },
+    {
+     "height": 351,
+     "iou": 0.2767
+    },
+    {
+     "height": 421.2,
+     "iou": 0.1255
+    }
+   ],
+   "groundFootprintScaleRatio": 1.815,
+   "yawCandidates": [
+    {
+     "yaw": 42.05,
+     "score": 0.3654,
+     "translation": [
+      1.05,
+      0.16
+     ]
+    },
+    {
+     "yaw": 334.1,
+     "score": 0.3654,
+     "translation": [
+      1.13,
+      1.56
+     ]
+    },
+    {
+     "yaw": 340.5,
+     "score": 0.3652,
+     "translation": [
+      -0.18,
+      0.16
+     ]
+    },
+    {
+     "yaw": 326,
+     "score": 0.3652,
+     "translation": [
+      0.64,
+      -0.63
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 60,
+    "selectRadius": null
+   },
+   "referenceParts": [
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958420,
+     "polygon": 0,
+     "height": 65,
+     "base": 52
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958420,
+     "polygon": 1,
+     "height": 65,
+     "base": 52
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958420,
+     "polygon": 2,
+     "height": 65,
+     "base": 52
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958360,
+     "polygon": 0,
+     "height": 74,
+     "base": 61
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958360,
+     "polygon": 1,
+     "height": 74,
+     "base": 61
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958360,
+     "polygon": 2,
+     "height": 74,
+     "base": 61
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958410,
+     "polygon": 0,
+     "height": 83,
+     "base": 70
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958410,
+     "polygon": 1,
+     "height": 83,
+     "base": 70
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958410,
+     "polygon": 2,
+     "height": 83,
+     "base": 70
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958350,
+     "polygon": 0,
+     "height": 92,
+     "base": 79
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958350,
+     "polygon": 1,
+     "height": 92,
+     "base": 79
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958350,
+     "polygon": 2,
+     "height": 92,
+     "base": 79
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958992,
+     "polygon": 0,
+     "height": 103,
+     "base": 89
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958932,
+     "polygon": 0,
+     "height": 110,
+     "base": 83
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958852,
+     "polygon": 0,
+     "height": 115,
+     "base": 78
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958962,
+     "polygon": 0,
+     "height": 119,
+     "base": 74
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958882,
+     "polygon": 0,
+     "height": 121,
+     "base": 72
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958842,
+     "polygon": 0,
+     "height": 127,
+     "base": 118
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958832,
+     "polygon": 0,
+     "height": 149,
+     "base": 141
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958822,
+     "polygon": 0,
+     "height": 172,
+     "base": 163
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958812,
+     "polygon": 0,
+     "height": 194,
+     "base": 185
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958802,
+     "polygon": 0,
+     "height": 217,
+     "base": 208
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241958792,
+     "polygon": 0,
+     "height": 239,
+     "base": 230
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5209901940,
+     "polygon": 0,
+     "height": 275,
+     "base": 0
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5209901940,
+     "polygon": 1,
+     "height": 275,
+     "base": 0
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5209901940,
+     "polygon": 2,
+     "height": 275,
+     "base": 0
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5256172182,
+     "polygon": 0,
+     "height": 275,
+     "base": 258
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5256172192,
+     "polygon": 0,
+     "height": 275,
+     "base": 255
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5256172202,
+     "polygon": 0,
+     "height": 275,
+     "base": 252
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241959142,
+     "polygon": 0,
+     "height": 287,
+     "base": 263
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241959112,
+     "polygon": 0,
+     "height": 292,
+     "base": 275
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241959072,
+     "polygon": 0,
+     "height": 295,
+     "base": 275
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5241959032,
+     "polygon": 0,
+     "height": 298,
+     "base": 275
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5242706432,
+     "polygon": 0,
+     "height": 348,
+     "base": 275
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5242706452,
+     "polygon": 0,
+     "height": 354,
+     "base": 342
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5242706442,
+     "polygon": 0,
+     "height": 355,
+     "base": 340
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5242706422,
+     "polygon": 0,
+     "height": 407,
+     "base": 347
+    },
+    {
+     "tile": "14/13721/6693",
+     "id": 5242706412,
+     "polygon": 0,
+     "height": 468,
+     "base": 406
+    }
+   ],
+   "replacement": {
+    "partRadius": 58,
+    "parts": [
+     {
+      "id": 5241958400,
+      "height": 55,
+      "base": 43
+     },
+     {
+      "id": 5241958420,
+      "height": 65,
+      "base": 52
+     },
+     {
+      "id": 5241958360,
+      "height": 74,
+      "base": 61
+     },
+     {
+      "id": 5241958410,
+      "height": 83,
+      "base": 70
+     },
+     {
+      "id": 5241958350,
+      "height": 92,
+      "base": 79
+     },
+     {
+      "id": 5241958992,
+      "height": 103,
+      "base": 89
+     },
+     {
+      "id": 5241958932,
+      "height": 110,
+      "base": 83
+     },
+     {
+      "id": 5241958852,
+      "height": 115,
+      "base": 78
+     },
+     {
+      "id": 5241958962,
+      "height": 119,
+      "base": 74
+     },
+     {
+      "id": 5241958882,
+      "height": 121,
+      "base": 72
+     },
+     {
+      "id": 5241958842,
+      "height": 127,
+      "base": 118
+     },
+     {
+      "id": 5241958832,
+      "height": 149,
+      "base": 141
+     },
+     {
+      "id": 5241958822,
+      "height": 172,
+      "base": 163
+     },
+     {
+      "id": 5241958812,
+      "height": 194,
+      "base": 185
+     },
+     {
+      "id": 5241958802,
+      "height": 217,
+      "base": 208
+     },
+     {
+      "id": 5241958792,
+      "height": 239,
+      "base": 230
+     },
+     {
+      "id": 5209901940,
+      "height": 275,
+      "base": 0
+     },
+     {
+      "id": 5256172182,
+      "height": 275,
+      "base": 258
+     },
+     {
+      "id": 5256172192,
+      "height": 275,
+      "base": 255
+     },
+     {
+      "id": 5256172202,
+      "height": 275,
+      "base": 252
+     },
+     {
+      "id": 5241959142,
+      "height": 287,
+      "base": 263
+     },
+     {
+      "id": 5241959112,
+      "height": 292,
+      "base": 275
+     },
+     {
+      "id": 5241959072,
+      "height": 295,
+      "base": 275
+     },
+     {
+      "id": 5241959032,
+      "height": 298,
+      "base": 275
+     },
+     {
+      "id": 5242706432,
+      "height": 348,
+      "base": 275
+     },
+     {
+      "id": 5242706452,
+      "height": 354,
+      "base": 342
+     },
+     {
+      "id": 5242706442,
+      "height": 355,
+      "base": 340
+     },
+     {
+      "id": 5242706422,
+      "height": 407,
+      "base": 347
+     },
+     {
+      "id": 5242706412,
+      "height": 468,
+      "base": 406
+     },
+     {
+      "id": 5241958340,
+      "height": 46,
+      "base": 33
+     },
+     {
+      "id": 5241958330,
+      "height": 28,
+      "base": 15
+     },
+     {
+      "id": 5241958380,
+      "height": 37,
+      "base": 24
+     },
+     {
+      "id": 5241958390,
+      "height": 10,
+      "base": 0
+     },
+     {
+      "id": 5241958370,
+      "height": 19,
+      "base": 6
+     }
+    ],
+    "replacedPolygons": 56,
+    "maxReplacedCentreDistance": 56.19,
+    "nearestKeptSameFeatureDistance": null,
+    "keptOverlapping": []
+   },
+   "sources": [
+    {
+     "tile": "14/13721/6694",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6694.pbf",
+     "sha256": "8ef40e9fd3543e077b828d63f1b4b118a762cee077ee4fa04bc063e463a33796",
+     "bytes": 183012
+    },
+    {
+     "tile": "14/13721/6693",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6693.pbf",
+     "sha256": "6643588a1b923135cb9197d31b64b6553a9df7d9594e6a8b3b0e8ea87385067b",
+     "bytes": 143058
+    }
+   ]
+  },
+  {
+   "id": "shanghai-wfc",
+   "sourceSha256": "9c4b79dfd2a4fa1e2c32a96f97b5cc35a764e833fe82b35dcad4100152d598a8",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": "base-bounds",
+    "height": 492
+   },
+   "registrationProcessing": {
+    "targetTriangles": 7000
+   },
+   "initial": {
+    "latitude": 31.236578,
+    "longitude": 121.503041
+   },
+   "anchor": {
+    "latitude": 31.236572824114344,
+    "longitude": 121.50303577411799
+   },
+   "yawDegrees": 5,
+   "translationMetres": [
+    -0.5,
+    -0.57
+   ],
+   "meanIoU": 0.7534,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.8584
+    },
+    {
+     "height": 73.8,
+     "iou": 0.8585
+    },
+    {
+     "height": 147.6,
+     "iou": 0.8639
+    },
+    {
+     "height": 221.4,
+     "iou": 0.8477
+    },
+    {
+     "height": 295.2,
+     "iou": 0.7814
+    },
+    {
+     "height": 369,
+     "iou": 0.636
+    },
+    {
+     "height": 442.8,
+     "iou": 0.4277
+    }
+   ],
+   "groundFootprintScaleRatio": 1.079,
+   "yawCandidates": [
+    {
+     "yaw": 5,
+     "score": 0.7534,
+     "translation": [
+      -0.5,
+      -0.57
+     ]
+    },
+    {
+     "yaw": 184.75,
+     "score": 0.7533,
+     "translation": [
+      0.03,
+      -0.09
+     ]
+    },
+    {
+     "yaw": 99.5,
+     "score": 0.6971,
+     "translation": [
+      0.01,
+      -0.1
+     ]
+    },
+    {
+     "yaw": 279,
+     "score": 0.6969,
+     "translation": [
+      0.03,
+      0.18
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": null,
+    "selectRadius": null
+   },
+   "referenceParts": [
+    {
+     "tile": "14/13721/6694",
+     "id": 2799428960,
+     "polygon": 0,
+     "height": 430,
+     "base": 0
+    },
+    {
+     "tile": "14/13721/6694",
+     "id": 2799428960,
+     "polygon": 1,
+     "height": 430,
+     "base": 0
+    },
+    {
+     "tile": "14/13721/6694",
+     "id": 2799428960,
+     "polygon": 2,
+     "height": 430,
+     "base": 0
+    },
+    {
+     "tile": "14/13721/6694",
+     "id": 2799428930,
+     "polygon": 0,
+     "height": 470,
+     "base": 0
+    },
+    {
+     "tile": "14/13721/6694",
+     "id": 2799428930,
+     "polygon": 1,
+     "height": 470,
+     "base": 0
+    },
+    {
+     "tile": "14/13721/6694",
+     "id": 2799428930,
+     "polygon": 2,
+     "height": 470,
+     "base": 0
+    },
+    {
+     "tile": "14/13721/6694",
+     "id": 2799428930,
+     "polygon": 3,
+     "height": 470,
+     "base": 0
+    },
+    {
+     "tile": "14/13721/6694",
+     "id": 2799428930,
+     "polygon": 4,
+     "height": 470,
+     "base": 0
+    },
+    {
+     "tile": "14/13721/6694",
+     "id": 2799428930,
+     "polygon": 5,
+     "height": 470,
+     "base": 0
+    },
+    {
+     "tile": "14/13721/6694",
+     "id": 2799428930,
+     "polygon": 6,
+     "height": 470,
+     "base": 0
+    },
+    {
+     "tile": "14/13721/6694",
+     "id": 2799428930,
+     "polygon": 7,
+     "height": 470,
+     "base": 0
+    },
+    {
+     "tile": "14/13721/6694",
+     "id": 2799428922,
+     "polygon": 0,
+     "height": 492,
+     "base": 470
+    }
+   ],
+   "replacement": {
+    "partRadius": 38,
+    "parts": [
+     {
+      "id": 2799428960,
+      "height": 430,
+      "base": 0
+     },
+     {
+      "id": 2799428930,
+      "height": 470,
+      "base": 0
+     },
+     {
+      "id": 2799428922,
+      "height": 492,
+      "base": 470
+     }
+    ],
+    "replacedPolygons": 12,
+    "maxReplacedCentreDistance": 32.05,
+    "nearestKeptSameFeatureDistance": null,
+    "keptOverlapping": []
+   },
+   "sources": [
+    {
+     "tile": "14/13721/6694",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13721/6694.pbf",
+     "sha256": "8ef40e9fd3543e077b828d63f1b4b118a762cee077ee4fa04bc063e463a33796",
+     "bytes": 183012
+    }
+   ]
+  },
+  {
+   "id": "taipei-101",
+   "sourceSha256": "96b0a437e5c200f5656b410fb6ec1f7c4be98c623ae6121e9070dc1ec7718bd7",
+   "frame": {
+    "space": "local",
+    "axes": [
+     "+x",
+     "+z",
+     "-y"
+    ],
+    "center": "base-bounds",
+    "height": 508
+   },
+   "registrationProcessing": {
+    "targetTriangles": 2894
+   },
+   "initial": {
+    "latitude": 25.03367,
+    "longitude": 121.56481
+   },
+   "anchor": {
+    "latitude": 25.03366976427025,
+    "longitude": 121.564797224827
+   },
+   "yawDegrees": 88.65,
+   "translationMetres": [
+    -1.29,
+    -0.03
+   ],
+   "meanIoU": 0.7882,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.7947
+    },
+    {
+     "height": 76.2,
+     "iou": 0.9231
+    },
+    {
+     "height": 152.4,
+     "iou": 0.949
+    },
+    {
+     "height": 228.6,
+     "iou": 0.9532
+    },
+    {
+     "height": 304.8,
+     "iou": 0.9424
+    },
+    {
+     "height": 381,
+     "iou": 0.9397
+    },
+    {
+     "height": 457.2,
+     "iou": 0.0153
+    }
+   ],
+   "groundFootprintScaleRatio": 1.122,
+   "yawCandidates": [
+    {
+     "yaw": 88.65,
+     "score": 0.7882,
+     "translation": [
+      -1.29,
+      -0.03
+     ]
+    },
+    {
+     "yaw": 268.15,
+     "score": 0.787,
+     "translation": [
+      1.43,
+      -0.74
+     ]
+    },
+    {
+     "yaw": 359.35,
+     "score": 0.7833,
+     "translation": [
+      0.93,
+      1.22
+     ]
+    },
+    {
+     "yaw": 178.15,
+     "score": 0.7821,
+     "translation": [
+      -0.79,
+      -1.74
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": null,
+    "selectRadius": null
+   },
+   "referenceParts": [
+    {
+     "tile": "14/13724/7014",
+     "id": 13394877180,
+     "polygon": 0,
+     "height": 151,
+     "base": 0
+    },
+    {
+     "tile": "14/13724/7014",
+     "id": 13394877180,
+     "polygon": 1,
+     "height": 151,
+     "base": 0
+    },
+    {
+     "tile": "14/13724/7014",
+     "id": 13394877180,
+     "polygon": 2,
+     "height": 151,
+     "base": 0
+    },
+    {
+     "tile": "14/13724/7014",
+     "id": 13394877180,
+     "polygon": 3,
+     "height": 151,
+     "base": 0
+    },
+    {
+     "tile": "14/13724/7014",
+     "id": 13394877172,
+     "polygon": 0,
+     "height": 337,
+     "base": 0
+    },
+    {
+     "tile": "14/13724/7014",
+     "id": 1986379692,
+     "polygon": 0,
+     "height": 386,
+     "base": 0
+    },
+    {
+     "tile": "14/13724/7014",
+     "id": 6151836212,
+     "polygon": 0,
+     "height": 391,
+     "base": 386
+    },
+    {
+     "tile": "14/13724/7014",
+     "id": 6151836222,
+     "polygon": 0,
+     "height": 439,
+     "base": 390
+    },
+    {
+     "tile": "14/13724/7014",
+     "id": 6151842692,
+     "polygon": 0,
+     "height": 448,
+     "base": 439
+    },
+    {
+     "tile": "14/13724/7014",
+     "id": 6151836232,
+     "polygon": 0,
+     "height": 508,
+     "base": 448
+    }
+   ],
+   "replacement": {
+    "partRadius": 34,
+    "parts": [
+     {
+      "id": 13394877180,
+      "height": 151,
+      "base": 0
+     },
+     {
+      "id": 13394877172,
+      "height": 337,
+      "base": 0
+     },
+     {
+      "id": 1986379692,
+      "height": 386,
+      "base": 0
+     },
+     {
+      "id": 6151836212,
+      "height": 391,
+      "base": 386
+     },
+     {
+      "id": 6151836222,
+      "height": 439,
+      "base": 390
+     },
+     {
+      "id": 6151842692,
+      "height": 448,
+      "base": 439
+     },
+     {
+      "id": 6151836232,
+      "height": 508,
+      "base": 448
+     }
+    ],
+    "replacedPolygons": 10,
+    "maxReplacedCentreDistance": 28.61,
+    "nearestKeptSameFeatureDistance": null,
+    "keptOverlapping": [
+     "11593289630#1 h=25 b=0 cov=0.363 a=1174.7"
+    ]
+   },
+   "sources": [
+    {
+     "tile": "14/13724/7014",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13724/7014.pbf",
+     "sha256": "c737ab624d45b9bf8c41db56cc32b7b0e855b2975439a8d0dc37b0ef14fbf8df",
+     "bytes": 781730
+    }
+   ]
+  },
+  {
+   "id": "osaka-castle",
+   "sourceSha256": "b766e301f100ba7b691df28ba49c7f9f2a8be9cc086ca5ae098364a07b349554",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": "base-bounds",
+    "height": 54.8
+   },
+   "registrationProcessing": {
+    "ignoreLinePrimitives": true,
+    "targetTriangles": 40000
+   },
+   "initial": {
+    "latitude": 34.687373,
+    "longitude": 135.525855
+   },
+   "anchor": {
+    "latitude": 34.68726659399407,
+    "longitude": 135.5258638376158
+   },
+   "yawDegrees": 1.2,
+   "translationMetres": [
+    0.81,
+    -11.8
+   ],
+   "meanIoU": 0.5989,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.8197,
+     "sizeRatio": 1.051
+    },
+    {
+     "height": 8.2,
+     "iou": 0.8639,
+     "sizeRatio": 1.076
+    },
+    {
+     "height": 16.4,
+     "iou": 0.9353,
+     "sizeRatio": 1.034
+    },
+    {
+     "height": 24.7,
+     "iou": 0.8286,
+     "sizeRatio": 0.91
+    },
+    {
+     "height": 32.9,
+     "iou": 0.4704,
+     "sizeRatio": 0.686
+    },
+    {
+     "height": 41.1,
+     "iou": 0.2134,
+     "sizeRatio": 0.462
+    },
+    {
+     "height": 49.3,
+     "iou": 0.0611,
+     "sizeRatio": 0.247
+    }
+   ],
+   "groundFootprintScaleRatio": 1.051,
+   "yawCandidates": [
+    {
+     "yaw": 1.2,
+     "score": 0.5989,
+     "translation": [
+      0.81,
+      -11.8
+     ]
+    },
+    {
+     "yaw": 180,
+     "score": 0.5471,
+     "translation": [
+      -0.22,
+      11.15
+     ]
+    },
+    {
+     "yaw": 179.75,
+     "score": 0.5471,
+     "translation": [
+      -0.12,
+      11.25
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": [
+     346190382,
+     2028985930
+    ],
+    "minHeight": 4,
+    "selectRadius": 60
+   },
+   "referenceParts": [
+    {
+     "tile": "14/14359/6507",
+     "id": 1723288140,
+     "polygon": 235,
+     "height": 4,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6507",
+     "id": 22635910,
+     "polygon": 2586,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6507",
+     "id": 22635910,
+     "polygon": 2587,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6507",
+     "id": 22635910,
+     "polygon": 2588,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6507",
+     "id": 22635910,
+     "polygon": 2589,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6507",
+     "id": 2028985930,
+     "polygon": 7,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6507",
+     "id": 33024490,
+     "polygon": 247,
+     "height": 15,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6507",
+     "id": 1700871210,
+     "polygon": 180,
+     "height": 19,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6507",
+     "id": 1716898960,
+     "polygon": 120,
+     "height": 22,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6507",
+     "id": 1701478620,
+     "polygon": 135,
+     "height": 30,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6507",
+     "id": 346190382,
+     "polygon": 0,
+     "height": 58,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6506",
+     "id": 30136730,
+     "polygon": 2289,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6506",
+     "id": 1621739540,
+     "polygon": 182,
+     "height": 15,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6506",
+     "id": 1802031630,
+     "polygon": 122,
+     "height": 19,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6506",
+     "id": 1789244830,
+     "polygon": 45,
+     "height": 22,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6506",
+     "id": 1616214090,
+     "polygon": 92,
+     "height": 30,
+     "base": 0
+    },
+    {
+     "tile": "14/14359/6506",
+     "id": 346190382,
+     "polygon": 0,
+     "height": 58,
+     "base": 0
+    }
+   ],
+   "replacement": {
+    "partRadius": 29,
+    "parts": [
+     {
+      "id": 22635910,
+      "height": 5,
+      "base": 0
+     },
+     {
+      "id": 33024490,
+      "height": 15,
+      "base": 0
+     },
+     {
+      "id": 1700871210,
+      "height": 19,
+      "base": 0
+     },
+     {
+      "id": 1716898960,
+      "height": 22,
+      "base": 0
+     },
+     {
+      "id": 1701478620,
+      "height": 30,
+      "base": 0
+     },
+     {
+      "id": 30136730,
+      "height": 5,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 14359,
+       "y": 6506
+      }
+     },
+     {
+      "id": 1621739540,
+      "height": 15,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 14359,
+       "y": 6506
+      }
+     },
+     {
+      "id": 1802031630,
+      "height": 19,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 14359,
+       "y": 6506
+      }
+     },
+     {
+      "id": 1789244830,
+      "height": 22,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 14359,
+       "y": 6506
+      }
+     },
+     {
+      "id": 1616214090,
+      "height": 30,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 14359,
+       "y": 6506
+      }
+     }
+    ],
+    "replacedPolygons": 12,
+    "maxReplacedCentreDistance": 26.4,
+    "nearestKeptSameFeatureDistance": 31.75,
+    "keptOverlapping": []
+   },
+   "sources": [
+    {
+     "tile": "14/14359/6507",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14359/6507.pbf",
+     "sha256": "5a881daf07e2cd5704d836be45c1de4922ad92d5c879d50ffc19b1e19f2a3f7e",
+     "bytes": 704519
+    },
+    {
+     "tile": "14/14360/6507",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14360/6507.pbf",
+     "sha256": "47b95c5334331552dcfb29d5c30ece91cc04f8ca7aeebe724daa9fe2c72f0c6d",
+     "bytes": 517610
+    },
+    {
+     "tile": "14/14359/6506",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14359/6506.pbf",
+     "sha256": "7b6f91fb271b86a042696df56be7b9f03fd6cab51daf54b035015567404081c0",
+     "bytes": 753190
+    },
+    {
+     "tile": "14/14360/6506",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/14360/6506.pbf",
+     "sha256": "fb7302ed35e19ae072ba10cd320fa7de52ecd517950c80499395459f188a5281",
+     "bytes": 514877
+    }
+   ]
+  },
+  {
+   "id": "eiffel-tower",
+   "sourceSha256": "6191c29942c242c4d60005747de5b29332568fef47d77f46e2bfdf5a079ddcc4",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": "base-bounds",
+    "height": 330
+   },
+   "registrationProcessing": {
+    "targetTriangles": 60000
+   },
+   "initial": {
+    "latitude": 48.85826,
+    "longitude": 2.294496
+   },
+   "anchor": {
+    "latitude": 48.85826376849708,
+    "longitude": 2.2944879250396366
+   },
+   "yawDegrees": 134.9,
+   "translationMetres": [
+    -0.59,
+    0.42
+   ],
+   "meanIoU": 0.6249,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.6698,
+     "sizeRatio": 1.159
+    },
+    {
+     "height": 49.5,
+     "iou": 0.7187,
+     "sizeRatio": 0.965
+    },
+    {
+     "height": 99,
+     "iou": 0.7043,
+     "sizeRatio": 0.944
+    },
+    {
+     "height": 148.5,
+     "iou": 0.7734,
+     "sizeRatio": 0.88
+    },
+    {
+     "height": 198,
+     "iou": 0.3732,
+     "sizeRatio": 0.61
+    },
+    {
+     "height": 247.5,
+     "iou": 0.3067,
+     "sizeRatio": 0.553
+    },
+    {
+     "height": 297,
+     "iou": 0.8285,
+     "sizeRatio": 1.076
+    }
+   ],
+   "groundFootprintScaleRatio": 1.159,
+   "yawCandidates": [
+    {
+     "yaw": 134.9,
+     "score": 0.6249,
+     "translation": [
+      -0.59,
+      0.42
+     ]
+    },
+    {
+     "yaw": 45.2,
+     "score": 0.6248,
+     "translation": [
+      -0.23,
+      0.8
+     ]
+    },
+    {
+     "yaw": 225.4,
+     "score": 0.6246,
+     "translation": [
+      -0.2,
+      0.55
+     ]
+    },
+    {
+     "yaw": 315.75,
+     "score": 0.6243,
+     "translation": [
+      -0.09,
+      0.69
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 0,
+    "selectRadius": null
+   },
+   "referenceParts": [
+    {
+     "tile": "14/8296/5636",
+     "id": 540317560,
+     "polygon": 1,
+     "height": 3,
+     "base": 0
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 540317560,
+     "polygon": 2,
+     "height": 3,
+     "base": 0
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 540317560,
+     "polygon": 3,
+     "height": 3,
+     "base": 0
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 540317560,
+     "polygon": 4,
+     "height": 3,
+     "base": 0
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 5405900,
+     "polygon": 20,
+     "height": 4,
+     "base": 0
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 690341270,
+     "polygon": 0,
+     "height": 4,
+     "base": 0
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 690341270,
+     "polygon": 1,
+     "height": 4,
+     "base": 0
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 690341270,
+     "polygon": 2,
+     "height": 4,
+     "base": 0
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 690341270,
+     "polygon": 3,
+     "height": 4,
+     "base": 0
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 2786440,
+     "polygon": 78,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 2786440,
+     "polygon": 79,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 2786440,
+     "polygon": 333,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3086891640,
+     "polygon": 0,
+     "height": 58,
+     "base": 4
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3086891640,
+     "polygon": 1,
+     "height": 58,
+     "base": 4
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3086891640,
+     "polygon": 2,
+     "height": 58,
+     "base": 4
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3086891640,
+     "polygon": 3,
+     "height": 58,
+     "base": 4
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 41148393,
+     "polygon": 0,
+     "height": 61,
+     "base": 57
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3081452390,
+     "polygon": 0,
+     "height": 64,
+     "base": 57
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3081452390,
+     "polygon": 1,
+     "height": 64,
+     "base": 57
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3081452390,
+     "polygon": 2,
+     "height": 64,
+     "base": 57
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3086877440,
+     "polygon": 0,
+     "height": 116,
+     "base": 57
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3086877440,
+     "polygon": 1,
+     "height": 116,
+     "base": 57
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3086877440,
+     "polygon": 2,
+     "height": 116,
+     "base": 57
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3086877440,
+     "polygon": 3,
+     "height": 116,
+     "base": 57
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 41148423,
+     "polygon": 0,
+     "height": 120,
+     "base": 115
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3086877450,
+     "polygon": 0,
+     "height": 277,
+     "base": 115
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3086877450,
+     "polygon": 1,
+     "height": 277,
+     "base": 115
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3086877450,
+     "polygon": 2,
+     "height": 277,
+     "base": 115
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3086877450,
+     "polygon": 3,
+     "height": 277,
+     "base": 115
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 3080213892,
+     "polygon": 0,
+     "height": 300,
+     "base": 276
+    },
+    {
+     "tile": "14/8296/5636",
+     "id": 14625977622,
+     "polygon": 0,
+     "height": 330,
+     "base": 300
+    }
+   ],
+   "replacement": {
+    "partRadius": 77,
+    "parts": [
+     {
+      "id": 41148393,
+      "height": 61,
+      "base": 57
+     },
+     {
+      "id": 3081452390,
+      "height": 64,
+      "base": 57
+     },
+     {
+      "id": 3086877440,
+      "height": 116,
+      "base": 57
+     },
+     {
+      "id": 41148423,
+      "height": 120,
+      "base": 115
+     },
+     {
+      "id": 3086877450,
+      "height": 277,
+      "base": 115
+     },
+     {
+      "id": 14625977622,
+      "height": 330,
+      "base": 300
+     },
+     {
+      "id": 3086891640,
+      "height": 58,
+      "base": 4
+     },
+     {
+      "id": 3080213892,
+      "height": 300,
+      "base": 276
+     },
+     {
+      "id": 690341270,
+      "height": 4,
+      "base": 0
+     }
+    ],
+    "replacedPolygons": 23,
+    "maxReplacedCentreDistance": 71.82,
+    "nearestKeptSameFeatureDistance": null,
+    "keptOverlapping": [
+     "540317560#2 h=3 b=0 cov=1 a=18.8",
+     "540317560#3 h=3 b=0 cov=1 a=10.2",
+     "540317560#4 h=3 b=0 cov=1 a=38",
+     "2786440#333 h=5 b=0 cov=1 a=10.4",
+     "2786440#78 h=5 b=0 cov=0.635 a=26.4"
+    ]
+   },
+   "sources": [
+    {
+     "tile": "14/8296/5636",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/8296/5636.pbf",
+     "sha256": "850bd22e9f088f8860cd4f96bd99d1d191f25fd6f56d2cafe2081089f2b58f3f",
+     "bytes": 514435
+    }
+   ]
+  },
+  {
+   "id": "big-ben",
+   "sourceSha256": "727448eac6dae84491d42aa33eec9ff5d346917e01c4d4ce5892ada052d5dab0",
+   "frame": {
+    "space": "local",
+    "axes": [
+     "+x",
+     "+z",
+     "-y"
+    ],
+    "center": "base-bounds",
+    "height": 96
+   },
+   "registrationProcessing": {
+    "targetTriangles": 30000
+   },
+   "initial": {
+    "latitude": 51.5007,
+    "longitude": -0.124573
+   },
+   "anchor": {
+    "latitude": 51.500702899558895,
+    "longitude": -0.12457208005509952
+   },
+   "yawDegrees": 346,
+   "translationMetres": [
+    0.06,
+    0.32
+   ],
+   "meanIoU": 0.5787,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.6456
+    },
+    {
+     "height": 13.7,
+     "iou": 0.6456
+    },
+    {
+     "height": 27.3,
+     "iou": 0.6421
+    },
+    {
+     "height": 41,
+     "iou": 0.6421
+    },
+    {
+     "height": 54.6,
+     "iou": 0.641
+    },
+    {
+     "height": 68.3,
+     "iou": 0.7984
+    },
+    {
+     "height": 81.9,
+     "iou": 0.036
+    }
+   ],
+   "groundFootprintScaleRatio": 1.246,
+   "yawCandidates": [
+    {
+     "yaw": 346,
+     "score": 0.5787,
+     "translation": [
+      0.06,
+      0.32
+     ]
+    },
+    {
+     "yaw": 166,
+     "score": 0.5786,
+     "translation": [
+      -0.07,
+      0.24
+     ]
+    },
+    {
+     "yaw": 256,
+     "score": 0.5786,
+     "translation": [
+      0.04,
+      0.22
+     ]
+    },
+    {
+     "yaw": 76,
+     "score": 0.5785,
+     "translation": [
+      -0.04,
+      0.35
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 20,
+    "selectRadius": null
+   },
+   "referenceParts": [
+    {
+     "tile": "14/8186/5448",
+     "id": 11346293980,
+     "polygon": 44,
+     "height": 20,
+     "base": 0
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11346293980,
+     "polygon": 45,
+     "height": 20,
+     "base": 0
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11346293980,
+     "polygon": 46,
+     "height": 20,
+     "base": 0
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11346293980,
+     "polygon": 47,
+     "height": 20,
+     "base": 0
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3676426730,
+     "polygon": 23,
+     "height": 24,
+     "base": 0
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3637012242,
+     "polygon": 0,
+     "height": 51,
+     "base": 0
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11417644840,
+     "polygon": 0,
+     "height": 53,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11417644840,
+     "polygon": 1,
+     "height": 53,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11417644840,
+     "polygon": 2,
+     "height": 53,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693130,
+     "polygon": 0,
+     "height": 54,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693130,
+     "polygon": 1,
+     "height": 54,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693130,
+     "polygon": 2,
+     "height": 54,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693130,
+     "polygon": 3,
+     "height": 54,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693130,
+     "polygon": 4,
+     "height": 54,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693120,
+     "polygon": 0,
+     "height": 57,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693120,
+     "polygon": 1,
+     "height": 57,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693120,
+     "polygon": 2,
+     "height": 57,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693120,
+     "polygon": 3,
+     "height": 57,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693120,
+     "polygon": 4,
+     "height": 57,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693120,
+     "polygon": 5,
+     "height": 57,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693120,
+     "polygon": 6,
+     "height": 57,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693120,
+     "polygon": 7,
+     "height": 57,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 14532483910,
+     "polygon": 0,
+     "height": 57,
+     "base": 55
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 14532483910,
+     "polygon": 1,
+     "height": 57,
+     "base": 55
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 14532483910,
+     "polygon": 2,
+     "height": 57,
+     "base": 55
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 14532483910,
+     "polygon": 3,
+     "height": 57,
+     "base": 55
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693300,
+     "polygon": 0,
+     "height": 60,
+     "base": 52
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693300,
+     "polygon": 1,
+     "height": 60,
+     "base": 52
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3632752402,
+     "polygon": 0,
+     "height": 61,
+     "base": 48
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11264953020,
+     "polygon": 0,
+     "height": 61,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11264953020,
+     "polygon": 1,
+     "height": 61,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11264953020,
+     "polygon": 2,
+     "height": 61,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11264953020,
+     "polygon": 3,
+     "height": 61,
+     "base": 51
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3632770930,
+     "polygon": 0,
+     "height": 68,
+     "base": 66
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3632770930,
+     "polygon": 1,
+     "height": 68,
+     "base": 66
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3632770930,
+     "polygon": 2,
+     "height": 68,
+     "base": 66
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3632770930,
+     "polygon": 3,
+     "height": 68,
+     "base": 66
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3632770930,
+     "polygon": 4,
+     "height": 68,
+     "base": 66
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3632770930,
+     "polygon": 5,
+     "height": 68,
+     "base": 66
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3632770930,
+     "polygon": 6,
+     "height": 68,
+     "base": 66
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3638675240,
+     "polygon": 0,
+     "height": 71,
+     "base": 68
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3638675240,
+     "polygon": 1,
+     "height": 71,
+     "base": 68
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3638675240,
+     "polygon": 2,
+     "height": 71,
+     "base": 68
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3638675240,
+     "polygon": 3,
+     "height": 71,
+     "base": 68
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3638675240,
+     "polygon": 4,
+     "height": 71,
+     "base": 68
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3638675240,
+     "polygon": 5,
+     "height": 71,
+     "base": 68
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3637445742,
+     "polygon": 0,
+     "height": 82,
+     "base": 60
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 3632752372,
+     "polygon": 0,
+     "height": 88,
+     "base": 72
+    },
+    {
+     "tile": "14/8186/5448",
+     "id": 11397693192,
+     "polygon": 0,
+     "height": 91,
+     "base": 82
+    }
+   ],
+   "replacement": {
+    "partRadius": 10,
+    "parts": [
+     {
+      "id": 3641974102,
+      "height": 3,
+      "base": 0
+     },
+     {
+      "id": 11417644930,
+      "height": 6,
+      "base": 0
+     },
+     {
+      "id": 11346294020,
+      "height": 7,
+      "base": 0
+     },
+     {
+      "id": 11346293980,
+      "height": 20,
+      "base": 0
+     },
+     {
+      "id": 3676426730,
+      "height": 24,
+      "base": 0
+     },
+     {
+      "id": 3637012242,
+      "height": 51,
+      "base": 0
+     },
+     {
+      "id": 11417644840,
+      "height": 53,
+      "base": 51
+     },
+     {
+      "id": 11397693130,
+      "height": 54,
+      "base": 51
+     },
+     {
+      "id": 11397693120,
+      "height": 57,
+      "base": 51
+     },
+     {
+      "id": 14532483910,
+      "height": 57,
+      "base": 55
+     },
+     {
+      "id": 11397693300,
+      "height": 60,
+      "base": 52
+     },
+     {
+      "id": 3632752402,
+      "height": 61,
+      "base": 48
+     },
+     {
+      "id": 11264953020,
+      "height": 61,
+      "base": 51
+     },
+     {
+      "id": 3632770930,
+      "height": 68,
+      "base": 66
+     },
+     {
+      "id": 3638675240,
+      "height": 71,
+      "base": 68
+     },
+     {
+      "id": 3637445742,
+      "height": 82,
+      "base": 60
+     },
+     {
+      "id": 3632752372,
+      "height": 88,
+      "base": 72
+     },
+     {
+      "id": 11397693192,
+      "height": 91,
+      "base": 82
+     }
+    ],
+    "replacedPolygons": 54,
+    "maxReplacedCentreDistance": 12.8,
+    "nearestKeptSameFeatureDistance": 7.42,
+    "keptOverlapping": [
+     "11460733900#1 h=6 b=5 cov=0.313 a=29.1"
+    ]
+   },
+   "sources": [
+    {
+     "tile": "14/8186/5448",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/8186/5448.pbf",
+     "sha256": "406bbca3d8e27304bbfb65fc774d24191a852957881d7ef29ae752111a78c952",
+     "bytes": 569075
+    }
+   ]
+  },
+  {
+   "id": "sydney-opera-house",
+   "sourceSha256": "584749e10aca32d57c4a5c3aa65447273e01373ced2b6ad0132584ec7cd08a5f",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": "base-bounds",
+    "height": 65
+   },
+   "registrationProcessing": {
+    "excludeNodes": [
+     "Object_12",
+     "Object_15",
+     "Object_17",
+     "Object_8",
+     "Object_9"
+    ],
+    "targetTriangles": 30000
+   },
+   "initial": {
+    "latitude": -33.85712,
+    "longitude": 151.215157
+   },
+   "anchor": {
+    "latitude": -33.857110084002535,
+    "longitude": 151.2150651297151
+   },
+   "yawDegrees": 66.85,
+   "translationMetres": [
+    -8.5,
+    1.1
+   ],
+   "meanIoU": 0.5326,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.5193,
+     "sizeRatio": 1.331
+    },
+    {
+     "height": 0.8,
+     "iou": 0.5193,
+     "sizeRatio": 1.331
+    },
+    {
+     "height": 1.5,
+     "iou": 0.5193,
+     "sizeRatio": 1.331
+    },
+    {
+     "height": 2.3,
+     "iou": 0.519,
+     "sizeRatio": 1.33
+    },
+    {
+     "height": 3,
+     "iou": 0.5239,
+     "sizeRatio": 1.291
+    },
+    {
+     "height": 3.8,
+     "iou": 0.5638,
+     "sizeRatio": 1.151
+    },
+    {
+     "height": 4.5,
+     "iou": 0.564,
+     "sizeRatio": 1.145
+    }
+   ],
+   "groundFootprintScaleRatio": 1.331,
+   "yawCandidates": [
+    {
+     "yaw": 66.85,
+     "score": 0.5326,
+     "translation": [
+      -8.5,
+      1.1
+     ]
+    },
+    {
+     "yaw": 72,
+     "score": 0.5313,
+     "translation": [
+      -7.03,
+      1.59
+     ]
+    },
+    {
+     "yaw": 237.5,
+     "score": 0.5311,
+     "translation": [
+      -5.3,
+      15.54
+     ]
+    },
+    {
+     "yaw": 53.25,
+     "score": 0.5305,
+     "translation": [
+      -11.33,
+      10.31
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 0,
+    "selectRadius": null
+   },
+   "referenceParts": [
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 474,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 475,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 476,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 477,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 478,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 479,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 480,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 481,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 482,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 483,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 484,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 485,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 486,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 487,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 488,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 489,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 490,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 491,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 492,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 493,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 494,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 495,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 496,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 497,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 498,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 499,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 500,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 501,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 502,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 503,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 504,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 505,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 506,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 507,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 508,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 509,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 510,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 511,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 512,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 513,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 514,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 515,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 516,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 517,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 518,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 519,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 520,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 521,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 522,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 523,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 524,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 525,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 526,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 527,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 528,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 529,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 609,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 610,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 611,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 612,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 613,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 614,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 615,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 616,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 617,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 618,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 619,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 620,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 621,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 622,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 623,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 624,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 625,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 626,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 627,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 628,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 629,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 630,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 631,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 632,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 633,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 634,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 635,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 636,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 637,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 638,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 639,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 640,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 641,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 642,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 643,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 644,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15073/9831",
+     "id": 95968730,
+     "polygon": 645,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 1,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 2,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 3,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 4,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 5,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 6,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 7,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 8,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 9,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 10,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 11,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 12,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 13,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 17,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 18,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 19,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 20,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 21,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 22,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 23,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 24,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 25,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 26,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 27,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 28,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 29,
+     "height": 5,
+     "base": 0
+    },
+    {
+     "tile": "14/15074/9831",
+     "id": 95968730,
+     "polygon": 30,
+     "height": 5,
+     "base": 0
+    }
+   ],
+   "replacement": {
+    "partRadius": 59,
+    "parts": [
+     {
+      "id": 95968730,
+      "height": 5,
+      "base": 0
+     },
+     {
+      "id": 95968730,
+      "height": 5,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 15074,
+       "y": 9831
+      }
+     }
+    ],
+    "replacedPolygons": 74,
+    "maxReplacedCentreDistance": 80.58,
+    "nearestKeptSameFeatureDistance": 59.62,
+    "keptOverlapping": []
+   },
+   "sources": [
+    {
+     "tile": "14/15073/9831",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/15073/9831.pbf",
+     "sha256": "d101a00d650859e07c46571feb7ad755715c50c11c643a8640cb03590e0ce0a0",
+     "bytes": 520481
+    },
+    {
+     "tile": "14/15074/9831",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/15074/9831.pbf",
+     "sha256": "6d4c7567ef6888fa11be8d3f4b41c871e77da93039dd7eb4976baee2ba237b30",
+     "bytes": 220298
+    }
+   ]
+  },
+  {
+   "id": "petronas-towers",
+   "sourceSha256": "3739ad4444330c151614b80ea65773726acf28b8f2089a98b060a5072f5aa29b",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": "base-bounds",
+    "height": 451.9
+   },
+   "registrationProcessing": {
+    "targetTriangles": 30000
+   },
+   "initial": {
+    "latitude": 3.1579185,
+    "longitude": 101.7117916
+   },
+   "anchor": {
+    "latitude": 3.1579700210767183,
+    "longitude": 101.71175125565526
+   },
+   "yawDegrees": 220.6,
+   "translationMetres": [
+    -4.48,
+    5.7
+   ],
+   "meanIoU": 0.4701,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.5918,
+     "sizeRatio": 0.91
+    },
+    {
+     "height": 67.8,
+     "iou": 0.5917,
+     "sizeRatio": 0.91
+    },
+    {
+     "height": 135.6,
+     "iou": 0.5918,
+     "sizeRatio": 0.91
+    },
+    {
+     "height": 203.4,
+     "iou": 0.5079,
+     "sizeRatio": 0.92
+    },
+    {
+     "height": 271.1,
+     "iou": 0.5382,
+     "sizeRatio": 0.851
+    },
+    {
+     "height": 338.9,
+     "iou": 0.4692,
+     "sizeRatio": 1.056
+    },
+    {
+     "height": 406.7,
+     "iou": 0,
+     "sizeRatio": 1.531
+    }
+   ],
+   "groundFootprintScaleRatio": 0.91,
+   "yawCandidates": [
+    {
+     "yaw": 220.6,
+     "score": 0.4701,
+     "translation": [
+      -4.48,
+      5.7
+     ]
+    },
+    {
+     "yaw": 41.35,
+     "score": 0.4261,
+     "translation": [
+      8.26,
+      -5.02
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 150,
+    "selectRadius": 100
+   },
+   "referenceParts": [
+    {
+     "tile": "14/12820/8048",
+     "id": 1373963622,
+     "polygon": 0,
+     "height": 175,
+     "base": 0
+    },
+    {
+     "tile": "14/12820/8048",
+     "id": 1373963652,
+     "polygon": 0,
+     "height": 180,
+     "base": 170
+    },
+    {
+     "tile": "14/12820/8048",
+     "id": 1373312550,
+     "polygon": 0,
+     "height": 185,
+     "base": 0
+    },
+    {
+     "tile": "14/12820/8048",
+     "id": 1373312550,
+     "polygon": 1,
+     "height": 185,
+     "base": 0
+    },
+    {
+     "tile": "14/12820/8048",
+     "id": 1373963482,
+     "polygon": 0,
+     "height": 240,
+     "base": 0
+    },
+    {
+     "tile": "14/12820/8048",
+     "id": 1373963832,
+     "polygon": 0,
+     "height": 295,
+     "base": 0
+    },
+    {
+     "tile": "14/12820/8048",
+     "id": 1373963512,
+     "polygon": 0,
+     "height": 325,
+     "base": 0
+    },
+    {
+     "tile": "14/12820/8048",
+     "id": 1373963812,
+     "polygon": 0,
+     "height": 355,
+     "base": 0
+    },
+    {
+     "tile": "14/12820/8048",
+     "id": 1373963672,
+     "polygon": 0,
+     "height": 370,
+     "base": 0
+    },
+    {
+     "tile": "14/12820/8048",
+     "id": 1373963742,
+     "polygon": 0,
+     "height": 380,
+     "base": 0
+    },
+    {
+     "tile": "14/12820/8048",
+     "id": 1373963792,
+     "polygon": 0,
+     "height": 390,
+     "base": 0
+    },
+    {
+     "tile": "14/12820/8048",
+     "id": 1373963712,
+     "polygon": 0,
+     "height": 400,
+     "base": 0
+    },
+    {
+     "tile": "14/12820/8048",
+     "id": 1373963722,
+     "polygon": 0,
+     "height": 410,
+     "base": 0
+    },
+    {
+     "tile": "14/12820/8048",
+     "id": 1373963732,
+     "polygon": 0,
+     "height": 452,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312560,
+     "polygon": 0,
+     "height": 175,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312560,
+     "polygon": 1,
+     "height": 175,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373963652,
+     "polygon": 0,
+     "height": 180,
+     "base": 170
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312550,
+     "polygon": 0,
+     "height": 185,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312550,
+     "polygon": 1,
+     "height": 185,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312520,
+     "polygon": 0,
+     "height": 240,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312520,
+     "polygon": 1,
+     "height": 240,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312650,
+     "polygon": 0,
+     "height": 295,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312650,
+     "polygon": 1,
+     "height": 295,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312530,
+     "polygon": 0,
+     "height": 325,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312530,
+     "polygon": 1,
+     "height": 325,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312640,
+     "polygon": 0,
+     "height": 355,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312640,
+     "polygon": 1,
+     "height": 355,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312580,
+     "polygon": 0,
+     "height": 370,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312580,
+     "polygon": 1,
+     "height": 370,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312630,
+     "polygon": 0,
+     "height": 380,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312630,
+     "polygon": 1,
+     "height": 380,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312590,
+     "polygon": 0,
+     "height": 390,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312590,
+     "polygon": 1,
+     "height": 390,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312600,
+     "polygon": 0,
+     "height": 400,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312600,
+     "polygon": 1,
+     "height": 400,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312620,
+     "polygon": 0,
+     "height": 410,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312620,
+     "polygon": 1,
+     "height": 410,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312610,
+     "polygon": 0,
+     "height": 452,
+     "base": 0
+    },
+    {
+     "tile": "14/12821/8048",
+     "id": 1373312610,
+     "polygon": 1,
+     "height": 452,
+     "base": 0
+    }
+   ],
+   "replacement": {
+    "partRadius": 61,
+    "parts": [
+     {
+      "id": 1373963672,
+      "height": 370,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 12820,
+       "y": 8048
+      }
+     },
+     {
+      "id": 1373963742,
+      "height": 380,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 12820,
+       "y": 8048
+      }
+     },
+     {
+      "id": 1373963792,
+      "height": 390,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 12820,
+       "y": 8048
+      }
+     },
+     {
+      "id": 1373963712,
+      "height": 400,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 12820,
+       "y": 8048
+      }
+     },
+     {
+      "id": 1373963722,
+      "height": 410,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 12820,
+       "y": 8048
+      }
+     },
+     {
+      "id": 1373963732,
+      "height": 452,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 12820,
+       "y": 8048
+      }
+     },
+     {
+      "id": 1373312580,
+      "height": 370,
+      "base": 0
+     },
+     {
+      "id": 1373312630,
+      "height": 380,
+      "base": 0
+     },
+     {
+      "id": 1373312590,
+      "height": 390,
+      "base": 0
+     },
+     {
+      "id": 1373312600,
+      "height": 400,
+      "base": 0
+     },
+     {
+      "id": 1373312620,
+      "height": 410,
+      "base": 0
+     },
+     {
+      "id": 1373312610,
+      "height": 452,
+      "base": 0
+     },
+     {
+      "id": 1373963652,
+      "height": 180,
+      "base": 170,
+      "tile": {
+       "z": 14,
+       "x": 12820,
+       "y": 8048
+      }
+     },
+     {
+      "id": 1373963652,
+      "height": 180,
+      "base": 170
+     },
+     {
+      "id": 1373312640,
+      "height": 355,
+      "base": 0
+     },
+     {
+      "id": 1373963812,
+      "height": 355,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 12820,
+       "y": 8048
+      }
+     },
+     {
+      "id": 1373312530,
+      "height": 325,
+      "base": 0
+     },
+     {
+      "id": 1373963512,
+      "height": 325,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 12820,
+       "y": 8048
+      }
+     },
+     {
+      "id": 1373312650,
+      "height": 295,
+      "base": 0
+     },
+     {
+      "id": 1373963832,
+      "height": 295,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 12820,
+       "y": 8048
+      }
+     },
+     {
+      "id": 1373312520,
+      "height": 240,
+      "base": 0
+     },
+     {
+      "id": 1373312560,
+      "height": 175,
+      "base": 0
+     },
+     {
+      "id": 1373963482,
+      "height": 240,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 12820,
+       "y": 8048
+      }
+     },
+     {
+      "id": 1373963622,
+      "height": 175,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 12820,
+       "y": 8048
+      }
+     }
+    ],
+    "replacedPolygons": 35,
+    "maxReplacedCentreDistance": 55.74,
+    "nearestKeptSameFeatureDistance": null,
+    "keptOverlapping": []
+   },
+   "sources": [
+    {
+     "tile": "14/12820/8048",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/12820/8048.pbf",
+     "sha256": "92b29dbb28bc6091cd209ebd566c9c190f2108af6a4ad0c87fc5554977af6a94",
+     "bytes": 716264
+    },
+    {
+     "tile": "14/12821/8048",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/12821/8048.pbf",
+     "sha256": "3ff36bf24a221ce1cbeca94269fdc089b6835ec0e0c4d954ee616e7543c5d231",
+     "bytes": 424114
+    }
+   ]
+  },
+  {
+   "id": "burj-khalifa",
+   "sourceSha256": "f33e61a8e948b83e6c93a77d0dd7cc5900ce119b28f22a9ca50d7b20c3e02d98",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": "base-bounds",
+    "height": 828
+   },
+   "registrationProcessing": {
+    "targetTriangles": 16000
+   },
+   "initial": {
+    "latitude": 25.197219,
+    "longitude": 55.274156
+   },
+   "anchor": {
+    "latitude": 25.19707818113305,
+    "longitude": 55.2742152018721
+   },
+   "yawDegrees": 3.85,
+   "translationMetres": [
+    5.97,
+    -15.6
+   ],
+   "meanIoU": 0.7298,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.478
+    },
+    {
+     "height": 124.2,
+     "iou": 0.8679
+    },
+    {
+     "height": 248.4,
+     "iou": 0.8883
+    },
+    {
+     "height": 372.6,
+     "iou": 0.8723
+    },
+    {
+     "height": 496.8,
+     "iou": 0.8363
+    },
+    {
+     "height": 621,
+     "iou": 0.8051
+    },
+    {
+     "height": 745.2,
+     "iou": 0.3611
+    }
+   ],
+   "groundFootprintScaleRatio": 1.446,
+   "yawCandidates": [
+    {
+     "yaw": 3.85,
+     "score": 0.7298,
+     "translation": [
+      5.97,
+      -15.6
+     ]
+    },
+    {
+     "yaw": 122.35,
+     "score": 0.691,
+     "translation": [
+      8.2,
+      12.79
+     ]
+    },
+    {
+     "yaw": 243.9,
+     "score": 0.6747,
+     "translation": [
+      -18.44,
+      0.65
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 100,
+    "selectRadius": null
+   },
+   "referenceParts": [
+    {
+     "tile": "14/10707/7006",
+     "id": 1371403452,
+     "polygon": 0,
+     "height": 105,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371403662,
+     "polygon": 0,
+     "height": 130,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371403402,
+     "polygon": 0,
+     "height": 160,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371403542,
+     "polygon": 0,
+     "height": 200,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371403552,
+     "polygon": 0,
+     "height": 235,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371403742,
+     "polygon": 0,
+     "height": 270,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371403712,
+     "polygon": 0,
+     "height": 315,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371403682,
+     "polygon": 0,
+     "height": 360,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371403482,
+     "polygon": 0,
+     "height": 405,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371403632,
+     "polygon": 0,
+     "height": 460,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371403612,
+     "polygon": 0,
+     "height": 520,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371531392,
+     "polygon": 0,
+     "height": 545,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371531412,
+     "polygon": 0,
+     "height": 560,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371531402,
+     "polygon": 0,
+     "height": 580,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371531382,
+     "polygon": 0,
+     "height": 605,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371531372,
+     "polygon": 0,
+     "height": 625,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371531352,
+     "polygon": 0,
+     "height": 645,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 6179123952,
+     "polygon": 0,
+     "height": 660,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371531362,
+     "polygon": 0,
+     "height": 680,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371531312,
+     "polygon": 0,
+     "height": 700,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371477122,
+     "polygon": 0,
+     "height": 710,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371531432,
+     "polygon": 0,
+     "height": 720,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371531422,
+     "polygon": 0,
+     "height": 740,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371531442,
+     "polygon": 0,
+     "height": 760,
+     "base": 0
+    },
+    {
+     "tile": "14/10707/7006",
+     "id": 1371477152,
+     "polygon": 0,
+     "height": 828,
+     "base": 0
+    }
+   ],
+   "replacement": {
+    "partRadius": 71,
+    "parts": [
+     {
+      "id": 1371403310,
+      "height": 35,
+      "base": 0
+     },
+     {
+      "id": 1371403662,
+      "height": 130,
+      "base": 0
+     },
+     {
+      "id": 1371403552,
+      "height": 235,
+      "base": 0
+     },
+     {
+      "id": 1371403742,
+      "height": 270,
+      "base": 0
+     },
+     {
+      "id": 1371403712,
+      "height": 315,
+      "base": 0
+     },
+     {
+      "id": 1371403682,
+      "height": 360,
+      "base": 0
+     },
+     {
+      "id": 1371403482,
+      "height": 405,
+      "base": 0
+     },
+     {
+      "id": 1371403632,
+      "height": 460,
+      "base": 0
+     },
+     {
+      "id": 1371403612,
+      "height": 520,
+      "base": 0
+     },
+     {
+      "id": 1371531392,
+      "height": 545,
+      "base": 0
+     },
+     {
+      "id": 1371531412,
+      "height": 560,
+      "base": 0
+     },
+     {
+      "id": 1371531402,
+      "height": 580,
+      "base": 0
+     },
+     {
+      "id": 1371531382,
+      "height": 605,
+      "base": 0
+     },
+     {
+      "id": 1371531372,
+      "height": 625,
+      "base": 0
+     },
+     {
+      "id": 1371531352,
+      "height": 645,
+      "base": 0
+     },
+     {
+      "id": 6179123952,
+      "height": 660,
+      "base": 0
+     },
+     {
+      "id": 1371531362,
+      "height": 680,
+      "base": 0
+     },
+     {
+      "id": 1371531312,
+      "height": 700,
+      "base": 0
+     },
+     {
+      "id": 1371477122,
+      "height": 710,
+      "base": 0
+     },
+     {
+      "id": 1371531432,
+      "height": 720,
+      "base": 0
+     },
+     {
+      "id": 1371531422,
+      "height": 740,
+      "base": 0
+     },
+     {
+      "id": 1371531442,
+      "height": 760,
+      "base": 0
+     },
+     {
+      "id": 1371477152,
+      "height": 828,
+      "base": 0
+     },
+     {
+      "id": 1371403542,
+      "height": 200,
+      "base": 0
+     },
+     {
+      "id": 1371403582,
+      "height": 70,
+      "base": 0
+     },
+     {
+      "id": 1371403402,
+      "height": 160,
+      "base": 0
+     },
+     {
+      "id": 1371403452,
+      "height": 105,
+      "base": 0
+     }
+    ],
+    "replacedPolygons": 29,
+    "maxReplacedCentreDistance": 65.43,
+    "nearestKeptSameFeatureDistance": null,
+    "keptOverlapping": [
+     "1371531270#2 h=15 b=0 cov=0.778 a=407.3",
+     "1371531270#4 h=15 b=0 cov=0.685 a=405.1",
+     "1371531270#0 h=15 b=0 cov=0.661 a=871.9",
+     "1371531270#5 h=15 b=0 cov=0.66 a=404.2",
+     "1371531270#1 h=15 b=0 cov=0.619 a=965.6",
+     "1371531270#3 h=15 b=0 cov=0.577 a=848.3"
+    ]
+   },
+   "sources": [
+    {
+     "tile": "14/10707/7006",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/10707/7006.pbf",
+     "sha256": "014ec9299893c7767e6dc002b60bee336575cfd0aab100fe6720f7af637eb413",
+     "bytes": 195964
+    }
+   ]
+  },
+  {
+   "id": "burj-al-arab",
+   "sourceSha256": "2740c27f0469555de0130d06b586ffdfb4da4d5c5f52f475a17d75d244442e40",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": "base-bounds",
+    "height": 321
+   },
+   "registrationProcessing": {
+    "targetTriangles": 30000
+   },
+   "initial": {
+    "latitude": 25.141288,
+    "longitude": 55.185286
+   },
+   "anchor": {
+    "latitude": 25.141281037788612,
+    "longitude": 55.18540190376306
+   },
+   "yawDegrees": 246.25,
+   "translationMetres": [
+    11.69,
+    -0.77
+   ],
+   "meanIoU": 0.3729,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.4404
+    },
+    {
+     "height": 48.1,
+     "iou": 0.4457
+    },
+    {
+     "height": 96.3,
+     "iou": 0.458
+    },
+    {
+     "height": 144.5,
+     "iou": 0.516
+    },
+    {
+     "height": 192.6,
+     "iou": 0.6222
+    },
+    {
+     "height": 240.8,
+     "iou": 0.114
+    },
+    {
+     "height": 288.9,
+     "iou": 0.014
+    }
+   ],
+   "groundFootprintScaleRatio": 1.481,
+   "yawCandidates": [
+    {
+     "yaw": 246.25,
+     "score": 0.3729,
+     "translation": [
+      11.69,
+      -0.77
+     ]
+    },
+    {
+     "yaw": 218.5,
+     "score": 0.3727,
+     "translation": [
+      11.22,
+      -3
+     ]
+    },
+    {
+     "yaw": 233.6,
+     "score": 0.3703,
+     "translation": [
+      5.61,
+      -4.57
+     ]
+    },
+    {
+     "yaw": 15,
+     "score": 0.3517,
+     "translation": [
+      11.65,
+      1.05
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 50,
+    "selectRadius": null
+   },
+   "referenceParts": [
+    {
+     "tile": "14/10703/7009",
+     "id": 127005462,
+     "polygon": 0,
+     "height": 321,
+     "base": 0
+    }
+   ],
+   "replacement": {
+    "partRadius": 20,
+    "parts": [
+     {
+      "id": 127005462,
+      "height": 321,
+      "base": 0
+     }
+    ],
+    "replacedPolygons": 1,
+    "maxReplacedCentreDistance": 11.67,
+    "nearestKeptSameFeatureDistance": null,
+    "keptOverlapping": [
+     "27202160#853 h=5 b=0 cov=0.904 a=33.6",
+     "27202160#850 h=5 b=0 cov=0.782 a=1257.9"
+    ]
+   },
+   "sources": [
+    {
+     "tile": "14/10703/7009",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/10703/7009.pbf",
+     "sha256": "657264fc7a54465162ee953a3fa2a117ab0ba1ab758715a04cdb0dceac799e78",
+     "bytes": 88321
+    }
+   ]
+  },
+  {
+   "id": "empire-state-building",
+   "sourceSha256": "a7c649647504a08d32a4b7c99b9d60826361bc39266da22e079fa1e42df44d16",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": "base-bounds",
+    "height": 443.2
+   },
+   "registrationProcessing": {
+    "targetTriangles": 40000
+   },
+   "initial": {
+    "latitude": 40.748422,
+    "longitude": -73.9856727
+   },
+   "anchor": {
+    "latitude": 40.74848263989071,
+    "longitude": -73.98577633636773
+   },
+   "yawDegrees": 150.7,
+   "translationMetres": [
+    -8.75,
+    6.73
+   ],
+   "meanIoU": 0.6694,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.857,
+     "sizeRatio": 1.021
+    },
+    {
+     "height": 66.5,
+     "iou": 0.6337,
+     "sizeRatio": 0.796
+    },
+    {
+     "height": 133,
+     "iou": 0.8377,
+     "sizeRatio": 1.045
+    },
+    {
+     "height": 199.4,
+     "iou": 0.8377,
+     "sizeRatio": 1.045
+    },
+    {
+     "height": 265.9,
+     "iou": 0.829,
+     "sizeRatio": 1.067
+    },
+    {
+     "height": 332.4,
+     "iou": 0.6371,
+     "sizeRatio": 0.912
+    },
+    {
+     "height": 398.9,
+     "iou": 0.0532,
+     "sizeRatio": 0.225
+    }
+   ],
+   "groundFootprintScaleRatio": 1.021,
+   "yawCandidates": [
+    {
+     "yaw": 150.7,
+     "score": 0.6694,
+     "translation": [
+      -8.75,
+      6.73
+     ]
+    },
+    {
+     "yaw": 331,
+     "score": 0.6682,
+     "translation": [
+      8.85,
+      -5.19
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 0,
+    "selectRadius": 70
+   },
+   "referenceParts": [
+    {
+     "tile": "14/4824/6157",
+     "id": 108720540,
+     "polygon": 0,
+     "height": 17,
+     "base": 0
+    },
+    {
+     "tile": "14/4824/6157",
+     "id": 2646519750,
+     "polygon": 23,
+     "height": 23,
+     "base": 0
+    },
+    {
+     "tile": "14/4824/6157",
+     "id": 1374251312,
+     "polygon": 0,
+     "height": 75,
+     "base": 18
+    },
+    {
+     "tile": "14/4824/6157",
+     "id": 1374251332,
+     "polygon": 0,
+     "height": 90,
+     "base": 75
+    },
+    {
+     "tile": "14/4824/6157",
+     "id": 1374251282,
+     "polygon": 0,
+     "height": 115,
+     "base": 90
+    },
+    {
+     "tile": "14/4824/6157",
+     "id": 1374251272,
+     "polygon": 0,
+     "height": 255,
+     "base": 115
+    },
+    {
+     "tile": "14/4824/6157",
+     "id": 1374251292,
+     "polygon": 0,
+     "height": 290,
+     "base": 255
+    },
+    {
+     "tile": "14/4824/6157",
+     "id": 1374251252,
+     "polygon": 0,
+     "height": 310,
+     "base": 290
+    },
+    {
+     "tile": "14/4824/6157",
+     "id": 1374251442,
+     "polygon": 0,
+     "height": 320,
+     "base": 0
+    },
+    {
+     "tile": "14/4824/6157",
+     "id": 1374251422,
+     "polygon": 0,
+     "height": 330,
+     "base": 0
+    },
+    {
+     "tile": "14/4824/6157",
+     "id": 2659326182,
+     "polygon": 0,
+     "height": 390,
+     "base": 330
+    },
+    {
+     "tile": "14/4824/6157",
+     "id": 1374251452,
+     "polygon": 0,
+     "height": 444,
+     "base": 330
+    }
+   ],
+   "replacement": {
+    "partRadius": 20,
+    "parts": [
+     {
+      "id": 1374251292,
+      "height": 290,
+      "base": 255
+     },
+     {
+      "id": 1374251252,
+      "height": 310,
+      "base": 290
+     },
+     {
+      "id": 1374251442,
+      "height": 320,
+      "base": 0
+     },
+     {
+      "id": 1374251422,
+      "height": 330,
+      "base": 0
+     },
+     {
+      "id": 2659326182,
+      "height": 390,
+      "base": 330
+     },
+     {
+      "id": 1374251452,
+      "height": 444,
+      "base": 330
+     },
+     {
+      "id": 1374251312,
+      "height": 75,
+      "base": 18
+     },
+     {
+      "id": 1374251282,
+      "height": 115,
+      "base": 90
+     },
+     {
+      "id": 1374251272,
+      "height": 255,
+      "base": 115
+     },
+     {
+      "id": 108720540,
+      "height": 17,
+      "base": 0
+     },
+     {
+      "id": 1374251332,
+      "height": 90,
+      "base": 75
+     }
+    ],
+    "replacedPolygons": 11,
+    "maxReplacedCentreDistance": 11.41,
+    "nearestKeptSameFeatureDistance": null,
+    "keptOverlapping": []
+   },
+   "sources": [
+    {
+     "tile": "14/4824/6158",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/4824/6158.pbf",
+     "sha256": "f8a84d12cf42158546760f2ca39b0b80198945ce168808ef362246e95c9859da",
+     "bytes": 776075
+    },
+    {
+     "tile": "14/4824/6157",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/4824/6157.pbf",
+     "sha256": "45416149e99108f413a7f3b640ed1c314d512d4860bab9c0efad6b5de270b8e0",
+     "bytes": 688977
+    }
+   ]
+  },
+  {
+   "id": "one-world-trade-center",
+   "sourceSha256": "440d028d051b2b3fcb20933e9daac208ef7ef52503c6be45d8979a6094377a51",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": "base-bounds",
+    "height": 541.3
+   },
+   "registrationProcessing": {
+    "targetTriangles": 30000
+   },
+   "initial": {
+    "latitude": 40.713,
+    "longitude": -74.013187
+   },
+   "anchor": {
+    "latitude": 40.71299728147888,
+    "longitude": -74.01319244652076
+   },
+   "yawDegrees": 62.6,
+   "translationMetres": [
+    -0.46,
+    -0.3
+   ],
+   "meanIoU": 0.7118,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.9822
+    },
+    {
+     "height": 81.1,
+     "iou": 0.9761
+    },
+    {
+     "height": 162.3,
+     "iou": 0.9256
+    },
+    {
+     "height": 243.5,
+     "iou": 0.8179
+    },
+    {
+     "height": 324.6,
+     "iou": 0.6553
+    },
+    {
+     "height": 405.8,
+     "iou": 0.0775
+    },
+    {
+     "height": 486.9,
+     "iou": 0.5477
+    }
+   ],
+   "groundFootprintScaleRatio": 0.991,
+   "yawCandidates": [
+    {
+     "yaw": 62.6,
+     "score": 0.7118,
+     "translation": [
+      -0.46,
+      -0.3
+     ]
+    },
+    {
+     "yaw": 332.75,
+     "score": 0.7115,
+     "translation": [
+      -0.44,
+      0.44
+     ]
+    },
+    {
+     "yaw": 242.9,
+     "score": 0.7113,
+     "translation": [
+      0.06,
+      0.18
+     ]
+    },
+    {
+     "yaw": 152,
+     "score": 0.7103,
+     "translation": [
+      0.04,
+      -0.57
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 100,
+    "selectRadius": null
+   },
+   "referenceParts": [
+    {
+     "tile": "14/4823/6160",
+     "id": 2410292530,
+     "polygon": 0,
+     "height": 417,
+     "base": 0
+    },
+    {
+     "tile": "14/4823/6160",
+     "id": 2410292530,
+     "polygon": 1,
+     "height": 417,
+     "base": 0
+    },
+    {
+     "tile": "14/4823/6160",
+     "id": 2410292530,
+     "polygon": 2,
+     "height": 417,
+     "base": 0
+    },
+    {
+     "tile": "14/4823/6160",
+     "id": 2410292530,
+     "polygon": 3,
+     "height": 417,
+     "base": 0
+    },
+    {
+     "tile": "14/4823/6160",
+     "id": 2410292530,
+     "polygon": 4,
+     "height": 417,
+     "base": 0
+    },
+    {
+     "tile": "14/4823/6160",
+     "id": 2410292482,
+     "polygon": 0,
+     "height": 420,
+     "base": 417
+    },
+    {
+     "tile": "14/4823/6160",
+     "id": 2410292472,
+     "polygon": 0,
+     "height": 541,
+     "base": 420
+    }
+   ],
+   "replacement": {
+    "partRadius": 36,
+    "parts": [
+     {
+      "id": 2410292530,
+      "height": 417,
+      "base": 0
+     },
+     {
+      "id": 2410292472,
+      "height": 541,
+      "base": 420
+     },
+     {
+      "id": 2410292482,
+      "height": 420,
+      "base": 417
+     }
+    ],
+    "replacedPolygons": 7,
+    "maxReplacedCentreDistance": 30.67,
+    "nearestKeptSameFeatureDistance": null,
+    "keptOverlapping": []
+   },
+   "sources": [
+    {
+     "tile": "14/4823/6160",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/4823/6160.pbf",
+     "sha256": "7f69ce57ba1e1538de03f095d25a0bcfb7085eb5014be86e392a9e2145fbc9a4",
+     "bytes": 554192
+    },
+    {
+     "tile": "14/4823/6159",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/4823/6159.pbf",
+     "sha256": "a87ba23dca632df7d65e5033975386e263723b3caed4f3ed374fdfb03dfd1529",
+     "bytes": 479905
+    }
+   ]
+  },
+  {
+   "id": "chrysler-building",
+   "sourceSha256": "4285460ff234916b8c0fc442318124b4dd3df9d21dacd83fdabae5ac96981c2e",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": "base-bounds",
+    "height": 318.9
+   },
+   "registrationProcessing": {
+    "targetTriangles": 19000
+   },
+   "initial": {
+    "latitude": 40.751601,
+    "longitude": -73.975333
+   },
+   "anchor": {
+    "latitude": 40.75159922242493,
+    "longitude": -73.97533234471788
+   },
+   "yawDegrees": 242.75,
+   "translationMetres": [
+    0.06,
+    -0.2
+   ],
+   "meanIoU": 0.667,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.5233
+    },
+    {
+     "height": 47.8,
+     "iou": 0.5779
+    },
+    {
+     "height": 95.7,
+     "iou": 0.8328
+    },
+    {
+     "height": 143.5,
+     "iou": 0.8328
+    },
+    {
+     "height": 191.3,
+     "iou": 0.7818
+    },
+    {
+     "height": 239.2,
+     "iou": 0.9095
+    },
+    {
+     "height": 287,
+     "iou": 0.2105
+    }
+   ],
+   "groundFootprintScaleRatio": 0.901,
+   "yawCandidates": [
+    {
+     "yaw": 242.75,
+     "score": 0.667,
+     "translation": [
+      0.06,
+      -0.2
+     ]
+    },
+    {
+     "yaw": 58.5,
+     "score": 0.665,
+     "translation": [
+      0.05,
+      0.58
+     ]
+    },
+    {
+     "yaw": 327.5,
+     "score": 0.6195,
+     "translation": [
+      0.32,
+      0.07
+     ]
+    },
+    {
+     "yaw": 145,
+     "score": 0.6187,
+     "translation": [
+      -0.46,
+      -0.44
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 20,
+    "selectRadius": 45
+   },
+   "referenceParts": [
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040680,
+     "polygon": 8,
+     "height": 50,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040680,
+     "polygon": 9,
+     "height": 50,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609041090,
+     "polygon": 6,
+     "height": 70,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609041090,
+     "polygon": 8,
+     "height": 70,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 1450385020,
+     "polygon": 6,
+     "height": 80,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 1450385020,
+     "polygon": 7,
+     "height": 80,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040690,
+     "polygon": 2,
+     "height": 90,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040690,
+     "polygon": 3,
+     "height": 90,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040750,
+     "polygon": 0,
+     "height": 91,
+     "base": 89
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040750,
+     "polygon": 1,
+     "height": 91,
+     "base": 89
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040750,
+     "polygon": 2,
+     "height": 91,
+     "base": 89
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040750,
+     "polygon": 3,
+     "height": 91,
+     "base": 89
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609041080,
+     "polygon": 0,
+     "height": 185,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609041080,
+     "polygon": 1,
+     "height": 185,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609041080,
+     "polygon": 2,
+     "height": 185,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609041080,
+     "polygon": 3,
+     "height": 185,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141210,
+     "polygon": 0,
+     "height": 186,
+     "base": 185
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141210,
+     "polygon": 1,
+     "height": 186,
+     "base": 185
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141210,
+     "polygon": 2,
+     "height": 186,
+     "base": 185
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141210,
+     "polygon": 3,
+     "height": 186,
+     "base": 185
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 1966474162,
+     "polygon": 0,
+     "height": 199,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040910,
+     "polygon": 0,
+     "height": 200,
+     "base": 199
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040910,
+     "polygon": 1,
+     "height": 200,
+     "base": 199
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040910,
+     "polygon": 2,
+     "height": 200,
+     "base": 199
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040910,
+     "polygon": 3,
+     "height": 200,
+     "base": 199
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040910,
+     "polygon": 4,
+     "height": 200,
+     "base": 199
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040910,
+     "polygon": 5,
+     "height": 200,
+     "base": 199
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040910,
+     "polygon": 6,
+     "height": 200,
+     "base": 199
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040910,
+     "polygon": 7,
+     "height": 200,
+     "base": 199
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040910,
+     "polygon": 8,
+     "height": 200,
+     "base": 199
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040910,
+     "polygon": 9,
+     "height": 200,
+     "base": 199
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141220,
+     "polygon": 0,
+     "height": 200,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141220,
+     "polygon": 1,
+     "height": 200,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141220,
+     "polygon": 2,
+     "height": 200,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141220,
+     "polygon": 3,
+     "height": 200,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141220,
+     "polygon": 4,
+     "height": 200,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141220,
+     "polygon": 5,
+     "height": 200,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141220,
+     "polygon": 6,
+     "height": 200,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141220,
+     "polygon": 7,
+     "height": 200,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141330,
+     "polygon": 0,
+     "height": 201,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141330,
+     "polygon": 1,
+     "height": 201,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141330,
+     "polygon": 2,
+     "height": 201,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141330,
+     "polygon": 3,
+     "height": 201,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141330,
+     "polygon": 4,
+     "height": 201,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141330,
+     "polygon": 5,
+     "height": 201,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141330,
+     "polygon": 6,
+     "height": 201,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609141330,
+     "polygon": 7,
+     "height": 201,
+     "base": 198
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040970,
+     "polygon": 0,
+     "height": 227,
+     "base": 200
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040970,
+     "polygon": 1,
+     "height": 227,
+     "base": 200
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040900,
+     "polygon": 0,
+     "height": 228,
+     "base": 200
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040900,
+     "polygon": 1,
+     "height": 228,
+     "base": 200
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040930,
+     "polygon": 0,
+     "height": 229,
+     "base": 200
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040930,
+     "polygon": 1,
+     "height": 229,
+     "base": 200
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040820,
+     "polygon": 0,
+     "height": 235,
+     "base": 224
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040820,
+     "polygon": 1,
+     "height": 235,
+     "base": 224
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040940,
+     "polygon": 0,
+     "height": 242,
+     "base": 200
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040940,
+     "polygon": 1,
+     "height": 242,
+     "base": 200
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040800,
+     "polygon": 0,
+     "height": 249,
+     "base": 200
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040800,
+     "polygon": 1,
+     "height": 249,
+     "base": 200
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040890,
+     "polygon": 0,
+     "height": 256,
+     "base": 200
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040890,
+     "polygon": 1,
+     "height": 256,
+     "base": 200
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040860,
+     "polygon": 0,
+     "height": 262,
+     "base": 256
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040860,
+     "polygon": 1,
+     "height": 262,
+     "base": 256
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040920,
+     "polygon": 0,
+     "height": 267,
+     "base": 262
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040920,
+     "polygon": 1,
+     "height": 267,
+     "base": 262
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040810,
+     "polygon": 0,
+     "height": 272,
+     "base": 267
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040810,
+     "polygon": 1,
+     "height": 272,
+     "base": 267
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 2609040722,
+     "polygon": 0,
+     "height": 282,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 1966474172,
+     "polygon": 0,
+     "height": 319,
+     "base": 272
+    }
+   ],
+   "replacement": {
+    "partRadius": 23,
+    "parts": [
+     {
+      "id": 1450385020,
+      "height": 80,
+      "base": 0
+     },
+     {
+      "id": 2609040690,
+      "height": 90,
+      "base": 0
+     },
+     {
+      "id": 2609041080,
+      "height": 185,
+      "base": 0
+     },
+     {
+      "id": 1966474162,
+      "height": 199,
+      "base": 0
+     },
+     {
+      "id": 2609040970,
+      "height": 227,
+      "base": 200
+     },
+     {
+      "id": 2609040900,
+      "height": 228,
+      "base": 200
+     },
+     {
+      "id": 2609040930,
+      "height": 229,
+      "base": 200
+     },
+     {
+      "id": 2609040940,
+      "height": 242,
+      "base": 200
+     },
+     {
+      "id": 2609040800,
+      "height": 249,
+      "base": 200
+     },
+     {
+      "id": 2609040890,
+      "height": 256,
+      "base": 200
+     },
+     {
+      "id": 2609040860,
+      "height": 262,
+      "base": 256
+     },
+     {
+      "id": 2609040920,
+      "height": 267,
+      "base": 262
+     },
+     {
+      "id": 2609040810,
+      "height": 272,
+      "base": 267
+     },
+     {
+      "id": 2609040722,
+      "height": 282,
+      "base": 0
+     },
+     {
+      "id": 1966474172,
+      "height": 319,
+      "base": 272
+     },
+     {
+      "id": 2609040820,
+      "height": 235,
+      "base": 224
+     },
+     {
+      "id": 2609040710,
+      "height": 15,
+      "base": 0
+     },
+     {
+      "id": 2609141220,
+      "height": 200,
+      "base": 198
+     },
+     {
+      "id": 2609041090,
+      "height": 70,
+      "base": 0
+     },
+     {
+      "id": 2609040910,
+      "height": 200,
+      "base": 199
+     },
+     {
+      "id": 2609141210,
+      "height": 186,
+      "base": 185
+     }
+    ],
+    "replacedPolygons": 56,
+    "maxReplacedCentreDistance": 21.15,
+    "nearestKeptSameFeatureDistance": 19.07,
+    "keptOverlapping": []
+   },
+   "sources": [
+    {
+     "tile": "14/4825/6157",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/4825/6157.pbf",
+     "sha256": "e58e6dd14edde11907c1eadf86491b71fd0eed6dc60ef63262bae40b322e9742",
+     "bytes": 731049
+    }
+   ]
+  },
+  {
+   "id": "cn-tower",
+   "sourceSha256": "2d590a01f72bb052e59e7841450a39a8996edf162cd4388af9cfc981a1abe20f",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": [
+     2.72,
+     -1.65
+    ],
+    "height": 553.3
+   },
+   "registrationProcessing": {
+    "excludeNodes": [
+     "Ground_Material #67_0",
+     "Untitled2_Material #95_0",
+     "Object001_Material #94_0"
+    ],
+    "targetTriangles": 40000
+   },
+   "initial": {
+    "latitude": 43.642589,
+    "longitude": -79.387086
+   },
+   "anchor": {
+    "latitude": 43.642593936305765,
+    "longitude": -79.3870875527202
+   },
+   "yawDegrees": 312.75,
+   "translationMetres": [
+    -0.13,
+    0.55
+   ],
+   "meanIoU": 0.7325,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.8672,
+     "sizeRatio": 1.074
+    },
+    {
+     "height": 83,
+     "iou": 0.8677,
+     "sizeRatio": 1.026
+    },
+    {
+     "height": 165.9,
+     "iou": 0.8677,
+     "sizeRatio": 1.026
+    },
+    {
+     "height": 248.8,
+     "iou": 0.8677,
+     "sizeRatio": 1.026
+    },
+    {
+     "height": 331.8,
+     "iou": 0.8907,
+     "sizeRatio": 1.06
+    },
+    {
+     "height": 414.8,
+     "iou": 0.5005,
+     "sizeRatio": 0.706
+    },
+    {
+     "height": 497.7,
+     "iou": 0.2662,
+     "sizeRatio": 0.515
+    }
+   ],
+   "groundFootprintScaleRatio": 1.074,
+   "yawCandidates": [
+    {
+     "yaw": 312.75,
+     "score": 0.7325,
+     "translation": [
+      -0.13,
+      0.55
+     ]
+    },
+    {
+     "yaw": 194.9,
+     "score": 0.732,
+     "translation": [
+      -0.61,
+      0.27
+     ]
+    },
+    {
+     "yaw": 71.75,
+     "score": 0.7319,
+     "translation": [
+      -0.64,
+      0.27
+     ]
+    },
+    {
+     "yaw": 76,
+     "score": 0.7318,
+     "translation": [
+      -0.39,
+      0.02
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 20,
+    "selectRadius": null
+   },
+   "referenceParts": [
+    {
+     "tile": "14/4578/5980",
+     "id": 2882734580,
+     "polygon": 0,
+     "height": 330,
+     "base": 0
+    },
+    {
+     "tile": "14/4578/5980",
+     "id": 2882734580,
+     "polygon": 1,
+     "height": 330,
+     "base": 0
+    },
+    {
+     "tile": "14/4578/5980",
+     "id": 2882734580,
+     "polygon": 2,
+     "height": 330,
+     "base": 0
+    },
+    {
+     "tile": "14/4578/5980",
+     "id": 2882737932,
+     "polygon": 0,
+     "height": 338,
+     "base": 330
+    },
+    {
+     "tile": "14/4578/5980",
+     "id": 2882737952,
+     "polygon": 0,
+     "height": 360,
+     "base": 338
+    },
+    {
+     "tile": "14/4578/5980",
+     "id": 2882737942,
+     "polygon": 0,
+     "height": 370,
+     "base": 360
+    },
+    {
+     "tile": "14/4578/5980",
+     "id": 2882734612,
+     "polygon": 0,
+     "height": 440,
+     "base": 0
+    },
+    {
+     "tile": "14/4578/5980",
+     "id": 2882734542,
+     "polygon": 0,
+     "height": 457,
+     "base": 440
+    },
+    {
+     "tile": "14/4578/5980",
+     "id": 2882734522,
+     "polygon": 0,
+     "height": 495,
+     "base": 370
+    },
+    {
+     "tile": "14/4578/5980",
+     "id": 2882734512,
+     "polygon": 0,
+     "height": 510,
+     "base": 490
+    },
+    {
+     "tile": "14/4578/5980",
+     "id": 2882734552,
+     "polygon": 0,
+     "height": 530,
+     "base": 505
+    },
+    {
+     "tile": "14/4578/5980",
+     "id": 2882734532,
+     "polygon": 0,
+     "height": 540,
+     "base": 510
+    },
+    {
+     "tile": "14/4578/5980",
+     "id": 2882734562,
+     "polygon": 0,
+     "height": 553,
+     "base": 510
+    },
+    {
+     "tile": "14/4579/5980",
+     "id": 2882734580,
+     "polygon": 0,
+     "height": 330,
+     "base": 0
+    },
+    {
+     "tile": "14/4579/5980",
+     "id": 2882734580,
+     "polygon": 1,
+     "height": 330,
+     "base": 0
+    },
+    {
+     "tile": "14/4579/5980",
+     "id": 2882734580,
+     "polygon": 2,
+     "height": 330,
+     "base": 0
+    },
+    {
+     "tile": "14/4579/5980",
+     "id": 2882737932,
+     "polygon": 0,
+     "height": 338,
+     "base": 330
+    },
+    {
+     "tile": "14/4579/5980",
+     "id": 2882737952,
+     "polygon": 0,
+     "height": 360,
+     "base": 338
+    },
+    {
+     "tile": "14/4579/5980",
+     "id": 2882737942,
+     "polygon": 0,
+     "height": 370,
+     "base": 360
+    },
+    {
+     "tile": "14/4579/5980",
+     "id": 2882734612,
+     "polygon": 0,
+     "height": 440,
+     "base": 0
+    },
+    {
+     "tile": "14/4579/5980",
+     "id": 2882734542,
+     "polygon": 0,
+     "height": 457,
+     "base": 440
+    },
+    {
+     "tile": "14/4579/5980",
+     "id": 2882734522,
+     "polygon": 0,
+     "height": 495,
+     "base": 370
+    },
+    {
+     "tile": "14/4579/5980",
+     "id": 2882734512,
+     "polygon": 0,
+     "height": 510,
+     "base": 490
+    },
+    {
+     "tile": "14/4579/5980",
+     "id": 2882734552,
+     "polygon": 0,
+     "height": 530,
+     "base": 505
+    },
+    {
+     "tile": "14/4579/5980",
+     "id": 2882734532,
+     "polygon": 0,
+     "height": 540,
+     "base": 510
+    },
+    {
+     "tile": "14/4579/5980",
+     "id": 2882734562,
+     "polygon": 0,
+     "height": 553,
+     "base": 510
+    }
+   ],
+   "replacement": {
+    "partRadius": 24,
+    "parts": [
+     {
+      "id": 2882734580,
+      "height": 330,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 4578,
+       "y": 5980
+      }
+     },
+     {
+      "id": 2882737932,
+      "height": 338,
+      "base": 330,
+      "tile": {
+       "z": 14,
+       "x": 4578,
+       "y": 5980
+      }
+     },
+     {
+      "id": 2882737952,
+      "height": 360,
+      "base": 338,
+      "tile": {
+       "z": 14,
+       "x": 4578,
+       "y": 5980
+      }
+     },
+     {
+      "id": 2882734612,
+      "height": 440,
+      "base": 0,
+      "tile": {
+       "z": 14,
+       "x": 4578,
+       "y": 5980
+      }
+     },
+     {
+      "id": 2882734522,
+      "height": 495,
+      "base": 370,
+      "tile": {
+       "z": 14,
+       "x": 4578,
+       "y": 5980
+      }
+     },
+     {
+      "id": 2882734580,
+      "height": 330,
+      "base": 0
+     },
+     {
+      "id": 2882737932,
+      "height": 338,
+      "base": 330
+     },
+     {
+      "id": 2882737952,
+      "height": 360,
+      "base": 338
+     },
+     {
+      "id": 2882734612,
+      "height": 440,
+      "base": 0
+     },
+     {
+      "id": 2882734522,
+      "height": 495,
+      "base": 370
+     },
+     {
+      "id": 2882737942,
+      "height": 370,
+      "base": 360,
+      "tile": {
+       "z": 14,
+       "x": 4578,
+       "y": 5980
+      }
+     },
+     {
+      "id": 2882737942,
+      "height": 370,
+      "base": 360
+     },
+     {
+      "id": 2882734562,
+      "height": 553,
+      "base": 510,
+      "tile": {
+       "z": 14,
+       "x": 4578,
+       "y": 5980
+      }
+     },
+     {
+      "id": 2882734562,
+      "height": 553,
+      "base": 510
+     },
+     {
+      "id": 2882734542,
+      "height": 457,
+      "base": 440,
+      "tile": {
+       "z": 14,
+       "x": 4578,
+       "y": 5980
+      }
+     },
+     {
+      "id": 2882734542,
+      "height": 457,
+      "base": 440
+     },
+     {
+      "id": 2882734532,
+      "height": 540,
+      "base": 510,
+      "tile": {
+       "z": 14,
+       "x": 4578,
+       "y": 5980
+      }
+     },
+     {
+      "id": 2882734532,
+      "height": 540,
+      "base": 510
+     },
+     {
+      "id": 2882734512,
+      "height": 510,
+      "base": 490,
+      "tile": {
+       "z": 14,
+       "x": 4578,
+       "y": 5980
+      }
+     },
+     {
+      "id": 2882734512,
+      "height": 510,
+      "base": 490
+     },
+     {
+      "id": 2882734552,
+      "height": 530,
+      "base": 505,
+      "tile": {
+       "z": 14,
+       "x": 4578,
+       "y": 5980
+      }
+     },
+     {
+      "id": 2882734552,
+      "height": 530,
+      "base": 505
+     }
+    ],
+    "replacedPolygons": 26,
+    "maxReplacedCentreDistance": 18.78,
+    "nearestKeptSameFeatureDistance": null,
+    "keptOverlapping": []
+   },
+   "sources": [
+    {
+     "tile": "14/4578/5980",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/4578/5980.pbf",
+     "sha256": "8aff589976f14442e69502f0a3689850cd74ada87dd7c4cc28563cd6eea35ab6",
+     "bytes": 267627
+    },
+    {
+     "tile": "14/4579/5980",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/4579/5980.pbf",
+     "sha256": "e5e6041d974d9a494b59480806895bdd0e5d7efc6c924515ccb7bd41e354a4d3",
+     "bytes": 165066
+    }
+   ]
+  },
+  {
+   "id": "lotte-world-tower",
+   "sourceSha256": "25628f19d2cb5e20cf2884b7303078b65451144210ab57931d8c0e641a9bb4cc",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": "base-bounds",
+    "height": 555
+   },
+   "registrationProcessing": {
+    "targetTriangles": 9800
+   },
+   "initial": {
+    "latitude": 37.512541,
+    "longitude": 127.1026597
+   },
+   "anchor": {
+    "latitude": 37.51254060135736,
+    "longitude": 127.10265793920469
+   },
+   "yawDegrees": 340.5,
+   "translationMetres": [
+    -0.16,
+    -0.04
+   ],
+   "meanIoU": 0.5411,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.7381
+    },
+    {
+     "height": 83.3,
+     "iou": 0.7273
+    },
+    {
+     "height": 166.5,
+     "iou": 0.686
+    },
+    {
+     "height": 249.8,
+     "iou": 0.6163
+    },
+    {
+     "height": 333,
+     "iou": 0.4891
+    },
+    {
+     "height": 416.3,
+     "iou": 0.3414
+    },
+    {
+     "height": 499.5,
+     "iou": 0.1898
+    }
+   ],
+   "groundFootprintScaleRatio": 0.859,
+   "yawCandidates": [
+    {
+     "yaw": 340.5,
+     "score": 0.5411,
+     "translation": [
+      -0.16,
+      -0.04
+     ]
+    },
+    {
+     "yaw": 160,
+     "score": 0.5411,
+     "translation": [
+      -0.41,
+      0.23
+     ]
+    },
+    {
+     "yaw": 165,
+     "score": 0.5411,
+     "translation": [
+      -1.17,
+      0.23
+     ]
+    },
+    {
+     "yaw": 346.5,
+     "score": 0.5411,
+     "translation": [
+      -1.14,
+      -1.04
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 100,
+    "selectRadius": 60
+   },
+   "referenceParts": [
+    {
+     "tile": "14/13976/6347",
+     "id": 8886054732,
+     "polygon": 0,
+     "height": 154,
+     "base": 146
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8795717502,
+     "polygon": 0,
+     "height": 183,
+     "base": 153
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8795717522,
+     "polygon": 0,
+     "height": 200,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8886054722,
+     "polygon": 0,
+     "height": 290,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797987172,
+     "polygon": 0,
+     "height": 312,
+     "base": 289
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8886054712,
+     "polygon": 0,
+     "height": 392,
+     "base": 311
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797987162,
+     "polygon": 0,
+     "height": 432,
+     "base": 391
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8886054702,
+     "polygon": 0,
+     "height": 440,
+     "base": 431
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 6350734622,
+     "polygon": 0,
+     "height": 520,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797987040,
+     "polygon": 0,
+     "height": 520,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797987040,
+     "polygon": 1,
+     "height": 520,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797987040,
+     "polygon": 2,
+     "height": 520,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797987040,
+     "polygon": 3,
+     "height": 520,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 6350734690,
+     "polygon": 0,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 6350734690,
+     "polygon": 1,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 0,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 1,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 2,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 3,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 4,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 5,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 6,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 7,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 8,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 9,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 10,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 11,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 12,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 13,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 14,
+     "height": 555,
+     "base": 0
+    },
+    {
+     "tile": "14/13976/6347",
+     "id": 8797986960,
+     "polygon": 15,
+     "height": 555,
+     "base": 0
+    }
+   ],
+   "replacement": {
+    "partRadius": 35,
+    "parts": [
+     {
+      "id": 8886054722,
+      "height": 290,
+      "base": 0
+     },
+     {
+      "id": 8886054712,
+      "height": 392,
+      "base": 311
+     },
+     {
+      "id": 8797987162,
+      "height": 432,
+      "base": 391
+     },
+     {
+      "id": 8886054702,
+      "height": 440,
+      "base": 431
+     },
+     {
+      "id": 6350734622,
+      "height": 520,
+      "base": 0
+     },
+     {
+      "id": 6350734690,
+      "height": 555,
+      "base": 0
+     },
+     {
+      "id": 8797987172,
+      "height": 312,
+      "base": 289
+     },
+     {
+      "id": 8797986960,
+      "height": 555,
+      "base": 0
+     },
+     {
+      "id": 8797987040,
+      "height": 520,
+      "base": 0
+     },
+     {
+      "id": 8795717502,
+      "height": 183,
+      "base": 153
+     },
+     {
+      "id": 8795717522,
+      "height": 200,
+      "base": 0
+     },
+     {
+      "id": 8886054732,
+      "height": 154,
+      "base": 146
+     }
+    ],
+    "replacedPolygons": 31,
+    "maxReplacedCentreDistance": 29.56,
+    "nearestKeptSameFeatureDistance": null,
+    "keptOverlapping": []
+   },
+   "sources": [
+    {
+     "tile": "14/13976/6347",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/13976/6347.pbf",
+     "sha256": "3fcd86952a8e7b0a24a3fe8c89638d09844d5725da67059c430d20ae24f7597c",
+     "bytes": 230720
+    }
+   ]
+  },
+  {
+   "id": "willis-tower",
+   "sourceSha256": "593bd727fb64677d3c2a7a998e82d606b80cd53a4fc0c98bc972b9cfa64750a1",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": "base-bounds",
+    "height": 527
+   },
+   "registrationProcessing": {
+    "targetTriangles": 29000
+   },
+   "initial": {
+    "latitude": 41.878886,
+    "longitude": -87.6359
+   },
+   "anchor": {
+    "latitude": 41.878886999575,
+    "longitude": -87.6358683438353
+   },
+   "yawDegrees": 1.6,
+   "translationMetres": [
+    2.63,
+    0.11
+   ],
+   "meanIoU": 0.7504,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.8441
+    },
+    {
+     "height": 79,
+     "iou": 0.8441
+    },
+    {
+     "height": 158.1,
+     "iou": 0.8441
+    },
+    {
+     "height": 237.2,
+     "iou": 0.8284
+    },
+    {
+     "height": 316.2,
+     "iou": 0.8004
+    },
+    {
+     "height": 395.3,
+     "iou": 0.8212
+    },
+    {
+     "height": 474.3,
+     "iou": 0.2706
+    }
+   ],
+   "groundFootprintScaleRatio": 1.088,
+   "yawCandidates": [
+    {
+     "yaw": 1.6,
+     "score": 0.7504,
+     "translation": [
+      2.63,
+      0.11
+     ]
+    },
+    {
+     "yaw": 181.5,
+     "score": 0.6474,
+     "translation": [
+      -1.36,
+      0.63
+     ]
+    },
+    {
+     "yaw": 271.45,
+     "score": 0.603,
+     "translation": [
+      1.13,
+      2.87
+     ]
+    },
+    {
+     "yaw": 91,
+     "score": 0.6009,
+     "translation": [
+      -1.11,
+      0.86
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 100,
+    "selectRadius": null
+   },
+   "referenceParts": [
+    {
+     "tile": "14/4203/6089",
+     "id": 1371622900,
+     "polygon": 0,
+     "height": 200,
+     "base": 0
+    },
+    {
+     "tile": "14/4203/6089",
+     "id": 1371622900,
+     "polygon": 1,
+     "height": 200,
+     "base": 0
+    },
+    {
+     "tile": "14/4203/6089",
+     "id": 11782439700,
+     "polygon": 0,
+     "height": 205,
+     "base": 0
+    },
+    {
+     "tile": "14/4203/6089",
+     "id": 11782439700,
+     "polygon": 1,
+     "height": 205,
+     "base": 0
+    },
+    {
+     "tile": "14/4203/6089",
+     "id": 1371622890,
+     "polygon": 0,
+     "height": 260,
+     "base": 0
+    },
+    {
+     "tile": "14/4203/6089",
+     "id": 1371622890,
+     "polygon": 1,
+     "height": 260,
+     "base": 0
+    },
+    {
+     "tile": "14/4203/6089",
+     "id": 11782439710,
+     "polygon": 0,
+     "height": 265,
+     "base": 0
+    },
+    {
+     "tile": "14/4203/6089",
+     "id": 11782439710,
+     "polygon": 1,
+     "height": 265,
+     "base": 0
+    },
+    {
+     "tile": "14/4203/6089",
+     "id": 1371622950,
+     "polygon": 0,
+     "height": 355,
+     "base": 0
+    },
+    {
+     "tile": "14/4203/6089",
+     "id": 1371622950,
+     "polygon": 1,
+     "height": 355,
+     "base": 0
+    },
+    {
+     "tile": "14/4203/6089",
+     "id": 1371622950,
+     "polygon": 2,
+     "height": 355,
+     "base": 0
+    },
+    {
+     "tile": "14/4203/6089",
+     "id": 1371622962,
+     "polygon": 0,
+     "height": 442,
+     "base": 0
+    },
+    {
+     "tile": "14/4203/6089",
+     "id": 2339181410,
+     "polygon": 0,
+     "height": 527,
+     "base": 0
+    },
+    {
+     "tile": "14/4203/6089",
+     "id": 2339181410,
+     "polygon": 1,
+     "height": 527,
+     "base": 0
+    }
+   ],
+   "replacement": {
+    "partRadius": 40.9,
+    "parts": [
+     {
+      "id": 173713230,
+      "height": 5,
+      "base": 0
+     },
+     {
+      "id": 5905361520,
+      "height": 10,
+      "base": 0
+     },
+     {
+      "id": 1371622900,
+      "height": 200,
+      "base": 0
+     },
+     {
+      "id": 11782439700,
+      "height": 205,
+      "base": 0
+     },
+     {
+      "id": 1371622890,
+      "height": 260,
+      "base": 0
+     },
+     {
+      "id": 11782439710,
+      "height": 265,
+      "base": 0
+     },
+     {
+      "id": 1371622950,
+      "height": 355,
+      "base": 0
+     },
+     {
+      "id": 1371622962,
+      "height": 442,
+      "base": 0
+     },
+     {
+      "id": 2339181410,
+      "height": 527,
+      "base": 0
+     },
+     {
+      "id": 11782129920,
+      "height": 10,
+      "base": 0
+     }
+    ],
+    "replacedPolygons": 17,
+    "maxReplacedCentreDistance": 38.85,
+    "nearestKeptSameFeatureDistance": 43.04,
+    "keptOverlapping": [
+     "11782129932#0 h=5 b=0 cov=0.416 a=361.1"
+    ]
+   },
+   "sources": [
+    {
+     "tile": "14/4203/6089",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/4203/6089.pbf",
+     "sha256": "4dc60bd8fde04c7ec08b5d5d0fba971c3dfe8325cb187ae26b24fbe6a129af6d",
+     "bytes": 531596
+    }
+   ]
+  },
+  {
+   "id": "three-world-trade-center",
+   "sourceSha256": "024adde29a7d7b51eab5207d079e9d300e3691aaf8c16b8f3ce5a3571d537fca",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": "base-bounds",
+    "height": 328.9
+   },
+   "registrationProcessing": {
+    "targetTriangles": 30000
+   },
+   "initial": {
+    "latitude": 40.710904,
+    "longitude": -74.011488
+   },
+   "anchor": {
+    "latitude": 40.71102636268061,
+    "longitude": -74.01111879314988
+   },
+   "yawDegrees": 248.5,
+   "translationMetres": [
+    31.2,
+    13.59
+   ],
+   "meanIoU": 0.7542,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.7656
+    },
+    {
+     "height": 49.3,
+     "iou": 0.7853
+    },
+    {
+     "height": 98.7,
+     "iou": 0.7558
+    },
+    {
+     "height": 148,
+     "iou": 0.7558
+    },
+    {
+     "height": 197.3,
+     "iou": 0.7558
+    },
+    {
+     "height": 246.7,
+     "iou": 0.7302
+    },
+    {
+     "height": 296,
+     "iou": 0.7308
+    }
+   ],
+   "groundFootprintScaleRatio": 1.143,
+   "yawCandidates": [
+    {
+     "yaw": 248.5,
+     "score": 0.7542,
+     "translation": [
+      31.2,
+      13.59
+     ]
+    },
+    {
+     "yaw": 65,
+     "score": 0.6521,
+     "translation": [
+      -32.53,
+      -4.41
+     ]
+    },
+    {
+     "yaw": 333.5,
+     "score": 0.6227,
+     "translation": [
+      -7.25,
+      31.98
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 0,
+    "selectRadius": 60
+   },
+   "referenceParts": [
+    {
+     "tile": "14/4823/6160",
+     "id": 9601465092,
+     "polygon": 0,
+     "height": 75,
+     "base": 0
+    },
+    {
+     "tile": "14/4823/6160",
+     "id": 2742858290,
+     "polygon": 0,
+     "height": 220,
+     "base": 0
+    },
+    {
+     "tile": "14/4823/6160",
+     "id": 9601465102,
+     "polygon": 0,
+     "height": 281,
+     "base": 0
+    },
+    {
+     "tile": "14/4823/6160",
+     "id": 9601465112,
+     "polygon": 0,
+     "height": 352,
+     "base": 0
+    }
+   ],
+   "replacement": {
+    "partRadius": 75,
+    "parts": [
+     {
+      "id": 9601465092,
+      "height": 75,
+      "base": 0
+     },
+     {
+      "id": 2742858290,
+      "height": 220,
+      "base": 0
+     },
+     {
+      "id": 9601465102,
+      "height": 281,
+      "base": 0
+     },
+     {
+      "id": 9601465112,
+      "height": 352,
+      "base": 0
+     }
+    ],
+    "replacedPolygons": 4,
+    "maxReplacedCentreDistance": 69.96,
+    "nearestKeptSameFeatureDistance": 112.49,
+    "keptOverlapping": []
+   },
+   "sources": [
+    {
+     "tile": "14/4823/6160",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/4823/6160.pbf",
+     "sha256": "7f69ce57ba1e1538de03f095d25a0bcfb7085eb5014be86e392a9e2145fbc9a4",
+     "bytes": 554192
+    }
+   ]
+  },
+  {
+   "id": "metlife-building",
+   "sourceSha256": "a32214c7865ff178063dcd31cdb794c6e193b856bbf2e1799f28bed368733b90",
+   "frame": {
+    "space": "world",
+    "axes": [
+     "+x",
+     "-z",
+     "+y"
+    ],
+    "center": "base-bounds",
+    "height": 246.3
+   },
+   "registrationProcessing": {
+    "targetTriangles": 40000
+   },
+   "initial": {
+    "latitude": 40.753412,
+    "longitude": -73.976723
+   },
+   "anchor": {
+    "latitude": 40.75357858225152,
+    "longitude": -73.97660849467599
+   },
+   "yawDegrees": 331.75,
+   "translationMetres": [
+    9.67,
+    18.5
+   ],
+   "meanIoU": 0.8591,
+   "levels": [
+    {
+     "height": 0.5,
+     "iou": 0.8486,
+     "sizeRatio": 1.055
+    },
+    {
+     "height": 36.9,
+     "iou": 0.532,
+     "sizeRatio": 0.766
+    },
+    {
+     "height": 73.8,
+     "iou": 0.9266,
+     "sizeRatio": 1.036
+    },
+    {
+     "height": 110.7,
+     "iou": 0.9266,
+     "sizeRatio": 1.036
+    },
+    {
+     "height": 147.6,
+     "iou": 0.9266,
+     "sizeRatio": 1.036
+    },
+    {
+     "height": 184.5,
+     "iou": 0.9266,
+     "sizeRatio": 1.036
+    },
+    {
+     "height": 221.4,
+     "iou": 0.9266,
+     "sizeRatio": 1.036
+    }
+   ],
+   "groundFootprintScaleRatio": 1.055,
+   "yawCandidates": [
+    {
+     "yaw": 331.75,
+     "score": 0.8591,
+     "translation": [
+      9.67,
+      18.5
+     ]
+    },
+    {
+     "yaw": 150.9,
+     "score": 0.821,
+     "translation": [
+      -10.13,
+      -17.55
+     ]
+    }
+   ],
+   "referenceSelection": {
+    "includeHidden": null,
+    "minHeight": 0,
+    "selectRadius": 80
+   },
+   "referenceParts": [
+    {
+     "tile": "14/4825/6157",
+     "id": 14879627932,
+     "polygon": 0,
+     "height": 30,
+     "base": 0
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 1375652952,
+     "polygon": 0,
+     "height": 38,
+     "base": 30
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 14879627890,
+     "polygon": 0,
+     "height": 38,
+     "base": 30
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 14879627890,
+     "polygon": 1,
+     "height": 38,
+     "base": 30
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 14879627890,
+     "polygon": 2,
+     "height": 38,
+     "base": 30
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 14879627890,
+     "polygon": 3,
+     "height": 38,
+     "base": 30
+    },
+    {
+     "tile": "14/4825/6157",
+     "id": 1375646412,
+     "polygon": 0,
+     "height": 246,
+     "base": 38
+    }
+   ],
+   "replacement": {
+    "partRadius": 61,
+    "parts": [
+     {
+      "id": 1375652952,
+      "height": 38,
+      "base": 30
+     },
+     {
+      "id": 14879627890,
+      "height": 38,
+      "base": 30
+     },
+     {
+      "id": 1375646412,
+      "height": 246,
+      "base": 38
+     },
+     {
+      "id": 14879627932,
+      "height": 30,
+      "base": 0
+     }
+    ],
+    "replacedPolygons": 7,
+    "maxReplacedCentreDistance": 55.38,
+    "nearestKeptSameFeatureDistance": null,
+    "keptOverlapping": []
+   },
+   "sources": [
+    {
+     "tile": "14/4825/6157",
+     "url": "https://tiles.openfreemap.org/planet/20261101_080013_pt/14/4825/6157.pbf",
+     "sha256": "e58e6dd14edde11907c1eadf86491b71fd0eed6dc60ef63262bae40b322e9742",
+     "bytes": 731049
+    }
+   ]
+  }
+ ]
+}

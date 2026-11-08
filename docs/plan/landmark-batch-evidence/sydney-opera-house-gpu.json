@@ -1,0 +1,108 @@
+{
+ "id": "sydney-opera-house",
+ "assetSha256": "73ffa5b2d6329f2e2f3360ada2f0140006f87ff8969e9fdf718bf2f252f0c0ed",
+ "placementHash": "9ff15e5bac6b5a11aa0e59cec183ea10f6e78d390c44f447f04a02c63b820186",
+ "gpuPassed": true,
+ "recordedAt": "2026-11-08",
+ "build": "Production /Tamatamatori/ subpath via vite preview on 127.0.0.1:5181; Chrome 157 on this Windows machine with native GPU, occlusion throttling disabled, viewport emulated 2000×1250",
+ "screenshots": [
+  "docs/plan/landmark-batch-evidence/sydney-opera-house-gpu.jpg"
+ ],
+ "scenes": [
+  {
+   "kind": "n1",
+   "observer": {
+    "latitude": -33.86052750138216,
+    "longitude": 151.21506512999997
+   },
+   "azimuth": 0,
+   "pitch": 0.4,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 84,
+   "distanceMetres": 380,
+   "utc": "2026-11-03T23:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "悉尼歌剧院无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.4 km · 30,022 面",
+   "sameScene": [],
+   "facts": "84 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 16.0 m · 离地 30 m"
+  },
+  {
+   "kind": "n2",
+   "observer": {
+    "latitude": -33.857110015625814,
+    "longitude": 151.21918037050796
+   },
+   "azimuth": 270,
+   "pitch": 0.4,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 84,
+   "distanceMetres": 380,
+   "utc": "2026-11-03T23:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "悉尼歌剧院无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 0.4 km · 30,022 面",
+   "sameScene": [],
+   "facts": "84 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 6.0 m · 离地 30 m"
+  },
+  {
+   "kind": "f1",
+   "observer": {
+    "latitude": -34.01594051495587,
+    "longitude": 151.02326608313092
+   },
+   "azimuth": 45.1,
+   "pitch": -0.1,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 1000,
+   "distanceMetres": 25000,
+   "utc": "2026-11-03T23:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "悉尼歌剧院无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 25.0 km · 30,022 面",
+   "sameScene": [],
+   "facts": "1000 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 85.8 m · 离地 30 m"
+  },
+  {
+   "kind": "b1",
+   "observer": {
+    "latitude": -33.86052750138216,
+    "longitude": 151.21506512999997
+   },
+   "azimuth": 0,
+   "pitch": 0.4,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 84,
+   "distanceMetres": 380,
+   "utc": "2026-11-03T23:30:00Z",
+   "modelRequestsBlocked": true,
+   "landmarkPhase": "fallback",
+   "landmarkStatus": "悉尼歌剧院精细模型未应用，保留粗体块；可重新读取建筑。 · 约 0.4 km",
+   "sameScene": [],
+   "facts": "84 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 16.0 m · 离地 30 m"
+  },
+  {
+   "kind": "r1",
+   "observer": {
+    "latitude": -33.84586636040502,
+    "longitude": 151.2385087731467
+   },
+   "azimuth": 240,
+   "pitch": 0,
+   "cameraHeightMetres": 30,
+   "focalLengthMm": 554,
+   "distanceMetres": 2500,
+   "utc": "2026-11-03T23:30:00Z",
+   "modelRequestsBlocked": false,
+   "landmarkPhase": "applied",
+   "landmarkStatus": "悉尼歌剧院无纹理精细模型 · 定位与朝向近似 · 画面待验 · 约 2.5 km · 30,022 面",
+   "sameScene": [],
+   "facts": "554 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n机位高程 ≈ 1.3 m · 离地 30 m"
+  }
+ ],
+ "observations": "南、东近景壳体组与台基完整，无水面与背景板；东北 2.5 km 跨港视角清晰；拦截后仅剩 OSM 低层分部；25 km 远景被地形与曲率遮挡（合理）。",
+ "limitations": [
+  "画面验收确认渲染位置、尺度、朝向与同机位 OSM 粗体块对照一致，以及远景着地和失败回退；不代表实景测绘精度。",
+  "未测实体手机与 GPU 帧耗时。"
+ ]
+}

@@ -378,7 +378,7 @@ test('已注册地标实际文件独立校验与跨城市缓存，总高误差�
     for(const target of landmarks)await loadLandmark(target,signal);assert.ok(requests.length>landmarks.length,'three decoded assets exceed 8 MiB; oldest assets are evicted');
     clearLandmarkCache();globalThis.fetch=async()=>new Response(landmarkCompressed);
     await assert.rejects(loadLandmark(shanghaiTower,signal),/校验/,'a Skytree payload must not be reused for Shanghai');
-    assert.deepEqual(landmarksInRange(shanghaiTower).map(item=>item.target.id),[shanghaiTower.id]);
+    assert.deepEqual(landmarksInRange(shanghaiTower).map(item=>item.target.id),[shanghaiTower.id,'shanghai-wfc','oriental-pearl'],'same-city landmarks are ordered by distance');
   }finally{globalThis.fetch=original;clearLandmarkCache();}
 });
 

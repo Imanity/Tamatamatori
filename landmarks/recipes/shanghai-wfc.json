@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "id": "shanghai-wfc",
+  "name": "上海环球金融中心",
+  "version": 1,
+  "source": {
+    "sha256": "9c4b79dfd2a4fa1e2c32a96f97b5cc35a764e833fe82b35dcad4100152d598a8",
+    "filename": "shanghai_wfc.glb",
+    "title": "Shanghai WFC",
+    "author": "NanoRay",
+    "authorPage": "https://sketchfab.com/NanoRay",
+    "page": "https://sketchfab.com/3d-models/shanghai-wfc-ce4389da68b54732b216fc04f765d4db",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "upstreamNotes": "社区作者模型；其上游制作资料未独立认证，不作为测绘数据。"
+  },
+  "frame": {
+    "space": "world",
+    "axes": [
+      "+x",
+      "-z",
+      "+y"
+    ],
+    "center": "base-bounds",
+    "height": 492,
+    "heightReference": "https://en.wikipedia.org/wiki/Shanghai_World_Financial_Center",
+    "yawDegrees": 5,
+    "requireSharedTransform": false,
+    "normalizeNormals": true
+  },
+  "processing": {
+    "targetTriangles": 6950,
+    "maxErrorMetres": 0.05,
+    "normalWeight": 0.01,
+    "weld": true
+  },
+  "geo": {
+    "latitude": 31.236572824,
+    "longitude": 121.503035774,
+    "partRadius": 38,
+    "parts": [
+      {
+        "id": 2799428960,
+        "height": 430,
+        "base": 0
+      },
+      {
+        "id": 2799428930,
+        "height": 470,
+        "base": 0
+      },
+      {
+        "id": 2799428922,
+        "height": 492,
+        "base": 470
+      }
+    ],
+    "registration": "锚点、朝向与替换分部参考 © OpenStreetMap contributors（OpenFreeMap 20261101_080013_pt）。多高度层俯视轮廓 IoU 拟合，ENU 逆时针 5.00°，各层 IoU 0.43–0.86，地面层尺度比约 1.08；次优候选 184.75°（得分 0.753，最优 0.753）。方形平面，与 180° 翻转候选的轮廓得分几乎相同，顶部开口朝向存在歧义。属近似注册，不提供测绘精度。",
+    "references": [
+      {
+        "title": "© OpenStreetMap contributors，WGS84 建筑分部轮廓与高度",
+        "url": "https://www.openstreetmap.org/copyright"
+      }
+    ]
+  },
+  "review": {
+    "license": true,
+    "geometry": true,
+    "registration": true
+  }
+}
