@@ -1,7 +1,7 @@
 import { readFile, writeFile, mkdir, rename } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { ORBIT_SOURCE, ORBIT_REFRESH_MS, stationElements, validateOrbitSnapshot, assertOrbitProgress } from '../src/domain/orbit-data.ts';
+import { ORBIT_SOURCE, ORBIT_REFRESH_MS, orbitEpoch, stationCatalog, stationElements, validateOrbitSnapshot, assertOrbitProgress } from '../src/domain/orbit-data.ts';
 
 export async function updateStations(previous, { now = Date.now(), fetchImpl = fetch, resume = false, saveAttempt = async () => {} } = {}) {
   const lastAttempt = Date.parse(previous.attemptedAt ?? '');
@@ -15,9 +15,28 @@ export async function updateStations(previous, { now = Date.now(), fetchImpl = f
     if (response.status !== 200) throw new Error(`上游 HTTP ${response.status}`);
     const text = await response.text();
     if (text.length > 1_000_000) throw new Error('轨道响应超出大小限制');
-    const objects = stationElements(JSON.parse(text));
-    if (!objects.length) throw new Error('上游未提供所选空间站的轨道');
-    const next = validateOrbitSnapshot({ version: 1, source: ORBIT_SOURCE, status: 'ready', fetchedAt: attemptedAt, attemptedAt, error: null, blocked: false, objects }, now);
+    const upstream = stationElements(JSON.parse(text));
+    if (!upstream.length) throw new Error('上游未提供所选空间站的轨道');
+    // An element older than the published one (a stale upstream copy or a refit served for a
+    // while) or a station missing from one response is not an upstream failure: keep the newer
+    // element of that station and check again on the next schedule. Pausing here once stopped
+    // all updates for days (2026-11-07) while upstream had moved on.
+    const notes = [];
+    const objects = stationCatalog.flatMap((station) => {
+      const fresh = upstream.find((entry) => entry.NORAD_CAT_ID === station.noradId);
+      const old = previous.objects.find((entry) => entry.NORAD_CAT_ID === station.noradId);
+      if (fresh && old && orbitEpoch(fresh.EPOCH) < orbitEpoch(old.EPOCH)) {
+        notes.push(`${station.name} 上游历元 ${fresh.EPOCH} 早于已发布的 ${old.EPOCH}，保留较新的轨道`);
+        return [old];
+      }
+      if (!fresh && old) {
+        notes.push(`${station.name} 本次上游缺少轨道，保留已发布的历元 ${old.EPOCH}`);
+        return [old];
+      }
+      return fresh ? [fresh] : [];
+    });
+    const next = validateOrbitSnapshot({ version: 1, source: ORBIT_SOURCE, status: 'ready', fetchedAt: attemptedAt, attemptedAt, error: null, blocked: false,
+      notice: notes.length ? notes.join('；') : null, objects }, now);
     assertOrbitProgress(previous, next);
     return next;
   } catch (error) {
@@ -56,7 +75,10 @@ async function main() {
   });
   await writeSnapshot(cache, next);
   await writeSnapshot(output, next);
-  console.log(JSON.stringify({ status: next.status, fetchedAt: next.fetchedAt, attemptedAt: next.attemptedAt, objects: next.objects.length }));
+  console.log(JSON.stringify({ status: next.status, fetchedAt: next.fetchedAt, attemptedAt: next.attemptedAt, objects: next.objects.length,
+    epochs: next.objects.map((entry) => `${entry.NORAD_CAT_ID} ${entry.EPOCH}`), notice: next.notice ?? null }));
+  // A kept element is worth seeing in the run summary, without pausing anything.
+  if (next.notice && next.attemptedAt === next.fetchedAt) console.warn(`::warning::${next.notice.replaceAll('%', '%25').replaceAll(String.fromCharCode(13), '%0D').replaceAll(String.fromCharCode(10), '%0A')}`);
   if (next.error) {
     const message = next.error.replaceAll('%', '%25').replaceAll('\r', '%0D').replaceAll('\n', '%0A');
     console.warn(`::warning::${message}`);

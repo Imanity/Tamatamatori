@@ -23,6 +23,11 @@ export interface OrbitSnapshot {
   status: "seed" | "ready" | "error";
   error: string | null;
   blocked: boolean;
+  /**
+   * Stations whose published element was kept because upstream served an older
+   * epoch or none; a successful check, not a pause.
+   */
+  notice?: string | null;
   objects: OMMJsonObject[];
 }
 
@@ -74,7 +79,8 @@ export function validateOrbitSnapshot(value: unknown, now = Date.now()): OrbitSn
   const data = value as OrbitSnapshot;
   if (!data || data.version !== 1 || data.source !== ORBIT_SOURCE ||
       !["seed", "ready", "error"].includes(data.status) || typeof data.blocked !== "boolean" ||
-      !(data.error === null || typeof data.error === "string"))
+      !(data.error === null || typeof data.error === "string") ||
+      !(data.notice === undefined || data.notice === null || typeof data.notice === "string"))
     throw new Error("轨道快照格式或来源无效");
   for (const stamp of [data.fetchedAt, data.attemptedAt]) {
     if (stamp !== null && (typeof stamp !== "string" || !stamp.endsWith("Z") ||

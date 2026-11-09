@@ -94,7 +94,7 @@ test('上游检查遵守两小时冷却，先保存尝试，再进行唯一下�
   assert.notEqual(updated.fetchedAt, ready.fetchedAt);
 });
 
-test('上游 HTTP/无效数据/历元回退失败暂停，后续任务不重试，手动恢复仍受冷却限制', async () => {
+test('上游 HTTP/无效数据失败暂停，后续任务不重试，手动恢复仍受冷却限制', async () => {
   for (const status of [301, 403, 404, 500]) {
     let calls = 0;
     const failed = await updateStations(ready, { now: now + ORBIT_REFRESH_MS, fetchImpl: async () => { calls++; return response({}, status); } });
@@ -105,10 +105,34 @@ test('上游 HTTP/无效数据/历元回退失败暂停，后续任务不重试�
     const recovered = await updateStations(failed, { now: now + ORBIT_REFRESH_MS * 2, resume: true, fetchImpl: async () => response(seed.objects) });
     assert.equal(recovered.status, 'ready'); assert.equal(recovered.blocked, false);
   }
-  for (const objects of [[], [{ ...seed.objects[0], EPOCH: '2020-01-01T00:00:00' }], [{ ...seed.objects[0], MEAN_MOTION: null }]]) {
+  for (const objects of [[], [{ ...seed.objects[0], MEAN_MOTION: null }]]) {
     const failed = await updateStations(ready, { now: now + ORBIT_REFRESH_MS, fetchImpl: async () => response(objects) });
     assert.equal(failed.status, 'error'); assert.equal(failed.blocked, true);
   }
+});
+
+test('上游历元早于已发布版本或缺少某站时保留较新的轨道并记录说明，不暂停，下一次检查照常更新', async () => {
+  const [iss, css] = ready.objects;
+  // 2026-11-07: upstream served ISS with an epoch older than the published one; this paused every update for days.
+  const regressed = await updateStations(ready, { now: now + ORBIT_REFRESH_MS, fetchImpl: async () => response([{ ...iss, EPOCH: '2026-11-04T09:00:00.000000' }, css]) });
+  assert.deepEqual([regressed.status, regressed.blocked, regressed.error], ['ready', false, null]);
+  assert.notEqual(regressed.fetchedAt, ready.fetchedAt);
+  assert.deepEqual(regressed.objects, [iss, css]);
+  assert.match(regressed.notice, /国际空间站 ISS 上游历元 2026-11-04T09:00:00\.000000 早于已发布的 2026-11-05T20:28:36\.809184，保留较新的轨道/);
+  // The next scheduled check runs without a manual resume and takes a newer epoch.
+  const newer = { ...iss, EPOCH: '2026-11-06T09:00:00.000000', MEAN_ANOMALY: 12.5 };
+  const later = await updateStations(regressed, { now: now + ORBIT_REFRESH_MS * 2, fetchImpl: async () => response([newer, css]) });
+  assert.deepEqual([later.status, later.blocked, later.notice], ['ready', false, null]);
+  assert.deepEqual(later.objects, [newer, css]);
+  // A station missing from one response keeps its published element.
+  const partial = await updateStations(later, { now: now + ORBIT_REFRESH_MS * 3, fetchImpl: async () => response([newer]) });
+  assert.equal(partial.status, 'ready');
+  assert.deepEqual(partial.objects, [newer, css]);
+  assert.match(partial.notice, /天宫空间站 本次上游缺少轨道，保留已发布的历元/);
+  // Published snapshots still never move backwards.
+  assert.doesNotThrow(() => assertOrbitProgress(ready, regressed));
+  assert.equal(validateOrbitSnapshot(regressed, now + ORBIT_REFRESH_MS).notice, regressed.notice);
+  assert.throws(() => validateOrbitSnapshot({ ...regressed, notice: 3 }), /格式或来源无效/);
 });
 
 test('空间站搜索匹配中文、CSS/ISS 和 NORAD，轨道 workflow 仅发布任务请求上游', async () => {
