@@ -209,6 +209,27 @@ export function About() {
             <p>预估密度按 Koschack 与 Rendtel（1990）把 ZHR 换算为流量，月光采用 Krisciunas 与 Schaefer（1991）模型。假定广角大光圈相机在自然暗夜能记录亮于约 +2 等的流星，天空每亮 10 倍阈值减 1.25 等；光污染按机位天顶值均匀计入。数量按拍摄时刻所在的整晚累计：按机位经度的地方平太阳时，从正午到次日正午，其中太阳低于 −18° 的时段都计入，凌晨的拍摄时刻仍属前一晚。未计山体遮挡、云量、流星角速度对灵敏度的影响和散发流星。预览按后期对齐叠加的成片表现：相机整晚固定在当前构图连续拍摄，含流星的帧按星空对齐到拍摄时刻（锚点帧）后贴回。因此一颗流星要在它出现时位于固定画面内，对齐后也仍落在画面内、地平线以上，才计入数量和示意；所有示意流星都从拍摄时刻的辐射点发散，离拍摄时刻越远、焦距越长，对齐后的有效天区越小。示意流星是按同一模型抽取的固定样本，位置、亮度和数量都不代表实际会出现的流星。</p>
           </section>
 
+          <section aria-labelledby="about-comets-title">
+            <h3 id="about-comets-title">彗星</h3>
+            <ul>
+              <li>
+                <a href="https://cobs.si" target="_blank" rel="noreferrer">COBS Comet Observation Database · CC BY-NC-SA 4.0</a>
+                <p>彗星亮度参数拟合自 COBS 中世界各地观测者提交的目视总星等：每颗彗星按近日点前、后分别拟合 m = H + 5 log Δ + 2.5 n log r，只保存拟合结果，不含观测者与单条观测。该衍生数据按 CC BY-NC-SA 4.0 提供，仅限非商业使用。</p>
+                <a href={`${import.meta.env.BASE_URL}comets/catalog.json`} download="tamatamatori-comets.json">下载彗星目录（含更新状态）</a>
+              </li>
+              <li>
+                <a href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noreferrer">NASA/JPL Solar System Dynamics · Horizons</a>
+                <p>引用格式：NASA/JPL Solar System Dynamics. Data retrieved on（目录更新日期，见彗星目录的 sources.orbit.citation）. Horizons System. https://ssd.jpl.nasa.gov。取每次回归近日点时刻的日心密切根数，本机按二体轨道推算，不含行星摄动与非引力效应。</p>
+              </li>
+              <li>
+                <a href="https://www.projectpluto.com/update7b.htm#comet_tail_formula" target="_blank" rel="noreferrer">Andreas Kammerer · 彗尾长度与彗发直径经验公式（Project Pluto Guide 7）</a>
+                <p>按日心星等与日距估算彗尾物理长度和目视彗发直径，原作者称多数情况误差约 30%。</p>
+              </li>
+            </ul>
+            <p>收录 1990 年起近日点、COBS 目视星等夜间中位最亮不暗于 10 等的回归。目录随站点每 3 小时自动检查一次：观测期仍未结束的回归重新拟合，新达到条件的彗星加入，已结束的回归保持不变；周期彗星的新回归与旧回归并存。更新失败时沿用上一份目录并暂停自动更新，预览中会提示。观测夜以外的亮度为外推；仍在回归中的彗星按已有观测外推，实际亮度常有 1 等以上出入，爆发、碎裂与前向散射增亮都不预测。</p>
+            <p>彗尾按暗夜长曝光口径：离子尾取经验长度，沿太阳风方向（计入彗星运动造成的偏折）伸直；尘埃尾取一半长度（不超过约 4500 万 km），沿辐射压力为引力一半的尘埃粒子轨迹弯曲，形态与长度比离子尾更近似。两条彗尾都按日、彗、地的实际三维位置投影到画面，因此指向或背向观察者时会缩短，并随焦距缩放。暮光、月光与光污染使天空比自然暗夜每亮 1 等，彗尾末端约少显示 30%。彗尾的亮度、宽度与颜色只作示意。</p>
+          </section>
+
           <section aria-labelledby="about-stations-title">
             <h3 id="about-stations-title">空间站轨道</h3>
             <a href="https://celestrak.org/NORAD/documentation/gp-data-formats.php" target="_blank" rel="noreferrer">CelesTrak · GP 轨道数据 · T.S. Kelso</a>

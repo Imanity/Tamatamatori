@@ -27,6 +27,8 @@ import type { StationScene } from "../domain/stations.ts";
 import { classifyOcclusion, skyLabelKey } from "../domain/visibility.ts";
 import { activeShowers, meteorSample } from "../domain/meteor-showers.ts";
 import { meteorFragment, meteorMesh, meteorVertex, METEOR_ATTRIBUTES, METEOR_STRIDE } from "./meteor-streaks.ts";
+import type { CometScene } from "../domain/comets.ts";
+import { cometFragment, cometMesh, cometVertex, COMET_ATTRIBUTES, COMET_STRIDE } from "./comet-tails.ts";
 
 interface Frame {
   key: string;
@@ -34,6 +36,8 @@ interface Frame {
   ready: boolean;
   plan: ShootingPlan;
   stations?: StationScene;
+  /** Comets at the instant; drawn while the comet layer is on. */
+  comets?: CometScene;
   artificialMcd?: number;
   /** Direction the preview camera actually shows; the plan's when absent. */
   view?: { azimuth: number; pitch: number };
@@ -181,6 +185,12 @@ export class StarfieldLayer implements CustomLayerInterface {
   private meteorData: Float32Array = new Float32Array();
   private meteorKey = "";
   private meteorDirty = false;
+  private cometProgram?: WebGLProgram;
+  private cometVao?: WebGLVertexArrayObject;
+  private cometBuffer?: WebGLBuffer;
+  private cometData: Float32Array = new Float32Array();
+  private cometKey = "";
+  private cometDirty = false;
   private deepVao?: WebGLVertexArrayObject;
   private deepBuffer?: WebGLBuffer;
   private deepData: Float32Array = new Float32Array();
@@ -242,6 +252,9 @@ export class StarfieldLayer implements CustomLayerInterface {
       this.meteorProgram = program(gl, meteorVertex, meteorFragment);
       this.meteorVao = gl.createVertexArray() ?? undefined;
       this.meteorBuffer = gl.createBuffer() ?? undefined;
+      this.cometProgram = program(gl, cometVertex, cometFragment);
+      this.cometVao = gl.createVertexArray() ?? undefined;
+      this.cometBuffer = gl.createBuffer() ?? undefined;
       this.pointsVao = gl.createVertexArray() ?? undefined;
       this.bandVao = gl.createVertexArray() ?? undefined;
       this.lineVao = gl.createVertexArray() ?? undefined;
@@ -262,7 +275,9 @@ export class StarfieldLayer implements CustomLayerInterface {
         !this.deepVao ||
         !this.deepBuffer ||
         !this.meteorVao ||
-        !this.meteorBuffer
+        !this.meteorBuffer ||
+        !this.cometVao ||
+        !this.cometBuffer
       )
         throw new Error("allocation");
     } catch {
@@ -306,6 +321,8 @@ export class StarfieldLayer implements CustomLayerInterface {
         frame.stations?.key,
         frame.artificialMcd ?? 0,
         !!p.layers.meteors,
+        !!p.layers.comets,
+        frame.comets?.key,
       ].join("/");
     if (key !== this.dataKey) {
       this.dataKey = key;
@@ -321,6 +338,8 @@ export class StarfieldLayer implements CustomLayerInterface {
       this.lineData = figure?.vertices ?? new Float32Array();
       const deep = p.layers.deepSky ? deepSkyScene(p) : null;
       const radiants = p.layers.meteors ? activeShowers(p).map((active) => active.point) : [];
+      // Comet heads are drawn with their tails; the points only carry the terrain test for the labels.
+      const heads = p.layers.comets ? (frame.comets?.views ?? []).map((view) => view.point) : [];
       this.deepObjects = deep?.objects ?? [];
       this.deepData = deep?.vertices ?? new Float32Array();
       this.points = [
@@ -332,6 +351,7 @@ export class StarfieldLayer implements CustomLayerInterface {
         ...(p.layers.stations ? (frame.stations?.points ?? []).filter((point) => point.elevation > 0) : []),
         ...(p.layers.stations ? (frame.stations?.trail ?? []).filter((point) => point.elevation > 0) : []),
         ...radiants,
+        ...heads,
       ];
       this.targets = this.points.filter((point) => !!point.name);
       this.offsets.clear();
@@ -340,7 +360,7 @@ export class StarfieldLayer implements CustomLayerInterface {
         this.offsets.set(point.id, i);
         const ray = refractDirection(point.direction, p.refraction);
         const anchor =
-          point.id.startsWith("constellation-") || point.id.startsWith("dso-");
+          point.id.startsWith("constellation-") || point.id.startsWith("dso-") || point.id.startsWith("comet-");
         const station = point.id.startsWith("station-");
         const radiant = point.id.startsWith("meteor-");
         const trail = station && point.id.includes("-trail-");
@@ -356,6 +376,14 @@ export class StarfieldLayer implements CustomLayerInterface {
       this.pointData = new Float32Array(data);
       this.band = p.layers.milkyWay ? milkyWayMesh(p) : undefined;
       this.strength = appearance?.galaxyStrength ?? 0;
+    }
+    // Tails are sky directions, so turning or zooming the camera keeps the mesh.
+    const comets = p.layers.comets ? frame.comets : undefined;
+    const cometKey = comets ? [comets.key, p.refraction].join("/") : "";
+    if (cometKey !== this.cometKey) {
+      this.cometKey = cometKey;
+      this.cometDirty = true;
+      this.cometData = comets ? cometMesh(comets.views, p.refraction, comets.skyFade) : new Float32Array();
     }
     // The stack depends on the fixed camera, so turning it rebuilds only the meteors.
     const camera = { ...p, ...frame.view };
@@ -443,7 +471,8 @@ export class StarfieldLayer implements CustomLayerInterface {
         !f.plan.layers.constellations &&
         !f.plan.layers.deepSky &&
         !f.plan.layers.stations &&
-        !f.plan.layers.meteors)
+        !f.plan.layers.meteors &&
+        !f.plan.layers.comets)
     )
       return;
     if (gl.isContextLost()) {
@@ -601,6 +630,18 @@ export class StarfieldLayer implements CustomLayerInterface {
         }
         this.meteorDirty = false;
       }
+      if (this.cometDirty) {
+        if (this.cometData.length) {
+          gl.bindVertexArray(this.cometVao!);
+          gl.bindBuffer(gl.ARRAY_BUFFER, this.cometBuffer!);
+          gl.bufferData(gl.ARRAY_BUFFER, this.cometData, gl.STATIC_DRAW);
+          for (const [index, size, offset] of COMET_ATTRIBUTES) {
+            gl.enableVertexAttribArray(index);
+            gl.vertexAttribPointer(index, size, gl.FLOAT, false, COMET_STRIDE * 4, offset);
+          }
+        }
+        this.cometDirty = false;
+      }
       if (this.band && this.milky.texture && this.strength > 0) {
         gl.useProgram(b);
         gl.bindTexture(gl.TEXTURE_2D, this.milky.texture!);
@@ -661,6 +702,18 @@ export class StarfieldLayer implements CustomLayerInterface {
       }
       const host = this.map!.getContainer(),
         canvas = this.map!.getCanvas();
+      if (this.cometData.length && this.cometProgram) {
+        // Comets sit under the stars; additive glow keeps overlapping tails smooth.
+        const m = this.cometProgram;
+        gl.useProgram(m);
+        gl.uniformMatrix4fv(gl.getUniformLocation(m, "u_camera"), false, this.matrix);
+        gl.uniform2fv(gl.getUniformLocation(m, "u_viewport"), [canvas.width, canvas.height]);
+        gl.uniform1f(gl.getUniformLocation(m, "u_pixel_ratio"), canvas.width / Math.max(1, host.clientWidth));
+        gl.bindVertexArray(this.cometVao!);
+        gl.blendFunc(gl.ONE, gl.ONE);
+        gl.drawArrays(gl.TRIANGLES, 0, this.cometData.length / COMET_STRIDE);
+        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      }
       if (this.meteorData.length && this.meteorProgram) {
         // Illustrative meteors sit under the radiant symbols and star points.
         const m = this.meteorProgram;
@@ -799,6 +852,9 @@ export class StarfieldLayer implements CustomLayerInterface {
       gl.deleteProgram(this.meteorProgram ?? null);
       gl.deleteBuffer(this.meteorBuffer ?? null);
       gl.deleteVertexArray(this.meteorVao ?? null);
+      gl.deleteProgram(this.cometProgram ?? null);
+      gl.deleteBuffer(this.cometBuffer ?? null);
+      gl.deleteVertexArray(this.cometVao ?? null);
       gl.deleteBuffer(this.deepBuffer ?? null);
       gl.deleteVertexArray(this.deepVao ?? null);
       gl.deleteBuffer(this.pointsBuffer ?? null);
@@ -816,5 +872,6 @@ export class StarfieldLayer implements CustomLayerInterface {
     this.lineProgram = undefined;
     this.deepProgram = undefined;
     this.meteorProgram = undefined;
+    this.cometProgram = undefined;
   }
 }

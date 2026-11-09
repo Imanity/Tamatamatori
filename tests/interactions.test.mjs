@@ -17,6 +17,8 @@ import { dayEvents } from '../src/domain/day-events.ts';
 import { cameraHeightSlider } from '../src/domain/plan.ts';
 import { bodyPath } from '../src/domain/body-paths.ts';
 import { activeShowers, meteorEstimate } from '../src/domain/meteor-showers.ts';
+import { cometScene } from '../src/domain/comets.ts';
+import { validateCometCatalog } from '../src/domain/comet-catalog.ts';
 
 // Exercise real React handlers and state with an SDK test double; no WebGL is
 // simulated, and these checks do not claim browser rendering verification.
@@ -168,7 +170,8 @@ class TestStarfieldLayer {
     const deep=frame.plan.layers.deepSky?deepSkyScene(frame.plan).objects:[];
     const stations=frame.plan.layers.stations?(frame.stations?.points??[]):[];
     const radiants=frame.plan.layers.meteors?activeShowers(frame.plan).map(a=>a.point):[];
-    this.report({planKey:frame.planKey,orbitKey:frame.stations?.key,ready:frame.ready,view:{azimuth:frame.plan.azimuth,pitch:frame.plan.pitch},states:Object.fromEntries([...sky.points,sky.core,...figures,...deep,...stations,...radiants,...deep.map(p=>({...p,id:p.id+':label'}))].map(p=>[p.id,frame.ready?'clear':'waiting'])),deepSky:{phase:frame.plan.layers.deepSky?'ready':'off'}});
+    const heads=frame.plan.layers.comets?(frame.comets?.views??[]).map(v=>v.point):[];
+    this.report({planKey:frame.planKey,orbitKey:frame.stations?.key,ready:frame.ready,view:{azimuth:frame.plan.azimuth,pitch:frame.plan.pitch},states:Object.fromEntries([...sky.points,sky.core,...figures,...deep,...stations,...radiants,...heads,...deep.map(p=>({...p,id:p.id+':label'}))].map(p=>[p.id,frame.ready?'clear':'waiting'])),deepSky:{phase:frame.plan.layers.deepSky?'ready':'off'}});
   }
   invalidate() { if(this.frame)this.report({planKey:this.frame.planKey,ready:false,view:null,states:{}}); }
   onRemove() { this.removed=true; }
@@ -1285,7 +1288,15 @@ test('About 汇集所有署名与下载，开关图层和弹窗不重建地图�
   assert.match(dialog.querySelector('[data-credit-source="IC0434"]').textContent, /火树/);
   const landmarkCatalog = JSON.parse(readFileSync(new URL('../src/data/landmarks.generated.json', import.meta.url), 'utf8'));
   const downloads = [...dialog.querySelectorAll('a[download]')];
-  assert.equal(downloads.length, catalog.imageSources.length + 6 + 2 * landmarkCatalog.length);
+  assert.equal(downloads.length, catalog.imageSources.length + 7 + 2 * landmarkCatalog.length);
+  // Comets: COBS share-alike, non-commercial terms beside the derived data download, JPL citation, tail formula.
+  const cometSection = dialog.querySelector('[aria-labelledby="about-comets-title"]');
+  assert.match(cometSection.textContent, /COBS Comet Observation Database · CC BY-NC-SA 4\.0.*仅限非商业使用/s);
+  assert.match(cometSection.querySelector('a[download]').textContent, /下载彗星目录/);
+  assert.equal(cometSection.querySelector('a[download]').getAttribute('href'), '/comets/catalog.json');
+  assert.match(cometSection.textContent, /NASA\/JPL Solar System Dynamics\. Data retrieved on/);
+  assert.match(cometSection.textContent, /每 3 小时自动检查/);
+  assert.match(cometSection.textContent, /Kammerer/);
   const landmarkSection=dialog.querySelector('[aria-labelledby="about-landmarks-title"]');
   assert.match(landmarkSection.textContent,/Noah.*CC BY 4.0/);
   assert.equal(landmarkSection.querySelectorAll('a[download]').length,2*landmarkCatalog.length);
@@ -1472,11 +1483,11 @@ test('精简工作区：全局信息默认展开，图层分组随开关展开�
   for (const selector of ['.workspace-heading', '.workspace-footer', '.base-layer', '.sidebar-bottom', '.layer-hint', '.map-footer-note', '.viewfinder-label', '.viewfinder-focal', '.terrain-height', '.parameter-note', '.info-header', '.layer-settings', '[aria-label$="设置与信息"]'])
     assert.equal(document.querySelector(selector), null, selector);
   const groups = [...document.querySelectorAll('.info-group h2 button')];
-  assert.deepEqual(groups.map(group => group.id), ['info-global', 'info-buildings', 'info-sun', 'info-moon', 'info-stars', 'info-milkyWay', 'info-deepSky', 'info-stations', 'info-meteors']);
+  assert.deepEqual(groups.map(group => group.id), ['info-global', 'info-buildings', 'info-sun', 'info-moon', 'info-stars', 'info-milkyWay', 'info-deepSky', 'info-stations', 'info-meteors', 'info-comets']);
   // Global information is open; layer groups start in step with their switches.
   // Groups unmount while a search is shown, so read them afresh each time.
   const expanded = () => Object.fromEntries([...document.querySelectorAll('.info-group h2 button')].map(group => [group.id.slice(5), group.getAttribute('aria-expanded') === 'true']));
-  assert.deepEqual(expanded(), { global: true, buildings: false, sun: true, moon: true, stars: false, milkyWay: false, deepSky: false, stations: false, meteors: false });
+  assert.deepEqual(expanded(), { global: true, buildings: false, sun: true, moon: true, stars: false, milkyWay: false, deepSky: false, stations: false, meteors: false, comets: false });
   assert.equal(document.querySelector('#info-sun-body').hidden, false);
   assert.equal(document.querySelector('#info-sun-body [data-body-status="moon"]'), null);
   const global = document.querySelector('#info-global-body').textContent;
@@ -2194,4 +2205,86 @@ test('流星雨图层：左栏开启后列出拍摄日期的活动流星雨与�
   // Variable showers list a radiant but no estimate.
   await setShootingDateTime('2026-06-25T00:30');
   assert.match(document.querySelector('[data-meteor-status="JBO"]').textContent, /ZHR 不定，不估算/);
+});
+
+const publishedComets = JSON.parse(readFileSync(new URL('../public/comets/catalog.json', import.meta.url), 'utf8'));
+/** The published catalogue with update times relative to the real clock, as the browser would see it. */
+function cometCatalogAt(hoursAgo, extra = {}) {
+  const stamp = (hours) => new Date(Date.now() - hours * 3_600_000).toISOString().replace(/\.\d+Z$/, 'Z');
+  return { ...publishedComets, fetchedAt: stamp(hoursAgo), attemptedAt: stamp(extra.attemptedHoursAgo ?? hoursAgo), ...extra.fields };
+}
+
+test('彗星图层：左栏开启后读取已发布目录，列出拍摄时刻的彗星，右栏给出星等与暗夜/当前天光下的彗尾长度，朝向后画面出现标注，回归期外与关闭分别提示', async t => {
+  const served = cometCatalogAt(3), calls = [];
+  t.mock.method(globalThis, 'fetch', async (url) => { calls.push(String(url)); return new Response(JSON.stringify(served)); });
+  await workspace(t); const map = await readyTerrain();
+  assert.deepEqual(calls, [], 'the catalogue is read only when the layer is on');
+  const starfield = () => map.customLayers.find((l) => l instanceof TestStarfieldLayer);
+  const layerSwitch = () => document.querySelector('input[aria-label="显示彗星"]');
+  const group = () => document.querySelector('[data-info-group="comets"]');
+  assert.equal(layerSwitch().checked, false);
+  assert.match(group().textContent, /彗星已关闭/);
+  // NEOWISE in the evening twilight of 2020-07-15 from the default site.
+  await setShootingDateTime('2020-07-15T20:30');
+  const requests = groundRequests.length;
+  await settle(() => layerSwitch().click());
+  assert.equal(document.getElementById('info-comets').getAttribute('aria-expanded'), 'true');
+  assert.deepEqual(calls, ['/comets/catalog.json']);
+  const catalog = validateCometCatalog(served);
+  const plan = { latitude: value('纬度'), longitude: value('经度'), instant: '2020-07-15T11:30:00Z' };
+  const scene = cometScene(plan, catalog);
+  const neowise = scene.views.find((view) => view.comet.id === 'C/2020 F3');
+  assert.ok(neowise, 'NEOWISE listed');
+  assert.deepEqual([...document.querySelectorAll('[data-comet-status]')].map((row) => row.dataset.cometStatus), scene.views.map((view) => view.comet.id));
+  const row = document.querySelector('[data-comet-status="C/2020 F3"]');
+  assert.match(row.textContent, /新智彗星 C\/2020 F3(?! \()/);
+  assert.match(row.textContent, new RegExp(`${neowise.magnitude.toFixed(1)} 等`));
+  assert.ok(scene.visibleShare < 1, 'evening twilight dims the tails');
+  assert.match(document.querySelector('[data-comet-sky]').textContent, /天空比暗夜亮约 \d\.\d 等，彗尾约显示前 \d+%/);
+  assert.match(row.querySelector('[data-comet-tail]').textContent, /离子尾 [\d.]+°? · 尘埃尾 [\d.]+[°′] · 暗夜 [\d.]+° \/ [\d.]+[°′]/);
+  assert.equal(document.querySelector('[data-comet-updated]').textContent, served.fetchedAt.slice(0, 10));
+  assert.equal(document.querySelector('[data-comet-feed]'), null, 'fresh catalogue: no update notice');
+  assert.equal(starfield().frame.comets.key, scene.key);
+  assert.equal(starfield().frame.plan.layers.comets, true);
+  await settle(() => document.querySelector('button[aria-label="朝向新智彗星"]').click());
+  assert.ok(document.querySelector('[data-comet-label="C/2020 F3"]'), 'head label in frame');
+  assert.match(document.querySelector('[data-comet-label="C/2020 F3"]').textContent, /新智彗星/);
+  assert.equal(groundRequests.length, requests, 'comets do not reload terrain');
+  // Outside every apparition window of the catalogue.
+  await setShootingDateTime('1991-01-15T20:30');
+  assert.equal(document.querySelectorAll('[data-comet-status]').length, cometScene({ ...plan, instant: '1991-01-15T11:30:00Z' }, catalog).views.length);
+  await settle(() => layerSwitch().click());
+  assert.match(group().textContent, /彗星已关闭/);
+  assert.equal(document.querySelector('[data-comet-label]'), null);
+});
+
+test('彗星目录：读取失败可重试并保留图层，超过 1 天未更新与自动更新暂停分别提示', async t => {
+  let respond = async () => new Response('busy', { status: 503 });
+  t.mock.method(globalThis, 'fetch', async () => respond());
+  await workspace(t); await readyTerrain();
+  const group = () => document.querySelector('[data-info-group="comets"]');
+  await setShootingDateTime('2020-07-15T20:30');
+  await settle(() => document.querySelector('input[aria-label="显示彗星"]').click());
+  assert.match(document.querySelector('[data-comet-feed="error"]').textContent, /彗星目录读取失败 · 彗星目录 HTTP 503/);
+  assert.equal(document.querySelectorAll('[data-comet-status]').length, 0);
+  // Retry: a catalogue last updated nine days ago is shown with a staleness notice.
+  const old = cometCatalogAt(9 * 24);
+  respond = async () => new Response(JSON.stringify(old));
+  await settle(() => group().querySelector('[data-comet-feed="error"] button').click());
+  assert.match(document.querySelector('[data-comet-feed="stale"]').textContent, /目录已 9 天未更新，新发现或新近变亮的彗星可能缺失/);
+  assert.ok(document.querySelector('[data-comet-status="C/2020 F3"]'));
+  // A later failed update: the same comets, update paused, no staleness notice on top.
+  const paused = cometCatalogAt(9 * 24, { attemptedHoursAgo: 1, fields: { status: 'error', blocked: true, error: 'cobs.si HTTP 503，自动更新已暂停，需维护者检查后手动恢复' } });
+  respond = async () => new Response(JSON.stringify(paused));
+  await settle(() => document.querySelector('input[aria-label="显示彗星"]').click());
+  await settle(() => document.querySelector('input[aria-label="显示彗星"]').click());
+  assert.match(document.querySelector('[data-comet-feed="paused"]').textContent, new RegExp(`目录自动更新已暂停，沿用 ${old.fetchedAt.slice(0, 10)} 的目录`));
+  assert.equal(document.querySelector('[data-comet-feed="stale"]'), null);
+  assert.ok(document.querySelector('[data-comet-status="C/2020 F3"]'));
+  // An older copy (for example from a cache) never replaces what is shown.
+  respond = async () => new Response(JSON.stringify(cometCatalogAt(20 * 24)));
+  await settle(() => document.querySelector('input[aria-label="显示彗星"]').click());
+  await settle(() => document.querySelector('input[aria-label="显示彗星"]').click());
+  assert.match(document.querySelector('[data-comet-feed="error"]').textContent, /彗星目录刷新失败，沿用 .* 的目录 · 彗星目录更新记录回退/);
+  assert.ok(document.querySelector('[data-comet-status="C/2020 F3"]'));
 });

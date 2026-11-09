@@ -1,0 +1,294 @@
+{
+ "reference": "tests/fixtures/comet-reference.json",
+ "note": "二体模型相对 JPL Horizons 无折射测站方向的角距（角分）及日距、地距差（km）",
+ "rows": [
+  {
+   "id": "C/2020 F3",
+   "site": "fuji",
+   "instant": "2020-04-04T16:18:00.000Z",
+   "offsetDays": -90,
+   "errorArcmin": 0.086,
+   "rKm": -151,
+   "deltaKm": -443
+  },
+  {
+   "id": "C/2020 F3",
+   "site": "fuji",
+   "instant": "2020-06-13T16:18:00.000Z",
+   "offsetDays": -20,
+   "errorArcmin": 0.05,
+   "rKm": -159,
+   "deltaKm": -1607
+  },
+  {
+   "id": "C/2020 F3",
+   "site": "fuji",
+   "instant": "2020-07-03T16:18:00.000Z",
+   "offsetDays": 0,
+   "errorArcmin": 0.017,
+   "rKm": 2,
+   "deltaKm": -1152
+  },
+  {
+   "id": "C/2020 F3",
+   "site": "fuji",
+   "instant": "2020-07-15T16:18:00.000Z",
+   "offsetDays": 12,
+   "errorArcmin": 0.147,
+   "rKm": 107,
+   "deltaKm": -764
+  },
+  {
+   "id": "C/2020 F3",
+   "site": "fuji",
+   "instant": "2020-09-01T16:18:00.000Z",
+   "offsetDays": 60,
+   "errorArcmin": 0.047,
+   "rKm": -15,
+   "deltaKm": -397
+  },
+  {
+   "id": "C/2020 F3",
+   "site": "fuji",
+   "instant": "2020-10-21T16:18:00.000Z",
+   "offsetDays": 110,
+   "errorArcmin": 0.155,
+   "rKm": -229,
+   "deltaKm": 183
+  },
+  {
+   "id": "C/2023 A3",
+   "site": "sydney",
+   "instant": "2023-12-02T17:49:00.000Z",
+   "offsetDays": -300,
+   "errorArcmin": 0.542,
+   "rKm": -81059,
+   "deltaKm": -77778
+  },
+  {
+   "id": "C/2023 A3",
+   "site": "sydney",
+   "instant": "2024-07-29T17:49:00.000Z",
+   "offsetDays": -60,
+   "errorArcmin": 0.218,
+   "rKm": -7389,
+   "deltaKm": -10458
+  },
+  {
+   "id": "C/2023 A3",
+   "site": "sydney",
+   "instant": "2024-09-27T17:49:00.000Z",
+   "offsetDays": 0,
+   "errorArcmin": 0.045,
+   "rKm": -4,
+   "deltaKm": -962
+  },
+  {
+   "id": "C/2023 A3",
+   "site": "sydney",
+   "instant": "2024-10-15T17:49:00.000Z",
+   "offsetDays": 18,
+   "errorArcmin": 0.304,
+   "rKm": -1873,
+   "deltaKm": 1668
+  },
+  {
+   "id": "C/2023 A3",
+   "site": "sydney",
+   "instant": "2024-12-26T17:49:00.000Z",
+   "offsetDays": 90,
+   "errorArcmin": 0.047,
+   "rKm": -16990,
+   "deltaKm": -11750
+  },
+  {
+   "id": "12P",
+   "site": "paris",
+   "instant": "2023-08-15T02:59:00.000Z",
+   "offsetDays": -250,
+   "errorArcmin": 0.229,
+   "rKm": 15130,
+   "deltaKm": 15241
+  },
+  {
+   "id": "12P",
+   "site": "paris",
+   "instant": "2024-02-21T02:59:00.000Z",
+   "offsetDays": -60,
+   "errorArcmin": 0.137,
+   "rKm": -528,
+   "deltaKm": -682
+  },
+  {
+   "id": "12P",
+   "site": "paris",
+   "instant": "2024-04-21T02:59:00.000Z",
+   "offsetDays": 0,
+   "errorArcmin": 0.117,
+   "rKm": 3,
+   "deltaKm": 128
+  },
+  {
+   "id": "12P",
+   "site": "paris",
+   "instant": "2024-05-31T02:59:00.000Z",
+   "offsetDays": 40,
+   "errorArcmin": 0.122,
+   "rKm": 389,
+   "deltaKm": 71
+  },
+  {
+   "id": "12P",
+   "site": "paris",
+   "instant": "2024-09-18T02:59:00.000Z",
+   "offsetDays": 150,
+   "errorArcmin": 0.181,
+   "rKm": 3036,
+   "deltaKm": 2081
+  },
+  {
+   "id": "C/2025 A6",
+   "site": "fuji",
+   "instant": "2025-08-20T12:56:00.000Z",
+   "offsetDays": -80,
+   "errorArcmin": 0.355,
+   "rKm": -10761,
+   "deltaKm": -3744
+  },
+  {
+   "id": "C/2025 A6",
+   "site": "fuji",
+   "instant": "2025-10-29T12:56:00.000Z",
+   "offsetDays": -10,
+   "errorArcmin": 0.135,
+   "rKm": -577,
+   "deltaKm": -89
+  },
+  {
+   "id": "C/2025 A6",
+   "site": "fuji",
+   "instant": "2025-12-08T12:56:00.000Z",
+   "offsetDays": 30,
+   "errorArcmin": 0.136,
+   "rKm": -4184,
+   "deltaKm": -4640
+  },
+  {
+   "id": "C/2025 A6",
+   "site": "fuji",
+   "instant": "2026-04-07T12:56:00.000Z",
+   "offsetDays": 150,
+   "errorArcmin": 0.735,
+   "rKm": -38705,
+   "deltaKm": -41497
+  },
+  {
+   "id": "C/1995 O1",
+   "site": "paris",
+   "instant": "1996-02-26T03:12:00.000Z",
+   "offsetDays": -400,
+   "errorArcmin": 1.277,
+   "rKm": -417291,
+   "deltaKm": -397488
+  },
+  {
+   "id": "C/1995 O1",
+   "site": "paris",
+   "instant": "1996-12-02T03:12:00.000Z",
+   "offsetDays": -120,
+   "errorArcmin": 0.193,
+   "rKm": 2165,
+   "deltaKm": 2455
+  },
+  {
+   "id": "C/1995 O1",
+   "site": "paris",
+   "instant": "1997-04-01T03:12:00.000Z",
+   "offsetDays": 0,
+   "errorArcmin": 0.033,
+   "rKm": 3,
+   "deltaKm": -81
+  },
+  {
+   "id": "C/1995 O1",
+   "site": "paris",
+   "instant": "1997-05-31T03:12:00.000Z",
+   "offsetDays": 60,
+   "errorArcmin": 0.08,
+   "rKm": -348,
+   "deltaKm": -592
+  },
+  {
+   "id": "C/1995 O1",
+   "site": "paris",
+   "instant": "1998-01-26T03:12:00.000Z",
+   "offsetDays": 300,
+   "errorArcmin": 0.317,
+   "rKm": 3005,
+   "deltaKm": 8784
+  },
+  {
+   "id": "C/1996 B2",
+   "site": "fuji",
+   "instant": "1996-03-22T09:28:00.000Z",
+   "offsetDays": -40,
+   "errorArcmin": 6.398,
+   "rKm": -18136,
+   "deltaKm": -17575
+  },
+  {
+   "id": "C/1996 B2",
+   "site": "fuji",
+   "instant": "1996-05-01T09:28:00.000Z",
+   "offsetDays": 0,
+   "errorArcmin": 0.111,
+   "rKm": -17,
+   "deltaKm": -956
+  },
+  {
+   "id": "C/1996 B2",
+   "site": "fuji",
+   "instant": "1996-05-31T09:28:00.000Z",
+   "offsetDays": 30,
+   "errorArcmin": 0.343,
+   "rKm": -12806,
+   "deltaKm": -15847
+  },
+  {
+   "id": "10P",
+   "site": "sydney",
+   "instant": "2026-04-24T02:46:00.000Z",
+   "offsetDays": -100,
+   "errorArcmin": 0.016,
+   "rKm": 993,
+   "deltaKm": 878
+  },
+  {
+   "id": "10P",
+   "site": "sydney",
+   "instant": "2026-08-02T02:46:00.000Z",
+   "offsetDays": 0,
+   "errorArcmin": 0.532,
+   "rKm": -3,
+   "deltaKm": -140
+  },
+  {
+   "id": "10P",
+   "site": "sydney",
+   "instant": "2026-11-30T02:46:00.000Z",
+   "offsetDays": 120,
+   "errorArcmin": 0.026,
+   "rKm": 3970,
+   "deltaKm": 4159
+  },
+  {
+   "id": "10P",
+   "site": "sydney",
+   "instant": "2027-09-06T02:46:00.000Z",
+   "offsetDays": 400,
+   "errorArcmin": 0.151,
+   "rKm": 60169,
+   "deltaKm": 51972
+  }
+ ]
+}

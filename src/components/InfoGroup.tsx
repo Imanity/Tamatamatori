@@ -9,7 +9,8 @@ export type InfoGroupId =
   | "milkyWay"
   | "deepSky"
   | "stations"
-  | "meteors";
+  | "meteors"
+  | "comets";
 /**
  * A layer switch expands and reveals its group (`open`) or collapses it;
  * `sync` sets every layer group to its switch after a whole plan was applied.

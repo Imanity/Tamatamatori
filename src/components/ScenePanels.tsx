@@ -44,6 +44,8 @@ import { WeatherReadout, WeatherActions, weatherMessage } from "./WeatherReadout
 import { emptyBuildings, buildingKey } from "../domain/buildings";
 import { BuildingReadout } from "./BuildingReadout";
 import { MeteorLabels, MeteorReadout, meteorFact, useMeteorScene } from "./MeteorScene";
+import { CometLabels, CometReadout, useCometScene } from "./CometScene";
+import { useCometCatalog } from "./useCometCatalog";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -83,6 +85,7 @@ export function PreviewPanel({
     deepSky: plan.layers.deepSky,
     stations: plan.layers.stations,
     meteors: !!plan.layers.meteors,
+    comets: !!plan.layers.comets,
   }));
   const toggleGroup = (id: InfoGroupId) =>
     setExpanded((current) => ({ ...current, [id]: !current[id] }));
@@ -124,6 +127,7 @@ export function PreviewPanel({
         deepSky: layers.deepSky,
         stations: layers.stations,
         meteors: !!layers.meteors,
+        comets: !!layers.comets,
       }));
       return;
     }
@@ -245,6 +249,8 @@ export function PreviewPanel({
       : pollution.phase === "loading" ? "光污染读取中，暂按自然天空" : "光污染不可用，按自然天空",
   });
   const meteorNote = meteorFact(meteorScene);
+  const cometFeed = useCometCatalog(!!plan.layers.comets);
+  const comets = useCometScene(plan, cometFeed, artificialMcd ?? 0);
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return (
     <div className="preview-content">
@@ -407,6 +413,7 @@ export function PreviewPanel({
             artificialMcd={artificialMcd}
             weather={weather}
             stations={plan.layers.stations ? stations : undefined}
+            comets={comets.scene ?? undefined}
             onVisibilityChange={setVisibility}
             onCameraChange={setCamera}
             onSkyChange={setSkyVisibility}
@@ -418,6 +425,7 @@ export function PreviewPanel({
           <CelestialDiscs scene={celestialScene} weather={weather} plan={plan} />
           <StarLabels scene={starScene} />
           <MeteorLabels plan={plan} scene={meteorScene} visibility={skyVisibility} />
+          <CometLabels plan={plan} comets={comets} visibility={skyVisibility} />
           <StationLabels
             plan={plan}
             weather={weather}
@@ -717,6 +725,11 @@ export function PreviewPanel({
                   "meteors",
                   "流星雨",
                   <MeteorReadout plan={plan} scene={meteorScene} visibility={skyVisibility} update={update} />,
+                )}
+                {group(
+                  "comets",
+                  "彗星",
+                  <CometReadout plan={plan} comets={comets} visibility={skyVisibility} update={update} />,
                 )}
               </>
             )}

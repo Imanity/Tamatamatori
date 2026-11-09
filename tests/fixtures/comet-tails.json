@@ -1,0 +1,4963 @@
+{
+ "source": "COBS Comet Observation Database, https://cobs.si",
+ "license": "CC BY-NC-SA 4.0",
+ "changes": "每夜至少 6 条目视彗尾长度报告的分位数与位置角中位数（单位：度）；不含观测者与单条观测。",
+ "comets": [
+  {
+   "id": "C/1995 O1",
+   "nights": [
+    {
+     "day": "1996-06-07",
+     "reports": 6,
+     "median": 0.19,
+     "p75": 0.44,
+     "p90": 0.6,
+     "max": 0.7,
+     "positionAngle": 282.5
+    },
+    {
+     "day": "1996-06-09",
+     "reports": 9,
+     "median": 0.17,
+     "p75": 0.2,
+     "p90": 0.34,
+     "max": 0.7,
+     "positionAngle": 352.5
+    },
+    {
+     "day": "1996-06-14",
+     "reports": 7,
+     "median": 0.2,
+     "p75": 0.65,
+     "p90": 0.8,
+     "max": 0.8,
+     "positionAngle": 300
+    },
+    {
+     "day": "1996-06-15",
+     "reports": 13,
+     "median": 0.2,
+     "p75": 0.3,
+     "p90": 0.78,
+     "max": 0.8,
+     "positionAngle": 330
+    },
+    {
+     "day": "1996-06-16",
+     "reports": 6,
+     "median": 0.8,
+     "p75": 0.95,
+     "p90": 1,
+     "max": 1,
+     "positionAngle": 270
+    },
+    {
+     "day": "1996-07-04",
+     "reports": 6,
+     "median": 0.21,
+     "p75": 0.29,
+     "p90": 0.4,
+     "max": 0.5,
+     "positionAngle": 25
+    },
+    {
+     "day": "1996-07-06",
+     "reports": 7,
+     "median": 0.05,
+     "p75": 0.14,
+     "p90": 0.22,
+     "max": 0.25,
+     "positionAngle": 350
+    },
+    {
+     "day": "1996-07-07",
+     "reports": 6,
+     "median": 0.25,
+     "p75": 0.51,
+     "p90": 0.75,
+     "max": 0.9,
+     "positionAngle": 15
+    },
+    {
+     "day": "1996-07-09",
+     "reports": 7,
+     "median": 0.25,
+     "p75": 0.35,
+     "p90": 0.72,
+     "max": 1.2,
+     "positionAngle": 10
+    },
+    {
+     "day": "1996-07-10",
+     "reports": 6,
+     "median": 0.5,
+     "p75": 0.88,
+     "p90": 1,
+     "max": 1,
+     "positionAngle": 270
+    },
+    {
+     "day": "1996-07-11",
+     "reports": 8,
+     "median": 0.24,
+     "p75": 0.5,
+     "p90": 0.65,
+     "max": 1,
+     "positionAngle": 350
+    },
+    {
+     "day": "1996-07-12",
+     "reports": 7,
+     "median": 0.5,
+     "p75": 0.5,
+     "p90": 0.7,
+     "max": 1,
+     "positionAngle": 290
+    },
+    {
+     "day": "1996-07-13",
+     "reports": 10,
+     "median": 0.35,
+     "p75": 0.88,
+     "p90": 3.67,
+     "max": 5.2,
+     "positionAngle": 47.5
+    },
+    {
+     "day": "1996-07-14",
+     "reports": 8,
+     "median": 0.25,
+     "p75": 1.13,
+     "p90": 1.95,
+     "max": 3,
+     "positionAngle": 12.5
+    },
+    {
+     "day": "1996-07-15",
+     "reports": 11,
+     "median": 0.25,
+     "p75": 1,
+     "p90": 1,
+     "max": 1.5,
+     "positionAngle": 359
+    },
+    {
+     "day": "1996-07-16",
+     "reports": 16,
+     "median": 0.28,
+     "p75": 0.63,
+     "p90": 1.1,
+     "max": 2,
+     "positionAngle": 20
+    },
+    {
+     "day": "1996-07-17",
+     "reports": 10,
+     "median": 0.45,
+     "p75": 1.05,
+     "p90": 1.23,
+     "max": 1.5,
+     "positionAngle": 322.5
+    },
+    {
+     "day": "1996-07-18",
+     "reports": 9,
+     "median": 0.5,
+     "p75": 1,
+     "p90": 2.04,
+     "max": 5.4,
+     "positionAngle": 72.5
+    },
+    {
+     "day": "1996-07-19",
+     "reports": 9,
+     "median": 1,
+     "p75": 1.5,
+     "p90": 1.57,
+     "max": 1.83,
+     "positionAngle": 295
+    },
+    {
+     "day": "1996-07-20",
+     "reports": 13,
+     "median": 0.33,
+     "p75": 0.4,
+     "p90": 1.09,
+     "max": 1.2,
+     "positionAngle": 40
+    },
+    {
+     "day": "1996-07-21",
+     "reports": 17,
+     "median": 0.3,
+     "p75": 0.8,
+     "p90": 1.08,
+     "max": 2,
+     "positionAngle": 350
+    },
+    {
+     "day": "1996-07-22",
+     "reports": 12,
+     "median": 0.27,
+     "p75": 1,
+     "p90": 1.18,
+     "max": 1.2,
+     "positionAngle": 295
+    },
+    {
+     "day": "1996-07-23",
+     "reports": 7,
+     "median": 0.3,
+     "p75": 0.73,
+     "p90": 0.77,
+     "max": 0.8,
+     "positionAngle": 69
+    },
+    {
+     "day": "1996-07-24",
+     "reports": 6,
+     "median": 0.1,
+     "p75": 0.21,
+     "p90": 0.33,
+     "max": 0.4,
+     "positionAngle": null
+    },
+    {
+     "day": "1996-08-03",
+     "reports": 9,
+     "median": 0.45,
+     "p75": 0.75,
+     "p90": 0.84,
+     "max": 1,
+     "positionAngle": 110
+    },
+    {
+     "day": "1996-08-04",
+     "reports": 10,
+     "median": 0.42,
+     "p75": 0.93,
+     "p90": 1.14,
+     "max": 1.5,
+     "positionAngle": 80
+    },
+    {
+     "day": "1996-08-05",
+     "reports": 11,
+     "median": 0.3,
+     "p75": 0.85,
+     "p90": 1.2,
+     "max": 1.2,
+     "positionAngle": 75
+    },
+    {
+     "day": "1996-08-06",
+     "reports": 9,
+     "median": 0.3,
+     "p75": 1,
+     "p90": 1.04,
+     "max": 1.2,
+     "positionAngle": 122.5
+    },
+    {
+     "day": "1996-08-07",
+     "reports": 12,
+     "median": 0.28,
+     "p75": 0.85,
+     "p90": 1.45,
+     "max": 42,
+     "positionAngle": 75
+    },
+    {
+     "day": "1996-08-08",
+     "reports": 15,
+     "median": 0.4,
+     "p75": 0.9,
+     "p90": 1,
+     "max": 1.5,
+     "positionAngle": 110
+    },
+    {
+     "day": "1996-08-09",
+     "reports": 18,
+     "median": 0.56,
+     "p75": 0.79,
+     "p90": 1.13,
+     "max": 1.5,
+     "positionAngle": 117
+    },
+    {
+     "day": "1996-08-10",
+     "reports": 18,
+     "median": 0.61,
+     "p75": 0.91,
+     "p90": 1.22,
+     "max": 2,
+     "positionAngle": 123
+    },
+    {
+     "day": "1996-08-11",
+     "reports": 19,
+     "median": 0.5,
+     "p75": 0.75,
+     "p90": 1.56,
+     "max": 2,
+     "positionAngle": 120
+    },
+    {
+     "day": "1996-08-12",
+     "reports": 11,
+     "median": 0.4,
+     "p75": 0.56,
+     "p90": 0.9,
+     "max": 1.17,
+     "positionAngle": 135
+    },
+    {
+     "day": "1996-08-13",
+     "reports": 16,
+     "median": 0.5,
+     "p75": 0.81,
+     "p90": 1.27,
+     "max": 1.4,
+     "positionAngle": 120
+    },
+    {
+     "day": "1996-08-14",
+     "reports": 17,
+     "median": 0.5,
+     "p75": 1,
+     "p90": 1.2,
+     "max": 1.5,
+     "positionAngle": 110
+    },
+    {
+     "day": "1996-08-15",
+     "reports": 11,
+     "median": 0.5,
+     "p75": 0.55,
+     "p90": 1,
+     "max": 1.2,
+     "positionAngle": 95
+    },
+    {
+     "day": "1996-08-16",
+     "reports": 15,
+     "median": 0.5,
+     "p75": 1,
+     "p90": 1.06,
+     "max": 1.8,
+     "positionAngle": 110
+    },
+    {
+     "day": "1996-08-17",
+     "reports": 19,
+     "median": 0.8,
+     "p75": 1,
+     "p90": 1.18,
+     "max": 1.7,
+     "positionAngle": 117.5
+    },
+    {
+     "day": "1996-08-18",
+     "reports": 19,
+     "median": 0.5,
+     "p75": 0.7,
+     "p90": 1,
+     "max": 1.3,
+     "positionAngle": 110
+    },
+    {
+     "day": "1996-08-19",
+     "reports": 24,
+     "median": 0.63,
+     "p75": 1,
+     "p90": 1.34,
+     "max": 2,
+     "positionAngle": 110
+    },
+    {
+     "day": "1996-08-20",
+     "reports": 19,
+     "median": 0.5,
+     "p75": 0.92,
+     "p90": 1.08,
+     "max": 2,
+     "positionAngle": 95
+    },
+    {
+     "day": "1996-08-21",
+     "reports": 6,
+     "median": 0.3,
+     "p75": 0.83,
+     "p90": 1.25,
+     "max": 1.5,
+     "positionAngle": 70
+    },
+    {
+     "day": "1996-08-31",
+     "reports": 6,
+     "median": 0.75,
+     "p75": 1,
+     "p90": 1,
+     "max": 1,
+     "positionAngle": 95
+    },
+    {
+     "day": "1996-09-02",
+     "reports": 12,
+     "median": 0.4,
+     "p75": 0.73,
+     "p90": 0.86,
+     "max": 1,
+     "positionAngle": 107.5
+    },
+    {
+     "day": "1996-09-03",
+     "reports": 13,
+     "median": 0.4,
+     "p75": 1,
+     "p90": 1.88,
+     "max": 2,
+     "positionAngle": 115.5
+    },
+    {
+     "day": "1996-09-04",
+     "reports": 8,
+     "median": 0.9,
+     "p75": 1.35,
+     "p90": 1.56,
+     "max": 1.7,
+     "positionAngle": 107.5
+    },
+    {
+     "day": "1996-09-05",
+     "reports": 12,
+     "median": 0.65,
+     "p75": 1,
+     "p90": 1.54,
+     "max": 2,
+     "positionAngle": 101
+    },
+    {
+     "day": "1996-09-06",
+     "reports": 7,
+     "median": 0.7,
+     "p75": 0.9,
+     "p90": 1.32,
+     "max": 1.8,
+     "positionAngle": 120
+    },
+    {
+     "day": "1996-09-07",
+     "reports": 10,
+     "median": 0.3,
+     "p75": 0.5,
+     "p90": 1,
+     "max": 1,
+     "positionAngle": 85
+    },
+    {
+     "day": "1996-09-08",
+     "reports": 7,
+     "median": 0.83,
+     "p75": 0.95,
+     "p90": 1.4,
+     "max": 2,
+     "positionAngle": 95
+    },
+    {
+     "day": "1996-09-09",
+     "reports": 6,
+     "median": 0.5,
+     "p75": 0.9,
+     "p90": 1.5,
+     "max": 2,
+     "positionAngle": 61
+    },
+    {
+     "day": "1996-09-10",
+     "reports": 10,
+     "median": 0.54,
+     "p75": 1.05,
+     "p90": 1.37,
+     "max": 2,
+     "positionAngle": 92.5
+    },
+    {
+     "day": "1996-09-11",
+     "reports": 8,
+     "median": 0.3,
+     "p75": 0.57,
+     "p90": 0.86,
+     "max": 1,
+     "positionAngle": 70
+    },
+    {
+     "day": "1996-09-13",
+     "reports": 13,
+     "median": 0.35,
+     "p75": 0.8,
+     "p90": 1,
+     "max": 2,
+     "positionAngle": 80
+    },
+    {
+     "day": "1996-09-14",
+     "reports": 11,
+     "median": 0.4,
+     "p75": 0.88,
+     "p90": 1,
+     "max": 1.5,
+     "positionAngle": 79.5
+    },
+    {
+     "day": "1996-09-15",
+     "reports": 11,
+     "median": 0.4,
+     "p75": 0.63,
+     "p90": 1,
+     "max": 1.2,
+     "positionAngle": 90
+    },
+    {
+     "day": "1996-09-16",
+     "reports": 9,
+     "median": 0.33,
+     "p75": 0.5,
+     "p90": 0.65,
+     "max": 0.83,
+     "positionAngle": 87
+    },
+    {
+     "day": "1996-09-17",
+     "reports": 8,
+     "median": 0.34,
+     "p75": 0.5,
+     "p90": 0.8,
+     "max": 1.5,
+     "positionAngle": 90
+    },
+    {
+     "day": "1996-09-18",
+     "reports": 6,
+     "median": 0.55,
+     "p75": 0.68,
+     "p90": 1.1,
+     "max": 1.5,
+     "positionAngle": 250
+    },
+    {
+     "day": "1996-09-19",
+     "reports": 6,
+     "median": 0.5,
+     "p75": 0.57,
+     "p90": 0.7,
+     "max": 0.8,
+     "positionAngle": 20
+    },
+    {
+     "day": "1996-09-30",
+     "reports": 20,
+     "median": 1,
+     "p75": 1.42,
+     "p90": 1.55,
+     "max": 2,
+     "positionAngle": 91
+    },
+    {
+     "day": "1996-10-01",
+     "reports": 18,
+     "median": 0.7,
+     "p75": 1.38,
+     "p90": 1.87,
+     "max": 2.6,
+     "positionAngle": 93
+    },
+    {
+     "day": "1996-10-02",
+     "reports": 21,
+     "median": 0.5,
+     "p75": 1,
+     "p90": 1.4,
+     "max": 1.5,
+     "positionAngle": 94
+    },
+    {
+     "day": "1996-10-03",
+     "reports": 23,
+     "median": 0.5,
+     "p75": 0.95,
+     "p90": 1,
+     "max": 1.5,
+     "positionAngle": 82.5
+    },
+    {
+     "day": "1996-10-04",
+     "reports": 25,
+     "median": 0.5,
+     "p75": 0.7,
+     "p90": 1,
+     "max": 1,
+     "positionAngle": 94.5
+    },
+    {
+     "day": "1996-10-05",
+     "reports": 14,
+     "median": 0.68,
+     "p75": 1.18,
+     "p90": 1.27,
+     "max": 2,
+     "positionAngle": 95.5
+    },
+    {
+     "day": "1996-10-06",
+     "reports": 9,
+     "median": 0.8,
+     "p75": 1,
+     "p90": 1.36,
+     "max": 2,
+     "positionAngle": 95
+    },
+    {
+     "day": "1996-10-07",
+     "reports": 13,
+     "median": 0.7,
+     "p75": 1.25,
+     "p90": 1.7,
+     "max": 2,
+     "positionAngle": 98
+    },
+    {
+     "day": "1996-10-08",
+     "reports": 7,
+     "median": 0.8,
+     "p75": 1.02,
+     "p90": 1.35,
+     "max": 1.8,
+     "positionAngle": 98
+    },
+    {
+     "day": "1996-10-09",
+     "reports": 7,
+     "median": 0.97,
+     "p75": 1.4,
+     "p90": 1.62,
+     "max": 1.8,
+     "positionAngle": 95
+    },
+    {
+     "day": "1996-10-10",
+     "reports": 6,
+     "median": 0.6,
+     "p75": 0.7,
+     "p90": 1,
+     "max": 1.3,
+     "positionAngle": 95
+    },
+    {
+     "day": "1996-10-11",
+     "reports": 19,
+     "median": 0.5,
+     "p75": 0.9,
+     "p90": 1.4,
+     "max": 2.5,
+     "positionAngle": 97.5
+    },
+    {
+     "day": "1996-10-12",
+     "reports": 24,
+     "median": 0.54,
+     "p75": 1,
+     "p90": 1.64,
+     "max": 2.8,
+     "positionAngle": 90
+    },
+    {
+     "day": "1996-10-13",
+     "reports": 28,
+     "median": 0.5,
+     "p75": 0.89,
+     "p90": 1.38,
+     "max": 2.6,
+     "positionAngle": 85
+    },
+    {
+     "day": "1996-10-14",
+     "reports": 17,
+     "median": 0.5,
+     "p75": 1,
+     "p90": 2.44,
+     "max": 5.7,
+     "positionAngle": 89
+    },
+    {
+     "day": "1996-10-15",
+     "reports": 12,
+     "median": 0.5,
+     "p75": 0.93,
+     "p90": 1,
+     "max": 1.7,
+     "positionAngle": 95
+    },
+    {
+     "day": "1996-10-16",
+     "reports": 14,
+     "median": 0.65,
+     "p75": 1,
+     "p90": 1.44,
+     "max": 2.3,
+     "positionAngle": 91
+    },
+    {
+     "day": "1996-10-17",
+     "reports": 7,
+     "median": 0.5,
+     "p75": 0.75,
+     "p90": 1.28,
+     "max": 2,
+     "positionAngle": 80
+    },
+    {
+     "day": "1996-10-19",
+     "reports": 7,
+     "median": 0.5,
+     "p75": 1.4,
+     "p90": 2,
+     "max": 2,
+     "positionAngle": 81
+    },
+    {
+     "day": "1996-10-29",
+     "reports": 8,
+     "median": 0.82,
+     "p75": 1.48,
+     "p90": 2.36,
+     "max": 2.5,
+     "positionAngle": 90
+    },
+    {
+     "day": "1996-10-30",
+     "reports": 12,
+     "median": 1.65,
+     "p75": 2.58,
+     "p90": 2.98,
+     "max": 3,
+     "positionAngle": 95
+    },
+    {
+     "day": "1996-11-01",
+     "reports": 17,
+     "median": 1,
+     "p75": 1.3,
+     "p90": 1.9,
+     "max": 2.5,
+     "positionAngle": 85
+    },
+    {
+     "day": "1996-11-02",
+     "reports": 14,
+     "median": 0.5,
+     "p75": 1,
+     "p90": 1,
+     "max": 1.5,
+     "positionAngle": 80
+    },
+    {
+     "day": "1996-11-03",
+     "reports": 13,
+     "median": 0.8,
+     "p75": 1,
+     "p90": 1.45,
+     "max": 1.5,
+     "positionAngle": 80
+    },
+    {
+     "day": "1996-11-04",
+     "reports": 23,
+     "median": 1,
+     "p75": 1.35,
+     "p90": 2.4,
+     "max": 4.3,
+     "positionAngle": 89
+    },
+    {
+     "day": "1996-11-05",
+     "reports": 16,
+     "median": 0.5,
+     "p75": 1.2,
+     "p90": 2,
+     "max": 4.5,
+     "positionAngle": 80
+    },
+    {
+     "day": "1996-11-06",
+     "reports": 10,
+     "median": 0.68,
+     "p75": 1.5,
+     "p90": 2.11,
+     "max": 3.1,
+     "positionAngle": 75
+    },
+    {
+     "day": "1996-11-07",
+     "reports": 6,
+     "median": 0.37,
+     "p75": 0.48,
+     "p90": 0.55,
+     "max": 0.6,
+     "positionAngle": 80
+    },
+    {
+     "day": "1996-11-08",
+     "reports": 21,
+     "median": 0.9,
+     "p75": 1.5,
+     "p90": 2,
+     "max": 5,
+     "positionAngle": 86.5
+    },
+    {
+     "day": "1996-11-09",
+     "reports": 23,
+     "median": 0.8,
+     "p75": 1.45,
+     "p90": 2,
+     "max": 5,
+     "positionAngle": 82.5
+    },
+    {
+     "day": "1996-11-10",
+     "reports": 9,
+     "median": 0.5,
+     "p75": 0.7,
+     "p90": 2,
+     "max": 2,
+     "positionAngle": 78
+    },
+    {
+     "day": "1996-11-11",
+     "reports": 6,
+     "median": 0.75,
+     "p75": 2.13,
+     "p90": 4.25,
+     "max": 6,
+     "positionAngle": 82.5
+    },
+    {
+     "day": "1996-11-12",
+     "reports": 11,
+     "median": 0.5,
+     "p75": 0.87,
+     "p90": 6.5,
+     "max": 7,
+     "positionAngle": 77.5
+    },
+    {
+     "day": "1996-11-13",
+     "reports": 8,
+     "median": 0.68,
+     "p75": 0.85,
+     "p90": 1.18,
+     "max": 1.6,
+     "positionAngle": 85
+    },
+    {
+     "day": "1996-11-14",
+     "reports": 12,
+     "median": 0.6,
+     "p75": 0.75,
+     "p90": 0.99,
+     "max": 1.2,
+     "positionAngle": 90
+    },
+    {
+     "day": "1996-11-15",
+     "reports": 8,
+     "median": 0.95,
+     "p75": 1.4,
+     "p90": 2,
+     "max": 2,
+     "positionAngle": 90
+    },
+    {
+     "day": "1996-11-16",
+     "reports": 6,
+     "median": 0.5,
+     "p75": 0.65,
+     "p90": 0.85,
+     "max": 1,
+     "positionAngle": 65
+    },
+    {
+     "day": "1996-11-21",
+     "reports": 6,
+     "median": 0.34,
+     "p75": 0.48,
+     "p90": 0.75,
+     "max": 1,
+     "positionAngle": 40
+    },
+    {
+     "day": "1996-11-22",
+     "reports": 6,
+     "median": 0.5,
+     "p75": 0.88,
+     "p90": 1,
+     "max": 1,
+     "positionAngle": 44
+    },
+    {
+     "day": "1996-11-28",
+     "reports": 9,
+     "median": 0.85,
+     "p75": 1,
+     "p90": 1.04,
+     "max": 1.2,
+     "positionAngle": 70
+    },
+    {
+     "day": "1996-11-29",
+     "reports": 8,
+     "median": 0.63,
+     "p75": 0.94,
+     "p90": 1.5,
+     "max": 1.5,
+     "positionAngle": 70
+    },
+    {
+     "day": "1996-11-30",
+     "reports": 8,
+     "median": 0.5,
+     "p75": 1,
+     "p90": 1,
+     "max": 1,
+     "positionAngle": 55
+    },
+    {
+     "day": "1996-12-01",
+     "reports": 17,
+     "median": 0.5,
+     "p75": 1,
+     "p90": 1.2,
+     "max": 3.5,
+     "positionAngle": 60
+    },
+    {
+     "day": "1996-12-02",
+     "reports": 11,
+     "median": 0.7,
+     "p75": 0.96,
+     "p90": 1.2,
+     "max": 2.3,
+     "positionAngle": 57.5
+    },
+    {
+     "day": "1996-12-03",
+     "reports": 11,
+     "median": 0.8,
+     "p75": 1.25,
+     "p90": 1.5,
+     "max": 2,
+     "positionAngle": 50
+    },
+    {
+     "day": "1996-12-04",
+     "reports": 20,
+     "median": 0.75,
+     "p75": 1,
+     "p90": 1.23,
+     "max": 2.4,
+     "positionAngle": 50
+    },
+    {
+     "day": "1996-12-05",
+     "reports": 6,
+     "median": 1,
+     "p75": 1,
+     "p90": 1.15,
+     "max": 1.3,
+     "positionAngle": 45
+    },
+    {
+     "day": "1996-12-06",
+     "reports": 6,
+     "median": 0.6,
+     "p75": 0.68,
+     "p90": 0.9,
+     "max": 1.1,
+     "positionAngle": 52.5
+    },
+    {
+     "day": "1996-12-07",
+     "reports": 7,
+     "median": 1,
+     "p75": 1.63,
+     "p90": 2.65,
+     "max": 4,
+     "positionAngle": 56
+    },
+    {
+     "day": "1996-12-13",
+     "reports": 7,
+     "median": 0.5,
+     "p75": 1.05,
+     "p90": 1.14,
+     "max": 1.2,
+     "positionAngle": 50
+    },
+    {
+     "day": "1996-12-14",
+     "reports": 10,
+     "median": 0.75,
+     "p75": 1,
+     "p90": 1.03,
+     "max": 1.3,
+     "positionAngle": 45
+    },
+    {
+     "day": "1996-12-16",
+     "reports": 6,
+     "median": 0.5,
+     "p75": 3.88,
+     "p90": 5,
+     "max": 5,
+     "positionAngle": null
+    },
+    {
+     "day": "1996-12-21",
+     "reports": 14,
+     "median": 1.1,
+     "p75": 1.5,
+     "p90": 1.57,
+     "max": 3,
+     "positionAngle": 25
+    },
+    {
+     "day": "1996-12-22",
+     "reports": 9,
+     "median": 1.5,
+     "p75": 1.5,
+     "p90": 1.64,
+     "max": 2.2,
+     "positionAngle": 29.5
+    },
+    {
+     "day": "1996-12-23",
+     "reports": 6,
+     "median": 1,
+     "p75": 1,
+     "p90": 1.25,
+     "max": 1.5,
+     "positionAngle": 20
+    },
+    {
+     "day": "1996-12-25",
+     "reports": 8,
+     "median": 1.25,
+     "p75": 1.73,
+     "p90": 2.16,
+     "max": 3,
+     "positionAngle": 20
+    },
+    {
+     "day": "1996-12-26",
+     "reports": 10,
+     "median": 0.8,
+     "p75": 1.3,
+     "p90": 2.65,
+     "max": 4,
+     "positionAngle": 45
+    },
+    {
+     "day": "1996-12-28",
+     "reports": 16,
+     "median": 1,
+     "p75": 1.2,
+     "p90": 1.95,
+     "max": 2.5,
+     "positionAngle": 20
+    },
+    {
+     "day": "1997-01-01",
+     "reports": 8,
+     "median": 1,
+     "p75": 1.63,
+     "p90": 2.15,
+     "max": 2.5,
+     "positionAngle": 20
+    },
+    {
+     "day": "1997-01-09",
+     "reports": 6,
+     "median": 1.1,
+     "p75": 1.48,
+     "p90": 1.75,
+     "max": 2,
+     "positionAngle": 349.5
+    },
+    {
+     "day": "1997-01-12",
+     "reports": 6,
+     "median": 0.46,
+     "p75": 0.5,
+     "p90": 0.75,
+     "max": 1,
+     "positionAngle": 15
+    },
+    {
+     "day": "1997-01-13",
+     "reports": 9,
+     "median": 1,
+     "p75": 2,
+     "p90": 2.52,
+     "max": 2.6,
+     "positionAngle": 5
+    },
+    {
+     "day": "1997-01-14",
+     "reports": 21,
+     "median": 1,
+     "p75": 1.5,
+     "p90": 1.5,
+     "max": 2.7,
+     "positionAngle": 0
+    },
+    {
+     "day": "1997-01-15",
+     "reports": 18,
+     "median": 1.5,
+     "p75": 2,
+     "p90": 2.44,
+     "max": 3.4,
+     "positionAngle": 0
+    },
+    {
+     "day": "1997-01-16",
+     "reports": 27,
+     "median": 1.2,
+     "p75": 2,
+     "p90": 2.24,
+     "max": 2.5,
+     "positionAngle": 342.5
+    },
+    {
+     "day": "1997-01-17",
+     "reports": 25,
+     "median": 1.2,
+     "p75": 2,
+     "p90": 2.1,
+     "max": 3.5,
+     "positionAngle": 0
+    },
+    {
+     "day": "1997-01-18",
+     "reports": 17,
+     "median": 1.5,
+     "p75": 2,
+     "p90": 2.46,
+     "max": 4,
+     "positionAngle": 332.5
+    },
+    {
+     "day": "1997-01-19",
+     "reports": 11,
+     "median": 1.5,
+     "p75": 2.25,
+     "p90": 3,
+     "max": 3,
+     "positionAngle": 331
+    },
+    {
+     "day": "1997-01-21",
+     "reports": 9,
+     "median": 1,
+     "p75": 2.5,
+     "p90": 6,
+     "max": 6,
+     "positionAngle": 335
+    },
+    {
+     "day": "1997-01-22",
+     "reports": 7,
+     "median": 0.5,
+     "p75": 1,
+     "p90": 1.6,
+     "max": 2.5,
+     "positionAngle": 7.5
+    },
+    {
+     "day": "1997-01-23",
+     "reports": 9,
+     "median": 0.5,
+     "p75": 1,
+     "p90": 1.6,
+     "max": 2,
+     "positionAngle": 357
+    },
+    {
+     "day": "1997-01-25",
+     "reports": 14,
+     "median": 0.6,
+     "p75": 1.15,
+     "p90": 1.5,
+     "max": 1.5,
+     "positionAngle": 330
+    },
+    {
+     "day": "1997-01-26",
+     "reports": 32,
+     "median": 1,
+     "p75": 2,
+     "p90": 2.99,
+     "max": 8,
+     "positionAngle": 335
+    },
+    {
+     "day": "1997-01-27",
+     "reports": 31,
+     "median": 0.67,
+     "p75": 1.55,
+     "p90": 2.2,
+     "max": 10,
+     "positionAngle": 330
+    },
+    {
+     "day": "1997-01-28",
+     "reports": 14,
+     "median": 1.15,
+     "p75": 2.1,
+     "p90": 2.5,
+     "max": 3.5,
+     "positionAngle": 330
+    },
+    {
+     "day": "1997-01-29",
+     "reports": 20,
+     "median": 1.15,
+     "p75": 2,
+     "p90": 2.19,
+     "max": 8.9,
+     "positionAngle": 330
+    },
+    {
+     "day": "1997-01-30",
+     "reports": 7,
+     "median": 1.6,
+     "p75": 2.25,
+     "p90": 2.62,
+     "max": 2.8,
+     "positionAngle": 330
+    },
+    {
+     "day": "1997-01-31",
+     "reports": 8,
+     "median": 1.1,
+     "p75": 1.63,
+     "p90": 2,
+     "max": 2,
+     "positionAngle": 330
+    },
+    {
+     "day": "1997-02-01",
+     "reports": 42,
+     "median": 1.15,
+     "p75": 2.45,
+     "p90": 2.96,
+     "max": 5.1,
+     "positionAngle": 327.5
+    },
+    {
+     "day": "1997-02-02",
+     "reports": 57,
+     "median": 2,
+     "p75": 2.7,
+     "p90": 4.4,
+     "max": 13,
+     "positionAngle": 330
+    },
+    {
+     "day": "1997-02-03",
+     "reports": 52,
+     "median": 2,
+     "p75": 4,
+     "p90": 5.98,
+     "max": 11,
+     "positionAngle": 318
+    },
+    {
+     "day": "1997-02-04",
+     "reports": 27,
+     "median": 2,
+     "p75": 3,
+     "p90": 4.4,
+     "max": 15,
+     "positionAngle": 319
+    },
+    {
+     "day": "1997-02-05",
+     "reports": 20,
+     "median": 1.4,
+     "p75": 2.13,
+     "p90": 3,
+     "max": 5,
+     "positionAngle": 316.5
+    },
+    {
+     "day": "1997-02-06",
+     "reports": 25,
+     "median": 2,
+     "p75": 3,
+     "p90": 4,
+     "max": 5,
+     "positionAngle": 309
+    },
+    {
+     "day": "1997-02-07",
+     "reports": 32,
+     "median": 2.5,
+     "p75": 3.35,
+     "p90": 4,
+     "max": 20,
+     "positionAngle": 316.5
+    },
+    {
+     "day": "1997-02-08",
+     "reports": 43,
+     "median": 3,
+     "p75": 4.5,
+     "p90": 5.24,
+     "max": 10,
+     "positionAngle": 318
+    },
+    {
+     "day": "1997-02-09",
+     "reports": 43,
+     "median": 3,
+     "p75": 4.25,
+     "p90": 5.64,
+     "max": 10.5,
+     "positionAngle": 320
+    },
+    {
+     "day": "1997-02-10",
+     "reports": 37,
+     "median": 3.5,
+     "p75": 5,
+     "p90": 6.7,
+     "max": 9,
+     "positionAngle": 315
+    },
+    {
+     "day": "1997-02-11",
+     "reports": 51,
+     "median": 3,
+     "p75": 4.5,
+     "p90": 8,
+     "max": 19,
+     "positionAngle": 320
+    },
+    {
+     "day": "1997-02-12",
+     "reports": 35,
+     "median": 2,
+     "p75": 4,
+     "p90": 6.8,
+     "max": 15,
+     "positionAngle": 315
+    },
+    {
+     "day": "1997-02-13",
+     "reports": 17,
+     "median": 4,
+     "p75": 4.7,
+     "p90": 9.6,
+     "max": 15,
+     "positionAngle": 317.5
+    },
+    {
+     "day": "1997-02-14",
+     "reports": 29,
+     "median": 4,
+     "p75": 5,
+     "p90": 6.6,
+     "max": 15,
+     "positionAngle": 315.5
+    },
+    {
+     "day": "1997-02-15",
+     "reports": 36,
+     "median": 2.5,
+     "p75": 5,
+     "p90": 6.25,
+     "max": 10,
+     "positionAngle": 315
+    },
+    {
+     "day": "1997-02-16",
+     "reports": 34,
+     "median": 3.4,
+     "p75": 7.5,
+     "p90": 9.4,
+     "max": 15,
+     "positionAngle": 315
+    },
+    {
+     "day": "1997-02-17",
+     "reports": 39,
+     "median": 5,
+     "p75": 7.15,
+     "p90": 9,
+     "max": 23.3,
+     "positionAngle": 315
+    },
+    {
+     "day": "1997-02-18",
+     "reports": 52,
+     "median": 4.2,
+     "p75": 6,
+     "p90": 7,
+     "max": 25,
+     "positionAngle": 317
+    },
+    {
+     "day": "1997-02-19",
+     "reports": 36,
+     "median": 4,
+     "p75": 6.5,
+     "p90": 7.25,
+     "max": 9,
+     "positionAngle": 319
+    },
+    {
+     "day": "1997-02-20",
+     "reports": 37,
+     "median": 3,
+     "p75": 4.3,
+     "p90": 6,
+     "max": 7,
+     "positionAngle": 317.5
+    },
+    {
+     "day": "1997-02-21",
+     "reports": 15,
+     "median": 3,
+     "p75": 5.25,
+     "p90": 8,
+     "max": 11,
+     "positionAngle": 320
+    },
+    {
+     "day": "1997-02-22",
+     "reports": 17,
+     "median": 2.5,
+     "p75": 4,
+     "p90": 5,
+     "max": 5.1,
+     "positionAngle": 315
+    },
+    {
+     "day": "1997-02-23",
+     "reports": 19,
+     "median": 3,
+     "p75": 5,
+     "p90": 9.8,
+     "max": 15.5,
+     "positionAngle": 300
+    },
+    {
+     "day": "1997-02-24",
+     "reports": 16,
+     "median": 3.25,
+     "p75": 4.63,
+     "p90": 6,
+     "max": 15.5,
+     "positionAngle": 320
+    },
+    {
+     "day": "1997-02-25",
+     "reports": 32,
+     "median": 2.7,
+     "p75": 4.25,
+     "p90": 7.85,
+     "max": 8,
+     "positionAngle": 320
+    },
+    {
+     "day": "1997-02-26",
+     "reports": 18,
+     "median": 3.25,
+     "p75": 4.5,
+     "p90": 5.3,
+     "max": 7,
+     "positionAngle": 319.5
+    },
+    {
+     "day": "1997-02-27",
+     "reports": 38,
+     "median": 4,
+     "p75": 5.38,
+     "p90": 10,
+     "max": 15,
+     "positionAngle": 317
+    },
+    {
+     "day": "1997-02-28",
+     "reports": 38,
+     "median": 4,
+     "p75": 6.88,
+     "p90": 10,
+     "max": 15,
+     "positionAngle": 308.5
+    },
+    {
+     "day": "1997-03-01",
+     "reports": 57,
+     "median": 4,
+     "p75": 6,
+     "p90": 8.8,
+     "max": 30,
+     "positionAngle": 317
+    },
+    {
+     "day": "1997-03-02",
+     "reports": 60,
+     "median": 4.65,
+     "p75": 6,
+     "p90": 8.65,
+     "max": 36,
+     "positionAngle": 325
+    },
+    {
+     "day": "1997-03-03",
+     "reports": 52,
+     "median": 5.5,
+     "p75": 8.25,
+     "p90": 11.8,
+     "max": 40,
+     "positionAngle": 323.5
+    },
+    {
+     "day": "1997-03-04",
+     "reports": 61,
+     "median": 5,
+     "p75": 7,
+     "p90": 10,
+     "max": 40,
+     "positionAngle": 322.5
+    },
+    {
+     "day": "1997-03-05",
+     "reports": 63,
+     "median": 5.8,
+     "p75": 9.9,
+     "p90": 14,
+     "max": 42,
+     "positionAngle": 320
+    },
+    {
+     "day": "1997-03-06",
+     "reports": 69,
+     "median": 6,
+     "p75": 10,
+     "p90": 14,
+     "max": 25,
+     "positionAngle": 324.5
+    },
+    {
+     "day": "1997-03-07",
+     "reports": 61,
+     "median": 7,
+     "p75": 9,
+     "p90": 12,
+     "max": 15,
+     "positionAngle": 326
+    },
+    {
+     "day": "1997-03-08",
+     "reports": 97,
+     "median": 9,
+     "p75": 12,
+     "p90": 15,
+     "max": 25,
+     "positionAngle": 325
+    },
+    {
+     "day": "1997-03-09",
+     "reports": 66,
+     "median": 10,
+     "p75": 12,
+     "p90": 14,
+     "max": 20,
+     "positionAngle": 330
+    },
+    {
+     "day": "1997-03-10",
+     "reports": 98,
+     "median": 8,
+     "p75": 12,
+     "p90": 14,
+     "max": 25,
+     "positionAngle": 330
+    },
+    {
+     "day": "1997-03-11",
+     "reports": 93,
+     "median": 7,
+     "p75": 12,
+     "p90": 15,
+     "max": 24,
+     "positionAngle": 326
+    },
+    {
+     "day": "1997-03-12",
+     "reports": 69,
+     "median": 8,
+     "p75": 10,
+     "p90": 15,
+     "max": 25,
+     "positionAngle": 330.5
+    },
+    {
+     "day": "1997-03-13",
+     "reports": 47,
+     "median": 7.5,
+     "p75": 11.25,
+     "p90": 17.4,
+     "max": 28,
+     "positionAngle": 337
+    },
+    {
+     "day": "1997-03-14",
+     "reports": 16,
+     "median": 7,
+     "p75": 12,
+     "p90": 18.5,
+     "max": 20,
+     "positionAngle": 338.5
+    },
+    {
+     "day": "1997-03-15",
+     "reports": 29,
+     "median": 8,
+     "p75": 13,
+     "p90": 16,
+     "max": 20,
+     "positionAngle": 335
+    },
+    {
+     "day": "1997-03-16",
+     "reports": 47,
+     "median": 8.5,
+     "p75": 12,
+     "p90": 15.4,
+     "max": 18,
+     "positionAngle": 325
+    },
+    {
+     "day": "1997-03-17",
+     "reports": 66,
+     "median": 7,
+     "p75": 11.75,
+     "p90": 15,
+     "max": 20,
+     "positionAngle": 340
+    },
+    {
+     "day": "1997-03-18",
+     "reports": 67,
+     "median": 6,
+     "p75": 10,
+     "p90": 15,
+     "max": 20,
+     "positionAngle": 335
+    },
+    {
+     "day": "1997-03-19",
+     "reports": 38,
+     "median": 6.05,
+     "p75": 9,
+     "p90": 12.3,
+     "max": 15,
+     "positionAngle": 335
+    },
+    {
+     "day": "1997-03-20",
+     "reports": 45,
+     "median": 8,
+     "p75": 10,
+     "p90": 13.2,
+     "max": 18,
+     "positionAngle": 338
+    },
+    {
+     "day": "1997-03-21",
+     "reports": 56,
+     "median": 5,
+     "p75": 8,
+     "p90": 9,
+     "max": 14,
+     "positionAngle": 340
+    },
+    {
+     "day": "1997-03-22",
+     "reports": 42,
+     "median": 6.5,
+     "p75": 10,
+     "p90": 11.96,
+     "max": 15,
+     "positionAngle": 345
+    },
+    {
+     "day": "1997-03-23",
+     "reports": 31,
+     "median": 6,
+     "p75": 8.25,
+     "p90": 10,
+     "max": 15,
+     "positionAngle": 345
+    },
+    {
+     "day": "1997-03-24",
+     "reports": 42,
+     "median": 6,
+     "p75": 8,
+     "p90": 10,
+     "max": 32,
+     "positionAngle": 345
+    },
+    {
+     "day": "1997-03-25",
+     "reports": 35,
+     "median": 5,
+     "p75": 10.5,
+     "p90": 13,
+     "max": 16,
+     "positionAngle": 344
+    },
+    {
+     "day": "1997-03-26",
+     "reports": 69,
+     "median": 9,
+     "p75": 10.5,
+     "p90": 15,
+     "max": 35,
+     "positionAngle": 345.5
+    },
+    {
+     "day": "1997-03-27",
+     "reports": 83,
+     "median": 10,
+     "p75": 14.5,
+     "p90": 16,
+     "max": 40,
+     "positionAngle": 355
+    },
+    {
+     "day": "1997-03-28",
+     "reports": 85,
+     "median": 10,
+     "p75": 15,
+     "p90": 16,
+     "max": 24,
+     "positionAngle": 0
+    },
+    {
+     "day": "1997-03-29",
+     "reports": 59,
+     "median": 12,
+     "p75": 15,
+     "p90": 18,
+     "max": 19,
+     "positionAngle": 8
+    },
+    {
+     "day": "1997-03-30",
+     "reports": 100,
+     "median": 11.85,
+     "p75": 16,
+     "p90": 20,
+     "max": 24,
+     "positionAngle": 5
+    },
+    {
+     "day": "1997-03-31",
+     "reports": 77,
+     "median": 10,
+     "p75": 15,
+     "p90": 17.4,
+     "max": 30,
+     "positionAngle": 10
+    },
+    {
+     "day": "1997-04-01",
+     "reports": 103,
+     "median": 13,
+     "p75": 15,
+     "p90": 18.9,
+     "max": 38,
+     "positionAngle": 10
+    },
+    {
+     "day": "1997-04-02",
+     "reports": 76,
+     "median": 12,
+     "p75": 16,
+     "p90": 20,
+     "max": 32,
+     "positionAngle": 5
+    },
+    {
+     "day": "1997-04-03",
+     "reports": 77,
+     "median": 12,
+     "p75": 16,
+     "p90": 20.8,
+     "max": 35,
+     "positionAngle": 10
+    },
+    {
+     "day": "1997-04-04",
+     "reports": 56,
+     "median": 14,
+     "p75": 16.25,
+     "p90": 20,
+     "max": 35,
+     "positionAngle": 13
+    },
+    {
+     "day": "1997-04-05",
+     "reports": 34,
+     "median": 14,
+     "p75": 15,
+     "p90": 20.7,
+     "max": 45,
+     "positionAngle": 4
+    },
+    {
+     "day": "1997-04-06",
+     "reports": 69,
+     "median": 11.3,
+     "p75": 17.8,
+     "p90": 20.2,
+     "max": 26,
+     "positionAngle": 17.5
+    },
+    {
+     "day": "1997-04-07",
+     "reports": 81,
+     "median": 10.8,
+     "p75": 15,
+     "p90": 17,
+     "max": 23,
+     "positionAngle": 16
+    },
+    {
+     "day": "1997-04-08",
+     "reports": 65,
+     "median": 12,
+     "p75": 17,
+     "p90": 20,
+     "max": 30,
+     "positionAngle": 5.5
+    },
+    {
+     "day": "1997-04-09",
+     "reports": 50,
+     "median": 10,
+     "p75": 12.68,
+     "p90": 15.1,
+     "max": 30,
+     "positionAngle": 25
+    },
+    {
+     "day": "1997-04-10",
+     "reports": 44,
+     "median": 10,
+     "p75": 14.25,
+     "p90": 16.4,
+     "max": 27,
+     "positionAngle": 25.5
+    },
+    {
+     "day": "1997-04-11",
+     "reports": 52,
+     "median": 8.75,
+     "p75": 11.25,
+     "p90": 16.9,
+     "max": 32,
+     "positionAngle": 20
+    },
+    {
+     "day": "1997-04-12",
+     "reports": 42,
+     "median": 6.75,
+     "p75": 10,
+     "p90": 13.8,
+     "max": 19,
+     "positionAngle": 10
+    },
+    {
+     "day": "1997-04-13",
+     "reports": 38,
+     "median": 7,
+     "p75": 10,
+     "p90": 13,
+     "max": 21,
+     "positionAngle": 17.5
+    },
+    {
+     "day": "1997-04-14",
+     "reports": 21,
+     "median": 8,
+     "p75": 10,
+     "p90": 12,
+     "max": 13,
+     "positionAngle": 18
+    },
+    {
+     "day": "1997-04-15",
+     "reports": 49,
+     "median": 6,
+     "p75": 12,
+     "p90": 14,
+     "max": 21,
+     "positionAngle": 25
+    },
+    {
+     "day": "1997-04-16",
+     "reports": 34,
+     "median": 6,
+     "p75": 8,
+     "p90": 10,
+     "max": 13,
+     "positionAngle": 33
+    },
+    {
+     "day": "1997-04-17",
+     "reports": 34,
+     "median": 6.5,
+     "p75": 7.7,
+     "p90": 9.4,
+     "max": 13,
+     "positionAngle": 34
+    },
+    {
+     "day": "1997-04-18",
+     "reports": 24,
+     "median": 4.5,
+     "p75": 8,
+     "p90": 9.4,
+     "max": 13,
+     "positionAngle": 45
+    },
+    {
+     "day": "1997-04-19",
+     "reports": 36,
+     "median": 5,
+     "p75": 8,
+     "p90": 10.5,
+     "max": 15,
+     "positionAngle": 33
+    },
+    {
+     "day": "1997-04-20",
+     "reports": 50,
+     "median": 5,
+     "p75": 7,
+     "p90": 9,
+     "max": 11.7,
+     "positionAngle": 35
+    },
+    {
+     "day": "1997-04-21",
+     "reports": 25,
+     "median": 5,
+     "p75": 8,
+     "p90": 11.2,
+     "max": 20,
+     "positionAngle": 35
+    },
+    {
+     "day": "1997-04-22",
+     "reports": 17,
+     "median": 2.5,
+     "p75": 5,
+     "p90": 7,
+     "max": 9,
+     "positionAngle": 42
+    },
+    {
+     "day": "1997-04-23",
+     "reports": 54,
+     "median": 4,
+     "p75": 6,
+     "p90": 9.4,
+     "max": 22,
+     "positionAngle": 41
+    },
+    {
+     "day": "1997-04-24",
+     "reports": 49,
+     "median": 5,
+     "p75": 8,
+     "p90": 20,
+     "max": 30,
+     "positionAngle": 33.5
+    },
+    {
+     "day": "1997-04-25",
+     "reports": 26,
+     "median": 7,
+     "p75": 13,
+     "p90": 18,
+     "max": 22,
+     "positionAngle": 44
+    },
+    {
+     "day": "1997-04-26",
+     "reports": 33,
+     "median": 6,
+     "p75": 9,
+     "p90": 10.8,
+     "max": 21,
+     "positionAngle": 30
+    },
+    {
+     "day": "1997-04-27",
+     "reports": 33,
+     "median": 6,
+     "p75": 9.7,
+     "p90": 14,
+     "max": 25,
+     "positionAngle": 27.5
+    },
+    {
+     "day": "1997-04-28",
+     "reports": 18,
+     "median": 5,
+     "p75": 9.38,
+     "p90": 12,
+     "max": 21,
+     "positionAngle": 40
+    },
+    {
+     "day": "1997-04-29",
+     "reports": 31,
+     "median": 5.4,
+     "p75": 10,
+     "p90": 14,
+     "max": 23,
+     "positionAngle": 40
+    },
+    {
+     "day": "1997-04-30",
+     "reports": 27,
+     "median": 4,
+     "p75": 8.75,
+     "p90": 12.4,
+     "max": 36,
+     "positionAngle": 49
+    },
+    {
+     "day": "1997-05-01",
+     "reports": 39,
+     "median": 3,
+     "p75": 8,
+     "p90": 15,
+     "max": 36,
+     "positionAngle": 40.5
+    },
+    {
+     "day": "1997-05-02",
+     "reports": 39,
+     "median": 3,
+     "p75": 5.5,
+     "p90": 13,
+     "max": 20,
+     "positionAngle": 50
+    },
+    {
+     "day": "1997-05-03",
+     "reports": 26,
+     "median": 2.35,
+     "p75": 5.88,
+     "p90": 9.6,
+     "max": 13,
+     "positionAngle": 50
+    },
+    {
+     "day": "1997-05-04",
+     "reports": 36,
+     "median": 2.75,
+     "p75": 5,
+     "p90": 7,
+     "max": 13,
+     "positionAngle": 47
+    },
+    {
+     "day": "1997-05-05",
+     "reports": 29,
+     "median": 3,
+     "p75": 7,
+     "p90": 9.2,
+     "max": 14,
+     "positionAngle": 40
+    },
+    {
+     "day": "1997-05-06",
+     "reports": 21,
+     "median": 2,
+     "p75": 4,
+     "p90": 6,
+     "max": 6,
+     "positionAngle": 47
+    },
+    {
+     "day": "1997-05-07",
+     "reports": 14,
+     "median": 2.5,
+     "p75": 4.5,
+     "p90": 6.7,
+     "max": 18,
+     "positionAngle": 67.5
+    },
+    {
+     "day": "1997-05-08",
+     "reports": 12,
+     "median": 2.15,
+     "p75": 5,
+     "p90": 5,
+     "max": 7,
+     "positionAngle": 62.5
+    },
+    {
+     "day": "1997-05-09",
+     "reports": 29,
+     "median": 2,
+     "p75": 3.5,
+     "p90": 4.2,
+     "max": 5,
+     "positionAngle": 50
+    },
+    {
+     "day": "1997-05-10",
+     "reports": 20,
+     "median": 1.35,
+     "p75": 2.13,
+     "p90": 3.1,
+     "max": 5,
+     "positionAngle": 70
+    },
+    {
+     "day": "1997-05-11",
+     "reports": 8,
+     "median": 1.5,
+     "p75": 2.25,
+     "p90": 3.9,
+     "max": 6,
+     "positionAngle": 87.5
+    },
+    {
+     "day": "1997-05-12",
+     "reports": 11,
+     "median": 1,
+     "p75": 2.35,
+     "p90": 4,
+     "max": 4.5,
+     "positionAngle": 60
+    },
+    {
+     "day": "1997-05-13",
+     "reports": 10,
+     "median": 1,
+     "p75": 1.93,
+     "p90": 3.15,
+     "max": 4.5,
+     "positionAngle": 80
+    },
+    {
+     "day": "1997-05-14",
+     "reports": 9,
+     "median": 0.8,
+     "p75": 1.7,
+     "p90": 1.76,
+     "max": 2,
+     "positionAngle": 72.5
+    },
+    {
+     "day": "1997-05-16",
+     "reports": 6,
+     "median": 1,
+     "p75": 1.23,
+     "p90": 1.3,
+     "max": 1.3,
+     "positionAngle": null
+    },
+    {
+     "day": "1997-05-17",
+     "reports": 8,
+     "median": 1.75,
+     "p75": 3.25,
+     "p90": 4,
+     "max": 4,
+     "positionAngle": 55
+    },
+    {
+     "day": "1997-05-18",
+     "reports": 6,
+     "median": 1.4,
+     "p75": 1.5,
+     "p90": 2.75,
+     "max": 4,
+     "positionAngle": 67.5
+    },
+    {
+     "day": "1997-05-19",
+     "reports": 6,
+     "median": 1.75,
+     "p75": 2.75,
+     "p90": 3.5,
+     "max": 4,
+     "positionAngle": null
+    },
+    {
+     "day": "1997-05-20",
+     "reports": 7,
+     "median": 0.9,
+     "p75": 1.2,
+     "p90": 2.44,
+     "max": 4,
+     "positionAngle": null
+    },
+    {
+     "day": "1997-05-25",
+     "reports": 6,
+     "median": 1.85,
+     "p75": 2.08,
+     "p90": 3.55,
+     "max": 5,
+     "positionAngle": 70
+    },
+    {
+     "day": "1997-05-27",
+     "reports": 6,
+     "median": 1.65,
+     "p75": 2,
+     "p90": 3,
+     "max": 4,
+     "positionAngle": null
+    },
+    {
+     "day": "1997-08-01",
+     "reports": 8,
+     "median": 2.5,
+     "p75": 3.05,
+     "p90": 3.74,
+     "max": 5,
+     "positionAngle": 235
+    },
+    {
+     "day": "1997-08-10",
+     "reports": 6,
+     "median": 2.75,
+     "p75": 3.75,
+     "p90": 5.25,
+     "max": 6.5,
+     "positionAngle": 330
+    },
+    {
+     "day": "1997-08-12",
+     "reports": 6,
+     "median": 2.5,
+     "p75": 2.88,
+     "p90": 3.5,
+     "max": 4,
+     "positionAngle": 235
+    }
+   ]
+  },
+  {
+   "id": "C/1996 B2",
+   "nights": [
+    {
+     "day": "1996-02-24",
+     "reports": 8,
+     "median": 0.37,
+     "p75": 0.54,
+     "p90": 0.71,
+     "max": 0.8,
+     "positionAngle": 280
+    },
+    {
+     "day": "1996-02-25",
+     "reports": 6,
+     "median": 0.64,
+     "p75": 0.8,
+     "p90": 0.9,
+     "max": 1,
+     "positionAngle": 290
+    },
+    {
+     "day": "1996-02-26",
+     "reports": 7,
+     "median": 0.4,
+     "p75": 0.9,
+     "p90": 1,
+     "max": 1,
+     "positionAngle": 293.5
+    },
+    {
+     "day": "1996-02-27",
+     "reports": 9,
+     "median": 0.2,
+     "p75": 0.5,
+     "p90": 0.92,
+     "max": 1,
+     "positionAngle": 280
+    },
+    {
+     "day": "1996-02-28",
+     "reports": 11,
+     "median": 0.33,
+     "p75": 0.95,
+     "p90": 1,
+     "max": 1.5,
+     "positionAngle": 285
+    },
+    {
+     "day": "1996-03-02",
+     "reports": 11,
+     "median": 0.3,
+     "p75": 0.5,
+     "p90": 0.75,
+     "max": 1,
+     "positionAngle": 280
+    },
+    {
+     "day": "1996-03-12",
+     "reports": 14,
+     "median": 1.35,
+     "p75": 1.8,
+     "p90": 2,
+     "max": 2.5,
+     "positionAngle": 280
+    },
+    {
+     "day": "1996-03-13",
+     "reports": 22,
+     "median": 0.61,
+     "p75": 1.1,
+     "p90": 1.5,
+     "max": 2,
+     "positionAngle": 280
+    },
+    {
+     "day": "1996-03-14",
+     "reports": 20,
+     "median": 1,
+     "p75": 1.63,
+     "p90": 2.55,
+     "max": 3,
+     "positionAngle": 280
+    },
+    {
+     "day": "1996-03-15",
+     "reports": 19,
+     "median": 0.8,
+     "p75": 1.75,
+     "p90": 3,
+     "max": 7.5,
+     "positionAngle": 282.5
+    },
+    {
+     "day": "1996-03-16",
+     "reports": 54,
+     "median": 1,
+     "p75": 2.1,
+     "p90": 4.4,
+     "max": 10,
+     "positionAngle": 300
+    },
+    {
+     "day": "1996-03-17",
+     "reports": 40,
+     "median": 2.6,
+     "p75": 3.63,
+     "p90": 6.1,
+     "max": 15,
+     "positionAngle": 276
+    },
+    {
+     "day": "1996-03-18",
+     "reports": 64,
+     "median": 3,
+     "p75": 4.35,
+     "p90": 8,
+     "max": 10,
+     "positionAngle": 275
+    },
+    {
+     "day": "1996-03-19",
+     "reports": 73,
+     "median": 3,
+     "p75": 5,
+     "p90": 7.8,
+     "max": 45,
+     "positionAngle": 271.5
+    },
+    {
+     "day": "1996-03-20",
+     "reports": 99,
+     "median": 5,
+     "p75": 10,
+     "p90": 15,
+     "max": 30,
+     "positionAngle": 270
+    },
+    {
+     "day": "1996-03-21",
+     "reports": 99,
+     "median": 5.5,
+     "p75": 9.6,
+     "p90": 15,
+     "max": 30,
+     "positionAngle": 260
+    },
+    {
+     "day": "1996-03-22",
+     "reports": 87,
+     "median": 10,
+     "p75": 15,
+     "p90": 20,
+     "max": 40,
+     "positionAngle": 250
+    },
+    {
+     "day": "1996-03-23",
+     "reports": 147,
+     "median": 12,
+     "p75": 25,
+     "p90": 30,
+     "max": 80,
+     "positionAngle": 236
+    },
+    {
+     "day": "1996-03-24",
+     "reports": 111,
+     "median": 28,
+     "p75": 35,
+     "p90": 41,
+     "max": 70,
+     "positionAngle": 225
+    },
+    {
+     "day": "1996-03-25",
+     "reports": 123,
+     "median": 30,
+     "p75": 40,
+     "p90": 50,
+     "max": 62,
+     "positionAngle": 210
+    },
+    {
+     "day": "1996-03-26",
+     "reports": 99,
+     "median": 30,
+     "p75": 50,
+     "p90": 60,
+     "max": 90,
+     "positionAngle": 198.5
+    },
+    {
+     "day": "1996-03-27",
+     "reports": 141,
+     "median": 27,
+     "p75": 40,
+     "p90": 55,
+     "max": 75,
+     "positionAngle": 77
+    },
+    {
+     "day": "1996-03-28",
+     "reports": 104,
+     "median": 18,
+     "p75": 37.75,
+     "p90": 60,
+     "max": 90,
+     "positionAngle": 52.5
+    },
+    {
+     "day": "1996-03-29",
+     "reports": 76,
+     "median": 10,
+     "p75": 20,
+     "p90": 38.5,
+     "max": 45,
+     "positionAngle": 46
+    },
+    {
+     "day": "1996-03-30",
+     "reports": 68,
+     "median": 8,
+     "p75": 12,
+     "p90": 25,
+     "max": 35,
+     "positionAngle": 46
+    },
+    {
+     "day": "1996-03-31",
+     "reports": 53,
+     "median": 5,
+     "p75": 8,
+     "p90": 15,
+     "max": 34,
+     "positionAngle": 48
+    },
+    {
+     "day": "1996-04-01",
+     "reports": 72,
+     "median": 4,
+     "p75": 7,
+     "p90": 10.9,
+     "max": 25,
+     "positionAngle": 49.5
+    },
+    {
+     "day": "1996-04-02",
+     "reports": 38,
+     "median": 3,
+     "p75": 4,
+     "p90": 5.3,
+     "max": 20,
+     "positionAngle": 45
+    },
+    {
+     "day": "1996-04-03",
+     "reports": 27,
+     "median": 2.5,
+     "p75": 4,
+     "p90": 6.4,
+     "max": 21,
+     "positionAngle": 45
+    },
+    {
+     "day": "1996-04-04",
+     "reports": 62,
+     "median": 4,
+     "p75": 5.38,
+     "p90": 8,
+     "max": 25,
+     "positionAngle": 45
+    },
+    {
+     "day": "1996-04-05",
+     "reports": 87,
+     "median": 5,
+     "p75": 7,
+     "p90": 11,
+     "max": 30,
+     "positionAngle": 45.5
+    },
+    {
+     "day": "1996-04-06",
+     "reports": 100,
+     "median": 5.95,
+     "p75": 9.25,
+     "p90": 14.3,
+     "max": 70,
+     "positionAngle": 45
+    },
+    {
+     "day": "1996-04-07",
+     "reports": 101,
+     "median": 6,
+     "p75": 9,
+     "p90": 15,
+     "max": 50,
+     "positionAngle": 45
+    },
+    {
+     "day": "1996-04-08",
+     "reports": 69,
+     "median": 4.7,
+     "p75": 7.1,
+     "p90": 10,
+     "max": 35,
+     "positionAngle": 45
+    },
+    {
+     "day": "1996-04-09",
+     "reports": 57,
+     "median": 4.3,
+     "p75": 9,
+     "p90": 15.4,
+     "max": 90,
+     "positionAngle": 45
+    },
+    {
+     "day": "1996-04-10",
+     "reports": 41,
+     "median": 5,
+     "p75": 15,
+     "p90": 25,
+     "max": 65,
+     "positionAngle": 46
+    },
+    {
+     "day": "1996-04-11",
+     "reports": 40,
+     "median": 10,
+     "p75": 16,
+     "p90": 20.5,
+     "max": 65,
+     "positionAngle": 45
+    },
+    {
+     "day": "1996-04-12",
+     "reports": 41,
+     "median": 6,
+     "p75": 10,
+     "p90": 25,
+     "max": 40,
+     "positionAngle": 41
+    },
+    {
+     "day": "1996-04-13",
+     "reports": 59,
+     "median": 4,
+     "p75": 8.25,
+     "p90": 16,
+     "max": 80,
+     "positionAngle": 42
+    },
+    {
+     "day": "1996-04-14",
+     "reports": 54,
+     "median": 7,
+     "p75": 10.75,
+     "p90": 18,
+     "max": 70,
+     "positionAngle": 42
+    },
+    {
+     "day": "1996-04-15",
+     "reports": 65,
+     "median": 5,
+     "p75": 11,
+     "p90": 17.8,
+     "max": 40,
+     "positionAngle": 40
+    },
+    {
+     "day": "1996-04-16",
+     "reports": 55,
+     "median": 5,
+     "p75": 8,
+     "p90": 17.6,
+     "max": 80,
+     "positionAngle": 40
+    },
+    {
+     "day": "1996-04-17",
+     "reports": 68,
+     "median": 8.25,
+     "p75": 13,
+     "p90": 20,
+     "max": 50,
+     "positionAngle": 40
+    },
+    {
+     "day": "1996-04-18",
+     "reports": 35,
+     "median": 7,
+     "p75": 11.5,
+     "p90": 16.2,
+     "max": 50,
+     "positionAngle": 40
+    },
+    {
+     "day": "1996-04-19",
+     "reports": 42,
+     "median": 5,
+     "p75": 14.5,
+     "p90": 24.8,
+     "max": 65,
+     "positionAngle": 38
+    },
+    {
+     "day": "1996-04-20",
+     "reports": 38,
+     "median": 4,
+     "p75": 6.75,
+     "p90": 10,
+     "max": 70,
+     "positionAngle": 36.5
+    },
+    {
+     "day": "1996-04-21",
+     "reports": 45,
+     "median": 3,
+     "p75": 5,
+     "p90": 9.2,
+     "max": 30,
+     "positionAngle": 32
+    },
+    {
+     "day": "1996-04-22",
+     "reports": 22,
+     "median": 4.75,
+     "p75": 6.5,
+     "p90": 9.9,
+     "max": 32,
+     "positionAngle": 35
+    },
+    {
+     "day": "1996-04-23",
+     "reports": 12,
+     "median": 3.5,
+     "p75": 4.25,
+     "p90": 5.9,
+     "max": 20,
+     "positionAngle": 31.5
+    },
+    {
+     "day": "1996-04-24",
+     "reports": 8,
+     "median": 4,
+     "p75": 4.88,
+     "p90": 6.6,
+     "max": 8,
+     "positionAngle": 20
+    },
+    {
+     "day": "1996-04-26",
+     "reports": 6,
+     "median": 0.45,
+     "p75": 1.02,
+     "p90": 1.35,
+     "max": 1.5,
+     "positionAngle": 25
+    }
+   ]
+  },
+  {
+   "id": "C/2006 P1",
+   "nights": [
+    {
+     "day": "2007-01-10",
+     "reports": 7,
+     "median": 2.5,
+     "p75": 3.25,
+     "p90": 3.7,
+     "max": 4,
+     "positionAngle": 0
+    },
+    {
+     "day": "2007-01-12",
+     "reports": 12,
+     "median": 1,
+     "p75": 1.2,
+     "p90": 1.5,
+     "max": 2,
+     "positionAngle": 35
+    },
+    {
+     "day": "2007-01-16",
+     "reports": 8,
+     "median": 2,
+     "p75": 2,
+     "p90": 2,
+     "max": 2,
+     "positionAngle": 120
+    },
+    {
+     "day": "2007-01-23",
+     "reports": 7,
+     "median": 5,
+     "p75": 25,
+     "p90": 32,
+     "max": 35,
+     "positionAngle": null
+    },
+    {
+     "day": "2007-01-24",
+     "reports": 9,
+     "median": 20,
+     "p75": 20,
+     "p90": 26,
+     "max": 26,
+     "positionAngle": 149
+    },
+    {
+     "day": "2007-01-29",
+     "reports": 8,
+     "median": 4.5,
+     "p75": 9.75,
+     "p90": 15,
+     "max": 15,
+     "positionAngle": 159
+    },
+    {
+     "day": "2007-02-03",
+     "reports": 10,
+     "median": 1,
+     "p75": 1.08,
+     "p90": 1.51,
+     "max": 1.6,
+     "positionAngle": 170
+    },
+    {
+     "day": "2007-02-04",
+     "reports": 6,
+     "median": 1,
+     "p75": 2.5,
+     "p90": 6.56,
+     "max": 10.11,
+     "positionAngle": 160
+    }
+   ]
+  },
+  {
+   "id": "C/2020 F3",
+   "nights": [
+    {
+     "day": "2020-07-05",
+     "reports": 9,
+     "median": 0.9,
+     "p75": 1.2,
+     "p90": 1.33,
+     "max": 1.33,
+     "positionAngle": 295
+    },
+    {
+     "day": "2020-07-06",
+     "reports": 17,
+     "median": 1,
+     "p75": 1.5,
+     "p90": 1.67,
+     "max": 2.5,
+     "positionAngle": 303
+    },
+    {
+     "day": "2020-07-07",
+     "reports": 12,
+     "median": 1.75,
+     "p75": 2.5,
+     "p90": 2.5,
+     "max": 3.17,
+     "positionAngle": 302.5
+    },
+    {
+     "day": "2020-07-08",
+     "reports": 10,
+     "median": 1.5,
+     "p75": 2,
+     "p90": 3.15,
+     "max": 4.5,
+     "positionAngle": 310
+    },
+    {
+     "day": "2020-07-09",
+     "reports": 9,
+     "median": 2,
+     "p75": 2.5,
+     "p90": 3.2,
+     "max": 6,
+     "positionAngle": 320
+    },
+    {
+     "day": "2020-07-10",
+     "reports": 21,
+     "median": 2.5,
+     "p75": 3.5,
+     "p90": 4.5,
+     "max": 5.5,
+     "positionAngle": 320
+    },
+    {
+     "day": "2020-07-11",
+     "reports": 29,
+     "median": 3.1,
+     "p75": 5,
+     "p90": 6.2,
+     "max": 8,
+     "positionAngle": 327.5
+    },
+    {
+     "day": "2020-07-12",
+     "reports": 34,
+     "median": 4.75,
+     "p75": 6,
+     "p90": 8,
+     "max": 10,
+     "positionAngle": 330
+    },
+    {
+     "day": "2020-07-13",
+     "reports": 30,
+     "median": 4,
+     "p75": 4.8,
+     "p90": 5.75,
+     "max": 11,
+     "positionAngle": 340
+    },
+    {
+     "day": "2020-07-14",
+     "reports": 26,
+     "median": 4,
+     "p75": 5.38,
+     "p90": 8.25,
+     "max": 16,
+     "positionAngle": 350
+    },
+    {
+     "day": "2020-07-15",
+     "reports": 14,
+     "median": 5.05,
+     "p75": 10,
+     "p90": 11.4,
+     "max": 12,
+     "positionAngle": 349
+    },
+    {
+     "day": "2020-07-16",
+     "reports": 17,
+     "median": 5,
+     "p75": 5,
+     "p90": 6,
+     "max": 7,
+     "positionAngle": 0
+    },
+    {
+     "day": "2020-07-17",
+     "reports": 21,
+     "median": 5.5,
+     "p75": 8,
+     "p90": 10.96,
+     "max": 12,
+     "positionAngle": 8.5
+    },
+    {
+     "day": "2020-07-18",
+     "reports": 22,
+     "median": 6,
+     "p75": 8,
+     "p90": 12,
+     "max": 15,
+     "positionAngle": 20
+    },
+    {
+     "day": "2020-07-19",
+     "reports": 25,
+     "median": 4,
+     "p75": 8,
+     "p90": 11.6,
+     "max": 25,
+     "positionAngle": 30
+    },
+    {
+     "day": "2020-07-20",
+     "reports": 33,
+     "median": 5.4,
+     "p75": 10,
+     "p90": 11.6,
+     "max": 25,
+     "positionAngle": 34
+    },
+    {
+     "day": "2020-07-21",
+     "reports": 41,
+     "median": 5,
+     "p75": 8,
+     "p90": 10,
+     "max": 12,
+     "positionAngle": 40
+    },
+    {
+     "day": "2020-07-22",
+     "reports": 34,
+     "median": 3.25,
+     "p75": 5.38,
+     "p90": 10.7,
+     "max": 12,
+     "positionAngle": 45
+    },
+    {
+     "day": "2020-07-23",
+     "reports": 19,
+     "median": 3,
+     "p75": 6.35,
+     "p90": 8,
+     "max": 10,
+     "positionAngle": 56
+    },
+    {
+     "day": "2020-07-24",
+     "reports": 26,
+     "median": 2.55,
+     "p75": 5.13,
+     "p90": 7.75,
+     "max": 11,
+     "positionAngle": 60.5
+    },
+    {
+     "day": "2020-07-25",
+     "reports": 30,
+     "median": 2.55,
+     "p75": 4.38,
+     "p90": 6.82,
+     "max": 7,
+     "positionAngle": 60
+    },
+    {
+     "day": "2020-07-26",
+     "reports": 17,
+     "median": 2.7,
+     "p75": 4,
+     "p90": 4.4,
+     "max": 6,
+     "positionAngle": 70
+    },
+    {
+     "day": "2020-07-27",
+     "reports": 29,
+     "median": 2,
+     "p75": 3,
+     "p90": 3.52,
+     "max": 7,
+     "positionAngle": 75
+    },
+    {
+     "day": "2020-07-28",
+     "reports": 11,
+     "median": 2,
+     "p75": 2.95,
+     "p90": 3,
+     "max": 4,
+     "positionAngle": 72
+    },
+    {
+     "day": "2020-07-29",
+     "reports": 18,
+     "median": 1,
+     "p75": 1.85,
+     "p90": 3.25,
+     "max": 5,
+     "positionAngle": 70
+    },
+    {
+     "day": "2020-07-30",
+     "reports": 23,
+     "median": 0.8,
+     "p75": 2,
+     "p90": 2,
+     "max": 4,
+     "positionAngle": 80
+    },
+    {
+     "day": "2020-07-31",
+     "reports": 13,
+     "median": 0.6,
+     "p75": 1,
+     "p90": 1.3,
+     "max": 2,
+     "positionAngle": 82
+    },
+    {
+     "day": "2020-08-01",
+     "reports": 8,
+     "median": 0.78,
+     "p75": 1.05,
+     "p90": 1.44,
+     "max": 2,
+     "positionAngle": 76
+    },
+    {
+     "day": "2020-08-05",
+     "reports": 6,
+     "median": 1,
+     "p75": 1,
+     "p90": 1.1,
+     "max": 1.2,
+     "positionAngle": 85
+    },
+    {
+     "day": "2020-08-06",
+     "reports": 7,
+     "median": 0.83,
+     "p75": 1.1,
+     "p90": 1.2,
+     "max": 1.2,
+     "positionAngle": 85
+    }
+   ]
+  },
+  {
+   "id": "C/2023 A3",
+   "nights": [
+    {
+     "day": "2024-05-04",
+     "reports": 7,
+     "median": 0.07,
+     "p75": 0.08,
+     "p90": 0.1,
+     "max": 0.13,
+     "positionAngle": 109
+    },
+    {
+     "day": "2024-05-08",
+     "reports": 7,
+     "median": 0.03,
+     "p75": 0.08,
+     "p90": 0.11,
+     "max": 0.13,
+     "positionAngle": 100
+    },
+    {
+     "day": "2024-05-11",
+     "reports": 6,
+     "median": 0.07,
+     "p75": 0.08,
+     "p90": 0.11,
+     "max": 0.13,
+     "positionAngle": 100
+    },
+    {
+     "day": "2024-05-12",
+     "reports": 7,
+     "median": 0.05,
+     "p75": 0.09,
+     "p90": 0.13,
+     "max": 0.17,
+     "positionAngle": 105
+    },
+    {
+     "day": "2024-09-22",
+     "reports": 7,
+     "median": 1.3,
+     "p75": 1.5,
+     "p90": 1.58,
+     "max": 1.7,
+     "positionAngle": 252
+    },
+    {
+     "day": "2024-09-25",
+     "reports": 11,
+     "median": 1,
+     "p75": 2,
+     "p90": 3,
+     "max": 3.6,
+     "positionAngle": 250
+    },
+    {
+     "day": "2024-09-26",
+     "reports": 8,
+     "median": 0.8,
+     "p75": 1.05,
+     "p90": 2.04,
+     "max": 4,
+     "positionAngle": 250
+    },
+    {
+     "day": "2024-09-28",
+     "reports": 14,
+     "median": 1.15,
+     "p75": 2.75,
+     "p90": 6.8,
+     "max": 8.4,
+     "positionAngle": 250
+    },
+    {
+     "day": "2024-09-29",
+     "reports": 8,
+     "median": 1.75,
+     "p75": 4.25,
+     "p90": 6.5,
+     "max": 10,
+     "positionAngle": 257
+    },
+    {
+     "day": "2024-09-30",
+     "reports": 9,
+     "median": 3,
+     "p75": 5,
+     "p90": 9.6,
+     "max": 10,
+     "positionAngle": 260
+    },
+    {
+     "day": "2024-10-01",
+     "reports": 17,
+     "median": 3,
+     "p75": 5.5,
+     "p90": 11.4,
+     "max": 15,
+     "positionAngle": 260
+    },
+    {
+     "day": "2024-10-02",
+     "reports": 11,
+     "median": 2,
+     "p75": 4,
+     "p90": 15,
+     "max": 19,
+     "positionAngle": 260
+    },
+    {
+     "day": "2024-10-13",
+     "reports": 22,
+     "median": 5.75,
+     "p75": 8,
+     "p90": 9.85,
+     "max": 15,
+     "positionAngle": 74
+    },
+    {
+     "day": "2024-10-14",
+     "reports": 18,
+     "median": 8,
+     "p75": 10,
+     "p90": 11.3,
+     "max": 18,
+     "positionAngle": 70
+    },
+    {
+     "day": "2024-10-15",
+     "reports": 25,
+     "median": 9,
+     "p75": 10,
+     "p90": 15,
+     "max": 20,
+     "positionAngle": 70
+    },
+    {
+     "day": "2024-10-16",
+     "reports": 42,
+     "median": 6.1,
+     "p75": 10,
+     "p90": 14.8,
+     "max": 22,
+     "positionAngle": 70
+    },
+    {
+     "day": "2024-10-17",
+     "reports": 30,
+     "median": 5,
+     "p75": 7.88,
+     "p90": 11,
+     "max": 15,
+     "positionAngle": 70
+    },
+    {
+     "day": "2024-10-18",
+     "reports": 28,
+     "median": 4.5,
+     "p75": 6.5,
+     "p90": 7,
+     "max": 8,
+     "positionAngle": 70
+    },
+    {
+     "day": "2024-10-19",
+     "reports": 27,
+     "median": 5,
+     "p75": 7,
+     "p90": 12,
+     "max": 19,
+     "positionAngle": 73
+    },
+    {
+     "day": "2024-10-20",
+     "reports": 34,
+     "median": 5,
+     "p75": 7,
+     "p90": 10.7,
+     "max": 15,
+     "positionAngle": 75
+    },
+    {
+     "day": "2024-10-21",
+     "reports": 23,
+     "median": 4.5,
+     "p75": 6.5,
+     "p90": 8,
+     "max": 10,
+     "positionAngle": 73
+    },
+    {
+     "day": "2024-10-22",
+     "reports": 36,
+     "median": 5,
+     "p75": 6.63,
+     "p90": 10.75,
+     "max": 15.5,
+     "positionAngle": 75
+    },
+    {
+     "day": "2024-10-23",
+     "reports": 28,
+     "median": 4.8,
+     "p75": 5,
+     "p90": 7,
+     "max": 9,
+     "positionAngle": 72
+    },
+    {
+     "day": "2024-10-24",
+     "reports": 28,
+     "median": 3.5,
+     "p75": 5,
+     "p90": 6.3,
+     "max": 9,
+     "positionAngle": 74.5
+    },
+    {
+     "day": "2024-10-25",
+     "reports": 22,
+     "median": 3.5,
+     "p75": 4.38,
+     "p90": 5.98,
+     "max": 6.2,
+     "positionAngle": 74
+    },
+    {
+     "day": "2024-10-26",
+     "reports": 14,
+     "median": 2.5,
+     "p75": 3.58,
+     "p90": 4,
+     "max": 6.4,
+     "positionAngle": 72
+    },
+    {
+     "day": "2024-10-27",
+     "reports": 18,
+     "median": 2.1,
+     "p75": 3,
+     "p90": 3.79,
+     "max": 5.5,
+     "positionAngle": 74
+    },
+    {
+     "day": "2024-10-28",
+     "reports": 23,
+     "median": 2,
+     "p75": 4,
+     "p90": 4.28,
+     "max": 5.7,
+     "positionAngle": 73
+    },
+    {
+     "day": "2024-10-29",
+     "reports": 15,
+     "median": 2,
+     "p75": 3.35,
+     "p90": 4.46,
+     "max": 4.6,
+     "positionAngle": 72
+    },
+    {
+     "day": "2024-10-30",
+     "reports": 17,
+     "median": 2,
+     "p75": 2.3,
+     "p90": 3.28,
+     "max": 3.8,
+     "positionAngle": 75
+    },
+    {
+     "day": "2024-10-31",
+     "reports": 12,
+     "median": 1.37,
+     "p75": 2,
+     "p90": 2.18,
+     "max": 3.3,
+     "positionAngle": 75
+    },
+    {
+     "day": "2024-11-01",
+     "reports": 15,
+     "median": 1.5,
+     "p75": 2.2,
+     "p90": 3.3,
+     "max": 4,
+     "positionAngle": 75
+    },
+    {
+     "day": "2024-11-02",
+     "reports": 20,
+     "median": 0.83,
+     "p75": 1.25,
+     "p90": 1.5,
+     "max": 3.3,
+     "positionAngle": 73
+    },
+    {
+     "day": "2024-11-03",
+     "reports": 22,
+     "median": 1,
+     "p75": 1.68,
+     "p90": 3.35,
+     "max": 30,
+     "positionAngle": 72
+    },
+    {
+     "day": "2024-11-04",
+     "reports": 18,
+     "median": 1.3,
+     "p75": 1.5,
+     "p90": 1.8,
+     "max": 2.1,
+     "positionAngle": 70.5
+    },
+    {
+     "day": "2024-11-05",
+     "reports": 13,
+     "median": 1,
+     "p75": 1.5,
+     "p90": 2.32,
+     "max": 3,
+     "positionAngle": 72
+    },
+    {
+     "day": "2024-11-06",
+     "reports": 6,
+     "median": 0.92,
+     "p75": 1.3,
+     "p90": 1.6,
+     "max": 1.8,
+     "positionAngle": 71
+    },
+    {
+     "day": "2024-11-07",
+     "reports": 7,
+     "median": 0.8,
+     "p75": 1.22,
+     "p90": 1.68,
+     "max": 1.8,
+     "positionAngle": 75
+    },
+    {
+     "day": "2024-11-08",
+     "reports": 7,
+     "median": 0.3,
+     "p75": 0.45,
+     "p90": 0.63,
+     "max": 0.83,
+     "positionAngle": 71.5
+    },
+    {
+     "day": "2024-11-09",
+     "reports": 6,
+     "median": 0.18,
+     "p75": 0.43,
+     "p90": 0.8,
+     "max": 1.1,
+     "positionAngle": 74.5
+    },
+    {
+     "day": "2024-11-11",
+     "reports": 6,
+     "median": 0.33,
+     "p75": 0.46,
+     "p90": 0.65,
+     "max": 0.8,
+     "positionAngle": 70
+    },
+    {
+     "day": "2024-11-20",
+     "reports": 6,
+     "median": 0.18,
+     "p75": 0.23,
+     "p90": 0.3,
+     "max": 0.35,
+     "positionAngle": 70
+    },
+    {
+     "day": "2024-11-29",
+     "reports": 10,
+     "median": 0.23,
+     "p75": 0.28,
+     "p90": 0.36,
+     "max": 0.6,
+     "positionAngle": 70
+    },
+    {
+     "day": "2024-12-01",
+     "reports": 8,
+     "median": 0.16,
+     "p75": 0.19,
+     "p90": 0.22,
+     "max": 0.27,
+     "positionAngle": 65
+    }
+   ]
+  },
+  {
+   "id": "C/2025 A6",
+   "nights": [
+    {
+     "day": "2025-09-29",
+     "reports": 6,
+     "median": 0.27,
+     "p75": 0.33,
+     "p90": 0.37,
+     "max": 0.4,
+     "positionAngle": 295
+    },
+    {
+     "day": "2025-10-01",
+     "reports": 7,
+     "median": 0.5,
+     "p75": 0.65,
+     "p90": 1,
+     "max": 1.3,
+     "positionAngle": 300
+    },
+    {
+     "day": "2025-10-02",
+     "reports": 8,
+     "median": 0.44,
+     "p75": 0.55,
+     "p90": 0.74,
+     "max": 0.83,
+     "positionAngle": 305
+    },
+    {
+     "day": "2025-10-03",
+     "reports": 15,
+     "median": 0.3,
+     "p75": 0.5,
+     "p90": 0.52,
+     "max": 0.6,
+     "positionAngle": 303
+    },
+    {
+     "day": "2025-10-12",
+     "reports": 8,
+     "median": 0.8,
+     "p75": 1,
+     "p90": 1.12,
+     "max": 1.39,
+     "positionAngle": 320
+    },
+    {
+     "day": "2025-10-13",
+     "reports": 10,
+     "median": 1.37,
+     "p75": 1.5,
+     "p90": 1.54,
+     "max": 1.9,
+     "positionAngle": 330
+    },
+    {
+     "day": "2025-10-14",
+     "reports": 8,
+     "median": 0.6,
+     "p75": 1,
+     "p90": 1.06,
+     "max": 1.2,
+     "positionAngle": 335
+    },
+    {
+     "day": "2025-10-16",
+     "reports": 16,
+     "median": 1,
+     "p75": 1.15,
+     "p90": 1.5,
+     "max": 2,
+     "positionAngle": 340
+    },
+    {
+     "day": "2025-10-17",
+     "reports": 18,
+     "median": 1.05,
+     "p75": 1.5,
+     "p90": 2.65,
+     "max": 3.2,
+     "positionAngle": 343
+    },
+    {
+     "day": "2025-10-18",
+     "reports": 22,
+     "median": 1.18,
+     "p75": 1.88,
+     "p90": 2.9,
+     "max": 3.6,
+     "positionAngle": 355
+    },
+    {
+     "day": "2025-10-19",
+     "reports": 20,
+     "median": 1.35,
+     "p75": 2,
+     "p90": 2.04,
+     "max": 2.5,
+     "positionAngle": 357.5
+    },
+    {
+     "day": "2025-10-20",
+     "reports": 21,
+     "median": 1.3,
+     "p75": 2,
+     "p90": 4.5,
+     "max": 5.2,
+     "positionAngle": 9
+    },
+    {
+     "day": "2025-10-21",
+     "reports": 13,
+     "median": 1.5,
+     "p75": 2,
+     "p90": 3.6,
+     "max": 5,
+     "positionAngle": 13
+    },
+    {
+     "day": "2025-10-22",
+     "reports": 12,
+     "median": 2,
+     "p75": 2.65,
+     "p90": 3.43,
+     "max": 4,
+     "positionAngle": 20
+    },
+    {
+     "day": "2025-10-23",
+     "reports": 11,
+     "median": 2,
+     "p75": 2.4,
+     "p90": 3,
+     "max": 4.5,
+     "positionAngle": 20
+    },
+    {
+     "day": "2025-10-24",
+     "reports": 22,
+     "median": 3.5,
+     "p75": 4.9,
+     "p90": 5.18,
+     "max": 6,
+     "positionAngle": 25
+    },
+    {
+     "day": "2025-10-25",
+     "reports": 15,
+     "median": 1.5,
+     "p75": 2.5,
+     "p90": 7,
+     "max": 18,
+     "positionAngle": 30
+    },
+    {
+     "day": "2025-10-26",
+     "reports": 19,
+     "median": 2,
+     "p75": 2.95,
+     "p90": 4.86,
+     "max": 6.5,
+     "positionAngle": 35
+    },
+    {
+     "day": "2025-10-27",
+     "reports": 17,
+     "median": 1.6,
+     "p75": 2.5,
+     "p90": 3,
+     "max": 4,
+     "positionAngle": 40
+    },
+    {
+     "day": "2025-10-28",
+     "reports": 7,
+     "median": 1.9,
+     "p75": 2.85,
+     "p90": 3.28,
+     "max": 3.4,
+     "positionAngle": 46
+    },
+    {
+     "day": "2025-10-29",
+     "reports": 14,
+     "median": 1.7,
+     "p75": 2.38,
+     "p90": 3.14,
+     "max": 4,
+     "positionAngle": 46
+    },
+    {
+     "day": "2025-10-30",
+     "reports": 16,
+     "median": 1.35,
+     "p75": 2.63,
+     "p90": 3.65,
+     "max": 5,
+     "positionAngle": 45
+    },
+    {
+     "day": "2025-11-01",
+     "reports": 12,
+     "median": 1,
+     "p75": 1.2,
+     "p90": 1.47,
+     "max": 2,
+     "positionAngle": 57
+    },
+    {
+     "day": "2025-11-02",
+     "reports": 12,
+     "median": 1,
+     "p75": 1.63,
+     "p90": 2.36,
+     "max": 2.67,
+     "positionAngle": 55.5
+    },
+    {
+     "day": "2025-11-03",
+     "reports": 8,
+     "median": 1,
+     "p75": 1.05,
+     "p90": 1.74,
+     "max": 3,
+     "positionAngle": 62.5
+    },
+    {
+     "day": "2025-11-05",
+     "reports": 6,
+     "median": 0.7,
+     "p75": 0.98,
+     "p90": 1.25,
+     "max": 1.5,
+     "positionAngle": 60
+    },
+    {
+     "day": "2025-11-06",
+     "reports": 8,
+     "median": 0.79,
+     "p75": 1,
+     "p90": 1.06,
+     "max": 1.2,
+     "positionAngle": 60
+    },
+    {
+     "day": "2025-11-07",
+     "reports": 6,
+     "median": 1.39,
+     "p75": 1.93,
+     "p90": 2.25,
+     "max": 2.5,
+     "positionAngle": 64.5
+    },
+    {
+     "day": "2025-11-10",
+     "reports": 8,
+     "median": 1.38,
+     "p75": 1.98,
+     "p90": 2.65,
+     "max": 3,
+     "positionAngle": 75
+    }
+   ]
+  },
+  {
+   "id": "12P",
+   "nights": [
+    {
+     "day": "2024-03-03",
+     "reports": 7,
+     "median": 0.63,
+     "p75": 0.95,
+     "p90": 1.44,
+     "max": 1.8,
+     "positionAngle": 14
+    },
+    {
+     "day": "2024-03-08",
+     "reports": 7,
+     "median": 0.67,
+     "p75": 1.5,
+     "p90": 1.5,
+     "max": 1.5,
+     "positionAngle": 20
+    },
+    {
+     "day": "2024-03-11",
+     "reports": 7,
+     "median": 0.83,
+     "p75": 1.35,
+     "p90": 1.56,
+     "max": 1.8,
+     "positionAngle": 20
+    },
+    {
+     "day": "2024-03-19",
+     "reports": 8,
+     "median": 0.45,
+     "p75": 0.7,
+     "p90": 10.99,
+     "max": 35,
+     "positionAngle": 30
+    },
+    {
+     "day": "2024-03-25",
+     "reports": 7,
+     "median": 0.4,
+     "p75": 0.92,
+     "p90": 1.11,
+     "max": 1.4,
+     "positionAngle": 35
+    },
+    {
+     "day": "2024-03-28",
+     "reports": 14,
+     "median": 0.6,
+     "p75": 1.5,
+     "p90": 1.94,
+     "max": 3,
+     "positionAngle": 40
+    },
+    {
+     "day": "2024-03-29",
+     "reports": 8,
+     "median": 0.85,
+     "p75": 1.5,
+     "p90": 1.5,
+     "max": 1.5,
+     "positionAngle": 40
+    },
+    {
+     "day": "2024-03-30",
+     "reports": 7,
+     "median": 0.5,
+     "p75": 0.68,
+     "p90": 1.05,
+     "max": 1.5,
+     "positionAngle": 40
+    },
+    {
+     "day": "2024-04-01",
+     "reports": 11,
+     "median": 1.2,
+     "p75": 1.7,
+     "p90": 2,
+     "max": 2,
+     "positionAngle": 40
+    },
+    {
+     "day": "2024-04-05",
+     "reports": 7,
+     "median": 1,
+     "p75": 1.25,
+     "p90": 1.7,
+     "max": 2,
+     "positionAngle": 50
+    },
+    {
+     "day": "2024-04-07",
+     "reports": 6,
+     "median": 1,
+     "p75": 1,
+     "p90": 1.2,
+     "max": 1.4,
+     "positionAngle": 49
+    },
+    {
+     "day": "2024-04-08",
+     "reports": 6,
+     "median": 1,
+     "p75": 1,
+     "p90": 1.4,
+     "max": 1.8,
+     "positionAngle": 50
+    },
+    {
+     "day": "2024-05-05",
+     "reports": 6,
+     "median": 1.3,
+     "p75": 1.88,
+     "p90": 2.7,
+     "max": 3.4,
+     "positionAngle": 120
+    }
+   ]
+  },
+  {
+   "id": "C/2022 E3",
+   "nights": [
+    {
+     "day": "2022-12-27",
+     "reports": 7,
+     "median": 0.13,
+     "p75": 0.15,
+     "p90": 0.19,
+     "max": 0.22,
+     "positionAngle": 349
+    },
+    {
+     "day": "2023-01-18",
+     "reports": 7,
+     "median": 0.6,
+     "p75": 0.87,
+     "p90": 1.16,
+     "max": 1.5,
+     "positionAngle": 317
+    },
+    {
+     "day": "2023-01-19",
+     "reports": 10,
+     "median": 0.73,
+     "p75": 0.79,
+     "p90": 0.99,
+     "max": 1.1,
+     "positionAngle": 330
+    },
+    {
+     "day": "2023-01-21",
+     "reports": 12,
+     "median": 0.63,
+     "p75": 0.93,
+     "p90": 1,
+     "max": 1.1,
+     "positionAngle": 332.5
+    },
+    {
+     "day": "2023-01-29",
+     "reports": 11,
+     "median": 0.87,
+     "p75": 1.58,
+     "p90": 2,
+     "max": 2,
+     "positionAngle": 230
+    },
+    {
+     "day": "2023-01-30",
+     "reports": 9,
+     "median": 0.58,
+     "p75": 1,
+     "p90": 1.65,
+     "max": 2.2,
+     "positionAngle": 215
+    },
+    {
+     "day": "2023-02-07",
+     "reports": 7,
+     "median": 0.5,
+     "p75": 0.79,
+     "p90": 1.27,
+     "max": 1.8,
+     "positionAngle": 80
+    },
+    {
+     "day": "2023-02-08",
+     "reports": 10,
+     "median": 0.5,
+     "p75": 0.5,
+     "p90": 0.55,
+     "max": 0.58,
+     "positionAngle": 55
+    },
+    {
+     "day": "2023-02-11",
+     "reports": 7,
+     "median": 0.33,
+     "p75": 0.5,
+     "p90": 0.5,
+     "max": 0.5,
+     "positionAngle": 62.5
+    },
+    {
+     "day": "2023-02-12",
+     "reports": 7,
+     "median": 0.4,
+     "p75": 0.75,
+     "p90": 1,
+     "max": 1,
+     "positionAngle": 60
+    },
+    {
+     "day": "2023-02-13",
+     "reports": 6,
+     "median": 0.4,
+     "p75": 0.6,
+     "p90": 0.67,
+     "max": 0.72,
+     "positionAngle": 55
+    },
+    {
+     "day": "2023-02-14",
+     "reports": 8,
+     "median": 0.45,
+     "p75": 0.59,
+     "p90": 0.66,
+     "max": 0.8,
+     "positionAngle": 37.5
+    },
+    {
+     "day": "2023-02-16",
+     "reports": 6,
+     "median": 0.52,
+     "p75": 0.76,
+     "p90": 1,
+     "max": 1.2,
+     "positionAngle": 72.5
+    }
+   ]
+  },
+  {
+   "id": "C/2021 A1",
+   "nights": [
+    {
+     "day": "2021-12-01",
+     "reports": 7,
+     "median": 0.4,
+     "p75": 0.58,
+     "p90": 1.05,
+     "max": 1.5,
+     "positionAngle": 310
+    },
+    {
+     "day": "2021-12-02",
+     "reports": 8,
+     "median": 0.73,
+     "p75": 1.26,
+     "p90": 1.48,
+     "max": 1.9,
+     "positionAngle": 318
+    },
+    {
+     "day": "2021-12-03",
+     "reports": 9,
+     "median": 0.5,
+     "p75": 1.33,
+     "p90": 2.08,
+     "max": 2.4,
+     "positionAngle": 315
+    },
+    {
+     "day": "2021-12-04",
+     "reports": 11,
+     "median": 0.5,
+     "p75": 1.55,
+     "p90": 2.3,
+     "max": 3,
+     "positionAngle": 320
+    },
+    {
+     "day": "2021-12-07",
+     "reports": 6,
+     "median": 1.2,
+     "p75": 1.43,
+     "p90": 5.75,
+     "max": 10,
+     "positionAngle": 315
+    },
+    {
+     "day": "2021-12-08",
+     "reports": 10,
+     "median": 1.1,
+     "p75": 1.8,
+     "p90": 2.05,
+     "max": 2.5,
+     "positionAngle": 322.5
+    },
+    {
+     "day": "2021-12-09",
+     "reports": 9,
+     "median": 1.3,
+     "p75": 1.9,
+     "p90": 2.6,
+     "max": 3,
+     "positionAngle": 325
+    },
+    {
+     "day": "2021-12-11",
+     "reports": 7,
+     "median": 1.5,
+     "p75": 1.85,
+     "p90": 2.4,
+     "max": 3,
+     "positionAngle": 330
+    },
+    {
+     "day": "2021-12-18",
+     "reports": 8,
+     "median": 0.3,
+     "p75": 0.43,
+     "p90": 0.8,
+     "max": 1.5,
+     "positionAngle": 90
+    },
+    {
+     "day": "2021-12-19",
+     "reports": 11,
+     "median": 0.4,
+     "p75": 0.77,
+     "p90": 1.5,
+     "max": 2,
+     "positionAngle": 89
+    },
+    {
+     "day": "2021-12-20",
+     "reports": 8,
+     "median": 0.4,
+     "p75": 0.88,
+     "p90": 2,
+     "max": 2,
+     "positionAngle": 90
+    },
+    {
+     "day": "2021-12-21",
+     "reports": 10,
+     "median": 0.42,
+     "p75": 0.5,
+     "p90": 1.35,
+     "max": 2.3,
+     "positionAngle": 90
+    },
+    {
+     "day": "2021-12-25",
+     "reports": 7,
+     "median": 1.5,
+     "p75": 2.3,
+     "p90": 2.76,
+     "max": 3,
+     "positionAngle": 90
+    },
+    {
+     "day": "2021-12-26",
+     "reports": 8,
+     "median": 0.8,
+     "p75": 3.88,
+     "p90": 8.6,
+     "max": 10,
+     "positionAngle": 90
+    },
+    {
+     "day": "2021-12-27",
+     "reports": 8,
+     "median": 0.7,
+     "p75": 1.27,
+     "p90": 1.8,
+     "max": 2.5,
+     "positionAngle": 90
+    },
+    {
+     "day": "2021-12-28",
+     "reports": 7,
+     "median": 1.5,
+     "p75": 6,
+     "p90": 9,
+     "max": 9,
+     "positionAngle": 90
+    },
+    {
+     "day": "2021-12-30",
+     "reports": 6,
+     "median": 1.15,
+     "p75": 1.83,
+     "p90": 2.2,
+     "max": 2.4,
+     "positionAngle": 90.5
+    },
+    {
+     "day": "2022-01-01",
+     "reports": 6,
+     "median": 1.35,
+     "p75": 1.5,
+     "p90": 2.55,
+     "max": 3.6,
+     "positionAngle": 93.5
+    },
+    {
+     "day": "2022-01-02",
+     "reports": 8,
+     "median": 1.6,
+     "p75": 2.65,
+     "p90": 4.15,
+     "max": 4.5,
+     "positionAngle": 95
+    }
+   ]
+  },
+  {
+   "id": "C/2011 L4",
+   "nights": [
+    {
+     "day": "2013-03-01",
+     "reports": 6,
+     "median": 0.7,
+     "p75": 0.98,
+     "p90": 1,
+     "max": 1,
+     "positionAngle": 160
+    },
+    {
+     "day": "2013-03-03",
+     "reports": 9,
+     "median": 1.5,
+     "p75": 2,
+     "p90": 2.1,
+     "max": 2.5,
+     "positionAngle": 150
+    },
+    {
+     "day": "2013-03-13",
+     "reports": 12,
+     "median": 0.4,
+     "p75": 0.54,
+     "p90": 0.7,
+     "max": 0.75,
+     "positionAngle": 70
+    },
+    {
+     "day": "2013-03-14",
+     "reports": 11,
+     "median": 0.5,
+     "p75": 0.58,
+     "p90": 1,
+     "max": 2,
+     "positionAngle": 70
+    },
+    {
+     "day": "2013-03-15",
+     "reports": 13,
+     "median": 0.5,
+     "p75": 0.67,
+     "p90": 0.97,
+     "max": 2.5,
+     "positionAngle": 60
+    },
+    {
+     "day": "2013-03-16",
+     "reports": 10,
+     "median": 0.55,
+     "p75": 1.75,
+     "p90": 2,
+     "max": 2,
+     "positionAngle": 65
+    },
+    {
+     "day": "2013-03-17",
+     "reports": 10,
+     "median": 1.25,
+     "p75": 2.38,
+     "p90": 2.95,
+     "max": 7,
+     "positionAngle": 55
+    },
+    {
+     "day": "2013-03-18",
+     "reports": 8,
+     "median": 0.75,
+     "p75": 1.5,
+     "p90": 1.8,
+     "max": 2.5,
+     "positionAngle": 52
+    },
+    {
+     "day": "2013-03-19",
+     "reports": 6,
+     "median": 1.75,
+     "p75": 2,
+     "p90": 2,
+     "max": 2,
+     "positionAngle": null
+    },
+    {
+     "day": "2013-03-20",
+     "reports": 12,
+     "median": 0.85,
+     "p75": 1.13,
+     "p90": 1.92,
+     "max": 2,
+     "positionAngle": 45
+    },
+    {
+     "day": "2013-03-21",
+     "reports": 7,
+     "median": 1.4,
+     "p75": 1.75,
+     "p90": 2,
+     "max": 2,
+     "positionAngle": 35
+    },
+    {
+     "day": "2013-03-22",
+     "reports": 6,
+     "median": 0.93,
+     "p75": 1.38,
+     "p90": 1.75,
+     "max": 2,
+     "positionAngle": null
+    },
+    {
+     "day": "2013-03-23",
+     "reports": 13,
+     "median": 1,
+     "p75": 1.5,
+     "p90": 1.74,
+     "max": 3,
+     "positionAngle": 34
+    },
+    {
+     "day": "2013-03-24",
+     "reports": 12,
+     "median": 0.75,
+     "p75": 1.13,
+     "p90": 1.47,
+     "max": 1.5,
+     "positionAngle": 25
+    },
+    {
+     "day": "2013-03-26",
+     "reports": 7,
+     "median": 0.83,
+     "p75": 1.24,
+     "p90": 1.7,
+     "max": 2,
+     "positionAngle": 20
+    },
+    {
+     "day": "2013-03-28",
+     "reports": 7,
+     "median": 1,
+     "p75": 1.65,
+     "p90": 1.88,
+     "max": 2,
+     "positionAngle": 15
+    },
+    {
+     "day": "2013-03-31",
+     "reports": 7,
+     "median": 0.8,
+     "p75": 1.35,
+     "p90": 1.7,
+     "max": 2,
+     "positionAngle": 8
+    },
+    {
+     "day": "2013-04-01",
+     "reports": 17,
+     "median": 1.1,
+     "p75": 1.5,
+     "p90": 10.07,
+     "max": 30,
+     "positionAngle": 8.5
+    },
+    {
+     "day": "2013-04-03",
+     "reports": 7,
+     "median": 1,
+     "p75": 1.2,
+     "p90": 1.44,
+     "max": 1.5,
+     "positionAngle": 6
+    },
+    {
+     "day": "2013-04-06",
+     "reports": 7,
+     "median": 1,
+     "p75": 1.25,
+     "p90": 1.66,
+     "max": 1.9,
+     "positionAngle": 0
+    },
+    {
+     "day": "2013-04-07",
+     "reports": 18,
+     "median": 0.57,
+     "p75": 1.35,
+     "p90": 7.19,
+     "max": 30,
+     "positionAngle": 355
+    },
+    {
+     "day": "2013-04-08",
+     "reports": 8,
+     "median": 1.15,
+     "p75": 1.35,
+     "p90": 1.65,
+     "max": 2,
+     "positionAngle": 0
+    },
+    {
+     "day": "2013-04-12",
+     "reports": 7,
+     "median": 0.6,
+     "p75": 0.68,
+     "p90": 0.82,
+     "max": 1,
+     "positionAngle": 350
+    },
+    {
+     "day": "2013-04-13",
+     "reports": 6,
+     "median": 0.83,
+     "p75": 15.25,
+     "p90": 25,
+     "max": 30,
+     "positionAngle": 352.5
+    },
+    {
+     "day": "2013-04-15",
+     "reports": 14,
+     "median": 0.33,
+     "p75": 0.48,
+     "p90": 0.6,
+     "max": 5,
+     "positionAngle": 358
+    },
+    {
+     "day": "2013-04-18",
+     "reports": 8,
+     "median": 0.4,
+     "p75": 0.42,
+     "p90": 0.48,
+     "max": 0.5,
+     "positionAngle": 348
+    },
+    {
+     "day": "2013-04-19",
+     "reports": 10,
+     "median": 0.28,
+     "p75": 0.48,
+     "p90": 0.5,
+     "max": 0.52,
+     "positionAngle": 345
+    },
+    {
+     "day": "2013-04-20",
+     "reports": 7,
+     "median": 0.42,
+     "p75": 0.55,
+     "p90": 0.68,
+     "max": 0.8,
+     "positionAngle": 356.5
+    },
+    {
+     "day": "2013-04-21",
+     "reports": 11,
+     "median": 0.3,
+     "p75": 0.63,
+     "p90": 20,
+     "max": 30,
+     "positionAngle": 340
+    },
+    {
+     "day": "2013-04-22",
+     "reports": 7,
+     "median": 0.25,
+     "p75": 0.29,
+     "p90": 0.5,
+     "max": 0.8,
+     "positionAngle": 345
+    },
+    {
+     "day": "2013-04-28",
+     "reports": 6,
+     "median": 0.4,
+     "p75": 0.48,
+     "p90": 0.55,
+     "max": 0.6,
+     "positionAngle": 340
+    },
+    {
+     "day": "2013-05-05",
+     "reports": 7,
+     "median": 0.32,
+     "p75": 0.5,
+     "p90": 8.3,
+     "max": 20,
+     "positionAngle": 325
+    },
+    {
+     "day": "2013-05-06",
+     "reports": 6,
+     "median": 0.2,
+     "p75": 0.24,
+     "p90": 0.48,
+     "max": 0.7,
+     "positionAngle": 325.5
+    },
+    {
+     "day": "2013-05-15",
+     "reports": 6,
+     "median": 0.45,
+     "p75": 0.57,
+     "p90": 0.75,
+     "max": 0.9,
+     "positionAngle": 310
+    }
+   ]
+  },
+  {
+   "id": "C/2013 R1",
+   "nights": [
+    {
+     "day": "2013-11-13",
+     "reports": 6,
+     "median": 0.85,
+     "p75": 1,
+     "p90": 1.5,
+     "max": 2,
+     "positionAngle": 285
+    },
+    {
+     "day": "2013-11-14",
+     "reports": 9,
+     "median": 0.8,
+     "p75": 1.6,
+     "p90": 8.36,
+     "max": 35,
+     "positionAngle": 290
+    },
+    {
+     "day": "2013-11-25",
+     "reports": 9,
+     "median": 1.4,
+     "p75": 1.5,
+     "p90": 2.54,
+     "max": 3.5,
+     "positionAngle": 319
+    },
+    {
+     "day": "2013-11-26",
+     "reports": 8,
+     "median": 1.42,
+     "p75": 1.6,
+     "p90": 1.84,
+     "max": 2.4,
+     "positionAngle": 315
+    },
+    {
+     "day": "2013-11-28",
+     "reports": 9,
+     "median": 1.3,
+     "p75": 1.5,
+     "p90": 3.36,
+     "max": 4,
+     "positionAngle": 320
+    },
+    {
+     "day": "2013-11-30",
+     "reports": 8,
+     "median": 1.25,
+     "p75": 2.35,
+     "p90": 2.8,
+     "max": 3.5,
+     "positionAngle": 334.5
+    },
+    {
+     "day": "2013-12-02",
+     "reports": 9,
+     "median": 1,
+     "p75": 1.8,
+     "p90": 2.3,
+     "max": 3.5,
+     "positionAngle": 336
+    },
+    {
+     "day": "2013-12-03",
+     "reports": 15,
+     "median": 0.9,
+     "p75": 2.85,
+     "p90": 3.64,
+     "max": 5,
+     "positionAngle": 336.5
+    },
+    {
+     "day": "2013-12-04",
+     "reports": 8,
+     "median": 1.48,
+     "p75": 1.83,
+     "p90": 3.46,
+     "max": 5,
+     "positionAngle": 335
+    },
+    {
+     "day": "2013-12-05",
+     "reports": 6,
+     "median": 1.2,
+     "p75": 1.95,
+     "p90": 2.23,
+     "max": 2.25,
+     "positionAngle": 340
+    },
+    {
+     "day": "2013-12-06",
+     "reports": 9,
+     "median": 1.5,
+     "p75": 2.5,
+     "p90": 3,
+     "max": 3,
+     "positionAngle": 340
+    },
+    {
+     "day": "2013-12-07",
+     "reports": 12,
+     "median": 2.25,
+     "p75": 3.9,
+     "p90": 4.5,
+     "max": 4.7,
+     "positionAngle": 340
+    },
+    {
+     "day": "2013-12-10",
+     "reports": 13,
+     "median": 1.7,
+     "p75": 2.4,
+     "p90": 3.32,
+     "max": 30,
+     "positionAngle": 345
+    },
+    {
+     "day": "2013-12-12",
+     "reports": 8,
+     "median": 0.85,
+     "p75": 1.55,
+     "p90": 2.81,
+     "max": 4,
+     "positionAngle": 345
+    },
+    {
+     "day": "2013-12-13",
+     "reports": 6,
+     "median": 1,
+     "p75": 1.38,
+     "p90": 1.75,
+     "max": 2,
+     "positionAngle": 345
+    },
+    {
+     "day": "2013-12-14",
+     "reports": 12,
+     "median": 0.92,
+     "p75": 2,
+     "p90": 2.81,
+     "max": 9.5,
+     "positionAngle": 347
+    },
+    {
+     "day": "2014-01-03",
+     "reports": 8,
+     "median": 0.5,
+     "p75": 0.95,
+     "p90": 2.45,
+     "max": 4.2,
+     "positionAngle": 331
+    },
+    {
+     "day": "2014-01-12",
+     "reports": 6,
+     "median": 0.6,
+     "p75": 0.85,
+     "p90": 0.95,
+     "max": 1,
+     "positionAngle": 325
+    }
+   ]
+  },
+  {
+   "id": "C/2014 Q2",
+   "nights": [
+    {
+     "day": "2015-01-09",
+     "reports": 8,
+     "median": 2.3,
+     "p75": 3,
+     "p90": 3,
+     "max": 3,
+     "positionAngle": 70
+    },
+    {
+     "day": "2015-01-10",
+     "reports": 12,
+     "median": 0.92,
+     "p75": 1.85,
+     "p90": 2.45,
+     "max": 4,
+     "positionAngle": 70
+    },
+    {
+     "day": "2015-01-11",
+     "reports": 8,
+     "median": 2,
+     "p75": 2.5,
+     "p90": 3.04,
+     "max": 4.3,
+     "positionAngle": 70
+    },
+    {
+     "day": "2015-01-12",
+     "reports": 7,
+     "median": 1.75,
+     "p75": 2,
+     "p90": 2.2,
+     "max": 2.5,
+     "positionAngle": 70
+    },
+    {
+     "day": "2015-01-13",
+     "reports": 22,
+     "median": 1.5,
+     "p75": 2.38,
+     "p90": 3,
+     "max": 7.4,
+     "positionAngle": 75
+    },
+    {
+     "day": "2015-01-14",
+     "reports": 13,
+     "median": 1.7,
+     "p75": 2,
+     "p90": 2.44,
+     "max": 3,
+     "positionAngle": 75
+    },
+    {
+     "day": "2015-01-15",
+     "reports": 8,
+     "median": 1.9,
+     "p75": 2.13,
+     "p90": 2.53,
+     "max": 2.6,
+     "positionAngle": 75
+    },
+    {
+     "day": "2015-01-16",
+     "reports": 13,
+     "median": 2,
+     "p75": 2.3,
+     "p90": 3,
+     "max": 7.2,
+     "positionAngle": 80
+    },
+    {
+     "day": "2015-01-17",
+     "reports": 13,
+     "median": 2,
+     "p75": 3,
+     "p90": 3.4,
+     "max": 4,
+     "positionAngle": 75
+    },
+    {
+     "day": "2015-01-18",
+     "reports": 11,
+     "median": 2,
+     "p75": 2,
+     "p90": 2.8,
+     "max": 5.3,
+     "positionAngle": 80
+    },
+    {
+     "day": "2015-01-19",
+     "reports": 7,
+     "median": 2,
+     "p75": 2.25,
+     "p90": 2.7,
+     "max": 3,
+     "positionAngle": 80
+    },
+    {
+     "day": "2015-01-20",
+     "reports": 9,
+     "median": 1,
+     "p75": 1.7,
+     "p90": 3.04,
+     "max": 8,
+     "positionAngle": 79
+    },
+    {
+     "day": "2015-01-24",
+     "reports": 15,
+     "median": 2,
+     "p75": 2.65,
+     "p90": 3,
+     "max": 7,
+     "positionAngle": 76
+    },
+    {
+     "day": "2015-02-06",
+     "reports": 11,
+     "median": 1.3,
+     "p75": 1.45,
+     "p90": 1.8,
+     "max": 2,
+     "positionAngle": 72.5
+    },
+    {
+     "day": "2015-02-07",
+     "reports": 9,
+     "median": 1,
+     "p75": 2,
+     "p90": 2.1,
+     "max": 2.5,
+     "positionAngle": 80
+    },
+    {
+     "day": "2015-02-08",
+     "reports": 14,
+     "median": 1,
+     "p75": 1.53,
+     "p90": 1.88,
+     "max": 3,
+     "positionAngle": 68
+    },
+    {
+     "day": "2015-02-09",
+     "reports": 6,
+     "median": 1.5,
+     "p75": 1.88,
+     "p90": 2,
+     "max": 2,
+     "positionAngle": 75
+    },
+    {
+     "day": "2015-02-12",
+     "reports": 7,
+     "median": 1.8,
+     "p75": 2,
+     "p90": 2,
+     "max": 2,
+     "positionAngle": 65
+    },
+    {
+     "day": "2015-02-13",
+     "reports": 14,
+     "median": 1.05,
+     "p75": 1.88,
+     "p90": 2.24,
+     "max": 2.4,
+     "positionAngle": 63.5
+    },
+    {
+     "day": "2015-02-14",
+     "reports": 14,
+     "median": 1.1,
+     "p75": 1.4,
+     "p90": 1.91,
+     "max": 2.5,
+     "positionAngle": 60
+    },
+    {
+     "day": "2015-02-15",
+     "reports": 7,
+     "median": 1.2,
+     "p75": 1.8,
+     "p90": 1.92,
+     "max": 2.1,
+     "positionAngle": 65
+    },
+    {
+     "day": "2015-02-16",
+     "reports": 7,
+     "median": 1.2,
+     "p75": 1.78,
+     "p90": 1.92,
+     "max": 2.1,
+     "positionAngle": 60
+    },
+    {
+     "day": "2015-02-17",
+     "reports": 7,
+     "median": 1,
+     "p75": 1.35,
+     "p90": 1.82,
+     "max": 2,
+     "positionAngle": 60
+    },
+    {
+     "day": "2015-02-19",
+     "reports": 8,
+     "median": 1.4,
+     "p75": 1.63,
+     "p90": 2.15,
+     "max": 2.5,
+     "positionAngle": 60
+    },
+    {
+     "day": "2015-02-20",
+     "reports": 8,
+     "median": 1.3,
+     "p75": 1.6,
+     "p90": 1.78,
+     "max": 2.2,
+     "positionAngle": 60
+    },
+    {
+     "day": "2015-02-21",
+     "reports": 6,
+     "median": 0.98,
+     "p75": 1.65,
+     "p90": 2.05,
+     "max": 2.3,
+     "positionAngle": 52
+    },
+    {
+     "day": "2015-02-23",
+     "reports": 6,
+     "median": 0.8,
+     "p75": 0.95,
+     "p90": 1.05,
+     "max": 1.1,
+     "positionAngle": 58
+    },
+    {
+     "day": "2015-03-08",
+     "reports": 7,
+     "median": 0.7,
+     "p75": 1,
+     "p90": 1.2,
+     "max": 1.5,
+     "positionAngle": 50
+    },
+    {
+     "day": "2015-03-09",
+     "reports": 11,
+     "median": 0.5,
+     "p75": 1,
+     "p90": 1.3,
+     "max": 1.5,
+     "positionAngle": 49.5
+    },
+    {
+     "day": "2015-03-10",
+     "reports": 8,
+     "median": 0.74,
+     "p75": 1,
+     "p90": 1.03,
+     "max": 1.1,
+     "positionAngle": 43
+    },
+    {
+     "day": "2015-03-11",
+     "reports": 6,
+     "median": 0.47,
+     "p75": 0.88,
+     "p90": 1.05,
+     "max": 1.1,
+     "positionAngle": 40
+    },
+    {
+     "day": "2015-03-12",
+     "reports": 8,
+     "median": 0.8,
+     "p75": 1,
+     "p90": 1.03,
+     "max": 1.1,
+     "positionAngle": 33
+    },
+    {
+     "day": "2015-04-21",
+     "reports": 7,
+     "median": 0.3,
+     "p75": 0.39,
+     "p90": 0.52,
+     "max": 0.7,
+     "positionAngle": 359
+    }
+   ]
+  }
+ ]
+}

@@ -35,6 +35,7 @@ const skyLayers = [
   { id: "deepSky", name: "深空天体", icon: "orbit" },
   { id: "stations", name: "空间站", icon: "satellite" },
   { id: "meteors", name: "流星雨", icon: "meteor" },
+  { id: "comets", name: "彗星", icon: "comet" },
 ] as const;
 
 function Divider({

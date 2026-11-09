@@ -1,0 +1,23 @@
+{
+ "build": [
+  "index-Oe29XbPG.js"
+ ],
+ "requestsBeforeLayer": 1,
+ "catalogRequests": [
+  "http://127.0.0.1:5181/Tamatamatori/comets/catalog.json",
+  "http://127.0.0.1:5181/Tamatamatori/comets/catalog.json",
+  "http://127.0.0.1:5181/Tamatamatori/comets/catalog.json"
+ ],
+ "state": {
+  "rows": [
+   "C/2020 F3",
+   "C/2019 U6",
+   "C/2017 T2"
+  ],
+  "updated": "2026-11-09",
+  "feed": null,
+  "basis": "彗尾为暗夜长曝光口径的经验长度，按实际几何投影；亮度参数拟合自 COBS 目视观测，实际亮度常有 1 等以上出入。收录 1990 年起亮于 10 等的回归，目录更新于 2026-11-09，每日自动检查新彗星。",
+  "about": "/Tamatamatori/comets/catalog.json"
+ },
+ "errors": []
+}

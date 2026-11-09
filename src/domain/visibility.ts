@@ -14,7 +14,7 @@ export function celestialPlanKey(plan: ShootingPlan) {
   return [plan.longitude, plan.latitude, plan.instant, plan.azimuth, plan.pitch, plan.focalLength,
     plan.sensor, plan.aspectRatio, plan.orientation, plan.cameraHeight, plan.refraction,
     plan.layers.sun, plan.layers.moon, !!plan.layers.stars, !!plan.layers.milkyWay, !!plan.layers.constellations, !!plan.layers.deepSky, !!plan.layers.stations, !!plan.layers.buildings,
-    !!plan.layers.meteors, !!plan.layers.meteorDensity].join("/");
+    !!plan.layers.meteors, !!plan.layers.meteorDensity, !!plan.layers.comets].join("/");
 }
 
 // Turning or zooming the camera does not move a target relative to a mountain.
@@ -23,7 +23,7 @@ export function skyLabelKey(plan: ShootingPlan) {
   return [plan.longitude, plan.latitude, plan.instant, plan.cameraHeight, plan.refraction,
     !!plan.layers.sun, !!plan.layers.moon, !!plan.layers.stars, !!plan.layers.milkyWay, !!plan.layers.constellations,
     !!plan.layers.deepSky, !!plan.layers.stations, !!plan.layers.buildings,
-    !!plan.layers.meteors, !!plan.layers.meteorDensity].join("/");
+    !!plan.layers.meteors, !!plan.layers.meteorDensity, !!plan.layers.comets].join("/");
 }
 
 export function classifyOcclusion(clear: boolean, blocked: boolean): Occlusion {

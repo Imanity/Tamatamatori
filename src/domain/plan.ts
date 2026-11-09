@@ -38,6 +38,8 @@ export interface ShootingPlan {
     meteors?: boolean;
     /** Illustrative meteors and the estimate for the night of the shooting instant; requires `meteors`. */
     meteorDensity?: boolean;
+    /** Comets of the catalogue brighter than the list limit at the shooting instant. */
+    comets?: boolean;
   };
   refraction: "standard" | "none";
   milkyWayContrast: number;
@@ -72,6 +74,7 @@ export const initialPlan: ShootingPlan = {
     stations: false,
     meteors: false,
     meteorDensity: false,
+    comets: false,
   },
   refraction: "standard",
   milkyWayContrast: 100,

@@ -10,6 +10,10 @@ on:
         description: 排查上游异常后恢复轨道检查（仍遵守两小时冷却）
         type: boolean
         default: false
+      resume_comets:
+        description: 排查上游异常后恢复彗星目录更新（仍遵守两小时冷却）
+        type: boolean
+        default: false
   schedule:
     - cron: '23 */3 * * *'
 
@@ -24,7 +28,7 @@ jobs:
   test-and-build:
     name: 测试与构建 (Node.js ${{ matrix.node-version }})
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -64,6 +68,26 @@ jobs:
         with:
           path: .cache/station-feed.json
           key: stations-v1-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: 恢复上次彗星目录与更新记录
+        if: matrix.node-version == '24' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.PAGES_ENABLED == 'true'
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: .cache/comet-catalog.json
+          key: comets-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: comets-v1-
+
+      - name: 更新彗星目录（上游最短间隔两小时）
+        if: matrix.node-version == '24' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.PAGES_ENABLED == 'true'
+        timeout-minutes: 10
+        run: node --experimental-strip-types scripts/update-comets.mjs ${{ inputs.resume_comets && '--resume' || '' }}
+
+      - name: 保存彗星目录更新记录（含失败与中断）
+        if: always() && matrix.node-version == '24' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.PAGES_ENABLED == 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: .cache/comet-catalog.json
+          key: comets-v1-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: 运行全部测试
         run: npm test

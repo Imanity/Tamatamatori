@@ -28,6 +28,7 @@ const paths = {
   bookmark: "M6 3.5h12v17l-6-4.2-6 4.2v-17Z",
   chevron: "m6 9 6 6 6-6",
   meteor: "M20 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM16.5 6.5 4 19M12.5 6 7 11.5M18 11.5 12.5 17",
+  comet: "M19 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM13.5 15.5C10 12 6 8 3 3m11.5 11C12 10 9 6 7 3m9.5 12.5C16 12 15 8 14 4",
 } as const;
 
 export type IconName = keyof typeof paths;

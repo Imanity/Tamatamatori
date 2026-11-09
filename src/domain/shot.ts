@@ -38,6 +38,7 @@ export const shotLayerKeys = [
   "stations",
   "meteors",
   "meteorDensity",
+  "comets",
 ] as const;
 type LayerKey = (typeof shotLayerKeys)[number];
 // Adding a layer to the plan without listing it here fails to compile.

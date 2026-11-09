@@ -1,0 +1,137 @@
+{
+ "results": [
+  {
+   "name": "neowise-2030-50",
+   "instant": "2020-07-15T20:30",
+   "mcd": 0,
+   "focal": 50,
+   "skyFade": 0.4,
+   "visibleShare": 0.876,
+   "ionDegreesDark": 11.95,
+   "ionDegreesVisible": 10.73,
+   "predictedAt": 0.825,
+   "measuredAt": 0.817,
+   "predictedPx": 270,
+   "measuredPx": 268,
+   "headPx": [
+    486,
+    569
+   ],
+   "image": [
+    1138,
+    759
+   ]
+  },
+  {
+   "name": "neowise-2030-24",
+   "instant": "2020-07-15T20:30",
+   "mcd": 0,
+   "focal": 24,
+   "skyFade": 0.4,
+   "visibleShare": 0.876,
+   "ionDegreesDark": 11.95,
+   "ionDegreesVisible": 10.73,
+   "predictedAt": 0.825,
+   "measuredAt": 0.825,
+   "predictedPx": 130,
+   "measuredPx": 130,
+   "headPx": [
+    529,
+    470
+   ],
+   "image": [
+    1138,
+    759
+   ]
+  },
+  {
+   "name": "neowise-2030-85",
+   "instant": "2020-07-15T20:30",
+   "mcd": 0,
+   "focal": 85,
+   "skyFade": 0.4,
+   "visibleShare": 0.876,
+   "ionDegreesDark": 11.95,
+   "ionDegreesVisible": 10.73,
+   "predictedAt": 0.825,
+   "measuredAt": 0.817,
+   "predictedPx": 462,
+   "measuredPx": 458,
+   "headPx": [
+    332,
+    796
+   ],
+   "image": [
+    1138,
+    759
+   ]
+  },
+  {
+   "name": "neowise-2000-50",
+   "instant": "2020-07-15T20:00:00",
+   "mcd": 0,
+   "focal": 50,
+   "skyFade": 1.61,
+   "visibleShare": 0.504,
+   "ionDegreesDark": 11.96,
+   "ionDegreesVisible": 6.2,
+   "predictedAt": 0.45,
+   "measuredAt": 0.439,
+   "predictedPx": 147,
+   "measuredPx": 143,
+   "headPx": [
+    384,
+    473
+   ],
+   "image": [
+    1138,
+    759
+   ]
+  },
+  {
+   "name": "neowise-2030-50-lp",
+   "instant": "2020-07-15T20:30:00",
+   "mcd": 0.202,
+   "focal": 50,
+   "skyFade": 1.04,
+   "visibleShare": 0.68,
+   "ionDegreesDark": 11.95,
+   "ionDegreesVisible": 8.3,
+   "predictedAt": 0.625,
+   "measuredAt": 0.625,
+   "predictedPx": 204,
+   "measuredPx": 204,
+   "headPx": [
+    486,
+    569
+   ],
+   "image": [
+    1138,
+    759
+   ]
+  },
+  {
+   "name": "hale-bopp-2000-24",
+   "instant": "1997-04-01T20:00:00",
+   "mcd": 0,
+   "focal": 24,
+   "skyFade": 0,
+   "visibleShare": 1,
+   "ionDegreesDark": 23.54,
+   "ionDegreesVisible": 23.54,
+   "predictedAt": 0.95,
+   "measuredAt": 0.946,
+   "predictedPx": 331,
+   "measuredPx": 330,
+   "headPx": [
+    696,
+    426
+   ],
+   "image": [
+    1138,
+    759
+   ]
+  }
+ ],
+ "errors": []
+}

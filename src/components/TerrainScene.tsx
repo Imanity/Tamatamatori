@@ -26,6 +26,7 @@ import type { RenderedCamera } from "../preview/rendered-camera";
 import { applyTerrainDetail, terrainCoverageRange } from "../preview/terrain-detail";
 import type { TerrainPerspective } from "../preview/terrain-perspective";
 import type { StationScene } from "../domain/stations";
+import type { CometScene } from "../domain/comets";
 import type { BuildingLayer } from "../preview/building-layer";
 import { emptyBuildings } from "../domain/buildings";
 import type { BuildingStatus } from "../domain/buildings";
@@ -55,7 +56,7 @@ export interface TerrainInfo {
   adjusted: boolean;
 }
 
-export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChange, onSkyChange, onInfoChange, artificialMcd, weather, onBuildingsChange, buildingAttempt=0 }: { plan: ShootingPlan; stations?: StationScene; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void; onCameraChange?: (camera: RenderedCamera | null) => void; onSkyChange?: (snapshot:SkyVisibility)=>void; onInfoChange?: (info: TerrainInfo) => void; artificialMcd?: number; weather?: WeatherSample; onBuildingsChange?: (status:BuildingStatus)=>void; buildingAttempt?:number }) {
+export function TerrainScene({ plan, stations, comets, onVisibilityChange, onCameraChange, onSkyChange, onInfoChange, artificialMcd, weather, onBuildingsChange, buildingAttempt=0 }: { plan: ShootingPlan; stations?: StationScene; comets?: CometScene; onVisibilityChange?: (snapshot: VisibilitySnapshot) => void; onCameraChange?: (camera: RenderedCamera | null) => void; onSkyChange?: (snapshot:SkyVisibility)=>void; onInfoChange?: (info: TerrainInfo) => void; artificialMcd?: number; weather?: WeatherSample; onBuildingsChange?: (status:BuildingStatus)=>void; buildingAttempt?:number }) {
   const container = useRef<HTMLDivElement>(null);
   const synchronize = useRef<(() => void) | null>(null);
   const key = `${plan.longitude}/${plan.latitude}`;
@@ -74,12 +75,12 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
     ground: number;
     altitude: number;
   } | null>(null);
-  const latest = useRef({ plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd, weather, onBuildingsChange, buildingAttempt });
+  const latest = useRef({ plan, stations, comets, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd, weather, onBuildingsChange, buildingAttempt });
 
   useEffect(() => {
-    latest.current = { plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd, weather, onBuildingsChange, buildingAttempt };
+    latest.current = { plan, stations, comets, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd, weather, onBuildingsChange, buildingAttempt };
     synchronize.current?.();
-  }, [plan, stations, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd, weather, onBuildingsChange, buildingAttempt]);
+  }, [plan, stations, comets, ground, key, onVisibilityChange, onCameraChange, onSkyChange, artificialMcd, weather, onBuildingsChange, buildingAttempt]);
 
   useEffect(() => {
     // Unavailable ground has no render/query callback; keep its status explicit
@@ -319,7 +320,7 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
         // Whole local hours depend on the time zone, which the plan key leaves out.
         const pathIds = (["sun", "moon"] as const).filter((id) => current.plan.layers[id] && current.plan.layers[`${id}Path`]);
         const pathKey = pathIds.length ? `${pathIds.join("+")}/${current.plan.timeZone}` : "";
-        const frameKey = `${poseKey}/${planKey}/${sourceRevision}/${ready}/${renderView.azimuth}/${renderView.pitch}/${current.stations?.key ?? ""}/${current.artificialMcd ?? 0}/${weatherKey}/${pathKey}`;
+        const frameKey = `${poseKey}/${planKey}/${sourceRevision}/${ready}/${renderView.azimuth}/${renderView.pitch}/${current.stations?.key ?? ""}/${current.comets?.key ?? ""}/${current.artificialMcd ?? 0}/${weatherKey}/${pathKey}`;
         if (celestialLayer && frameKey !== lastCelestialFrame) {
           lastCelestialFrame = frameKey;
           const bodies = Object.values(celestialBodies(current.plan))
@@ -333,7 +334,7 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
             return { id: path.id, runs: view.runs, markers: view.markers.map((marker) => marker.point) };
           });
           celestialLayer.setScene({ key: frameKey, planKey, ready, bodies, paths, plan: current.plan, weather: current.weather, artificialMcd: current.artificialMcd });
-          starfield?.setScene({key:frameKey,planKey,ready,plan:current.plan,stations:current.stations,artificialMcd:current.artificialMcd,view:renderView});
+          starfield?.setScene({key:frameKey,planKey,ready,plan:current.plan,stations:current.stations,comets:current.comets,artificialMcd:current.artificialMcd,view:renderView});
         }
         markReady();
       } catch {

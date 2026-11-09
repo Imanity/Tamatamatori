@@ -4,8 +4,10 @@ const smoothstep = (low: number, high: number, value: number) => {
   const t = clamp((value - low) / (high - low));
   return t * t * (3 - 2 * t);
 };
+/** Display limiting magnitude of the natural dark sky; brighter skies lower it. */
+export const DARK_SKY_MAGNITUDE = 5.5;
 const solarStops = [
-  [-18, 5.5],
+  [-18, DARK_SKY_MAGNITUDE],
   [-12, 4],
   [-6, 1.5],
   [0, -4.5],
@@ -47,7 +49,7 @@ export function skyAppearance(
   // The atlas supplies artificial zenith luminance in mcd/m². Its natural
   // reference is 0.174 mcd/m². Preserve the existing twilight/Moon display
   // response, then add the artificial component in linear brightness space.
-  const background = 0.174 * 10 ** (0.4 * (5.5 - baseMagnitude));
+  const background = 0.174 * 10 ** (0.4 * (DARK_SKY_MAGNITUDE - baseMagnitude));
   const contrast = background / (background + artificialMcd);
   // Opacity gains remain independent and monotone. A growing Moon or twilight
   // must not make a target brighten as its share of the total skyglow shrinks.

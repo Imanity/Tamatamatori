@@ -14,7 +14,7 @@ import { searchTimeZones, zoneOffset, allTimeZones } from "../src/domain/time-zo
 const varied = {
   latitude: -33.8568, longitude: 151.2153, azimuth: 123.456789, pitch: -7.25, cameraHeight: 42.5, focalLength: 600.3,
   sensor: "aps-c", aspectRatio: "16:9", orientation: "portrait", instant: "2026-12-14T09:31:12Z", timeZone: "Australia/Sydney",
-  layers: { buildings: true, sun: false, sunPath: false, moon: false, moonPath: false, stars: true, milkyWay: true, constellations: true, deepSky: true, stations: true, meteors: true, meteorDensity: true },
+  layers: { buildings: true, sun: false, sunPath: false, moon: false, moonPath: false, stars: true, milkyWay: true, constellations: true, deepSky: true, stations: true, meteors: true, meteorDensity: true, comets: true },
   refraction: "none", milkyWayContrast: 135, cameraResponse: "ha-modified", lightPollution: true, weather: true, weatherModel: "ecmwf_ifs025",
 };
 const minimal = (extra = {}) => ({ format: "tamatamatori.shot", version: 1, position: { latitude: 35, longitude: 139 }, view: { azimuth: 90 }, time: { instant: "2026-11-04T08:00:00Z" }, ...extra });
@@ -55,6 +55,11 @@ test("机位覆盖全部拍摄计划字段，JSON、分享码与链接往返无�
   const meteorDefaults = parseShot(beforeMeteors);
   assert.deepEqual(meteorDefaults.defaults, ["layers.meteors", "layers.meteorDensity"]);
   assert.deepEqual([meteorDefaults.plan.layers.meteors, meteorDefaults.plan.layers.meteorDensity], [false, false]);
+  // And the comet layer, added after the meteors.
+  const beforeComets = shotFromPlan(varied);
+  delete beforeComets.layers.comets;
+  const cometDefaults = parseShot(beforeComets);
+  assert.deepEqual([cometDefaults.defaults, cometDefaults.plan.layers.comets], [["layers.comets"], false]);
   // The shooting duration of an unreleased development build is read and ignored, never written.
   assert.deepEqual(Object.keys(shotFromPlan(varied).sky), ["milkyWayContrast"]);
   const devBuild = parseShot({ ...shotFromPlan(varied), sky: { milkyWayContrast: 135, meteorHours: 7.5 } });
