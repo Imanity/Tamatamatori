@@ -1,0 +1,171 @@
+{
+ "inApp": {
+  "method": "Chrome, production build; 30 frames, azimuth +0.02° per frame (about 0.15 CSS px at 14 mm), 400x300 CSS px around the Perseid radiant at 2026-08-13 00:30. symbolEnergyCV: frame-to-frame variation of the radiant symbol energy with density off; popFraction: share of lit pixels changing by more than 60 between consecutive frames with density on. Before = aligned 2-hour build index-2YCVIHbv.js, after = whole-night build index-BnWrjiWA.js; the meteor samples differ, the symbol does not.",
+  "before": {
+   "dpr1": {
+    "build": "index-2YCVIHbv.js",
+    "symbolEnergyCV": 0.1081,
+    "streakEnergyCV": 0.0061,
+    "popFraction": 0.0087,
+    "facts": "14 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n流星示意 · 2 小时 · 画面内约 29 颗\n机位高程 ≈ 980.5 m · 离地 1.6 m"
+   },
+   "dpr2": {
+    "build": "index-2YCVIHbv.js",
+    "symbolEnergyCV": 0.0213,
+    "streakEnergyCV": 0.0014,
+    "popFraction": 0.0033,
+    "facts": "14 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n流星示意 · 2 小时 · 画面内约 29 颗\n机位高程 ≈ 980.5 m · 离地 1.6 m"
+   }
+  },
+  "after": {
+   "dpr1": {
+    "build": "index-BnWrjiWA.js",
+    "symbolEnergyCV": 0.0081,
+    "streakEnergyCV": 0.0008,
+    "popFraction": 0,
+    "facts": "14 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n流星示意 · 整晚暗夜 7.3 小时 · 画面内约 71 颗\n机位高程 ≈ 980.5 m · 离地 1.6 m"
+   },
+   "dpr2": {
+    "build": "index-BnWrjiWA.js",
+    "symbolEnergyCV": 0.0059,
+    "streakEnergyCV": 0.0001,
+    "popFraction": 0,
+    "facts": "14 mm · 全画幅 · 横幅 3:2\n未改机 · 近似参考\n流星示意 · 整晚暗夜 7.3 小时 · 画面内约 71 颗\n机位高程 ≈ 980.5 m · 离地 1.6 m"
+   }
+  }
+ },
+ "shaders": {
+  "generatedAt": "2026-11-09T13:01:09.305Z",
+  "method": "160x160 WebGL2 canvas without multisampling in Chrome; 40 frames, each shifted by (0.05, 0.031) device px; coverage read back from alpha; spokes: pixels within 2.5 CSS px of each spoke line beyond the ring, relative to the exact centre.",
+  "result": {
+   "radiantOldDpr1": {
+    "total": {
+     "mean": 60.36,
+     "cv": 0.1256
+    },
+    "ring": {
+     "mean": 46.03,
+     "cv": 0.0058
+    },
+    "spokes": [
+     1.1486,
+     1.1131,
+     1.2115,
+     0.9416,
+     1.1484,
+     1.1032,
+     1.2114,
+     0.941
+    ]
+   },
+   "radiantNewDpr1": {
+    "total": {
+     "mean": 67.79,
+     "cv": 0.0035
+    },
+    "ring": {
+     "mean": 46.02,
+     "cv": 0.0031
+    },
+    "spokes": [
+     0.012,
+     0.0259,
+     0.0131,
+     0.0302,
+     0.0123,
+     0.0193,
+     0.0139,
+     0.0285
+    ]
+   },
+   "streak-short-OldDpr1": {
+    "mean": 2.13,
+    "cv": 0.1842
+   },
+   "streak-long-OldDpr1": {
+    "mean": 25.54,
+    "cv": 0.0135
+   },
+   "streak-bright-OldDpr1": {
+    "mean": 59.75,
+    "cv": 0.0396
+   },
+   "streak-short-NewDpr1": {
+    "mean": 2,
+    "cv": 0.0131
+   },
+   "streak-long-NewDpr1": {
+    "mean": 25.51,
+    "cv": 0.0006
+   },
+   "streak-bright-NewDpr1": {
+    "mean": 59.56,
+    "cv": 0.0004
+   },
+   "radiantOldDpr2": {
+    "total": {
+     "mean": 247.8,
+     "cv": 0.0318
+    },
+    "ring": {
+     "mean": 184.29,
+     "cv": 0.0009
+    },
+    "spokes": [
+     0.4316,
+     0.0154,
+     0.4826,
+     0.0149,
+     0.4315,
+     0.0155,
+     0.4827,
+     0.0152
+    ]
+   },
+   "radiantNewDpr2": {
+    "total": {
+     "mean": 271.39,
+     "cv": 0.0025
+    },
+    "ring": {
+     "mean": 184.28,
+     "cv": 0.0018
+    },
+    "spokes": [
+     0.0033,
+     0.0205,
+     0.0042,
+     0.0265,
+     0.0031,
+     0.0234,
+     0.0041,
+     0.0278
+    ]
+   },
+   "streak-short-OldDpr2": {
+    "mean": 8.37,
+    "cv": 0.0709
+   },
+   "streak-long-OldDpr2": {
+    "mean": 102.21,
+    "cv": 0.0028
+   },
+   "streak-bright-OldDpr2": {
+    "mean": 238.38,
+    "cv": 0.0057
+   },
+   "streak-short-NewDpr2": {
+    "mean": 8.13,
+    "cv": 0.0014
+   },
+   "streak-long-NewDpr2": {
+    "mean": 102.05,
+    "cv": 0.0003
+   },
+   "streak-bright-NewDpr2": {
+    "mean": 238.24,
+    "cv": 0.0002
+   }
+  }
+ }
+}

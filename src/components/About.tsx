@@ -193,6 +193,22 @@ export function About() {
             <p>日月位置、出没时刻与运行轨迹由 Astronomy Engine 在本机计算。轨迹取拍摄时刻所在的一次出没，在地平线下时取前后 36 小时内最近的一次；每 5 分钟取一点连线，中心落到海平面地平以下的部分不绘制。整点标注按所选时区，只标方向、不判断遮挡；山体或建筑后方的轨迹以淡色虚线表示。</p>
           </section>
 
+          <section aria-labelledby="about-meteors-title">
+            <h3 id="about-meteors-title">流星雨</h3>
+            <ul>
+              <li>
+                <a href="https://www.imo.net/resources/calendar/" target="_blank" rel="noreferrer">IMO Meteor Shower Calendar 2026 · Jürgen Rendtel 编 · © International Meteor Organization</a>
+                <p>摘录表 5“目视流星雨工作表”与表 6 辐射点位置的数值：活动期、极大、辐射点、速度、族群指数和 ZHR。中文名称为本应用翻译。IMO 未给出明示许可，本应用署名摘录这些事实数据，权利人要求时撤下。</p>
+              </li>
+              <li>
+                <a href="https://arxiv.org/abs/1904.06370" target="_blank" rel="noreferrer">Moorhead 等（2019）· NASA 流星体环境办公室流星雨参数表</a>
+                <p>有该表参数的流星雨按其上升、衰减指数描述极大前后的 ZHR；其余在活动期两端按降为峰值的十分之一估计。</p>
+              </li>
+            </ul>
+            <p>辐射点按太阳黄经插值，极大时与表 5 一致、漂移取自表 6；两表在天鹅座κ、九月天猫座分别相差约 5°、7°。其他年份沿用 2026 年参数，不预测爆发。</p>
+            <p>预估密度按 Koschack 与 Rendtel（1990）把 ZHR 换算为流量，月光采用 Krisciunas 与 Schaefer（1991）模型。假定广角大光圈相机在自然暗夜能记录亮于约 +2 等的流星，天空每亮 10 倍阈值减 1.25 等；光污染按机位天顶值均匀计入。数量按拍摄时刻所在的整晚累计：按机位经度的地方平太阳时，从正午到次日正午，其中太阳低于 −18° 的时段都计入，凌晨的拍摄时刻仍属前一晚。未计山体遮挡、云量、流星角速度对灵敏度的影响和散发流星。预览按后期对齐叠加的成片表现：相机整晚固定在当前构图连续拍摄，含流星的帧按星空对齐到拍摄时刻（锚点帧）后贴回。因此一颗流星要在它出现时位于固定画面内，对齐后也仍落在画面内、地平线以上，才计入数量和示意；所有示意流星都从拍摄时刻的辐射点发散，离拍摄时刻越远、焦距越长，对齐后的有效天区越小。示意流星是按同一模型抽取的固定样本，位置、亮度和数量都不代表实际会出现的流星。</p>
+          </section>
+
           <section aria-labelledby="about-stations-title">
             <h3 id="about-stations-title">空间站轨道</h3>
             <a href="https://celestrak.org/NORAD/documentation/gp-data-formats.php" target="_blank" rel="noreferrer">CelesTrak · GP 轨道数据 · T.S. Kelso</a>

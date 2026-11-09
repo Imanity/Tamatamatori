@@ -16,6 +16,7 @@ import { parseShotText } from '../src/domain/shot.ts';
 import { dayEvents } from '../src/domain/day-events.ts';
 import { cameraHeightSlider } from '../src/domain/plan.ts';
 import { bodyPath } from '../src/domain/body-paths.ts';
+import { activeShowers, meteorEstimate } from '../src/domain/meteor-showers.ts';
 
 // Exercise real React handlers and state with an SDK test double; no WebGL is
 // simulated, and these checks do not claim browser rendering verification.
@@ -166,7 +167,8 @@ class TestStarfieldLayer {
     const figures=frame.plan.layers.constellations?constellationScene(frame.plan).anchors:[];
     const deep=frame.plan.layers.deepSky?deepSkyScene(frame.plan).objects:[];
     const stations=frame.plan.layers.stations?(frame.stations?.points??[]):[];
-    this.report({planKey:frame.planKey,orbitKey:frame.stations?.key,ready:frame.ready,view:{azimuth:frame.plan.azimuth,pitch:frame.plan.pitch},states:Object.fromEntries([...sky.points,sky.core,...figures,...deep,...stations,...deep.map(p=>({...p,id:p.id+':label'}))].map(p=>[p.id,frame.ready?'clear':'waiting'])),deepSky:{phase:frame.plan.layers.deepSky?'ready':'off'}});
+    const radiants=frame.plan.layers.meteors?activeShowers(frame.plan).map(a=>a.point):[];
+    this.report({planKey:frame.planKey,orbitKey:frame.stations?.key,ready:frame.ready,view:{azimuth:frame.plan.azimuth,pitch:frame.plan.pitch},states:Object.fromEntries([...sky.points,sky.core,...figures,...deep,...stations,...radiants,...deep.map(p=>({...p,id:p.id+':label'}))].map(p=>[p.id,frame.ready?'clear':'waiting'])),deepSky:{phase:frame.plan.layers.deepSky?'ready':'off'}});
   }
   invalidate() { if(this.frame)this.report({planKey:this.frame.planKey,ready:false,view:null,states:{}}); }
   onRemove() { this.removed=true; }
@@ -1470,11 +1472,11 @@ test('精简工作区：全局信息默认展开，图层分组随开关展开�
   for (const selector of ['.workspace-heading', '.workspace-footer', '.base-layer', '.sidebar-bottom', '.layer-hint', '.map-footer-note', '.viewfinder-label', '.viewfinder-focal', '.terrain-height', '.parameter-note', '.info-header', '.layer-settings', '[aria-label$="设置与信息"]'])
     assert.equal(document.querySelector(selector), null, selector);
   const groups = [...document.querySelectorAll('.info-group h2 button')];
-  assert.deepEqual(groups.map(group => group.id), ['info-global', 'info-buildings', 'info-sun', 'info-moon', 'info-stars', 'info-milkyWay', 'info-deepSky', 'info-stations']);
+  assert.deepEqual(groups.map(group => group.id), ['info-global', 'info-buildings', 'info-sun', 'info-moon', 'info-stars', 'info-milkyWay', 'info-deepSky', 'info-stations', 'info-meteors']);
   // Global information is open; layer groups start in step with their switches.
   // Groups unmount while a search is shown, so read them afresh each time.
   const expanded = () => Object.fromEntries([...document.querySelectorAll('.info-group h2 button')].map(group => [group.id.slice(5), group.getAttribute('aria-expanded') === 'true']));
-  assert.deepEqual(expanded(), { global: true, buildings: false, sun: true, moon: true, stars: false, milkyWay: false, deepSky: false, stations: false });
+  assert.deepEqual(expanded(), { global: true, buildings: false, sun: true, moon: true, stars: false, milkyWay: false, deepSky: false, stations: false, meteors: false });
   assert.equal(document.querySelector('#info-sun-body').hidden, false);
   assert.equal(document.querySelector('#info-sun-body [data-body-status="moon"]'), null);
   const global = document.querySelector('#info-global-body').textContent;
@@ -2137,4 +2139,59 @@ test('太阳、月亮分组各有运行轨迹开关：从属于天体图层，�
   await settle(() => document.querySelector('input[aria-label="显示太阳"]').click());
   assert.deepEqual([toggle('sun').checked, toggle('sun').disabled], [false, false]);
   assert.equal(toggle('moon').checked, true);
+});
+
+test('流星雨图层：左栏开启后列出拍摄日期的活动流星雨与辐射点，右栏开关驱动整晚画面内估算，同一夜内移动时刻不改暗夜，关闭图层同时关闭密度', async t => {
+  await workspace(t); const map = await readyTerrain();
+  const layerSwitch = () => document.querySelector('input[aria-label="显示流星雨"]');
+  const density = () => document.querySelector('[data-info-group="meteors"] input[aria-label="显示流星雨预估密度"]');
+  const fact = () => document.querySelector('[data-meteor-fact]');
+  const night = () => document.querySelector('[data-meteor-night]')?.textContent;
+  assert.equal(layerSwitch().checked, false);
+  assert.deepEqual([density().checked, density().disabled], [false, true]);
+  assert.equal(document.querySelector('[data-info-group="meteors"] input[type="range"]'), null, 'no duration slider');
+  assert.match(document.querySelector('[data-info-group="meteors"]').textContent, /流星雨已关闭/);
+  await setShootingDateTime('2026-08-13T00:30');
+  const requests = groundRequests.length, poses = map.cameraSolutions.length;
+  await settle(() => layerSwitch().click());
+  assert.equal(document.getElementById('info-meteors').getAttribute('aria-expanded'), 'true');
+  const rows = [...document.querySelectorAll('[data-meteor-status]')].map((row) => row.dataset.meteorStatus);
+  assert.equal(rows[0], 'PER', 'strongest shower first');
+  assert.deepEqual([...rows].sort(), ['ANT', 'CAP', 'ERI', 'KCG', 'PER', 'SDA']);
+  assert.match(document.querySelector('[data-meteor-status="PER"]').textContent, /ZHR 约 \d+（峰值 100，极大前后）/);
+  await settle(() => document.querySelector('button[aria-label="朝向英仙座流星雨辐射点"]').click());
+  assert.ok(document.querySelector('[data-meteor-label="PER"]'), 'radiant label in frame');
+  assert.equal(fact(), null);
+  await settle(() => density().click());
+  const plan = { latitude: value('纬度'), longitude: value('经度'), instant: '2026-08-12T15:30:00Z', azimuth: value('方位角'), pitch: value('俯仰角'),
+    focalLength: value('焦距'), sensor: 'full-frame', aspectRatio: '3:2', orientation: 'landscape' };
+  const shown = (n) => (n >= 10 ? String(Math.round(n)) : n.toFixed(1));
+  const clock = (ms) => new Date(ms).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+  const whole = meteorEstimate(plan);
+  assert.equal(fact().textContent, `流星示意 · 整晚暗夜 ${Number(whole.darkHours.toFixed(1))} 小时 · 画面内约 ${shown(whole.expected)} 颗`);
+  assert.equal(night(), `暗夜 8月12日 ${clock(whole.dark.from)}—8月13日 ${clock(whole.dark.to)} · ${Number(whole.darkHours.toFixed(1))} 小时`);
+  assert.match(document.querySelector('[data-meteor-estimate]').textContent, /整晚画面内约 \d+ 颗.*固定机位整晚连拍.*光污染未开启，按自然天空/);
+  const starfield = map.customLayers.find((l) => l instanceof TestStarfieldLayer);
+  assert.equal(starfield.frame.plan.layers.meteorDensity, true);
+  assert.equal('meteorHours' in starfield.frame.plan, false);
+  assert.equal(groundRequests.length, requests); assert.equal(map.cameraSolutions.length, poses + 1, 'only the explicit 朝向 turned the camera');
+  // 22:00 the evening before is the same night: same dark stretch, another anchor for the alignment.
+  const range = night();
+  await setShootingDateTime('2026-08-12T22:00');
+  const evening = meteorEstimate({ ...plan, instant: '2026-08-12T13:00:00Z' });
+  assert.equal(night(), range);
+  assert.equal(fact().textContent, `流星示意 · 整晚暗夜 ${Number(evening.darkHours.toFixed(1))} 小时 · 画面内约 ${shown(evening.expected)} 颗`);
+  assert.notEqual(Math.round(evening.expected), Math.round(whole.expected));
+  await setShootingDateTime('2026-08-13T00:30');
+  // Turning the layer off takes the estimate with it; turning it on again keeps it off.
+  await settle(() => layerSwitch().click());
+  assert.deepEqual([density().checked, density().disabled], [false, true]);
+  assert.equal(fact(), null); assert.equal(document.querySelector('[data-meteor-label]'), null);
+  await settle(() => layerSwitch().click());
+  assert.equal(density().checked, false);
+  // The antihelion source has no maximum: a constant rate without days from peak.
+  assert.match(document.querySelector('[data-meteor-status="ANT"]').textContent, /ZHR 约 4\.0 · 30\skm\/s/);
+  // Variable showers list a radiant but no estimate.
+  await setShootingDateTime('2026-06-25T00:30');
+  assert.match(document.querySelector('[data-meteor-status="JBO"]').textContent, /ZHR 不定，不估算/);
 });

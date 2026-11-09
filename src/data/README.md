@@ -50,3 +50,15 @@ M31/M45 的额外红色增量为零。加州沿用扩散光支持，心脏/灵�
 `light-pollution.json` 保存 GFZ 版本 1.1 的来源、许可、原始 SHA256、地理注册、对数编码和分块校验。`public/light-pollution/atlas-2015/*.bin` 是显式 gzip 压缩的 126 份字节分块，文件扩展名避开静态服务的自动 Content-Encoding 解压，运行时先校验压缩字节，再显式解码。有效原生 3×3 像元按线性亮度平均为约 2.8 km 格网，采样时对解码后的值作双线性插值。无效编码 0 与真实零亮度编码 1 分开。
 
 生成入口为 `scripts/build-light-pollution.py`，不参与正常构建或 CI 下载。原始和衍生数据均为 CC BY-NC 4.0，仅限非商业使用，完整作者与两份引用在 About 和第三方说明。版本、边界和验证见[光污染计划](../../docs/plan/light-pollution.md)。
+
+## 流星雨工作表
+
+`meteor-showers.json` 摘录 [IMO Meteor Shower Calendar 2026](https://www.imo.net/files/meteor-shower/cal2026.pdf)（IMO INFO(3-25)，Jürgen Rendtel 编）的表 5“目视流星雨工作表”38 个流星雨，以及表 6 的 234 个辐射点位置。活动曲线的上升/衰减指数取自 [Moorhead 等（2019）](https://arxiv.org/abs/1904.06370)表 5，共 22 个流星雨。两份 PDF 的 SHA-256、权利说明，以及表 6 各列与表 5 辐射点的匹配差值都保存在 JSON 元数据中。
+
+IMO 资料标注 © International Meteor Organization，没有明示许可。经用户确认，本应用署名摘录这些事实数值，不单独提供下载；权利人要求时撤下，商业使用前需另行确认。中文名称为本应用翻译。日期保留 2026 年日历的月-日形式，由应用换算为 J2000 太阳黄经。表 6 的 “Jan 0” 记为 12-31。
+
+重建：在隔离的 Python 环境安装 `pypdf==7.0.0`，下载两份 PDF，然后执行 `python scripts/build-meteor-showers.py cal2026.pdf 1904.06370.pdf`。运行、构建和 CI 直接使用已提交的 JSON。
+
+脚本处理表 6 的方式：表 6 的列在年内依次给不同流星雨使用，因此不按列标签取数；而是按文字坐标取出连续数值段，在辐射点跳变处切开，再用表 5 的极大日期和辐射点以全局最小距离匹配，并把跨年的两段重新接上。
+
+两表不一致之处：波江座η、天鹅座κ、九月天猫座在极大日分别相差 2.2°、4.9°、6.8°，其余不超过 1.04°。运行时以表 5 为准，表 6 只提供漂移。范围与验收见[流星雨计划](../../docs/plan/meteor-showers.md)。

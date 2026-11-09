@@ -14,7 +14,7 @@ import { searchTimeZones, zoneOffset, allTimeZones } from "../src/domain/time-zo
 const varied = {
   latitude: -33.8568, longitude: 151.2153, azimuth: 123.456789, pitch: -7.25, cameraHeight: 42.5, focalLength: 600.3,
   sensor: "aps-c", aspectRatio: "16:9", orientation: "portrait", instant: "2026-12-14T09:31:12Z", timeZone: "Australia/Sydney",
-  layers: { buildings: true, sun: false, sunPath: false, moon: false, moonPath: false, stars: true, milkyWay: true, constellations: true, deepSky: true, stations: true },
+  layers: { buildings: true, sun: false, sunPath: false, moon: false, moonPath: false, stars: true, milkyWay: true, constellations: true, deepSky: true, stations: true, meteors: true, meteorDensity: true },
   refraction: "none", milkyWayContrast: 135, cameraResponse: "ha-modified", lightPollution: true, weather: true, weatherModel: "ecmwf_ifs025",
 };
 const minimal = (extra = {}) => ({ format: "tamatamatori.shot", version: 1, position: { latitude: 35, longitude: 139 }, view: { azimuth: 90 }, time: { instant: "2026-11-04T08:00:00Z" }, ...extra });
@@ -49,6 +49,17 @@ test("机位覆盖全部拍摄计划字段，JSON、分享码与链接往返无�
   const reopened = parseShot(older);
   assert.deepEqual([reopened.plan.layers.sunPath, reopened.plan.layers.moonPath], [false, false]);
   assert.deepEqual(reopened.defaults, ["layers.sunPath", "layers.moonPath"]);
+  // Likewise the meteor layer and its estimate switch.
+  const beforeMeteors = shotFromPlan(initialPlan);
+  delete beforeMeteors.layers.meteors; delete beforeMeteors.layers.meteorDensity;
+  const meteorDefaults = parseShot(beforeMeteors);
+  assert.deepEqual(meteorDefaults.defaults, ["layers.meteors", "layers.meteorDensity"]);
+  assert.deepEqual([meteorDefaults.plan.layers.meteors, meteorDefaults.plan.layers.meteorDensity], [false, false]);
+  // The shooting duration of an unreleased development build is read and ignored, never written.
+  assert.deepEqual(Object.keys(shotFromPlan(varied).sky), ["milkyWayContrast"]);
+  const devBuild = parseShot({ ...shotFromPlan(varied), sky: { milkyWayContrast: 135, meteorHours: 7.5 } });
+  assert.equal(devBuild.ok, true, devBuild.errors?.join());
+  assert.deepEqual([devBuild.plan, devBuild.defaults], [varied, []]);
   // The initial plan has no stored model; it round-trips as the default model.
   assert.deepEqual(planFromShot(shotFromPlan(initialPlan)), { ...initialPlan, weatherModel: "best_match" });
 });
@@ -70,6 +81,10 @@ test("机位校验一次列出全部问题并带字段路径，未知字段和�
   const orphanPaths = errorsOf(minimal({ layers: { sun: false, sunPath: true, moon: false, moonPath: true } }));
   assert.match(orphanPaths, /layers\.sunPath：需要同时开启 layers\.sun/);
   assert.match(orphanPaths, /layers\.moonPath：需要同时开启 layers\.moon/);
+  const meteors = errorsOf(minimal({ layers: { meteors: false, meteorDensity: true }, sky: { meteorHours: 2, meteorMinutes: 5 } }));
+  assert.match(meteors, /layers\.meteorDensity：需要同时开启 layers\.meteors/);
+  assert.match(meteors, /sky\.meteorMinutes：未知字段/);
+  assert.doesNotMatch(meteors, /meteorHours/);
   assert.match(errorsOf({ ...minimal(), version: 2 }), /更新版本/);
   assert.match(errorsOf({ ...minimal(), format: "other" }), /format：应为 "tamatamatori.shot"/);
   assert.match(errorsOf({ format: "tamatamatori.shot", version: 1 }), /position：缺少该字段[\s\S]*view：缺少该字段[\s\S]*time：缺少该字段/);

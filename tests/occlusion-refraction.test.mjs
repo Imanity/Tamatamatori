@@ -14,6 +14,8 @@ import {deepSkyScene} from '../src/domain/deep-sky.ts';
 import {DeepSkyTextures} from '../src/preview/deep-sky-textures.ts';
 import { parseWeather, sampleWeather } from '../src/domain/weather.ts';
 import { weatherResponse } from './fixtures/weather.mjs';
+import { activeShowers, meteorSample } from '../src/domain/meteor-showers.ts';
+import { meteorMesh, METEOR_ATTRIBUTES, METEOR_STRIDE } from '../src/preview/meteor-streaks.ts';
 
 const close = (a, b, tolerance = 1e-6) => assert.ok(Math.abs(a - b) <= tolerance, `${a} vs ${b}`);
 const disc = (elevation) => ({ id: "sun", elevation, azimuth: 0, angularRadius: 0.25, distanceKm: 1.5e8, direction: direction(0, elevation) });
@@ -554,4 +556,64 @@ test('光污染改变星空显示强度，天体位置、星座与深空几何�
   }
   assert.equal(changed, true); assert.deepEqual(Array.from(layer.band.vertices), band);
   layer.onRemove(); assert.equal(resources.size, 0);
+});
+
+test('流星雨辐射点进入星点与遮挡查询；示意流星在远平面按深度绘制、不写深度，转动相机只重建流星，关闭后不再绘制', () => {
+  const {gl,queries,resources,state,enabled}=fakeGL(),reports=[];
+  const layer=new StarfieldLayer(s=>reports.push(s),async()=>({width:2048,height:256,close(){}}));
+  layer.onAdd({triggerRepaint(){},getContainer:()=>({clientWidth:600,clientHeight:400}),getCanvas:()=>({width:1200,height:800})},gl);
+  const plan={...initialPlan,instant:'2026-08-12T15:00:00Z',focalLength:14,refraction:'none',
+    layers:{sun:false,moon:false,stars:false,milkyWay:false,constellations:false,deepSky:false,stations:false,meteors:true,meteorDensity:true}};
+  const per=activeShowers(plan).find(a=>a.shower.code==='PER').point;
+  plan.azimuth=per.azimuth;plan.pitch=per.elevation;
+  const before=new Map(state),beforeEnabled=new Set(enabled);
+  layer.setScene({key:'meteors',planKey:'meteors',ready:true,plan});
+  layer.camera={azimuth:plan.azimuth,pitch:plan.pitch};layer.matrix=photoCameraMatrix(plan);
+  gl.results=Array(10).fill(true);layer.render(gl);
+  const streaks=meteorSample(plan).streaks;
+  assert.ok(streaks.length>15);
+  const draw=gl.draws.find(d=>d.mode===gl.TRIANGLES&&d.count===streaks.length*6);
+  assert.ok(draw,'one draw for all streaks');
+  assert.deepEqual([draw.depth,draw.write,draw.depthTest],[gl.LEQUAL,false,true]);
+  assert.ok(gl.uploads.some(data=>data.length===streaks.length*6*METEOR_STRIDE));
+  // Six radiants are listed; the Perseid radiant at the frame centre is probed for its label.
+  const points=gl.uploads.find(data=>data.length===6*9);
+  assert.ok(points,'radiant points uploaded');
+  assert.ok([...Array(6).keys()].every(i=>points[i*9+4]===2),'radiant symbol');
+  assert.ok(queries.size>=1);gl.complete();layer.render(gl);
+  assert.equal(reports.at(-1).states[per.id],'clear');
+  assert.deepEqual(state,before);assert.deepEqual(enabled,beforeEnabled);
+  // The stack follows the fixed camera: the preview camera turns, only the meteor buffer is rebuilt.
+  const turned={...plan,azimuth:plan.azimuth+20},uploads=gl.uploads.length;
+  layer.setScene({key:'turned',planKey:'turned',ready:true,plan:turned});
+  layer.render(gl);
+  const fresh=gl.uploads.slice(uploads),again=meteorSample(turned).streaks;
+  assert.equal(fresh.length,1);assert.equal(fresh[0].length,again.length*6*METEOR_STRIDE);
+  assert.notDeepEqual(again.map(s=>s.time),streaks.map(s=>s.time));
+  // The rendered direction comes from the frame view when given.
+  layer.setScene({key:'view',planKey:'view',ready:true,plan,view:{azimuth:turned.azimuth,pitch:turned.pitch}});
+  layer.render(gl);assert.equal(gl.uploads.length,uploads+1,'same camera, nothing rebuilt');
+  const count=gl.draws.length;
+  layer.setScene({key:'off',planKey:'off',ready:true,plan:{...plan,layers:{...plan.layers,meteors:false,meteorDensity:false}}});
+  layer.render(gl);assert.equal(gl.draws.length,count,'nothing drawn with the layer off');
+  layer.onRemove();assert.equal(resources.size,0);
+});
+
+test('示意流星网格：每颗 6 个顶点，两侧按起止方向一致，截断的流星保留原长度位置，亮流星更宽更亮，属性布局与步长一致', () => {
+  const streak={code:'PER',time:0,start:direction(10,40),end:direction(14,36),along:[0,1],magnitude:-1};
+  const faint={...streak,along:[0.25,0.7],magnitude:2};
+  const data=meteorMesh([streak,faint],'none');
+  assert.equal(data.length,2*6*METEOR_STRIDE);
+  const vertex=(i)=>Array.from(data.slice(i*METEOR_STRIDE,(i+1)*METEOR_STRIDE));
+  // Start vertices carry the start ray, end vertices the end ray; sides are measured against start → end at both ends.
+  assert.deepEqual(vertex(0).slice(0,3),Array.from(Float32Array.from(direction(10,40))));
+  assert.deepEqual(vertex(2).slice(3,6),Array.from(Float32Array.from(direction(10,40))));
+  assert.deepEqual([0,1,2,3,4,5].map(i=>vertex(i)[6]),[-1,1,-1,1,1,-1]);
+  assert.deepEqual([0,1,2,3,4,5].map(i=>vertex(i)[7]),[0,0,1,0,1,1]);
+  // A streak cut at the frame keeps its fade-in and fade-out where they were along the whole meteor.
+  assert.deepEqual([...vertex(6).slice(8,10),...vertex(8).slice(8,10)].map(v=>Math.round(v*100)/100),[0.25,0.7,0.7,0.25]);
+  assert.ok(vertex(0)[10]>vertex(6)[10]&&vertex(0)[11]>vertex(6)[11]);
+  // Attribute locations 0–4 tile the stride without gaps.
+  assert.deepEqual(METEOR_ATTRIBUTES.map(([index])=>index),[0,1,2,3,4]);
+  assert.equal(METEOR_ATTRIBUTES.reduce((offset,[,size,at])=>{assert.equal(at,offset);return offset+size*4;},0),METEOR_STRIDE*4);
 });

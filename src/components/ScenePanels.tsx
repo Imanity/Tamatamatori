@@ -43,6 +43,7 @@ import { useWeather } from "./useWeather";
 import { WeatherReadout, WeatherActions, weatherMessage } from "./WeatherReadout";
 import { emptyBuildings, buildingKey } from "../domain/buildings";
 import { BuildingReadout } from "./BuildingReadout";
+import { MeteorLabels, MeteorReadout, meteorFact, useMeteorScene } from "./MeteorScene";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -81,6 +82,7 @@ export function PreviewPanel({
     milkyWay: plan.layers.milkyWay,
     deepSky: plan.layers.deepSky,
     stations: plan.layers.stations,
+    meteors: !!plan.layers.meteors,
   }));
   const toggleGroup = (id: InfoGroupId) =>
     setExpanded((current) => ({ ...current, [id]: !current[id] }));
@@ -121,6 +123,7 @@ export function PreviewPanel({
         milkyWay: layers.milkyWay,
         deepSky: layers.deepSky,
         stations: layers.stations,
+        meteors: !!layers.meteors,
       }));
       return;
     }
@@ -235,6 +238,13 @@ export function PreviewPanel({
   const weatherFeed = useWeather(plan);
   const weather = weatherFeed.sample ?? undefined;
   const starScene = useStarScene(plan, skyVisibility, artificialMcd, weather, view);
+  const meteorScene = useMeteorScene(plan, view, {
+    artificialMcd: artificialMcd ?? 0,
+    note: !plan.lightPollution ? "光污染未开启，按自然天空"
+      : pollution.phase === "ready" ? `已计光污染 ${artificialMcd!.toFixed(2)} mcd/m²`
+      : pollution.phase === "loading" ? "光污染读取中，暂按自然天空" : "光污染不可用，按自然天空",
+  });
+  const meteorNote = meteorFact(meteorScene);
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return (
     <div className="preview-content">
@@ -253,6 +263,7 @@ export function PreviewPanel({
               ? "天文改机 · Hα 增强示意"
               : "未改机 · 近似参考"}
           </span>
+          {meteorNote && <span className="meteor-fact" data-meteor-fact>{meteorNote}</span>}
           <span className="preview-elevation">
             机位高程{" "}
             {terrainInfo.ground === null
@@ -406,6 +417,7 @@ export function PreviewPanel({
           <CelestialPathLabels scene={celestialScene} plan={plan} />
           <CelestialDiscs scene={celestialScene} weather={weather} plan={plan} />
           <StarLabels scene={starScene} />
+          <MeteorLabels plan={plan} scene={meteorScene} visibility={skyVisibility} />
           <StationLabels
             plan={plan}
             weather={weather}
@@ -700,6 +712,11 @@ export function PreviewPanel({
                       update={update}
                     />
                   ),
+                )}
+                {group(
+                  "meteors",
+                  "流星雨",
+                  <MeteorReadout plan={plan} scene={meteorScene} visibility={skyVisibility} update={update} />,
                 )}
               </>
             )}

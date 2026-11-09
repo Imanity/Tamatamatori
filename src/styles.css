@@ -1329,6 +1329,11 @@ input[aria-invalid="true"] {
 .subsetting-toggle input { accent-color: var(--green); width: 16px; height: 16px; }
 .subsetting-toggle:has(input:disabled) { opacity: .6; }
 .path-status { margin: -8px 0 10px; font-size: 11px; line-height: 1.6; color: #8b9781; }
+.meteor-estimate { margin: -4px 0 12px; font-size: 11px; line-height: 1.6; color: #63765c; }
+.meteor-estimate p { margin: 0; }
+.meteor-estimate strong { color: #34452e; }
+.meteor-estimate .meteor-basis { color: #8b9781; }
+.meteor-row small { font-weight: 400; color: #8b9781; }
 .info-group .galaxy-contrast { margin: 0 0 12px; }
 .info-group .galaxy-contrast input:disabled { opacity: .45; cursor: default; }
 .info-reopen { align-self: flex-start; flex-shrink: 0; margin-top: 16px; margin-right: 10px; }

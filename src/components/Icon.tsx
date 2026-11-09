@@ -27,6 +27,7 @@ const paths = {
   info: "M12 11v6m0-10h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z",
   bookmark: "M6 3.5h12v17l-6-4.2-6 4.2v-17Z",
   chevron: "m6 9 6 6 6-6",
+  meteor: "M20 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM16.5 6.5 4 19M12.5 6 7 11.5M18 11.5 12.5 17",
 } as const;
 
 export type IconName = keyof typeof paths;

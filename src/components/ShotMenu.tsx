@@ -29,6 +29,8 @@ const layerNames: Record<keyof Shot["layers"], string> = {
   milkyWay: "银河",
   deepSky: "深空天体",
   stations: "空间站",
+  meteors: "流星雨",
+  meteorDensity: "流星密度",
 };
 
 const coordinates = (p: { latitude: number; longitude: number }) =>

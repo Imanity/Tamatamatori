@@ -25,6 +25,8 @@ import { deepSkyScene, deepSkyView, deepSkyRedEnhancementColor, deepSkyImageEntr
 import type { DeepSkyTarget } from "../domain/deep-sky.ts";
 import type { StationScene } from "../domain/stations.ts";
 import { classifyOcclusion, skyLabelKey } from "../domain/visibility.ts";
+import { activeShowers, meteorSample } from "../domain/meteor-showers.ts";
+import { meteorFragment, meteorMesh, meteorVertex, METEOR_ATTRIBUTES, METEOR_STRIDE } from "./meteor-streaks.ts";
 
 interface Frame {
   key: string;
@@ -33,6 +35,8 @@ interface Frame {
   plan: ShootingPlan;
   stations?: StationScene;
   artificialMcd?: number;
+  /** Direction the preview camera actually shows; the plan's when absent. */
+  view?: { azimuth: number; pitch: number };
 }
 type Pending = { id: string; query: WebGLQuery; blocked?: WebGLQuery };
 const pointVertex = `#version 300 es
@@ -41,14 +45,26 @@ layout(location=0) in vec3 a_ray;
 layout(location=1) in vec2 a_symbol;
 layout(location=2) in vec4 a_color;
 uniform mat4 u_camera; uniform float u_pixel_ratio;
-out vec4 v_color; out float v_kind; out float v_height;
+out vec4 v_color; out float v_kind; out float v_height; out float v_size;
 void main(){gl_Position=u_camera*vec4(a_ray,0.0);gl_Position.z=gl_Position.w;
-gl_PointSize=a_symbol.x*u_pixel_ratio;v_color=a_color;v_kind=a_symbol.y;v_height=a_ray.z;}`;
+gl_PointSize=a_symbol.x*u_pixel_ratio;v_size=gl_PointSize;v_color=a_color;v_kind=a_symbol.y;v_height=a_ray.z;}`;
+// The meteor radiant (kind 2) is a ring with eight half-CSS-pixel spokes,
+// shaded by distance in device pixels so they stay steady while the view
+// moves; a spoke narrower than a device pixel is drawn one pixel wide and
+// correspondingly fainter.
 const pointFragment = `#version 300 es
 precision highp float;
-in vec4 v_color; in float v_kind; in float v_height; uniform float u_probe; out vec4 color;
+in vec4 v_color; in float v_kind; in float v_height; in float v_size; uniform float u_probe; uniform float u_pixel_ratio; out vec4 color;
+float band(float distance,float width){return 1.0-smoothstep(width-0.6,width+0.6,distance);}
 void main(){if(v_height<=0.0)discard;float d=length(gl_PointCoord-0.5);
-float coverage=v_kind>0.5?(1.0-smoothstep(0.40,0.5,d))*smoothstep(0.26,0.36,d):exp(-d*d*13.0)*(1.0-smoothstep(0.35,0.5,d));
+float coverage;
+if(v_kind>1.5){vec2 c=(gl_PointCoord-0.5)*v_size;float r=length(c),s=v_size,sector=0.78539816;
+float angle=atan(c.y,c.x),offset=angle-sector*floor(angle/sector+0.5);
+float ring=band(abs(r-0.155*s),max(0.035*s,0.5));
+float spokeHalf=max(0.25*u_pixel_ratio,0.5);
+float spoke=band(r*abs(sin(offset)),spokeHalf)*0.25*u_pixel_ratio/spokeHalf*smoothstep(0.26*s-0.6,0.26*s+0.6,r)*band(r,0.47*s);
+coverage=max(ring,spoke);}
+else coverage=v_kind>0.5?(1.0-smoothstep(0.40,0.5,d))*smoothstep(0.26,0.36,d):exp(-d*d*13.0)*(1.0-smoothstep(0.35,0.5,d));
 float a=coverage*mix(v_color.a,1.0,u_probe);if(a<0.01)discard;color=vec4(v_color.rgb*a,a);}`;
 const bandVertex = `#version 300 es
 precision highp float;
@@ -159,6 +175,12 @@ export class StarfieldLayer implements CustomLayerInterface {
   private milky: SkyTexture;
   private deep: DeepSkyTextures;
   private deepProgram?: WebGLProgram;
+  private meteorProgram?: WebGLProgram;
+  private meteorVao?: WebGLVertexArrayObject;
+  private meteorBuffer?: WebGLBuffer;
+  private meteorData: Float32Array = new Float32Array();
+  private meteorKey = "";
+  private meteorDirty = false;
   private deepVao?: WebGLVertexArrayObject;
   private deepBuffer?: WebGLBuffer;
   private deepData: Float32Array = new Float32Array();
@@ -217,6 +239,9 @@ export class StarfieldLayer implements CustomLayerInterface {
       this.bandProgram = program(gl, bandVertex, bandFragment);
       this.lineProgram = program(gl, lineVertex, lineFragment);
       this.deepProgram = program(gl, deepVertex, deepFragment);
+      this.meteorProgram = program(gl, meteorVertex, meteorFragment);
+      this.meteorVao = gl.createVertexArray() ?? undefined;
+      this.meteorBuffer = gl.createBuffer() ?? undefined;
       this.pointsVao = gl.createVertexArray() ?? undefined;
       this.bandVao = gl.createVertexArray() ?? undefined;
       this.lineVao = gl.createVertexArray() ?? undefined;
@@ -235,7 +260,9 @@ export class StarfieldLayer implements CustomLayerInterface {
         !this.lineVao ||
         !this.lineBuffer ||
         !this.deepVao ||
-        !this.deepBuffer
+        !this.deepBuffer ||
+        !this.meteorVao ||
+        !this.meteorBuffer
       )
         throw new Error("allocation");
     } catch {
@@ -278,6 +305,7 @@ export class StarfieldLayer implements CustomLayerInterface {
         !!p.layers.deepSky,
         frame.stations?.key,
         frame.artificialMcd ?? 0,
+        !!p.layers.meteors,
       ].join("/");
     if (key !== this.dataKey) {
       this.dataKey = key;
@@ -292,6 +320,7 @@ export class StarfieldLayer implements CustomLayerInterface {
       const figure = p.layers.constellations ? constellationScene(p) : null;
       this.lineData = figure?.vertices ?? new Float32Array();
       const deep = p.layers.deepSky ? deepSkyScene(p) : null;
+      const radiants = p.layers.meteors ? activeShowers(p).map((active) => active.point) : [];
       this.deepObjects = deep?.objects ?? [];
       this.deepData = deep?.vertices ?? new Float32Array();
       this.points = [
@@ -302,6 +331,7 @@ export class StarfieldLayer implements CustomLayerInterface {
         ...(!p.layers.stars ? (deep?.clusterStars ?? []) : []),
         ...(p.layers.stations ? (frame.stations?.points ?? []).filter((point) => point.elevation > 0) : []),
         ...(p.layers.stations ? (frame.stations?.trail ?? []).filter((point) => point.elevation > 0) : []),
+        ...radiants,
       ];
       this.targets = this.points.filter((point) => !!point.name);
       this.offsets.clear();
@@ -312,12 +342,13 @@ export class StarfieldLayer implements CustomLayerInterface {
         const anchor =
           point.id.startsWith("constellation-") || point.id.startsWith("dso-");
         const station = point.id.startsWith("station-");
+        const radiant = point.id.startsWith("meteor-");
         const trail = station && point.id.includes("-trail-");
-        const alpha = station ? (trail ? 0.45 : 0.95) : anchor ? 0 : starOpacity(point, appearance!);
+        const alpha = radiant ? 0.95 : station ? (trail ? 0.45 : 0.95) : anchor ? 0 : starOpacity(point, appearance!);
         data.push(
           ...ray,
-          station ? (trail ? 2 : 9) : anchor ? 4 : skyPointSize(point),
-          (station && !trail) || point.id === "galactic-center" ? 1 : 0,
+          radiant ? 26 : station ? (trail ? 2 : 9) : anchor ? 4 : skyPointSize(point),
+          radiant ? 2 : (station && !trail) || point.id === "galactic-center" ? 1 : 0,
           ...point.color,
           alpha,
         );
@@ -325,6 +356,19 @@ export class StarfieldLayer implements CustomLayerInterface {
       this.pointData = new Float32Array(data);
       this.band = p.layers.milkyWay ? milkyWayMesh(p) : undefined;
       this.strength = appearance?.galaxyStrength ?? 0;
+    }
+    // The stack depends on the fixed camera, so turning it rebuilds only the meteors.
+    const camera = { ...p, ...frame.view };
+    const meteorKey = p.layers.meteors && p.layers.meteorDensity
+      ? [p.latitude, p.longitude, p.instant, p.refraction, frame.artificialMcd ?? 0,
+        camera.azimuth, camera.pitch, p.focalLength, p.sensor, p.aspectRatio, p.orientation].join("/")
+      : "";
+    if (meteorKey !== this.meteorKey) {
+      this.meteorKey = meteorKey;
+      this.meteorDirty = true;
+      this.meteorData = meteorKey
+        ? meteorMesh(meteorSample(camera, frame.artificialMcd ?? 0).streaks, p.refraction)
+        : new Float32Array();
     }
     this.map?.triggerRepaint();
   }
@@ -398,7 +442,8 @@ export class StarfieldLayer implements CustomLayerInterface {
         !f.plan.layers.milkyWay &&
         !f.plan.layers.constellations &&
         !f.plan.layers.deepSky &&
-        !f.plan.layers.stations)
+        !f.plan.layers.stations &&
+        !f.plan.layers.meteors)
     )
       return;
     if (gl.isContextLost()) {
@@ -544,6 +589,18 @@ export class StarfieldLayer implements CustomLayerInterface {
         }
         this.dirty = false;
       }
+      if (this.meteorDirty) {
+        if (this.meteorData.length) {
+          gl.bindVertexArray(this.meteorVao!);
+          gl.bindBuffer(gl.ARRAY_BUFFER, this.meteorBuffer!);
+          gl.bufferData(gl.ARRAY_BUFFER, this.meteorData, gl.STATIC_DRAW);
+          for (const [index, size, offset] of METEOR_ATTRIBUTES) {
+            gl.enableVertexAttribArray(index);
+            gl.vertexAttribPointer(index, size, gl.FLOAT, false, METEOR_STRIDE * 4, offset);
+          }
+        }
+        this.meteorDirty = false;
+      }
       if (this.band && this.milky.texture && this.strength > 0) {
         gl.useProgram(b);
         gl.bindTexture(gl.TEXTURE_2D, this.milky.texture!);
@@ -602,14 +659,24 @@ export class StarfieldLayer implements CustomLayerInterface {
           gl.drawArrays(gl.TRIANGLES, object.offset, object.count);
         }
       }
+      const host = this.map!.getContainer(),
+        canvas = this.map!.getCanvas();
+      if (this.meteorData.length && this.meteorProgram) {
+        // Illustrative meteors sit under the radiant symbols and star points.
+        const m = this.meteorProgram;
+        gl.useProgram(m);
+        gl.uniformMatrix4fv(gl.getUniformLocation(m, "u_camera"), false, this.matrix);
+        gl.uniform2fv(gl.getUniformLocation(m, "u_viewport"), [canvas.width, canvas.height]);
+        gl.uniform1f(gl.getUniformLocation(m, "u_pixel_ratio"), canvas.width / Math.max(1, host.clientWidth));
+        gl.bindVertexArray(this.meteorVao!);
+        gl.drawArrays(gl.TRIANGLES, 0, this.meteorData.length / METEOR_STRIDE);
+      }
       gl.useProgram(p);
       gl.uniformMatrix4fv(
         gl.getUniformLocation(p, "u_camera"),
         false,
         this.matrix,
       );
-      const host = this.map!.getContainer(),
-        canvas = this.map!.getCanvas();
       gl.uniform1f(
         gl.getUniformLocation(p, "u_pixel_ratio"),
         canvas.width / Math.max(1, host.clientWidth),
@@ -729,6 +796,9 @@ export class StarfieldLayer implements CustomLayerInterface {
       gl.deleteProgram(this.bandProgram ?? null);
       gl.deleteProgram(this.lineProgram ?? null);
       gl.deleteProgram(this.deepProgram ?? null);
+      gl.deleteProgram(this.meteorProgram ?? null);
+      gl.deleteBuffer(this.meteorBuffer ?? null);
+      gl.deleteVertexArray(this.meteorVao ?? null);
       gl.deleteBuffer(this.deepBuffer ?? null);
       gl.deleteVertexArray(this.deepVao ?? null);
       gl.deleteBuffer(this.pointsBuffer ?? null);
@@ -745,5 +815,6 @@ export class StarfieldLayer implements CustomLayerInterface {
     this.bandProgram = undefined;
     this.lineProgram = undefined;
     this.deepProgram = undefined;
+    this.meteorProgram = undefined;
   }
 }

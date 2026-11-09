@@ -34,6 +34,10 @@ export interface ShootingPlan {
     constellations: boolean;
     deepSky: boolean;
     stations: boolean;
+    /** Active meteor shower radiants on the shooting date. */
+    meteors?: boolean;
+    /** Illustrative meteors and the estimate for the night of the shooting instant; requires `meteors`. */
+    meteorDensity?: boolean;
   };
   refraction: "standard" | "none";
   milkyWayContrast: number;
@@ -66,6 +70,8 @@ export const initialPlan: ShootingPlan = {
     constellations: false,
     deepSky: false,
     stations: false,
+    meteors: false,
+    meteorDensity: false,
   },
   refraction: "standard",
   milkyWayContrast: 100,

@@ -333,7 +333,7 @@ export function TerrainScene({ plan, stations, onVisibilityChange, onCameraChang
             return { id: path.id, runs: view.runs, markers: view.markers.map((marker) => marker.point) };
           });
           celestialLayer.setScene({ key: frameKey, planKey, ready, bodies, paths, plan: current.plan, weather: current.weather, artificialMcd: current.artificialMcd });
-          starfield?.setScene({key:frameKey,planKey,ready,plan:current.plan,stations:current.stations,artificialMcd:current.artificialMcd});
+          starfield?.setScene({key:frameKey,planKey,ready,plan:current.plan,stations:current.stations,artificialMcd:current.artificialMcd,view:renderView});
         }
         markReady();
       } catch {

@@ -36,6 +36,8 @@ export const shotLayerKeys = [
   "milkyWay",
   "deepSky",
   "stations",
+  "meteors",
+  "meteorDensity",
 ] as const;
 type LayerKey = (typeof shotLayerKeys)[number];
 // Adding a layer to the plan without listing it here fails to compile.
@@ -230,6 +232,9 @@ const groupKeys: Record<string, readonly string[]> = {
   sky: ["milkyWayContrast"],
   environment: ["lightPollution", "weather", "weatherModel"],
 };
+// Written only by an unreleased development build (2026-11-09, meteor shooting hours);
+// accepted and ignored so locally saved test shots still load.
+const retiredKeys: Record<string, readonly string[]> = { sky: ["meteorHours"] };
 
 /** Validates a decoded shot; reports every problem with its field path. */
 export function parseShot(value: unknown): ShotParse {
@@ -252,7 +257,7 @@ export function parseShot(value: unknown): ShotParse {
       return {} as Record<string, unknown>;
     }
     for (const field of Object.keys(item))
-      if (!groupKeys[key].includes(field)) errors.push(`${key}.${field}：未知字段`);
+      if (!groupKeys[key].includes(field) && !retiredKeys[key]?.includes(field)) errors.push(`${key}.${field}：未知字段`);
     return item;
   };
   function number(source: Record<string, unknown>, path: string, fallback: number | undefined, range?: readonly [number, number], normalize?: (value: number) => number) {
@@ -383,6 +388,7 @@ export function parseShot(value: unknown): ShotParse {
   if (layerValues.constellations && !layerValues.stars) errors.push("layers.constellations：需要同时开启 layers.stars");
   if (layerValues.sunPath && !layerValues.sun) errors.push("layers.sunPath：需要同时开启 layers.sun");
   if (layerValues.moonPath && !layerValues.moon) errors.push("layers.moonPath：需要同时开启 layers.moon");
+  if (layerValues.meteorDensity && !layerValues.meteors) errors.push("layers.meteorDensity：需要同时开启 layers.meteors");
   const sky = group("sky", false);
   const milkyWayContrast = number(sky, "sky.milkyWayContrast", initialPlan.milkyWayContrast, shotLimits.milkyWayContrast);
   const environment = group("environment", false);

@@ -34,6 +34,7 @@ const skyLayers = [
   { id: "milkyWay", name: "银河", icon: "orbit" },
   { id: "deepSky", name: "深空天体", icon: "orbit" },
   { id: "stations", name: "空间站", icon: "satellite" },
+  { id: "meteors", name: "流星雨", icon: "meteor" },
 ] as const;
 
 function Divider({
@@ -323,6 +324,7 @@ export default function App() {
         // A path belongs to its body, like the constellation figures to the stars.
         ...(id === "sun" && current.layers.sun ? { sunPath: false } : {}),
         ...(id === "moon" && current.layers.moon ? { moonPath: false } : {}),
+        ...(id === "meteors" && current.layers.meteors ? { meteorDensity: false } : {}),
       },
     }));
   };
