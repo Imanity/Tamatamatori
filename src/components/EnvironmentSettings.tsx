@@ -39,7 +39,7 @@ export function EnvironmentSettings({ plan, update, children, autoSource = null 
     </div>
     <div className="environment-selects">
       <label className="environment-model"
-        title="自动匹配由 Open-Meteo 按地区选用当地最合适的模型（如日本使用日本气象厅 JMA 模型），该模型不提供的变量（如能见度）取自其他模型；其余三项为单一全球模型，结果可能明显不同">
+        title="自动匹配由 Open-Meteo 按地区选用当地最合适的模型（如日本使用日本气象厅 JMA 模型），该模型不提供的变量（如能见度）取自其他模型；其余为单一全球模型，结果可能明显不同。ECMWF IFS 9 km 为高分辨率版本，含能见度；0.25° 版不提供能见度">
         <span>预测模型</span>
         <select aria-label="天气预测模型" value={plan.weatherModel ?? "best_match"}
           onChange={event => update({ weatherModel: event.target.value as WeatherModel })}>

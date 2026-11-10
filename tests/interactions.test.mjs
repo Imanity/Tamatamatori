@@ -1864,6 +1864,8 @@ test('环境分组保留关闭时的模型选择，切换模型取消旧数据�
   await workspace(t); const map = await readyTerrain(), ground = groundRequests.length;
   const select = document.querySelector('[aria-label="天气预测模型"]');
   assert.ok(document.querySelector('.environment-settings').contains(select));
+  assert.deepEqual([...select.options].map((option) => option.value), ['best_match', 'gfs_seamless', 'icon_seamless', 'ecmwf_ifs', 'ecmwf_ifs025']);
+  assert.deepEqual([...select.options].map((option) => option.textContent).slice(3), ['ECMWF IFS 9 km', 'ECMWF IFS 0.25°']);
   await settle(() => setControl(select, 'gfs_seamless'));
   assert.equal(weatherRequests.length, 0);
   const pending = [];

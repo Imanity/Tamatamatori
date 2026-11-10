@@ -132,6 +132,9 @@ test("当地时区标记：旧机位缺省为固定时区，跟随时可省略�
   assert.match(errorsOf(minimal({ time: { instant: "2026-11-04T08:00:00Z", followLocalZone: "yes" } })), /time\.followLocalZone/);
   assert.match(errorsOf(minimal({ time: { local: "2026-07-14T22:30" } })), /followLocalZone/);
   assert.equal(shotFromPlan({ ...initialPlan, followLocalZone: true }).time.followLocalZone, true);
+  // Both ECMWF grids are valid weather models; the 9 km one was added later in v1.
+  for (const model of ["ecmwf_ifs", "ecmwf_ifs025"])
+    assert.equal(parseShot(minimal({ environment: { weatherModel: model } })).plan.weatherModel, model);
   assert.equal(shotFromPlan({ ...initialPlan, followLocalZone: undefined }).time.followLocalZone, false);
 });
 
