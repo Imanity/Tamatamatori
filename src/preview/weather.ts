@@ -2,6 +2,8 @@ import { parseWeather, weatherLocationKey, weatherVariables, weatherModels, WEAT
 import type { WeatherModel } from "../domain/weather.ts";
 import type { WeatherForecast } from "../domain/weather.ts";
 import type { MapPoint } from "../domain/map.ts";
+import { bestMatchCandidates, parseBestMatchSeries } from "../domain/weather-source.ts";
+import type { BestMatchSeries } from "../domain/weather-source.ts";
 
 const cache = new Map<string, WeatherForecast>();
 
@@ -28,4 +30,29 @@ export async function loadWeather(point: MapPoint, signal: AbortSignal, now = Da
   cache.set(key, data);
   if (cache.size > 4) cache.delete(cache.keys().next().value!);
   return data;
+}
+
+const sourceCache = new Map<string, { fetchedAt: number; series: BestMatchSeries }>();
+
+/**
+ * Hourly cloud cover of best_match and its candidate models in one request,
+ * to tell which model best_match uses at the shooting hour.
+ */
+export async function loadWeatherSource(point: MapPoint, signal: AbortSignal, now = Date.now()) {
+  signal.throwIfAborted();
+  const key = weatherLocationKey(point), cached = sourceCache.get(key);
+  if (cached && now >= cached.fetchedAt && now - cached.fetchedAt < WEATHER_TTL) return cached.series;
+  const parameters = new URLSearchParams({
+    latitude: String(point.latitude), longitude: String(point.longitude),
+    hourly: "cloud_cover", forecast_days: "7", timezone: "GMT", timeformat: "unixtime",
+    models: ["best_match", ...bestMatchCandidates.map((candidate) => candidate.id)].join(","),
+  });
+  const response = await fetch(`https://api.open-meteo.com/v1/forecast?${parameters}`, { signal });
+  if (!response.ok) throw new Error(`自动匹配来源请求失败（${response.status}）`);
+  const series = parseBestMatchSeries(await response.json());
+  signal.throwIfAborted();
+  sourceCache.delete(key);
+  sourceCache.set(key, { fetchedAt: now, series });
+  if (sourceCache.size > 4) sourceCache.delete(sourceCache.keys().next().value!);
+  return series;
 }

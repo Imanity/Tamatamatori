@@ -2,7 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import type { ShootingPlan } from "../domain/plan";
 import { sampleWeather, WEATHER_TTL, weatherLocationKey } from "../domain/weather";
 import type { WeatherForecast } from "../domain/weather";
-import { loadWeather } from "../preview/weather";
+import { loadWeather, loadWeatherSource } from "../preview/weather";
+import { bestMatchSource } from "../domain/weather-source";
+import type { BestMatchSeries } from "../domain/weather-source";
 
 interface WeatherState {
   key: string;
@@ -16,6 +18,9 @@ export function useWeather(plan: ShootingPlan) {
   const key = `${weatherLocationKey(plan)}/${model}`;
   const [state, setState] = useState<WeatherState>({ key, phase: "off" });
   const [attempt, setAttempt] = useState(0);
+  // Which model "自动匹配" uses, found by comparing hourly cloud cover.
+  const [source, setSource] = useState<{ key: string; phase: "loading" | "ready" | "error"; series?: BestMatchSeries }>({ key: "", phase: "loading" });
+  const sourceWanted = enabled && model === "best_match";
   const [clock, setClock] = useState(Date.now);
   useEffect(() => {
     if (!enabled) return;
@@ -49,6 +54,25 @@ export function useWeather(plan: ShootingPlan) {
     }, 250);
     return () => { disposed = true; clearTimeout(timer); clearTimeout(timeout); controller.abort(); };
   }, [enabled, key, attempt]);
+  useEffect(() => {
+    if (!sourceWanted) return;
+    const controller = new AbortController();
+    let disposed = false;
+    setSource((previous) => previous.key === key && previous.series ? previous : { key, phase: "loading" });
+    const timer = setTimeout(() => {
+      void loadWeatherSource(plan, controller.signal, Date.now())
+        .then((series) => { if (!disposed) setSource({ key, phase: "ready", series }); })
+        .catch(() => { if (!disposed) setSource({ key, phase: "error" }); });
+    }, 300);
+    return () => { disposed = true; clearTimeout(timer); controller.abort(); };
+  }, [sourceWanted, key, attempt]);
+  const sourceSeries = sourceWanted && source.key === key ? source.series : undefined;
+  const autoSource = useMemo(() => {
+    if (!sourceWanted) return null;
+    if (!sourceSeries) return { phase: source.key === key && source.phase === "error" ? "error" as const : "loading" as const, label: null };
+    const found = bestMatchSource(sourceSeries, plan.instant);
+    return { phase: "ready" as const, label: found?.label ?? null };
+  }, [sourceWanted, sourceSeries, source.key, source.phase, key, plan.instant]);
   const now = Math.max(clock, Date.now());
   const expired = !!state.forecast && (now < state.forecast.fetchedAt || now - state.forecast.fetchedAt >= WEATHER_TTL);
   useEffect(() => {
@@ -62,7 +86,7 @@ export function useWeather(plan: ShootingPlan) {
     [current.phase, expired, forecast, plan.instant]);
   const phase = (current.phase === "ready" || current.phase === "loading") && expired ? "stale"
     : current.phase === "ready" ? outside ? "outside" : sample ? "ready" : "missing" : current.phase;
-  return { phase, forecast, sample, message: current.message,
+  return { phase, forecast, sample, message: current.message, autoSource,
     retry: () => { setClock(Date.now()); setAttempt(value => value + 1); } };
 }
 export type WeatherFeed = ReturnType<typeof useWeather>;

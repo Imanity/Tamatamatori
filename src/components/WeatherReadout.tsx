@@ -32,7 +32,10 @@ export function WeatherReadout({ feed, update }: {
       <p className="info-detail">总云量 {(sample.cloud * 100).toFixed(0)}% · 低 {(sample.low * 100).toFixed(0)}% / 中 {(sample.mid * 100).toFixed(0)}% / 高 {(sample.high * 100).toFixed(0)}%</p>
       <p className="info-detail">降水 {sample.precipitation.toFixed(1)} mm/小时 · 概率 {(sample.probability * 100).toFixed(0)}% · 能见度 {sample.visibility === null ? "模型未提供" : `${(sample.visibility / 1000).toFixed(1)} km`}</p>
     </>}
-    {feed.phase !== "off" && <p className="weather-source">天气数据来自 <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo</a></p>}
+    {feed.phase !== "off" && <p className="weather-source">
+      天气数据来自 <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo</a>
+      {feed.autoSource?.label && <>，自动匹配此刻的云量来自{feed.autoSource.label}</>}
+    </p>}
     <WeatherActions feed={feed} update={update} />
   </section>;
 }

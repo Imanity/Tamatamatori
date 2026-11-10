@@ -150,3 +150,30 @@ test("低中高云独立控制覆盖与透光，示意高度有序、云形可�
   }
   assert.notDeepEqual(patterns[0], patterns[1]); assert.notDeepEqual(patterns[1], patterns[2]);
 });
+
+test("自动匹配的数据源按拍摄时刻前后连续一致的云量识别，平局按区域优先、ECMWF 先于北欧回落模型", async () => {
+  const { bestMatchSource, parseBestMatchSeries } = await import("../src/domain/weather-source.ts");
+  const hours = 168, base = Date.UTC(2026, 10, 10) / 1000;
+  const time = Array.from({ length: hours }, (_, hour) => base + hour * 3600);
+  const wave = (seed) => time.map((_, hour) => Math.round(50 + 45 * Math.sin(hour * 0.37 + seed)));
+  const jma = wave(1), ecmwf = wave(2), gfs = wave(3);
+  // Like Tokyo: JMA for the first 76 hours, then ECMWF; MET Norway falls back to ECMWF here.
+  const best = time.map((_, hour) => (hour < 76 ? jma : ecmwf)[hour]);
+  const series = parseBestMatchSeries({ hourly: {
+    time, cloud_cover_best_match: best, cloud_cover_jma_seamless: jma, cloud_cover_ecmwf_ifs: ecmwf,
+    cloud_cover_metno_seamless: [...ecmwf], cloud_cover_gfs_seamless: gfs, cloud_cover_unknown_model: gfs,
+  } });
+  assert.deepEqual(Object.keys(series.candidates).sort(), ["ecmwf_ifs", "gfs_seamless", "jma_seamless", "metno_seamless"]);
+  const at = (hour) => new Date((base + hour * 3600) * 1000).toISOString();
+  assert.deepEqual(bestMatchSource(series, at(10)), { id: "jma_seamless", label: "日本气象厅 JMA" });
+  assert.deepEqual(bestMatchSource(series, at(100)), { id: "ecmwf_ifs", label: "欧洲中期天气预报中心 ECMWF" });
+  // Between hours the nearest hour decides; outside the series nothing is claimed.
+  assert.equal(bestMatchSource(series, new Date((base + 10.4 * 3600) * 1000).toISOString()).id, "jma_seamless");
+  assert.equal(bestMatchSource(series, at(-2)), null);
+  assert.equal(bestMatchSource(series, at(200)), null);
+  // A two-hour coincidence is not a source.
+  const lone = time.map((_, hour) => (hour === 40 || hour === 41 ? gfs[hour] : (gfs[hour] + 30) % 101));
+  assert.equal(bestMatchSource(parseBestMatchSeries({ hourly: { time, cloud_cover_best_match: lone, cloud_cover_gfs_seamless: gfs } }), at(40)), null);
+  assert.throws(() => parseBestMatchSeries({ hourly: { time, cloud_cover_best_match: best.slice(1) } }));
+  assert.throws(() => parseBestMatchSeries(null));
+});

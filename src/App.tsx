@@ -274,7 +274,8 @@ export default function App() {
   };
   const toggleLayer = (id: LayerGroupId) => {
     // The information group follows its layer: enabling expands and reveals
-    // it without moving focus (the switch sits in the group's heading),
+    // it in place without moving focus or scrolling (the switch sits in the
+    // group's heading),
     // disabling collapses it.
     const enabling = !plan.layers[id];
     if (enabling) {

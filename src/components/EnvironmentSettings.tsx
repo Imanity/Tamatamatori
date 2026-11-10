@@ -9,11 +9,17 @@ import { Icon } from "./Icon";
  * weather effect, each followed by its conclusion, then the forecast model and
  * the refraction model.
  */
-export function EnvironmentSettings({ plan, update, children }: {
+export function EnvironmentSettings({ plan, update, children, autoSource = null }: {
   plan: ShootingPlan;
   update: (patch: Partial<ShootingPlan>) => void;
   children: { pollution: ReactNode; weather: ReactNode };
+  /** The model "自动匹配" uses at the shooting hour, while weather is on and it is chosen. */
+  autoSource?: { phase: "loading" | "ready" | "error"; label: string | null } | null;
 }) {
+  const autoNote = !autoSource ? ""
+    : autoSource.phase === "loading" ? "（识别来源中）"
+      : autoSource.phase === "error" ? "（来源未知）"
+        : `（${autoSource.label ?? "来源未能确定"}）`;
   return <div className="environment-settings">
     <div className="environment-row">
       <label className="subsetting-toggle layer-toggle">
@@ -32,11 +38,13 @@ export function EnvironmentSettings({ plan, update, children }: {
       {children.weather}
     </div>
     <div className="environment-selects">
-      <label className="environment-model">
+      <label className="environment-model"
+        title="自动匹配由 Open-Meteo 按地区选用当地最合适的模型（如日本使用日本气象厅 JMA 模型），该模型不提供的变量（如能见度）取自其他模型；其余三项为单一全球模型，结果可能明显不同">
         <span>预测模型</span>
         <select aria-label="天气预测模型" value={plan.weatherModel ?? "best_match"}
           onChange={event => update({ weatherModel: event.target.value as WeatherModel })}>
-          {Object.entries(weatherModels).map(([id, name]) => <option key={id} value={id}>{name}</option>)}
+          {Object.entries(weatherModels).map(([id, name]) =>
+            <option key={id} value={id}>{id === "best_match" ? `${name}${autoNote}` : name}</option>)}
         </select>
       </label>
       <label className="environment-model" title="标准折射为固定海平面参考大气；无折射显示几何位置">

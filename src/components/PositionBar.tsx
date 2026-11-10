@@ -1,12 +1,12 @@
 import type { ClipboardEvent } from "react";
-import { cameraHeightSlider, normalizeLongitude, parseCoordinatePair } from "../domain/plan";
+import { cameraHeightSlider, compassDirection, normalizeLongitude, parseCoordinatePair } from "../domain/plan";
 import type { ShootingPlan } from "../domain/plan";
 import { NumberField } from "./NumberField";
 
 /**
- * Camera position below the map: coordinates, the ground elevation read by the
- * preview and the camera height above ground. Pasting "latitude, longitude"
- * into either coordinate fills both.
+ * Camera position below the map: coordinates, shooting direction, the ground
+ * elevation read by the preview and the camera height above ground. Pasting
+ * "latitude, longitude" into either coordinate fills both.
  */
 export function PositionBar({
   plan,
@@ -54,6 +54,29 @@ export function PositionBar({
                 longitude === 180 ? normalizeLongitude(longitude) : longitude,
             })
           }
+        />
+      </div>
+      <div className="position-view" role="group" aria-label="拍摄方向">
+        <NumberField
+          label="方位角"
+          value={plan.azimuth}
+          min={0}
+          max={359.9}
+          step={0.1}
+          unit="°"
+          title="以真北为 0°，顺时针递增；也可拖动地图上的方向把手或预览画面"
+          onChange={(azimuth) => update({ azimuth })}
+        />
+        <span className="view-compass">{compassDirection(plan.azimuth)}</span>
+        <NumberField
+          label="俯仰角"
+          value={plan.pitch}
+          min={-90}
+          max={90}
+          step={0.1}
+          unit="°"
+          title="水平为 0°，向上为正；也可上下拖动预览画面"
+          onChange={(pitch) => update({ pitch })}
         />
       </div>
       <div className="position-height">

@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import {
-  compassDirection,
   dragView,
   frameAspectRatio,
   fieldOfView,
@@ -46,7 +45,6 @@ import { BuildingReadout } from "./BuildingReadout";
 import { MeteorLabels, MeteorReadout, meteorFact, useMeteorScene } from "./MeteorScene";
 import { CometLabels, CometReadout, useCometScene } from "./CometScene";
 import { useCometCatalog } from "./useCometCatalog";
-import { NumberField } from "./NumberField";
 import { CameraBar } from "./CameraBar";
 import { Timeline } from "./Timeline";
 import { EnvironmentSettings } from "./EnvironmentSettings";
@@ -111,34 +109,11 @@ export function PreviewPanel({
   }));
   const toggleGroup = (id: InfoGroupId) =>
     setExpanded((current) => ({ ...current, [id]: !current[id] }));
-  // Scroll the information rail itself so the group starts at its top; a
-  // hidden rail (closed mobile drawer, collapsed desktop rail) reveals the
-  // group as soon as it gains a size.
-  const pendingReveal = useRef<InfoGroupId | null>(null);
-  const reveal = (host: HTMLElement, id: InfoGroupId) => {
-    const group = host.querySelector(`#info-${id}`)?.closest(".info-group");
-    if (!group || !host.getClientRects().length) return false;
-    const top =
-      group.getBoundingClientRect().top -
-      host.getBoundingClientRect().top +
-      host.scrollTop;
-    const behavior = window.matchMedia?.("(prefers-reduced-motion: reduce)")
-      ?.matches
-      ? "auto"
-      : "smooth";
-    if (typeof host.scrollTo === "function") host.scrollTo({ top, behavior });
-    else host.scrollTop = top;
-    return true;
-  };
-  // Expand first; scroll only after the expanded content has been committed,
-  // otherwise the rail is still too short to reach the group.
-  const [revealing, setRevealing] = useState<InfoGroupId | null>(null);
+  // A layer switch expands or collapses its group in place; the panel does not scroll.
   useEffect(() => {
     if (!infoNavigation) return;
     if ("sync" in infoNavigation) {
       const layers = latestPlan.current.layers;
-      pendingReveal.current = null;
-      setRevealing(null);
       setExpanded((current) => ({
         ...current,
         buildings: !!layers.buildings,
@@ -155,30 +130,7 @@ export function PreviewPanel({
     }
     const { id, open } = infoNavigation;
     setExpanded((current) => ({ ...current, [id]: open }));
-    if (open) setRevealing(id);
-    else {
-      // A collapsed group must not be scrolled to later.
-      if (pendingReveal.current === id) pendingReveal.current = null;
-      setRevealing((current) => (current === id ? null : current));
-    }
   }, [infoNavigation]);
-  useEffect(() => {
-    if (!revealing || !infoHost || !expanded[revealing]) return;
-    const frame = requestAnimationFrame(() => {
-      pendingReveal.current = reveal(infoHost, revealing) ? null : revealing;
-      setRevealing((current) => (current === revealing ? null : current));
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [revealing, infoHost, expanded]);
-  useEffect(() => {
-    if (!infoHost || typeof ResizeObserver === "undefined") return;
-    const observer = new ResizeObserver(() => {
-      const id = pendingReveal.current;
-      if (id && reveal(infoHost, id)) pendingReveal.current = null;
-    });
-    observer.observe(infoHost);
-    return () => observer.disconnect();
-  }, [infoHost]);
   useEffect(() => {
     const element = viewfinder.current;
     if (!element) return;
@@ -302,33 +254,6 @@ export function PreviewPanel({
     <div className="preview-content">
       <div className="preview-meta">
         <div className="preview-facts">
-          <div className="view-fields" role="group" aria-label="拍摄方向">
-            <NumberField
-              key={`azimuth-${generation}`}
-              className="view-field"
-              label="方位角"
-              value={plan.azimuth}
-              min={0}
-              max={359.9}
-              step={0.1}
-              unit="°"
-              title="以真北为 0°，顺时针递增"
-              onChange={(azimuth) => update({ azimuth })}
-            />
-            <span className="view-compass">{compassDirection(plan.azimuth)}</span>
-            <NumberField
-              key={`pitch-${generation}`}
-              className="view-field"
-              label="俯仰角"
-              value={plan.pitch}
-              min={-90}
-              max={90}
-              step={0.1}
-              unit="°"
-              title="水平为 0°，向上为正"
-              onChange={(pitch) => update({ pitch })}
-            />
-          </div>
           {plan.layers.deepSky && (
             <span className="camera-response-fact">
               {plan.cameraResponse === "ha-modified"
@@ -642,7 +567,7 @@ export function PreviewPanel({
                       </p>
                     </section>
                     <section className="info-section environment-section">
-                      <EnvironmentSettings plan={plan} update={update}>
+                      <EnvironmentSettings plan={plan} update={update} autoSource={weatherFeed.autoSource}>
                         {{
                           pollution: (
                             <div className="pollution-readout" aria-label="当地光污染数据">

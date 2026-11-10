@@ -1172,7 +1172,7 @@ input[aria-invalid="true"] {
 .info-group-title { flex: 1; min-width: 0; }
 .info-group-sign { color: #9aa38f; }
 .info-group h2 > button:hover { color: #2c5138; }
-.info-group > div:not([hidden]) { padding-bottom: 17px; }
+.info-group > div:not(.info-group-header):not([hidden]) { padding-bottom: 17px; }
 .info-group .info-section { padding: 8px 0 14px; }
 .info-group .info-section h3 { margin: 0 0 10px; }
 .info-body { overscroll-behavior: contain; }
@@ -1362,3 +1362,43 @@ p.info-detail, span.info-detail { color: #8f9886; }
 @media (max-width: 1099px) {
   .info-sidebar { width: auto; border-left: 1px solid #dfe4d7; }
 }
+
+/* Hierarchy inside the information panel: the layer switch in the heading is the
+   primary control; settings of an open layer sit in a tinted, indented block
+   with smaller switches, apart from the readout below them. */
+.info-group h2 { font-size: 13px; font-weight: 600; }
+.info-group h2 > button { padding: 14px 0; color: #3f5a46; }
+.info-group > div:not(.info-group-header):not([hidden]) { padding-left: 24px; }
+.info-group[data-info-group="global"] > div:not(.info-group-header):not([hidden]) { padding-left: 0; }
+.info-group .subsetting-toggle,
+.info-group .subsetting-select,
+.info-group .galaxy-contrast,
+.info-group .environment-selects {
+  margin: 0 0 6px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: #f0f3ea;
+  color: #6c7e61;
+  font-size: 10.5px;
+}
+.info-group .galaxy-contrast { padding-bottom: 4px; }
+.info-group .path-status { margin: -2px 0 8px; padding: 0 10px; font-size: 10px; }
+.info-group .subsetting-toggle input[type="checkbox"] { width: 22px; height: 13px; min-width: 22px; min-height: 13px; }
+.info-group .subsetting-toggle input[type="checkbox"]::before { width: 7px; height: 7px; left: 2px; top: 2px; }
+.info-group .subsetting-toggle input[type="checkbox"]:checked::before { transform: translateX(9px); }
+.info-group .subsetting-toggle + :not(.subsetting-toggle):not(.path-status),
+.info-group .galaxy-contrast + *,
+.info-group .subsetting-select + * { margin-top: 10px; }
+/* Light pollution and weather are environment switches, not sub-settings. */
+.info-group .environment-row .subsetting-toggle { margin: 0 0 4px; padding: 0; background: none; color: #3f5a46; font-size: 12px; font-weight: 550; }
+.info-group .environment-row .subsetting-toggle input[type="checkbox"] { width: 27px; height: 16px; min-width: 27px; min-height: 16px; }
+.info-group .environment-row .subsetting-toggle input[type="checkbox"]::before { width: 10px; height: 10px; }
+.info-group .environment-row .subsetting-toggle input[type="checkbox"]:checked::before { transform: translateX(10px); }
+.info-group .environment-selects { margin-top: 2px; }
+/* Position bar: coordinates, then the shooting direction below them, then height. */
+.position-coordinates, .position-view { flex-basis: 100%; }
+.position-view { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.position-view .number-wrap { width: 92px; }
+.position-view .view-compass { margin-left: -6px; }
+/* The time section is set apart from the lens row above it. */
+.timeline { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }

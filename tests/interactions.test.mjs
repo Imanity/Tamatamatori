@@ -349,7 +349,8 @@ before(async () => {
           if (id.replaceAll("\\", "/").endsWith("/src/preview/light-pollution.ts"))
             return "export const sampleLightPollution = (...args) => globalThis.__testPollutionLoader(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/weather.ts"))
-            return "export const loadWeather = (...args) => globalThis.__testWeatherLoader(...args);";
+            return "export const loadWeather = (...args) => globalThis.__testWeatherLoader(...args);\n" +
+              "export const loadWeatherSource = (...args) => (globalThis.__testWeatherSourceLoader ?? (() => Promise.reject(new Error('no source'))))(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/elevation.ts"))
             return "export const groundElevation = (...args) => globalThis.__testGroundLoader(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/map/sdk.ts"))
@@ -1558,39 +1559,23 @@ test('建筑入口联动右栏、转向调焦复用几何，失败独立重试�
   assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
 });
 
-test('分组标题的图层开关开启时展开并滚动到该组且不移动焦点，关闭即折叠不滚动，隐藏的信息栏显示后再定位', async t => {
+test('分组标题的图层开关开启时就地展开、不滚动信息栏也不移动焦点，关闭即折叠', async t => {
   await workspace(t); await readyTerrain();
-  const body=document.querySelector('.info-body'),scrolls=[],tops={stars:460,milkyWay:520};
-  const proto=dom.window.HTMLElement.prototype,original=proto.getBoundingClientRect;
-  proto.getBoundingClientRect=function(){return {top:this===body?100:tops[this.dataset.infoGroup]??0};};
-  t.after(()=>{proto.getBoundingClientRect=original;});
-  body.getClientRects=()=>[{}];body.scrollTo=options=>scrolls.push(options);
-  await settle(()=>setControl(document.querySelector('#target-search'),'Vega'));
-  await settle(()=>document.querySelector('[aria-label="收起图层与信息"]').click());
-  const stars=document.querySelector('[aria-label="显示星空"]');stars.focus();
-  await settle(()=>stars.click());
-  assert.equal(document.querySelector('.info-sidebar').classList.contains('is-collapsed'),false);
-  assert.equal(document.querySelector('#target-search').value,'');
-  assert.equal(document.querySelector('#info-stars').getAttribute('aria-expanded'),'true');
-  assert.equal(document.activeElement,stars);
-  assert.deepEqual(scrolls.at(-1),{top:360,behavior:'smooth'});
-  const count=scrolls.length;await settle(()=>stars.click());
-  assert.equal(stars.checked,false);assert.equal(document.querySelector('#info-stars').getAttribute('aria-expanded'),'false');assert.equal(scrolls.length,count);
-  // Hidden rail: the reveal waits for a size; switching off first cancels it.
-  const observe=()=>resizeObservers.filter(observer=>observer.target===body).forEach(observer=>observer.callback([]));
-  const milkyWay=document.querySelector('[aria-label="显示银河"]');
-  body.getClientRects=()=>[];
-  await settle(()=>milkyWay.click());
-  assert.equal(document.querySelector('#info-milkyWay').getAttribute('aria-expanded'),'true');assert.equal(scrolls.length,count);
-  await settle(()=>milkyWay.click());
-  assert.equal(document.querySelector('#info-milkyWay').getAttribute('aria-expanded'),'false');
-  body.getClientRects=()=>[{}];
-  await settle(observe);assert.equal(scrolls.length,count);
-  body.getClientRects=()=>[];
-  await settle(()=>milkyWay.click());
-  body.getClientRects=()=>[{}];
-  await settle(observe);
-  assert.deepEqual(scrolls.at(-1),{top:420,behavior:'smooth'});
+  const body = document.querySelector('.info-body'), scrolls = [];
+  body.scrollTo = (options) => scrolls.push(options);
+  body.scrollTop = 120;
+  for (const [id, name] of [['stars', '星空'], ['milkyWay', '银河'], ['comets', '彗星']]) {
+    const toggle = document.querySelector(`[aria-label="显示${name}"]`);
+    toggle.focus();
+    await settle(() => toggle.click());
+    assert.equal(document.querySelector(`#info-${id}`).getAttribute('aria-expanded'), 'true', id);
+    assert.equal(document.activeElement, toggle);
+    await act(async () => { await delay(30); });
+    await settle(() => toggle.click());
+    assert.equal(document.querySelector(`#info-${id}`).getAttribute('aria-expanded'), 'false', id);
+  }
+  assert.deepEqual(scrolls, []);
+  assert.equal(body.scrollTop, 120);
 });
 
 test('建筑分组显示加载进度、范围与精模朝向，不显示缓存和调试计数', async t => {
@@ -1622,7 +1607,7 @@ test('建筑分组显示加载进度、范围与精模朝向，不显示缓存�
   for(const removed of [/缓存/,/清理/])assert.doesNotMatch(readout().textContent,removed);
 });
 
-test('星座和银河子设置位于右栏；方向、镜头与时间在预览旁，机位与高度在地图下方，不再有参数栏', async t => {
+test('星座和银河子设置位于右栏；镜头与时间在预览下方，坐标、方向与高度在地图下方，不再有参数栏', async t => {
   await workspace(t); await readyTerrain();
   const stars = document.querySelector('[aria-label="显示星座名称与连线"]');
   assert.ok(stars.closest('#info-stars-body')); assert.equal(stars.disabled, true);
@@ -1634,11 +1619,9 @@ test('星座和银河子设置位于右栏；方向、镜头与时间在预览�
   assert.equal(stars.checked, false); assert.equal(stars.disabled, true);
   assert.equal(document.querySelector('.panel-parameters'), null);
   assert.equal(document.querySelectorAll('.panel').length, 2);
-  // Direction above the frame, lens and time below it, all outside the frame.
-  for (const label of ['方位角', '俯仰角']) {
-    assert.ok(input(label).closest('.preview-meta'), label);
-    assert.equal(input(label).closest('.viewfinder'), null);
-  }
+  // Direction sits under the coordinates below the map; lens and time below the frame.
+  for (const label of ['方位角', '俯仰角']) assert.ok(input(label).closest('.panel-map .position-bar .position-view'), label);
+  assert.equal(document.querySelector('.preview-meta input'), null);
   for (const control of [input('焦距'), document.querySelector('[aria-label="焦距滑块"]'), document.querySelector('[aria-label="传感器"]'),
     document.querySelector('[aria-label="画幅比例"]'), document.querySelector('[aria-label="拍摄画幅方向"]')])
     assert.ok(control.closest('.panel-preview .camera-bar'));
@@ -1648,6 +1631,8 @@ test('星座和银河子设置位于右栏；方向、镜头与时间在预览�
   assert.ok(clock.closest('.panel-preview .timeline'));
   // Position and height below the map; the ground elevation comes from the preview.
   for (const label of ['纬度', '经度', '离地高度']) assert.ok(input(label).closest('.panel-map .position-bar'), label);
+  const bar = document.querySelector('.position-bar');
+  assert.ok(bar.querySelector('.position-coordinates').compareDocumentPosition(bar.querySelector('.position-view')) & dom.window.Node.DOCUMENT_POSITION_FOLLOWING);
   assert.match(document.querySelector('.panel-map .ground-elevation').textContent, /1000\.0/);
   assert.equal(document.querySelector('.preview-meta').textContent.includes('1000.0'), false);
   // Rare settings move next to what they affect.
@@ -2492,4 +2477,31 @@ test('右栏先给结论：详细数值默认隐藏，开启后显示并在本�
   assert.equal(body().classList.contains('show-details'), true);
   await settle(() => toggle().click());
   assert.equal(dom.window.localStorage.getItem('tamatamatori.showDetails'), '0');
+});
+
+test('天气“自动匹配”在选项后标注拍摄时刻的云量来源，识别中、失败与其他模型分别处理', async t => {
+  const base = Date.parse('2026-11-04T00:00:00Z') / 1000;
+  const time = Array.from({ length: 48 }, (_, hour) => base + hour * 3600);
+  const jma = time.map((_, hour) => (hour * 7) % 100), other = time.map((_, hour) => (hour * 13 + 5) % 100);
+  let resolveSource;
+  installGlobal('__testWeatherSourceLoader', () => new Promise((resolve) => { resolveSource = resolve; }));
+  t.after(() => { delete globalThis.__testWeatherSourceLoader; });
+  const { parseBestMatchSeries } = await server.ssrLoadModule('/src/domain/weather-source.ts');
+  await workspace(t); await readyTerrain();
+  const option = () => document.querySelector('[aria-label="天气预测模型"] option[value="best_match"]');
+  assert.equal(option().textContent, '自动匹配', 'weather off: nothing to identify');
+  await settle(() => document.querySelector('[aria-label="天气效果"]').click());
+  await waitUntil(() => resolveSource);
+  assert.equal(option().textContent, '自动匹配（识别来源中）');
+  await act(async () => resolveSource(parseBestMatchSeries({ hourly: {
+    time, cloud_cover_best_match: jma, cloud_cover_jma_seamless: jma, cloud_cover_gfs_seamless: other,
+  } })));
+  await settle();
+  assert.equal(option().textContent, '自动匹配（日本气象厅 JMA）');
+  await waitUntil(() => document.querySelector('[data-weather-phase="ready"]'));
+  assert.match(document.querySelector('.weather-source').textContent, /自动匹配此刻的云量来自日本气象厅 JMA/);
+  // A single global model needs no note; the auto option goes back to its plain name.
+  await settle(() => setControl(document.querySelector('[aria-label="天气预测模型"]'), 'gfs_seamless'));
+  assert.equal(option().textContent, '自动匹配');
+  assert.doesNotMatch(document.querySelector('.weather-source')?.textContent ?? '', /云量来自/);
 });
