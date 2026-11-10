@@ -16,6 +16,8 @@ import {
   shiftInstant,
   shiftDate,
   cameraHeightSlider,
+  focalSlider,
+  parseCoordinatePair,
 } from "../src/domain/plan.ts";
 
 test("日期编辑保留当地秒钟，拒绝越界及夏令时重复或跳过", () => {
@@ -226,4 +228,37 @@ test("离地高度滑条按对数映射 0.1—100 m，10 m 以下精确到 0.1 m
   assert.equal(cameraHeightSlider.step(50, 1), 51);
   assert.equal(cameraHeightSlider.step(100, 1), 100);
   assert.equal(cameraHeightSlider.step(0.1, -1), 0.1);
+});
+
+test("焦距滑杆按对数刻度覆盖 8—1000 mm，端点与常用焦距精确、单调且其他焦距误差小于一格", () => {
+  const { toPosition, fromPosition, max } = focalSlider;
+  assert.equal(fromPosition(0), 8);
+  assert.equal(fromPosition(max), 1000);
+  assert.equal(toPosition(8), 0);
+  assert.equal(toPosition(1000), max);
+  assert.equal(fromPosition(-5), 8);
+  assert.equal(fromPosition(max + 5), 1000);
+  // 8—100 mm keeps about half of the travel instead of 9 % on a linear scale.
+  assert.ok(toPosition(100) > 0.5 * max && toPosition(100) < 0.53 * max);
+  for (const focal of [8, 24, 35, 50, 85, 200, 600, 1000])
+    assert.equal(fromPosition(toPosition(focal)), focal, `${focal}`);
+  // Other focal lengths come back within one slider step (about 0.5 %).
+  for (const focal of [10, 18, 70, 135, 300, 800])
+    assert.ok(Math.abs(fromPosition(toPosition(focal)) / focal - 1) < 0.005, `${focal}`);
+  let previous = 0;
+  for (let position = 0; position <= max; position += 1) {
+    const focal = fromPosition(position);
+    assert.ok(focal >= previous, `monotonic at ${position}`);
+    assert.ok(Math.abs(focal * 10 - Math.round(focal * 10)) < 1e-9, `${focal}`);
+    previous = focal;
+  }
+});
+
+test("粘贴“纬度, 经度”可识别逗号、中文逗号与空格，越界或格式不符时不处理", () => {
+  assert.deepEqual(parseCoordinatePair("35.4172, 138.8729"), { latitude: 35.4172, longitude: 138.8729 });
+  assert.deepEqual(parseCoordinatePair(" -33.8568，151.2153 "), { latitude: -33.8568, longitude: 151.2153 });
+  assert.deepEqual(parseCoordinatePair("51.5 -0.12"), { latitude: 51.5, longitude: -0.12 });
+  assert.deepEqual(parseCoordinatePair("10,180"), { latitude: 10, longitude: -180 });
+  for (const text of ["35.4172", "91, 0", "0, 181", "35°N 138°E", "a, b", "1, 2, 3", ""])
+    assert.equal(parseCoordinatePair(text), null, text);
 });

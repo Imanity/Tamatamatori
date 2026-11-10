@@ -2,10 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import {
+  compassDirection,
   dragView,
   frameAspectRatio,
   fieldOfView,
-  sensors,
   signedAngle,
   zoomFocalLength,
 } from "../domain/plan";
@@ -46,6 +46,9 @@ import { BuildingReadout } from "./BuildingReadout";
 import { MeteorLabels, MeteorReadout, meteorFact, useMeteorScene } from "./MeteorScene";
 import { CometLabels, CometReadout, useCometScene } from "./CometScene";
 import { useCometCatalog } from "./useCometCatalog";
+import { NumberField } from "./NumberField";
+import { CameraBar } from "./CameraBar";
+import { Timeline } from "./Timeline";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -55,12 +58,21 @@ export function PreviewPanel({
   infoHost,
   infoQuery = "",
   infoNavigation,
+  generation = 0,
+  onGroundChange,
+  showCameraBar = true,
 }: {
   plan: ShootingPlan;
   update: (patch: Partial<ShootingPlan>) => void;
   infoHost?: HTMLElement | null;
   infoQuery?: string;
   infoNavigation?: InfoNavigation | null;
+  /** Changes when a whole plan replaces the current one; resets typed drafts. */
+  generation?: number;
+  /** DEM elevation under the camera for the position bar below the map. */
+  onGroundChange?: (ground: number | null) => void;
+  /** Narrow screens show the lens controls in their own tab instead. */
+  showCameraBar?: boolean;
 }) {
   const viewfinder = useRef<HTMLDivElement>(null);
   const latestPlan = useRef(plan);
@@ -71,6 +83,9 @@ export function PreviewPanel({
     actualPitch: null,
     adjusted: false,
   });
+  useEffect(() => {
+    onGroundChange?.(terrainInfo.ground);
+  }, [terrainInfo.ground, onGroundChange]);
   // Global information starts open; each layer group starts in step with its
   // layer and then follows the left switches (see App.toggleLayer).
   const [expanded, setExpanded] = useState<
@@ -221,6 +236,17 @@ export function PreviewPanel({
       observerAltitude,
     ],
   );
+  // Touch points on the frame; two of them pinch the focal length.
+  const touches = useRef(new Map<number, { x: number; y: number }>());
+  const pinch = useRef<{ distance: number; focalLength: number } | null>(null);
+  const touchSpread = () => {
+    const [a, b] = [...touches.current.values()];
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  };
+  const endPointer = (pointerId: number) => {
+    touches.current.delete(pointerId);
+    if (pinch.current && touches.current.size < 2) pinch.current = null;
+  };
   const drag = useRef<{
     pointerId: number;
     x: number;
@@ -256,27 +282,41 @@ export function PreviewPanel({
     <div className="preview-content">
       <div className="preview-meta">
         <div className="preview-facts">
-          <span>
-            <strong>{plan.focalLength} mm</strong> ·{" "}
-            {sensors[plan.sensor].label.split(" · ")[0]} ·{" "}
-            {plan.orientation === "portrait" ? "竖幅" : "横幅"}{" "}
-            {plan.orientation === "portrait"
-              ? plan.aspectRatio.split(":").reverse().join(":")
-              : plan.aspectRatio}
-          </span>
-          <span>
-            {plan.cameraResponse === "ha-modified"
-              ? "天文改机 · Hα 增强示意"
-              : "未改机 · 近似参考"}
-          </span>
+          <div className="view-fields" role="group" aria-label="拍摄方向">
+            <NumberField
+              key={`azimuth-${generation}`}
+              className="view-field"
+              label="方位角"
+              value={plan.azimuth}
+              min={0}
+              max={359.9}
+              step={0.1}
+              unit="°"
+              title="以真北为 0°，顺时针递增"
+              onChange={(azimuth) => update({ azimuth })}
+            />
+            <span className="view-compass">{compassDirection(plan.azimuth)}</span>
+            <NumberField
+              key={`pitch-${generation}`}
+              className="view-field"
+              label="俯仰角"
+              value={plan.pitch}
+              min={-90}
+              max={90}
+              step={0.1}
+              unit="°"
+              title="水平为 0°，向上为正"
+              onChange={(pitch) => update({ pitch })}
+            />
+          </div>
+          {plan.layers.deepSky && (
+            <span className="camera-response-fact">
+              {plan.cameraResponse === "ha-modified"
+                ? "天文改机 · Hα 增强示意"
+                : "未改机 · 近似参考"}
+            </span>
+          )}
           {meteorNote && <span className="meteor-fact" data-meteor-fact>{meteorNote}</span>}
-          <span className="preview-elevation">
-            机位高程{" "}
-            {terrainInfo.ground === null
-              ? "待更新"
-              : `≈ ${terrainInfo.ground.toFixed(1)} m`}{" "}
-            · 离地 {plan.cameraHeight} m
-          </span>
           {terrainInfo.adjusted && (
             <span className="camera-adjustment" role="status">
               引擎避让 · 实际离地 ≈ {terrainInfo.actualHeight?.toFixed(2)} m ·
@@ -316,15 +356,35 @@ export function PreviewPanel({
           <WeatherActions feed={weatherFeed} update={update} />
         </div>
       )}
-      <div className="viewfinder-wrap">
+      <div
+        className="viewfinder-wrap"
+        style={{ "--frame-ratio": frameAspectRatio(plan) } as CSSProperties}
+      >
         <div
           className={`viewfinder ${dragging ? "is-dragging" : ""}`}
           ref={viewfinder}
           role="group"
-          aria-label="拍摄预览，拖动调整拍摄视角，滚轮调整焦距，也可使用方向键，Shift 加速"
+          aria-label="拍摄预览，拖动调整拍摄视角，滚轮或双指捏合调整焦距，也可使用方向键，Shift 加速"
           tabIndex={0}
           onPointerDown={(event) => {
-            if (event.button !== 0 || drag.current) return;
+            if (event.button !== 0) return;
+            if (event.pointerType === "touch") {
+              touches.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+              if (touches.current.size === 2) {
+                // A second finger turns the drag into a pinch for the focal length.
+                event.preventDefault();
+                event.currentTarget.setPointerCapture(event.pointerId);
+                drag.current = null;
+                setDragging(false);
+                const spread = touchSpread();
+                pinch.current =
+                  spread > 0
+                    ? { distance: spread, focalLength: latestPlan.current.focalLength }
+                    : null;
+                return;
+              }
+            }
+            if (drag.current || pinch.current) return;
             const bounds = event.currentTarget.getBoundingClientRect();
             if (bounds.width <= 0 || bounds.height <= 0) return;
             event.preventDefault();
@@ -341,6 +401,19 @@ export function PreviewPanel({
             setDragging(true);
           }}
           onPointerMove={(event) => {
+            if (touches.current.has(event.pointerId)) {
+              touches.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+              const zoom = pinch.current;
+              if (zoom && touches.current.size >= 2) {
+                const focalLength =
+                  Math.round(
+                    Math.max(8, Math.min(1000, (zoom.focalLength * touchSpread()) / zoom.distance)) * 10,
+                  ) / 10;
+                latestPlan.current = { ...latestPlan.current, focalLength };
+                update({ focalLength });
+                return;
+              }
+            }
             const start = drag.current;
             if (
               !start ||
@@ -359,17 +432,21 @@ export function PreviewPanel({
             );
           }}
           onPointerUp={(event) => {
+            endPointer(event.pointerId);
             if (drag.current?.pointerId !== event.pointerId) return;
             drag.current = null;
             setDragging(false);
             if (event.currentTarget.hasPointerCapture(event.pointerId))
               event.currentTarget.releasePointerCapture(event.pointerId);
           }}
-          onPointerCancel={() => {
+          onPointerCancel={(event) => {
+            endPointer(event.pointerId);
             drag.current = null;
             setDragging(false);
           }}
-          onLostPointerCapture={() => {
+          onLostPointerCapture={(event) => {
+            endPointer(event.pointerId);
+            if (drag.current?.pointerId !== event.pointerId) return;
             drag.current = null;
             setDragging(false);
           }}
@@ -481,6 +558,8 @@ export function PreviewPanel({
           </svg>
         </div>
       </div>
+      {showCameraBar && <CameraBar key={`camera-${generation}`} plan={plan} update={update} />}
+      <Timeline key={`time-${generation}`} plan={plan} update={update} />
       {infoHost &&
         createPortal(
           <>
@@ -694,16 +773,37 @@ export function PreviewPanel({
                 {group(
                   "deepSky",
                   "深空天体",
-                  !plan.layers.deepSky ? (
-                    <p className="info-empty">深空天体已关闭</p>
-                  ) : (
-                    <StarReadout
-                      scene={starScene}
-                      plan={plan}
-                      update={update}
-                      section="deepSky"
-                    />
-                  ),
+                  <>
+                    <label
+                      className="subsetting-select"
+                      title="未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。"
+                    >
+                      <span>相机响应</span>
+                      <select
+                        aria-label="深空相机响应"
+                        value={plan.cameraResponse}
+                        onChange={(event) =>
+                          update({
+                            cameraResponse: event.target
+                              .value as ShootingPlan["cameraResponse"],
+                          })
+                        }
+                      >
+                        <option value="stock">未改机 · 近似参考</option>
+                        <option value="ha-modified">天文改机 · Hα 增强示意</option>
+                      </select>
+                    </label>
+                    {!plan.layers.deepSky ? (
+                      <p className="info-empty">深空天体已关闭</p>
+                    ) : (
+                      <StarReadout
+                        scene={starScene}
+                        plan={plan}
+                        update={update}
+                        section="deepSky"
+                      />
+                    )}
+                  </>,
                 )}
                 {group(
                   "stations",

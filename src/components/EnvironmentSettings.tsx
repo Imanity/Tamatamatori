@@ -26,5 +26,13 @@ export function EnvironmentSettings({ plan, update }: {
         {Object.entries(weatherModels).map(([id, name]) => <option key={id} value={id}>{name}</option>)}
       </select>
     </label>
+    <label className="environment-model" title="标准折射为固定海平面参考大气；无折射显示几何位置">
+      <span>大气折射</span>
+      <select aria-label="大气折射模型" value={plan.refraction}
+        onChange={event => update({ refraction: event.target.value as ShootingPlan["refraction"] })}>
+        <option value="standard">标准折射 · 海平面近似</option>
+        <option value="none">无折射 · 几何位置</option>
+      </select>
+    </label>
   </details>;
 }

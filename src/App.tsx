@@ -4,7 +4,8 @@ import { initialPlan } from "./domain/plan";
 import type { ShootingPlan } from "./domain/plan";
 import { Icon } from "./components/Icon";
 import type { IconName } from "./components/Icon";
-import { Parameters } from "./components/Parameters";
+import { PositionBar } from "./components/PositionBar";
+import { CameraBar } from "./components/CameraBar";
 import { PreviewPanel } from "./components/ScenePanels";
 import { MapPanel } from "./components/MapPanel";
 import { About } from "./components/About";
@@ -14,18 +15,42 @@ import type { InfoGroupId, InfoNavigation } from "./components/InfoGroup";
 import { ShotMenu, ShotToast } from "./components/ShotMenu";
 import { browserStorage, readSession, writeSession } from "./domain/shot-library";
 
-type PanelId = "map" | "preview" | "parameters";
-const defaultPanels: PanelId[] = ["map", "preview", "parameters"];
-const defaultUpperHeight = 50;
+type PanelId = "map" | "preview";
+type MobileTab = "map" | "camera" | "layers" | "info";
 const panelInfo: Record<
   PanelId,
   { title: string; icon: IconName; tag: string }
 > = {
   map: { title: "地图", icon: "map", tag: "交互底图" },
   preview: { title: "拍摄预览", icon: "camera", tag: "地形模拟" },
-  parameters: { title: "拍摄参数", icon: "settings", tag: "实时联动" },
 };
-const slotNames = ["主栏", "右上", "右下"];
+const mobileTabs: { id: MobileTab; title: string; icon: IconName }[] = [
+  { id: "map", title: "地图", icon: "map" },
+  { id: "camera", title: "相机", icon: "camera" },
+  { id: "layers", title: "图层", icon: "layers" },
+  { id: "info", title: "信息", icon: "info" },
+];
+// The map's share of the workspace width, in percent; the preview gets the rest.
+const defaultMapShare = 36;
+const mapShareRange = { min: 25, max: 70 };
+// Must match the narrow-layout media queries in styles.css.
+const narrowQuery = "(max-width: 1099px)";
+
+/** True on narrow screens, where the lens controls move to their own tab. */
+function useNarrowLayout() {
+  const [narrow, setNarrow] = useState(
+    () => typeof window !== "undefined" && !!window.matchMedia?.(narrowQuery).matches,
+  );
+  useEffect(() => {
+    const query = window.matchMedia?.(narrowQuery);
+    if (!query) return;
+    const sync = () => setNarrow(query.matches);
+    sync();
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
+  return narrow;
+}
 const skyLayers = [
   { id: "buildings", name: "建筑", icon: "building" },
   { id: "sun", name: "太阳", icon: "sun" },
@@ -61,7 +86,7 @@ function Divider({
       className={`divider divider-${axis}`}
       role="separator"
       tabIndex={0}
-      aria-label={axis === "x" ? "调整主栏宽度" : "调整右侧面板高度"}
+      aria-label={axis === "x" ? "调整地图与预览宽度" : "调整面板高度"}
       aria-orientation={axis === "x" ? "vertical" : "horizontal"}
       aria-valuemin={min}
       aria-valuemax={max}
@@ -120,97 +145,35 @@ function Divider({
 
 function Panel({
   id,
-  slot,
   children,
-  active,
-  dragging,
-  onDrag,
-  onMove,
+  onSwap,
 }: {
   id: PanelId;
-  slot: number;
   children: ReactNode;
-  active: boolean;
-  dragging: PanelId | null;
-  onDrag: (id: PanelId | null) => void;
-  onMove: (from: PanelId, slot: number) => void;
+  onSwap: () => void;
 }) {
-  const [over, setOver] = useState(false);
   const info = panelInfo[id];
   return (
-    <section
-      className={`panel panel-${id} ${over && dragging && dragging !== id ? "drop-target" : ""}`}
-      aria-label={info.title}
-      data-mobile-active={active}
-      data-slot={slot}
-      onDragOver={(event) => {
-        if (dragging && dragging !== id) {
-          event.preventDefault();
-          event.dataTransfer.dropEffect = "move";
-          setOver(true);
-        }
-      }}
-      onDragLeave={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null))
-          setOver(false);
-      }}
-      onDrop={(event) => {
-        event.preventDefault();
-        setOver(false);
-        if (dragging) onMove(dragging, slot);
-        onDrag(null);
-      }}
-    >
+    <section className={`panel panel-${id}`} aria-label={info.title}>
       <header className="panel-header">
         <div className="panel-title">
           <Icon name={info.icon} size={17} />
           <h2>{info.title}</h2>
-          <span
-            className={`panel-tag ${id === "parameters" ? "tag-live" : ""}`}
-          >
-            {info.tag}
-          </span>
+          <span className="panel-tag">{info.tag}</span>
         </div>
         <div className="panel-controls">
-          <select
-            className="slot-select"
-            aria-label={`${info.title}面板位置`}
-            title="选择面板位置，也可拖动右侧把手"
-            value={slot}
-            onChange={(event) => onMove(id, Number(event.target.value))}
-          >
-            {slotNames.map((name, index) => (
-              <option key={name} value={index}>
-                {name}
-              </option>
-            ))}
-          </select>
           <button
-            className="drag-grip icon-button"
-            draggable
-            aria-label={`拖动${info.title}面板以交换位置`}
-            title="拖到另一个面板以交换位置"
-            onDragStart={(event) => {
-              event.dataTransfer.setData("text/plain", id);
-              event.dataTransfer.effectAllowed = "move";
-              onDrag(id);
-            }}
-            onDragEnd={() => {
-              onDrag(null);
-              setOver(false);
-            }}
+            type="button"
+            className="icon-button panel-swap"
+            aria-label="对调地图与预览位置"
+            title="对调地图与预览位置"
+            onClick={onSwap}
           >
-            <Icon name="grip" size={18} />
+            <Icon name="swap" size={16} />
           </button>
         </div>
       </header>
       <div className="panel-body">{children}</div>
-      {over && dragging && dragging !== id && (
-        <div className="drop-overlay">
-          <Icon name="layers" size={24} />
-          <span>松开以交换面板</span>
-        </div>
-      )}
     </section>
   );
 }
@@ -229,15 +192,14 @@ export default function App() {
     text: string;
     undo: { plan: ShootingPlan; activeId: string | null };
   } | null>(null);
-  const [panels, setPanels] = useState(defaultPanels);
-  const [mainWidth, setMainWidth] = useState(65);
-  const [upperHeight, setUpperHeight] = useState(defaultUpperHeight);
+  const [previewFirst, setPreviewFirst] = useState(false);
+  const [mapShare, setMapShare] = useState(defaultMapShare);
   const [resizing, setResizing] = useState(false);
-  const [dragging, setDragging] = useState<PanelId | null>(null);
-  const [mobilePanel, setMobilePanel] = useState<PanelId>("map");
-  const [layersOpen, setLayersOpen] = useState(false);
+  const [mobileTab, setMobileTab] = useState<MobileTab>("map");
   const [infoCollapsed, setInfoCollapsed] = useState(false);
-  const [infoOpen, setInfoOpen] = useState(false);
+  // DEM elevation under the camera, reported by the preview for the position bar.
+  const [ground, setGround] = useState<number | null>(null);
+  const narrow = useNarrowLayout();
   const [infoHost, setInfoHost] = useState<HTMLDivElement | null>(null);
   const [infoQuery, setInfoQuery] = useState("");
   const [infoNavigation, setInfoNavigation] = useState<InfoNavigation | null>(
@@ -251,7 +213,6 @@ export default function App() {
     }));
   const [announcement, setAnnouncement] = useState("");
   const workspaceRef = useRef<HTMLDivElement>(null);
-  const secondaryRef = useRef<HTMLDivElement>(null);
   const mapViewport = useRef<MapViewport>({
     longitude: plan.longitude,
     latitude: plan.latitude,
@@ -306,8 +267,8 @@ export default function App() {
   const toggleLayer = (id: (typeof skyLayers)[number]["id"]) => {
     // The information group follows its layer: enabling expands and reveals
     // it without moving focus, disabling collapses it. On narrow screens the
-    // layer drawer stays open; the group is revealed when the information
-    // drawer is next opened.
+    // layer tab stays open; the group is revealed when the information tab is
+    // next shown.
     const enabling = !plan.layers[id];
     if (enabling) {
       setInfoCollapsed(false);
@@ -329,42 +290,18 @@ export default function App() {
       },
     }));
   };
-  const movePanel = (id: PanelId, destination: number) => {
-    const next = [...panels];
-    const source = next.indexOf(id);
-    [next[source], next[destination]] = [next[destination], next[source]];
-    setPanels(next);
+  const swapPanels = () => {
+    // Only the CSS order changes, so neither the map nor the preview remounts.
+    setPreviewFirst((current) => !current);
     setAnnouncement(
-      `${panelInfo[id].title}已移动至${slotNames[destination]}，拍摄参数保持不变。`,
+      `${previewFirst ? "地图" : "拍摄预览"}已移至左侧，拍摄参数保持不变。`,
     );
   };
-  const renderPanel = (slot: number) => {
-    const id = panels[slot];
-    return (
-      <Panel
-        id={id}
-        slot={slot}
-        active={id === mobilePanel}
-        dragging={dragging}
-        onDrag={setDragging}
-        onMove={movePanel}
-      >
-        {id === "map" ? (
-          <MapPanel plan={plan} update={updatePlan} viewport={mapViewport} />
-        ) : id === "preview" ? (
-          <PreviewPanel
-            plan={plan}
-            update={updatePlan}
-            infoHost={infoHost}
-            infoQuery={infoQuery}
-            infoNavigation={infoNavigation}
-          />
-        ) : (
-          <Parameters key={planGeneration} plan={plan} update={updatePlan} />
-        )}
-      </Panel>
-    );
-  };
+  // The divider measures the first column; the map share is stored either way.
+  const firstShare = previewFirst ? 100 - mapShare : mapShare;
+  const firstRange = previewFirst
+    ? { min: 100 - mapShareRange.max, max: 100 - mapShareRange.min }
+    : mapShareRange;
   return (
     <div className="app-shell">
       <header className="topbar">
@@ -396,22 +333,15 @@ export default function App() {
           onClose={() => setShotNotice(null)}
         />
       )}
-      <div className="app-layout">
-        <aside
-          className={`sidebar ${layersOpen ? "is-open" : ""}`}
-          aria-label="图层侧栏"
-        >
+      <main
+        className={`app-layout ${resizing ? "is-resizing" : ""}`}
+        data-mobile-tab={mobileTab}
+      >
+        <aside className="sidebar" aria-label="图层侧栏">
           <div className="sidebar-intro">
             <h2>
               <Icon name="layers" size={17} /> 图层
             </h2>
-            <button
-              className="icon-button layer-close"
-              aria-label="关闭图层"
-              onClick={() => setLayersOpen(false)}
-            >
-              <Icon name="arrow" size={17} />
-            </button>
           </div>
           <div className="layer-list">
             {skyLayers.map(({ id, name, icon }) => (
@@ -430,83 +360,71 @@ export default function App() {
           </div>
           <EnvironmentSettings plan={plan} update={updatePlan} />
         </aside>
-        <main className="main-content">
-          <div className="mobile-toolbar">
-            <button
-              className={`mobile-layer-button ${layersOpen ? "is-active" : ""}`}
-              aria-expanded={layersOpen}
-              onClick={() => {
-                setLayersOpen(!layersOpen);
-                setInfoOpen(false);
-              }}
-            >
-              <Icon name="layers" size={16} /> 图层
-            </button>
-            <div className="mobile-tabs" role="tablist" aria-label="工作区面板">
-              {defaultPanels.map((id) => (
-                <button
-                  role="tab"
-                  aria-selected={mobilePanel === id}
-                  key={id}
-                  onClick={() => {
-                    setMobilePanel(id);
-                    setLayersOpen(false);
-                    setInfoOpen(false);
-                  }}
-                >
-                  {panelInfo[id].title}
-                </button>
-              ))}
-            </div>
-            <button
-              className="mobile-layer-button"
-              aria-expanded={infoOpen}
-              onClick={() => {
-                setInfoOpen(!infoOpen);
-                setLayersOpen(false);
-              }}
-            >
-              <Icon name="info" size={16} />
-              拍摄信息
-            </button>
-          </div>
-          <div
-            className={`workgrid ${resizing ? "is-resizing" : ""} ${dragging ? "is-dragging" : ""}`}
-            ref={workspaceRef}
-            style={
-              {
-                "--main-track": `${mainWidth}fr`,
-                "--secondary-track": `${100 - mainWidth}fr`,
-                "--upper-track": `${upperHeight}fr`,
-                "--lower-track": `${100 - upperHeight}fr`,
-              } as CSSProperties
-            }
-          >
-            {renderPanel(0)}
-            <Divider
-              axis="x"
-              value={mainWidth}
-              min={40}
-              max={78}
-              container={workspaceRef}
-              onChange={setMainWidth}
-              onResize={setResizing}
-            />
-            <div className="secondary-column" ref={secondaryRef}>
-              {renderPanel(1)}
-              <Divider
-                axis="y"
-                value={upperHeight}
-                min={30}
-                max={70}
-                container={secondaryRef}
-                onChange={setUpperHeight}
-                onResize={setResizing}
+        <div
+          className="workgrid"
+          ref={workspaceRef}
+          data-order={previewFirst ? "preview-first" : "map-first"}
+          style={
+            {
+              "--first-track": `${firstShare}fr`,
+              "--second-track": `${100 - firstShare}fr`,
+            } as CSSProperties
+          }
+        >
+          <Panel id="map" onSwap={swapPanels}>
+            <div className="map-stack">
+              <MapPanel plan={plan} update={updatePlan} viewport={mapViewport} />
+              <PositionBar
+                key={planGeneration}
+                plan={plan}
+                update={updatePlan}
+                ground={ground}
               />
-              {renderPanel(2)}
             </div>
-          </div>
-        </main>
+          </Panel>
+          <Divider
+            axis="x"
+            value={firstShare}
+            min={firstRange.min}
+            max={firstRange.max}
+            container={workspaceRef}
+            onChange={(value) =>
+              setMapShare(previewFirst ? 100 - value : value)
+            }
+            onResize={setResizing}
+          />
+          <Panel id="preview" onSwap={swapPanels}>
+            <PreviewPanel
+              plan={plan}
+              update={updatePlan}
+              infoHost={infoHost}
+              infoQuery={infoQuery}
+              infoNavigation={infoNavigation}
+              generation={planGeneration}
+              onGroundChange={setGround}
+              showCameraBar={!narrow}
+            />
+          </Panel>
+        </div>
+        {narrow && (
+          <section className="mobile-camera" aria-label="相机与镜头">
+            <CameraBar key={planGeneration} plan={plan} update={updatePlan} />
+          </section>
+        )}
+        <div className="mobile-tabs" role="tablist" aria-label="工作区分区">
+          {mobileTabs.map(({ id, title, icon }) => (
+            <button
+              type="button"
+              role="tab"
+              key={id}
+              aria-selected={mobileTab === id}
+              onClick={() => setMobileTab(id)}
+            >
+              <Icon name={icon} size={15} />
+              {title}
+            </button>
+          ))}
+        </div>
         {infoCollapsed && (
           <button
             className="info-reopen icon-button"
@@ -517,13 +435,10 @@ export default function App() {
           </button>
         )}
         <aside
-          className={`info-sidebar ${infoCollapsed ? "is-collapsed" : ""} ${infoOpen ? "is-open" : ""}`}
+          className={`info-sidebar ${infoCollapsed ? "is-collapsed" : ""}`}
           aria-label="拍摄信息"
           onKeyDown={(event) => {
-            if (event.key === "Escape") {
-              setInfoOpen(false);
-              setInfoCollapsed(true);
-            }
+            if (event.key === "Escape") setInfoCollapsed(true);
           }}
         >
           <div className="info-search" role="search" aria-label="拍摄目标搜索">
@@ -533,13 +448,6 @@ export default function App() {
                 className="icon-button info-close-desktop"
                 aria-label="收起拍摄信息"
                 onClick={() => setInfoCollapsed(true)}
-              >
-                <Icon name="arrow" size={17} />
-              </button>
-              <button
-                className="icon-button info-close-mobile"
-                aria-label="关闭拍摄信息"
-                onClick={() => setInfoOpen(false)}
               >
                 <Icon name="arrow" size={17} />
               </button>
@@ -572,7 +480,7 @@ export default function App() {
           </div>
           <div className="info-body" ref={setInfoHost} />
         </aside>
-      </div>
+      </main>
       <div className="sr-only" aria-live="polite">
         {announcement}
       </div>

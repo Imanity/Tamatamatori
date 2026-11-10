@@ -229,6 +229,39 @@ export const cameraHeightSlider = {
   },
 };
 
+export const focalPresets = [8, 24, 35, 50, 85, 200, 600, 1000];
+
+const focalPosition = (focalLength: number) =>
+  Math.round((Math.log(Math.max(8, Math.min(1000, focalLength)) / 8) / Math.log(125)) * 1000);
+
+/**
+ * Focal length slider on a logarithmic scale, so 8—100 mm keeps as much travel
+ * as 100—1000 mm. Position 0—1000 maps to 8—1000 mm, rounded to 0.1 mm; the
+ * position of a common focal length gives exactly that focal length.
+ */
+export const focalSlider = {
+  max: 1000,
+  toPosition: focalPosition,
+  fromPosition(position: number) {
+    const clamped = Math.max(0, Math.min(1000, Math.round(position)));
+    const preset = focalPresets.find((focal) => focalPosition(focal) === clamped);
+    return preset ?? Math.round(8 * 125 ** (clamped / 1000) * 10) / 10;
+  },
+};
+
+/**
+ * Reads "latitude, longitude" pasted as one piece of text (comma, Chinese
+ * comma or whitespace between two decimal degrees). Returns null otherwise.
+ */
+export function parseCoordinatePair(text: string) {
+  const match = text.trim().match(/^(-?\d+(?:\.\d+)?)\s*[,，\s]\s*(-?\d+(?:\.\d+)?)$/);
+  if (!match) return null;
+  const latitude = Number(match[1]);
+  const longitude = Number(match[2]);
+  if (Math.abs(latitude) > 90 || Math.abs(longitude) > 180) return null;
+  return { latitude, longitude: longitude === 180 ? normalizeLongitude(longitude) : longitude };
+}
+
 export function signedAngle(angle: number) {
   return ((((angle + 180) % 360) + 360) % 360) - 180;
 }

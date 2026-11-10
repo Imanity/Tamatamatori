@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { RefObject } from "react";
 import type { Map as MapLibreMap, Marker, GeoJSONSource } from "maplibre-gl";
-import { compassDirection, fieldOfView } from "../domain/plan";
 import type { ShootingPlan } from "../domain/plan";
 import {
   isMapPosition,
@@ -43,7 +42,6 @@ export function MapPanel({
     message: "正在加载地图与底图…",
   });
   const coverage = isMapPosition(plan);
-  const fov = fieldOfView(plan);
 
   useEffect(() => {
     latest.current = { plan, update, mode };
@@ -420,7 +418,7 @@ export function MapPanel({
       <div
         className="map-engine"
         ref={container}
-        aria-label="交互地图，可用方向键浏览、加减键缩放；机位和朝向也可在参数区输入"
+        aria-label="交互地图，可用方向键浏览、加减键缩放；坐标也可在下方机位条输入"
       />
       <div className="map-toolbar">
         <div className="map-mode-group" aria-label="地图点击操作">
@@ -497,7 +495,7 @@ export function MapPanel({
         {!coverage && (
           <p className="map-coverage-warning">
             当前机位超出底图 ±85.05°
-            的纬度范围，已保留原始坐标；地图不显示该机位及视场，可继续在参数区编辑。
+            的纬度范围，已保留原始坐标；地图不显示该机位及视场，可继续在下方机位条编辑。
           </p>
         )}
         {notice && <p className="map-coverage-warning">{notice}</p>}
@@ -510,32 +508,6 @@ export function MapPanel({
                 : ""}
           </p>
         )}
-      </div>
-      <div className="real-map-summary">
-        <div className="map-coordinate">
-          <Icon name="pin" size={14} />
-          <span>
-            {Math.abs(plan.latitude).toFixed(4)}°
-            {plan.latitude >= 0 ? "N" : "S"} &nbsp;{" "}
-            {Math.abs(plan.longitude).toFixed(4)}°
-            {plan.longitude >= 0 ? "E" : "W"}
-          </span>
-          <span className="map-source-label">
-            {status.phase === "ready" ? "底图已加载" : "底图待就绪"}
-          </span>
-        </div>
-        <div className="map-values">
-          <span>
-            方向 <strong>{plan.azimuth.toFixed(1)}°</strong>{" "}
-            <small>{compassDirection(plan.azimuth)}</small>
-          </span>
-          <span>
-            水平视场 <strong>{fov.horizontal.toFixed(1)}°</strong>
-          </span>
-          <span>
-            焦距 <strong>{plan.focalLength}</strong> mm
-          </span>
-        </div>
       </div>
     </div>
   );

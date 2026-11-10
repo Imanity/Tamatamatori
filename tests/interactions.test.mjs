@@ -577,12 +577,12 @@ test("方向拖动中即更新扇形；地图旋转保持地理朝向且在换�
   assert.equal(value("方位角"), azimuth);
   assert.equal(heading().rotation, azimuth);
   assert.equal(map.options.dragRotate, true);
-  await settle(() =>
-    setControl(document.querySelector('select[aria-label="地图面板位置"]'), 1),
-  );
-  const movedMap = await waitForMap();
-  assert.notEqual(movedMap, map);
-  assert.equal(movedMap.options.bearing, 75);
+  await settle(() => document.querySelector('[aria-label="对调地图与预览位置"]').click());
+  // Swapping only reorders the panels: the same map keeps its browsing bearing.
+  assert.equal(await waitForMap(), map);
+  assert.ok(!map.removed);
+  assert.equal(map.bearing, 75);
+  assert.equal(heading().rotation, azimuth);
 });
 
 test("缩放过程按帧更新扇形，连续事件合并，不等待 moveend", async (t) => {
@@ -739,7 +739,7 @@ test("三维预览启用真实地形与水体；缺失 DEM 返回的零值不覆
   assert.equal(pose.eye.lat, value("纬度"));
   assert.equal(map.cameraViews.at(-1).pitch, 94);
   assert.ok(
-    document.querySelector(".preview-elevation").textContent.includes("1000.0"),
+    document.querySelector(".ground-elevation").textContent.includes("1000.0"),
   );
   assert.ok(
     document
@@ -793,10 +793,10 @@ test("隐藏面板有高程后保持等待，恢复有效尺寸即可建立相�
   assert.equal(await readyTerrain(), map);
 });
 
-test("预览尺寸变化只同步相机，面板换位后保留拍摄参数并释放旧实例", async (t) => {
+test("预览尺寸变化只同步相机，对调面板不重建预览并保留拍摄参数", async (t) => {
   await workspace(t);
   const old = await readyTerrain();
-  const fields = ["经度", "纬度", "方位角", "俯仰角", "焦距", "相机离地高度"];
+  const fields = ["经度", "纬度", "方位角", "俯仰角", "焦距", "离地高度"];
   const before = fields.map(value);
   const requests = groundRequests.length;
   const updates = old.cameraSolutions.length;
@@ -816,20 +816,20 @@ test("预览尺寸变化只同步相机，面板换位后保留拍摄参数并�
   assert.equal(old.cameraSolutions.length, updates + 1);
   assert.equal(groundRequests.length, requests);
   assert.deepEqual(fields.map(value), before);
-  await settle(() => setControl(document.querySelector('select[aria-label="拍摄预览面板位置"]'), 0));
-  const moved = await readyTerrain();
-  assert.notEqual(moved, old);
-  assert.equal(old.removed, true);
+  await settle(() => document.querySelector('[aria-label="对调地图与预览位置"]').click());
+  assert.equal(await readyTerrain(), old);
+  assert.ok(!old.removed);
+  assert.equal(old.cameraSolutions.length, updates + 1);
+  assert.equal(groundRequests.length, requests);
   assert.deepEqual(fields.map(value), before);
-  assert.equal(moved.cameraViews.at(-1).bearing, before[2]);
-  assert.equal(moved.cameraSolutions.at(-1).altitude, 1000 + before[5]);
+  assert.equal(old.cameraViews.at(-1).bearing, before[2]);
 });
 
 test("地形相机随高度、方向和横竖幅更新，镜头或时间编辑不重复请求机位高程", async (t) => {
   await workspace(t);
   const map = await readyTerrain(),
     requests = groundRequests.length;
-  await settle(() => setControl(input("相机离地高度"), 5));
+  await settle(() => setControl(input("离地高度"), 5));
   assert.equal(map.cameraSolutions.at(-1).altitude, 1005);
   await settle(() => setControl(input("方位角"), 123.4));
   await settle(() => setControl(input("俯仰角"), 30));
@@ -858,14 +858,14 @@ test("地形相机随高度、方向和横竖幅更新，镜头或时间编辑�
   assert.equal(groundRequests.length, requests);
 });
 
-test("时间驱动环境并合并连续更新，切换时区不重绘，布局重建保留最新夜景", async (t) => {
+test("时间驱动环境并合并连续更新，切换时区不重绘，对调面板保留最新夜景", async (t) => {
   await workspace(t);
   const map = await readyTerrain();
   const slider = document.querySelector('input[aria-label="24 小时时间滑杆"]');
   await settle(() => setControl(slider, 720));
   const day = map.environments.at(-1);
   const poses = map.cameraSolutions.length, requests = groundRequests.length;
-  const fields = ["经度", "纬度", "方位角", "俯仰角", "焦距", "相机离地高度"].map(value);
+  const fields = ["经度", "纬度", "方位角", "俯仰角", "焦距", "离地高度"].map(value);
   const writes = map.environments.length;
   await settle(() => {
     setControl(slider, 1020);
@@ -880,11 +880,12 @@ test("时间驱动环境并合并连续更新，切换时区不重绘，布局�
   assert.equal(groundRequests.length, requests);
   await chooseTimeZone("America/New_York");
   assert.equal(map.environments.length, writes + 1);
-  assert.deepEqual(["经度", "纬度", "方位角", "俯仰角", "焦距", "相机离地高度"].map(value), fields);
-  await settle(() => setControl(document.querySelector('select[aria-label="拍摄预览面板位置"]'), 0));
-  const moved = await readyTerrain();
-  assert.equal(map.removed, true);
-  assert.deepEqual(moved.environments.at(-1), night);
+  assert.deepEqual(["经度", "纬度", "方位角", "俯仰角", "焦距", "离地高度"].map(value), fields);
+  await settle(() => document.querySelector('[aria-label="对调地图与预览位置"]').click());
+  assert.equal(await readyTerrain(), map);
+  assert.ok(!map.removed);
+  assert.equal(map.environments.length, writes + 1);
+  assert.deepEqual(map.environments.at(-1), night);
 });
 
 test("月光随日期变化，隐藏月亮保留环境及夜间参考，不重建相机或读取 DEM", async (t) => {
@@ -917,7 +918,7 @@ test("日月开关、主动朝向与状态联动，关闭太阳不改变光照�
   assert.ok(parseFloat(toggleStyle.minHeight) <= 20, "layer switches must not inherit text-field sizing");
   const slider = document.querySelector('input[aria-label="24 小时时间滑杆"]');
   await settle(() => setControl(slider, 720));
-  const fields = ["经度", "纬度", "焦距", "相机离地高度"].map(value);
+  const fields = ["经度", "纬度", "焦距", "离地高度"].map(value);
   const time = shootingDateTime();
   assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes("视场外"));
   await settle(() => document.querySelector('button[aria-label="朝向太阳"]').click());
@@ -931,9 +932,9 @@ test("日月开关、主动朝向与状态联动，关闭太阳不改变光照�
   assert.equal(map.cameraSolutions.length, poses);
   assert.equal(map.environments.length, environments);
   assert.equal(groundRequests.length, requests);
-  assert.deepEqual(["经度", "纬度", "焦距", "相机离地高度"].map(value), fields);
+  assert.deepEqual(["经度", "纬度", "焦距", "离地高度"].map(value), fields);
   assert.equal(shootingDateTime(), time);
-  await settle(() => setControl(document.querySelector('select[aria-label="拍摄预览面板位置"]'), 0));
+  await settle(() => document.querySelector('[aria-label="对调地图与预览位置"]').click());
   await readyTerrain();
   assert.equal(document.querySelector('input[aria-label="显示太阳"]').checked, false);
   assert.equal(document.querySelector('input[aria-label="显示月亮"]').checked, true);
@@ -948,14 +949,14 @@ test("画外日月显示各自箭头，关闭或朝向入画后消失，地平�
   await settle(()=>setControl(slider,720));
   assert.equal(document.querySelectorAll('[data-body-direction]').length,2);
   assert.ok(document.querySelector('[data-body-direction="sun"]').getAttribute('aria-label').includes('左上方'));
-  const fields=['经度','纬度','焦距','相机离地高度'].map(value),requests=groundRequests.length;
+  const fields=['经度','纬度','焦距','离地高度'].map(value),requests=groundRequests.length;
   const environment=structuredClone(map.environments.at(-1));
   await settle(()=>document.querySelector('input[aria-label="显示月亮"]').click());
   assert.equal(document.querySelector('[data-body-direction="moon"]'),null);
   await settle(()=>document.querySelector('button[aria-label="朝向太阳"]').click());
   assert.equal(document.querySelector('[data-body-direction="sun"]'),null);
   assert.ok(document.querySelector('[data-celestial-body="sun"]'));
-  assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);
+  assert.deepEqual(['经度','纬度','焦距','离地高度'].map(value),fields);
   assert.equal(groundRequests.length,requests);assert.deepEqual(map.environments.at(-1),environment);
   await settle(()=>setControl(slider,1020));
   assert.equal(document.querySelectorAll('[data-body-direction]').length,0);
@@ -975,7 +976,7 @@ test("靠近日月的箭头并排，实际相机反馈决定画外方向而不�
   assert.notEqual(document.querySelector('[data-body-direction="sun"] svg').style.transform,previous);
 });
 
-test("折射修改只更新日月轮廓，地形更新使遮挡失效，重建释放旧深度图层", async (t) => {
+test("折射修改只更新日月轮廓，地形更新使遮挡失效，对调面板保留深度图层", async (t) => {
   await workspace(t);const map=await readyTerrain();
   await settle(()=>setControl(document.querySelector('input[aria-label="24 小时时间滑杆"]'),720));
   await settle(()=>document.querySelector('button[aria-label="朝向太阳"]').click());
@@ -990,8 +991,8 @@ test("折射修改只更新日月轮廓，地形更新使遮挡失效，重建�
   assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes('遮挡待测'));
   await settle(()=>{map.tilesLoaded=true;map.emit('sourcedata');});
   assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes('当前 DEM 未遮挡'));
-  await settle(()=>setControl(document.querySelector('select[aria-label="拍摄预览面板位置"]'),0));
-  const restored = await readyTerrain();assert.equal(layer.removed,true);
+  await settle(()=>document.querySelector('[aria-label="对调地图与预览位置"]').click());
+  const restored = await readyTerrain();assert.equal(restored,map);assert.ok(!layer.removed);
   assert.equal(document.querySelector('select[aria-label="大气折射模型"]').value,'none');
   await settle(()=>restored.emit('error',{sourceId:'terrain-dem'}));
   assert.ok(document.querySelector('[data-body-status="sun"]').textContent.includes('遮挡未知'));
@@ -1031,7 +1032,7 @@ test("引擎避让反馈实际高度和俯仰，日月随实际姿态投影，�
   await settle(() => setControl(document.querySelector('input[aria-label="24 小时时间滑杆"]'),720));
   await settle(() => document.querySelector('button[aria-label="朝向太阳"]').click());
   const layer = map.customLayers.find(layer=>layer instanceof TestCelestialLayer), outline = structuredClone(layer.frame.bodies.find(b => b.id === 'sun').outline);
-  const before = ["经度", "纬度", "俯仰角", "方位角", "相机离地高度", "焦距"].map(value);
+  const before = ["经度", "纬度", "俯仰角", "方位角", "离地高度", "焦距"].map(value);
   const labelTop = document.querySelector('[data-celestial-body="sun"]').style.top;
   const expected = map.cameraSolutions.at(-1), pitch = value("俯仰角") - 5;
   await settle(() => {
@@ -1040,7 +1041,7 @@ test("引擎避让反馈实际高度和俯仰，日月随实际姿态投影，�
       altitude: expected.altitude + 1.7, azimuth: value("方位角"), pitch });
     map.emit('render');
   });
-  assert.deepEqual(["经度", "纬度", "俯仰角", "方位角", "相机离地高度", "焦距"].map(value), before);
+  assert.deepEqual(["经度", "纬度", "俯仰角", "方位角", "离地高度", "焦距"].map(value), before);
   assert.ok(document.querySelector('.camera-adjustment').textContent.includes('引擎避让'));
   assert.ok(document.querySelector('.camera-adjustment').textContent.includes(pitch.toFixed(2)));
   assert.ok(document.querySelector('.preview-readout').textContent.includes(pitch.toFixed(1)));
@@ -1057,7 +1058,7 @@ test("引擎避让反馈实际高度和俯仰，日月随实际姿态投影，�
 
 test("镜头与画幅变化复用地形屏幕细节函数，不重建预览或重复加载机位高程", async(t)=>{
   await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
-  const before=['经度','纬度','方位角','俯仰角','相机离地高度'].map(value);
+  const before=['经度','纬度','方位角','俯仰角','离地高度'].map(value);
   const calculate=map.sources.get('preview-terrain').calculateTileZoom,writes=map.detailWrites;
   await settle(()=>button('200 mm').click());
   await settle(()=>setControl(document.querySelector('select[aria-label="拍摄画幅方向"]'),'portrait'));
@@ -1066,7 +1067,7 @@ test("镜头与画幅变化复用地形屏幕细节函数，不重建预览或�
   await settle(()=>button('8 mm').click());
   assert.equal(map.sources.get('preview-terrain').calculateTileZoom,calculate);
   assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
-  assert.deepEqual(['经度','纬度','方位角','俯仰角','相机离地高度'].map(value),before);
+  assert.deepEqual(['经度','纬度','方位角','俯仰角','离地高度'].map(value),before);
 });
 
 test("切换机位取消过期高程请求；等待新高程时保留旧画面并标记未就绪", async (t) => {
@@ -1105,7 +1106,7 @@ test('星空与银河独立开关、朝向及实际相机反馈联动，不重�
   await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
   await settle(()=>setControl(document.querySelector('input[aria-label="24 小时时间滑杆"]'),1320));
   assert.equal(document.querySelector('.sky-readout'),null);
-  const fields=['经度','纬度','焦距','相机离地高度'].map(value),time=shootingDateTime();
+  const fields=['经度','纬度','焦距','离地高度'].map(value),time=shootingDateTime();
   const poses=map.cameraSolutions.length,environments=map.environments.length;
   await settle(()=>document.querySelector('[aria-label="显示星空"]').click());
   await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
@@ -1123,7 +1124,7 @@ test('星空与银河独立开关、朝向及实际相机反馈联动，不重�
   assert.ok(document.querySelector('[data-sky-status="银心"]'));
   assert.equal(document.querySelector('[aria-label="显示银河"]').checked,true);
   assert.equal(groundRequests.length,requests);assert.equal(terrainMap(),map);
-  assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);assert.equal(shootingDateTime(),time);
+  assert.deepEqual(['经度','纬度','焦距','离地高度'].map(value),fields);assert.equal(shootingDateTime(),time);
 });
 
 test('银河对比度滑杆即时联动，重置/关闭重开/布局保留正确，未重载地形或作废几何状态',async t=>{
@@ -1132,7 +1133,7 @@ test('银河对比度滑杆即时联动，重置/关闭重开/布局保留正确
   await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
   const slider=()=>document.querySelector('#galaxy-contrast'),layer=map.customLayers.find(l=>l instanceof TestStarfieldLayer);
   assert.equal(slider().value,'100');assert.equal(document.querySelector('[aria-label="重置银河对比度"]').disabled,true);
-  const fields=['经度','纬度','焦距','相机离地高度','方位角','俯仰角'].map(value),time=shootingDateTime();
+  const fields=['经度','纬度','焦距','离地高度','方位角','俯仰角'].map(value),time=shootingDateTime();
   const originalFrame=layer.frame,poses=map.cameraSolutions.length,environments=map.environments.length;
   for (const percent of [25,200]) {
     await settle(()=>setControl(slider(),percent));assert.equal(layer.contrast,percent);
@@ -1140,13 +1141,13 @@ test('银河对比度滑杆即时联动，重置/关闭重开/布局保留正确
     assert.equal(document.querySelector('.galaxy-contrast output').textContent,`${percent}%`);
     assert.equal(layer.frame,originalFrame);assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
     assert.equal(map.cameraSolutions.length,poses);assert.equal(map.environments.length,environments);
-    assert.deepEqual(['经度','纬度','焦距','相机离地高度','方位角','俯仰角'].map(value),fields);assert.equal(shootingDateTime(),time);
+    assert.deepEqual(['经度','纬度','焦距','离地高度','方位角','俯仰角'].map(value),fields);assert.equal(shootingDateTime(),time);
   }
   await settle(()=>document.querySelector('[aria-label="重置银河对比度"]').click());assert.equal(slider().value,'100');assert.equal(layer.contrast,100);
   await settle(()=>setControl(slider(),150));await settle(()=>document.querySelector('[aria-label="显示银河"]').click());assert.equal(slider().disabled,true);
   await settle(()=>document.querySelector('[aria-label="显示银河"]').click());assert.equal(slider().value,'150');
-  await settle(()=>setControl(document.querySelector('[aria-label="拍摄预览面板位置"]'),'0'));assert.equal(slider().value,'150');
-  await settle(()=>setControl(document.querySelector('[aria-label="拍摄预览面板位置"]'),'1'));assert.equal(slider().value,'150');
+  await settle(()=>document.querySelector('[aria-label="对调地图与预览位置"]').click());assert.equal(slider().value,'150');
+  await settle(()=>document.querySelector('[aria-label="对调地图与预览位置"]').click());assert.equal(slider().value,'150');
 });
 
 test('深空搜索开启与朝向，未改机/改机响应切换保留几何、时刻与 DEM',async t=>{
@@ -1155,15 +1156,16 @@ test('深空搜索开启与朝向，未改机/改机响应切换保留几何、�
   await settle(()=>setControl(document.querySelector('#target-search'),'M42'));
   assert.equal(document.querySelector('[aria-label="显示深空天体"]').checked,false);
   assert.match(document.querySelector('[data-search-target="dso-ngc1976"]').textContent,/图层已关闭/);
-  const time=shootingDateTime(),fields=['经度','纬度','焦距','相机离地高度'].map(value);
+  const time=shootingDateTime(),fields=['经度','纬度','焦距','离地高度'].map(value);
   await settle(()=>document.querySelector('[aria-label="开启并朝向猎户座大星云"]').click());
   assert.equal(document.querySelector('[aria-label="显示深空天体"]').checked,true);
   assert.ok(document.querySelector('[data-dso-label="猎户座大星云"]'));
   const layer=map.customLayers.find(l=>l instanceof TestStarfieldLayer),originalFrame=layer.frame,requests=groundRequests.length,poses=map.cameraSolutions.length;
+  // The response setting lives in the deep-sky group, shown once the search is cleared.
+  await settle(()=>document.querySelector('[aria-label="清除目标搜索"]').click());
   await settle(()=>setControl(document.querySelector('[aria-label="深空相机响应"]'),'ha-modified'));
   assert.equal(layer.cameraResponse,'ha-modified');assert.equal(layer.frame,originalFrame);assert.equal(groundRequests.length,requests);assert.equal(terrainMap(),map);assert.equal(map.cameraSolutions.length,poses);
-  assert.deepEqual(['经度','纬度','焦距','相机离地高度'].map(value),fields);assert.equal(shootingDateTime(),time);
-  await settle(()=>document.querySelector('[aria-label="清除目标搜索"]').click());
+  assert.deepEqual(['经度','纬度','焦距','离地高度'].map(value),fields);assert.equal(shootingDateTime(),time);
   assert.equal(document.querySelectorAll('[data-dso-status]').length,15);assert.match(document.querySelector('.preview-meta').textContent,/天文改机/);
   assert.doesNotMatch(document.querySelector('#info-deepSky-body').textContent,/源图色彩|未作具体相机定标|遮挡按画面内/);
   await settle(()=>document.querySelector('[aria-label="显示深空天体"]').click());assert.equal(document.querySelector('[data-dso-label]'),null);
@@ -1307,7 +1309,7 @@ test('About 汇集所有署名与下载，开关图层和弹窗不重建地图�
   assert.ok(landmarkCatalog.some(target=>target.credit.use),'catalogue carries at least one non-commercial landmark');
   assert.match(landmarkSection.textContent,/NanoRay.*CC BY 4.0/);
   assert.equal(new Set(downloads.map((link) => link.getAttribute('href'))).size, downloads.length);
-  const fields = ['经度', '纬度', '焦距', '相机离地高度', '方位角', '俯仰角'];
+  const fields = ['经度', '纬度', '焦距', '离地高度', '方位角', '俯仰角'];
   const before = fields.map(value), time = shootingDateTime();
   const requests = groundRequests.length, maps = TestMap.instances.length;
   for (const label of ['显示星空', '显示银河', '显示星座名称与连线', '显示深空天体']) {
@@ -1337,7 +1339,7 @@ test('空间站按需读取同源轨道、搜索开启与朝向、秒级时间�
   });
   await workspace(t);
   const map = await readyTerrain(), requests = groundRequests.length;
-  const fields = ['经度', '纬度', '焦距', '相机离地高度'];
+  const fields = ['经度', '纬度', '焦距', '离地高度'];
   const before = fields.map(value);
   assert.equal(calls.length, 0);
   assert.equal(document.querySelector('[aria-label="显示空间站"]').checked, false);
@@ -1453,6 +1455,7 @@ test('缓存视野的加载事件在没有后续 sourcedata 时恢复深空图�
   await settle(()=>map.emit('dataloading'));
   assert.notEqual(layer.frame.key,oldKey);assert.equal(layer.frame.ready,true);
   assert.match(document.querySelector('.target-search-results').textContent,/当前 DEM 未遮挡/);
+  await settle(()=>document.querySelector('[aria-label="清除目标搜索"]').click());
   await settle(()=>setControl(document.querySelector('[aria-label="深空相机响应"]'),'ha-modified'));
   assert.equal(layer.frame.ready,true);assert.ok(document.querySelector('[data-dso-label="仙女座星系"]'));
 });
@@ -1469,17 +1472,20 @@ test('侧栏收起、面板交换保留搜索，地平线下的未开启目标�
   await settle(()=>document.querySelector('[aria-label="收起拍摄信息"]').click());
   await settle(()=>document.querySelector('[aria-label="展开拍摄信息"]').click());
   assert.equal(document.querySelector('#target-search').value,'Vega');
-  await settle(()=>setControl(document.querySelector('select[aria-label="拍摄预览面板位置"]'),0));await readyTerrain();
+  await settle(()=>document.querySelector('[aria-label="对调地图与预览位置"]').click());await readyTerrain();
   assert.equal(document.querySelector('#target-search').value,'Vega');assert.ok(document.querySelector('[data-search-target]'));
 });
 
 
 test('精简工作区：全局信息默认展开，图层分组随开关展开与折叠，左栏无跳转按钮', async t => {
   await workspace(t); const map = await readyTerrain(), requests = groundRequests.length;
+  // Map and preview side by side, the preview wider; no separate parameter panel.
   const layout = document.querySelector('.workgrid');
-  assert.equal(layout.style.getPropertyValue('--upper-track'), '50fr');
-  assert.equal(layout.style.getPropertyValue('--lower-track'), '50fr');
-  assert.equal(document.querySelector('[aria-label="调整右侧面板高度"]').getAttribute('aria-valuenow'), '50');
+  assert.equal(layout.dataset.order, 'map-first');
+  assert.equal(layout.style.getPropertyValue('--first-track'), '36fr');
+  assert.equal(layout.style.getPropertyValue('--second-track'), '64fr');
+  assert.equal(document.querySelector('[aria-label="调整地图与预览宽度"]').getAttribute('aria-valuenow'), '36');
+  assert.equal(document.querySelector('[aria-label="调整面板高度"]'), null);
   for (const selector of ['.workspace-heading', '.workspace-footer', '.base-layer', '.sidebar-bottom', '.layer-hint', '.map-footer-note', '.viewfinder-label', '.viewfinder-focal', '.terrain-height', '.parameter-note', '.info-header', '.layer-settings', '[aria-label$="设置与信息"]'])
     assert.equal(document.querySelector(selector), null, selector);
   const groups = [...document.querySelectorAll('.info-group h2 button')];
@@ -1607,7 +1613,7 @@ test('建筑分组显示加载进度、范围与精模朝向，不显示缓存�
   for(const removed of [/缓存/,/清理/])assert.doesNotMatch(readout().textContent,removed);
 });
 
-test('星座和银河子设置位于右栏，预览信息与时间配置位于画布外', async t => {
+test('星座和银河子设置位于右栏；方向、镜头与时间在预览旁，机位与高度在地图下方，不再有参数栏', async t => {
   await workspace(t); await readyTerrain();
   const stars = document.querySelector('[aria-label="显示星座名称与连线"]');
   assert.ok(stars.closest('#info-stars-body')); assert.equal(stars.disabled, true);
@@ -1617,15 +1623,32 @@ test('星座和银河子设置位于右栏，预览信息与时间配置位于�
   await settle(() => stars.click()); assert.equal(stars.checked, true);
   await settle(() => document.querySelector('[aria-label="显示星空"]').click());
   assert.equal(stars.checked, false); assert.equal(stars.disabled, true);
-  assert.match(document.querySelector('.preview-meta').textContent, /35 mm.*全画幅/s);
-  assert.match(document.querySelector('.preview-elevation').textContent, /1000.0.*1.6/s);
-  assert.equal(document.querySelector('.viewfinder .preview-elevation'), null);
+  assert.equal(document.querySelector('.panel-parameters'), null);
+  assert.equal(document.querySelectorAll('.panel').length, 2);
+  // Direction above the frame, lens and time below it, all outside the frame.
+  for (const label of ['方位角', '俯仰角']) {
+    assert.ok(input(label).closest('.preview-meta'), label);
+    assert.equal(input(label).closest('.viewfinder'), null);
+  }
+  for (const control of [input('焦距'), document.querySelector('[aria-label="焦距滑块"]'), document.querySelector('[aria-label="传感器"]'),
+    document.querySelector('[aria-label="画幅比例"]'), document.querySelector('[aria-label="拍摄画幅方向"]')])
+    assert.ok(control.closest('.panel-preview .camera-bar'));
   const date = document.querySelector('input[type="date"]'), clock = document.querySelector('input[type="time"]');
   assert.equal(date.closest('.time-row'), clock.closest('.time-row'));
-  assert.equal(document.querySelector('.timezone-trigger').closest('.field-pair'), document.querySelector('[aria-label="大气折射模型"]').closest('.field-pair'));
+  assert.equal(document.querySelector('.timezone-trigger').closest('.time-row'), clock.closest('.time-row'));
+  assert.ok(clock.closest('.panel-preview .timeline'));
+  // Position and height below the map; the ground elevation comes from the preview.
+  for (const label of ['纬度', '经度', '离地高度']) assert.ok(input(label).closest('.panel-map .position-bar'), label);
+  assert.match(document.querySelector('.panel-map .ground-elevation').textContent, /1000\.0/);
+  assert.equal(document.querySelector('.preview-meta').textContent.includes('1000.0'), false);
+  // Rare settings move next to what they affect.
+  assert.ok(document.querySelector('[aria-label="大气折射模型"]').closest('.sidebar .environment-settings'));
+  assert.ok(document.querySelector('[aria-label="深空相机响应"]').closest('#info-deepSky-body'));
   await settle(() => setControl(clock, '19:35:12'));
   await settle(() => setControl(date, '2026-11-07'));
   assert.equal(clock.value, '19:35:12');
+  assert.doesNotMatch(document.querySelector('.preview-meta').textContent, /未改机/);
+  await settle(() => document.querySelector('[aria-label="显示深空天体"]').click());
   assert.match(document.querySelector('.preview-meta').textContent, /未改机/);
   await settle(() => setControl(document.querySelector('[aria-label="深空相机响应"]'), 'ha-modified'));
   assert.match(document.querySelector('.preview-meta').textContent, /天文改机/);
@@ -1661,7 +1684,7 @@ test('新机位保留有效画布，短暂更新无加载提示，持续等待�
   await settle(() => setControl(input('经度'), 139));
   assert.equal(canvas.dataset.ready, 'false'); assert.equal(canvas.dataset.rendered, 'true');
   assert.equal(document.querySelector('.terrain-feedback'), null);
-  assert.match(document.querySelector('.preview-elevation').textContent, /待更新/);
+  assert.match(document.querySelector('.ground-elevation').textContent, /待更新/);
   await waitUntil(() => pending.length === 2);
   await act(async () => { await delay(850); });
   assert.match(document.querySelector('.terrain-feedback').textContent, /暂留上一机位/);
@@ -2049,7 +2072,7 @@ test('拍摄时间：微调按钮跨午夜，前后一天保留钟点，夏令�
   assert.equal(shootingDateTime(), '2026-11-03T23:05');
   await press('推后 1 分钟'); await press('推后 1 小时');
   assert.equal(shootingDateTime(), '2026-11-04T00:06');
-  assert.equal(document.querySelector('.date-field .field-label small').textContent, '周三');
+  assert.equal(document.querySelector('.date-field .weekday').textContent, '周三');
   const slider = document.querySelector('input[aria-label="24 小时时间滑杆"]');
   assert.match(slider.getAttribute('aria-valuetext'), /^00:06:00 Asia\/Tokyo · 夜间$/);
   assert.ok(document.querySelector('.time-band').style.background.includes('linear-gradient'), 'daylight band painted');
@@ -2095,20 +2118,95 @@ test('日月时刻按当地日期列出，点击跳到该时刻；极夜无日�
 
 test('离地高度滑条按对数刻度同步数值框，方向键按 0.1 m / 1 m 微调', async t => {
   await workspace(t); await readyTerrain();
-  const slider = document.querySelector('input[aria-label="相机离地高度滑块"]');
+  const slider = document.querySelector('input[aria-label="离地高度滑块"]');
   await settle(() => setControl(slider, cameraHeightSlider.toPosition(10)));
-  assert.equal(value('相机离地高度'), 10);
+  assert.equal(value('离地高度'), 10);
   assert.equal(slider.getAttribute('aria-valuetext'), '10 m');
   await settle(() => keydown(slider, 'ArrowLeft'));
-  assert.equal(value('相机离地高度'), 9.9);
+  assert.equal(value('离地高度'), 9.9);
   await settle(() => setControl(slider, cameraHeightSlider.max));
-  assert.equal(value('相机离地高度'), 100);
+  assert.equal(value('离地高度'), 100);
   await settle(() => keydown(slider, 'ArrowUp'));
-  assert.equal(value('相机离地高度'), 100);
-  await settle(() => setControl(input('相机离地高度'), 1.5));
+  assert.equal(value('离地高度'), 100);
+  await settle(() => setControl(input('离地高度'), 1.5));
   assert.equal(slider.value, String(cameraHeightSlider.toPosition(1.5)));
   await settle(() => keydown(slider, 'ArrowRight'));
-  assert.equal(value('相机离地高度'), 1.6);
+  assert.equal(value('离地高度'), 1.6);
+});
+
+test('机位条位于地图下方：粘贴“纬度, 经度”一次填入两项，单个数值照常输入，地面高程来自预览', async t => {
+  await workspace(t); await readyTerrain();
+  const latitude = input('纬度');
+  assert.ok(latitude.closest('.panel-map .position-bar'));
+  assert.match(document.querySelector('.ground-elevation').textContent, /1000\.0/);
+  const paste = (text) => {
+    const event = new dom.window.Event('paste', { bubbles: true, cancelable: true });
+    event.clipboardData = { getData: () => text };
+    latitude.dispatchEvent(event);
+    return event;
+  };
+  let event;
+  await settle(() => { event = paste('35.6586, 139.7454'); });
+  assert.equal(event.defaultPrevented, true);
+  assert.equal(value('纬度'), 35.6586);
+  assert.equal(value('经度'), 139.7454);
+  await settle(() => { event = paste('36'); });
+  assert.equal(event.defaultPrevented, false, 'a single number is left to the input');
+  assert.equal(value('经度'), 139.7454);
+});
+
+test('预览双指捏合按两指间距比例调焦，不改方向；松开一指后不再转动', async t => {
+  await workspace(t); await readyTerrain();
+  const frame = document.querySelector('.viewfinder');
+  frame.getBoundingClientRect = () => ({ width: 600, height: 400 });
+  const touch = (type, pointerId, clientX, clientY) => frame.dispatchEvent(new dom.window.PointerEvent(type, {
+    pointerId, pointerType: 'touch', button: 0, clientX, clientY, bubbles: true,
+  }));
+  const pose = ['方位角', '俯仰角'].map(value);
+  assert.equal(value('焦距'), 35);
+  await settle(() => touch('pointerdown', 1, 250, 200));
+  await settle(() => touch('pointerdown', 2, 350, 200));
+  await settle(() => touch('pointermove', 2, 450, 200));
+  assert.equal(value('焦距'), 70);
+  await settle(() => touch('pointermove', 1, 400, 200));
+  assert.equal(value('焦距'), 17.5);
+  assert.deepEqual(['方位角', '俯仰角'].map(value), pose);
+  await settle(() => touch('pointerup', 2, 450, 200));
+  await settle(() => touch('pointermove', 1, 300, 260));
+  assert.equal(value('焦距'), 17.5);
+  assert.deepEqual(['方位角', '俯仰角'].map(value), pose);
+  await settle(() => touch('pointerup', 1, 300, 260));
+});
+
+test('窄屏：预览与时间轴常驻，相机条移入“相机”标签，切换标签不重建地图或预览，变宽后恢复', async t => {
+  const listeners = new Set();
+  const narrow = { matches: true, addEventListener: (_, listener) => listeners.add(listener), removeEventListener: (_, listener) => listeners.delete(listener) };
+  const original = window.matchMedia;
+  window.matchMedia = (query) => query === '(max-width: 1099px)' ? narrow : { matches: false, addEventListener() {}, removeEventListener() {} };
+  t.after(() => { window.matchMedia = original; });
+  const { map } = await workspace(t); const terrain = await readyTerrain();
+  const layout = document.querySelector('.app-layout');
+  const tabs = () => [...document.querySelectorAll('.mobile-tabs [role="tab"]')];
+  const tab = (name) => tabs().find((element) => element.textContent.trim() === name);
+  assert.deepEqual(tabs().map((element) => element.textContent.trim()), ['地图', '相机', '图层', '信息']);
+  assert.equal(layout.dataset.mobileTab, 'map');
+  assert.equal(document.querySelector('.panel-preview .camera-bar'), null);
+  assert.ok(input('焦距').closest('.mobile-camera'));
+  assert.ok(document.querySelector('.panel-preview .timeline'));
+  await settle(() => tab('相机').click());
+  assert.equal(layout.dataset.mobileTab, 'camera');
+  assert.equal(tab('相机').getAttribute('aria-selected'), 'true');
+  await settle(() => setControl(input('焦距'), 85));
+  await settle(() => tab('信息').click());
+  assert.equal(layout.dataset.mobileTab, 'info');
+  assert.equal(await waitForMap(), map);
+  assert.ok(!map.removed);
+  assert.equal(await readyTerrain(), terrain);
+  await settle(() => { narrow.matches = false; for (const listener of listeners) listener(); });
+  assert.ok(input('焦距').closest('.panel-preview .camera-bar'));
+  assert.equal(document.querySelector('.mobile-camera'), null);
+  assert.equal(value('焦距'), 85);
+  assert.equal(await readyTerrain(), terrain);
 });
 
 test('太阳、月亮分组各有运行轨迹开关：从属于天体图层，开启后预览得到轨迹线与整点标注', async t => {
