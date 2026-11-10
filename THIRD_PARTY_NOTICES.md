@@ -16,6 +16,10 @@ MapLibre GL JS 6.16.0 的本地修改还包括：为带有本项目 LOD 回调�
 
 本项目去掉北部覆盖外填充值，将有效原生 3×3 像元按线性 mcd/m² 平均为约 2.8 km 格网，保留原始格网注册，再对数编码、gzip 分块。衍生文件位于 `public/light-pollution/atlas-2015/`，继续按 CC BY-NC 4.0 提供。原始和逐块校验值、坐标、处理步骤及下载索引见 [light-pollution.json](src/data/light-pollution.json)，完整来源在 About。
 
+## 当地时区与 tz-lookup
+
+“当地时区”按机位坐标查询 IANA 时区，使用 @photostructure/tz-lookup 11.7.0，CC0 1.0（原 Dark Sky tz-lookup 亦为 CC0）。其有损压缩网格由 Evan Siroky 的 timezone-boundary-builder 生成，后者以 ODbL 1.0 发布、基于 © OpenStreetMap contributors。边境附近与海上可能返回相邻时区，结果仅用于显示当地钟点，拍摄时刻按 UTC 保存。[tz-lookup](https://github.com/photostructure/tz-lookup)、[timezone-boundary-builder](https://github.com/evansiroky/timezone-boundary-builder)、[ODbL 1.0](https://opendatacommons.org/licenses/odbl/)
+
 ## 空间站轨道与 satellite.js
 
 ISS（25544）与天宫天和核心舱（48274）的 GP JSON 由 CelesTrak 提供。保留原始轨道字段、UTC 历元及独立的检查状态，空间站白名单筛选和静态镜像均在本项目完成。遵守两小时最短请求间隔和错误暂停要求，署名与快照下载入口在 About。[数据说明](https://celestrak.org/NORAD/documentation/gp-data-formats.php)，[使用政策](https://celestrak.org/usage-policy.php)

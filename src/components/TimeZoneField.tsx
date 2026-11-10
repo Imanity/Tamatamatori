@@ -13,6 +13,8 @@ import {
 import { validTimeZone } from "../domain/shot";
 
 const RESULT_LIMIT = 80;
+// "local" is the follow-the-position option; every other option is a fixed zone.
+const LOCAL = "local";
 type Row = { kind: "group"; label: string } | { kind: "divider" } | { kind: "option"; zone: string; index: number; detail: string };
 
 function browserZone() {
@@ -28,7 +30,23 @@ function browserZone() {
  * force at the shooting instant, so daylight saving is shown correctly.
  * The list opens inline below the row so the scrolling panel never clips it.
  */
-export function TimeZoneField({ zone, instant, onChange }: { zone: string; instant: string; onChange: (zone: string) => void }) {
+export function TimeZoneField({
+  zone,
+  instant,
+  onChange,
+  follow = false,
+  localZone = null,
+  onFollow,
+}: {
+  zone: string;
+  instant: string;
+  onChange: (zone: string) => void;
+  /** The zone follows the camera position ("当地时区"). */
+  follow?: boolean;
+  /** The position's zone, or null when it cannot be determined. */
+  localZone?: string | null;
+  onFollow?: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
@@ -46,8 +64,14 @@ export function TimeZoneField({ zone, instant, onChange }: { zone: string; insta
       rows.push({ kind: "option", zone: item, index: options.length, detail: detail(item) });
       options.push(item);
     };
+    const pushLocal = () => {
+      if (!onFollow || !localZone) return;
+      rows.push({ kind: "option", zone: LOCAL, index: options.length, detail: `随机位 · ${detail(localZone)}` });
+      options.push(LOCAL);
+    };
     if (!query.trim()) {
       rows.push({ kind: "group", label: "常用" });
+      pushLocal();
       [...new Set([zone, browserZone(), ...commonTimeZones])].forEach((item) => item && push(item));
       // All zones follow, ordered by the offset at the shooting instant.
       rows.push({ kind: "divider" });
@@ -55,12 +79,13 @@ export function TimeZoneField({ zone, instant, onChange }: { zone: string; insta
         .sort((a, b) => zoneOffsetMinutes(a, instant) - zoneOffsetMinutes(b, instant) || a.localeCompare(b))
         .forEach(push);
     } else {
+      if (/当地|本地|机位|local/i.test(query)) pushLocal();
       const found = searchTimeZones(query, instant);
       found.slice(0, RESULT_LIMIT).forEach(push);
       hidden = Math.max(0, found.length - RESULT_LIMIT);
     }
     return { rows, options, hidden };
-  }, [open, query, zone, instant]);
+  }, [open, query, zone, instant, localZone, onFollow]);
   useEffect(() => {
     if (!open) return;
     const outside = (event: PointerEvent) => {
@@ -82,7 +107,8 @@ export function TimeZoneField({ zone, instant, onChange }: { zone: string; insta
     trigger.current?.focus();
   };
   const choose = (item: string) => {
-    if (validTimeZone(item)) onChange(item);
+    if (item === LOCAL) onFollow?.();
+    else if (validTimeZone(item)) onChange(item);
     close();
   };
   const keys = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -113,10 +139,11 @@ export function TimeZoneField({ zone, instant, onChange }: { zone: string; insta
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-labelledby={`${id}-label ${id}-value`}
-        title={detail(zone)}
+        title={`${follow ? "当地时区，随机位变化 · " : ""}${detail(zone)}`}
         onClick={() => (open ? setOpen(false) : show())}
       >
         <span id={`${id}-value`}>
+          {follow && <small className="timezone-local">当地</small>}
           <strong>{zoneCity(zone)}</strong>
           <small>{zoneOffset(zone, instant)}</small>
         </span>
@@ -155,13 +182,13 @@ export function TimeZoneField({ zone, instant, onChange }: { zone: string; insta
                   data-index={row.index}
                   data-zone={row.zone}
                   role="option"
-                  aria-selected={row.zone === zone}
+                  aria-selected={row.zone === LOCAL ? follow : !follow && row.zone === zone}
                   className={row.index === active ? "is-active" : undefined}
                   onPointerDown={(event) => event.preventDefault()}
                   onPointerMove={() => setActive(row.index)}
                   onClick={() => choose(row.zone)}
                 >
-                  <strong>{zoneCity(row.zone)}</strong>
+                  <strong>{row.zone === LOCAL ? "当地时区" : zoneCity(row.zone)}</strong>
                   <small>{row.detail}</small>
                 </li>
               ),

@@ -21,6 +21,11 @@ export interface ShootingPlan {
   orientation: "landscape" | "portrait";
   instant: string;
   timeZone: string;
+  /**
+   * The display zone follows the camera position ("当地时区"); `timeZone`
+   * still holds the resolved zone. Absent (old sessions and shots) means fixed.
+   */
+  followLocalZone?: boolean;
   layers: {
     buildings?: boolean;
     sun: boolean;
@@ -61,6 +66,7 @@ export const initialPlan: ShootingPlan = {
   orientation: "landscape",
   instant: "2026-11-04T08:00:00Z",
   timeZone: "Asia/Tokyo",
+  followLocalZone: true,
   layers: {
     buildings: false,
     sun: true,

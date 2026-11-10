@@ -2,6 +2,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import { aspectRatios, initialPlan, sensors } from "./plan.ts";
 import type { ShootingPlan } from "./plan.ts";
 import { weatherModels } from "./weather.ts";
+import { localTimeZone } from "./zone-lookup.ts";
 import type { WeatherModel } from "./weather.ts";
 
 /**
@@ -59,7 +60,14 @@ export interface Shot {
     orientation: ShootingPlan["orientation"];
     response: ShootingPlan["cameraResponse"];
   };
-  time: { instant: string; local: string; timeZone: string; refraction: ShootingPlan["refraction"] };
+  time: {
+    instant: string;
+    local: string;
+    timeZone: string;
+    /** The display zone follows the position; `timeZone` is the zone it resolved to. */
+    followLocalZone: boolean;
+    refraction: ShootingPlan["refraction"];
+  };
   layers: Record<LayerKey, boolean>;
   sky: { milkyWayContrast: number };
   environment: { lightPollution: boolean; weather: boolean; weatherModel: WeatherModel };
@@ -115,6 +123,7 @@ export function shotFromPlan(plan: ShootingPlan, name = "", note = ""): Shot {
       instant: plan.instant,
       local: shotLocalTime(plan.instant, plan.timeZone),
       timeZone: plan.timeZone,
+      followLocalZone: !!plan.followLocalZone,
       refraction: plan.refraction,
     },
     layers: Object.fromEntries(shotLayerKeys.map((key) => [key, !!plan.layers[key]])) as Shot["layers"],
@@ -143,6 +152,7 @@ export function planFromShot(shot: Shot): ShootingPlan {
     cameraResponse: shot.camera.response,
     instant: shot.time.instant,
     timeZone: shot.time.timeZone,
+    followLocalZone: shot.time.followLocalZone,
     refraction: shot.time.refraction,
     layers: { ...shot.layers },
     milkyWayContrast: shot.sky.milkyWayContrast,
@@ -228,7 +238,7 @@ const groupKeys: Record<string, readonly string[]> = {
   position: ["latitude", "longitude", "heightAboveGround"],
   view: ["azimuth", "pitch"],
   camera: ["focalLength", "sensor", "aspectRatio", "orientation", "response"],
-  time: ["instant", "local", "timeZone", "refraction"],
+  time: ["instant", "local", "timeZone", "followLocalZone", "refraction"],
   layers: shotLayerKeys,
   sky: ["milkyWayContrast"],
   environment: ["lightPollution", "weather", "weatherModel"],
@@ -331,9 +341,20 @@ export function parseShot(value: unknown): ShotParse {
 
   const time = group("time", true);
   const refraction = choice(time, "time.refraction", ["standard", "none"] as const, initialPlan.refraction);
+  // Absent in shots written before the option existed: those keep a fixed zone.
+  let followLocalZone = false;
+  if (time.followLocalZone !== undefined) {
+    if (typeof time.followLocalZone !== "boolean")
+      errors.push(`time.followLocalZone：应为 true 或 false，收到 ${shown(time.followLocalZone)}`);
+    else followLocalZone = time.followLocalZone;
+  }
+  // Following the position, a missing zone is the position's own zone.
+  const positionZone = followLocalZone && typeof latitude === "number" && typeof longitude === "number"
+    ? localTimeZone(latitude, longitude) : null;
   let timeZone = "UTC";
-  if (time.timeZone === undefined) {
-    if (time.local !== undefined) errors.push("time.timeZone：使用 time.local 时必须给出 IANA 时区，例如 \"Asia/Tokyo\"");
+  if (time.timeZone === undefined && positionZone) timeZone = positionZone;
+  else if (time.timeZone === undefined) {
+    if (time.local !== undefined) errors.push("time.timeZone：使用 time.local 时必须给出 IANA 时区，例如 \"Asia/Tokyo\"，或设 time.followLocalZone 为 true");
     else if (time.instant !== undefined) defaults.push("time.timeZone");
   } else if (typeof time.timeZone !== "string" || !validTimeZone(time.timeZone)) {
     errors.push(`time.timeZone：应为有效的 IANA 时区，例如 "Asia/Tokyo"，收到 ${shown(time.timeZone)}`);
@@ -352,7 +373,7 @@ export function parseShot(value: unknown): ShotParse {
       errors.push(`time.instant：应为带 Z 或时差的 ISO 时刻，例如 "2026-12-14T17:30:00Z"，收到 ${shown(time.instant)}`);
     }
   }
-  if (time.local !== undefined && time.timeZone !== undefined) {
+  if (time.local !== undefined && (time.timeZone !== undefined || positionZone)) {
     try {
       if (typeof time.local !== "string" || /[zZ]$/.test(time.local)) throw new TypeError();
       local = Temporal.PlainDateTime.from(time.local);
@@ -360,7 +381,7 @@ export function parseShot(value: unknown): ShotParse {
       errors.push(`time.local：应为当地日期时间，例如 "2026-12-15T02:30"，收到 ${shown(time.local)}`);
     }
     if (local && !inYears(local.year)) errors.push(`time.local：只支持 ${shotLimits.year[0]}—${shotLimits.year[1]} 年`);
-    else if (local && validTimeZone(String(time.timeZone))) {
+    else if (local && (positionZone && time.timeZone === undefined || validTimeZone(String(time.timeZone)))) {
       try {
         fromLocal = local.toZonedDateTime(timeZone, { disambiguation: "reject" }).toInstant().toString();
       } catch {
@@ -406,7 +427,7 @@ export function parseShot(value: unknown): ShotParse {
     position: { latitude, longitude, heightAboveGround },
     view: { azimuth, pitch },
     camera: { focalLength, sensor, aspectRatio, orientation, response },
-    time: { instant: resolvedInstant, local: shotLocalTime(resolvedInstant, timeZone), timeZone, refraction },
+    time: { instant: resolvedInstant, local: shotLocalTime(resolvedInstant, timeZone), timeZone, followLocalZone, refraction },
     layers: layerValues,
     sky: { milkyWayContrast },
     environment: { lightPollution, weather, weatherModel },

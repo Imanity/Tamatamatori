@@ -1175,28 +1175,36 @@ input[aria-invalid="true"] {
 .timezone-field { position: relative; flex: 1 1 120px; min-width: 110px; max-width: 220px; }
 .timeline .timezone-picker { top: auto; bottom: calc(100% + 6px); left: auto; right: 0; width: min(300px, calc(100vw - 32px)); }
 .timeline .timezone-list { max-height: min(240px, 36dvh); }
-.time-actions { display: flex; flex-wrap: wrap; gap: 6px 10px; margin-top: 2px; }
-.time-actions .time-steps { flex: 1 1 280px; margin: 0; }
-.time-actions .time-events { flex: 1 1 300px; margin: 0; }
+.time-actions { display: flex; align-items: stretch; gap: 6px; margin-top: 2px; }
+.time-actions .time-steps { flex: 1 1 auto; margin: 0; }
+.time-event-step { flex: none; padding: 5px 8px; border: 1px solid #d5dfc9; border-radius: 4px; background: #eef3e7; color: #4f6a4e; font-size: 9px; white-space: nowrap; }
+.time-event-step:hover:not(:disabled) { background: #e3ebd8; border-color: #b8cba5; }
+.time-event-step:disabled { opacity: .45; cursor: default; }
+/* Event ticks above the band: a dot, a stem down to the band and, when there is room, a label. */
+.time-markers { position: relative; height: 22px; margin: 0 calc(var(--time-thumb-size) / 2); }
+.time-marker { position: absolute; bottom: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; min-width: 14px; padding: 0 2px; border: 0; border-radius: 3px; background: none; color: #5d7055; font-size: 9px; line-height: 1.2; white-space: nowrap; }
+.time-marker::after { content: ""; width: 1px; height: 6px; margin-top: 1px; background: #8fa07f; }
+.time-marker.is-dot::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: #8fa07f; }
+.time-marker:hover, .time-marker:focus-visible { z-index: 2; background: #edf2e6; color: #2f4d33; }
+.time-marker.is-current { color: #2f4d33; font-weight: 600; }
+.time-marker.is-current::after, .time-marker.is-current.is-dot::before { background: var(--accent); }
+.time-marker[data-event="station-pass"] { color: #3f6f86; }
+.time-marker[data-event^="core"], .time-marker[data-event^="radiant"], .time-marker[data-event^="comet"] { color: #5a5f8a; }
+.cloud-strip { display: block; height: 4px; margin: 1px calc(var(--time-thumb-size) / 2) 2px; border-radius: 2px; }
+.time-slider-ticks .is-date { font-weight: 600; color: #5d7055; }
+.time-missing { margin: 2px 0 4px; color: #98a38b; font-size: 9px; line-height: 1.6; }
+.time-zone-notice { margin: 6px 0 0; padding: 5px 8px; border-radius: 4px; background: #eef3ea; color: #4f6a4e; font-size: 10px; line-height: 1.5; }
 .date-stepper { display: flex; align-items: stretch; min-width: 0; }
 .date-stepper input[type="date"] { flex: 1; min-width: 0; border-radius: 0; padding-inline: 5px; font-size: 11px; text-align: center; }
 .date-stepper button { flex-shrink: 0; width: 24px; padding: 0; border: 1px solid #e1e7d7; background: #f5f8ef; color: #5f7754; font-size: 15px; line-height: 1; cursor: pointer; }
 .date-stepper button:first-child { border-right: 0; border-radius: 4px 0 0 4px; }
 .date-stepper button:last-child { border-left: 0; border-radius: 0 4px 4px 0; }
-.date-stepper button:hover, .time-steps button:hover:not(:disabled), .time-events button:hover:not(:disabled) { background: #eaf0e1; border-color: #b8cba5; }
+.date-stepper button:hover, .time-steps button:hover:not(:disabled) { background: #eaf0e1; border-color: #b8cba5; }
 .clock-field input[type="time"] { padding-inline: 6px; font-size: 12px; font-variant-numeric: tabular-nums; }
 .time-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.15fr) repeat(3, minmax(0, 1fr)); gap: 4px; margin: 0 0 8px; }
-.time-steps button, .time-events button { min-width: 0; border: 1px solid #e6eadb; border-radius: 4px; background: #f7f9f1; color: #7d8b6f; font-size: 9px; line-height: 1.2; white-space: nowrap; cursor: pointer; }
+.time-steps button { min-width: 0; border: 1px solid #e6eadb; border-radius: 4px; background: #f7f9f1; color: #7d8b6f; font-size: 9px; line-height: 1.2; white-space: nowrap; cursor: pointer; }
 .time-steps button { padding: 5px 0; font-variant-numeric: tabular-nums; }
 .time-steps .time-now { border-color: #c9d6bc; background: #eef3e7; color: #4f6a4e; font-weight: 550; }
-.time-events { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) 2px repeat(2, minmax(0, 1fr)); gap: 4px; margin: 0 0 4px; }
-.time-events [data-event="moonrise"] { grid-column: 6; }
-.time-events [data-event="moonset"] { grid-column: 7; }
-.time-events button { display: grid; gap: 1px; padding: 4px 0; }
-.time-events button span { color: #98a38b; font-size: 8px; }
-.time-events button strong { color: #5c784b; font-size: 10px; font-weight: 550; font-variant-numeric: tabular-nums; }
-.time-events button.is-current { border-color: #9db489; background: #e6eedb; }
-.time-events button:disabled { cursor: default; opacity: .55; }
 .timeline > .field-error { margin: 4px 0 0; }
 .info-search-tools { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 7px; }
 .info-search-tools label { margin: 0; }
@@ -1233,8 +1241,10 @@ input[aria-invalid="true"] {
 @media (max-width: 599px) {
   .preview-content { padding: 0 8px 8px; }
   .weekday { display: none; }
-  .date-field .date-stepper { width: 150px; }
-  .clock-field input[type="time"] { width: 92px; }
+  .date-field .date-stepper { width: 140px; }
+  .date-stepper button { width: 20px; }
+  .clock-field input[type="time"] { width: 86px; padding-inline: 4px; }
+  .timeline .timezone-trigger { padding-inline: 6px 4px; }
   .time-slider-ticks { font-size: 7px; }
   .brand small { display: none; }
 }
@@ -1312,6 +1322,7 @@ input[aria-invalid="true"] {
 .timezone-trigger > span { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
 .timezone-trigger strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; font-weight: 500; }
 .timezone-trigger small { flex-shrink: 0; color: #93a088; font-size: 9px; }
+.timezone-trigger .timezone-local { padding: 0 4px; border-radius: 3px; background: #e6eedb; color: #4f6a4e; font-size: 9px; line-height: 16px; }
 .timezone-trigger > svg { color: #93a088; }
 .timezone-picker { position: absolute; left: 0; right: 0; top: calc(100% - 6px); z-index: 20; display: grid; gap: 6px; padding: 8px; border: 1px solid #d6dfcc; border-radius: 6px; background: #fcfcf8; box-shadow: 0 12px 34px #203c302e; }
 .timezone-picker input { min-height: 30px; font-size: 11px; }
@@ -1337,15 +1348,14 @@ input[aria-invalid="true"] {
 @media (max-width: 1099px) {
   .time-actions { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
   .time-actions::-webkit-scrollbar { display: none; }
-  .time-actions .time-steps, .time-actions .time-events { flex: none; display: flex; gap: 4px; }
+  .time-actions .time-steps { flex: none; display: flex; gap: 4px; }
   .time-actions .time-steps button { width: 46px; }
-  .time-actions .time-events button { width: 48px; }
   .timeline .time-row { flex-wrap: nowrap; }
   .timezone-field { flex: 1 1 64px; min-width: 64px; }
   .position-bar { padding: 8px 10px 10px; gap: 6px 12px; }
 }
 @media (max-width: 599px) {
-  .timeline .timezone-trigger small { display: none; }
+  .timeline .timezone-trigger small:not(.timezone-local) { display: none; }
   .date-stepper input[type="date"] { font-size: 11px; padding-inline: 2px; }
   .position-coordinates .number-wrap { width: 96px; }
   .position-height .number-wrap { width: 62px; }

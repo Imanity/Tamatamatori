@@ -24,6 +24,7 @@ const libraries = [
   { name: "Earcut", license: "ISC", url: "https://github.com/mapbox/earcut" },
   { name: "Temporal polyfill", license: "ISC", url: "https://github.com/js-temporal/temporal-polyfill" },
   { name: "satellite.js 7.1.0", license: "MIT", url: "https://github.com/shashwatak/satellite-js" },
+  { name: "@photostructure/tz-lookup 11.7.0", license: "CC0-1.0", url: "https://github.com/photostructure/tz-lookup" },
 ];
 
 export function About() {
@@ -98,6 +99,17 @@ export function About() {
             </ul>
             <p>地形按曲面构图绘制；高程数据的垂直基准尚未核定，水面高程按 DEM 近似，不含倒影、波纹或实际水位。</p>
             <p>建筑以周边有限范围的轮廓和渲染高度生成体块；高度可能来自楼层换算或缺省值，不含完整屋顶、实景材质或灯光。基座采用同源 DEM 近似，不保证建筑完整覆盖或楼顶日月对齐精度。</p>
+          </section>
+
+          <section aria-labelledby="about-zone-title">
+            <h3 id="about-zone-title">当地时区</h3>
+            <p>“当地时区”按机位坐标查询 IANA 时区，使用 @photostructure/tz-lookup 11.7.0（CC0 1.0）。其有损压缩网格源自 Evan Siroky 的 timezone-boundary-builder，后者以 ODbL 发布、基于 © OpenStreetMap contributors。</p>
+            <p>边境附近与海上可能返回相邻时区；新疆返回 Asia/Urumqi（UTC+6）而非北京时间。结果以城市和 UTC 偏移显示，可随时改选固定时区，拍摄时刻按 UTC 保存、不受影响。</p>
+            <div className="about-downloads">
+              <a href="https://github.com/photostructure/tz-lookup" target="_blank" rel="noreferrer">tz-lookup</a>
+              <a href="https://github.com/evansiroky/timezone-boundary-builder" target="_blank" rel="noreferrer">timezone-boundary-builder</a>
+              <a href="https://opendatacommons.org/licenses/odbl/" target="_blank" rel="noreferrer">ODbL 1.0</a>
+            </div>
           </section>
 
           <section aria-labelledby="about-weather-title">

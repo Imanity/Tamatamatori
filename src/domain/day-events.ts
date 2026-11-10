@@ -22,7 +22,7 @@ const meanRadius = { [Body.Sun]: 0.2666, [Body.Moon]: 0.2591 } as Record<Body, n
  * horizon in the preview: e + R(e) + radius = 0 with the preview's own
  * refraction (astronomy-engine "normal"), not the almanac's fixed 34′.
  */
-function limbAltitude(radius: number, refraction: ShootingPlan["refraction"]) {
+export function limbAltitude(radius: number, refraction: ShootingPlan["refraction"]) {
   if (refraction === "none") return -radius;
   let altitude = -radius - 0.5;
   for (let pass = 0; pass < 6; pass++) altitude = -radius - Math.max(0, Refraction("normal", altitude));
@@ -70,6 +70,15 @@ function describe(id: DayEventId, refraction: ShootingPlan["refraction"]) {
  */
 export function dayEvents(plan: DayInput): DayEvent[] {
   const { start, end } = localDay(plan.instant, plan.timeZone);
+  return sunMoonEvents(plan, start, end);
+}
+
+/** The same Sun and Moon events inside any time span (the timeline's day or night). */
+export function sunMoonEvents(
+  plan: Pick<ShootingPlan, "latitude" | "longitude" | "refraction">,
+  start: Temporal.Instant,
+  end: Temporal.Instant,
+): DayEvent[] {
   const observer = new Observer(plan.latitude, plan.longitude, 0);
   const from = new Date(start.epochMilliseconds);
   const days = (end.epochMilliseconds - start.epochMilliseconds) / 86400000;

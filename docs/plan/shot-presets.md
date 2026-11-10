@@ -52,7 +52,7 @@
   "position": { "latitude": 35.4172, "longitude": 138.8729, "heightAboveGround": 1.6 },
   "view": { "azimuth": 200, "pitch": 18 },
   "camera": { "focalLength": 24, "sensor": "full-frame", "aspectRatio": "3:2", "orientation": "landscape", "response": "stock" },
-  "time": { "instant": "2026-11-12T14:40:00Z", "local": "2026-11-12T23:40:00", "timeZone": "Asia/Tokyo", "refraction": "standard" },
+  "time": { "instant": "2026-11-12T14:40:00Z", "local": "2026-11-12T23:40:00", "timeZone": "Asia/Tokyo", "followLocalZone": true, "refraction": "standard" },
   "layers": { "buildings": false, "sun": true, "sunPath": false, "moon": true, "moonPath": false, "stars": true, "constellations": false, "milkyWay": true, "deepSky": true, "stations": false, "meteors": false, "meteorDensity": false },
   "sky": { "milkyWayContrast": 100 },
   "environment": { "lightPollution": false, "weather": false, "weatherModel": "best_match" }
@@ -77,6 +77,7 @@
   - 也接受只写 `local` 加 `timeZone`。两者都写时，`local` 必须按其写到的精度（分或秒）与 `instant` 一致。
   - 夏令时跳过或重复的当地时间报错。
 - **时区：**只要浏览器与 Temporal 都接受的 IANA 时区即可，大小写自动规范（`europe/paris` → `Europe/Paris`）。
+- **当地时区：**`time.followLocalZone` 于 2026-11-10 加入 v1（见[工作区交互改版](workspace-redesign.md#第-2-轮时间轴)），缺省为 false，旧机位保持固定时区。为 true 时显示时区跟随机位：未写 `timeZone` 时按坐标求出，也可只写 `local` 加 `followLocalZone`；写了 `timeZone` 则按记录复现。
 - **文本：**名称最多 40 字，备注最多 500 字，只作纯文本显示；整段输入上限 16 KB。
 - **错误信息：**一次列出全部问题并带字段路径，例如 `view.azimuth：应为数字，收到 "西南"`。导入框提供“复制问题列表”，便于交回 AI 修正。
 - **版本：**高于当前版本的机位拒绝导入，并提示刷新页面。

@@ -13,7 +13,7 @@ import { searchTimeZones, zoneOffset, allTimeZones } from "../src/domain/time-zo
 // Every field differs from the defaults so a dropped mapping cannot hide.
 const varied = {
   latitude: -33.8568, longitude: 151.2153, azimuth: 123.456789, pitch: -7.25, cameraHeight: 42.5, focalLength: 600.3,
-  sensor: "aps-c", aspectRatio: "16:9", orientation: "portrait", instant: "2026-12-14T09:31:12Z", timeZone: "Australia/Sydney",
+  sensor: "aps-c", aspectRatio: "16:9", orientation: "portrait", instant: "2026-12-14T09:31:12Z", timeZone: "Australia/Sydney", followLocalZone: true,
   layers: { buildings: true, sun: false, sunPath: false, moon: false, moonPath: false, stars: true, milkyWay: true, constellations: true, deepSky: true, stations: true, meteors: true, meteorDensity: true, comets: true },
   refraction: "none", milkyWayContrast: 135, cameraResponse: "ha-modified", lightPollution: true, weather: true, weatherModel: "ecmwf_ifs025",
 };
@@ -112,6 +112,27 @@ test("省略字段补默认值并列出，方位与经度取模归一，时区�
   assert.equal(parseShot(minimal({ view: { azimuth: 370 } })).plan.azimuth, 10);
   assert.equal(validTimeZone("asia/tokyo"), "Asia/Tokyo"); assert.equal(validTimeZone("Mars/Base"), null);
   assert.equal(parseShot(minimal({ time: { instant: "2026-11-04T08:00:00Z", timeZone: "europe/paris" } })).plan.timeZone, "Europe/Paris");
+});
+
+test("当地时区标记：旧机位缺省为固定时区，跟随时可省略时区并按坐标求出，记录的时区照样复现，类型错误被拒绝", () => {
+  const old = parseShot(minimal({ time: { instant: "2026-11-04T08:00:00Z", timeZone: "Asia/Tokyo" } }));
+  assert.equal(old.plan.followLocalZone, false);
+  assert.equal(old.defaults.includes("time.followLocalZone"), false);
+  const follow = parseShot(minimal({ time: { instant: "2026-11-04T08:00:00Z", followLocalZone: true } }));
+  assert.equal(follow.ok, true);
+  assert.equal(follow.plan.timeZone, "Asia/Tokyo");
+  assert.equal(follow.plan.followLocalZone, true);
+  assert.equal(follow.defaults.includes("time.timeZone"), false);
+  const local = parseShot(minimal({ position: { latitude: 48.8584, longitude: 2.2945 }, time: { local: "2026-07-14T22:30", followLocalZone: true } }));
+  assert.equal(local.ok, true);
+  assert.equal(local.plan.timeZone, "Europe/Paris");
+  assert.equal(local.plan.instant, "2026-07-14T20:30:00Z");
+  const recorded = parseShot(minimal({ time: { instant: "2026-11-04T08:00:00Z", timeZone: "UTC", followLocalZone: true } }));
+  assert.equal(recorded.plan.timeZone, "UTC");
+  assert.match(errorsOf(minimal({ time: { instant: "2026-11-04T08:00:00Z", followLocalZone: "yes" } })), /time\.followLocalZone/);
+  assert.match(errorsOf(minimal({ time: { local: "2026-07-14T22:30" } })), /followLocalZone/);
+  assert.equal(shotFromPlan({ ...initialPlan, followLocalZone: true }).time.followLocalZone, true);
+  assert.equal(shotFromPlan({ ...initialPlan, followLocalZone: undefined }).time.followLocalZone, false);
 });
 
 test("当地时间加时区换算 UTC，夏令时跳过与重复的钟点和不一致的双写被拒绝", () => {

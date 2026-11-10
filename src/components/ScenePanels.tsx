@@ -559,7 +559,14 @@ export function PreviewPanel({
         </div>
       </div>
       {showCameraBar && <CameraBar key={`camera-${generation}`} plan={plan} update={update} />}
-      <Timeline key={`time-${generation}`} plan={plan} update={update} />
+      <Timeline
+        key={`time-${generation}`}
+        plan={plan}
+        update={update}
+        comets={plan.layers.comets ? cometFeed.catalog : null}
+        orbits={plan.layers.stations ? orbits.snapshot : null}
+        forecast={plan.weather ? weatherFeed.forecast ?? null : null}
+      />
       {infoHost &&
         createPortal(
           <>

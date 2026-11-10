@@ -1,29 +1,34 @@
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Temporal } from "@js-temporal/polyfill";
 import {
   instantFromLocal,
-  instantAtMinute,
   instantOnDate,
   localClockTime,
   localDateTime,
-  minuteOfDay,
   shiftDate,
   shiftInstant,
 } from "../domain/plan";
 import type { ShootingPlan } from "../domain/plan";
-import { dayEvents, sunElevationByMinute } from "../domain/day-events";
 import { daylightPhase, solarPosition } from "../domain/solar";
+import {
+  instantAtWindowMinute,
+  neighbourEvent,
+  sunElevationAcross,
+  timelineEvents,
+  timelineMode,
+  timelineWindow,
+  windowMinute,
+} from "../domain/timeline";
+import type { TimelineEvent } from "../domain/timeline";
+import type { CometCatalog } from "../domain/comet-catalog";
+import type { OrbitSnapshot } from "../domain/orbit-data";
+import type { WeatherForecast } from "../domain/weather";
+import { localTimeZone } from "../domain/zone-lookup";
+import { zoneCity, zoneOffset } from "../domain/time-zones";
 import { TimeZoneField } from "./TimeZoneField";
 
 type UpdatePlan = (patch: Partial<ShootingPlan>) => void;
 
-const timeTicks = [
-  { label: "00:00", minute: 0 },
-  { label: "06:00", minute: 360 },
-  { label: "12:00", minute: 720 },
-  { label: "18:00", minute: 1080 },
-  { label: "23:59", minute: 1439 },
-];
 const weekdays = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
 const timeSteps = [
   { label: "−1时", minutes: -60, name: "提前 1 小时" },
@@ -34,6 +39,9 @@ const timeSteps = [
   { label: "+1时", minutes: 60, name: "推后 1 小时" },
 ];
 const dstMessage = "该钟点因夏令时跳过或重复，已保留原时刻，请选择其他时间。";
+// Approximate width of one marker label character and the space kept between labels, px.
+const LABEL_CHAR = 9.5;
+const LABEL_SPACE = 6;
 
 /** Sun elevation band behind the slider: night, the three twilights, low sun and day. */
 function bandColor(elevation: number) {
@@ -47,14 +55,22 @@ function bandColor(elevation: number) {
 
 /**
  * Shooting time below the preview: local date, clock and display zone in one
- * row, the 24 h slider over the day's sun elevation, nudges and day events.
+ * row, the 24 h slider (calendar day, or noon to noon while a night-sky layer
+ * is on) with the enabled layers' events as ticks, nudges and event steps.
  */
 export function Timeline({
   plan,
   update,
+  comets = null,
+  orbits = null,
+  forecast = null,
 }: {
   plan: ShootingPlan;
   update: UpdatePlan;
+  comets?: CometCatalog | null;
+  orbits?: OrbitSnapshot | null;
+  /** Weather forecast while the weather effect is on; drawn as hourly cloud cover. */
+  forecast?: WeatherForecast | null;
 }) {
   const dateId = useId();
   const [date, setDate] = useState(
@@ -67,27 +83,76 @@ export function Timeline({
     setTime(localClockTime(plan.instant, plan.timeZone));
     setError("");
   }, [plan.instant, plan.timeZone]);
-  const day = localDateTime(plan.instant, plan.timeZone).slice(0, 10);
-  const { latitude, longitude, timeZone, refraction } = plan;
-  // Recomputed only when the local date, place, zone or refraction changes.
-  const { events, band } = useMemo(() => {
+  const { latitude, longitude, timeZone, refraction, cameraHeight, layers } = plan;
+
+  // "Local time zone": the display zone follows the position. The instant is
+  // kept, so the local clock changes; say so once.
+  const localZone = useMemo(() => localTimeZone(latitude, longitude), [latitude, longitude]);
+  const [zoneNotice, setZoneNotice] = useState("");
+  // Track width decides which marker labels fit; dots always remain.
+  const markerRow = useRef<HTMLDivElement>(null);
+  const [trackWidth, setTrackWidth] = useState(480);
+  useEffect(() => {
+    const element = markerRow.current;
+    if (!element || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => {
+      if (element.clientWidth > 0) setTrackWidth(element.clientWidth);
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+  const followed = useRef(timeZone);
+  useEffect(() => {
+    if (!plan.followLocalZone || !localZone || localZone === timeZone) return;
+    update({ timeZone: localZone });
+    if (followed.current !== localZone)
+      setZoneNotice(`时区随机位改为${zoneCity(localZone)}（${zoneOffset(localZone, plan.instant)}），拍摄时刻不变`);
+    followed.current = localZone;
+  }, [plan.followLocalZone, localZone, timeZone]);
+  useEffect(() => {
+    if (!zoneNotice) return;
+    const timer = setTimeout(() => setZoneNotice(""), 8000);
+    return () => clearTimeout(timer);
+  }, [zoneNotice]);
+
+  const mode = timelineMode(layers);
+  const axis = timelineWindow(plan.instant, timeZone, mode);
+  const layerKey = JSON.stringify(layers);
+  // Recomputed only when the axis, place, refraction, layers or feeds change.
+  const band = useMemo(() => {
     try {
-      const dayPlan = {
-        latitude,
-        longitude,
-        timeZone,
-        refraction,
-        instant: Temporal.PlainDate.from(day).toZonedDateTime({ timeZone, plainTime: "12:00" }).toInstant().toString(),
-      };
-      const samples = sunElevationByMinute(dayPlan);
-      const band = `linear-gradient(to right, ${samples
+      const samples = sunElevationAcross({ latitude, longitude }, axis, timeZone);
+      return `linear-gradient(to right, ${samples
         .map(({ minute, elevation }) => `${bandColor(elevation)} ${((Math.min(minute, 1439) / 1439) * 100).toFixed(2)}%`)
         .join(", ")})`;
-      return { events: dayEvents(dayPlan), band };
     } catch {
-      return { events: [], band: undefined };
+      return undefined;
     }
-  }, [day, latitude, longitude, timeZone, refraction]);
+  }, [axis.start, axis.mode, latitude, longitude, timeZone]);
+  const { events, missing } = useMemo(() => {
+    try {
+      return timelineEvents({ latitude, longitude, refraction, cameraHeight, layers }, axis, { comets, orbits });
+    } catch {
+      return { events: [] as TimelineEvent[], missing: [] as string[] };
+    }
+  }, [axis.start, axis.mode, latitude, longitude, refraction, cameraHeight, layerKey, comets, orbits]);
+  const clouds = useMemo(() => {
+    if (!forecast) return null;
+    const start = Date.parse(axis.start), end = Date.parse(axis.end);
+    const stops: string[] = [];
+    let covered = false;
+    for (const hour of forecast.hours) {
+      if (hour.time < start - 3_600_000 || hour.time > end) continue;
+      const from = Math.max(0, windowMinute(new Date(Math.max(hour.time, start)).toISOString(), axis, timeZone) / 1439);
+      const to = Math.min(1, from + 60 / 1439);
+      const cover = hour.cloud;
+      const color = cover === null ? "transparent" : `rgba(92, 104, 118, ${(0.08 + 0.72 * (cover / 100)).toFixed(3)})`;
+      if (cover !== null) covered = true;
+      stops.push(`${color} ${(from * 100).toFixed(2)}%`, `${color} ${(to * 100).toFixed(2)}%`);
+    }
+    return covered ? `linear-gradient(to right, transparent 0%, ${stops.join(", ")}, transparent 100%)` : null;
+  }, [forecast, axis.start, axis.mode, timeZone]);
+
   const elevation = useMemo(() => {
     try {
       return solarPosition({ latitude, longitude, instant: plan.instant }).elevation;
@@ -103,7 +168,7 @@ export function Timeline({
       setError(reason instanceof RangeError && /1900/.test(reason.message) ? "请保持在 1900—2100 年内。" : message);
     }
   };
-  const clock = (instant: string) => localClockTime(instant, plan.timeZone).slice(0, 5);
+  const clock = (instant: string) => localClockTime(instant, timeZone).slice(0, 5);
   let weekday = "";
   try {
     weekday = weekdays[Temporal.PlainDate.from(date).dayOfWeek - 1];
@@ -111,26 +176,55 @@ export function Timeline({
     weekday = "";
   }
   const describedBy = error ? "time-error" : undefined;
-  const step = (item: (typeof timeSteps)[number]) => (
+  const minute = windowMinute(plan.instant, axis, timeZone);
+  const position = (instant: string) => windowMinute(instant, axis, timeZone) / 1439;
+  // Hour ticks; the night axis names the date its midnight starts.
+  const nextDate = Temporal.PlainDate.from(axis.date).add({ days: 1 });
+  const ticks = mode === "night"
+    ? [
+        { label: "12:00", minute: 0 },
+        { label: "18:00", minute: 360 },
+        { label: `${nextDate.month}/${nextDate.day}`, minute: 720, strong: true },
+        { label: "06:00", minute: 1080 },
+        { label: "11:59", minute: 1439 },
+      ]
+    : [
+        { label: "00:00", minute: 0 },
+        { label: "06:00", minute: 360 },
+        { label: "12:00", minute: 720 },
+        { label: "18:00", minute: 1080 },
+        { label: "23:59", minute: 1439 },
+      ];
+  let last: { x: number; width: number } | null = null;
+  const markers = events.map((event) => {
+    const at = position(event.instant), x = at * trackWidth, width = [...event.label].length * LABEL_CHAR;
+    const labelled = !last || x - last.x >= (last.width + width) / 2 + LABEL_SPACE;
+    if (labelled) last = { x, width };
+    return { event, at, labelled };
+  });
+  const previous = neighbourEvent(events, plan.instant, -1), next = neighbourEvent(events, plan.instant, 1);
+  const describe = (event: TimelineEvent) => `${event.label} ${clock(event.instant)}`;
+  const stepButton = (item: (typeof timeSteps)[number]) => (
     <button
       key={item.label}
       type="button"
       aria-label={item.name}
       title={item.name}
-      onClick={() => attempt(() => shiftInstant(plan.instant, plan.timeZone, item.minutes))}
+      onClick={() => attempt(() => shiftInstant(plan.instant, timeZone, item.minutes))}
     >
       {item.label}
     </button>
   );
+  const localDate = localDateTime(plan.instant, timeZone).slice(5, 10).replace("-", "/");
   return (
-    <div className="timeline" role="group" aria-label="拍摄时间">
+    <div className="timeline" role="group" aria-label="拍摄时间" data-mode={mode}>
       <div className="time-row">
         <div className="field date-field">
           <span className="field-label">
             <label htmlFor={dateId}>当地日期</label>
           </span>
           <span className="date-stepper">
-            <button type="button" aria-label="前一天" title="前一天" onClick={() => attempt(() => shiftDate(plan.instant, plan.timeZone, -1))}>
+            <button type="button" aria-label="前一天" title="前一天" onClick={() => attempt(() => shiftDate(plan.instant, timeZone, -1))}>
               ‹
             </button>
             <input
@@ -145,12 +239,12 @@ export function Timeline({
               onChange={(event) => {
                 setDate(event.target.value);
                 attempt(
-                  () => instantOnDate(plan.instant, plan.timeZone, event.target.value),
+                  () => instantOnDate(plan.instant, timeZone, event.target.value),
                   "请输入 1900—2100 年内的有效日期，夏令时重复或跳过的时刻需改选。",
                 );
               }}
             />
-            <button type="button" aria-label="后一天" title="后一天" onClick={() => attempt(() => shiftDate(plan.instant, plan.timeZone, 1))}>
+            <button type="button" aria-label="后一天" title="后一天" onClick={() => attempt(() => shiftDate(plan.instant, timeZone, 1))}>
               ›
             </button>
           </span>
@@ -168,51 +262,90 @@ export function Timeline({
             aria-describedby={describedBy}
             onChange={(event) => {
               setTime(event.target.value);
-              attempt(() => instantFromLocal(`${date}T${event.target.value}`, plan.timeZone));
+              attempt(() => instantFromLocal(`${date}T${event.target.value}`, timeZone));
             }}
           />
         </label>
         <TimeZoneField
-          zone={plan.timeZone}
+          zone={timeZone}
           instant={plan.instant}
-          onChange={(timeZone) => update({ timeZone })}
+          follow={!!plan.followLocalZone}
+          localZone={localZone}
+          onChange={(zone) => update({ timeZone: zone, followLocalZone: false })}
+          onFollow={() => {
+            if (!localZone) return;
+            followed.current = localZone;
+            update({ timeZone: localZone, followLocalZone: true });
+          }}
         />
       </div>
       <div className="time-slider-field">
+        <div className="time-markers" role="group" aria-label="时间轴事件" ref={markerRow}>
+          {markers.map(({ event, at, labelled }) => (
+            <button
+              key={event.key}
+              type="button"
+              data-event={event.kind}
+              className={`time-marker ${labelled ? "" : "is-dot"} ${event.instant === plan.instant ? "is-current" : ""}`}
+              style={{ left: `${at * 100}%` }}
+              aria-label={`跳到${describe(event)}`}
+              title={`${describe(event)} · ${event.detail}`}
+              onClick={() => attempt(() => event.instant)}
+            >
+              {labelled && <span>{event.label}</span>}
+            </button>
+          ))}
+        </div>
         <span className="time-track">
           <span
             className="time-band"
             aria-hidden="true"
-            title="色带为当日太阳高度：深蓝为夜间，蓝紫为天文、航海与民用暮光，金色为低角度日照"
+            title="色带为太阳高度：深蓝为夜间，蓝紫为天文、航海与民用暮光，金色为低角度日照"
             style={{ background: band }}
           />
           <input
             className="time-slider"
             type="range"
-            aria-label="24 小时时间滑杆"
+            aria-label={mode === "night" ? "夜间时间滑杆（中午到次日中午）" : "24 小时时间滑杆"}
             min={0}
             max={1439}
             step={1}
-            value={minuteOfDay(plan.instant, plan.timeZone)}
-            aria-valuetext={`${time} ${plan.timeZone}${elevation === null ? "" : ` · ${daylightPhase(elevation)}`}`}
+            value={minute}
+            aria-valuetext={`${mode === "night" ? `${localDate} ` : ""}${time} ${timeZone}${elevation === null ? "" : ` · ${daylightPhase(elevation)}`}`}
             aria-invalid={!!error}
             aria-describedby={describedBy}
             onChange={(event) =>
-              attempt(() => instantAtMinute(plan.instant, plan.timeZone, Number(event.target.value)))
+              attempt(() => instantAtWindowMinute(axis, Number(event.target.value), timeZone))
             }
           />
         </span>
+        {clouds && (
+          <span className="cloud-strip" aria-hidden="true" title="逐小时总云量（Open-Meteo 预报），越深云越多" style={{ background: clouds }} />
+        )}
         <span className="time-slider-ticks" aria-hidden="true">
-          {timeTicks.map(({ label, minute }) => (
-            <span key={label} style={{ left: `${(minute / 1439) * 100}%` }}>
+          {ticks.map(({ label, minute: at, strong }) => (
+            <span key={label} className={strong ? "is-date" : undefined} style={{ left: `${(at / 1439) * 100}%` }}>
               {label}
             </span>
           ))}
         </span>
       </div>
-      <div className="time-actions">
+      {missing.length > 0 && (
+        <p className="time-missing">本时段无：{missing.join("、")}</p>
+      )}
+      <div className="time-actions" role="group" aria-label="调整拍摄时刻">
+        <button
+          type="button"
+          className="time-event-step"
+          disabled={!previous}
+          aria-label={previous ? `跳到上一事件：${describe(previous)}` : "没有上一事件"}
+          title={previous ? `上一事件：${describe(previous)}` : "本时段没有更早的事件"}
+          onClick={() => previous && attempt(() => previous.instant)}
+        >
+          ‹ 上一事件
+        </button>
         <div className="time-steps" role="group" aria-label="微调拍摄时刻">
-          {timeSteps.slice(0, 3).map(step)}
+          {timeSteps.slice(0, 3).map(stepButton)}
           <button
             type="button"
             className="time-now"
@@ -223,36 +356,24 @@ export function Timeline({
           >
             现在
           </button>
-          {timeSteps.slice(3).map(step)}
+          {timeSteps.slice(3).map(stepButton)}
         </div>
-        {events.length > 0 && (
-          <div
-            className="time-events"
-            role="group"
-            aria-label="跳到当日日月时刻"
-            title="晨光、昏影为太阳中心在地平下 18°；日月出没按海平面地平计算，不含地形遮挡。"
-          >
-            {events.map((event) => (
-              <button
-                key={event.id}
-                type="button"
-                data-event={event.id}
-                className={event.instant === plan.instant ? "is-current" : undefined}
-                disabled={!event.instant}
-                title={event.instant ? event.definition : `当地日期内没有${event.label}`}
-                aria-label={event.instant ? `跳到${event.label} ${clock(event.instant)}` : `当地日期内没有${event.label}`}
-                onClick={() => {
-                  const instant = event.instant;
-                  if (instant) attempt(() => instant);
-                }}
-              >
-                <span>{event.label}</span>
-                <strong>{event.instant ? clock(event.instant) : "—"}</strong>
-              </button>
-            ))}
-          </div>
-        )}
+        <button
+          type="button"
+          className="time-event-step"
+          disabled={!next}
+          aria-label={next ? `跳到下一事件：${describe(next)}` : "没有下一事件"}
+          title={next ? `下一事件：${describe(next)}` : "本时段没有更晚的事件"}
+          onClick={() => next && attempt(() => next.instant)}
+        >
+          下一事件 ›
+        </button>
       </div>
+      {zoneNotice && (
+        <p className="time-zone-notice" role="status">
+          {zoneNotice}
+        </p>
+      )}
       {error && (
         <p className="field-error" id="time-error" role="status">
           {error}

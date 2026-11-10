@@ -1234,7 +1234,10 @@ test('白昼星点隐藏独立于 DEM 遮挡，夜间恢复，银心参考仍可
   await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
   await settle(()=>document.querySelector('[aria-label="显示星空"]').click());
   await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
-  await settle(()=>setControl(document.querySelector('input[aria-label="24 小时时间滑杆"]'),720));
+  // Night layers put the slider on noon-to-noon: minute 0 is 12:00, 600 is 22:00.
+  assert.equal(document.querySelector('.timeline').dataset.mode,'night');
+  await settle(()=>setControl(document.querySelector('.time-slider'),0));
+  assert.equal(document.querySelector('input[type="time"]').value,'12:00:00');
   await settle(()=>document.querySelector('[aria-label="朝向北极星"]').click());
   const status=()=>document.querySelector('[data-sky-status="北极星"]');
   assert.match(status().textContent,/天空较亮/);assert.equal(status().dataset.skyOpacity,'0.000');
@@ -1244,7 +1247,8 @@ test('白昼星点隐藏独立于 DEM 遮挡，夜间恢复，银心参考仍可
   const layer=map.customLayers.find(l=>l instanceof TestStarfieldLayer),id=skyReference(layer.frame.plan).points.find(p=>p.name==='北极星').id;
   await settle(()=>layer.report({planKey:layer.frame.planKey,ready:true,view:null,states:{[id]:'blocked'}}));
   assert.match(status().textContent,/山体遮挡/);
-  await settle(()=>setControl(document.querySelector('input[aria-label="24 小时时间滑杆"]'),1320));
+  await settle(()=>setControl(document.querySelector('.time-slider'),600));
+  assert.equal(document.querySelector('input[type="time"]').value,'22:00:00');
   assert.ok(Number(status().dataset.skyOpacity)>0.06);assert.ok(document.querySelector('[data-sky-label="北极星"]'));
   const darkOpacity=Number(status().dataset.skyOpacity);
   await setShootingDateTime('2026-11-25T00:00');
@@ -1992,13 +1996,18 @@ test('导入机位：错误带字段路径，部分 JSON 补默认值，任意�
 test('时区选择：常用分组标出当前时区，中文城市搜索与键盘选择，Escape 不改时区，只改显示不改拍摄时刻', async t => {
   await workspace(t); await readyTerrain();
   const instant = document.querySelector('input[type="time"]').value, trigger = document.querySelector('.timezone-trigger');
-  assert.match(trigger.textContent, /东京.*UTC\+9/);
+  // New sessions follow the position's own zone ("当地时区").
+  assert.match(trigger.textContent, /当地.*东京.*UTC\+9/);
   await settle(() => trigger.click());
   assert.equal(trigger.getAttribute('aria-expanded'), 'true');
   const groups = [...document.querySelectorAll('.timezone-group')].map((g) => g.textContent);
   assert.deepEqual(groups, ['常用'], 'only the common group is labelled; all zones follow a divider');
   assert.equal(document.querySelectorAll('.timezone-divider').length, 1);
-  assert.equal(document.querySelector('.timezone-list [aria-selected="true"]').dataset.zone, 'Asia/Tokyo');
+  const options = [...document.querySelectorAll('.timezone-list [role="option"]')];
+  assert.equal(options[0].dataset.zone, 'local');
+  assert.match(options[0].textContent, /当地时区.*Asia\/Tokyo/);
+  assert.deepEqual([...document.querySelectorAll('.timezone-list [aria-selected="true"]')].map((o) => o.dataset.zone), ['local']);
+  assert.ok(options.some((o) => o.dataset.zone === 'Asia/Tokyo' && o.getAttribute('aria-selected') === 'false'));
   assert.ok(document.querySelectorAll('.timezone-list [role="option"]').length > 300);
   const search = document.querySelector('[aria-label="搜索时区"]');
   await settle(() => setControl(search, '悉尼'));
@@ -2007,6 +2016,7 @@ test('时区选择：常用分组标出当前时区，中文城市搜索与键�
   await settle(() => keydown(search, 'Enter'));
   assert.equal(trigger.getAttribute('aria-expanded'), 'false'); assert.equal(document.activeElement, trigger);
   assert.match(trigger.textContent, /悉尼.*UTC\+11/, 'Sydney is on daylight time in November');
+  assert.doesNotMatch(trigger.textContent, /当地/, 'a chosen zone no longer follows the position');
   assert.notEqual(document.querySelector('input[type="time"]').value, instant, 'display time changes with the zone');
   await settle(() => trigger.click());
   await settle(() => setControl(document.querySelector('[aria-label="搜索时区"]'), 'utc-3'));
@@ -2086,34 +2096,82 @@ test('拍摄时间：微调按钮跨午夜，前后一天保留钟点，夏令�
   assert.equal(document.getElementById('time-error'), null);
 });
 
-test('日月时刻按当地日期列出，点击跳到该时刻；极夜无日出时按钮禁用并说明', async t => {
+test('时间轴只标注已开启图层的事件：点击刻度跳转，上一/下一事件逐个移动，夜空图层改为中午到次日中午，极夜说明缺少的日出日落', async t => {
   await workspace(t); await readyTerrain();
   await setShootingDateTime('2026-11-04T12:00');
   const plan = { latitude: value('纬度'), longitude: value('经度'), timeZone: 'Asia/Tokyo', refraction: 'standard', instant: '2026-11-04T03:00:00Z' };
   const expected = Object.fromEntries(dayEvents(plan).map((event) => [event.id, event]));
-  const chip = (id) => document.querySelector(`.time-events [data-event="${id}"]`);
-  assert.deepEqual([...document.querySelectorAll('.time-events button')].map((b) => b.dataset.event), ['dawn', 'sunrise', 'sunset', 'dusk', 'moonrise', 'moonset']);
+  const marker = (id) => document.querySelector(`.time-marker[data-event="${id}"]`);
+  const kinds = () => [...document.querySelectorAll('.time-marker')].map((b) => b.dataset.event);
+  const steps = () => [...document.querySelectorAll('.time-event-step')];
   const local = (instant) => new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).format(new Date(instant));
-  assert.equal(chip('sunset').querySelector('strong').textContent, local(expected.sunset.instant).slice(0, 5));
-  assert.match(chip('sunset').title, /标准折射.*不含地形遮挡/);
-  await settle(() => chip('sunset').click());
+  // Sun and Moon are on by default: their rise and set only, in time order.
+  assert.equal(document.querySelector('.timeline').dataset.mode, 'day');
+  assert.deepEqual(kinds(), ['moonrise', 'sunrise', 'moonset', 'sunset']);
+  assert.equal(marker('sunset').getAttribute('aria-label'), `跳到日落 ${local(expected.sunset.instant).slice(0, 5)}`);
+  assert.match(marker('sunset').title, /标准折射.*不含地形遮挡/);
+  await settle(() => marker('sunset').click());
   assert.equal(document.querySelector('input[type="time"]').value, local(expected.sunset.instant));
-  assert.ok(chip('sunset').classList.contains('is-current'));
-  await settle(() => chip('dawn').click());
-  assert.equal(document.querySelector('input[type="time"]').value, local(expected.dawn.instant));
-  assert.ok(!chip('sunset').classList.contains('is-current'));
-  // Switching refraction changes the rise/set definition, not twilight.
+  assert.ok(marker('sunset').classList.contains('is-current'));
+  assert.equal(steps()[1].disabled, true, 'sunset is the last event of the day');
+  assert.match(steps()[0].getAttribute('aria-label'), /上一事件：月落/);
+  await settle(() => steps()[0].click());
+  assert.equal(document.querySelector('input[type="time"]').value, local(expected.moonset.instant));
+  await settle(() => steps()[1].click());
+  assert.equal(document.querySelector('input[type="time"]').value, local(expected.sunset.instant));
+  // Turning the Moon off drops its markers; a night layer adds the dark span and moves to noon-to-noon.
+  await settle(() => document.querySelector('[aria-label="显示月亮"]').click());
+  assert.deepEqual(kinds(), ['sunrise', 'sunset']);
+  await settle(() => document.querySelector('[aria-label="显示星空"]').click());
+  assert.equal(document.querySelector('.timeline').dataset.mode, 'night');
+  assert.match(document.querySelector('.time-slider').getAttribute('aria-label'), /中午到次日中午/);
+  assert.equal(document.querySelector('input[type="time"]').value, local(expected.sunset.instant), 'the axis changes, not the instant');
+  assert.deepEqual(kinds(), ['sunset', 'dusk', 'dawn', 'sunrise']);
+  assert.equal(marker('dusk').getAttribute('aria-label'), `跳到昏影 ${local(expected.dusk.instant).slice(0, 5)}`);
+  assert.deepEqual([...document.querySelectorAll('.time-slider-ticks span')].map((tick) => tick.textContent), ['12:00', '18:00', '11/5', '06:00', '11:59']);
+  await settle(() => marker('dawn').click());
+  assert.equal(shootingDateTime().slice(0, 10), '2026-11-05');
+  assert.equal(document.querySelector('.timeline').dataset.mode, 'night');
+  assert.deepEqual(kinds(), ['sunset', 'dusk', 'dawn', 'sunrise'], 'early morning stays on the same night');
+  // Refraction changes the rise/set definition, not twilight.
   await settle(() => setControl(document.querySelector('select[aria-label="大气折射模型"]'), 'none'));
-  assert.match(chip('sunrise').title, /无折射/);
-  assert.equal(chip('dawn').querySelector('strong').textContent, local(expected.dawn.instant).slice(0, 5));
-  // Polar night: no sunrise on the local date.
+  assert.match(marker('sunrise').title, /无折射/);
+  assert.match(marker('dusk').title, /地平下 18°/);
+  // Polar night: the enabled Sun layer has no rise or set in the span.
   await settle(() => setControl(input('纬度'), 78.2232));
   await settle(() => setControl(input('经度'), 15.6267));
   await chooseTimeZone('Arctic/Longyearbyen', 'Longyearbyen');
   await setShootingDateTime('2026-12-15T12:00');
-  assert.equal(chip('sunrise').disabled, true);
-  assert.equal(chip('sunrise').querySelector('strong').textContent, '—');
-  assert.equal(chip('sunrise').getAttribute('aria-label'), '当地日期内没有日出');
+  assert.equal(marker('sunrise'), null);
+  assert.match(document.querySelector('.time-missing').textContent, /本时段无：日出、日落/);
+});
+
+test('当地时区随机位变化并提示一次，拍摄时刻不变；改选固定时区后不再跟随', async t => {
+  await workspace(t); await readyTerrain();
+  const trigger = document.querySelector('.timezone-trigger');
+  const before = shootingDateTime();
+  const latitude = input('纬度');
+  const paste = (text) => {
+    const event = new dom.window.Event('paste', { bubbles: true, cancelable: true });
+    event.clipboardData = { getData: () => text };
+    latitude.dispatchEvent(event);
+  };
+  await settle(() => paste('48.8584, 2.2945'));
+  assert.match(trigger.textContent, /当地.*巴黎.*UTC\+1/);
+  assert.match(document.querySelector('.time-zone-notice').textContent, /时区随机位改为巴黎（UTC\+1），拍摄时刻不变/);
+  // 2026-11-04T08:00Z: 17:00 in Tokyo is 09:00 in Paris.
+  assert.equal(before.slice(11), '17:00');
+  assert.equal(shootingDateTime(), '2026-11-04T09:00');
+  await chooseTimeZone('Asia/Tokyo');
+  assert.doesNotMatch(trigger.textContent, /当地/);
+  await settle(() => paste('40.7128, -74.006'));
+  assert.match(trigger.textContent, /东京/);
+  assert.equal(shootingDateTime(), '2026-11-04T17:00');
+  // Choosing "当地时区" again follows New York.
+  await settle(() => trigger.click());
+  await settle(() => document.querySelector('.timezone-list [data-zone="local"]').click());
+  assert.match(trigger.textContent, /当地.*纽约.*UTC[−-]5/);
+  assert.equal(shootingDateTime(), '2026-11-04T03:00');
 });
 
 test('离地高度滑条按对数刻度同步数值框，方向键按 0.1 m / 1 m 微调', async t => {

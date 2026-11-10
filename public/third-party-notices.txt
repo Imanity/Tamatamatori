@@ -26,6 +26,17 @@ data index and source links are provided in About and light-pollution.json.
 Values model historical artificial zenith luminance. They are not real-time
 measurements, Bortle classes, directional light domes or exposure predictions.
 
+Local time zone lookup: @photostructure/tz-lookup 11.7.0
+https://github.com/photostructure/tz-lookup
+CC0 1.0 Universal (public domain dedication).
+Its lossy zone grid is generated from timezone-boundary-builder by Evan Siroky,
+https://github.com/evansiroky/timezone-boundary-builder
+published under the Open Database License (ODbL) 1.0,
+https://opendatacommons.org/licenses/odbl/
+based on data (c) OpenStreetMap contributors.
+Results may be wrong near borders and offshore; they only set the displayed
+local clock. Shooting instants are stored in UTC.
+
 Space-station GP data provided by CelesTrak / T.S. Kelso
 https://celestrak.org/NORAD/documentation/gp-data-formats.php
 https://celestrak.org/usage-policy.php
