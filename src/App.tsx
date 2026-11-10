@@ -9,14 +9,14 @@ import { CameraBar } from "./components/CameraBar";
 import { PreviewPanel } from "./components/ScenePanels";
 import { MapPanel } from "./components/MapPanel";
 import { About } from "./components/About";
-import { EnvironmentSettings } from "./components/EnvironmentSettings";
+import type { LayerGroupId } from "./components/layers";
 import type { MapViewport } from "./domain/map";
 import type { InfoGroupId, InfoNavigation } from "./components/InfoGroup";
 import { ShotMenu, ShotToast } from "./components/ShotMenu";
 import { browserStorage, readSession, writeSession } from "./domain/shot-library";
 
 type PanelId = "map" | "preview";
-type MobileTab = "map" | "camera" | "layers" | "info";
+type MobileTab = "map" | "camera" | "layers";
 const panelInfo: Record<
   PanelId,
   { title: string; icon: IconName; tag: string }
@@ -28,11 +28,20 @@ const mobileTabs: { id: MobileTab; title: string; icon: IconName }[] = [
   { id: "map", title: "地图", icon: "map" },
   { id: "camera", title: "相机", icon: "camera" },
   { id: "layers", title: "图层", icon: "layers" },
-  { id: "info", title: "信息", icon: "info" },
 ];
 // The map's share of the workspace width, in percent; the preview gets the rest.
 const defaultMapShare = 36;
 const mapShareRange = { min: 25, max: 70 };
+const detailKey = "tamatamatori.showDetails";
+// A viewer preference, not part of a shot: unavailable storage just means off.
+function readDetails() {
+  try {
+    return window.localStorage.getItem(detailKey) === "1";
+  } catch {
+    return false;
+  }
+}
+
 // Must match the narrow-layout media queries in styles.css.
 const narrowQuery = "(max-width: 1099px)";
 
@@ -51,17 +60,6 @@ function useNarrowLayout() {
   }, []);
   return narrow;
 }
-const skyLayers = [
-  { id: "buildings", name: "建筑", icon: "building" },
-  { id: "sun", name: "太阳", icon: "sun" },
-  { id: "moon", name: "月亮", icon: "moon" },
-  { id: "stars", name: "星空", icon: "stars" },
-  { id: "milkyWay", name: "银河", icon: "orbit" },
-  { id: "deepSky", name: "深空天体", icon: "orbit" },
-  { id: "stations", name: "空间站", icon: "satellite" },
-  { id: "meteors", name: "流星雨", icon: "meteor" },
-  { id: "comets", name: "彗星", icon: "comet" },
-] as const;
 
 function Divider({
   axis,
@@ -200,6 +198,16 @@ export default function App() {
   // DEM elevation under the camera, reported by the preview for the position bar.
   const [ground, setGround] = useState<number | null>(null);
   const narrow = useNarrowLayout();
+  const [showDetails, setShowDetails] = useState(readDetails);
+  const toggleDetails = () =>
+    setShowDetails((current) => {
+      try {
+        window.localStorage.setItem(detailKey, current ? "0" : "1");
+      } catch {
+        // Kept for this page only.
+      }
+      return !current;
+    });
   const [infoHost, setInfoHost] = useState<HTMLDivElement | null>(null);
   const [infoQuery, setInfoQuery] = useState("");
   const [infoNavigation, setInfoNavigation] = useState<InfoNavigation | null>(
@@ -264,11 +272,10 @@ export default function App() {
     });
     replacePlan(next, id);
   };
-  const toggleLayer = (id: (typeof skyLayers)[number]["id"]) => {
+  const toggleLayer = (id: LayerGroupId) => {
     // The information group follows its layer: enabling expands and reveals
-    // it without moving focus, disabling collapses it. On narrow screens the
-    // layer tab stays open; the group is revealed when the information tab is
-    // next shown.
+    // it without moving focus (the switch sits in the group's heading),
+    // disabling collapses it.
     const enabling = !plan.layers[id];
     if (enabling) {
       setInfoCollapsed(false);
@@ -337,29 +344,6 @@ export default function App() {
         className={`app-layout ${resizing ? "is-resizing" : ""}`}
         data-mobile-tab={mobileTab}
       >
-        <aside className="sidebar" aria-label="图层侧栏">
-          <div className="sidebar-intro">
-            <h2>
-              <Icon name="layers" size={17} /> 图层
-            </h2>
-          </div>
-          <div className="layer-list">
-            {skyLayers.map(({ id, name, icon }) => (
-              <label className="layer-row layer-toggle" key={id}>
-                <Icon name={icon} size={19} />
-                <span>{name}</span>
-                <input
-                  type="checkbox"
-                  role="switch"
-                  aria-label={`显示${name}`}
-                  checked={plan.layers[id]}
-                  onChange={() => toggleLayer(id)}
-                />
-              </label>
-            ))}
-          </div>
-          <EnvironmentSettings plan={plan} update={updatePlan} />
-        </aside>
         <div
           className="workgrid"
           ref={workspaceRef}
@@ -403,6 +387,7 @@ export default function App() {
               generation={planGeneration}
               onGroundChange={setGround}
               showCameraBar={!narrow}
+              onToggleLayer={toggleLayer}
             />
           </Panel>
         </div>
@@ -428,7 +413,7 @@ export default function App() {
         {infoCollapsed && (
           <button
             className="info-reopen icon-button"
-            aria-label="展开拍摄信息"
+            aria-label="展开图层与信息"
             onClick={() => setInfoCollapsed(false)}
           >
             <Icon name="info" size={17} />
@@ -436,7 +421,7 @@ export default function App() {
         )}
         <aside
           className={`info-sidebar ${infoCollapsed ? "is-collapsed" : ""}`}
-          aria-label="拍摄信息"
+          aria-label="图层与信息"
           onKeyDown={(event) => {
             if (event.key === "Escape") setInfoCollapsed(true);
           }}
@@ -444,9 +429,19 @@ export default function App() {
           <div className="info-search" role="search" aria-label="拍摄目标搜索">
             <div className="info-search-tools">
               <label htmlFor="target-search">搜索目标</label>
+              <label className="detail-toggle layer-toggle">
+                <span>详细数值</span>
+                <input
+                  type="checkbox"
+                  role="switch"
+                  aria-label="显示详细数值"
+                  checked={showDetails}
+                  onChange={toggleDetails}
+                />
+              </label>
               <button
                 className="icon-button info-close-desktop"
-                aria-label="收起拍摄信息"
+                aria-label="收起图层与信息"
                 onClick={() => setInfoCollapsed(true)}
               >
                 <Icon name="arrow" size={17} />
@@ -478,7 +473,10 @@ export default function App() {
               )}
             </div>
           </div>
-          <div className="info-body" ref={setInfoHost} />
+          <div
+            className={`info-body ${showDetails ? "show-details" : ""}`}
+            ref={setInfoHost}
+          />
         </aside>
       </main>
       <div className="sr-only" aria-live="polite">

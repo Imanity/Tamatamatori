@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Detail, where } from "./readout";
 import type { ShootingPlan } from "../domain/plan";
 import {
   emptySkyVisibility,
@@ -230,26 +231,8 @@ export function StarReadout({
   const stars = !section || section === "stars";
   const galaxy = !section || section === "milkyWay";
   const deep = !section || section === "deepSky";
-  if (
-    !plan.layers.stars &&
-    !plan.layers.milkyWay &&
-    !plan.layers.constellations &&
-    !plan.layers.deepSky
-  )
-    return null;
-  return (
-    <div className="sky-readout" aria-label="星空与银河状态">
-      {scene.error && (
-        <p role="status" className="celestial-error">
-          {scene.error}
-        </p>
-      )}
-      {deep && plan.layers.deepSky && (
-        <>
-          <details open>
-            <summary>深空目标与朝向</summary>
-            {scene.deep.map(
-              ({ point, entry, state, occlusion, partialFrame, opacity, cloudHidden, resource }) => (
+  const deepRows = (targets: Scene["deep"]) =>
+    targets.map(({ point, entry, state, occlusion, partialFrame, opacity, cloudHidden, resource }) => (
                 <div
                   className="celestial-row"
                   key={point.id}
@@ -271,9 +254,12 @@ export function StarReadout({
                       : state}
                   </span>
                   <span>
-                    {point.azimuth.toFixed(1)}° / 几何{" "}
-                    {point.elevation.toFixed(1)}° · 目录 {entry.majorArcmin}′ ×{" "}
-                    {entry.minorArcmin}′
+                    {where(point.azimuth, point.elevation)}
+                    <Detail>
+                      {point.azimuth.toFixed(1)}° / 几何{" "}
+                      {point.elevation.toFixed(1)}° · 目录 {entry.majorArcmin}′ ×{" "}
+                      {entry.minorArcmin}′
+                    </Detail>
                   </span>
                   <button
                     aria-label={`朝向${point.name}`}
@@ -291,7 +277,31 @@ export function StarReadout({
                     朝向
                   </button>
                 </div>
-              ),
+    ));
+  if (
+    !plan.layers.stars &&
+    !plan.layers.milkyWay &&
+    !plan.layers.constellations &&
+    !plan.layers.deepSky
+  )
+    return null;
+  return (
+    <div className="sky-readout" aria-label="星空与银河状态">
+      {scene.error && (
+        <p role="status" className="celestial-error">
+          {scene.error}
+        </p>
+      )}
+      {deep && plan.layers.deepSky && (
+        <>
+          <details open>
+            <summary>深空目标与朝向</summary>
+            {deepRows(scene.deep.filter((target) => target.state !== "地平线下"))}
+            {scene.deep.some((target) => target.state === "地平线下") && (
+              <details className="sky-below">
+                <summary>另有 {scene.deep.filter((target) => target.state === "地平线下").length} 个在地平线下</summary>
+                {deepRows(scene.deep.filter((target) => target.state === "地平线下"))}
+              </details>
             )}
           </details>
         </>
@@ -317,7 +327,8 @@ export function StarReadout({
                       : occlusionText(occlusion,plan)}
               </span>
               <span>
-                {point.azimuth.toFixed(1)}° / 几何 {point.elevation.toFixed(1)}°
+                {where(point.azimuth, point.elevation)}
+                <Detail>{point.azimuth.toFixed(1)}° / 几何 {point.elevation.toFixed(1)}°</Detail>
               </span>
               <button
                 aria-label={`朝向${point.name}`}
@@ -352,7 +363,8 @@ export function StarReadout({
                 {state === "画面内" ? occlusionText(occlusion,plan) : state}
               </span>
               <span>
-                {point.azimuth.toFixed(1)}° / 几何 {point.elevation.toFixed(1)}°
+                {where(point.azimuth, point.elevation)}
+                <Detail>{point.azimuth.toFixed(1)}° / 几何 {point.elevation.toFixed(1)}°</Detail>
               </span>
               <button
                 aria-label={`朝向${point.name}`}

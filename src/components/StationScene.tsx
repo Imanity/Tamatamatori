@@ -1,4 +1,5 @@
 import type { ShootingPlan } from "../domain/plan";
+import { where } from "./readout";
 import type { StationScene } from "../domain/stations";
 import type { SkyVisibility } from "../domain/starfield";
 import type { OrbitFeed } from "./useOrbits";
@@ -85,7 +86,8 @@ export function StationReadout({ plan, scene, visibility, feed, query, update }:
             {row.message && <p className="station-warning">{row.message}</p>}
             {point && <>
               <p>{!plan.layers.stations && "图层已关闭 · "}{state}</p>
-              <p>方位 {point.azimuth.toFixed(1)}° · 几何高度 {point.elevation.toFixed(1)}° · 距离 {point.rangeKm.toFixed(0)} km</p>
+              <p>{where(point.azimuth, point.elevation)}</p>
+              <p className="info-detail">方位 {point.azimuth.toFixed(1)}° · 几何高度 {point.elevation.toFixed(1)}° · 距离 {point.rangeKm.toFixed(0)} km</p>
               <p>{point.shadow > 0.99 ? "地影中" : point.shadow > 0.01 ? "地球半影中" : "太阳照明中"}</p>
             </>}
             <button type="button" aria-label={`${action}${row.name}`}

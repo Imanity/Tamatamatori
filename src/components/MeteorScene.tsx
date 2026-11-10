@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Detail, where } from "./readout";
 import { Temporal } from "@js-temporal/polyfill";
 import type { ShootingPlan } from "../domain/plan";
 import { activeShowers, meteorEstimate, meteorModel, meteorSample } from "../domain/meteor-showers";
@@ -107,7 +108,7 @@ export function MeteorReadout({ plan, scene, visibility, update }: {
               <p><strong>整晚画面内约 {count(estimate.expected)} 颗</strong></p>
               <p data-meteor-night>暗夜 {darkRange(estimate.dark, plan.timeZone)} · {hours(estimate.darkHours)} 小时</p>
               {estimate.byShower.length > 0 && <p>{breakdown(estimate.byShower)}</p>}
-              <p className="meteor-basis">
+              <p className="meteor-basis info-detail">
                 亮于约 +{meteorModel.cameraLimit} 等 · 固定机位整晚连拍，按拍摄时刻星空对齐叠加 · 已计月光 · {scene.pollution.note}
                 {estimate.thinning < 1 ? ` · 示意轨迹按 ${Math.round(estimate.thinning * 100)}% 抽样` : ""}
               </p>
@@ -125,11 +126,11 @@ export function MeteorReadout({ plan, scene, visibility, update }: {
           <div key={active.shower.code} className="celestial-row meteor-row" data-meteor-status={active.shower.code}>
             <span className="celestial-name">{shortName(active.shower.name)} <small>{active.shower.code}</small></span>
             <span className="celestial-state">{state.state === "画面内" ? occlusionText(state.occlusion, plan) : state.state}</span>
-            <span className="celestial-coordinates">辐射点 {active.point.azimuth.toFixed(1)}° / 视 {elevation.toFixed(1)}°</span>
+            <span className="celestial-coordinates">辐射点 {where(active.point.azimuth, elevation)}<Detail>辐射点 {active.point.azimuth.toFixed(1)}° / 视 {elevation.toFixed(1)}°</Detail></span>
             <span>
               {active.zhr === null ? "ZHR 不定，不估算"
                 : `ZHR 约 ${count(active.zhr)}${active.shower.zhr !== null && days !== null ? `（峰值 ${active.shower.zhr}，${Math.abs(days) < 0.5 ? "极大前后" : days < 0 ? `极大前 ${Math.round(-days)} 天` : `极大后 ${Math.round(days)} 天`}）` : ""}`}
-              {" · "}{active.shower.velocity}{" "}km/s
+              <Detail>{" · "}{active.shower.velocity}{" "}km/s</Detail>
             </span>
             <button aria-label={`朝向${active.shower.name}辐射点`} disabled={state.state === "地平线下"}
               onClick={() => update({ azimuth: active.point.azimuth, pitch: elevation })}>朝向</button>

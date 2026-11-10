@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Detail, where } from "./readout";
 import type { ShootingPlan } from "../domain/plan";
 import { frameAspectRatio } from "../domain/plan";
 import { bodyPath, pathView, PATH_SEARCH_HOURS } from "../domain/body-paths";
@@ -136,7 +137,7 @@ export function CelestialReadout({ scene, plan, update, bodyId, weather }: {
       <span className="celestial-name">{name(body.id)}</span>
       <span className="celestial-state">{!enabled ? "已关闭" : state === "画面内" ? occlusionText(occlusion,plan) : state}</span>
       {enabled && <>
-        <span className="celestial-coordinates">{body.azimuth.toFixed(1)}° / 视 {visualElevation.toFixed(2)}°（几何 {body.elevation.toFixed(2)}°）</span>
+        <span className="celestial-coordinates">{where(body.azimuth, visualElevation)}<Detail>{body.azimuth.toFixed(1)}° / 视 {visualElevation.toFixed(2)}°（几何 {body.elevation.toFixed(2)}°）</Detail></span>
         {body.id === "moon" && <span>{moonPhaseLabel(body.phaseAngle)} · 亮面 {(body.illuminatedFraction * 100).toFixed(0)}%</span>}
         {weather && <span>云层透过约 {((1 - cloudOpacity(refractDirection(body.direction, plan.refraction), weatherClouds(weather, plan))) * 100).toFixed(0)}%</span>}
         <button aria-label={`朝向${name(body.id)}`} disabled={state === "地平线下"}

@@ -61,10 +61,10 @@ export function BuildingReadout({ status, retry, plan, update, eyeAltitude, came
             <button type="button" aria-label={`朝向${target.name}`} onClick={() => aim(target, item?.ground)}>朝向</button>
           </div>;
         })}
-        <p className="building-note">精模为无纹理外观，位置与朝向为近似。</p>
+        <p className="building-note info-detail">精模为无纹理外观，位置与朝向为近似。</p>
       </>}
     </section>}
 
-    {enabled && <p className="building-note">建筑来自 OpenStreetMap，部分地区缺失，高度可能为估算，屋顶简化为平顶。</p>}
+    {enabled && <p className="building-note info-detail">建筑来自 OpenStreetMap，部分地区缺失，高度可能为估算，屋顶简化为平顶。</p>}
   </div>;
 }

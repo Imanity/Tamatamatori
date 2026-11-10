@@ -49,6 +49,10 @@ import { useCometCatalog } from "./useCometCatalog";
 import { NumberField } from "./NumberField";
 import { CameraBar } from "./CameraBar";
 import { Timeline } from "./Timeline";
+import { EnvironmentSettings } from "./EnvironmentSettings";
+import { layerGroups } from "./layers";
+import type { LayerGroupId } from "./layers";
+import { Detail, pollutionLevel } from "./readout";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -61,6 +65,7 @@ export function PreviewPanel({
   generation = 0,
   onGroundChange,
   showCameraBar = true,
+  onToggleLayer,
 }: {
   plan: ShootingPlan;
   update: (patch: Partial<ShootingPlan>) => void;
@@ -73,6 +78,8 @@ export function PreviewPanel({
   onGroundChange?: (ground: number | null) => void;
   /** Narrow screens show the lens controls in their own tab instead. */
   showCameraBar?: boolean;
+  /** Switches a layer from its group heading (with the panel follow-up). */
+  onToggleLayer?: (id: LayerGroupId) => void;
 }) {
   const viewfinder = useRef<HTMLDivElement>(null);
   const latestPlan = useRef(plan);
@@ -200,16 +207,25 @@ export function PreviewPanel({
     element.addEventListener("wheel", wheel, { passive: false });
     return () => element.removeEventListener("wheel", wheel);
   }, [update]);
-  const group = (id: InfoGroupId, title: string, children: ReactNode) => (
-    <InfoGroup
-      id={id}
-      title={title}
-      open={!!expanded[id]}
-      toggle={() => toggleGroup(id)}
-    >
-      {children}
-    </InfoGroup>
-  );
+  const group = (id: InfoGroupId, title: string, children: ReactNode) => {
+    const layer = layerGroups.find((entry) => entry.id === id);
+    return (
+      <InfoGroup
+        id={id}
+        title={title}
+        icon={layer?.icon ?? "light"}
+        open={!!expanded[id]}
+        toggle={() => toggleGroup(id)}
+        layer={layer && onToggleLayer ? {
+          name: layer.name,
+          checked: !!plan.layers[layer.id],
+          onToggle: () => onToggleLayer(layer.id),
+        } : undefined}
+      >
+        {children}
+      </InfoGroup>
+    );
+  };
   const [grid, setGrid] = useState(true);
   const [dragging, setDragging] = useState(false);
   const [visibility, setVisibility] = useState(emptyVisibility);
@@ -278,6 +294,10 @@ export function PreviewPanel({
   const cometFeed = useCometCatalog(!!plan.layers.comets);
   const comets = useCometScene(plan, cometFeed, artificialMcd ?? 0);
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+  // The sky note repeats the lighting phase in daylight ("白昼 · 白昼 · …"); keep its remainder.
+  const phase = daylightPhase(sun.elevation);
+  const skyLabel = starScene.appearance ? skyAppearanceLabel(starScene.appearance) : "";
+  const skyNote = skyLabel.startsWith(phase) ? skyLabel.slice(phase.length).replace(/^ · /, "") : skyLabel;
   return (
     <div className="preview-content">
       <div className="preview-meta">
@@ -570,7 +590,7 @@ export function PreviewPanel({
       {infoHost &&
         createPortal(
           <>
-            {infoQuery.trim() ? (
+            {infoQuery.trim() && (
               <TargetSearchResults
                 plan={plan}
                 view={view}
@@ -582,15 +602,76 @@ export function PreviewPanel({
                 visibility={visibility}
                 update={update}
               />
-            ) : (
-              <>
+            )}
+            {infoQuery.trim() && stationMatches.length > 0 && (
+              <StationReadout
+                plan={plan}
+                scene={stations}
+                visibility={skyVisibility}
+                feed={orbits}
+                query={infoQuery}
+                update={update}
+              />
+            )}
+            {/* Groups stay mounted under a search, keeping their switches and expansion. */}
+            <div className="info-groups" hidden={!!infoQuery.trim()}>
                 {group(
                   "global",
-                  "全局信息",
+                  "光照与环境",
                   <>
                     <section className="info-section">
+                      <p className="preview-lighting" aria-label="预览光照状态">
+                        <strong>{phase}</strong>
+                        {skyNote && (
+                          <span className="sky-appearance" role="status">
+                            {" · "}{skyNote}
+                          </span>
+                        )}
+                        <Detail>太阳高度 {sun.elevation.toFixed(1)}°</Detail>
+                        {sun.elevation < -6 && celestialScene.bodies && (
+                          <span className="preview-moonlight">
+                            {celestialScene.bodies.moon.elevation > 0
+                              ? `月亮在地平线上，亮面 ${(celestialScene.bodies.moon.illuminatedFraction * 100).toFixed(0)}%`
+                              : "月亮在地平线下，无月光"}
+                            <Detail>
+                              月亮亮面 {(celestialScene.bodies.moon.illuminatedFraction * 100).toFixed(0)}% · 高度{" "}
+                              {celestialScene.bodies.moon.elevation.toFixed(1)}°
+                            </Detail>
+                          </span>
+                        )}
+                      </p>
+                    </section>
+                    <section className="info-section environment-section">
+                      <EnvironmentSettings plan={plan} update={update}>
+                        {{
+                          pollution: (
+                            <div className="pollution-readout" aria-label="当地光污染数据">
+                              <p>
+                                {pollution.phase === "off"
+                                  ? "当地光污染已关闭"
+                                  : pollution.phase === "ready"
+                                    ? <>
+                                        {pollutionLevel(artificialMcd!)}
+                                        <Detail>{lightPollutionAtlas.year} 天顶人工亮度 ≈ {artificialMcd!.toFixed(3)} mcd/m²</Detail>
+                                      </>
+                                    : pollution.phase === "loading"
+                                      ? "正在读取当地光污染，效果待应用"
+                                      : pollution.message}
+                              </p>
+                              {pollution.phase === "error" && (
+                                <button type="button" onClick={pollution.retry}>
+                                  重试光污染数据
+                                </button>
+                              )}
+                            </div>
+                          ),
+                          weather: <WeatherReadout feed={weatherFeed} update={update} />,
+                        }}
+                      </EnvironmentSettings>
+                    </section>
+                    <section className="info-section info-detail-section">
                       <h3>取景参数</h3>
-                      <div className="preview-readout">
+                      <div className="preview-readout info-detail">
                         <span>
                           方位 <strong>{view.azimuth.toFixed(1)}°</strong>
                         </span>
@@ -604,49 +685,6 @@ export function PreviewPanel({
                           垂直视场 <strong>{fov.vertical.toFixed(1)}°</strong>
                         </span>
                       </div>
-                    </section>
-                    <section className="info-section">
-                      <h3>光照与天空</h3>
-                      <p className="preview-lighting" aria-label="预览光照状态">
-                        {daylightPhase(sun.elevation)} · 太阳高度{" "}
-                        {sun.elevation.toFixed(1)}°
-                        {sun.elevation < -6 && celestialScene.bodies && (
-                          <span className="preview-moonlight">
-                            月亮亮面{" "}
-                            {(
-                              celestialScene.bodies.moon.illuminatedFraction *
-                              100
-                            ).toFixed(0)}
-                            % · 高度{" "}
-                            {celestialScene.bodies.moon.elevation.toFixed(1)}°
-                          </span>
-                        )}
-                      </p>
-                      {starScene.appearance && (
-                        <p className="sky-appearance" role="status">
-                          天空明暗 · {skyAppearanceLabel(starScene.appearance)}
-                        </p>
-                      )}
-                      <div
-                        className="pollution-readout"
-                        aria-label="当地光污染数据"
-                      >
-                        <p>
-                          {pollution.phase === "off"
-                            ? "当地光污染已关闭"
-                            : pollution.phase === "ready"
-                              ? `${lightPollutionAtlas.year} 天顶人工亮度 ≈ ${artificialMcd!.toFixed(3)} mcd/m²`
-                              : pollution.phase === "loading"
-                                ? "正在读取当地光污染，效果待应用"
-                                : pollution.message}
-                        </p>
-                        {pollution.phase === "error" && (
-                          <button type="button" onClick={pollution.retry}>
-                            重试光污染数据
-                          </button>
-                        )}
-                      </div>
-                      <WeatherReadout feed={weatherFeed} update={update} />
                     </section>
                   </>,
                 )}
@@ -838,18 +876,7 @@ export function PreviewPanel({
                   "彗星",
                   <CometReadout plan={plan} comets={comets} visibility={skyVisibility} update={update} />,
                 )}
-              </>
-            )}
-            {infoQuery.trim() && stationMatches.length > 0 && (
-              <StationReadout
-                plan={plan}
-                scene={stations}
-                visibility={skyVisibility}
-                feed={orbits}
-                query={infoQuery}
-                update={update}
-              />
-            )}
+            </div>
           </>,
           infoHost,
         )}

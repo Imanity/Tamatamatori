@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Detail, where } from "./readout";
 import type { ShootingPlan } from "../domain/plan";
 import { COMET_LIST_LIMIT, cometScene, visibleTailDegrees } from "../domain/comets";
 import type { CometScene as Scene, CometView } from "../domain/comets";
@@ -59,6 +60,13 @@ export function CometLabels({ plan, comets, visibility }: { plan: ShootingPlan; 
   });
 }
 
+/** Brightness in words for photographers; the magnitude itself stays beside it. */
+function brightness(magnitude: number) {
+  if (magnitude <= 4) return "较亮，暗夜或可肉眼看到";
+  if (magnitude <= 7) return "需双筒或长曝光";
+  return "较暗，需长焦长曝光";
+}
+
 export function CometReadout({ plan, comets, visibility, update }: {
   plan: ShootingPlan; comets: CometState; visibility: SkyVisibility; update: (patch: Partial<ShootingPlan>) => void;
 }) {
@@ -101,7 +109,7 @@ export function CometReadout({ plan, comets, visibility, update }: {
           <div key={view.comet.key} className="celestial-row comet-row" data-comet-status={view.comet.id}>
             <span className="celestial-name">{view.comet.name} <small>{designation(view)}</small></span>
             <span className="celestial-state">{state.state === "画面内" ? occlusionText(state.occlusion, plan) : state.state}</span>
-            <span className="celestial-coordinates">{view.point.azimuth.toFixed(1)}° / 视 {elevation.toFixed(1)}° · {magnitudeText(view)}</span>
+            <span className="celestial-coordinates">{where(view.point.azimuth, elevation)} · {magnitudeText(view)}（{brightness(view.magnitude)}）<Detail>{view.point.azimuth.toFixed(1)}° / 视 {elevation.toFixed(1)}°</Detail></span>
             <span data-comet-tail>
               {scene.visibleShare <= 0
                 ? `彗尾不显示 · 暗夜离子尾 ${degreesText(view.ionDegrees)} / 尘埃尾 ${degreesText(view.dustDegrees)}`
@@ -110,7 +118,7 @@ export function CometReadout({ plan, comets, visibility, update }: {
                   {dimmed && ` · 暗夜 ${degreesText(view.ionDegrees)} / ${degreesText(view.dustDegrees)}`}
                 </>}
             </span>
-            <span className="comet-distance">
+            <span className="comet-distance info-detail">
               距日 {view.r.toFixed(2)} au · 距地 {view.delta.toFixed(2)} au · 彗发约 {degreesText(view.comaRadius * 2)}
             </span>
             <button aria-label={`朝向${view.comet.name}`} disabled={state.state === "地平线下"}
@@ -119,7 +127,7 @@ export function CometReadout({ plan, comets, visibility, update }: {
         );
       })}
       {comets.on && fresh && (
-        <p className="comet-basis">
+        <p className="comet-basis info-detail">
           彗尾为暗夜长曝光口径的经验长度，按实际几何投影；亮度参数拟合自 COBS 目视观测，实际亮度常有 1 等以上出入。收录 1990 年起亮于 10 等的回归，目录更新于 <span data-comet-updated>{fresh.updated}</span>，每 3 小时自动检查新彗星。
         </p>
       )}
