@@ -2656,3 +2656,29 @@ test('自定义传感器：从当前尺寸开始，修改宽高即改变视场�
   await settle(() => setControl(sensor, 'custom'));
   assert.equal(value('传感器宽'), 43.8, 'the custom size is remembered while the page is open');
 });
+
+test('预览周围的行固定存在：云量条、黄金/蓝调行与状态行不随数据或图层出现消失，数据提示浮在画面上', async t => {
+  await workspace(t); const map = await readyTerrain();
+  const rows = () => ['.light-periods', '.cloud-strip', '.time-status', '.time-markers'].map((selector) => document.querySelectorAll(`.timeline ${selector}`).length);
+  assert.deepEqual(rows(), [1, 1, 1, 1]);
+  // Without weather the strip is an empty slot; with a forecast it is painted.
+  assert.equal(document.querySelector('.cloud-strip').classList.contains('has-clouds'), false);
+  await settle(() => document.querySelector('[aria-label="天气效果"]').click());
+  await waitUntil(() => document.querySelector('.cloud-strip.has-clouds'));
+  // Switching the model clears the forecast for a moment; the slot stays.
+  weatherLoader = () => new Promise(() => {});
+  await settle(() => setControl(document.querySelector('[aria-label="天气预测模型"]'), 'gfs_seamless'));
+  assert.equal(document.querySelector('.cloud-strip.has-clouds'), null);
+  assert.deepEqual(rows(), [1, 1, 1, 1]);
+  // The Sun layer off leaves the golden/blue row empty but in place.
+  await settle(() => document.querySelector('[aria-label="显示太阳"]').click());
+  assert.equal(document.querySelectorAll('.light-period').length, 0);
+  assert.deepEqual(rows(), [1, 1, 1, 1]);
+  // Light-pollution and weather alerts sit over the frame, not above it.
+  pollutionResponse = async () => { throw new Error('测试光污染失败'); };
+  await settle(() => document.querySelector('[aria-label="当地光污染"]').click());
+  await waitUntil(() => document.querySelector('.pollution-status'));
+  assert.ok(document.querySelector('.pollution-status').closest('.viewfinder-wrap .preview-alerts'));
+  assert.equal(document.querySelector('.preview-content > .pollution-status, .preview-content > .weather-status'), null);
+  assert.equal(terrainMap(), map);
+});

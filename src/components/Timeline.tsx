@@ -285,10 +285,15 @@ export function Timeline({
           instant={plan.instant}
           follow={!!plan.followLocalZone}
           localZone={localZone}
-          onChange={(zone) => update({ timeZone: zone, followLocalZone: false })}
+          onChange={(zone) => {
+            // A zone chosen by hand makes the "followed the position" note obsolete.
+            setZoneNotice("");
+            update({ timeZone: zone, followLocalZone: false });
+          }}
           onFollow={() => {
             if (!localZone) return;
             followed.current = localZone;
+            setZoneNotice("");
             update({ timeZone: localZone, followLocalZone: true });
           }}
         />
@@ -310,8 +315,9 @@ export function Timeline({
             </button>
           ))}
         </div>
-        {periods.length > 0 && (
-          <div className="light-periods" role="group" aria-label="黄金时刻与蓝调时刻">
+        {/* Rows below keep their height whether or not they have content, so the
+            preview above never resizes when data arrives or a layer changes. */}
+        <div className="light-periods" role="group" aria-label="黄金时刻与蓝调时刻" aria-hidden={!periods.length || undefined}>
             {periods.map((period) => {
               const from = position(period.from), to = Date.parse(period.to) >= Date.parse(axis.end) ? 1 : position(period.to);
               const range = `${clock(period.from)}–${clock(period.to)}`;
@@ -330,8 +336,7 @@ export function Timeline({
                 </button>
               );
             })}
-          </div>
-        )}
+        </div>
         <span className="time-track">
           <span
             className="time-band"
@@ -355,9 +360,12 @@ export function Timeline({
             }
           />
         </span>
-        {clouds && (
-          <span className="cloud-strip" aria-hidden="true" title="逐小时总云量（Open-Meteo 预报），越深云越多" style={{ background: clouds }} />
-        )}
+        <span
+          className={`cloud-strip ${clouds ? "has-clouds" : ""}`}
+          aria-hidden="true"
+          title={clouds ? "逐小时总云量（Open-Meteo 预报），越深云越多" : undefined}
+          style={clouds ? { background: clouds } : undefined}
+        />
         <span className="time-slider-ticks" aria-hidden="true">
           {ticks.map(({ label, minute: at, strong }) => (
             <span key={label} className={strong ? "is-date" : undefined} style={{ left: `${(at / 1439) * 100}%` }}>
@@ -366,9 +374,6 @@ export function Timeline({
           ))}
         </span>
       </div>
-      {allMissing.length > 0 && (
-        <p className="time-missing">本时段无：{allMissing.join("、")}</p>
-      )}
       <div className="time-actions" role="group" aria-label="调整拍摄时刻">
         <button
           type="button"
@@ -405,16 +410,23 @@ export function Timeline({
           下一事件 ›
         </button>
       </div>
-      {zoneNotice && (
-        <p className="time-zone-notice" role="status">
-          {zoneNotice}
-        </p>
-      )}
-      {error && (
-        <p className="field-error" id="time-error" role="status">
-          {error}
-        </p>
-      )}
+      {/* One line for the input error, the zone change and missing events, in
+          that order, so none of them pushes the layout. */}
+      <div className="time-status">
+        {error ? (
+          <p className="field-error" id="time-error" role="status" title={error}>
+            {error}
+          </p>
+        ) : zoneNotice ? (
+          <p className="time-zone-notice" role="status" title={zoneNotice}>
+            {zoneNotice}
+          </p>
+        ) : allMissing.length > 0 ? (
+          <p className="time-missing" title={`本时段无：${allMissing.join("、")}`}>
+            本时段无：{allMissing.join("、")}
+          </p>
+        ) : null}
+      </div>
     </div>
   );
 }

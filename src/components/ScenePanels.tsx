@@ -261,7 +261,7 @@ export function PreviewPanel({
                 : "未改机 · 近似参考"}
             </span>
           )}
-          {meteorNote && <span className="meteor-fact" data-meteor-fact>{meteorNote}</span>}
+          {meteorNote && <span className="meteor-fact" data-meteor-fact title={meteorNote}>{meteorNote}</span>}
           {terrainInfo.adjusted && (
             <span className="camera-adjustment" role="status">
               引擎避让 · 实际离地 ≈ {terrainInfo.actualHeight?.toFixed(2)} m ·
@@ -281,30 +281,33 @@ export function PreviewPanel({
           </button>
         </div>
       </div>
-      {plan.lightPollution &&
-        (pollution.phase === "error" || pollution.phase === "unavailable") && (
-          <div
-            className={`pollution-status pollution-${pollution.phase}`}
-            role="status"
-          >
-            {`光污染未应用 · ${pollution.message}`}
-            {pollution.phase === "error" && (
-              <button type="button" onClick={pollution.retry}>
-                重试光污染
-              </button>
-            )}
-          </div>
-        )}
-      {["error", "outside", "missing", "stale"].includes(weatherFeed.phase) && (
-        <div className="weather-status" role="status">
-          天气未应用 · {weatherMessage(weatherFeed)}
-          <WeatherActions feed={weatherFeed} update={update} />
-        </div>
-      )}
       <div
         className="viewfinder-wrap"
         style={{ "--frame-ratio": frameAspectRatio(plan) } as CSSProperties}
       >
+        {/* Data alerts float over the frame so they never resize it. */}
+        <div className="preview-alerts">
+        {plan.lightPollution &&
+          (pollution.phase === "error" || pollution.phase === "unavailable") && (
+            <div
+              className={`pollution-status pollution-${pollution.phase}`}
+              role="status"
+            >
+              {`光污染未应用 · ${pollution.message}`}
+              {pollution.phase === "error" && (
+                <button type="button" onClick={pollution.retry}>
+                  重试光污染
+                </button>
+              )}
+            </div>
+          )}
+        {["error", "outside", "missing", "stale"].includes(weatherFeed.phase) && (
+          <div className="weather-status" role="status">
+            天气未应用 · {weatherMessage(weatherFeed)}
+            <WeatherActions feed={weatherFeed} update={update} />
+          </div>
+        )}
+        </div>
         <div
           className={`viewfinder ${dragging ? "is-dragging" : ""}`}
           ref={viewfinder}
