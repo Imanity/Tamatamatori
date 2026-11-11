@@ -32,6 +32,8 @@ const layerNames: Record<keyof Shot["layers"], string> = {
   meteors: "流星雨",
   meteorDensity: "流星密度",
   comets: "彗星",
+  tides: "潮汐",
+  aurora: "极光",
 };
 
 const coordinates = (p: { latitude: number; longitude: number }) =>

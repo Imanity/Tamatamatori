@@ -45,6 +45,10 @@ import { BuildingReadout } from "./BuildingReadout";
 import { MeteorLabels, MeteorReadout, meteorFact, useMeteorScene } from "./MeteorScene";
 import { CometLabels, CometReadout, useCometScene } from "./CometScene";
 import { LunarEclipseReadout, SolarEclipseReadout, eclipseFact, moonInUmbra, useEclipses } from "./EclipseReadout";
+import { TideReadout, tideFact } from "./TideScene";
+import type { TideFeed } from "./TideScene";
+import { AuroraReadout, auroraFact } from "./AuroraScene";
+import type { AuroraFeed } from "./AuroraScene";
 import { useCometCatalog } from "./useCometCatalog";
 import { CameraBar } from "./CameraBar";
 import { Timeline } from "./Timeline";
@@ -65,6 +69,8 @@ export function PreviewPanel({
   onGroundChange,
   showCameraBar = true,
   onToggleLayer,
+  tides,
+  aurora,
 }: {
   plan: ShootingPlan;
   update: (patch: Partial<ShootingPlan>) => void;
@@ -79,6 +85,9 @@ export function PreviewPanel({
   showCameraBar?: boolean;
   /** Switches a layer from its group heading (with the panel follow-up). */
   onToggleLayer?: (id: LayerGroupId) => void;
+  /** Sea level and aurora feeds, shared with the map. */
+  tides?: TideFeed;
+  aurora?: AuroraFeed;
 }) {
   const viewfinder = useRef<HTMLDivElement>(null);
   const latestPlan = useRef(plan);
@@ -107,6 +116,8 @@ export function PreviewPanel({
     stations: plan.layers.stations,
     meteors: !!plan.layers.meteors,
     comets: !!plan.layers.comets,
+    aurora: !!plan.layers.aurora,
+    tides: !!plan.layers.tides,
   }));
   const toggleGroup = (id: InfoGroupId) =>
     setExpanded((current) => ({ ...current, [id]: !current[id] }));
@@ -236,6 +247,9 @@ export function PreviewPanel({
   const moonLight = celestialScene.bodies?.moon.brightness ?? 1;
   const umbral = celestialScene.bodies ? moonInUmbra(celestialScene.bodies.moon) : false;
   const eclipseNote = eclipseFact(obscuration, moonLight, umbral);
+  const auroraInputs = useMemo(() => aurora ? { kp: aurora.kp ?? null, outlook: aurora.outlook ?? null } : null, [aurora?.kp, aurora?.outlook]);
+  const tideNote = plan.layers.tides && tides ? tideFact(tides, plan.instant) : "";
+  const auroraNote = plan.layers.aurora && aurora ? auroraFact(plan, aurora) : "";
   const pollution = useLightPollution(plan);
   const artificialMcd =
     pollution.phase === "ready" ? pollution.sample?.artificialMcd : undefined;
@@ -268,6 +282,8 @@ export function PreviewPanel({
             </span>
           )}
           {eclipseNote && <span className="eclipse-fact" data-eclipse-fact title={eclipseNote}>{eclipseNote}</span>}
+          {auroraNote && <span className="aurora-fact" data-aurora-fact title={auroraNote}>{auroraNote}</span>}
+          {tideNote && <span className="tide-fact" data-tide-fact title={tideNote}>{tideNote}</span>}
           {meteorNote && <span className="meteor-fact" data-meteor-fact title={meteorNote}>{meteorNote}</span>}
           {terrainInfo.adjusted && (
             <span className="camera-adjustment" role="status">
@@ -521,6 +537,8 @@ export function PreviewPanel({
         comets={plan.layers.comets ? cometFeed.catalog : null}
         orbits={plan.layers.stations ? orbits.snapshot : null}
         forecast={plan.weather ? weatherFeed.forecast ?? null : null}
+        tides={plan.layers.tides && tides?.phase === "ready" ? tides.series ?? null : null}
+        aurora={plan.layers.aurora && aurora?.phase === "ready" ? auroraInputs : null}
       />
       {infoHost &&
         createPortal(
@@ -813,6 +831,8 @@ export function PreviewPanel({
                   "彗星",
                   <CometReadout plan={plan} comets={comets} visibility={skyVisibility} update={update} />,
                 )}
+                {group("aurora", "极光", aurora ? <AuroraReadout plan={plan} feed={aurora} /> : null)}
+                {group("tides", "潮汐", tides ? <TideReadout plan={plan} feed={tides} /> : null)}
             </div>
           </>,
           infoHost,

@@ -56,6 +56,10 @@ export interface ShootingPlan {
     meteorDensity?: boolean;
     /** Comets of the catalogue brighter than the list limit at the shooting instant. */
     comets?: boolean;
+    /** Sea level near the camera (Open-Meteo Marine). */
+    tides?: boolean;
+    /** Aurora chances from NOAA SWPC forecasts. */
+    aurora?: boolean;
   };
   refraction: "standard" | "none";
   milkyWayContrast: number;
@@ -93,6 +97,8 @@ export const initialPlan: ShootingPlan = {
     meteors: false,
     meteorDensity: false,
     comets: false,
+    tides: false,
+    aurora: false,
   },
   refraction: "standard",
   milkyWayContrast: 100,

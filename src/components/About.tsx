@@ -130,6 +130,29 @@ export function About() {
             </div>
           </section>
 
+          <section aria-labelledby="about-tides-title">
+            <h3 id="about-tides-title">潮汐</h3>
+            <p>潮位来自 Open-Meteo Marine API 的海平面高度：MeteoFrance SMOC 模型，generated using E.U. Copernicus Marine Service Information。约 8 km 网格、逐小时、预报约 10 天，相对全球平均海平面，不是海图基准面；含天文潮、逆气压与海面高度变化。免密钥免费服务仅限非商业用途。</p>
+            <p>机位常落在陆地格点，因此同时查询周围约 12 km、30 km 两圈，取最近的海洋格点。高低潮由逐小时数值插值；与 NOAA 美国验潮站预报对照，开阔海岸的时刻常早 15—45 分钟，海湾可差 1 小时以上，不可用于航行。预览中的水面不随潮位变化。</p>
+            <div className="about-downloads">
+              <a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noreferrer">Open-Meteo Marine</a>
+              <a href="https://doi.org/10.48670/moi-00016" target="_blank" rel="noreferrer">Copernicus Marine SMOC</a>
+              <a href="https://open-meteo.com/en/terms" target="_blank" rel="noreferrer">服务条件与数据许可</a>
+            </div>
+          </section>
+
+          <section aria-labelledby="about-aurora-title">
+            <h3 id="about-aurora-title">极光</h3>
+            <p>极光预报来自 NOAA 空间天气预报中心（SWPC）：OVATION Prime 临近预报（拍摄时刻接近现在时）、3 小时 Kp 预报与 27 天展望。NOAA 数据可自由使用，本应用与 NOAA 无关联。</p>
+            <p>地磁坐标用 IGRF-14（2025.0）一、二阶系数的偏心偶极近似；极光带赤道侧边界按 Carbary（2005）的 Kp 线性模型，系数取自 MIT 许可的 carbary-auroral-model 转录。能否看到按 200 km 高的极光顶部是否高出地平线 5° 判断，偏向相机长曝光。均为近似，Kp 预报本身超过一天后可靠性较低；不含云量与月光，预览中不画极光。</p>
+            <div className="about-downloads">
+              <a href="https://www.swpc.noaa.gov/products/aurora-30-minute-forecast" target="_blank" rel="noreferrer">SWPC 极光临近预报</a>
+              <a href="https://www.swpc.noaa.gov/products/3-day-forecast" target="_blank" rel="noreferrer">Kp 预报</a>
+              <a href="https://www.ncei.noaa.gov/products/international-geomagnetic-reference-field" target="_blank" rel="noreferrer">IGRF-14</a>
+              <a href="https://doi.org/10.1029/2005SW000162" target="_blank" rel="noreferrer">Carbary 2005</a>
+            </div>
+          </section>
+
           <section aria-labelledby="about-pollution-title">
             <h3 id="about-pollution-title">当地光污染</h3>
             <p>{lightPollutionAtlas.credit}</p>

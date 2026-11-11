@@ -8,6 +8,9 @@ import type { BodyLine } from "../domain/body-lines";
 import { timelineMode, timelineWindow } from "../domain/timeline";
 import { centralEclipseInSpan, centralPath, umbraFootprint, unwrap } from "../domain/eclipses";
 import type { CentralPath } from "../domain/eclipses";
+import { auroraLines, kpAt, ovationApplies, ovationCells } from "../domain/aurora";
+import type { TideFeed } from "./TideScene";
+import type { AuroraFeed } from "./AuroraScene";
 import {
   destination,
   isMapPosition,
@@ -27,6 +30,7 @@ const styleUrl =
 const viewSourceId = "tamatamatori-view";
 const linesSourceId = "tamatamatori-body-lines";
 const eclipseSourceId = "tamatamatori-eclipse";
+const environmentSourceId = "tamatamatori-environment";
 type EclipseMap = { kind: CentralPath["kind"]; path: CentralPath; footprint: [number, number][] | null } | null;
 
 /** Central eclipse band (both edges), its centre line and the umbra at the shooting instant. */
@@ -72,10 +76,14 @@ export function MapPanel({
   plan,
   update,
   viewport,
+  tides,
+  aurora,
 }: {
   plan: ShootingPlan;
   update: (patch: Partial<ShootingPlan>) => void;
   viewport: RefObject<MapViewport>;
+  tides?: TideFeed;
+  aurora?: AuroraFeed;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const instance = useRef<MapLibreMap | null>(null);
@@ -110,7 +118,26 @@ export function MapPanel({
       return { kind: central.kind, path: central, footprint: null };
     }
   }, [central, plan.instant]);
-  const latest = useRef({ plan, update, mode, lines, eclipse });
+  // The sea cell used for tides; the auroral oval edge and view line for the
+  // shooting instant's Kp, and the OVATION nowcast when it applies.
+  const tideCell = layers.tides && tides?.phase === "ready" ? tides.series?.cell ?? null : null;
+  const auroraKp = layers.aurora && aurora?.phase === "ready"
+    ? kpAt(Date.parse(plan.instant), aurora.kp ?? null, aurora.outlook ?? null)?.kp ?? null : null;
+  const nowcast = layers.aurora && aurora?.ovation && ovationApplies(aurora.ovation, Date.parse(plan.instant)) ? aurora.ovation : null;
+  const environment = useMemo<GeoJSON.FeatureCollection>(() => {
+    const features: GeoJSON.Feature[] = [];
+    try {
+      if (nowcast)
+        for (const cell of ovationCells(nowcast))
+          features.push({ type: "Feature", properties: { kind: "aurora-cell", band: cell.band }, geometry: { type: "Polygon", coordinates: [cell.ring] } });
+      if (auroraKp !== null)
+        for (const line of auroraLines(plan.instant, auroraKp))
+          features.push({ type: "Feature", properties: { kind: `aurora-${line.kind}` }, geometry: { type: "LineString", coordinates: line.coordinates } });
+    } catch { /* The panel reports aurora failures. */ }
+    if (tideCell) features.push({ type: "Feature", properties: { kind: "tide-cell" }, geometry: { type: "Point", coordinates: [tideCell.longitude, tideCell.latitude] } });
+    return { type: "FeatureCollection", features };
+  }, [tideCell?.latitude, tideCell?.longitude, auroraKp, nowcast, auroraKp === null ? "" : plan.instant]);
+  const latest = useRef({ plan, update, mode, lines, eclipse, environment });
   const [searchOpen, setSearchOpen] = useState(false);
   const [target, setTarget] = useState<MapTarget | null>(null);
   const [locating, setLocating] = useState(false);
@@ -125,9 +152,9 @@ export function MapPanel({
   const coverage = isMapPosition(plan);
 
   useEffect(() => {
-    latest.current = { plan, update, mode, lines, eclipse };
+    latest.current = { plan, update, mode, lines, eclipse, environment };
     synchronize.current?.(true);
-  }, [plan, update, mode, lines, eclipse]);
+  }, [plan, update, mode, lines, eclipse, environment]);
 
   // A searched place or the device position: shown and flown to; the shot
   // only changes through "设为机位".
@@ -206,6 +233,7 @@ export function MapPanel({
     let geometryKey = "";
     let linesKey = "";
     let drawnEclipse: EclipseMap | undefined;
+    let drawnEnvironment: GeoJSON.FeatureCollection | undefined;
     let geometry = viewGeometry(latest.current.plan, viewport.current.zoom);
     let previousPosition = {
       longitude: latest.current.plan.longitude,
@@ -269,6 +297,11 @@ export function MapPanel({
       if (eclipseSource && latest.current.eclipse !== drawnEclipse) {
         eclipseSource.setData(eclipseGeometry(latest.current.eclipse));
         drawnEclipse = latest.current.eclipse;
+      }
+      const environmentSource = map.getSource(environmentSourceId) as GeoJSONSource | undefined;
+      if (environmentSource && latest.current.environment !== drawnEnvironment) {
+        environmentSource.setData(latest.current.environment);
+        drawnEnvironment = latest.current.environment;
       }
       if (!valid) return;
       const longitude = nearbyLongitude(current.longitude, map.getCenter().lng);
@@ -500,6 +533,29 @@ export function MapPanel({
                 "fill-opacity": 0.2,
                 "fill-outline-color": "#34715a",
               },
+            });
+            // Aurora nowcast, oval edge and view line; the tide cell.
+            map.addSource(environmentSourceId, { type: "geojson", data: latest.current.environment });
+            drawnEnvironment = latest.current.environment;
+            map.addLayer({
+              id: "tamatamatori-aurora-cells", type: "fill", source: environmentSourceId,
+              filter: ["==", ["get", "kind"], "aurora-cell"],
+              paint: { "fill-color": "#2f9e62", "fill-opacity": ["match", ["get", "band"], 3, 0.5, 2, 0.32, 0.16] },
+            });
+            map.addLayer({
+              id: "tamatamatori-aurora-edge", type: "line", source: environmentSourceId,
+              filter: ["==", ["get", "kind"], "aurora-edge"],
+              paint: { "line-color": "#1f8a52", "line-width": 1.8, "line-opacity": 0.85 },
+            });
+            map.addLayer({
+              id: "tamatamatori-aurora-view", type: "line", source: environmentSourceId,
+              filter: ["==", ["get", "kind"], "aurora-view"],
+              paint: { "line-color": "#1f8a52", "line-width": 1.4, "line-opacity": 0.75, "line-dasharray": [4, 3] },
+            });
+            map.addLayer({
+              id: "tamatamatori-tide-cell", type: "circle", source: environmentSourceId,
+              filter: ["==", ["get", "kind"], "tide-cell"],
+              paint: { "circle-radius": 6, "circle-color": "#2f6fae", "circle-opacity": 0.85, "circle-stroke-color": "#ffffff", "circle-stroke-width": 1.5 },
             });
             // Eclipse band under everything else drawn for the shot.
             map.addSource(eclipseSourceId, { type: "geojson", data: eclipseGeometry(latest.current.eclipse) });
@@ -747,7 +803,7 @@ export function MapPanel({
           </p>
         )}
       </div>
-      {(lines.length > 0 || eclipse) && (
+      {(lines.length > 0 || eclipse || auroraKp !== null || tideCell) && (
         <div className="map-legend" aria-label="方位线图例">
           {(["sun", "moon", "core"] as const).filter((body) => lines.some((line) => line.body === body)).map((body) => (
             <span key={body}><i style={{ background: bodyColors[body] }} />{bodyNames[body]}</span>
@@ -756,6 +812,10 @@ export function MapPanel({
           {eclipse && <span data-eclipse-legend title="中心食带：两侧界线之间可见全食或环食，虚线为中心线，深色为拍摄时刻的本影位置。不含月面边缘地形（界线约有 1—3 km 出入）。">
             <i className="map-legend-band" />{eclipse.kind === "total" ? "全食带" : eclipse.kind === "annular" ? "环食带" : "全环食带"}
           </span>}
+          {auroraKp !== null && <span data-aurora-legend title="实线：拍摄时刻 Kp 下极光带的赤道侧边界（Carbary 2005，偏心偶极地磁坐标）；虚线：200 km 高的极光顶部高出地平线 5° 的可见线。绿色块为 OVATION 临近预报的极光概率。均为近似。">
+            <i className="map-legend-aurora" />极光带 · 虚线可见
+          </span>}
+          {tideCell && <span data-tide-legend title="潮位所用的海洋格点（约 8 km）"><i className="map-legend-tide" />潮位格点</span>}
         </div>
       )}
       {target && (

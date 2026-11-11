@@ -8,6 +8,16 @@ MapLibre GL JS 6.16.0 的本地修改还包括：为带有本项目 LOD 回调�
 
 应用对云量进行时间插值，降水按累计区间采样。点位低中高云量用于控制程序云层，云块方位、光学透过、配色与降水粒子属于显示近似。预报抓取时间与有效时段在全局信息中展示，实际预测误差随地区和时效变化。
 
+## 潮位（Open-Meteo Marine · Copernicus Marine）
+
+潮汐图层读取 Open-Meteo Marine API 的 `sea_level_height_msl`：MeteoFrance SMOC 海流与潮汐模型，generated using E.U. Copernicus Marine Service Information（[SMOC](https://doi.org/10.48670/moi-00016)）。约 8 km 网格、逐小时，相对全球平均海平面，不是海图基准面，近岸与海湾精度有限，不可用于航行。Open-Meteo 免密钥免费服务仅限非商业用途。[Marine API](https://open-meteo.com/en/docs/marine-weather-api)、[服务条件](https://open-meteo.com/en/terms)
+
+## 极光（NOAA SWPC）与模型
+
+极光图层读取 NOAA Space Weather Prediction Center 的 OVATION Prime 临近预报、行星 Kp 预报与 27 天展望。美国政府数据可自由使用，按 NOAA 要求注明来源，不表示 NOAA 背书。[SWPC](https://www.swpc.noaa.gov/)
+
+地磁坐标使用 IGRF-14（IAGA，2025.0）的一、二阶高斯系数构造偏心偶极（Fraser-Smith 1987）。极光带赤道侧边界使用 Carbary, J. F. (2005), A Kp-based model of auroral boundaries, Space Weather, 3, S10001, [doi:10.1029/2005SW000162](https://doi.org/10.1029/2005SW000162)；系数取自 [carbary-auroral-model](https://github.com/mmatroskin/carbary_auroral_model) 0.0.1（MIT 许可）的转录，未逐项对照原文表格。
+
 ## World Atlas 2015 光污染
 
 使用 Fabio Falchi、Pierantonio Cinzano、Dan Duriscoe、Christopher C. M. Kyba、Christopher D. Elvidge、Kimberly Baugh、Boris Portnov、Nataliya A. Rybnikova、Riccardo Furgoni / ISTIL / GFZ Data Services 的 World Atlas 2015，发布版本 1.1。数据按 CC BY-NC 4.0 提供，仅限非商业使用。官方 DataCite 元数据记录 2019-11-13 许可变更，压缩包内 2016 README 的旧禁再分发说明按该更新处理。[数据与许可](https://doi.org/10.5880/GFZ.1.4.2016.001)，[许可文本](https://creativecommons.org/licenses/by-nc/4.0/legalcode)

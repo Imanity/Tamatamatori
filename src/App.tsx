@@ -8,6 +8,8 @@ import { PositionBar } from "./components/PositionBar";
 import { CameraBar } from "./components/CameraBar";
 import { PreviewPanel } from "./components/ScenePanels";
 import { MapPanel } from "./components/MapPanel";
+import { useTides } from "./components/TideScene";
+import { useAurora } from "./components/AuroraScene";
 import { About } from "./components/About";
 import type { LayerGroupId } from "./components/layers";
 import type { MapViewport } from "./domain/map";
@@ -272,6 +274,9 @@ export default function App() {
     });
     replacePlan(next, id);
   };
+  // Shared by the panel, the timeline and the map.
+  const tides = useTides(plan);
+  const aurora = useAurora(plan);
   const toggleLayer = (id: LayerGroupId) => {
     // The information group follows its layer: enabling expands and reveals
     // it in place without moving focus or scrolling (the switch sits in the
@@ -358,7 +363,7 @@ export default function App() {
         >
           <Panel id="map" onSwap={swapPanels}>
             <div className="map-stack">
-              <MapPanel plan={plan} update={updatePlan} viewport={mapViewport} />
+              <MapPanel plan={plan} update={updatePlan} viewport={mapViewport} tides={tides} aurora={aurora} />
               <PositionBar
                 key={planGeneration}
                 plan={plan}
@@ -389,6 +394,8 @@ export default function App() {
               onGroundChange={setGround}
               showCameraBar={!narrow}
               onToggleLayer={toggleLayer}
+              tides={tides}
+              aurora={aurora}
             />
           </Panel>
         </div>

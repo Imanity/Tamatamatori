@@ -358,6 +358,11 @@ before(async () => {
           if (id.replaceAll("\\", "/").endsWith("/src/preview/weather.ts"))
             return "export const loadWeather = (...args) => globalThis.__testWeatherLoader(...args);\n" +
               "export const loadWeatherSource = (...args) => (globalThis.__testWeatherSourceLoader ?? (() => Promise.reject(new Error('no source'))))(...args);";
+          if (id.replaceAll("\\", "/").endsWith("/src/preview/tides.ts"))
+            return "export const loadTides = (...args) => (globalThis.__testTideLoader ?? (() => Promise.reject(new Error('no tides'))))(...args);";
+          if (id.replaceAll("\\", "/").endsWith("/src/preview/aurora.ts"))
+            return "export const loadKp = (...args) => (globalThis.__testKpLoader ?? (() => Promise.reject(new Error('no kp'))))(...args);\n" +
+              "export const loadOvation = (...args) => (globalThis.__testOvationLoader ?? (() => Promise.reject(new Error('no ovation'))))(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/geocode.ts"))
             return "export const searchPlaces = (...args) => globalThis.__testPlaceSearch(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/elevation.ts"))
@@ -1503,16 +1508,16 @@ test('精简工作区：没有左栏，图层开关位于分组标题，光照�
   for (const selector of ['.workspace-heading', '.workspace-footer', '.base-layer', '.sidebar-bottom', '.layer-hint', '.map-footer-note', '.viewfinder-label', '.viewfinder-focal', '.terrain-height', '.parameter-note', '.info-header', '.layer-settings', '[aria-label$="设置与信息"]'])
     assert.equal(document.querySelector(selector), null, selector);
   const groups = [...document.querySelectorAll('.info-group h2 button')];
-  assert.deepEqual(groups.map(group => group.id), ['info-global', 'info-buildings', 'info-sun', 'info-moon', 'info-stars', 'info-milkyWay', 'info-deepSky', 'info-stations', 'info-meteors', 'info-comets']);
+  assert.deepEqual(groups.map(group => group.id), ['info-global', 'info-buildings', 'info-sun', 'info-moon', 'info-stars', 'info-milkyWay', 'info-deepSky', 'info-stations', 'info-meteors', 'info-comets', 'info-aurora', 'info-tides']);
   // No left rail: each layer switch sits in its group's heading row.
   assert.equal(document.querySelector('aside.sidebar'), null);
-  for (const [id, name] of [['buildings', '建筑'], ['sun', '太阳'], ['moon', '月亮'], ['stars', '星空'], ['milkyWay', '银河'], ['deepSky', '深空天体'], ['stations', '空间站'], ['meteors', '流星雨'], ['comets', '彗星']])
+  for (const [id, name] of [['buildings', '建筑'], ['sun', '太阳'], ['moon', '月亮'], ['stars', '星空'], ['milkyWay', '银河'], ['deepSky', '深空天体'], ['stations', '空间站'], ['meteors', '流星雨'], ['comets', '彗星'], ['aurora', '极光'], ['tides', '潮汐']])
     assert.ok(document.querySelector(`[aria-label="显示${name}"]`).closest(`.info-group[data-info-group="${id}"] .info-group-header`), id);
   assert.equal(document.querySelector('.info-group[data-info-group="global"] .info-group-switch'), null);
   assert.equal(document.querySelector('#info-global').textContent.includes('光照与环境'), true);
   // The first group is open; layer groups start in step with their switches.
   const expanded = () => Object.fromEntries([...document.querySelectorAll('.info-group h2 button')].map(group => [group.id.slice(5), group.getAttribute('aria-expanded') === 'true']));
-  assert.deepEqual(expanded(), { global: true, buildings: false, sun: true, moon: true, stars: false, milkyWay: false, deepSky: false, stations: false, meteors: false, comets: false });
+  assert.deepEqual(expanded(), { global: true, buildings: false, sun: true, moon: true, stars: false, milkyWay: false, deepSky: false, stations: false, meteors: false, comets: false, aurora: false, tides: false });
   assert.equal(document.querySelector('#info-sun-body').hidden, false);
   assert.equal(document.querySelector('#info-sun-body [data-body-status="moon"]'), null);
   const global = document.querySelector('#info-global-body').textContent;
@@ -2738,4 +2743,88 @@ test('月食与下次：月亮分组给出月偏食与接触时刻（不标半�
     .map((marker) => marker.getAttribute('aria-label').replace(/^跳到/, '').split(' ')[0]);
   assert.deepEqual(contacts, ['初亏', '食甚', '复圆']);
   assert.equal(document.querySelector('[data-eclipse-fact]').textContent, '月食 · 地影色为示意');
+});
+
+test('潮汐图层：读取最近海洋格点，右栏给出潮位与涨落，时间轴标高低潮，地图标格点；失败可重试，超出范围与无海洋格点分别说明', async t => {
+  const { map } = await workspace(t); await readyTerrain();
+  const tides = await server.ssrLoadModule('/src/domain/tides.ts');
+  const requests = [];
+  const series = (span) => {
+    const start = Date.parse(span.start) - 3 * 3_600_000;
+    const heights = Array.from({ length: 30 }, (_, index) => Number((0.7 * Math.sin((2 * Math.PI * index) / 12.42)).toFixed(2)));
+    return { fetchedAt: Date.now(), cell: { latitude: 35.29, longitude: 139.46, distance: 4.2 }, start, heights };
+  };
+  installGlobal('__testTideLoader', async (point, span) => { requests.push({ point, span }); return series(span); });
+  t.after(() => { delete globalThis.__testTideLoader; });
+  await setShootingDateTime('2026-11-12T10:00');
+  await settle(() => document.querySelector('[aria-label="显示潮汐"]').click());
+  await waitUntil(() => document.querySelector('.tide-now'));
+  assert.equal(requests.length, 1);
+  assert.match(document.querySelector('.tide-now').textContent, /^[+−]\d\.\d\d m · (涨潮中|落潮中)$/);
+  assert.match(document.querySelector('.tide-readout').textContent, /下次高潮/);
+  assert.match(document.querySelector('.tide-readout').textContent, /潮位格点距机位约 4 km/);
+  assert.ok(document.querySelector('.tide-chart path.tide-curve').getAttribute('d').startsWith('M'));
+  const marks = [...document.querySelectorAll('.time-marker[data-event^="tide-"]')].map((marker) => marker.dataset.event);
+  assert.ok(marks.includes('tide-high') && marks.includes('tide-low'), marks.join());
+  assert.match(document.querySelector('[data-tide-fact]').textContent, /^潮位 [+−]\d\.\d\d m · (涨潮|落潮)$/);
+  await waitUntil(() => map.getSource('tamatamatori-environment')?.data.features.some((feature) => feature.properties.kind === 'tide-cell'));
+  assert.ok(document.querySelector('[data-tide-legend]'));
+  // A failed request offers a retry; out-of-range and no-sea answers are explained, not retried.
+  installGlobal('__testTideLoader', async () => { throw new Error('潮位数据请求失败（500）'); });
+  await setShootingDateTime('2026-11-13T10:00');
+  await waitUntil(() => document.querySelector('.tide-status button'));
+  assert.match(document.querySelector('.tide-status').textContent, /潮位数据请求失败（500）/);
+  installGlobal('__testTideLoader', async () => { throw new tides.TideRangeError(); });
+  await settle(() => document.querySelector('.tide-status button').click());
+  await waitUntil(() => /超出潮位数据范围/.test(document.querySelector('.tide-status')?.textContent ?? ''));
+  assert.equal(document.querySelector('.tide-status button'), null);
+  installGlobal('__testTideLoader', async () => { throw new tides.NoSeaError(); });
+  await setShootingDateTime('2026-11-14T10:00');
+  await waitUntil(() => /没有海洋格点/.test(document.querySelector('.tide-status')?.textContent ?? ''));
+  assert.equal(document.querySelectorAll('.time-marker[data-event^="tide-"]').length, 0);
+  // Off: no markers, no fact, no map cell.
+  await settle(() => document.querySelector('[aria-label="显示潮汐"]').click());
+  assert.equal(document.querySelector('[data-tide-fact]'), null);
+  await waitUntil(() => !map.getSource('tamatamatori-environment').data.features.length);
+});
+
+test('极光图层：按拍摄时刻选 Kp 口径，给出能否看到与方向，时间轴标出可能时段，地图画边界与可见线，并把时间轴改为夜间', async t => {
+  const { map } = await workspace(t); await readyTerrain();
+  const start = Date.UTC(2026, 10, 10, 0);
+  const kp = Array.from({ length: 40 }, (_, index) => ({ start: start + index * 3 * 3_600_000, end: start + (index + 1) * 3 * 3_600_000, kp: 6, kind: 'predicted' }));
+  const outlook = [{ start: Date.UTC(2026, 10, 20), end: Date.UTC(2026, 10, 21), kp: 3, kind: 'outlook' }];
+  installGlobal('__testKpLoader', async () => ({ kp, outlook, fetchedAt: Date.now() }));
+  t.after(() => { delete globalThis.__testKpLoader; });
+  await settle(() => setControl(input('纬度'), 55.95));
+  await settle(() => setControl(input('经度'), -3.19));
+  await chooseTimeZone('Europe/London', 'London');
+  await setShootingDateTime('2026-11-11T23:00');
+  await settle(() => document.querySelector('[aria-label="显示极光"]').click());
+  await waitUntil(() => document.querySelector('.aurora-verdict'));
+  assert.equal(document.querySelector('.timeline').dataset.mode, 'night');
+  assert.match(document.querySelector('.aurora-source').textContent, /Kp 预报/);
+  assert.match(document.querySelector('.aurora-verdict').textContent, /Kp 6 · 可能低悬北方天空，顶部约 \d+°/);
+  assert.match(document.querySelector('.aurora-need').textContent, /本地需 Kp ≥/);
+  assert.equal(document.querySelectorAll('.time-marker[data-event="aurora"]').length, 1);
+  assert.match(document.querySelector('[data-aurora-fact]').textContent, /^极光 Kp 6 · 北方低空$/);
+  await waitUntil(() => map.getSource('tamatamatori-environment')?.data.features.filter((feature) => /^aurora-(edge|view)$/.test(feature.properties.kind)).length === 4);
+  assert.ok(document.querySelector('[data-aurora-legend]'));
+  // Daytime: the verdict stays but the sky is too bright; no preview fact.
+  await setShootingDateTime('2026-11-11T13:00');
+  assert.match(document.querySelector('.aurora-dark').textContent, /天太亮/);
+  assert.equal(document.querySelector('[data-aurora-fact]'), null);
+  // Outlook days and beyond.
+  await setShootingDateTime('2026-11-20T23:00');
+  assert.match(document.querySelector('.aurora-source').textContent, /27 天展望/);
+  await setShootingDateTime('2026-12-30T23:00');
+  assert.match(document.querySelector('.aurora-status').textContent, /超出预报时效/);
+  // Failure and retry.
+  installGlobal('__testKpLoader', async () => { throw new Error('Kp 预报请求失败（503）'); });
+  await settle(() => document.querySelector('[aria-label="显示极光"]').click());
+  await settle(() => document.querySelector('[aria-label="显示极光"]').click());
+  await waitUntil(() => document.querySelector('.aurora-status button'));
+  installGlobal('__testKpLoader', async () => ({ kp, outlook, fetchedAt: Date.now() }));
+  await setShootingDateTime('2026-11-11T23:00');
+  await settle(() => document.querySelector('.aurora-status button').click());
+  await waitUntil(() => document.querySelector('.aurora-verdict'));
 });

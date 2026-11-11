@@ -14,7 +14,7 @@ import { searchTimeZones, zoneOffset, allTimeZones } from "../src/domain/time-zo
 const varied = {
   latitude: -33.8568, longitude: 151.2153, azimuth: 123.456789, pitch: -7.25, cameraHeight: 42.5, focalLength: 600.3,
   sensor: "aps-c", customSensor: null, aspectRatio: "16:9", orientation: "portrait", instant: "2026-12-14T09:31:12Z", timeZone: "Australia/Sydney", followLocalZone: true,
-  layers: { buildings: true, sun: false, sunPath: false, moon: false, moonPath: false, stars: true, milkyWay: true, constellations: true, deepSky: true, stations: true, meteors: true, meteorDensity: true, comets: true },
+  layers: { buildings: true, sun: false, sunPath: false, moon: false, moonPath: false, stars: true, milkyWay: true, constellations: true, deepSky: true, stations: true, meteors: true, meteorDensity: true, comets: true, tides: true, aurora: false },
   refraction: "none", milkyWayContrast: 135, cameraResponse: "ha-modified", lightPollution: true, weather: true, weatherModel: "ecmwf_ifs",
 };
 const minimal = (extra = {}) => ({ format: "tamatamatori.shot", version: 1, position: { latitude: 35, longitude: 139 }, view: { azimuth: 90 }, time: { instant: "2026-11-04T08:00:00Z" }, ...extra });
@@ -75,12 +75,12 @@ test("机位校验一次列出全部问题并带字段路径，未知字段和�
     position: { latitude: 95, longitude: "东经" }, view: { azimuth: 10, pitch: 91, roll: 0 },
     camera: { focalLength: 4, sensor: "medium-format", orientation: "square" },
     time: { instant: "2026-11-04 08:00", timeZone: "Mars/Olympus" },
-    layers: { stars: false, constellations: true, aurora: true }, sky: { milkyWayContrast: 300 },
+    layers: { stars: false, constellations: true, rainbow: true }, sky: { milkyWayContrast: 300 },
     environment: { weather: "yes", weatherModel: "gfs" }, name: "x".repeat(41),
   });
   for (const path of ["azimut：未知字段", "position.latitude：应在 -90～90", "position.longitude：应为数字", "view.pitch：应在", "view.roll：未知字段",
     "camera.focalLength：应在 8～1000", "camera.sensor：应为", "camera.orientation", "time.instant：应为带 Z", "time.timeZone：应为有效的 IANA",
-    "layers.aurora：未知字段", "layers.constellations：需要同时开启", "sky.milkyWayContrast", "environment.weather：应为 true 或 false",
+    "layers.rainbow：未知字段", "layers.constellations：需要同时开启", "sky.milkyWayContrast", "environment.weather：应为 true 或 false",
     "environment.weatherModel", "name：最多 40 字"])
     assert.ok(text.includes(path), `${path}\n${text}`);
   const orphanPaths = errorsOf(minimal({ layers: { sun: false, sunPath: true, moon: false, moonPath: true } }));

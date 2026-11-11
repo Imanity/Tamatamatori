@@ -7,6 +7,10 @@ import { limbAltitude, sunMoonEvents } from "./day-events.ts";
 import { sunPosition } from "./ephemeris.ts";
 import { activeShowers } from "./meteor-showers.ts";
 import { eclipsesInSpan, lunarKindNames, solarKindNames } from "./eclipses.ts";
+import { tideCovers, tideExtremes, tideHeight } from "./tides.ts";
+import type { TideSeries } from "./tides.ts";
+import { auroraChances, kpLabel } from "./aurora.ts";
+import type { KpBlock } from "./aurora.ts";
 import { cometScene } from "./comets.ts";
 import { cometState } from "./comet-orbit.ts";
 import type { CometCatalog } from "./comet-catalog.ts";
@@ -19,7 +23,7 @@ import type { OrbitSnapshot } from "./orbit-data.ts";
  * night stays on one axis (early morning belongs to the previous night).
  */
 export type TimelineMode = "day" | "night";
-export const nightLayers = ["stars", "milkyWay", "deepSky", "meteors", "comets"] as const;
+export const nightLayers = ["stars", "milkyWay", "deepSky", "meteors", "comets", "aurora"] as const;
 
 export function timelineMode(layers: ShootingPlan["layers"]): TimelineMode {
   return nightLayers.some((key) => layers[key]) ? "night" : "day";
@@ -75,7 +79,7 @@ export function sunElevationAcross(plan: Pick<ShootingPlan, "latitude" | "longit
 export type TimelineEventKind =
   | "dawn" | "sunrise" | "sunset" | "dusk" | "moonrise" | "moonset"
   | "core-rise" | "core-set" | "radiant-rise" | "radiant-set" | "comet-rise" | "comet-set" | "station-pass"
-  | "solar-eclipse" | "lunar-eclipse";
+  | "solar-eclipse" | "lunar-eclipse" | "tide-high" | "tide-low" | "aurora";
 
 export interface TimelineEvent {
   key: string;
@@ -214,7 +218,10 @@ const stationLabel = (noradId: number) => (noradId === 25544 ? "ISS" : "天宫")
 export function timelineEvents(
   plan: EventPlan,
   window: TimelineWindow,
-  inputs: { comets?: CometCatalog | null; orbits?: OrbitSnapshot | null } = {},
+  inputs: {
+    comets?: CometCatalog | null; orbits?: OrbitSnapshot | null; tides?: TideSeries | null;
+    aurora?: { kp: KpBlock[] | null; outlook: KpBlock[] | null } | null;
+  } = {},
 ): TimelineEvents {
   const events: TimelineEvent[] = [], missing: string[] = [];
   const start = Temporal.Instant.from(window.start), end = Temporal.Instant.from(window.end);
@@ -305,6 +312,31 @@ export function timelineEvents(
         instant: round(pass.from),
         detail: `${pass.station.name}可见过境，约 ${Math.round((pass.to - pass.from) / 60_000) + 1} 分钟，最高 ${Math.round(pass.peak)}°（高于 10°、受照且太阳低于 −6°）`,
       });
+  }
+  if (plan.layers.tides && inputs.tides) {
+    const from = Date.parse(window.start), to = Date.parse(window.end);
+    const extremes = tideExtremes(inputs.tides, from, to);
+    for (const extreme of extremes)
+      events.push({
+        key: `tide-${extreme.kind}-${extreme.time}`,
+        kind: extreme.kind === "high" ? "tide-high" : "tide-low",
+        label: extreme.kind === "high" ? "高潮" : "低潮",
+        instant: round(extreme.time),
+        detail: `${extreme.kind === "high" ? "高潮" : "低潮"}约 ${tideHeight(extreme.height)}（相对平均海平面，按逐小时预报插值）`,
+      });
+    if (!extremes.length) missing.push(tideCovers(inputs.tides, from, to) ? "高低潮" : "高低潮（潮位预报不覆盖本时段）");
+  }
+  if (plan.layers.aurora && inputs.aurora) {
+    const chances = auroraChances(plan, window, inputs.aurora.kp, inputs.aurora.outlook);
+    for (const chance of chances)
+      events.push({
+        key: `aurora-${chance.from}`,
+        kind: "aurora",
+        label: "极光",
+        instant: round(chance.from),
+        detail: `可能看到极光约 ${Math.round((chance.to - chance.from) / 60_000)} 分钟（Kp ${kpLabel(chance.best.kp)}${chance.kind === "outlook" ? "，27 天展望" : ""}；太阳低于 −12°）`,
+      });
+    if (!chances.length) missing.push("极光机会");
   }
   events.sort((a, b) => Date.parse(a.instant) - Date.parse(b.instant) || a.key.localeCompare(b.key));
   return { events, missing };

@@ -8,6 +8,23 @@ The current free, keyless API service is for noncommercial use only.
 Cloud fractions are interpolated in time. Precipitation follows its accumulation interval.
 Procedural cloud placement, transmission, colouring and precipitation particles are display approximations.
 
+Sea level for tides: Open-Meteo Marine API (sea_level_height_msl).
+MeteoFrance SMOC currents and tides, generated using E.U. Copernicus Marine
+Service Information. https://doi.org/10.48670/moi-00016
+https://open-meteo.com/en/docs/marine-weather-api
+Relative to global mean sea level, not chart datum. Not for navigation.
+The current free, keyless API service is for noncommercial use only.
+
+Aurora: NOAA Space Weather Prediction Center (SWPC) OVATION Prime nowcast,
+planetary Kp forecast and 27-day outlook. https://www.swpc.noaa.gov/
+US government data; attribution to NOAA SWPC; no endorsement implied.
+Geomagnetic coordinates: eccentric dipole (Fraser-Smith 1987) from IGRF-14
+degree 1-2 Gauss coefficients at 2025.0 (IAGA).
+Auroral boundary: Carbary, J. F. (2005), A Kp-based model of auroral
+boundaries, Space Weather, 3, S10001, doi:10.1029/2005SW000162.
+Coefficients as transcribed in carbary-auroral-model 0.0.1 (MIT License),
+https://github.com/mmatroskin/carbary_auroral_model
+
 World Atlas 2015, GFZ Data Services version 1.1
 Fabio Falchi, Pierantonio Cinzano, Dan Duriscoe, Christopher C. M. Kyba,
 Christopher D. Elvidge, Kimberly Baugh, Boris Portnov, Nataliya A. Rybnikova,

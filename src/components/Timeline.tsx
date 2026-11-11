@@ -1,3 +1,5 @@
+import type { TideSeries } from "../domain/tides";
+import type { KpBlock } from "../domain/aurora";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Temporal } from "@js-temporal/polyfill";
 import {
@@ -68,6 +70,8 @@ export function Timeline({
   comets = null,
   orbits = null,
   forecast = null,
+  tides = null,
+  aurora = null,
 }: {
   plan: ShootingPlan;
   update: UpdatePlan;
@@ -75,6 +79,10 @@ export function Timeline({
   orbits?: OrbitSnapshot | null;
   /** Weather forecast while the weather effect is on; drawn as hourly cloud cover. */
   forecast?: WeatherForecast | null;
+  /** Sea level while the tide layer is on; highs and lows become markers. */
+  tides?: TideSeries | null;
+  /** Kp forecast and outlook while the aurora layer is on. */
+  aurora?: { kp: KpBlock[] | null; outlook: KpBlock[] | null } | null;
 }) {
   const dateId = useId();
   const [date, setDate] = useState(
@@ -135,11 +143,11 @@ export function Timeline({
   }, [axis.start, axis.mode, latitude, longitude, timeZone]);
   const { events, missing } = useMemo(() => {
     try {
-      return timelineEvents({ latitude, longitude, refraction, cameraHeight, layers }, axis, { comets, orbits });
+      return timelineEvents({ latitude, longitude, refraction, cameraHeight, layers }, axis, { comets, orbits, tides, aurora });
     } catch {
       return { events: [] as TimelineEvent[], missing: [] as string[] };
     }
-  }, [axis.start, axis.mode, latitude, longitude, refraction, cameraHeight, layerKey, comets, orbits]);
+  }, [axis.start, axis.mode, latitude, longitude, refraction, cameraHeight, layerKey, comets, orbits, tides, aurora]);
   // Golden and blue hour belong to the Sun layer, like its rise and set.
   const periods = useMemo(() => {
     if (!layers.sun) return [] as LightPeriod[];

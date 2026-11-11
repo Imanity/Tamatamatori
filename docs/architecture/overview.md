@@ -66,7 +66,7 @@ P2 首步以 DEM 三维场景替换预览平面，独立获取机位高程，再
 
 P2 时间天空由机位与 UTC 驱动天空、雾、地表配色与坡面阴影。通过现有实例的样式接口更新环境，时间修改不重建预览、不重新取高程或移动相机；算法、误差与范围见[时间天空设计](time-sky.md)。
 
-P3 日月接入 Astronomy Engine 后，太阳位置与基础环境统一算法。日月开关和折射模型属于拍摄计划；圆盘及月相按同一摄影相机的三维针孔模型投影，再由公开的 MapLibre 自定义三维图层共享地形深度。异步 GPU 查询区分当前 DEM 的无遮挡、部分遮挡和完全遮挡，数据更新使旧结果失效；不新增通用图层框架。详见[日月设计](sun-moon.md)与[遮挡和折射设计](occlusion-refraction.md)。日食与月食不新增数据源：本地食况用 Astronomy Engine，中心食带与地影几何在 `src/domain/eclipses.ts`、`src/domain/eclipse-geometry.ts` 自行计算；日月位置带出遮挡比例与等效太阳高度，各明暗模型共用，见[日食与月食](../plan/eclipses.md)。
+P3 日月接入 Astronomy Engine 后，太阳位置与基础环境统一算法。日月开关和折射模型属于拍摄计划；圆盘及月相按同一摄影相机的三维针孔模型投影，再由公开的 MapLibre 自定义三维图层共享地形深度。异步 GPU 查询区分当前 DEM 的无遮挡、部分遮挡和完全遮挡，数据更新使旧结果失效；不新增通用图层框架。详见[日月设计](sun-moon.md)与[遮挡和折射设计](occlusion-refraction.md)。日食与月食不新增数据源：本地食况用 Astronomy Engine，中心食带与地影几何在 `src/domain/eclipses.ts`、`src/domain/eclipse-geometry.ts` 自行计算；日月位置带出遮挡比例与等效太阳高度，各明暗模型共用，见[日食与月食](../plan/eclipses.md)。潮汐读取 Open-Meteo Marine（`src/preview/tides.ts`），极光读取 NOAA SWPC（`src/preview/aurora.ts`），二者都由浏览器直连、无密钥，数据在应用层读取一次，供右栏、时间轴与地图共用；模型与口径见[潮汐](../plan/tides.md)、[极光](../plan/aurora.md)。
 
 近地相机校准已发现引擎避让可能改变实际眼点和俯仰。预览读取公开绘制矩阵和相机角度，按实际姿态同步日月及读数，计划参数独立保留。开发校准器及模型精度边界见[相机校准设计](camera-calibration.md)。
 

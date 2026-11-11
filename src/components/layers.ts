@@ -1,7 +1,7 @@
 import type { IconName } from "./Icon";
 import type { ShootingPlan } from "../domain/plan";
 
-type LayerKey = "buildings" | "sun" | "moon" | "stars" | "milkyWay" | "deepSky" | "stations" | "meteors" | "comets";
+type LayerKey = "buildings" | "sun" | "moon" | "stars" | "milkyWay" | "deepSky" | "stations" | "meteors" | "comets" | "aurora" | "tides";
 
 /** Layers switched from the heading of their information group, in panel order. */
 export const layerGroups: readonly { id: LayerKey & keyof ShootingPlan["layers"]; name: string; icon: IconName }[] = [
@@ -14,5 +14,7 @@ export const layerGroups: readonly { id: LayerKey & keyof ShootingPlan["layers"]
   { id: "stations", name: "空间站", icon: "satellite" },
   { id: "meteors", name: "流星雨", icon: "meteor" },
   { id: "comets", name: "彗星", icon: "comet" },
+  { id: "aurora", name: "极光", icon: "aurora" },
+  { id: "tides", name: "潮汐", icon: "tide" },
 ];
 export type LayerGroupId = LayerKey;
