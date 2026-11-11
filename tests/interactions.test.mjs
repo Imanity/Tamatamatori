@@ -2828,3 +2828,28 @@ test('极光图层：按拍摄时刻选 Kp 口径，给出能否看到与方向�
   await settle(() => document.querySelector('.aurora-status button').click());
   await waitUntil(() => document.querySelector('.aurora-verdict'));
 });
+
+test('Open-Meteo 用量：开启天气或潮汐时在光照与环境中显示本浏览器的近 24 小时用量，接近上限与限流分别提示', async t => {
+  await workspace(t); await readyTerrain();
+  const usage = await server.ssrLoadModule('/src/preview/api-usage.ts');
+  const line = () => document.querySelector('.api-usage');
+  assert.equal(line(), null);
+  await settle(() => document.querySelector('[aria-label="天气效果"]').click());
+  assert.match(line().textContent, /^Open-Meteo 用量（本浏览器）：近 24 小时约 0 \/ 10,000 次/);
+  assert.equal(line().dataset.usage, 'ok');
+  const now = Date.now();
+  await settle(() => usage.recordOpenMeteo(new Response('{}', { headers: { 'X-RateLimit-Cost': '1.2', 'X-RateLimit-Remaining': '590', 'X-RateLimit-Limit': '600', 'X-RateLimit-Reset': String(Math.floor(now / 1000) + 50), 'X-RateLimit-Window': '60' } }), 1, now));
+  await settle(() => usage.recordOpenMeteo(new Response('{}'), 13, now));
+  assert.match(line().textContent, /近 24 小时约 14\.2 \/ 10,000 次/);
+  assert.match(line().querySelector('.info-detail').textContent, /近 1 小时 14\.2 \/ 5,000 · 近 1 分钟 14\.2 \/ 600 · 同一 IP 本分钟剩余 590 · 按访问者 IP 计数/);
+  // Near the hourly limit, then rate-limited.
+  await settle(() => usage.recordOpenMeteo(new Response('{}'), 4000, now));
+  assert.equal(line().dataset.usage, 'near');
+  assert.match(line().textContent, /接近免费上限/);
+  await settle(() => usage.recordOpenMeteo(new Response('{}', { status: 429, headers: { 'Retry-After': '40' } }), 1, now));
+  assert.equal(line().dataset.usage, 'limited');
+  assert.match(line().textContent, /已限流，约 \d+ 秒后恢复/);
+  // Still listed while weather is off, because calls were made today.
+  await settle(() => document.querySelector('[aria-label="天气效果"]').click());
+  assert.ok(line());
+});

@@ -3,6 +3,8 @@ import type { WeatherModel } from "../domain/weather.ts";
 import type { WeatherForecast } from "../domain/weather.ts";
 import type { MapPoint } from "../domain/map.ts";
 import { bestMatchCandidates, parseBestMatchSeries } from "../domain/weather-source.ts";
+import { estimateOpenMeteoCost, rateLimitMessage } from "../domain/api-usage.ts";
+import { recordOpenMeteo } from "./api-usage.ts";
 import type { BestMatchSeries } from "../domain/weather-source.ts";
 
 const cache = new Map<string, WeatherForecast>();
@@ -23,7 +25,9 @@ export async function loadWeather(point: MapPoint, signal: AbortSignal, now = Da
     models: model,
   });
   const response = await fetch(`https://api.open-meteo.com/v1/forecast?${parameters}`, { signal });
-  if (!response.ok) throw new Error(response.status === 429 ? "天气服务请求受限，请稍后重试" : `天气数据请求失败（${response.status}）`);
+  const wait = recordOpenMeteo(response, estimateOpenMeteoCost({ variables: Object.keys(weatherVariables).length, days: 7 }));
+  if (response.status === 429) throw new Error(rateLimitMessage(wait));
+  if (!response.ok) throw new Error(`天气数据请求失败（${response.status}）`);
   const data = parseWeather(await response.json(), now);
   signal.throwIfAborted();
   cache.delete(key);
@@ -48,6 +52,7 @@ export async function loadWeatherSource(point: MapPoint, signal: AbortSignal, no
     models: ["best_match", ...bestMatchCandidates.map((candidate) => candidate.id)].join(","),
   });
   const response = await fetch(`https://api.open-meteo.com/v1/forecast?${parameters}`, { signal });
+  recordOpenMeteo(response, estimateOpenMeteoCost({ models: bestMatchCandidates.length + 1, days: 7 }));
   if (!response.ok) throw new Error(`自动匹配来源请求失败（${response.status}）`);
   const series = parseBestMatchSeries(await response.json());
   signal.throwIfAborted();

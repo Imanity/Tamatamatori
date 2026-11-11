@@ -1474,3 +1474,8 @@ p.info-detail, span.info-detail { color: #8f9886; }
 .time-marker[data-event="aurora"] { color: #1f8a52; font-weight: 600; }
 .tide-fact { color: #2f6fae; }
 .aurora-fact { color: #1f8a52; }
+
+/* Open-Meteo usage */
+.api-usage { margin: 6px 0 0; color: #6f7d68; font-size: 11px; }
+.api-usage[data-usage="near"] { color: #aa6847; }
+.api-usage[data-usage="limited"] { color: #a2452c; font-weight: 600; }

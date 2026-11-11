@@ -64,7 +64,7 @@ test("天气取消后不写入缓存，失败和限流可以重试", async t => 
   controller.abort(); finish(Response.json(weatherResponse()));
   await assert.rejects(request, { name: "AbortError" });
   t.mock.method(globalThis, "fetch", async () => { count++; return new Response("", { status: 429 }); });
-  await assert.rejects(loadWeather(point, new AbortController().signal, start), /受限/);
+  await assert.rejects(loadWeather(point, new AbortController().signal, start), /Open-Meteo 限流：同一 IP 用量已满/);
   t.mock.method(globalThis, "fetch", async () => { count++; return Response.json(weatherResponse()); });
   await loadWeather(point, new AbortController().signal, start); assert.equal(count, 3);
 });

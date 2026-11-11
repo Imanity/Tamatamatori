@@ -46,6 +46,7 @@ import { MeteorLabels, MeteorReadout, meteorFact, useMeteorScene } from "./Meteo
 import { CometLabels, CometReadout, useCometScene } from "./CometScene";
 import { LunarEclipseReadout, SolarEclipseReadout, eclipseFact, moonInUmbra, useEclipses } from "./EclipseReadout";
 import { TideReadout, tideFact } from "./TideScene";
+import { OpenMeteoUsage } from "./ApiUsage";
 import type { TideFeed } from "./TideScene";
 import { AuroraReadout, auroraFact } from "./AuroraScene";
 import type { AuroraFeed } from "./AuroraScene";
@@ -621,6 +622,7 @@ export function PreviewPanel({
                           weather: <WeatherReadout feed={weatherFeed} update={update} />,
                         }}
                       </EnvironmentSettings>
+                      <OpenMeteoUsage active={!!plan.weather || !!plan.layers.tides} />
                     </section>
                     <section className="info-section info-detail-section">
                       <h3>取景参数</h3>

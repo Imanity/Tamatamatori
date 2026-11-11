@@ -1,6 +1,8 @@
 import type { MapPoint } from "../domain/map.ts";
 import { parseTides, tideDates, tideKey, tideProbes, TideRangeError, TIDE_TTL } from "../domain/tides.ts";
 import type { TideSeries } from "../domain/tides.ts";
+import { estimateOpenMeteoCost, rateLimitMessage } from "../domain/api-usage.ts";
+import { recordOpenMeteo } from "./api-usage.ts";
 
 const cache = new Map<string, TideSeries>();
 
@@ -21,11 +23,15 @@ export async function loadTides(point: MapPoint, span: { start: string; end: str
     start_date: dates.start, end_date: dates.end, cell_selection: "sea",
   });
   const response = await fetch(`https://marine-api.open-meteo.com/v1/marine?${parameters}`, { signal });
+  // The marine API sends no cost header; each probe location counts as one call.
+  const days = (Date.parse(dates.end) - Date.parse(dates.start)) / 86_400_000 + 1;
+  const wait = recordOpenMeteo(response, estimateOpenMeteoCost({ locations: probes.length, days }));
+  if (response.status === 429) throw new Error(rateLimitMessage(wait));
   if (response.status === 400) {
     const body = await response.json().catch(() => null) as { reason?: string } | null;
     if (body?.reason && /out of allowed range/i.test(body.reason)) throw new TideRangeError();
   }
-  if (!response.ok) throw new Error(response.status === 429 ? "潮位服务请求受限，请稍后重试" : `潮位数据请求失败（${response.status}）`);
+  if (!response.ok) throw new Error(`潮位数据请求失败（${response.status}）`);
   const series = parseTides(await response.json(), point, now);
   signal.throwIfAborted();
   cache.set(key, series);
