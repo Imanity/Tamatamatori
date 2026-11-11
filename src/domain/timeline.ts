@@ -6,6 +6,7 @@ import { instantFromLocal } from "./plan.ts";
 import { limbAltitude, sunMoonEvents } from "./day-events.ts";
 import { sunPosition } from "./ephemeris.ts";
 import { activeShowers } from "./meteor-showers.ts";
+import { eclipsesInSpan, lunarKindNames, solarKindNames } from "./eclipses.ts";
 import { cometScene } from "./comets.ts";
 import { cometState } from "./comet-orbit.ts";
 import type { CometCatalog } from "./comet-catalog.ts";
@@ -73,7 +74,8 @@ export function sunElevationAcross(plan: Pick<ShootingPlan, "latitude" | "longit
 
 export type TimelineEventKind =
   | "dawn" | "sunrise" | "sunset" | "dusk" | "moonrise" | "moonset"
-  | "core-rise" | "core-set" | "radiant-rise" | "radiant-set" | "comet-rise" | "comet-set" | "station-pass";
+  | "core-rise" | "core-set" | "radiant-rise" | "radiant-set" | "comet-rise" | "comet-set" | "station-pass"
+  | "solar-eclipse" | "lunar-eclipse";
 
 export interface TimelineEvent {
   key: string;
@@ -241,6 +243,28 @@ export function timelineEvents(
     }
     return found.length > 0;
   };
+  // Eclipse contacts follow the Sun and Moon layers. Penumbral contacts are
+  // marked only for a penumbral eclipse; contacts below the horizon say so.
+  if (plan.layers.sun || plan.layers.moon) {
+    let found: ReturnType<typeof eclipsesInSpan> = [];
+    try { found = eclipsesInSpan(plan, window, { sun: plan.layers.sun, moon: plan.layers.moon }); } catch { found = []; }
+    for (const eclipse of found) {
+      const name = eclipse.body === "sun" ? solarKindNames[eclipse.kind as keyof typeof solarKindNames] : lunarKindNames[eclipse.kind as keyof typeof lunarKindNames];
+      const body = eclipse.body === "sun" ? "太阳" : "月亮";
+      for (const contact of eclipse.contacts) {
+        if (eclipse.body === "moon" && eclipse.kind !== "penumbral" && (contact.id === "P1" || contact.id === "P4")) continue;
+        const time = Date.parse(contact.instant);
+        if (time < Date.parse(window.start) || time >= Date.parse(window.end)) continue;
+        events.push({
+          key: `${eclipse.body}-eclipse-${contact.id}-${time}`,
+          kind: eclipse.body === "sun" ? "solar-eclipse" : "lunar-eclipse",
+          label: contact.id === "P1" ? "半影始" : contact.id === "P4" ? "半影终" : contact.label,
+          instant: round(time),
+          detail: `${name}${contact.label}：${contact.above ? `${body}视高度 ${contact.elevation.toFixed(0)}°` : `${body}在地平线下，不可见`}（不含地形遮挡）`,
+        });
+      }
+    }
+  }
   if (plan.layers.milkyWay) {
     const found = fixedRiseSet(plan, window, galacticCentre.ra, galacticCentre.dec);
     if (!pairs(found, "core", ["银心升", "银心落"], (rise) => `银心${rise ? "升起" : "落下"}：${horizon}`)) missing.push(`银心升落${allSpan(found)}`);

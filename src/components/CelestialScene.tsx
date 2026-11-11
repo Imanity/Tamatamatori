@@ -42,11 +42,15 @@ export function CelestialDiscs({ scene, weather, plan }: { scene: CelestialScene
   const close = outside.length===2 && Math.hypot(outside[0].indicator!.x-outside[1].indicator!.x,
     outside[0].indicator!.y-outside[1].indicator!.y)<0.6;
   const groups = close ? [outside] : outside.map(view=>[view]);
+  // Near conjunction (an eclipse) the two disc names would print on top of each other; keep one.
+  const together = visible.length === 2 && visible.every((view) => view.centre) &&
+    Math.hypot(visible[0].centre!.x - visible[1].centre!.x, visible[0].centre!.y - visible[1].centre!.y) < 0.12;
+  const labelled = together ? visible.filter((view) => view.body.id === "sun") : visible;
   return <>
-    {visible.map(({ body, centre, outline }) => centre && <span key={body.id} className="celestial-label"
+    {labelled.map(({ body, centre, outline }) => centre && <span key={body.id} className="celestial-label"
       data-celestial-body={body.id}
-      style={{ opacity: 1 - cloudOpacity(refractDirection(body.direction, plan?.refraction ?? "none"), clouds), left: `${Math.max(5, Math.min(95, (centre.x + 1) * 50))}%`, top: `calc(${Math.max(7, Math.min(90, (Math.min(...outline.map((p) => p.y)) + 1) * 50))}% - 4px)` }}>
-      {name(body.id)}<small>构图辅助</small>
+      style={{ opacity: 1 - cloudOpacity(refractDirection(body.direction, plan?.refraction ?? "none"), clouds), left: `${Math.max(5, Math.min(95, (centre.x + 1) * 50))}%`, top: `calc(${Math.max(7, Math.min(90, (Math.min(...visible.flatMap((view) => together ? view.outline : []).concat(outline).map((p) => p.y)) + 1) * 50))}% - 4px)` }}>
+      {together ? "太阳 · 月亮" : name(body.id)}<small>构图辅助</small>
     </span>)}
     <div className="celestial-directions">{groups.map(group=>{
       const x=group.reduce((sum,v)=>sum+v.indicator!.x,0)/group.length;

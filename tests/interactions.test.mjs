@@ -2682,3 +2682,60 @@ test('预览周围的行固定存在：云量条、黄金/蓝调行与状态行�
   assert.equal(document.querySelector('.preview-content > .pollution-status, .preview-content > .weather-status'), null);
   assert.equal(terrainMap(), map);
 });
+
+test('日食：太阳分组给出食况与食带位置，时间轴标出接触时刻，地图画出食带，预览信息条写出遮挡，跳转只改时间', async t => {
+  const { map } = await workspace(t); await readyTerrain();
+  await settle(() => setControl(input('纬度'), 25.687));
+  await settle(() => setControl(input('经度'), 32.64));
+  await chooseTimeZone('UTC');
+  await setShootingDateTime('2027-08-02T10:05');
+  const sun = () => document.querySelector('[data-eclipse="sun"]');
+  assert.match(sun().textContent, /日全食中/);
+  assert.match(sun().textContent, /本时段日全食/);
+  assert.match(sun().textContent, /机位在全食带内/);
+  assert.match(sun().textContent, /减光滤镜/);
+  const contacts = () => [...document.querySelectorAll('.time-marker[data-event="solar-eclipse"]')]
+    .map((marker) => marker.getAttribute('aria-label').replace(/^跳到/, '').split(' ')[0]);
+  assert.deepEqual(contacts(), ['初亏', '食既', '食甚', '生光', '复圆']);
+  assert.equal(document.querySelector('[data-eclipse-fact]').textContent, '日全食 · 天空按暮光近似');
+  const kinds = () => map.getSource('tamatamatori-eclipse').data.features.map((feature) => feature.properties.kind);
+  await waitUntil(() => kinds().length);
+  assert.deepEqual(kinds(), ['band', 'centre', 'umbra']);
+  assert.match(document.querySelector('[data-eclipse-legend]').textContent, /全食带/);
+  // Outside the band: the nearest edge is to the south of Madrid.
+  await settle(() => setControl(input('纬度'), 40.4));
+  await settle(() => setControl(input('经度'), -3.7));
+  assert.match(document.querySelector('[data-eclipse-path]').textContent, /离全食带约 \d+ km（(南|东南|西南)）/);
+  // Jumping changes the time only.
+  await setShootingDateTime('2027-08-02T06:00');
+  assert.equal(document.querySelector('[data-eclipse-fact]'), null);
+  await settle(() => document.querySelector('[aria-label="跳到日食食甚"]').click());
+  assert.equal(shootingDateTime(), "2027-08-02T08:51");
+  assert.equal(value('纬度'), 40.4);
+  // The Sun layer owns all of it.
+  await settle(() => document.querySelector('[aria-label="显示太阳"]').click());
+  assert.deepEqual(contacts(), []);
+  assert.equal(sun(), null);
+  await waitUntil(() => !kinds().length);
+});
+
+test('月食与下次：月亮分组给出月偏食与接触时刻（不标半影始末），没有食时给出下次可见月食并可跳到食甚', async t => {
+  await workspace(t); await readyTerrain();
+  await settle(() => setControl(input('纬度'), 35.68));
+  await settle(() => setControl(input('经度'), 139.77));
+  await chooseTimeZone('Asia/Tokyo', 'Tokyo');
+  await setShootingDateTime('2026-11-12T21:00');
+  const moon = () => document.querySelector('[data-eclipse="moon"]');
+  assert.match(moon().textContent, /下次可见月食：2028-07-07 月偏食/);
+  assert.match(document.querySelector('[data-eclipse="sun"]').textContent, /下次本地可见：2030-06-01 日偏食/);
+  assert.match(document.querySelector('[data-eclipse="sun"]').textContent, /下次日环食（全球）：2027-02-0[67]/);
+  await settle(() => document.querySelector('[aria-label="跳到下次月食食甚"]').click());
+  assert.equal(shootingDateTime(), '2028-07-07T03:19');
+  assert.match(moon().textContent, /月偏食中/);
+  assert.match(moon().textContent, /本时段月偏食/);
+  assert.match(moon().textContent, /本影食分 0\.\d\d/);
+  const contacts = [...document.querySelectorAll('.time-marker[data-event="lunar-eclipse"]')]
+    .map((marker) => marker.getAttribute('aria-label').replace(/^跳到/, '').split(' ')[0]);
+  assert.deepEqual(contacts, ['初亏', '食甚', '复圆']);
+  assert.equal(document.querySelector('[data-eclipse-fact]').textContent, '月食 · 地影色为示意');
+});

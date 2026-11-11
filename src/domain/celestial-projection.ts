@@ -3,6 +3,8 @@ import { fieldOfView } from "./plan.ts";
 import type { SkyBody, Vector3 } from "./ephemeris.ts";
 import { add, degrees, direction, dot, scale, unit } from "./ephemeris.ts";
 import { apparentElevation, refractDirection } from "./refraction.ts";
+import { discDifference, discIntersection } from "./eclipse-geometry.ts";
+import type { Disc, Loop } from "./eclipse-geometry.ts";
 
 export type View = Pick<ShootingPlan, "azimuth" | "pitch" | "focalLength" | "sensor" | "aspectRatio" | "orientation"> & Partial<Pick<ShootingPlan, "refraction">>;
 const cross = (a: Vector3, b: Vector3): Vector3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
@@ -78,7 +80,55 @@ function discRay(body: SkyBody, right: Vector3, up: Vector3, x: number, y: numbe
   return add(body.direction, add(scale(right, radius * x), scale(up, radius * y)));
 }
 
-export function bodyPolygons(plan: View, body: SkyBody) {
+type Sun = Extract<SkyBody, { id: "sun" }>;
+type Moon = Extract<SkyBody, { id: "moon" }>;
+type Axes = ReturnType<typeof tangentAxes>;
+/** Gnomonic coordinates in a body's tangent plane, in units of tan(angle). */
+function tangentPoint(body: SkyBody, axes: Axes, ray: Vector3) {
+  const depth = dot(ray, body.direction);
+  return { x: dot(ray, axes.right) / depth, y: dot(ray, axes.up) / depth };
+}
+const tangentRay = (body: SkyBody, axes: Axes, point: { x: number; y: number }) =>
+  add(body.direction, add(scale(axes.right, point.x), scale(axes.up, point.y)));
+const tangentDisc = (body: SkyBody, axes: Axes, ray: Vector3, radius: number): Disc =>
+  ({ ...tangentPoint(body, axes, ray), r: Math.tan(radius * degrees) });
+
+export interface EclipseShape {
+  /** Lit pieces of the disc, each a simple polygon. */
+  lit: { x: number; y: number }[][];
+  /** Part of the Moon inside Earth's umbra. */
+  shadowed: { x: number; y: number }[][];
+  /** Brightness of the lit pieces, 1 outside the penumbra. */
+  level: number;
+}
+
+/**
+ * Eclipse shapes in the body's tangent plane: the Sun minus the Moon's disc,
+ * or the Moon split by Earth's umbra and dimmed across the penumbra.
+ */
+function eclipseShape(plan: View, body: SkyBody, axes: Axes, moon?: Moon): EclipseShape | undefined {
+  const own: Disc = { x: 0, y: 0, r: Math.tan(body.angularRadius * degrees) };
+  const project = (loops: Loop[]) => loops.map((loop) => projectedPolygon(plan, loop.map((point) => tangentRay(body, axes, point))))
+    .filter((loop) => loop.length >= 3);
+  if (body.id === "sun") {
+    if (!moon || !((body as Sun).obscuration > 0)) return undefined;
+    return { lit: project(discDifference(own, tangentDisc(body, axes, moon.direction, moon.angularRadius))), shadowed: [], level: 1 };
+  }
+  const shadow = (body as Moon).shadow;
+  if (!shadow) return undefined;
+  const umbra = tangentDisc(body, axes, shadow.direction, shadow.umbra);
+  const distance = Math.hypot(umbra.x, umbra.y), penumbra = Math.tan(shadow.penumbra * degrees);
+  if (distance >= own.r + penumbra) return undefined;
+  return {
+    lit: project(discDifference(own, umbra)),
+    shadowed: project(discIntersection(own, umbra)),
+    // Penumbral dimming at the middle of the lit part, which lies outside the umbra.
+    level: 0.45 + 0.55 * Math.max(0, Math.min(1, (Math.max(distance, umbra.r) + own.r / 2 - umbra.r) / (penumbra - umbra.r))),
+  };
+}
+
+/** `moon` lets a solar eclipse cut the Sun's disc; omit it for direction-only uses. */
+export function bodyPolygons(plan: View, body: SkyBody, moon?: Moon) {
   const axes = tangentAxes(body);
   const samples = 64;
   const circle = Array.from({ length: samples }, (_, index) => {
@@ -105,7 +155,8 @@ export function bodyPolygons(plan: View, body: SkyBody) {
     ? "地平线下"
     : outline.length < 3 ? "视场外" : "画面内";
   const ray = refractDirection(body.direction, plan.refraction);
-  return { outline, illuminated, centre: projectDirection(plan, ray), state, visualElevation,
+  const eclipse = eclipseShape(plan, body, axes, moon);
+  return { outline, illuminated, eclipse, centre: projectDirection(plan, ray), state, visualElevation,
     indicator: state === "视场外" ? frameEdgeDirection(plan,ray) : null };
 }
 

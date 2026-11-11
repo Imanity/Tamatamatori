@@ -274,3 +274,24 @@ test("地图方位线：日月与银心此刻方位来自同一星历，出没�
   assert.deepEqual(bodyLines({ ...subject, layers: { ...noLayers } }), []);
   assert.deepEqual([...new Set(bodyLines({ ...subject, layers: { ...noLayers, moon: true } }).map((line) => line.body))], ["moon"]);
 });
+
+test("时间轴的食：日食接触随太阳图层，月食接触随月亮图层；偏食月食不标半影始末，地平线下的接触写明不可见", async () => {
+  const { timelineEvents: events, timelineWindow: span } = await import("../src/domain/timeline.ts");
+  const layers = { ...initialPlan.layers, sun: true, moon: true };
+  const luxor = { latitude: 25.687, longitude: 32.64, refraction: "standard", cameraHeight: 1.6, layers };
+  const day = span("2027-08-02T10:00:00Z", "UTC", "day");
+  const solar = events(luxor, day).events.filter((event) => event.kind === "solar-eclipse");
+  assert.deepEqual(solar.map((event) => event.label), ["初亏", "食既", "食甚", "生光", "复圆"]);
+  assert.match(solar[2].detail, /^日全食食甚：太阳视高度 82°/);
+  assert.deepEqual(events({ ...luxor, layers: { ...layers, sun: false } }, day).events.filter((event) => event.kind === "solar-eclipse"), []);
+  const tokyo = { latitude: 35.68, longitude: 139.77, refraction: "standard", cameraHeight: 1.6, layers };
+  const night = span("2028-07-06T18:00:00Z", "Asia/Tokyo", "night");
+  const lunar = events(tokyo, night).events.filter((event) => event.kind === "lunar-eclipse");
+  assert.deepEqual(lunar.map((event) => event.label), ["初亏", "食甚", "复圆"]);
+  assert.match(lunar.at(-1).detail, /^月偏食复圆：月亮视高度 1°/);
+  assert.deepEqual(events({ ...tokyo, layers: { ...layers, moon: false } }, night).events.filter((event) => event.kind === "lunar-eclipse"), []);
+  // A penumbral eclipse marks only its penumbral contacts and peak.
+  const penumbral = events({ ...tokyo, latitude: 40.7, longitude: -74 }, span("2027-02-20T23:00:00Z", "America/New_York", "night"))
+    .events.filter((event) => event.kind === "lunar-eclipse");
+  assert.deepEqual(penumbral.map((event) => event.label), ["半影始", "食甚", "半影终"]);
+});

@@ -5,7 +5,9 @@ import type { ShootingPlan } from "../domain/plan";
 import { normalizeLongitude, sensorKey } from "../domain/plan";
 import { bodyLines } from "../domain/body-lines";
 import type { BodyLine } from "../domain/body-lines";
-import { timelineMode } from "../domain/timeline";
+import { timelineMode, timelineWindow } from "../domain/timeline";
+import { centralEclipseInSpan, centralPath, umbraFootprint, unwrap } from "../domain/eclipses";
+import type { CentralPath } from "../domain/eclipses";
 import {
   destination,
   isMapPosition,
@@ -24,6 +26,24 @@ const styleUrl =
   "https://tiles.openfreemap.org/styles/liberty";
 const viewSourceId = "tamatamatori-view";
 const linesSourceId = "tamatamatori-body-lines";
+const eclipseSourceId = "tamatamatori-eclipse";
+type EclipseMap = { kind: CentralPath["kind"]; path: CentralPath; footprint: [number, number][] | null } | null;
+
+/** Central eclipse band (both edges), its centre line and the umbra at the shooting instant. */
+function eclipseGeometry(eclipse: EclipseMap): GeoJSON.FeatureCollection {
+  if (!eclipse) return { type: "FeatureCollection", features: [] };
+  const features: GeoJSON.Feature[] = [];
+  const side = (index: 0 | 1) => eclipse.path.samples.map((sample) => sample.edges[index]).filter((point): point is [number, number] => !!point);
+  const ring = unwrap([...side(0), ...side(1).reverse()]);
+  if (ring.length >= 4) features.push({ type: "Feature", properties: { kind: "band" }, geometry: { type: "Polygon", coordinates: [[...ring, ring[0]]] } });
+  const centre = unwrap(eclipse.path.samples.map((sample) => sample.centre));
+  if (centre.length >= 2) features.push({ type: "Feature", properties: { kind: "centre" }, geometry: { type: "LineString", coordinates: centre } });
+  if (eclipse.footprint) {
+    const outline = unwrap(eclipse.footprint);
+    features.push({ type: "Feature", properties: { kind: "umbra" }, geometry: { type: "Polygon", coordinates: [[...outline, outline[0]]] } });
+  }
+  return { type: "FeatureCollection", features };
+}
 const bodyNames = { sun: "太阳", moon: "月亮", core: "银心" } as const;
 const bodyColors = { sun: "#e0892c", moon: "#5f7fc4", core: "#8b5fc4" } as const;
 
@@ -71,7 +91,26 @@ export function MapPanel({
       return [] as BodyLine[];
     }
   }, [plan.latitude, plan.longitude, plan.instant, plan.timeZone, plan.refraction, layers.sun, layers.moon, layers.milkyWay, timelineMode(layers)]);
-  const latest = useRef({ plan, update, mode, lines });
+  // A total or annular eclipse in the timeline's span: its band, and the umbra at the shooting instant.
+  const span = timelineWindow(plan.instant, plan.timeZone, timelineMode(layers));
+  const central = useMemo(() => {
+    if (!layers.sun) return null;
+    try {
+      const found = centralEclipseInSpan(span);
+      return found ? centralPath(found.instant) : null;
+    } catch {
+      return null;
+    }
+  }, [span.start, span.end, layers.sun]);
+  const eclipse: EclipseMap = useMemo(() => {
+    if (!central) return null;
+    try {
+      return { kind: central.kind, path: central, footprint: umbraFootprint(plan.instant) };
+    } catch {
+      return { kind: central.kind, path: central, footprint: null };
+    }
+  }, [central, plan.instant]);
+  const latest = useRef({ plan, update, mode, lines, eclipse });
   const [searchOpen, setSearchOpen] = useState(false);
   const [target, setTarget] = useState<MapTarget | null>(null);
   const [locating, setLocating] = useState(false);
@@ -86,9 +125,9 @@ export function MapPanel({
   const coverage = isMapPosition(plan);
 
   useEffect(() => {
-    latest.current = { plan, update, mode, lines };
+    latest.current = { plan, update, mode, lines, eclipse };
     synchronize.current?.(true);
-  }, [plan, update, mode, lines]);
+  }, [plan, update, mode, lines, eclipse]);
 
   // A searched place or the device position: shown and flown to; the shot
   // only changes through "设为机位".
@@ -166,6 +205,7 @@ export function MapPanel({
     let activeDrag: "camera" | "direction" | null = null;
     let geometryKey = "";
     let linesKey = "";
+    let drawnEclipse: EclipseMap | undefined;
     let geometry = viewGeometry(latest.current.plan, viewport.current.zoom);
     let previousPosition = {
       longitude: latest.current.plan.longitude,
@@ -224,6 +264,11 @@ export function MapPanel({
       if (lineSource && nextLinesKey !== linesKey) {
         lineSource.setData(lineGeometry(current, latest.current.lines, map.getZoom()));
         linesKey = nextLinesKey;
+      }
+      const eclipseSource = map.getSource(eclipseSourceId) as GeoJSONSource | undefined;
+      if (eclipseSource && latest.current.eclipse !== drawnEclipse) {
+        eclipseSource.setData(eclipseGeometry(latest.current.eclipse));
+        drawnEclipse = latest.current.eclipse;
       }
       if (!valid) return;
       const longitude = nearbyLongitude(current.longitude, map.getCenter().lng);
@@ -456,6 +501,29 @@ export function MapPanel({
                 "fill-outline-color": "#34715a",
               },
             });
+            // Eclipse band under everything else drawn for the shot.
+            map.addSource(eclipseSourceId, { type: "geojson", data: eclipseGeometry(latest.current.eclipse) });
+            drawnEclipse = latest.current.eclipse;
+            map.addLayer({
+              id: "tamatamatori-eclipse-band", type: "fill", source: eclipseSourceId,
+              filter: ["==", ["get", "kind"], "band"],
+              paint: { "fill-color": "#4a3566", "fill-opacity": 0.16 },
+            });
+            map.addLayer({
+              id: "tamatamatori-eclipse-edge", type: "line", source: eclipseSourceId,
+              filter: ["==", ["get", "kind"], "band"],
+              paint: { "line-color": "#5b3f80", "line-width": 1.2, "line-opacity": 0.8 },
+            });
+            map.addLayer({
+              id: "tamatamatori-eclipse-centre", type: "line", source: eclipseSourceId,
+              filter: ["==", ["get", "kind"], "centre"],
+              paint: { "line-color": "#5b3f80", "line-width": 1, "line-opacity": 0.7, "line-dasharray": [3, 3] },
+            });
+            map.addLayer({
+              id: "tamatamatori-eclipse-umbra", type: "fill", source: eclipseSourceId,
+              filter: ["==", ["get", "kind"], "umbra"],
+              paint: { "fill-color": "#26173a", "fill-opacity": 0.45, "fill-outline-color": "#26173a" },
+            });
             // Body azimuth lines under the view cone's direction line.
             map.addSource(linesSourceId, { type: "geojson", data: lineGeometry(latest.current.plan, latest.current.lines, map.getZoom()) });
             const lineColor = ["match", ["get", "body"], "sun", bodyColors.sun, "moon", bodyColors.moon, bodyColors.core] as unknown as string;
@@ -679,12 +747,15 @@ export function MapPanel({
           </p>
         )}
       </div>
-      {lines.length > 0 && (
+      {(lines.length > 0 || eclipse) && (
         <div className="map-legend" aria-label="方位线图例">
           {(["sun", "moon", "core"] as const).filter((body) => lines.some((line) => line.body === body)).map((body) => (
             <span key={body}><i style={{ background: bodyColors[body] }} />{bodyNames[body]}</span>
           ))}
-          <span className="map-legend-note" title="粗实线：拍摄时刻方位；点线：拍摄时刻在地平线下；细虚线：时间轴时段内的出没方位。只表示方向，不表示距离与遮挡。">粗线此刻 · 细线出没</span>
+          {lines.length > 0 && <span className="map-legend-note" title="粗实线：拍摄时刻方位；点线：拍摄时刻在地平线下；细虚线：时间轴时段内的出没方位。只表示方向，不表示距离与遮挡。">粗线此刻 · 细线出没</span>}
+          {eclipse && <span data-eclipse-legend title="中心食带：两侧界线之间可见全食或环食，虚线为中心线，深色为拍摄时刻的本影位置。不含月面边缘地形（界线约有 1—3 km 出入）。">
+            <i className="map-legend-band" />{eclipse.kind === "total" ? "全食带" : eclipse.kind === "annular" ? "环食带" : "全环食带"}
+          </span>}
         </div>
       )}
       {target && (

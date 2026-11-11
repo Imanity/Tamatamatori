@@ -324,9 +324,11 @@ export function TerrainScene({ plan, stations, comets, onVisibilityChange, onCam
         const frameKey = `${poseKey}/${planKey}/${sourceRevision}/${ready}/${renderView.azimuth}/${renderView.pitch}/${current.stations?.key ?? ""}/${current.comets?.key ?? ""}/${current.artificialMcd ?? 0}/${weatherKey}/${pathKey}`;
         if (celestialLayer && frameKey !== lastCelestialFrame) {
           lastCelestialFrame = frameKey;
-          const bodies = Object.values(celestialBodies(current.plan))
+          // The Moon cuts the Sun's disc during a solar eclipse even with the Moon layer off.
+          const sky = celestialBodies(current.plan);
+          const bodies = Object.values(sky)
             .filter((body) => current.plan.layers[body.id])
-            .map((body) => ({ id: body.id, ...bodyPolygons({ ...current.plan, ...renderView }, body) }))
+            .map((body) => ({ id: body.id, ...bodyPolygons({ ...current.plan, ...renderView }, body, sky.moon) }))
             .filter((body) => body.state === "画面内");
           const pathSource = `${pathKey}/${current.plan.latitude}/${current.plan.longitude}/${current.plan.instant}/${current.plan.refraction}`;
           if (pathCache.key !== pathSource) pathCache = { key: pathSource, paths: pathIds.map((id) => bodyPath(current.plan, id)) };

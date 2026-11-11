@@ -17,14 +17,14 @@ export interface CelestialFrame {
   key: string;
   planKey: string;
   ready: boolean;
-  bodies: { id: "sun" | "moon"; outline: Point[]; illuminated: Point[] }[];
+  bodies: { id: "sun" | "moon"; outline: Point[]; illuminated: Point[]; eclipse?: { lit: Point[][]; shadowed: Point[][]; level: number } }[];
   /** Projected sky paths: polylines already clipped at the horizon and frame margin. */
   paths?: { id: "sun" | "moon"; runs: Point[][]; markers: Point[] }[];
   plan?: ShootingPlan;
   weather?: WeatherSample;
   artificialMcd?: number;
 }
-type Mesh = { id: "sun" | "moon"; outline: Float32Array; fill: Float32Array; silhouette: Float32Array };
+type Mesh = { id: "sun" | "moon"; outline: Float32Array; fill: Float32Array; shadow: Float32Array; level: number; silhouette: Float32Array };
 type Pending = { id: "sun" | "moon"; clear: WebGLQuery; blocked: WebGLQuery };
 const weatherQuad = new Float32Array([-1,-1, 1,-1, 1,1, -1,-1, 1,1, -1,1]);
 const pathVertex = `#version 300 es
@@ -100,6 +100,13 @@ export function pathMeshes(paths: NonNullable<CelestialFrame["paths"]>, width: n
   }));
   return { data: new Float32Array(data), meshes };
 }
+
+const joined = (pieces: Float32Array[]) => {
+  const out = new Float32Array(pieces.reduce((sum, piece) => sum + piece.length, 0));
+  let offset = 0;
+  for (const piece of pieces) { out.set(piece, offset); offset += piece.length; }
+  return out;
+};
 
 export function triangulate(points: Point[]) {
   const coordinates = points.flatMap((point) => [point.x, point.y]);
@@ -202,8 +209,8 @@ export class CelestialLayer implements CustomLayerInterface {
     this.weatherDisplay = undefined;
     if (frame.weather && frame.plan) {
       const bodies = celestialBodies(frame.plan);
-      const appearance = skyAppearance(bodies.sun.elevation, bodies.moon, frame.artificialMcd);
-      const day = Math.max(0, Math.min(1, (bodies.sun.elevation + 6) / 14));
+      const appearance = skyAppearance(bodies.sun.skyElevation, bodies.moon, frame.artificialMcd);
+      const day = Math.max(0, Math.min(1, (bodies.sun.skyElevation + 6) / 14));
       const lift = appearance.moonlight * 0.08 + appearance.pollutionGlow * 0.18;
       this.weatherDisplay = {
         clouds: weatherClouds(frame.weather, frame.plan),
@@ -215,9 +222,13 @@ export class CelestialLayer implements CustomLayerInterface {
     this.refreshAnimation();
     this.resolvedKey = "";
     this.pathKey = "";
+    // An eclipse replaces the lit area: the Sun minus the Moon, or the Moon outside Earth's umbra.
     this.meshes = frame.bodies.map((body) => ({
       id: body.id, outline: new Float32Array(body.outline.flatMap((p) => [p.x, p.y])),
-      fill: triangulate(body.illuminated), silhouette: triangulate(body.outline),
+      fill: body.eclipse ? joined(body.eclipse.lit.map(triangulate)) : triangulate(body.illuminated),
+      shadow: joined((body.eclipse?.shadowed ?? []).map(triangulate)),
+      level: body.eclipse?.level ?? 1,
+      silhouette: triangulate(body.outline),
     }));
     this.publish({ planKey: frame.planKey, states: { sun: this.failed ? "error" : "waiting", moon: this.failed ? "error" : "waiting" } });
     this.map?.triggerRepaint();
@@ -372,8 +383,12 @@ export class CelestialLayer implements CustomLayerInterface {
           }
         }
         gl.colorMask(true, true, true, true); gl.depthFunc(gl.LEQUAL);
-        gl.uniform4fv(this.color, mesh.id === "sun" ? [1, 0.95, 0.737, 1] : [0.933, 0.918, 0.871, 1]);
+        const lit = mesh.id === "sun" ? [1, 0.95, 0.737] : [0.933, 0.918, 0.871];
+        gl.uniform4fv(this.color, [...lit.map((value) => value * mesh.level), 1]);
         draw(mesh.fill, gl.TRIANGLES);
+        // The umbral colour of a lunar eclipse depends on Earth's atmosphere; a fixed copper illustration.
+        gl.uniform4fv(this.color, [0.42, 0.14, 0.08, 1]);
+        draw(mesh.shadow, gl.TRIANGLES);
         gl.uniform4fv(this.color, mesh.id === "sun" ? [0.86, 0.71, 0.36, 0.9] : [0.435, 0.435, 0.43, 0.5]);
         draw(mesh.outline, gl.LINE_LOOP);
       }

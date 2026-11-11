@@ -172,7 +172,8 @@ function computeSky(plan: Input) {
     core,
     horizontal,
     time,
-    sunElevation: bodies.sun.elevation,
+    // Sky brightness: a solar eclipse darkens the sky like a lower Sun.
+    sunElevation: bodies.sun.skyElevation,
     moon: bodies.moon,
     star,
   };

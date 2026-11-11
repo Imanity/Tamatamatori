@@ -163,3 +163,35 @@ test("月相亮区面积符合比例，亮侧朝实际光源而非固定屏幕�
   assert.ok(left.reduce((sum, point) => sum + point.x, 0) < 0);
   assert.deepEqual([0, 90, 180, 270].map(moonPhaseLabel), ["新月附近", "上弦附近", "满月附近", "下弦附近"]);
 });
+
+test("食时圆面：日面减去月面（月牙、光环、全食无日面），月面按本影分成亮区与地影区", async () => {
+  const { celestialBodies } = await import("../src/domain/ephemeris.ts");
+  const { discOverlap } = await import("../src/domain/eclipse-geometry.ts");
+  const sumArea = (loops) => loops.reduce((sum, loop) => sum + area(loop), 0);
+  const view = (body) => ({ ...initialPlan, azimuth: body.azimuth, pitch: body.elevation, focalLength: 1200, refraction: "none" });
+  // Madrid, partial: the lit area is the uncovered share of the disc.
+  const partial = celestialBodies({ latitude: 40.4, longitude: -3.7, instant: "2027-08-02T08:51:00Z" });
+  const cut = bodyPolygons(view(partial.sun), partial.sun, partial.moon);
+  close(sumArea(cut.eclipse.lit) / area(cut.outline), 1 - partial.sun.obscuration, 0.01);
+  assert.equal(cut.eclipse.lit.length, 1);
+  // Without the Moon argument or outside an eclipse nothing is cut.
+  assert.equal(bodyPolygons(view(partial.sun), partial.sun).eclipse, undefined);
+  const plain = celestialBodies({ latitude: 40.4, longitude: -3.7, instant: "2027-08-03T08:51:00Z" });
+  assert.equal(bodyPolygons(view(plain.sun), plain.sun, plain.moon).eclipse, undefined);
+  // Totality leaves no solar disc; annularity leaves a ring in two pieces.
+  const total = celestialBodies({ latitude: 25.687, longitude: 32.64, instant: "2027-08-02T10:05:07Z" });
+  assert.deepEqual(bodyPolygons(view(total.sun), total.sun, total.moon).eclipse.lit, []);
+  const ring = celestialBodies({ latitude: -31.2133, longitude: -48.365, instant: "2027-02-06T15:59:33Z" });
+  const annular = bodyPolygons(view(ring.sun), ring.sun, ring.moon).eclipse;
+  assert.equal(annular.lit.length, 2);
+  close(sumArea(annular.lit) / area(bodyPolygons(view(ring.sun), ring.sun).outline), 1 - ring.sun.obscuration, 0.01);
+  // Lunar eclipse: the shadowed part matches the umbra overlap, the rest is dimmed.
+  const lunar = celestialBodies({ latitude: 35.68, longitude: 139.77, instant: "2028-07-06T18:19:38Z" });
+  const moon = bodyPolygons(view(lunar.moon), lunar.moon);
+  const separation = Math.acos(lunar.moon.direction.reduce((s, v, i) => s + v * lunar.moon.shadow.direction[i], 0)) * 180 / Math.PI;
+  const inside = discOverlap(lunar.moon.angularRadius, lunar.moon.shadow.umbra, separation);
+  close(sumArea(moon.eclipse.shadowed) / area(moon.outline), inside, 0.01);
+  close(sumArea(moon.eclipse.lit) / area(moon.outline), 1 - inside, 0.01);
+  // The lit part stays brighter than the umbra but dimmer than an uneclipsed Moon.
+  assert.ok(moon.eclipse.level > 0.45 && moon.eclipse.level < 0.8, `${moon.eclipse.level}`);
+});

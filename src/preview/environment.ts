@@ -24,24 +24,34 @@ const smoothstep = (low: number, high: number, value: number) => {
 };
 type Bodies = ReturnType<typeof celestialBodies>;
 
-export function environmentForSky(sun: Pick<Bodies["sun"], "elevation" | "azimuth">,
-  moon: Pick<Bodies["moon"], "elevation" | "illuminatedFraction">, artificialMcd = 0, weather?: WeatherSample) {
+const blendAt = (value: number) => {
+  const elevation = clamp(value, -18, 25);
+  const upper = stops.findIndex((stop) => stop.elevation >= elevation);
+  const a = stops[Math.max(0, upper - 1)], b = stops[upper];
+  const linear = a === b ? 0 : (elevation - a.elevation) / (b.elevation - a.elevation);
+  return { a, b, weight: linear * linear * (3 - 2 * linear) };
+};
+
+/**
+ * `sun.skyElevation` (from an eclipse) sets the sky colour and brightness;
+ * the warm low-Sun tint and the hillshade direction keep the true elevation.
+ */
+export function environmentForSky(sun: Pick<Bodies["sun"], "elevation" | "azimuth"> & { skyElevation?: number },
+  moon: Pick<Bodies["moon"], "elevation" | "illuminatedFraction"> & { brightness?: number }, artificialMcd = 0, weather?: WeatherSample) {
   if (!Number.isFinite(sun.elevation) || !Number.isFinite(sun.azimuth))
     throw new RangeError("光照需要有效的太阳位置");
   if (!Number.isFinite(moon.elevation) || Math.abs(moon.elevation) > 90 ||
     !Number.isFinite(moon.illuminatedFraction) || moon.illuminatedFraction < 0 || moon.illuminatedFraction > 1)
     throw new RangeError("光照需要有效的月亮高度与亮面比例");
-  const elevation = clamp(sun.elevation, -18, 25);
-  const upper = stops.findIndex((stop) => stop.elevation >= elevation);
-  const a = stops[Math.max(0, upper - 1)], b = stops[upper];
-  const linear = a === b ? 0 : (elevation - a.elevation) / (b.elevation - a.elevation);
-  const weight = linear * linear * (3 - 2 * linear);
+  const light = sun.skyElevation ?? sun.elevation;
+  if (!Number.isFinite(light)) throw new RangeError("光照需要有效的太阳位置");
+  const { a, b, weight } = blendAt(light);
   const nightWeight = mix(1-smoothstep(-18,-6,a.elevation),1-smoothstep(-18,-6,b.elevation),weight);
   // A display weight, not physical illuminance. Hidden/off-screen Moon discs
   // still illuminate the environment; a Moon below the geometric horizon does not.
-  const moonlight = moon.illuminatedFraction ** 2 * Math.sqrt(Math.sin(Math.max(0,moon.elevation) * Math.PI / 180)) *
+  const moonlight = (moon.brightness ?? 1) * moon.illuminatedFraction ** 2 * Math.sqrt(Math.sin(Math.max(0,moon.elevation) * Math.PI / 180)) *
     nightWeight;
-  const pollutionGlow = skyAppearance(sun.elevation, moon, artificialMcd).pollutionGlow;
+  const pollutionGlow = skyAppearance(light, moon, artificialMcd).pollutionGlow;
   const skyColor = (first: string, second: string, lift: number[], artificialLift: number[]) => {
     const to = channels(second);
     // Round only once, after solar interpolation and lunar lift are combined.
@@ -49,9 +59,9 @@ export function environmentForSky(sun: Pick<Bodies["sun"], "elevation" | "azimut
   };
   const cloud = weather?.cloud ?? 0;
   const brightness = (mix(a.brightness, b.brightness, weight) + 0.12 * moonlight) * (1 - cloud * 0.25);
-  const warmth = mix(a.warmth, b.warmth, weight);
+  const tint = blendAt(sun.elevation), warmth = mix(tint.a.warmth, tint.b.warmth, tint.weight);
   const surface = (color: string) => hex(channels(mixColor(color, "#ffb87d", warmth * 0.15)).map((value) => value * brightness));
-  const direct = clamp(sun.elevation / 6, 0, 1) * (1 - cloud * 0.85);
+  const direct = clamp(Math.min(sun.elevation, light) / 6, 0, 1) * (1 - cloud * 0.85);
   return {
     sky: {
       "sky-color": skyColor(a.sky, b.sky, [21,25,29], [45,40,30]),

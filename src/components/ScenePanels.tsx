@@ -44,6 +44,7 @@ import { emptyBuildings, buildingKey } from "../domain/buildings";
 import { BuildingReadout } from "./BuildingReadout";
 import { MeteorLabels, MeteorReadout, meteorFact, useMeteorScene } from "./MeteorScene";
 import { CometLabels, CometReadout, useCometScene } from "./CometScene";
+import { LunarEclipseReadout, SolarEclipseReadout, eclipseFact, moonInUmbra, useEclipses } from "./EclipseReadout";
 import { useCometCatalog } from "./useCometCatalog";
 import { CameraBar } from "./CameraBar";
 import { Timeline } from "./Timeline";
@@ -230,6 +231,11 @@ export function PreviewPanel({
       ? { ...plan, azimuth: camera.azimuth, pitch: camera.pitch }
       : plan;
   const celestialScene = useCelestialScene(plan, visibility, view);
+  const eclipses = useEclipses(plan);
+  const obscuration = celestialScene.bodies?.sun.obscuration ?? 0;
+  const moonLight = celestialScene.bodies?.moon.brightness ?? 1;
+  const umbral = celestialScene.bodies ? moonInUmbra(celestialScene.bodies.moon) : false;
+  const eclipseNote = eclipseFact(obscuration, moonLight, umbral);
   const pollution = useLightPollution(plan);
   const artificialMcd =
     pollution.phase === "ready" ? pollution.sample?.artificialMcd : undefined;
@@ -261,6 +267,7 @@ export function PreviewPanel({
                 : "未改机 · 近似参考"}
             </span>
           )}
+          {eclipseNote && <span className="eclipse-fact" data-eclipse-fact title={eclipseNote}>{eclipseNote}</span>}
           {meteorNote && <span className="meteor-fact" data-meteor-fact title={meteorNote}>{meteorNote}</span>}
           {terrainInfo.adjusted && (
             <span className="camera-adjustment" role="status">
@@ -635,6 +642,7 @@ export function PreviewPanel({
                       bodyId="sun"
                       weather={weather}
                     />
+                    <SolarEclipseReadout info={eclipses} plan={plan} update={update} obscuration={obscuration} />
                   </>,
                 )}
                 {group(
@@ -654,6 +662,7 @@ export function PreviewPanel({
                       bodyId="moon"
                       weather={weather}
                     />
+                    <LunarEclipseReadout info={eclipses} plan={plan} update={update} brightness={moonLight} umbral={umbral} />
                   </>,
                 )}
                 {group(

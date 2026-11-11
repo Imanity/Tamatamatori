@@ -12,7 +12,8 @@ const solarStops = [
   [-6, 1.5],
   [0, -4.5],
 ] as const;
-type Moon = { elevation: number; illuminatedFraction: number };
+/** `brightness` is the share of normal moonlight a lunar eclipse leaves (1 without one). */
+type Moon = { elevation: number; illuminatedFraction: number; brightness?: number };
 
 export function skyAppearance(
   sunElevation: number,
@@ -38,6 +39,7 @@ export function skyAppearance(
   const blend = a === b ? 0 : smoothstep(a[0], b[0], elevation);
   const night = 1 - smoothstep(-18, -6, sunElevation);
   const moonlight =
+    (moon.brightness ?? 1) *
     moon.illuminatedFraction ** 2 *
     Math.sqrt(Math.sin((Math.max(0, moon.elevation) * Math.PI) / 180));
   // Solar and lunar contrast multiply; fading the lunar penalty independently
