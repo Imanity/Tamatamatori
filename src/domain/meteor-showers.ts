@@ -2,6 +2,7 @@ import { Body, GeoVector, MakeTime, RotateVector, Rotation_EQJ_ECL, Rotation_EQJ
 import type { Observer } from "astronomy-engine";
 import data from "../data/meteor-showers.json" with { type: "json" };
 import type { ShootingPlan } from "./plan.ts";
+import { sensorKey } from "./plan.ts";
 import type { Vector3 } from "./ephemeris.ts";
 import { add, celestialBodies, degrees, dot, observerContext, scale, unit } from "./ephemeris.ts";
 import type { View } from "./celestial-projection.ts";
@@ -526,7 +527,7 @@ let sampleCache: { key: string; value: { streaks: MeteorStreak[]; thinning: numb
  */
 export function meteorSample(plan: PlanInput & View, artificialMcd = 0) {
   const key = [plan.latitude, plan.longitude, plan.instant, artificialMcd,
-    plan.azimuth, plan.pitch, plan.focalLength, plan.sensor, plan.aspectRatio, plan.orientation].join("/");
+    plan.azimuth, plan.pitch, plan.focalLength, sensorKey(plan), plan.aspectRatio, plan.orientation].join("/");
   if (sampleCache?.key === key) return sampleCache.value;
   const { from, to } = meteorNight(plan);
   const { date, observer } = observerContext(plan);

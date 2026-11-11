@@ -5,11 +5,12 @@ export const weatherModels = {
   best_match: "自动匹配",
   gfs_seamless: "NOAA GFS",
   icon_seamless: "DWD ICON",
-  // ECMWF IFS HRES, also the fallback of best_match in much of the world; unlike
-  // the 0.25° open-data grid it includes visibility.
+  // ECMWF IFS HRES, also the fallback of best_match in much of the world; it
+  // replaced the 0.25° open-data grid, which lacks visibility.
   ecmwf_ifs: "ECMWF IFS 9 km",
-  ecmwf_ifs025: "ECMWF IFS 0.25°",
 } as const;
+/** Models no longer offered, read as their replacement so saved shots still load. */
+export const retiredWeatherModels: Record<string, WeatherModel> = { ecmwf_ifs025: "ecmwf_ifs" };
 export type WeatherModel = keyof typeof weatherModels;
 export const weatherVariables = {
   cloud: "cloud_cover",

@@ -13,9 +13,9 @@ import { searchTimeZones, zoneOffset, allTimeZones } from "../src/domain/time-zo
 // Every field differs from the defaults so a dropped mapping cannot hide.
 const varied = {
   latitude: -33.8568, longitude: 151.2153, azimuth: 123.456789, pitch: -7.25, cameraHeight: 42.5, focalLength: 600.3,
-  sensor: "aps-c", aspectRatio: "16:9", orientation: "portrait", instant: "2026-12-14T09:31:12Z", timeZone: "Australia/Sydney", followLocalZone: true,
+  sensor: "aps-c", customSensor: null, aspectRatio: "16:9", orientation: "portrait", instant: "2026-12-14T09:31:12Z", timeZone: "Australia/Sydney", followLocalZone: true,
   layers: { buildings: true, sun: false, sunPath: false, moon: false, moonPath: false, stars: true, milkyWay: true, constellations: true, deepSky: true, stations: true, meteors: true, meteorDensity: true, comets: true },
-  refraction: "none", milkyWayContrast: 135, cameraResponse: "ha-modified", lightPollution: true, weather: true, weatherModel: "ecmwf_ifs025",
+  refraction: "none", milkyWayContrast: 135, cameraResponse: "ha-modified", lightPollution: true, weather: true, weatherModel: "ecmwf_ifs",
 };
 const minimal = (extra = {}) => ({ format: "tamatamatori.shot", version: 1, position: { latitude: 35, longitude: 139 }, view: { azimuth: 90 }, time: { instant: "2026-11-04T08:00:00Z" }, ...extra });
 const errorsOf = (value) => { const result = typeof value === "string" ? parseShotText(value) : parseShot(value); assert.equal(result.ok, false); return result.errors.join("\n"); };
@@ -132,10 +132,32 @@ test("当地时区标记：旧机位缺省为固定时区，跟随时可省略�
   assert.match(errorsOf(minimal({ time: { instant: "2026-11-04T08:00:00Z", followLocalZone: "yes" } })), /time\.followLocalZone/);
   assert.match(errorsOf(minimal({ time: { local: "2026-07-14T22:30" } })), /followLocalZone/);
   assert.equal(shotFromPlan({ ...initialPlan, followLocalZone: true }).time.followLocalZone, true);
-  // Both ECMWF grids are valid weather models; the 9 km one was added later in v1.
-  for (const model of ["ecmwf_ifs", "ecmwf_ifs025"])
-    assert.equal(parseShot(minimal({ environment: { weatherModel: model } })).plan.weatherModel, model);
+  // ECMWF IFS 9 km replaced the 0.25° grid: older shots that chose it read as the 9 km model.
+  for (const model of ["ecmwf_ifs", "ecmwf_ifs025"]) {
+    const parsed = parseShot(minimal({ environment: { weatherModel: model } }));
+    assert.equal(parsed.ok, true, model);
+    assert.equal(parsed.plan.weatherModel, "ecmwf_ifs");
+    assert.equal(parsed.shot.environment.weatherModel, "ecmwf_ifs");
+  }
+  assert.match(errorsOf(minimal({ environment: { weatherModel: "ecmwf_aifs" } })), /environment\.weatherModel/);
   assert.equal(shotFromPlan({ ...initialPlan, followLocalZone: undefined }).time.followLocalZone, false);
+});
+
+test("自定义传感器写入 sensorSize 并往返无损，预设不写尺寸，缺尺寸、越界或配错时报错", () => {
+  const custom = { ...varied, sensor: "custom", customSensor: { width: 43.8, height: 32.9 } };
+  const shot = shotFromPlan(custom);
+  assert.deepEqual(shot.camera.sensorSize, { width: 43.8, height: 32.9 });
+  assert.deepEqual(Object.keys(shot.camera), ["focalLength", "sensor", "sensorSize", "aspectRatio", "orientation", "response"]);
+  const parsed = parseShot(JSON.parse(shotJson(shot)));
+  assert.equal(parsed.ok, true);
+  assert.deepEqual(parsed.plan, custom);
+  assert.equal("sensorSize" in shotFromPlan(varied).camera, false);
+  assert.equal(planFromShot(shotFromPlan(varied)).customSensor, null);
+  const camera = (extra) => minimal({ camera: { sensor: "custom", ...extra } });
+  assert.match(errorsOf(camera({})), /camera\.sensorSize：自定义传感器需要宽和高/);
+  assert.match(errorsOf(camera({ sensorSize: { width: 0.5, height: 24 } })), /camera\.sensorSize\.width：应为 1—100 毫米/);
+  assert.match(errorsOf(camera({ sensorSize: { width: 36, height: 24, depth: 1 } })), /camera\.sensorSize：应为/);
+  assert.match(errorsOf(minimal({ camera: { sensor: "aps-c", sensorSize: { width: 36, height: 24 } } })), /只在 camera\.sensor 为 "custom" 时使用/);
 });
 
 test("当地时间加时区换算 UTC，夏令时跳过与重复的钟点和不一致的双写被拒绝", () => {

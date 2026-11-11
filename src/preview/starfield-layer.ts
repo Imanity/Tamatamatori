@@ -4,6 +4,7 @@ import type {
   Map as MapLibreMap,
 } from "maplibre-gl";
 import type { ShootingPlan } from "../domain/plan.ts";
+import { sensorKey } from "../domain/plan.ts";
 import {
   milkyWayMesh,
   skyPointSize,
@@ -389,7 +390,7 @@ export class StarfieldLayer implements CustomLayerInterface {
     const camera = { ...p, ...frame.view };
     const meteorKey = p.layers.meteors && p.layers.meteorDensity
       ? [p.latitude, p.longitude, p.instant, p.refraction, frame.artificialMcd ?? 0,
-        camera.azimuth, camera.pitch, p.focalLength, p.sensor, p.aspectRatio, p.orientation].join("/")
+        camera.azimuth, camera.pitch, p.focalLength, sensorKey(p), p.aspectRatio, p.orientation].join("/")
       : "";
     if (meteorKey !== this.meteorKey) {
       this.meteorKey = meteorKey;

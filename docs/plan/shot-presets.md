@@ -77,6 +77,8 @@
   - 也接受只写 `local` 加 `timeZone`。两者都写时，`local` 必须按其写到的精度（分或秒）与 `instant` 一致。
   - 夏令时跳过或重复的当地时间报错。
 - **时区：**只要浏览器与 Temporal 都接受的 IANA 时区即可，大小写自动规范（`europe/paris` → `Europe/Paris`）。
+- **自定义传感器：**`camera.sensor` 可为 `custom`，此时必须带 `camera.sensorSize`（`width`、`height`，1—100 mm），预设传感器不得带该字段；2026-11-11 加入 v1。
+- **天气模型：**可选 `best_match`、`gfs_seamless`、`icon_seamless`、`ecmwf_ifs`。2026-11-11 前的 `ecmwf_ifs025` 已退役，读取时改为 `ecmwf_ifs`，这是唯一会改写取值的退役项。
 - **当地时区：**`time.followLocalZone` 于 2026-11-10 加入 v1（见[工作区交互改版](workspace-redesign.md#第-2-轮时间轴)），缺省为 false，旧机位保持固定时区。为 true 时显示时区跟随机位：未写 `timeZone` 时按坐标求出，也可只写 `local` 加 `followLocalZone`；写了 `timeZone` 则按记录复现。
 - **文本：**名称最多 40 字，备注最多 500 字，只作纯文本显示；整段输入上限 16 KB。
 - **错误信息：**一次列出全部问题并带字段路径，例如 `view.azimuth：应为数字，收到 "西南"`。导入框提供“复制问题列表”，便于交回 AI 修正。

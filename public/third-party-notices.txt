@@ -26,6 +26,14 @@ data index and source links are provided in About and light-pollution.json.
 Values model historical artificial zenith luminance. They are not real-time
 measurements, Bortle classes, directional light domes or exposure predictions.
 
+Place search: Nominatim public service operated by the OpenStreetMap Foundation
+https://nominatim.org/
+Usage policy: https://operations.osmfoundation.org/policies/nominatim/
+Search results: data (c) OpenStreetMap contributors, Open Database License (ODbL) 1.0.
+Queries are sent only when the user submits a search (no search-as-you-type),
+at least 1.1 s apart from this page, and repeated queries are cached.
+"My location" uses the browser's geolocation; the position stays on the device.
+
 Local time zone lookup: @photostructure/tz-lookup 11.7.0
 https://github.com/photostructure/tz-lookup
 CC0 1.0 Universal (public domain dedication).

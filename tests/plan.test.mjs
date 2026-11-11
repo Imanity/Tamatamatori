@@ -262,3 +262,15 @@ test("粘贴“纬度, 经度”可识别逗号、中文逗号与空格，越界
   for (const text of ["35.4172", "91, 0", "0, 181", "35°N 138°E", "a, b", "1, 2, 3", ""])
     assert.equal(parseCoordinatePair(text), null, text);
 });
+
+test("自定义传感器按毫米尺寸计算视场与画幅裁切，缺尺寸时回落全画幅，缓存键随尺寸变化", async () => {
+  const { sensorSize, sensorKey } = await import("../src/domain/plan.ts");
+  // 44 × 33 mm medium format, 3:2 crop keeps the width: 44 × 29.33 mm.
+  const medium = { ...initialPlan, focalLength: 50, sensor: "custom", customSensor: { width: 44, height: 33 } };
+  const fov = fieldOfView(medium);
+  assert.ok(Math.abs(fov.width - 44) < 1e-9 && Math.abs(fov.height - 44 / 1.5) < 1e-9);
+  assert.ok(Math.abs(fov.horizontal - (2 * Math.atan(44 / 100) * 180) / Math.PI) < 1e-9);
+  assert.deepEqual(sensorSize({ sensor: "custom", customSensor: null }), sensorSize({ sensor: "full-frame" }));
+  assert.equal(sensorKey({ sensor: "aps-c" }), "aps-c");
+  assert.notEqual(sensorKey(medium), sensorKey({ ...medium, customSensor: { width: 44, height: 32.9 } }));
+});

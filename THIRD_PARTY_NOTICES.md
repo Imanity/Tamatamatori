@@ -16,6 +16,10 @@ MapLibre GL JS 6.16.0 的本地修改还包括：为带有本项目 LOD 回调�
 
 本项目去掉北部覆盖外填充值，将有效原生 3×3 像元按线性 mcd/m² 平均为约 2.8 km 格网，保留原始格网注册，再对数编码、gzip 分块。衍生文件位于 `public/light-pollution/atlas-2015/`，继续按 CC BY-NC 4.0 提供。原始和逐块校验值、坐标、处理步骤及下载索引见 [light-pollution.json](src/data/light-pollution.json)，完整来源在 About。
 
+## 地点搜索（Nominatim）
+
+地图的地点搜索使用 OpenStreetMap 基金会运营的 Nominatim 公共服务，结果数据 © OpenStreetMap contributors，ODbL 1.0。按其[使用条款](https://operations.osmfoundation.org/policies/nominatim/)只在用户主动提交时查询、不做边输边搜，本页相邻请求间隔至少 1.1 秒并缓存相同查询；服务方要求停止使用时应改用自建或第三方服务。“我的位置”使用浏览器定位，坐标只在本机使用。
+
 ## 当地时区与 tz-lookup
 
 “当地时区”按机位坐标查询 IANA 时区，使用 @photostructure/tz-lookup 11.7.0，CC0 1.0（原 Dark Sky tz-lookup 亦为 CC0）。其有损压缩网格由 Evan Siroky 的 timezone-boundary-builder 生成，后者以 ODbL 1.0 发布、基于 © OpenStreetMap contributors。边境附近与海上可能返回相邻时区，结果仅用于显示当地钟点，拍摄时刻按 UTC 保存。[tz-lookup](https://github.com/photostructure/tz-lookup)、[timezone-boundary-builder](https://github.com/evansiroky/timezone-boundary-builder)、[ODbL 1.0](https://opendatacommons.org/licenses/odbl/)

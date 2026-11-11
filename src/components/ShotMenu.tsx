@@ -47,7 +47,7 @@ function place(p: { latitude: number; longitude: number }) {
 const localTime = (shot: Shot) =>
   `${shot.time.local.slice(0, 16).replace("T", " ")} · ${shot.time.timeZone}${shot.time.followLocalZone ? "（当地）" : ""}`;
 const lens = (shot: Shot) =>
-  `${shot.camera.focalLength} mm · ${sensors[shot.camera.sensor].label.split(" · ")[0]} · ${shot.camera.orientation === "portrait" ? "竖幅" : "横幅"} ${shot.camera.aspectRatio}`;
+  `${shot.camera.focalLength} mm · ${shot.camera.sensor === "custom" ? `自定义 ${shot.camera.sensorSize?.width}×${shot.camera.sensorSize?.height} mm` : sensors[shot.camera.sensor].label.split(" · ")[0]} · ${shot.camera.orientation === "portrait" ? "竖幅" : "横幅"} ${shot.camera.aspectRatio}`;
 export const suggestShotName = (shot: Shot) =>
   `${place(shot.position).replace(/附近$/, "")} · ${shot.time.local.slice(5, 16).replace("T", " ")}`.slice(0, SHOT_NAME_LIMIT);
 

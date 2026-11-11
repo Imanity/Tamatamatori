@@ -185,3 +185,84 @@
     top: 9px;
   }
 }
+.map-tool-button.is-active {
+  color: #fafdf5;
+  background: #52734c;
+}
+/* Place search panel below the toolbar. */
+.map-search {
+  position: absolute;
+  top: 56px;
+  left: 12px;
+  right: 56px;
+  max-width: 400px;
+  z-index: 4;
+  padding: 8px;
+  border: 1px solid #d8e1ce;
+  border-radius: 8px;
+  background: #fcfdf7f8;
+  box-shadow: 0 6px 20px #2d462c26;
+}
+.map-search form { display: flex; gap: 6px; }
+.map-search input { flex: 1; min-width: 0; min-height: 30px; padding: 4px 8px; font-size: 12px; }
+.map-search button[type="submit"] { flex-shrink: 0; padding: 4px 10px; border: 1px solid #6f8965; border-radius: 4px; background: var(--green); color: #fbfcf7; font-size: 11px; }
+.map-search button[type="submit"]:disabled { opacity: .5; }
+.map-search-close { flex-shrink: 0; width: 26px; border: 0; background: none; color: #7c8b72; font-size: 16px; }
+.map-search-status { margin: 6px 2px 0; font-size: 11px; color: #6c7e61; }
+.map-search-error { color: #a14a2a; }
+.map-search-results { list-style: none; margin: 6px 0 0; padding: 0; max-height: 220px; overflow-y: auto; overscroll-behavior: contain; }
+.map-search-results button { display: grid; gap: 2px; width: 100%; padding: 6px; border: 0; border-radius: 4px; background: none; text-align: left; }
+.map-search-results button:hover, .map-search-results button:focus-visible { background: #eef3ea; }
+.map-search-results strong { font-size: 12px; font-weight: 550; color: #3f5a46; }
+.map-search-results small { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; font-size: 10px; color: #8a947f; }
+.map-search-credit { margin: 6px 2px 0; font-size: 9px; line-height: 1.5; color: #8a947f; }
+.map-search-credit a { text-decoration: underline; }
+/* Searched place or device position, separate from the camera marker. */
+.map-target-marker { width: 16px; height: 16px; border: 3px solid #fffef9; border-radius: 50%; box-shadow: 0 1px 5px #2d462c55; }
+.map-target-marker.map-target-place { background: #c2453a; }
+.map-target-marker.map-target-device { background: #2f7ae5; box-shadow: 0 0 0 6px #2f7ae533, 0 1px 5px #2d462c55; }
+.map-target-card {
+  position: absolute;
+  left: 12px;
+  right: 56px;
+  bottom: 34px;
+  max-width: 440px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid #d8e1ce;
+  border-radius: 8px;
+  background: #fcfdf7f8;
+  box-shadow: 0 4px 14px #2d462c22;
+}
+.map-target-card > span { flex: 1; min-width: 0; display: grid; gap: 1px; }
+.map-target-card strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: #3f5a46; }
+.map-target-card small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; color: #8a947f; }
+.map-target-apply { flex-shrink: 0; padding: 5px 10px; border: 1px solid #6f8965; border-radius: 4px; background: var(--green); color: #fbfcf7; font-size: 11px; }
+.map-target-close { flex-shrink: 0; width: 24px; border: 0; background: none; color: #7c8b72; font-size: 16px; }
+/* Colour key for the body azimuth lines, under the zoom controls. */
+.map-legend {
+  position: absolute;
+  top: 112px;
+  right: 10px;
+  z-index: 2;
+  display: grid;
+  gap: 2px;
+  padding: 5px 7px;
+  border: 1px solid #d8e1ce;
+  border-radius: 6px;
+  background: #fcfdf7e6;
+  color: #5d7055;
+  font-size: 10px;
+  line-height: 1.4;
+  pointer-events: auto;
+}
+.map-legend span { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+.map-legend i { width: 12px; height: 3px; border-radius: 2px; }
+.map-legend .map-legend-note { color: #8a947f; font-size: 9px; }
+/* Short maps (phones): the toolbar needs the top edge, so the key is left out. */
+@container photography-map (max-height: 260px) {
+  .map-legend { display: none; }
+}

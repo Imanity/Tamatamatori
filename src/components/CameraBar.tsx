@@ -1,4 +1,4 @@
-import { aspectRatios, focalPresets, focalSlider, sensors } from "../domain/plan";
+import { aspectRatios, customSensorLimits, focalPresets, focalSlider, sensorSize, sensors } from "../domain/plan";
 import type { ShootingPlan } from "../domain/plan";
 import { NumberField } from "./NumberField";
 
@@ -60,16 +60,38 @@ export function CameraBar({
           aria-label="传感器"
           title="传感器"
           value={plan.sensor}
-          onChange={(event) =>
-            update({ sensor: event.target.value as ShootingPlan["sensor"] })
-          }
+          onChange={(event) => {
+            const sensor = event.target.value as ShootingPlan["sensor"];
+            // A new custom sensor starts from the current size.
+            update(sensor === "custom"
+              ? { sensor, customSensor: plan.customSensor ?? { ...sensorSize(plan) } }
+              : { sensor });
+          }}
         >
           {Object.entries(sensors).map(([key, sensor]) => (
             <option key={key} value={key} title={sensor.label}>
               {sensor.label.split(" · ")[0]}
             </option>
           ))}
+          <option value="custom">自定义</option>
         </select>
+        {plan.sensor === "custom" && (
+          <span className="custom-sensor" role="group" aria-label="自定义传感器尺寸">
+            {(["width", "height"] as const).map((side) => (
+              <NumberField
+                key={side}
+                className="sensor-field"
+                label={side === "width" ? "传感器宽" : "传感器高"}
+                value={sensorSize(plan)[side]}
+                min={customSensorLimits[0]}
+                max={customSensorLimits[1]}
+                step={0.1}
+                unit="mm"
+                onChange={(value) => update({ customSensor: { ...sensorSize(plan), [side]: value } })}
+              />
+            ))}
+          </span>
+        )}
         <select
           aria-label="画幅比例"
           title="画幅比例"

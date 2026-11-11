@@ -1,4 +1,5 @@
 import type { ShootingPlan } from "./plan.ts";
+import { sensorKey } from "./plan.ts";
 
 export type Occlusion = "waiting" | "clear" | "partial" | "blocked" | "subpixel" | "error";
 export interface VisibilitySnapshot {
@@ -12,7 +13,7 @@ export const emptyVisibility: VisibilitySnapshot = { planKey: "", states: { sun:
 
 export function celestialPlanKey(plan: ShootingPlan) {
   return [plan.longitude, plan.latitude, plan.instant, plan.azimuth, plan.pitch, plan.focalLength,
-    plan.sensor, plan.aspectRatio, plan.orientation, plan.cameraHeight, plan.refraction,
+    sensorKey(plan), plan.aspectRatio, plan.orientation, plan.cameraHeight, plan.refraction,
     plan.layers.sun, plan.layers.moon, !!plan.layers.stars, !!plan.layers.milkyWay, !!plan.layers.constellations, !!plan.layers.deepSky, !!plan.layers.stations, !!plan.layers.buildings,
     !!plan.layers.meteors, !!plan.layers.meteorDensity, !!plan.layers.comets].join("/");
 }

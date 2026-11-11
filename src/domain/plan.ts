@@ -9,6 +9,15 @@ export const sensors = {
 
 export const aspectRatios = { "3:2": 3 / 2, "16:9": 16 / 9, "1:1": 1 } as const;
 
+/** Sensor width and height in millimetres. */
+export interface SensorSize {
+  width: number;
+  height: number;
+}
+/** A preset sensor or "custom", whose size is `ShootingPlan.customSensor`. */
+export type SensorId = keyof typeof sensors | "custom";
+export const customSensorLimits = [1, 100] as const;
+
 export interface ShootingPlan {
   latitude: number;
   longitude: number;
@@ -16,7 +25,9 @@ export interface ShootingPlan {
   pitch: number;
   cameraHeight: number;
   focalLength: number;
-  sensor: keyof typeof sensors;
+  sensor: SensorId;
+  /** Width and height for the "custom" sensor; null when no custom size is set. */
+  customSensor?: SensorSize | null;
   aspectRatio: keyof typeof aspectRatios;
   orientation: "landscape" | "portrait";
   instant: string;
@@ -62,6 +73,7 @@ export const initialPlan: ShootingPlan = {
   cameraHeight: 1.6,
   focalLength: 35,
   sensor: "full-frame",
+  customSensor: null,
   aspectRatio: "3:2",
   orientation: "landscape",
   instant: "2026-11-04T08:00:00Z",
@@ -93,16 +105,28 @@ export function normalizeLongitude(longitude: number) {
   return ((((longitude + 180) % 360) + 360) % 360) - 180;
 }
 
+/** The sensor in millimetres; a custom sensor without a size falls back to full frame. */
+export function sensorSize(plan: Pick<ShootingPlan, "sensor" | "customSensor">): SensorSize {
+  if (plan.sensor === "custom") return plan.customSensor ?? sensors["full-frame"];
+  return sensors[plan.sensor];
+}
+
+/** Identifies the sensor for cache keys, including a custom size. */
+export function sensorKey(plan: Pick<ShootingPlan, "sensor" | "customSensor">) {
+  const size = sensorSize(plan);
+  return plan.sensor === "custom" ? `custom:${size.width}x${size.height}` : plan.sensor;
+}
+
 export function fieldOfView(
   plan: Pick<
     ShootingPlan,
     "focalLength" | "sensor" | "aspectRatio" | "orientation"
-  >,
+  > & Partial<Pick<ShootingPlan, "customSensor">>,
 ) {
   if (!Number.isFinite(plan.focalLength) || plan.focalLength <= 0) {
     throw new RangeError("焦距必须大于 0");
   }
-  const sensor = sensors[plan.sensor];
+  const sensor = sensorSize(plan);
   const ratio = aspectRatios[plan.aspectRatio];
   const croppedWidth = Math.min(sensor.width, sensor.height * ratio);
   const croppedHeight = Math.min(sensor.height, sensor.width / ratio);

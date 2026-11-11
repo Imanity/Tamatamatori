@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Map as MapLibreMap } from "maplibre-gl";
 import type { ShootingPlan } from "../domain/plan";
+import { sensorKey } from "../domain/plan";
 import { isMapPosition } from "../domain/map";
 import {
   DEFAULT_TERRAIN_URL,
@@ -278,7 +279,7 @@ export function TerrainScene({ plan, stations, comets, onVisibilityChange, onCam
           current.plan.azimuth,
           current.plan.pitch,
           current.plan.focalLength,
-          current.plan.sensor,
+          sensorKey(current.plan),
           current.plan.aspectRatio,
           current.plan.orientation,
           !!current.plan.layers.buildings,

@@ -96,6 +96,12 @@ export function About() {
               <li>
                 <a href="https://mapterhorn.com/attribution/" target="_blank" rel="noreferrer">© Mapterhorn · 高程及上游数据来源</a>
               </li>
+              <li>
+                <a href="https://nominatim.org/" target="_blank" rel="noreferrer">Nominatim</a>
+                <span> · 地点搜索，数据 © OpenStreetMap contributors（ODbL）。只在按回车或“搜索”时查询，遵守 </span>
+                <a href="https://operations.osmfoundation.org/policies/nominatim/" target="_blank" rel="noreferrer">使用条款</a>
+                <span>；“我的位置”只在本机使用，不发送到任何服务</span>
+              </li>
             </ul>
             <p>地形按曲面构图绘制；高程数据的垂直基准尚未核定，水面高程按 DEM 近似，不含倒影、波纹或实际水位。</p>
             <p>建筑以周边有限范围的轮廓和渲染高度生成体块；高度可能来自楼层换算或缺省值，不含完整屋顶、实景材质或灯光。基座采用同源 DEM 近似，不保证建筑完整覆盖或楼顶日月对齐精度。</p>

@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Detail, where } from "./readout";
 import { Temporal } from "@js-temporal/polyfill";
 import type { ShootingPlan } from "../domain/plan";
+import { sensorKey } from "../domain/plan";
 import { activeShowers, meteorEstimate, meteorModel, meteorSample } from "../domain/meteor-showers";
 import type { ActiveShower } from "../domain/meteor-showers";
 import { skyPointView } from "../domain/starfield";
@@ -50,7 +51,7 @@ export function useMeteorScene(plan: ShootingPlan, view: View, pollution: Meteor
       return { ...value, thinning: meteorSample(view, pollution.artificialMcd).thinning };
     } catch { return null; }
   }, [density, actives.error, plan.latitude, plan.longitude, plan.instant, view.azimuth, view.pitch,
-    plan.focalLength, plan.sensor, plan.aspectRatio, plan.orientation, pollution.artificialMcd]);
+    plan.focalLength, sensorKey(plan), plan.aspectRatio, plan.orientation, pollution.artificialMcd]);
   return { on, density, actives: actives.list, error: actives.error, estimate, pollution };
 }
 type MeteorScene = ReturnType<typeof useMeteorScene>;

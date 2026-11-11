@@ -12,6 +12,7 @@ import type { ShootingPlan } from "../domain/plan";
 import { daylightPhase, solarPosition } from "../domain/solar";
 import {
   instantAtWindowMinute,
+  lightPeriods,
   neighbourEvent,
   sunElevationAcross,
   timelineEvents,
@@ -19,7 +20,10 @@ import {
   timelineWindow,
   windowMinute,
 } from "../domain/timeline";
-import type { TimelineEvent } from "../domain/timeline";
+import type { LightPeriod, TimelineEvent } from "../domain/timeline";
+
+const periodNames: Record<LightPeriod["kind"], string> = { golden: "黄金时刻", blue: "蓝调时刻" };
+const periodShort: Record<LightPeriod["kind"], string> = { golden: "黄金", blue: "蓝调" };
 import type { CometCatalog } from "../domain/comet-catalog";
 import type { OrbitSnapshot } from "../domain/orbit-data";
 import type { WeatherForecast } from "../domain/weather";
@@ -136,6 +140,16 @@ export function Timeline({
       return { events: [] as TimelineEvent[], missing: [] as string[] };
     }
   }, [axis.start, axis.mode, latitude, longitude, refraction, cameraHeight, layerKey, comets, orbits]);
+  // Golden and blue hour belong to the Sun layer, like its rise and set.
+  const periods = useMemo(() => {
+    if (!layers.sun) return [] as LightPeriod[];
+    try {
+      return lightPeriods({ latitude, longitude }, axis);
+    } catch {
+      return [] as LightPeriod[];
+    }
+  }, [axis.start, axis.mode, latitude, longitude, layers.sun]);
+  const allMissing = layers.sun && !periods.length ? [...missing, "黄金时刻与蓝调时刻"] : missing;
   const clouds = useMemo(() => {
     if (!forecast) return null;
     const start = Date.parse(axis.start), end = Date.parse(axis.end);
@@ -296,6 +310,28 @@ export function Timeline({
             </button>
           ))}
         </div>
+        {periods.length > 0 && (
+          <div className="light-periods" role="group" aria-label="黄金时刻与蓝调时刻">
+            {periods.map((period) => {
+              const from = position(period.from), to = Date.parse(period.to) >= Date.parse(axis.end) ? 1 : position(period.to);
+              const range = `${clock(period.from)}–${clock(period.to)}`;
+              return (
+                <button
+                  key={`${period.kind}-${period.from}`}
+                  type="button"
+                  className={`light-period light-period-${period.kind}`}
+                  data-period={period.kind}
+                  style={{ left: `${from * 100}%`, width: `${Math.max(0.4, (to - from) * 100)}%` }}
+                  aria-label={`跳到${periodNames[period.kind]}开始 ${range}`}
+                  title={`${periodNames[period.kind]} ${range}：太阳中心几何高度 ${period.kind === "golden" ? "−4°—6°" : "−6°—−4°"}，不含地形与天气`}
+                  onClick={() => attempt(() => period.from)}
+                >
+                  {(to - from) * trackWidth >= 30 && <span>{periodShort[period.kind]}</span>}
+                </button>
+              );
+            })}
+          </div>
+        )}
         <span className="time-track">
           <span
             className="time-band"
@@ -330,8 +366,8 @@ export function Timeline({
           ))}
         </span>
       </div>
-      {missing.length > 0 && (
-        <p className="time-missing">本时段无：{missing.join("、")}</p>
+      {allMissing.length > 0 && (
+        <p className="time-missing">本时段无：{allMissing.join("、")}</p>
       )}
       <div className="time-actions" role="group" aria-label="调整拍摄时刻">
         <button

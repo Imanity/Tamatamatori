@@ -1,7 +1,8 @@
 import { Temporal } from "@js-temporal/polyfill";
-import { aspectRatios, initialPlan, sensors } from "./plan.ts";
+import { aspectRatios, customSensorLimits, initialPlan, sensorSize, sensors } from "./plan.ts";
+import type { SensorSize } from "./plan.ts";
 import type { ShootingPlan } from "./plan.ts";
-import { weatherModels } from "./weather.ts";
+import { retiredWeatherModels, weatherModels } from "./weather.ts";
 import { localTimeZone } from "./zone-lookup.ts";
 import type { WeatherModel } from "./weather.ts";
 
@@ -56,6 +57,8 @@ export interface Shot {
   camera: {
     focalLength: number;
     sensor: ShootingPlan["sensor"];
+    /** Millimetres; present exactly when `sensor` is "custom". */
+    sensorSize?: SensorSize;
     aspectRatio: ShootingPlan["aspectRatio"];
     orientation: ShootingPlan["orientation"];
     response: ShootingPlan["cameraResponse"];
@@ -115,6 +118,7 @@ export function shotFromPlan(plan: ShootingPlan, name = "", note = ""): Shot {
     camera: {
       focalLength: plan.focalLength,
       sensor: plan.sensor,
+      ...(plan.sensor === "custom" ? { sensorSize: { ...sensorSize(plan) } } : {}),
       aspectRatio: plan.aspectRatio,
       orientation: plan.orientation,
       response: plan.cameraResponse,
@@ -147,6 +151,7 @@ export function planFromShot(shot: Shot): ShootingPlan {
     pitch: shot.view.pitch,
     focalLength: shot.camera.focalLength,
     sensor: shot.camera.sensor,
+    customSensor: shot.camera.sensorSize ? { ...shot.camera.sensorSize } : null,
     aspectRatio: shot.camera.aspectRatio,
     orientation: shot.camera.orientation,
     cameraResponse: shot.camera.response,
@@ -237,7 +242,7 @@ const topKeys = ["$schema", "format", "version", "name", "note", "position", "vi
 const groupKeys: Record<string, readonly string[]> = {
   position: ["latitude", "longitude", "heightAboveGround"],
   view: ["azimuth", "pitch"],
-  camera: ["focalLength", "sensor", "aspectRatio", "orientation", "response"],
+  camera: ["focalLength", "sensor", "sensorSize", "aspectRatio", "orientation", "response"],
   time: ["instant", "local", "timeZone", "followLocalZone", "refraction"],
   layers: shotLayerKeys,
   sky: ["milkyWayContrast"],
@@ -334,7 +339,23 @@ export function parseShot(value: unknown): ShotParse {
   const pitch = number(view, "view.pitch", initialPlan.pitch, shotLimits.pitch);
   const camera = group("camera", false);
   const focalLength = number(camera, "camera.focalLength", initialPlan.focalLength, shotLimits.focalLength);
-  const sensor = choice(camera, "camera.sensor", Object.keys(sensors) as ShootingPlan["sensor"][], initialPlan.sensor);
+  const sensor = choice(camera, "camera.sensor", [...Object.keys(sensors), "custom"] as ShootingPlan["sensor"][], initialPlan.sensor);
+  // A custom sensor carries its size; a preset must not.
+  let customSize: SensorSize | undefined;
+  if (camera.sensorSize !== undefined) {
+    const size = camera.sensorSize;
+    if (sensor !== "custom") errors.push(`camera.sensorSize：只在 camera.sensor 为 "custom" 时使用`);
+    else if (!isObject(size) || Object.keys(size).some((key) => key !== "width" && key !== "height"))
+      errors.push(`camera.sensorSize：应为 { "width": 毫米, "height": 毫米 }，收到 ${shown(size)}`);
+    else {
+      const [low, high] = customSensorLimits;
+      const width = size.width, height = size.height;
+      for (const [key, value] of [["width", width], ["height", height]] as const)
+        if (typeof value !== "number" || !Number.isFinite(value) || value < low || value > high)
+          errors.push(`camera.sensorSize.${key}：应为 ${low}—${high} 毫米，收到 ${shown(value)}`);
+      if (typeof width === "number" && typeof height === "number") customSize = { width, height };
+    }
+  } else if (sensor === "custom") errors.push(`camera.sensorSize：自定义传感器需要宽和高，例如 { "width": 43.8, "height": 32.9 }`);
   const aspectRatio = choice(camera, "camera.aspectRatio", Object.keys(aspectRatios) as ShootingPlan["aspectRatio"][], initialPlan.aspectRatio);
   const orientation = choice(camera, "camera.orientation", ["landscape", "portrait"] as const, initialPlan.orientation);
   const response = choice(camera, "camera.response", ["stock", "ha-modified"] as const, initialPlan.cameraResponse);
@@ -416,7 +437,11 @@ export function parseShot(value: unknown): ShotParse {
   const environment = group("environment", false);
   const lightPollution = flag(environment, "environment.lightPollution", !!initialPlan.lightPollution);
   const weather = flag(environment, "environment.weather", !!initialPlan.weather);
-  const weatherModel = choice(environment, "environment.weatherModel", Object.keys(weatherModels) as WeatherModel[], "best_match");
+  // A retired model (ECMWF IFS 0.25°, until 2026-11-11) reads as its replacement.
+  const writtenModel = environment.weatherModel;
+  const weatherModel = typeof writtenModel === "string" && Object.hasOwn(retiredWeatherModels, writtenModel)
+    ? retiredWeatherModels[writtenModel]
+    : choice(environment, "environment.weatherModel", Object.keys(weatherModels) as WeatherModel[], "best_match");
 
   if (errors.length) return { ok: false, errors };
   const shot: Shot = {
@@ -426,7 +451,7 @@ export function parseShot(value: unknown): ShotParse {
     note,
     position: { latitude, longitude, heightAboveGround },
     view: { azimuth, pitch },
-    camera: { focalLength, sensor, aspectRatio, orientation, response },
+    camera: { focalLength, sensor, ...(customSize ? { sensorSize: customSize } : {}), aspectRatio, orientation, response },
     time: { instant: resolvedInstant, local: shotLocalTime(resolvedInstant, timeZone), timeZone, followLocalZone, refraction },
     layers: layerValues,
     sky: { milkyWayContrast },

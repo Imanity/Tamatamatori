@@ -137,6 +137,13 @@ class TestMap extends Events {
     this.emit("move");
     this.emit("moveend");
   }
+  fitBounds(bounds, options) {
+    this.transitions.push({ bounds, ...options });
+    const [[west, south], [east, north]] = bounds;
+    this.center = { lng: (west + east) / 2, lat: (south + north) / 2 };
+    this.emit("move");
+    this.emit("moveend");
+  }
   resize() { this.resizes++; }
   remove() {
     this.customLayers.forEach((layer) => layer.onRemove?.());
@@ -351,6 +358,8 @@ before(async () => {
           if (id.replaceAll("\\", "/").endsWith("/src/preview/weather.ts"))
             return "export const loadWeather = (...args) => globalThis.__testWeatherLoader(...args);\n" +
               "export const loadWeatherSource = (...args) => (globalThis.__testWeatherSourceLoader ?? (() => Promise.reject(new Error('no source'))))(...args);";
+          if (id.replaceAll("\\", "/").endsWith("/src/preview/geocode.ts"))
+            return "export const searchPlaces = (...args) => globalThis.__testPlaceSearch(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/elevation.ts"))
             return "export const groundElevation = (...args) => globalThis.__testGroundLoader(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/map/sdk.ts"))
@@ -1864,8 +1873,8 @@ test('环境分组保留关闭时的模型选择，切换模型取消旧数据�
   await workspace(t); const map = await readyTerrain(), ground = groundRequests.length;
   const select = document.querySelector('[aria-label="天气预测模型"]');
   assert.ok(document.querySelector('.environment-settings').contains(select));
-  assert.deepEqual([...select.options].map((option) => option.value), ['best_match', 'gfs_seamless', 'icon_seamless', 'ecmwf_ifs', 'ecmwf_ifs025']);
-  assert.deepEqual([...select.options].map((option) => option.textContent).slice(3), ['ECMWF IFS 9 km', 'ECMWF IFS 0.25°']);
+  assert.deepEqual([...select.options].map((option) => option.value), ['best_match', 'gfs_seamless', 'icon_seamless', 'ecmwf_ifs']);
+  assert.deepEqual([...select.options].map((option) => option.textContent).slice(1), ['NOAA GFS', 'DWD ICON', 'ECMWF IFS 9 km']);
   await settle(() => setControl(select, 'gfs_seamless'));
   assert.equal(weatherRequests.length, 0);
   const pending = [];
@@ -1873,7 +1882,7 @@ test('环境分组保留关闭时的模型选择，切换模型取消旧数据�
   await settle(() => document.querySelector('[aria-label="天气效果"]').click());
   await waitUntil(() => pending.length === 1);
   assert.equal(pending[0].model, 'gfs_seamless');
-  await settle(() => setControl(select, 'ecmwf_ifs025'));
+  await settle(() => setControl(select, 'ecmwf_ifs'));
   await waitUntil(() => pending.length === 2);
   assert.ok(pending[0].signal.aborted);
   await settle(() => pending[0].resolve(parseWeather(weatherResponse(), Date.now())));
@@ -1881,7 +1890,7 @@ test('环境分组保留关闭时的模型选择，切换模型取消旧数据�
   const raw = weatherResponse(); raw.hourly.visibility.fill(null);
   await settle(() => pending[1].resolve(parseWeather(raw, Date.now())));
   assert.ok(document.querySelector('[data-weather-phase="ready"]'));
-  assert.equal(pending[1].model, 'ecmwf_ifs025');
+  assert.equal(pending[1].model, 'ecmwf_ifs');
   assert.match(document.querySelector('.weather-readout').textContent, /能见度 模型未提供/);
   assert.equal(terrainMap(), map); assert.equal(groundRequests.length, ground);
 });
@@ -2506,4 +2515,144 @@ test('天气“自动匹配”在选项后标注拍摄时刻的云量来源，�
   await settle(() => setControl(document.querySelector('[aria-label="天气预测模型"]'), 'gfs_seamless'));
   assert.equal(option().textContent, '自动匹配');
   assert.doesNotMatch(document.querySelector('.weather-source')?.textContent ?? '', /云量来自/);
+});
+
+test('地图方位线：日月默认画出，随图层开关增减，银心跟随银河；图例只列出现的天体', async t => {
+  const { map } = await workspace(t); await readyTerrain();
+  const features = () => map.getSource('tamatamatori-body-lines').data.features;
+  const bodies = () => [...new Set(features().map((feature) => feature.properties.body))].sort();
+  await waitUntil(() => features().length > 0);
+  assert.deepEqual(bodies(), ['moon', 'sun']);
+  const sunNow = features().find((feature) => feature.properties.body === 'sun' && feature.properties.kind === 'now');
+  assert.equal(sunNow.properties.above, false, '17:00 in Tokyo: below the horizon, drawn dotted');
+  assert.deepEqual(sunNow.geometry.coordinates[0], [value('经度'), value('纬度')]);
+  assert.deepEqual([...document.querySelectorAll('.map-legend span:not(.map-legend-note)')].map((item) => item.textContent), ['太阳', '月亮']);
+  await settle(() => document.querySelector('[aria-label="显示月亮"]').click());
+  assert.deepEqual(bodies(), ['sun']);
+  await settle(() => document.querySelector('[aria-label="显示银河"]').click());
+  assert.deepEqual(bodies(), ['core', 'sun']);
+  assert.ok(features().some((feature) => feature.properties.body === 'core' && feature.properties.kind !== 'now'));
+  assert.deepEqual([...document.querySelectorAll('.map-legend span:not(.map-legend-note)')].map((item) => item.textContent), ['太阳', '银心']);
+  await settle(() => document.querySelector('[aria-label="显示太阳"]').click());
+  await settle(() => document.querySelector('[aria-label="显示银河"]').click());
+  assert.deepEqual(features(), []);
+  assert.equal(document.querySelector('.map-legend'), null);
+});
+
+test('地点搜索只在提交时查询，坐标直接定位不发请求；选中结果只移动地图，“设为机位”才改计划', async t => {
+  const queries = [];
+  installGlobal('__testPlaceSearch', async (query) => {
+    queries.push(query);
+    if (query === '无此地') return [];
+    if (query === '出错') throw new Error('地点搜索失败（503）');
+    return [{ name: '富士山', detail: '富士山, 静冈县, 日本', latitude: 35.3606, longitude: 138.7274, bounds: [35.35, 35.37, 138.71, 138.74] }];
+  });
+  t.after(() => { delete globalThis.__testPlaceSearch; });
+  const { map } = await workspace(t); await readyTerrain();
+  const before = { latitude: value('纬度'), longitude: value('经度'), time: shootingDateTime() };
+  await settle(() => document.querySelector('[aria-label="搜索地点"]').click());
+  const field = () => document.querySelector('.map-search input[type="search"]');
+  await settle(() => setControl(field(), '富士'));
+  assert.deepEqual(queries, [], 'typing alone never searches');
+  await settle(() => document.querySelector('.map-search form').dispatchEvent(new dom.window.Event('submit', { bubbles: true, cancelable: true })));
+  await waitUntil(() => document.querySelector('.map-search-results button'));
+  assert.deepEqual(queries, ['富士']);
+  assert.match(document.querySelector('.map-search-credit').textContent, /OpenStreetMap 贡献者.*Nominatim/);
+  await settle(() => document.querySelector('.map-search-results button').click());
+  assert.equal(document.querySelector('.map-search'), null);
+  assert.match(document.querySelector('.map-target-card').textContent, /富士山/);
+  assert.ok(map.transitions.some((move) => move.bounds), 'the map fits the place');
+  assert.deepEqual({ latitude: value('纬度'), longitude: value('经度'), time: shootingDateTime() }, before, 'browsing only');
+  const target = TestMarker.instances.find((marker) => marker.getElement().classList.contains('map-target-marker'));
+  assert.deepEqual(target.getLngLat(), { lng: 138.7274, lat: 35.3606 });
+  await settle(() => document.querySelector('.map-target-apply').click());
+  assert.equal(value('纬度'), 35.3606); assert.equal(value('经度'), 138.7274);
+  assert.equal(document.querySelector('.map-target-card'), null);
+  // Coordinates locate directly; empty results and failures are told apart.
+  await settle(() => document.querySelector('[aria-label="搜索地点"]').click());
+  await settle(() => setControl(field(), '48.8584, 2.2945'));
+  await settle(() => document.querySelector('.map-search form').dispatchEvent(new dom.window.Event('submit', { bubbles: true, cancelable: true })));
+  assert.deepEqual(queries, ['富士']);
+  assert.match(document.querySelector('.map-target-card').textContent, /坐标位置.*48\.85840, 2\.29450/);
+  await settle(() => document.querySelector('[aria-label="移除地图标记"]').click());
+  await settle(() => document.querySelector('[aria-label="搜索地点"]').click());
+  await settle(() => setControl(field(), '无此地'));
+  await settle(() => document.querySelector('.map-search form').dispatchEvent(new dom.window.Event('submit', { bubbles: true, cancelable: true })));
+  await waitUntil(() => /没有找到/.test(document.querySelector('.map-search-status')?.textContent ?? ''));
+  await settle(() => setControl(field(), '出错'));
+  await settle(() => document.querySelector('.map-search form').dispatchEvent(new dom.window.Event('submit', { bubbles: true, cancelable: true })));
+  await waitUntil(() => /503/.test(document.querySelector('.map-search-error')?.textContent ?? ''));
+});
+
+test('我的位置：成功时放置本机标记且不改计划，权限拒绝与不支持分别提示', async t => {
+  const original = Object.getOwnPropertyDescriptor(dom.window.navigator, 'geolocation');
+  let respond;
+  Object.defineProperty(dom.window.navigator, 'geolocation', {
+    configurable: true,
+    value: { getCurrentPosition: (success, failure) => { respond = { success, failure }; } },
+  });
+  t.after(() => {
+    if (original) Object.defineProperty(dom.window.navigator, 'geolocation', original);
+    else delete dom.window.navigator.geolocation;
+  });
+  await workspace(t); await readyTerrain();
+  const before = { latitude: value('纬度'), longitude: value('经度') };
+  const locate = () => document.querySelector('[aria-label="我的位置"]');
+  await settle(() => locate().click());
+  assert.equal(locate().disabled, true);
+  assert.match(document.querySelector('.map-feedback').textContent, /正在获取当前位置/);
+  await settle(() => respond.success({ coords: { latitude: 31.2304, longitude: 121.4737, accuracy: 35 } }));
+  assert.equal(locate().disabled, false);
+  assert.match(document.querySelector('.map-target-card').textContent, /我的位置.*31\.23040, 121\.47370 · 精度约 35 m/);
+  assert.ok(TestMarker.instances.find((marker) => marker.getElement().classList.contains('map-target-device')));
+  assert.deepEqual({ latitude: value('纬度'), longitude: value('经度') }, before);
+  await settle(() => locate().click());
+  await settle(() => respond.failure({ code: 1 }));
+  assert.match(document.querySelector('.map-feedback').textContent, /未获得定位权限/);
+  Object.defineProperty(dom.window.navigator, 'geolocation', { configurable: true, value: undefined });
+  await settle(() => locate().click());
+  assert.match(document.querySelector('.map-feedback').textContent, /此浏览器不支持定位/);
+});
+
+test('时间轴标出黄金时刻与蓝调时刻：属于太阳图层，点击跳到起点，极夜时说明没有', async t => {
+  await workspace(t); await readyTerrain();
+  await setShootingDateTime('2026-11-04T12:00');
+  const periods = () => [...document.querySelectorAll('.light-period')].map((item) => item.dataset.period);
+  assert.deepEqual(periods(), ['blue', 'golden', 'golden', 'blue']);
+  const evening = document.querySelectorAll('.light-period[data-period="golden"]')[1];
+  assert.match(evening.getAttribute('aria-label'), /^跳到黄金时刻开始 16:11–17:03$/);
+  assert.match(evening.title, /−4°—6°/);
+  await settle(() => evening.click());
+  assert.equal(shootingDateTime(), '2026-11-04T16:11');
+  await settle(() => document.querySelector('[aria-label="显示太阳"]').click());
+  assert.deepEqual(periods(), []);
+  await settle(() => document.querySelector('[aria-label="显示太阳"]').click());
+  await settle(() => setControl(input('纬度'), 78.2232));
+  await settle(() => setControl(input('经度'), 15.6267));
+  await chooseTimeZone('Arctic/Longyearbyen', 'Longyearbyen');
+  await setShootingDateTime('2026-12-15T12:00');
+  assert.deepEqual(periods(), []);
+  assert.match(document.querySelector('.time-missing').textContent, /黄金时刻与蓝调时刻/);
+});
+
+test('自定义传感器：从当前尺寸开始，修改宽高即改变视场，切回预设恢复预设尺寸', async t => {
+  await workspace(t); await readyTerrain();
+  const sensor = document.querySelector('[aria-label="传感器"]');
+  const horizontal = () => Number(document.querySelector('[aria-label^="取景辅助线"]').getAttribute('aria-label').match(/水平视场 ([\d.]+)/)[1]);
+  const fullFrame = horizontal();
+  assert.equal(document.querySelector('.custom-sensor'), null);
+  await settle(() => setControl(sensor, 'custom'));
+  assert.equal(value('传感器宽'), 36); assert.equal(value('传感器高'), 24);
+  assert.equal(horizontal(), fullFrame);
+  await settle(() => setControl(input('传感器宽'), 43.8));
+  await settle(() => setControl(input('传感器高'), 32.9));
+  assert.ok(horizontal() > fullFrame);
+  assert.equal(horizontal().toFixed(1), (2 * Math.atan(43.8 / 70) * 180 / Math.PI).toFixed(1));
+  await settle(() => setControl(input('传感器宽'), 0.5));
+  assert.match(document.querySelector('.sensor-field .field-error').textContent, /1 至 100 mm/);
+  await settle(() => setControl(sensor, 'aps-c'));
+  assert.equal(document.querySelector('.custom-sensor'), null);
+  assert.ok(horizontal() < fullFrame);
+  await settle(() => setControl(sensor, 'custom'));
+  assert.equal(value('传感器宽'), 43.8, 'the custom size is remembered while the page is open');
 });

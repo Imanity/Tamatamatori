@@ -215,3 +215,62 @@ test("当地时区按坐标查询 IANA 时区，经度回绕，坐标无效时�
   const zone = localTimeZone(0, -150);
   assert.ok(zone && Temporal.Instant.from("2026-01-01T00:00:00Z").toZonedDateTimeISO(zone));
 });
+
+test("黄金时刻（−4°—6°）与蓝调时刻（−6°—−4°）的起止与独立逐分钟采样相差不超过 1 分钟", async () => {
+  const { lightPeriods } = await import("../src/domain/timeline.ts");
+  const { sunPosition } = await import("../src/domain/ephemeris.ts");
+  for (const [latitude, longitude, zone, instant, mode] of [
+    [35.4172, 138.8729, "Asia/Tokyo", "2026-11-04T08:00:00Z", "day"],
+    [35.4172, 138.8729, "Asia/Tokyo", "2026-11-04T08:00:00Z", "night"],
+    [64.14, -21.9, "Atlantic/Reykjavik", "2026-06-21T12:00:00Z", "day"],
+  ]) {
+    const window = timelineWindow(instant, zone, mode);
+    const periods = lightPeriods({ latitude, longitude }, window);
+    // Reference: classify every minute by the Sun's elevation.
+    const start = Date.parse(window.start), end = Date.parse(window.end), reference = [];
+    let current = null;
+    for (let time = start; time < end; time += 60_000) {
+      const elevation = sunPosition({ latitude, longitude, instant: new Date(time).toISOString() }).elevation;
+      const kind = elevation >= -4 && elevation < 6 ? "golden" : elevation >= -6 && elevation < -4 ? "blue" : null;
+      if (kind !== current?.kind) {
+        if (current?.kind) reference.push(current);
+        current = { kind, from: time, to: time };
+      }
+      current.to = time + 60_000;
+    }
+    if (current?.kind) reference.push(current);
+    assert.deepEqual(periods.map((period) => period.kind), reference.map((period) => period.kind), `${zone} ${mode}`);
+    periods.forEach((period, index) => {
+      assert.ok(Math.abs(Date.parse(period.from) - reference[index].from) <= 60_000, `${zone} ${period.kind} start`);
+      assert.ok(Math.abs(Date.parse(period.to) - reference[index].to) <= 60_000, `${zone} ${period.kind} end`);
+    });
+  }
+  // Reykjavik at midsummer: the Sun never drops below −4°, so no blue hour at all.
+  const midsummer = lightPeriods({ latitude: 64.14, longitude: -21.9 }, timelineWindow("2026-06-21T12:00:00Z", "Atlantic/Reykjavik", "day"));
+  assert.ok(midsummer.length > 0 && midsummer.every((period) => period.kind === "golden"));
+  assert.deepEqual(lightPeriods({ latitude: 78.22, longitude: 15.65 }, timelineWindow("2026-12-15T11:00:00Z", "Arctic/Longyearbyen", "day")), []);
+});
+
+test("地图方位线：日月与银心此刻方位来自同一星历，出没方位来自时间轴同一时段，并随图层开关", async () => {
+  const { bodyLines } = await import("../src/domain/body-lines.ts");
+  const { celestialBodies } = await import("../src/domain/ephemeris.ts");
+  const { fixedHorizontal, galacticCentre } = await import("../src/domain/timeline.ts");
+  const layers = { ...noLayers, sun: true, moon: true, milkyWay: true };
+  const subject = { latitude: 35.4172, longitude: 138.8729, instant: "2026-11-04T08:00:00Z", timeZone: "Asia/Tokyo", refraction: "standard", layers };
+  const lines = bodyLines(subject);
+  const bodies = celestialBodies(subject);
+  const now = (body) => lines.find((line) => line.body === body && line.kind === "now");
+  assert.equal(now("sun").azimuth, bodies.sun.azimuth);
+  assert.equal(now("sun").above, false, "17:00 JST, the Sun has set");
+  assert.equal(now("moon").azimuth, bodies.moon.azimuth);
+  assert.ok(Math.abs(now("core").azimuth - fixedHorizontal(subject, galacticCentre.ra, galacticCentre.dec, subject.instant).azimuth) < 1e-9);
+  // A night layer is on: the span is noon to noon, so this sunset and the next sunrise are both drawn.
+  const window = timelineWindow(subject.instant, "Asia/Tokyo", "night");
+  for (const line of lines.filter((line) => line.kind !== "now")) {
+    assert.ok(Date.parse(line.instant) >= Date.parse(window.start) && Date.parse(line.instant) < Date.parse(window.end), `${line.body} ${line.kind}`);
+    if (line.body !== "core") assert.ok(Math.abs(line.azimuth - celestialBodies({ ...subject, instant: line.instant })[line.body].azimuth) < 1e-9);
+  }
+  assert.deepEqual([...new Set(lines.filter((line) => line.body === "sun").map((line) => line.kind))].sort(), ["now", "rise", "set"]);
+  assert.deepEqual(bodyLines({ ...subject, layers: { ...noLayers } }), []);
+  assert.deepEqual([...new Set(bodyLines({ ...subject, layers: { ...noLayers, moon: true } }).map((line) => line.body))], ["moon"]);
+});

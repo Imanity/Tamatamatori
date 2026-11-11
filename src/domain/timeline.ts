@@ -100,7 +100,7 @@ const round = (time: number) => Temporal.Instant.fromEpochMilliseconds(Math.roun
  * Rise and set of a fixed J2000 direction in the span, horizon as for the
  * Sun and Moon (sea-level, chosen refraction). A star can rise twice in 24 h.
  */
-export function fixedRiseSet(plan: EventPlan, window: TimelineWindow, raHours: number, decDegrees: number) {
+export function fixedRiseSet(plan: Pick<ShootingPlan, "latitude" | "longitude" | "refraction">, window: TimelineWindow, raHours: number, decDegrees: number) {
   DefineStar(Body.Star8, raHours, decDegrees, 1000);
   const observer = new Observer(plan.latitude, plan.longitude, 0);
   const start = Date.parse(window.start), end = Date.parse(window.end), altitude = limbAltitude(0, plan.refraction);
@@ -126,6 +126,18 @@ export function fixedRiseSet(plan: EventPlan, window: TimelineWindow, raHours: n
   const time = MakeTime(new Date(start)), equator = Equator(Body.Star8, time, observer, true, true);
   const aboveAtStart = Horizon(time, observer, equator.ra, equator.dec).altitude > altitude;
   return Object.assign(found, { aboveAtStart });
+}
+
+/** Galactic centre (Sgr A*), J2000: right ascension in hours, declination in degrees. */
+export const galacticCentre = { ra: 17 + 45 / 60 + 40.034047 / 3600, dec: -29 - 28.21601 / 3600 } as const;
+
+/** Horizontal direction of a fixed J2000 direction at an instant (geometric altitude). */
+export function fixedHorizontal(plan: Pick<ShootingPlan, "latitude" | "longitude">, raHours: number, decDegrees: number, instant: string) {
+  DefineStar(Body.Star8, raHours, decDegrees, 1000);
+  const observer = new Observer(plan.latitude, plan.longitude, 0), time = MakeTime(new Date(instant));
+  const equator = Equator(Body.Star8, time, observer, true, true);
+  const horizon = Horizon(time, observer, equator.ra, equator.dec);
+  return { azimuth: horizon.azimuth, altitude: horizon.altitude };
 }
 
 function raDec(vector: readonly [number, number, number]) {
@@ -230,7 +242,7 @@ export function timelineEvents(
     return found.length > 0;
   };
   if (plan.layers.milkyWay) {
-    const found = fixedRiseSet(plan, window, 17 + 45 / 60 + 40.034047 / 3600, -29 - 28.21601 / 3600);
+    const found = fixedRiseSet(plan, window, galacticCentre.ra, galacticCentre.dec);
     if (!pairs(found, "core", ["银心升", "银心落"], (rise) => `银心${rise ? "升起" : "落下"}：${horizon}`)) missing.push(`银心升落${allSpan(found)}`);
   }
   const middle = new Date((Date.parse(window.start) + Date.parse(window.end)) / 2).toISOString();
@@ -279,4 +291,57 @@ export function neighbourEvent(events: TimelineEvent[], instant: string, directi
   const time = Date.parse(instant);
   const candidates = events.filter((event) => direction * (Date.parse(event.instant) - time) > 1000);
   return direction === 1 ? candidates[0] ?? null : candidates.at(-1) ?? null;
+}
+
+export type LightPeriodKind = "golden" | "blue";
+export interface LightPeriod {
+  kind: LightPeriodKind;
+  from: string;
+  to: string;
+}
+/** Photographers' convention on the Sun centre's geometric elevation, degrees. */
+export const lightPeriodBounds: Record<LightPeriodKind, readonly [number, number]> = {
+  golden: [-4, 6],
+  blue: [-6, -4],
+};
+
+/**
+ * Golden hour (Sun centre −4° to 6°) and blue hour (−6° to −4°) inside the
+ * span: crossings of the three bounding elevations split the span, and each
+ * piece is classified by the elevation at its middle. Terrain and weather are
+ * not considered.
+ */
+export function lightPeriods(plan: Pick<ShootingPlan, "latitude" | "longitude">, window: TimelineWindow): LightPeriod[] {
+  const observer = new Observer(plan.latitude, plan.longitude, 0);
+  const start = Date.parse(window.start), end = Date.parse(window.end);
+  const cuts = new Set<number>([start, end]);
+  for (const altitude of [-6, -4, 6])
+    for (const direction of [1, -1] as const) {
+      let from = start;
+      while (from < end) {
+        let event = null;
+        try {
+          event = SearchAltitude(Body.Sun, observer, direction, MakeTime(new Date(from)), (end - from) / 86_400_000, altitude);
+        } catch {
+          event = null;
+        }
+        if (!event || event.date.getTime() >= end) break;
+        cuts.add(Math.round(event.date.getTime() / 1000) * 1000);
+        from = event.date.getTime() + 60_000;
+      }
+    }
+  const edges = [...cuts].sort((a, b) => a - b);
+  const periods: LightPeriod[] = [];
+  for (let index = 0; index < edges.length - 1; index++) {
+    const from = edges[index], to = edges[index + 1];
+    if (to - from < 1000) continue;
+    const elevation = sunPosition({ latitude: plan.latitude, longitude: plan.longitude, instant: new Date((from + to) / 2).toISOString() }).elevation;
+    const kind = (Object.keys(lightPeriodBounds) as LightPeriodKind[])
+      .find((key) => elevation >= lightPeriodBounds[key][0] && elevation < lightPeriodBounds[key][1]);
+    if (!kind) continue;
+    const last = periods.at(-1);
+    if (last && last.kind === kind && Date.parse(last.to) === from) last.to = new Date(to).toISOString();
+    else periods.push({ kind, from: new Date(from).toISOString(), to: new Date(to).toISOString() });
+  }
+  return periods;
 }

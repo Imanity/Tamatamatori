@@ -1,20 +1,48 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { RefObject } from "react";
 import type { Map as MapLibreMap, Marker, GeoJSONSource } from "maplibre-gl";
 import type { ShootingPlan } from "../domain/plan";
+import { normalizeLongitude, sensorKey } from "../domain/plan";
+import { bodyLines } from "../domain/body-lines";
+import type { BodyLine } from "../domain/body-lines";
+import { timelineMode } from "../domain/timeline";
 import {
+  destination,
   isMapPosition,
   mapSelection,
   nearbyLongitude,
   viewGeometry,
+  viewRadiusMeters,
 } from "../domain/map";
 import type { MapMode, MapViewport } from "../domain/map";
 import { Icon } from "./Icon";
+import { MapSearch } from "./MapSearch";
+import type { MapTarget } from "./MapSearch";
 
 const styleUrl =
   import.meta.env.VITE_MAP_STYLE_URL?.trim() ||
   "https://tiles.openfreemap.org/styles/liberty";
 const viewSourceId = "tamatamatori-view";
+const linesSourceId = "tamatamatori-body-lines";
+const bodyNames = { sun: "太阳", moon: "月亮", core: "银心" } as const;
+const bodyColors = { sun: "#e0892c", moon: "#5f7fc4", core: "#8b5fc4" } as const;
+
+/** Body azimuth lines from the camera, as long as the view cone at this zoom. */
+function lineGeometry(plan: ShootingPlan, lines: BodyLine[], zoom: number): GeoJSON.FeatureCollection {
+  const radius = viewRadiusMeters(plan, zoom);
+  if (radius < 1 || !isMapPosition(plan)) return { type: "FeatureCollection", features: [] };
+  return {
+    type: "FeatureCollection",
+    features: lines.map((line) => {
+      const end = destination(plan, line.azimuth, radius * (line.kind === "now" ? 1.4 : 1.15));
+      return {
+        type: "Feature",
+        properties: { body: line.body, kind: line.kind, above: line.above },
+        geometry: { type: "LineString", coordinates: [[plan.longitude, plan.latitude], [nearbyLongitude(end.longitude, plan.longitude), end.latitude]] },
+      };
+    }),
+  };
+}
 type LoadStatus = {
   phase: "loading" | "ready" | "error" | "unavailable";
   message: string;
@@ -33,7 +61,21 @@ export function MapPanel({
   const instance = useRef<MapLibreMap | null>(null);
   const synchronize = useRef<((followPosition?: boolean) => void) | null>(null);
   const [mode, setMode] = useState<MapMode>("browse");
-  const latest = useRef({ plan, update, mode });
+  const layers = plan.layers;
+  // Sun, Moon and Milky Way core directions for the shooting instant and their
+  // rises and sets in the timeline's span; each follows its layer.
+  const lines = useMemo(() => {
+    try {
+      return bodyLines(plan);
+    } catch {
+      return [] as BodyLine[];
+    }
+  }, [plan.latitude, plan.longitude, plan.instant, plan.timeZone, plan.refraction, layers.sun, layers.moon, layers.milkyWay, timelineMode(layers)]);
+  const latest = useRef({ plan, update, mode, lines });
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [target, setTarget] = useState<MapTarget | null>(null);
+  const [locating, setLocating] = useState(false);
+  const targetMarker = useRef<Marker | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [available, setAvailable] = useState(false);
   const [notice, setNotice] = useState("");
@@ -44,9 +86,68 @@ export function MapPanel({
   const coverage = isMapPosition(plan);
 
   useEffect(() => {
-    latest.current = { plan, update, mode };
+    latest.current = { plan, update, mode, lines };
     synchronize.current?.(true);
-  }, [plan, update, mode]);
+  }, [plan, update, mode, lines]);
+
+  // A searched place or the device position: shown and flown to; the shot
+  // only changes through "设为机位".
+  useEffect(() => {
+    const map = instance.current, marker = targetMarker.current;
+    if (!marker) return;
+    const element = marker.getElement();
+    if (!target) {
+      element.style.display = "none";
+      return;
+    }
+    element.style.display = "";
+    element.className = `map-target-marker map-target-${target.kind}`;
+    element.setAttribute("aria-label", `${target.name}：纬度 ${target.latitude.toFixed(4)}，经度 ${target.longitude.toFixed(4)}`);
+    marker.setLngLat([target.longitude, target.latitude]);
+    if (!map) return;
+    const bounds = target.bounds;
+    // Small extents fit the view; countries and oceans just centre on the point.
+    if (bounds && bounds[1] - bounds[0] < 20 && bounds[3] - bounds[2] < 20)
+      map.fitBounds([[bounds[2], bounds[0]], [bounds[3], bounds[1]]], { padding: 48, maxZoom: 15, duration: 600 });
+    else map.easeTo({ center: [target.longitude, target.latitude], zoom: Math.max(map.getZoom(), 13), duration: 600 });
+  }, [target]);
+
+  const locate = () => {
+    setNotice("");
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+      setNotice("此浏览器不支持定位。");
+      return;
+    }
+    if (typeof window !== "undefined" && window.isSecureContext === false) {
+      setNotice("定位需要通过 HTTPS 访问本页面。");
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocating(false);
+        setSearchOpen(false);
+        const { latitude, longitude, accuracy } = position.coords;
+        setTarget({
+          kind: "device",
+          name: "我的位置",
+          detail: `${latitude.toFixed(5)}, ${longitude.toFixed(5)}${Number.isFinite(accuracy) ? ` · 精度约 ${Math.round(accuracy)} m` : ""}`,
+          latitude,
+          longitude,
+          accuracy,
+        });
+      },
+      (error) => {
+        setLocating(false);
+        setNotice(
+          error.code === 1 ? "未获得定位权限，可在浏览器设置中允许本站定位。"
+            : error.code === 3 ? "定位超时，请稍后重试。"
+              : "无法获得当前位置。",
+        );
+      },
+      { enableHighAccuracy: true, timeout: 15_000, maximumAge: 60_000 },
+    );
+  };
 
   useEffect(() => {
     if (!coverage) setMode("browse");
@@ -64,6 +165,7 @@ export function MapPanel({
     let followRequested = false;
     let activeDrag: "camera" | "direction" | null = null;
     let geometryKey = "";
+    let linesKey = "";
     let geometry = viewGeometry(latest.current.plan, viewport.current.zoom);
     let previousPosition = {
       longitude: latest.current.plan.longitude,
@@ -104,7 +206,7 @@ export function MapPanel({
         current.longitude,
         current.azimuth,
         current.focalLength,
-        current.sensor,
+        sensorKey(current),
         current.aspectRatio,
         current.orientation,
         map.getZoom(),
@@ -117,6 +219,12 @@ export function MapPanel({
       direction.getElement().style.display = geometry.features.length
         ? ""
         : "none";
+      const lineSource = map.getSource(linesSourceId) as GeoJSONSource | undefined;
+      const nextLinesKey = `${nextGeometryKey}/${JSON.stringify(latest.current.lines)}`;
+      if (lineSource && nextLinesKey !== linesKey) {
+        lineSource.setData(lineGeometry(current, latest.current.lines, map.getZoom()));
+        linesKey = nextLinesKey;
+      }
       if (!valid) return;
       const longitude = nearbyLongitude(current.longitude, map.getCenter().lng);
       if (activeDrag !== "camera")
@@ -235,6 +343,14 @@ export function MapPanel({
           .setLngLat([0, 0])
           .addTo(map);
 
+        const targetElement = document.createElement("div");
+        targetElement.className = "map-target-marker";
+        targetElement.style.display = "none";
+        targetElement.setAttribute("role", "img");
+        targetMarker.current = new sdk.Marker({ element: targetElement, anchor: "center" })
+          .setLngLat([0, 0])
+          .addTo(map);
+
         const choose = (
           longitude: number,
           latitude: number,
@@ -340,6 +456,30 @@ export function MapPanel({
                 "fill-outline-color": "#34715a",
               },
             });
+            // Body azimuth lines under the view cone's direction line.
+            map.addSource(linesSourceId, { type: "geojson", data: lineGeometry(latest.current.plan, latest.current.lines, map.getZoom()) });
+            const lineColor = ["match", ["get", "body"], "sun", bodyColors.sun, "moon", bodyColors.moon, bodyColors.core] as unknown as string;
+            map.addLayer({
+              id: "tamatamatori-body-riseset",
+              type: "line",
+              source: linesSourceId,
+              filter: ["!=", ["get", "kind"], "now"],
+              paint: { "line-color": lineColor, "line-width": 1.5, "line-opacity": 0.65, "line-dasharray": [4, 2] },
+            });
+            map.addLayer({
+              id: "tamatamatori-body-below",
+              type: "line",
+              source: linesSourceId,
+              filter: ["all", ["==", ["get", "kind"], "now"], ["!", ["get", "above"]]],
+              paint: { "line-color": lineColor, "line-width": 2.5, "line-opacity": 0.6, "line-dasharray": [1, 1.5] },
+            });
+            map.addLayer({
+              id: "tamatamatori-body-now",
+              type: "line",
+              source: linesSourceId,
+              filter: ["all", ["==", ["get", "kind"], "now"], ["get", "above"]],
+              paint: { "line-color": lineColor, "line-width": 3, "line-opacity": 0.9 },
+            });
             map.addLayer({
               id: "tamatamatori-direction",
               type: "line",
@@ -398,6 +538,8 @@ export function MapPanel({
         };
         camera?.remove();
         direction?.remove();
+        targetMarker.current?.remove();
+        targetMarker.current = null;
         map.remove();
       }
       instance.current = null;
@@ -447,6 +589,24 @@ export function MapPanel({
           </button>
         </div>
         <button
+          className={`map-tool-button ${searchOpen ? "is-active" : ""}`}
+          aria-label="搜索地点"
+          aria-pressed={searchOpen}
+          title="搜索地点"
+          onClick={() => setSearchOpen((open) => !open)}
+        >
+          <Icon name="search" size={17} />
+        </button>
+        <button
+          className="map-tool-button"
+          aria-label="我的位置"
+          title="我的位置（只在本机使用）"
+          disabled={locating}
+          onClick={locate}
+        >
+          <Icon name="locate" size={17} />
+        </button>
+        <button
           className="map-tool-button"
           aria-label="回到机位"
           title="回到机位"
@@ -476,7 +636,17 @@ export function MapPanel({
           <Icon name="map" size={17} />
         </button>
       </div>
+      {searchOpen && (
+        <MapSearch
+          onChoose={(place) => {
+            setSearchOpen(false);
+            setTarget(place);
+          }}
+          onClose={() => setSearchOpen(false)}
+        />
+      )}
       <div className="map-feedback" aria-live="polite">
+        {locating && <p className="map-interaction-hint">正在获取当前位置…</p>}
         {status.phase !== "ready" && (
           <div className={`map-status map-status-${status.phase}`}>
             <span>{status.message}</span>
@@ -509,6 +679,33 @@ export function MapPanel({
           </p>
         )}
       </div>
+      {lines.length > 0 && (
+        <div className="map-legend" aria-label="方位线图例">
+          {(["sun", "moon", "core"] as const).filter((body) => lines.some((line) => line.body === body)).map((body) => (
+            <span key={body}><i style={{ background: bodyColors[body] }} />{bodyNames[body]}</span>
+          ))}
+          <span className="map-legend-note" title="粗实线：拍摄时刻方位；点线：拍摄时刻在地平线下；细虚线：时间轴时段内的出没方位。只表示方向，不表示距离与遮挡。">粗线此刻 · 细线出没</span>
+        </div>
+      )}
+      {target && (
+        <div className="map-target-card" role="group" aria-label={`地图标记：${target.name}`}>
+          <span>
+            <strong>{target.name}</strong>
+            <small>{target.detail}</small>
+          </span>
+          <button
+            type="button"
+            className="map-target-apply"
+            onClick={() => {
+              update({ latitude: target.latitude, longitude: normalizeLongitude(target.longitude) });
+              setTarget(null);
+            }}
+          >
+            设为机位
+          </button>
+          <button type="button" className="map-target-close" aria-label="移除地图标记" onClick={() => setTarget(null)}>×</button>
+        </div>
+      )}
     </div>
   );
 }
