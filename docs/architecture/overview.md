@@ -60,6 +60,8 @@ flowchart TD
 
 推算结果的落地（第六轮）只在界面层组合纯函数：`pointPlan` 给出试看写入的字段，找机位、两者都找与日历链接共用；`solve-calendar.ts` 生成 RFC 5545 文本（UTC、75 字节折行、转义）；`mergeCandidates` 与 `distinctPoints` 合并同一视线上的近似重根。“存为机位”由 App 持有的机位库实例保存；同一页面的多个 `useShotLibrary` 实例在写入后经本地事件重读存储，避免旧列表覆盖新机位。
 
+固定方向天体（第八轮）由 `src/domain/sky-targets.ts` 从星表与深空目录生成并登记到 `sky-coordinates.ts`；求解器只经后者把天体换成 astronomy-engine 的自定义恒星，因此两者都找的 Worker 不带目录，由规划消息登记所需天体。天暗判断用 `Date` 计算的太阳高度，避免 Worker 引入 Temporal。
+
 “检查机位”（第七轮）按需运行：`src/domain/feasibility.ts` 只做几何判断（点在带洞多边形内、射线与轮廓求交、含曲率视线高度、按瓦片上限截取对象），`src/preview/feasibility.ts` 读取与预览同源的 OpenFreeMap z14 矢量瓦片，只解码 `water` 与 `building` 并按页面缓存。建筑基底取推算用的 DEM 采样器。检查结果由推算面板持有，按列出的机位与离地高度判定是否仍然有效，不进入拍摄计划、导出或地图。
 
 当地光污染开关属于拍摄计划，固定图集按经纬度异步采样，数据状态与天文几何分开。CPU 读数与 GPU 显示共用同一天空对比度计算，数据更新不重建地形或重新获取 DEM。静态数据、许可与显示近似边界见[光污染首步](../plan/light-pollution.md)。

@@ -20,6 +20,7 @@ import { weatherModels } from '../src/domain/weather.ts';
 import { skyConditions, skyConditionNames, targetElevationRange, toleranceChoices } from '../src/domain/alignment.ts';
 import { distanceChoices } from '../src/domain/position-alignment.ts';
 import { landmarks } from '../src/domain/landmarks.ts';
+import { DARK_SUN_ELEVATION, fixedBodies } from '../src/domain/sky-targets.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const REPOSITORY = 'https://github.com/Imanity/Tamatamatori';
@@ -57,6 +58,11 @@ const solveExamples = [
     title: '两者都找：90 天内晴空塔与接近满月的月亮，主体占画面 30%',
     value: { format: SOLVE_FORMAT, version: SOLVE_VERSION, name: '晴空塔满月', kind: 'range', body: 'moon', target: { landmark: 'tokyo-skytree' },
       date: '2026-11-12', days: 90, timeZone: 'Asia/Tokyo', share: 0.3, phase: [0.9, 1], sky: ['blue', 'twilight', 'night'] },
+  },
+  {
+    title: '两者都找：12 个月内银心落在晴空塔塔尖（暗夜）',
+    value: { format: SOLVE_FORMAT, version: SOLVE_VERSION, kind: 'range', body: 'galactic-center', target: { landmark: 'tokyo-skytree' },
+      date: '2027-03-01', days: 365, timeZone: 'Asia/Tokyo', share: 0.25, sky: ['night'] },
   },
   {
     title: '两者都找：坐标目标（山顶，高度 0 表示 DEM 地面）',
@@ -163,7 +169,7 @@ const solveSchema = {
     version: { const: SOLVE_VERSION },
     name: { type: 'string', maxLength: SOLVE_NAME_LIMIT },
     kind: { enum: [...solveKinds], description: 'time 找时间（机位已定）；position 找机位（某一天）；range 两者都找（一段日期）' },
-    body: { enum: [...solveBodies] },
+    body: { enum: [...solveBodies], description: '"sun"、"moon"，或固定方向天体："galactic-center"（银心）、亮星 hyg-…、深空目标 dso-…（见格式说明的列表）' },
     mark: {
       type: 'object', additionalProperties: false, required: ['azimuth', 'elevation'], description: '天体中心的视方位与视高度（含所选折射），度',
       properties: {
@@ -196,6 +202,7 @@ const solveSchema = {
     { if: { properties: { kind: { const: 'position' } } }, then: { required: ['target'], properties: forbid('mark', 'camera', 'days', 'tolerance', 'share', 'phase', 'sky') } },
     { if: { properties: { kind: { const: 'range' } } }, then: { required: ['target'], properties: { days: { enum: [...rangeDays], default: 30 }, ...forbid('mark', 'camera', 'tolerance') } } },
     { if: { properties: { body: { const: 'sun' } } }, then: { properties: forbid('phase', 'sky') } },
+    { if: { required: ['body'], properties: { body: { not: { const: 'moon' } } } }, then: { properties: forbid('phase') } },
   ],
 };
 
@@ -265,7 +272,7 @@ ${shotLink(shot, PUBLIC_SITE)}
 
 const solveMarkdown = `# Tamatamatori 推算请求格式 v${SOLVE_VERSION}
 
-推算请求（\`${SOLVE_FORMAT}\`）描述“想让太阳或月亮落在哪里”。应用在用户的浏览器中按星历、DEM 与海平面地平计算，结果由用户试看、挑选后成为普通机位。请求只是意图，链接里的数值不会被当作结果。
+推算请求（\`${SOLVE_FORMAT}\`）描述“想让太阳、月亮或银心、亮星、深空目标落在哪里”。应用在用户的浏览器中按星历、DEM 与海平面地平计算，结果由用户试看、挑选后成为普通机位。请求只是意图，链接里的数值不会被当作结果。
 
 - JSON Schema：${solveSchemaUrl}
 - 机位格式另见：${PUBLIC_SITE}shot-format.md
@@ -288,7 +295,7 @@ const solveMarkdown = `# Tamatamatori 推算请求格式 v${SOLVE_VERSION}
 | --- | --- | --- | --- |
 | \`format\` / \`version\` | 全部 | \`"${SOLVE_FORMAT}"\` / \`${SOLVE_VERSION}\` | 必填；更高版本拒绝读取 |
 | \`name\` | 全部 | 文本，最多 ${SOLVE_NAME_LIMIT} 字 | 空 |
-| \`body\` | 全部 | ${list([...solveBodies])} | 必填 |
+| \`body\` | 全部 | \`"sun"\` / \`"moon"\`，或下面“固定方向天体”中的 id | 必填 |
 | \`mark\` | time | \`{ "azimuth", "elevation" }\`：天体中心的视方位（度，正北 0、顺时针）与视高度（${range(targetElevationRange, '°')}，含所选折射） | 必填 |
 | \`camera\` | time | \`{ "latitude", "longitude", "heightAboveGround" }\`，离地 ${range(shotLimits.heightAboveGround, ' m')} | 沿用打开者当前机位 |
 | \`target\` | position、range | \`{ "landmark": id }\`，或 \`{ "latitude", "longitude", "height", "name" }\`；\`height\` 为目标顶部高出 DEM 地面的米数（${range(targetHeightLimits)}） | 必填；地标高度缺省为其高度，坐标为 0 |
@@ -296,11 +303,19 @@ const solveMarkdown = `# Tamatamatori 推算请求格式 v${SOLVE_VERSION}
 | \`days\` | time | ${list(timeDays)} | 365 |
 | \`days\` | range | ${list(rangeDays)} | 30 |
 | \`timeZone\` | 全部 | IANA 时区；给出时按它解释日期，并改为该固定时区 | 沿用打开者当前时区 |
-| \`tolerance\` | time | ${list([...toleranceChoices])}（中心偏离期望位置的视直径） | 0.25 |
+| \`tolerance\` | time | ${list([...toleranceChoices])}（中心偏离期望位置的视直径；固定方向天体按标记直径） | 0.25 |
 | \`share\` | range | ${range(shareLimits)}，主体占画面高度（目标不足 10 m 时改用 \`maxDistance\`） | 0.3 |
 | \`maxDistance\` | position、range | ${list([...distanceChoices])}，米 | 30000 |
 | \`phase\` | time、range，月亮 | \`[下限, 上限]\`，取 ${list([...phaseChoices])} | 不限 |
-| \`sky\` | time、range，月亮 | 非空数组：${skyConditions.map((sky) => `\`"${sky}"\` ${skyConditionNames[sky]}`).join('、')} | 不限 |
+| \`sky\` | time、range，月亮与固定方向天体 | 非空数组：${skyConditions.map((sky) => `\`"${sky}"\` ${skyConditionNames[sky]}`).join('、')} | 不限 |
+
+## 固定方向天体
+
+银心、有中文名的亮星与已收录的深空目标，方向相对恒星固定（J2000 坐标经岁差与章动换算）。它们没有日月那样的视直径，期望位置按“标记直径”画出，容差也按它计；只在太阳中心低于地平线 ${-DARK_SUN_ELEVATION}° 时推算，\`sky\` 只有 \`"twilight"\` 与 \`"night"\` 起作用。
+
+| id | 名称 | 类型 | 标记直径 |
+| --- | --- | --- | --- |
+${fixedBodies.map((body) => `| \`${body.id}\` | ${body.name} | ${{ core: '银心', star: '亮星', deepSky: '深空目标' }[body.kind]} | ${(2 * body.radius).toFixed(1)}° |`).join('\n')}
 
 ## 已接入地标
 
@@ -337,7 +352,7 @@ const llms = `# Tamatamatori
 AI 可以用两种链接把结果交给用户，用户打开后先看到预览，确认才应用：
 
 - 机位链接 \`${PUBLIC_SITE}#shot=json:<URL 编码的机位 JSON>\`：一个完整的拍摄计划。
-- 推算请求链接 \`${PUBLIC_SITE}#solve=json:<URL 编码的推算请求 JSON>\`：让应用求拍摄时间或机位（例如让月亮落在某座塔的塔尖）。
+- 推算请求链接 \`${PUBLIC_SITE}#solve=json:<URL 编码的推算请求 JSON>\`：让应用求拍摄时间或机位（例如让月亮或银心落在某座塔的塔尖）。
 
 写之前请读对应格式说明；字段错误会被逐条指出，可据此修正。地点请给坐标或已接入地标的 id，不要猜测坐标。预览与推算都是基于地理和天文数据的构图模拟，不代表实景一定可见。
 

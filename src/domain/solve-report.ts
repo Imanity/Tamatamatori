@@ -1,6 +1,7 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { skyConditionNames } from "./alignment.ts";
 import type { AlignmentBody, AlignmentResult } from "./alignment.ts";
+import { bodyName, sizeWord } from "./sky-targets.ts";
 import { compassDirection, localDateTime } from "./plan.ts";
 import type { PositionPoint } from "./position-alignment.ts";
 import type { RangeCandidate } from "./range-alignment.ts";
@@ -11,7 +12,8 @@ import type { SolveKind, SolveRequest } from "./solve.ts";
  * preview and "复制结果" (Markdown a person or an AI can read back).
  */
 export const solveKindNames: Record<SolveKind, string> = { time: "找时间", position: "找机位", range: "两者都找" };
-export const solveBodyNames: Record<AlignmentBody, string> = { sun: "太阳", moon: "月亮" };
+/** Names for any solve body (the Sun, the Moon, the Galactic Centre, stars and deep-sky targets). */
+export const solveBodyName = (body: AlignmentBody) => bodyName(body);
 /** Rows beyond this are counted, not listed. */
 export const REPORT_ROWS = 200;
 
@@ -32,7 +34,7 @@ export interface SolveRow {
 
 /** The request as labelled rows; absent fields say what the app uses instead. */
 export function describeSolve(request: SolveRequest): SolveRow[] {
-  const rows: SolveRow[] = [{ label: "求解", value: `${solveKindNames[request.kind]} · ${solveBodyNames[request.body]}` }];
+  const rows: SolveRow[] = [{ label: "求解", value: `${solveKindNames[request.kind]} · ${bodyName(request.body)}` }];
   if (request.name) rows.push({ label: "名称", value: request.name });
   if (request.kind === "time" && request.mark) {
     rows.push({ label: "期望位置", value: `方位 ${request.mark.azimuth.toFixed(2)}°（${compassDirection(request.mark.azimuth)}），视高度 ${request.mark.elevation.toFixed(2)}°` });
@@ -50,7 +52,7 @@ export function describeSolve(request: SolveRequest): SolveRow[] {
   rows.push({ label: "日期", value: request.kind === "position" ? `${date} 当天（时间轴范围）` : `${date} 起 ${spanName(request.days ?? 0)}` });
   rows.push({ label: "时区", value: request.timeZone ?? "沿用当前时区" });
   const conditions: string[] = [];
-  if (request.tolerance !== undefined) conditions.push(`中心偏离 ≤ ${request.tolerance} 个视直径`);
+  if (request.tolerance !== undefined) conditions.push(`中心偏离 ≤ ${request.tolerance} 个${sizeWord(request.body)}`);
   if (request.share !== undefined) conditions.push(`主体占画面高度 ${percent(request.share)}（目标不足 10 m 时改用最远距离）`);
   if (request.maxDistance !== undefined) conditions.push(`最远 ${request.maxDistance / 1000} km`);
   if (request.phase) conditions.push(`亮面 ${percent(request.phase[0])}—${percent(request.phase[1])}`);

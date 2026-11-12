@@ -101,7 +101,7 @@ test("两者都找：候选按天与连续分钟分段，月相与天空条件�
   assert.equal(bright.kept.length + bright.filtered.phase, candidates.length);
   const night = filterCandidates(candidates, { sky: ["night"] });
   assert.equal(night.kept.length, candidates.filter((c) => c.sky === "night").length);
-  assert.equal(filterCandidates(rangeCandidates({ ...input, body: "sun" }, solveRange({ ...input, body: "sun" }, days.slice(0, 3), flat)), { sky: ["night"], phase: [0.9, 1] }).filtered.sky, 0, "the Sun is not filtered");
+  assert.equal(filterCandidates(rangeCandidates({ ...input, body: "sun" }, solveRange({ ...input, body: "sun" }, days.slice(0, 3), flat)), { sky: ["night"], phase: [0.9, 1] }, "sun").filtered.sky, 0, "the Sun is not filtered");
   // Flat Terrarium tiles (0 m) under the corridor, handled like the worker does.
   const corridor = rangeCorridor(input, days.slice(0, 3).map((day) => rangeTrack(input, day)));
   const pixels = new Uint8ClampedArray(512 * 512 * 4);

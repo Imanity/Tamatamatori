@@ -1,4 +1,4 @@
-import { Body, KM_PER_AU, Observer } from "astronomy-engine";
+import { KM_PER_AU, Observer } from "astronomy-engine";
 import { degrees, direction, dot, topocentric, unit } from "./ephemeris.ts";
 import { apparentElevation } from "./refraction.ts";
 import { ecefGeodetic, ellipsoidalRay, geodeticEcef } from "./geodesy.ts";
@@ -7,6 +7,7 @@ import { normalizeLongitude, signedAngle } from "./plan.ts";
 import type { ShootingPlan } from "./plan.ts";
 import { targetElevationRange } from "./alignment.ts";
 import type { AlignmentBody } from "./alignment.ts";
+import { astroBody, bodyLayer, DARK_SUN_ELEVATION, isFixedBody } from "./sky-coordinates.ts";
 
 /**
  * "Find the place" for a ground target and one time span: where must the
@@ -84,7 +85,6 @@ export interface PositionResult {
   reason: PositionReason | null;
 }
 
-const bodies = { sun: Body.Sun, moon: Body.Moon } as const;
 const EARTH = 6_371_008.8;
 export const MIN_DISTANCE = 200;
 export const distanceChoices = [10_000, 20_000, 30_000] as const;
@@ -95,7 +95,7 @@ const NEAR_EYE = 20, NEAR_TARGET = 50, SIGHT_MARGIN = 0.5;
 
 /** Apparent direction of the body for an observer on the reference ellipsoid. */
 export function skyAt(body: AlignmentBody, time: number, latitude: number, longitude: number, refraction: ShootingPlan["refraction"]) {
-  const { horizon } = topocentric(bodies[body], new Date(time), new Observer(latitude, longitude, 0));
+  const { horizon } = topocentric(astroBody(body), new Date(time), new Observer(latitude, longitude, 0));
   return { azimuth: horizon.azimuth, elevation: apparentElevation(horizon.altitude, refraction) };
 }
 
@@ -109,7 +109,11 @@ export function bodyTrack(input: PositionInput): SkySample[] {
   const lowest = targetElevationRange[0] - HORIZON_MARGIN * Math.min(1, input.maxDistance / 30_000);
   for (let time = Math.ceil(input.start / 60_000) * 60_000; time < input.end; time += 60_000) {
     const sky = skyAt(input.body, time, input.target.latitude, input.target.longitude, input.refraction);
-    if (sky.elevation >= lowest) samples.push({ time, ...sky });
+    if (sky.elevation < lowest) continue;
+    // A fixed body is only looked for in a dark enough sky.
+    // (The geometric Sun elevation; Date-based, so the worker needs no Temporal.)
+    if (isFixedBody(input.body) && skyAt("sun", time, input.target.latitude, input.target.longitude, "none").elevation > DARK_SUN_ELEVATION) continue;
+    samples.push({ time, ...sky });
   }
   return samples;
 }
@@ -131,7 +135,7 @@ function enu(latitude: number, longitude: number) {
  * preview's; one ephemeris call serves the whole minute.
  */
 export function skyField(body: AlignmentBody, time: number, origin: { latitude: number; longitude: number }, refraction: ShootingPlan["refraction"]) {
-  const { equator, horizon } = topocentric(bodies[body], new Date(time), new Observer(origin.latitude, origin.longitude, 0));
+  const { equator, horizon } = topocentric(astroBody(body), new Date(time), new Observer(origin.latitude, origin.longitude, 0));
   const range = equator.dist * KM_PER_AU * 1000;
   const [e, n, u] = direction(horizon.azimuth, horizon.altitude);
   const basis = enu(origin.latitude, origin.longitude);
@@ -358,7 +362,20 @@ export function pointPlan(layers: ShootingPlan["layers"], point: Pick<PositionPo
     latitude: round(point.latitude, 6), longitude: round(point.longitude, 6),
     instant: new Date(point.time).toISOString().replace(".000Z", "Z"),
     azimuth: round(point.azimuth, 4), pitch: round(point.elevation, 4),
-    layers: { ...layers, [body]: true },
+    layers: { ...layers, [bodyLayer(body)]: true },
+  };
+}
+
+/** The layers a try-out may switch on (the body's own), kept for "返回推算前". */
+export type TriedLayers = Pick<ShootingPlan["layers"], "sun" | "moon" | "stars" | "milkyWay" | "deepSky">;
+export const triedLayers = (layers: ShootingPlan["layers"]): TriedLayers =>
+  ({ sun: layers.sun, moon: layers.moon, stars: layers.stars, milkyWay: layers.milkyWay, deepSky: layers.deepSky });
+/** The layers back as they were; a path or the constellation figures go with their base layer. */
+export function restoredLayers(current: ShootingPlan["layers"], before: TriedLayers): ShootingPlan["layers"] {
+  return {
+    ...current, ...before,
+    sunPath: before.sun && !!current.sunPath, moonPath: before.moon && !!current.moonPath,
+    constellations: before.stars && current.constellations,
   };
 }
 

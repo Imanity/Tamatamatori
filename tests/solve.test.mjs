@@ -232,7 +232,8 @@ test("公开格式：生成文件与代码常量一致，schema 接受应用写�
   for (const value of [time, position, range]) assert.deepEqual(validate(solveSchema, JSON.parse(solveJson(parseSolve(value).request, solveSchema.$id))), [], value.kind);
   // The documents' own examples are valid too.
   for (const [file, schema] of [["public/shot-format.md", shotSchema], ["public/solve-format.md", solveSchema]]) {
-    const examples = [...readFileSync(file, "utf8").matchAll(/```json\n([\s\S]*?)\n```/g)].map((match) => JSON.parse(match[1]));
+    // Line endings as checked out (CRLF on Windows with autocrlf).
+    const examples = [...readFileSync(file, "utf8").replace(/\r\n/g, "\n").matchAll(/```json\n([\s\S]*?)\n```/g)].map((match) => JSON.parse(match[1]));
     assert.ok(examples.length >= 1, file);
     for (const example of examples) assert.deepEqual(validate(schema, example), [], file);
   }

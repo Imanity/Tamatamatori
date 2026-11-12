@@ -28,7 +28,7 @@ export function observerContext(plan: PositionInput) {
 }
 
 /** Topocentric geometric position without refraction; discs and paths share it. */
-export function topocentric(body: Body.Sun | Body.Moon, date: Date, observer: Observer) {
+export function topocentric(body: Body, date: Date, observer: Observer) {
   const equator = Equator(body, date, observer, true, true);
   return { equator, horizon: Horizon(date, observer, equator.ra, equator.dec) };
 }

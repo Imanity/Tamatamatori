@@ -15,9 +15,13 @@ import {
   spanChoices,
 } from "../domain/range-alignment";
 import type { RangeCandidate, RangeInput, RangePoint } from "../domain/range-alignment";
-import { distanceChoices, pointPlan, positionProfile, travel } from "../domain/position-alignment";
+import { distanceChoices, pointPlan, positionProfile, restoredLayers, travel, triedLayers } from "../domain/position-alignment";
+import type { TriedLayers } from "../domain/position-alignment";
+import { bodyKind, bodyName, fixedPlace, isFixedBody } from "../domain/sky-targets";
+import { bodyRadius } from "../domain/alignment";
+import { SkyChoices } from "./Alignment";
 import type { GroundSampler } from "../domain/position-alignment";
-import { meanRadius, skyConditionNames, skyConditions } from "../domain/alignment";
+import { skyConditionNames, skyConditions } from "../domain/alignment";
 import type { AlignmentBody, SkyCondition } from "../domain/alignment";
 import { compassDirection, fieldOfView, frameAspectRatio, localDateTime, sensorKey } from "../domain/plan";
 import type { ShootingPlan } from "../domain/plan";
@@ -34,7 +38,6 @@ import type { RangeDay, RangeMessage, RangeReply } from "../preview/range-worker
 
 type UpdatePlan = (patch: Partial<ShootingPlan>) => void;
 const terrainUrl = import.meta.env.VITE_TERRAIN_TILEJSON_URL?.trim() || DEFAULT_TERRAIN_URL;
-const names: Record<AlignmentBody, string> = { sun: "太阳", moon: "月亮" };
 const weekdays = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
 const iso = (time: number) => new Date(time).toISOString().replace(".000Z", "Z");
 const clock = (time: number, timeZone: string) => localDateTime(iso(time), timeZone).slice(11, 16);
@@ -66,8 +69,7 @@ interface Before {
   instant: string;
   azimuth: number;
   pitch: number;
-  sun: boolean;
-  moon: boolean;
+  layers: TriedLayers;
 }
 
 const lensOf = (plan: ShootingPlan) => ({ focalLength: plan.focalLength, sensor: plan.sensor, customSensor: plan.customSensor, aspectRatio: plan.aspectRatio, orientation: plan.orientation });
@@ -112,7 +114,7 @@ async function runRange(input: RangeInput, days: RangeDay[], signal: AbortSignal
       return reply;
     };
     try {
-      active.postMessage({ type: "plan", id: 1, input, days } satisfies RangeMessage);
+      active.postMessage({ type: "plan", id: 1, input, days, fixed: isFixedBody(input.body) ? fixedPlace(input.body) : null } satisfies RangeMessage);
       const plan = await next();
       if (plan.type !== "planned") throw new Error("推算线程回复异常");
       hooks.usingWorker(true);
@@ -241,10 +243,11 @@ export function useRangeSearch(plan: ShootingPlan, update: UpdatePlan, active: b
   const merging = useMemo(() => (done ? mergeCandidates(rangeCandidates(done.input, done.points)) : { candidates: [], merged: 0 }), [done]);
   const all = merging.candidates;
   const moon = body === "moon";
-  const { kept, filtered } = useMemo(() => filterCandidates(all, moon ? {
-    ...(phase[0] > 0 || phase[1] < 100 ? { phase: [phase[0] / 100, phase[1] / 100] as const } : {}),
-    ...(sky.length < skyConditions.length ? { sky } : {}),
-  } : {}), [all, moon, phase, sky]);
+  // Phase for the Moon; skies for the Moon and fixed bodies (which are only solved in a dark sky).
+  const { kept, filtered } = useMemo(() => filterCandidates(all, {
+    ...(moon && (phase[0] > 0 || phase[1] < 100) ? { phase: [phase[0] / 100, phase[1] / 100] as const } : {}),
+    ...(body !== "sun" && sky.length < skyConditions.length ? { sky } : {}),
+  }, body), [all, moon, body, phase, sky]);
   const matches = (point: RangePoint) => iso(point.time) === plan.instant &&
     Math.abs(point.latitude - plan.latitude) < 1e-6 && Math.abs(point.longitude - plan.longitude) < 1e-6;
   const current = kept.find((candidate) => candidate.points.some(matches)) ?? null;
@@ -254,7 +257,7 @@ export function useRangeSearch(plan: ShootingPlan, update: UpdatePlan, active: b
     const now = latest.current;
     setBefore((kept) => kept ?? {
       latitude: now.latitude, longitude: now.longitude, instant: now.instant,
-      azimuth: now.azimuth, pitch: now.pitch, sun: now.layers.sun, moon: now.layers.moon,
+      azimuth: now.azimuth, pitch: now.pitch, layers: triedLayers(now.layers),
     });
     const patch = pointPlan(now.layers, point, body);
     latest.current = { ...now, ...patch };
@@ -265,13 +268,13 @@ export function useRangeSearch(plan: ShootingPlan, update: UpdatePlan, active: b
     const now = latest.current;
     update({
       latitude: before.latitude, longitude: before.longitude, instant: before.instant, azimuth: before.azimuth, pitch: before.pitch,
-      layers: { ...now.layers, sun: before.sun, moon: before.moon, sunPath: before.sun && !!now.layers.sunPath, moonPath: before.moon && !!now.layers.moonPath },
+      layers: restoredLayers(now.layers, before.layers),
     });
     setBefore(null);
   };
 
   const events = useMemo<TimelineEvent[]>(() => (active ? kept.flatMap((candidate) => {
-    const describe = (point: RangePoint) => `机位距目标 ${km(point.distance)} km，${names[body]}视高度 ${point.elevation.toFixed(2)}°${point.share === null ? "" : `，主体占画面 ${percent(point.share)}`}`;
+    const describe = (point: RangePoint) => `机位距目标 ${km(point.distance)} km，${bodyName(body)}视高度 ${point.elevation.toFixed(2)}°${point.share === null ? "" : `，主体占画面 ${percent(point.share)}`}`;
     return [
       { key: `range-${candidate.key}-start`, kind: "alignment" as const, label: "对齐始", instant: iso(candidate.start), detail: `候选开始：${describe(candidate.points[0])}` },
       ...(candidate.end !== candidate.start ? [{ key: `range-${candidate.key}-end`, kind: "alignment" as const, label: "对齐终", instant: iso(candidate.end), detail: `候选结束：${describe(candidate.points.at(-1)!)}` }] : []),
@@ -329,15 +332,15 @@ export function rangeGeometry(search: RangeSearch | null, target: PositionSearch
 function CompositionSketch({ plan, share, body }: { plan: ShootingPlan; share: number; body: AlignmentBody }) {
   const height = 100, width = height * frameAspectRatio(plan);
   const fov = fieldOfView(plan);
-  const radius = Math.max(0.8, (height / 2) * (Math.tan(meanRadius[body] * degrees) / Math.tan((fov.vertical / 2) * degrees)));
+  const radius = Math.max(0.8, (height / 2) * (Math.tan(bodyRadius(body) * degrees) / Math.tan((fov.vertical / 2) * degrees)));
   const bar = Math.min(height / 2, share * height);
   return (
     <svg className="composition-sketch" viewBox={`0 0 ${width.toFixed(1)} ${height}`} role="img"
-      aria-label={`构图草图：画面中心对准目标顶部，${names[body]}按真实大小落在顶部，主体向下占画面高度 ${percent(share)}`}>
+      aria-label={`构图草图：画面中心对准目标顶部，${bodyName(body)}按真实大小落在顶部，主体向下占画面高度 ${percent(share)}`}>
       <rect className="sketch-frame" x="0.5" y="0.5" width={width - 1} height={height - 1} />
       <path className="sketch-grid" d={`M${width / 3} 0V${height}M${(2 * width) / 3} 0V${height}M0 ${height / 3}H${width}M0 ${(2 * height) / 3}H${width}`} />
       <rect className="sketch-subject" x={width / 2 - 2} y={height / 2} width="4" height={bar} />
-      <circle className={`sketch-body sketch-${body}`} cx={width / 2} cy={height / 2} r={radius} />
+      <circle className={`sketch-body sketch-${bodyKind(body)}`} cx={width / 2} cy={height / 2} r={radius} />
     </svg>
   );
 }
@@ -357,7 +360,7 @@ export function RangePanel({ search, position, plan, body, occlusion, check }: {
   occlusion: { state: string; occlusion: Occlusion } | null;
 }) {
   const { run, done, kept, current, currentPoint } = search;
-  const name = names[body];
+  const name = bodyName(body);
   const target = position.target;
   const lens = lensOf(plan);
   const preview = target && search.sized ? rangeDistances(target, search.share, lens, 30_000) : null;
@@ -448,17 +451,8 @@ export function RangePanel({ search, position, plan, body, occlusion, check }: {
               </select>
             </span>
           </div>
-          <fieldset className="alignment-sky">
-            <legend>天空条件</legend>
-            {skyConditions.map((condition) => (
-              <label key={condition}>
-                <input type="checkbox" aria-label={`候选天空条件：${skyConditionNames[condition]}`} checked={search.sky.includes(condition)}
-                  onChange={() => search.setSky(search.sky.includes(condition) ? search.sky.filter((item) => item !== condition) : skyConditions.filter((item) => item === condition || search.sky.includes(item)))} />
-                {skyConditionNames[condition]}
-              </label>
-            ))}
-          </fieldset>
         </>}
+        {body !== "sun" && <SkyChoices body={body} sky={search.sky} onChange={search.setSky} label="候选天空条件" />}
       </div>
       <div className="alignment-section alignment-results" aria-label="推算结果">
         <h3>候选</h3>

@@ -7,7 +7,7 @@ import type { PositionPoint } from "./position-alignment.ts";
 import { mergeCandidates } from "./range-alignment.ts";
 import type { RangeCandidate } from "./range-alignment.ts";
 import { SHOT_NAME_LIMIT, shotFromPlan, shotLink } from "./shot.ts";
-import { solveBodyNames } from "./solve-report.ts";
+import { bodyLayer, bodyName, sizeWord } from "./sky-targets.ts";
 
 /**
  * 推算 results as an iCalendar file (RFC 5545): one event per result, in UTC,
@@ -72,7 +72,7 @@ export function calendarText(events: readonly CalendarEvent[], name: string, now
 /** "目标或地点 · 天体 月-日 时:分", within the shot name limit. */
 export function solveShotName(place: string, body: AlignmentBody, instant: string, timeZone: string) {
   const local = localDateTime(instant, timeZone);
-  return [...`${place} · ${solveBodyNames[body]} ${local.slice(5, 10)} ${local.slice(11, 16)}`].slice(0, SHOT_NAME_LIMIT).join("");
+  return [...`${place} · ${bodyName(body)} ${local.slice(5, 10)} ${local.slice(11, 16)}`].slice(0, SHOT_NAME_LIMIT).join("");
 }
 
 export interface CalendarContext {
@@ -95,16 +95,16 @@ function linkFor(context: CalendarContext, patch: Partial<ShootingPlan>) {
 
 /** 找时间: each alignment, over its span within the tolerance. */
 export function timeEvents(alignments: readonly Alignment[], context: CalendarContext): CalendarEvent[] {
-  const { plan, body } = context, name = solveBodyNames[body];
+  const { plan, body } = context, name = bodyName(body);
   return alignments.map((found, index) => {
-    const url = linkFor(context, { instant: found.instant, layers: { ...plan.layers, [body]: true } });
+    const url = linkFor(context, { instant: found.instant, layers: { ...plan.layers, [bodyLayer(body)]: true } });
     const ratio = found.separation / found.diameter;
     return {
       uid: `time-${stamp(Date.parse(found.instant))}-${index}@tamatamatori`,
       start: Date.parse(found.from), end: Date.parse(found.to),
       summary: `${name}对齐 · ${context.place}`,
       description: [
-        `${clock(Date.parse(found.instant), plan.timeZone)}（${plan.timeZone}）${name}中心${ratio < 0.02 ? "几乎居中" : `偏离期望位置 ${ratio.toFixed(2)} 个视直径（${found.offset}）`}`,
+        `${clock(Date.parse(found.instant), plan.timeZone)}（${plan.timeZone}）${name}中心${ratio < 0.02 ? "几乎居中" : `偏离期望位置 ${ratio.toFixed(2)} 个${sizeWord(body)}（${found.offset}）`}`,
         `天空：${skyConditionNames[found.sky]}${found.illuminated === null ? "" : `，亮面 ${percent(found.illuminated)}`}`,
         `机位：${plan.latitude.toFixed(6)}, ${plan.longitude.toFixed(6)}，离地 ${plan.cameraHeight} m`,
         `打开机位：${url}`, footer,
@@ -124,7 +124,7 @@ export function positionEvents(points: readonly PositionPoint[], context: Calend
     clear: run.filter((point) => point.sight === "clear").length / run.length,
   }));
   return mergeCandidates(segments).candidates.map((segment, index) => {
-    const { middle } = segment, name = solveBodyNames[context.body];
+    const { middle } = segment, name = bodyName(context.body);
     const url = linkFor(context, pointPlan(context.plan.layers, middle, context.body));
     const distances = segment.points.map((point) => point.distance);
     return {
@@ -144,7 +144,7 @@ export function positionEvents(points: readonly PositionPoint[], context: Calend
 
 /** 两者都找: each candidate, placed at its middle minute. */
 export function rangeEvents(candidates: readonly RangeCandidate[], context: CalendarContext): CalendarEvent[] {
-  const name = solveBodyNames[context.body];
+  const name = bodyName(context.body);
   return candidates.map((candidate, index) => {
     const { middle } = candidate;
     const url = linkFor(context, pointPlan(context.plan.layers, middle, context.body));

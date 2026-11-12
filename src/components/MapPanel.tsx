@@ -1,3 +1,5 @@
+import { bodyKind } from "../domain/sky-targets";
+import type { SolveBodyId } from "../domain/sky-targets";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { RefObject } from "react";
 import type { Map as MapLibreMap, Marker, GeoJSONSource } from "maplibre-gl";
@@ -55,6 +57,11 @@ function eclipseGeometry(eclipse: EclipseMap): GeoJSON.FeatureCollection {
 }
 const bodyNames = { sun: "太阳", moon: "月亮", core: "银心" } as const;
 const bodyColors = { sun: "#e0892c", moon: "#5f7fc4", core: "#8b5fc4" } as const;
+/** Alignment lines: the Sun and the Moon as their azimuth lines; fixed bodies by kind. */
+const alignmentColor = (body: string) => {
+  const kind = bodyKind(body as SolveBodyId);
+  return kind === "sun" || kind === "moon" || kind === "core" ? bodyColors[kind] : kind === "deepSky" ? "#a0568a" : "#3f7f8f";
+};
 
 /** Body azimuth lines from the camera, as long as the view cone at this zoom. */
 function lineGeometry(plan: ShootingPlan, lines: BodyLine[], zoom: number): GeoJSON.FeatureCollection {
@@ -347,7 +354,7 @@ export function MapPanel({
       }
       if (alignmentSource && latest.current.alignmentBody !== drawnBody) {
         drawnBody = latest.current.alignmentBody;
-        const color = bodyColors[drawnBody as "sun" | "moon"];
+        const color = alignmentColor(drawnBody);
         for (const id of ["tamatamatori-alignment-clear", "tamatamatori-alignment-blocked", "tamatamatori-alignment-dot", "tamatamatori-alignment-sector"])
           map.setPaintProperty(id, id.endsWith("dot") ? "circle-color" : id.endsWith("sector") ? "fill-color" : "line-color", color);
       }
@@ -661,11 +668,11 @@ export function MapPanel({
             map.addSource(alignmentSourceId, { type: "geojson", data: latest.current.alignmentFeatures });
             drawnAlignment = latest.current.alignmentFeatures;
             drawnBody = latest.current.alignmentBody;
-            const alignmentColor = bodyColors[drawnBody as "sun" | "moon"];
+            const lineColor_ = alignmentColor(drawnBody);
             map.addLayer({
               id: "tamatamatori-alignment-sector", type: "fill", source: alignmentSourceId,
               filter: ["==", ["get", "kind"], "sector"],
-              paint: { "fill-color": alignmentColor, "fill-opacity": 0.1 },
+              paint: { "fill-color": lineColor_, "fill-opacity": 0.1 },
             });
             map.addLayer({
               id: "tamatamatori-alignment-ring", type: "line", source: alignmentSourceId,
@@ -697,20 +704,20 @@ export function MapPanel({
               id: "tamatamatori-alignment-clear", type: "line", source: alignmentSourceId,
               filter: ["all", ["==", ["get", "kind"], "line"], ["==", ["get", "sight"], "clear"]],
               layout: { "line-cap": "round", "line-join": "round" },
-              paint: { "line-color": alignmentColor, "line-width": 3.5 },
+              paint: { "line-color": lineColor_, "line-width": 3.5 },
             });
             map.addLayer({
               id: "tamatamatori-alignment-blocked", type: "line", source: alignmentSourceId,
               filter: ["all", ["==", ["get", "kind"], "line"], ["!=", ["get", "sight"], "clear"]],
               paint: {
-                "line-color": alignmentColor, "line-width": 3, "line-opacity": ["match", ["get", "sight"], "blocked", 0.75, 0.45],
+                "line-color": lineColor_, "line-width": 3, "line-opacity": ["match", ["get", "sight"], "blocked", 0.75, 0.45],
                 "line-dasharray": ["match", ["get", "sight"], "blocked", ["literal", [2, 1.5]], ["literal", [0.6, 1.4]]],
               },
             });
             map.addLayer({
               id: "tamatamatori-alignment-dot", type: "circle", source: alignmentSourceId,
               filter: ["==", ["get", "kind"], "dot"],
-              paint: { "circle-radius": 3.5, "circle-color": alignmentColor, "circle-stroke-color": "#ffffff", "circle-stroke-width": 1 },
+              paint: { "circle-radius": 3.5, "circle-color": lineColor_, "circle-stroke-color": "#ffffff", "circle-stroke-width": 1 },
             });
             map.addLayer({
               id: "tamatamatori-alignment-labels", type: "symbol", source: alignmentSourceId,

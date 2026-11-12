@@ -5,7 +5,7 @@
 AI 可以用两种链接把结果交给用户，用户打开后先看到预览，确认才应用：
 
 - 机位链接 `https://imanity.github.io/Tamatamatori/#shot=json:<URL 编码的机位 JSON>`：一个完整的拍摄计划。
-- 推算请求链接 `https://imanity.github.io/Tamatamatori/#solve=json:<URL 编码的推算请求 JSON>`：让应用求拍摄时间或机位（例如让月亮落在某座塔的塔尖）。
+- 推算请求链接 `https://imanity.github.io/Tamatamatori/#solve=json:<URL 编码的推算请求 JSON>`：让应用求拍摄时间或机位（例如让月亮或银心落在某座塔的塔尖）。
 
 写之前请读对应格式说明；字段错误会被逐条指出，可据此修正。地点请给坐标或已接入地标的 id，不要猜测坐标。预览与推算都是基于地理和天文数据的构图模拟，不代表实景一定可见。
 

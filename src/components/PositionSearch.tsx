@@ -10,9 +10,12 @@ import {
   MIN_DISTANCE,
   pointPlan,
   positionProfile,
+  restoredLayers,
+  triedLayers,
   solvePositions,
 } from "../domain/position-alignment";
-import type { GroundSampler, GroundTarget, PositionInput, PositionPoint, PositionResult, PositionSlice } from "../domain/position-alignment";
+import type { GroundSampler, GroundTarget, PositionInput, PositionPoint, PositionResult, PositionSlice, TriedLayers } from "../domain/position-alignment";
+import { bodyName } from "../domain/sky-targets";
 import type { AlignmentBody } from "../domain/alignment";
 import { compassDirection, localDateTime, normalizeLongitude } from "../domain/plan";
 import type { ShootingPlan } from "../domain/plan";
@@ -27,7 +30,6 @@ import type { Feasibility } from "./Feasibility";
 
 type UpdatePlan = (patch: Partial<ShootingPlan>) => void;
 const terrainUrl = import.meta.env.VITE_TERRAIN_TILEJSON_URL?.trim() || DEFAULT_TERRAIN_URL;
-const names: Record<AlignmentBody, string> = { sun: "太阳", moon: "月亮" };
 const iso = (time: number) => new Date(time).toISOString().replace(".000Z", "Z");
 const clock = (time: number, timeZone: string) => localDateTime(iso(time), timeZone).slice(11, 16);
 const km = (meters: number) => (meters / 1000).toFixed(meters < 10_000 ? 2 : 1);
@@ -62,8 +64,7 @@ interface Before {
   instant: string;
   azimuth: number;
   pitch: number;
-  sun: boolean;
-  moon: boolean;
+  layers: TriedLayers;
 }
 
 /**
@@ -147,7 +148,7 @@ export function usePositionSearch(plan: ShootingPlan, update: UpdatePlan, active
     const now = latest.current;
     setBefore((kept) => kept ?? {
       latitude: now.latitude, longitude: now.longitude, instant: now.instant,
-      azimuth: now.azimuth, pitch: now.pitch, sun: now.layers.sun, moon: now.layers.moon,
+      azimuth: now.azimuth, pitch: now.pitch, layers: triedLayers(now.layers),
     });
     const patch = pointPlan(now.layers, point, body);
     latest.current = { ...now, ...patch };
@@ -159,10 +160,7 @@ export function usePositionSearch(plan: ShootingPlan, update: UpdatePlan, active
     update({
       latitude: before.latitude, longitude: before.longitude, instant: before.instant,
       azimuth: before.azimuth, pitch: before.pitch,
-      layers: {
-        ...now.layers, sun: before.sun, moon: before.moon,
-        sunPath: before.sun && !!now.layers.sunPath, moonPath: before.moon && !!now.layers.moonPath,
-      },
+      layers: restoredLayers(now.layers, before.layers),
     });
     setBefore(null);
   };
@@ -174,7 +172,7 @@ export function usePositionSearch(plan: ShootingPlan, update: UpdatePlan, active
     for (const point of result.points) branches.set(point.branch, [...(branches.get(point.branch) ?? []), point]);
     for (const [branch, run] of branches) {
       const first = run[0], last = run.at(-1)!;
-      const describe = (point: PositionPoint) => `机位距目标 ${km(point.distance)} km，${names[body]}视高度 ${point.elevation.toFixed(2)}°`;
+      const describe = (point: PositionPoint) => `机位距目标 ${km(point.distance)} km，${bodyName(body)}视高度 ${point.elevation.toFixed(2)}°`;
       found.push({ key: `position-${branch}-start`, kind: "alignment", label: "对齐始", instant: iso(first.time), detail: `对齐线开始：${describe(first)}` });
       if (last !== first) found.push({ key: `position-${branch}-end`, kind: "alignment", label: "对齐终", instant: iso(last.time), detail: `对齐线结束：${describe(last)}` });
     }
@@ -295,7 +293,7 @@ export function PositionPanel({ search, plan, body, occlusion, check }: {
   occlusion: { state: string; occlusion: Occlusion } | null;
 }) {
   const { target, run, result, points, current } = search;
-  const name = names[body];
+  const name = bodyName(body);
   const profile = useMemo(() => {
     if (!target || !run?.sampler) return null;
     try {

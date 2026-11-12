@@ -1539,6 +1539,9 @@ p.info-detail, span.info-detail { color: #8f9886; }
 .alignment-mark path { fill: none; stroke-width: 1.4; stroke-dasharray: 4 3; }
 .alignment-mark-sun path { stroke: #ffd27a; }
 .alignment-mark-moon path { stroke: #dfe8ff; }
+.alignment-mark-core path { stroke: #e3c6ff; }
+.alignment-mark-star path { stroke: #cfe6ff; }
+.alignment-mark-deepSky path { stroke: #f2c6e4; }
 .alignment-handle { position: absolute; width: 28px; height: 28px; margin: 0; padding: 0; transform: translate(-50%, -50%); border: 0; border-radius: 50%; background: none; pointer-events: auto; cursor: move; touch-action: none; }
 .alignment-handle::before, .alignment-handle::after { content: ""; position: absolute; left: 50%; top: 50%; background: #fff; box-shadow: 0 0 2px #0a1722; transform: translate(-50%, -50%); }
 .alignment-handle::before { width: 9px; height: 1px; }
@@ -1588,6 +1591,9 @@ p.info-detail, span.info-detail { color: #8f9886; }
 .composition-sketch .sketch-subject { fill: #1b2230; stroke: #c9d3e2; stroke-width: .6; }
 .composition-sketch .sketch-sun { fill: #ffe6a6; }
 .composition-sketch .sketch-moon { fill: #eef2fb; }
+.composition-sketch .sketch-core { fill: #e3c6ff; fill-opacity: .55; }
+.composition-sketch .sketch-star { fill: #cfe6ff; }
+.composition-sketch .sketch-deepSky { fill: #f2c6e4; fill-opacity: .6; }
 .alignment-export { position: relative; }
 .alignment-export .alignment-copied { display: block; min-height: 1.4em; color: #6c7e61; font-size: 11px; }
 .solve-dialog .shot-summary .solve-row { display: contents; }

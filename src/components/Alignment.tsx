@@ -8,12 +8,16 @@ import {
   scanAlignment,
   skyConditionNames,
   skyConditions,
+  bodyRadius,
   spanChoices,
   targetElevationRange,
   toleranceChoices,
 } from "../domain/alignment";
 import type { AlignmentBody, AlignmentInput, AlignmentResult, AlignmentScan, SkyCondition } from "../domain/alignment";
 import { localDateTime } from "../domain/plan";
+import { bodyKind, bodyName, bodyLayer, fixedBodies, isFixedBody, sizeWord } from "../domain/sky-targets";
+import { restoredLayers, triedLayers } from "../domain/position-alignment";
+import type { TriedLayers } from "../domain/position-alignment";
 import type { ShootingPlan } from "../domain/plan";
 import { solveRequestOf, solveStart } from "../domain/solve";
 import type { SolveRequest } from "../domain/solve";
@@ -31,7 +35,6 @@ import type { ShotSaving } from "./SolveLink";
 type UpdatePlan = (patch: Partial<ShootingPlan>) => void;
 const DAY = 86_400_000;
 const SLICE = 30 * DAY;
-const names: Record<AlignmentBody, string> = { sun: "太阳", moon: "月亮" };
 const round = (value: number, digits = 2) => Math.round(value * 10 ** digits) / 10 ** digits;
 const weekdays = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
 
@@ -69,8 +72,7 @@ interface Run {
 /** Fields a try-out changes, kept from before the first one for "返回推算前". */
 interface Before {
   instant: string;
-  sun: boolean;
-  moon: boolean;
+  layers: TriedLayers;
 }
 
 function clampTarget(target: { azimuth: number; elevation: number }) {
@@ -154,7 +156,7 @@ export function useAlignment(plan: ShootingPlan, update: UpdatePlan, active: boo
       return;
     }
     const target = next.target!;
-    const moon = next.body === "moon";
+    const moon = next.body === "moon", dark = moon || isFixedBody(next.body);
     const input: AlignmentInput = {
       latitude: current.latitude,
       longitude: current.longitude,
@@ -162,7 +164,7 @@ export function useAlignment(plan: ShootingPlan, update: UpdatePlan, active: boo
       target: { body: next.body, ...target },
       tolerance: next.tolerance,
       ...(moon && (next.phase[0] > 0 || next.phase[1] < 100) ? { phase: [next.phase[0] / 100, next.phase[1] / 100] as const } : {}),
-      ...(moon && next.sky.length < skyConditions.length ? { sky: next.sky } : {}),
+      ...(dark && next.sky.length < skyConditions.length ? { sky: next.sky } : {}),
     };
     setRun({ ...base, phase: "running", from, to });
     const scans: AlignmentScan[] = [];
@@ -218,23 +220,13 @@ export function useAlignment(plan: ShootingPlan, update: UpdatePlan, active: boo
 
   const tryOut = (instant: string) => {
     const current = latest.current;
-    setBefore((kept) => kept ?? { instant: current.instant, sun: current.layers.sun, moon: current.layers.moon });
-    update({ instant, layers: { ...current.layers, [settings.body]: true } });
+    setBefore((kept) => kept ?? { instant: current.instant, layers: triedLayers(current.layers) });
+    update({ instant, layers: { ...current.layers, [bodyLayer(settings.body)]: true } });
   };
   const restore = () => {
     if (!before) return;
     const current = latest.current;
-    update({
-      instant: before.instant,
-      layers: {
-        ...current.layers,
-        sun: before.sun,
-        moon: before.moon,
-        // A path belongs to its body, as with the layer switches.
-        sunPath: before.sun && !!current.layers.sunPath,
-        moonPath: before.moon && !!current.layers.moonPath,
-      },
-    });
+    update({ instant: before.instant, layers: restoredLayers(current.layers, before.layers) });
     setBefore(null);
   };
 
@@ -243,7 +235,7 @@ export function useAlignment(plan: ShootingPlan, update: UpdatePlan, active: boo
     kind: "alignment" as const,
     label: "对齐",
     instant: found.instant,
-    detail: `${names[settings.body]}中心距期望位置 ${round(found.separation / found.diameter)} 个视直径（容差内 ${clockOf(found.from, plan.timeZone)}–${clockOf(found.to, plan.timeZone)}）`,
+    detail: `${bodyName(settings.body)}中心距期望位置 ${round(found.separation / found.diameter)} 个${sizeWord(settings.body)}（容差内 ${clockOf(found.from, plan.timeZone)}–${clockOf(found.to, plan.timeZone)}）`,
   })) : []), [active, kind, result, plan.timeZone, settings.body]);
 
   /** Opens a request (from a link): its kind, body, mark or target and conditions; `opened` is the plan it applies to. */
@@ -358,7 +350,7 @@ export function AlignmentMark({ alignment, view, frame }: { alignment: Alignment
   };
   const path = `${outline.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(5)},${point.y.toFixed(5)}`).join(" ")}Z`;
   return (
-    <div className={`alignment-mark alignment-mark-${settings.body}`} data-alignment-mark={settings.body}>
+    <div className={`alignment-mark alignment-mark-${bodyKind(settings.body)}`} data-alignment-mark={settings.body}>
       <svg viewBox="-1 -1 2 2" preserveAspectRatio="none" aria-hidden="true">
         <path d={path} vectorEffect="non-scaling-stroke" />
       </svg>
@@ -366,7 +358,7 @@ export function AlignmentMark({ alignment, view, frame }: { alignment: Alignment
         type="button"
         className="alignment-handle"
         style={{ left: `${(centre.x + 1) * 50}%`, top: `${(centre.y + 1) * 50}%` }}
-        aria-label={`${names[settings.body]}期望位置：方位 ${settings.target.azimuth.toFixed(2)}°，视高度 ${settings.target.elevation.toFixed(2)}°。拖动或用方向键微调`}
+        aria-label={`${bodyName(settings.body)}期望位置：方位 ${settings.target.azimuth.toFixed(2)}°，视高度 ${settings.target.elevation.toFixed(2)}°。拖动或用方向键微调`}
         title="拖动或用方向键微调期望位置（Shift 加大步长）"
         onPointerDown={(event) => {
           if (event.button !== 0) return;
@@ -385,7 +377,7 @@ export function AlignmentMark({ alignment, view, frame }: { alignment: Alignment
         onLostPointerCapture={() => (drag.current = null)}
         onKeyDown={nudge}
       >
-        <span>{names[settings.body]}期望位置</span>
+        <span>{bodyName(settings.body)}期望位置</span>
       </button>
     </div>
   );
@@ -406,7 +398,7 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion, savin
   const { settings, change, run, result } = alignment;
   // "检查机位" belongs to the panel: it is asked for, and lasts while the listed results do.
   const check = useFeasibility(alignment, plan);
-  const name = names[settings.body];
+  const name = bodyName(settings.body);
   const target = settings.target;
   const outline = target ? markOutline(view, { body: settings.body, ...target }) : null;
   const inFrame = !!outline && outline.some((point) => Math.abs(point.x) <= 1 && Math.abs(point.y) <= 1);
@@ -443,7 +435,7 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion, savin
               : `${span}内${name}没有落在容差内的一次。`}</p>
         {nearest && result.reason !== "filtered" && <p className="alignment-nearest">
           最接近：{dateOf(nearest.instant, plan.timeZone).day} {clockOf(nearest.instant, plan.timeZone)}，
-          偏 {round(nearest.separation / nearest.diameter)} 个视直径 · {nearest.offset}
+          偏 {round(nearest.separation / nearest.diameter)} 个{sizeWord(settings.body)} · {nearest.offset}
           <button type="button" onClick={() => alignment.tryOut(nearest.instant)}>试看</button>
         </p>}
       </div>;
@@ -471,14 +463,7 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion, savin
             : <p>地面目标与主体在画面中的大小已定，在一段日期内求哪天、在哪里拍能让{name}落在目标顶部。只按星历、DEM 与海平面地平计算，不含天气。</p>}
       </header>
       <div className="alignment-section">
-        <div className="alignment-bodies" role="radiogroup" aria-label="天体">
-          {(["sun", "moon"] as const).map((body) => (
-            <label key={body}>
-              <input type="radio" name="alignment-body" value={body} checked={settings.body === body} onChange={() => change({ body })} />
-              {names[body]}
-            </label>
-          ))}
-        </div>
+        <BodyPicker body={settings.body} onChange={(body) => change({ body })} />
       </div>
       {alignment.kind === "position" ? (
         <PositionPanel search={alignment.position} plan={plan} body={settings.body} occlusion={occlusion} check={check} />
@@ -525,7 +510,7 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion, savin
         <label className="field">
           <span className="field-label">容差</span>
           <select aria-label="对齐容差" value={settings.tolerance} onChange={(event) => change({ tolerance: Number(event.target.value) })}>
-            {toleranceChoices.map((value) => <option key={value} value={value}>中心偏离 ≤ {value} 个视直径</option>)}
+            {toleranceChoices.map((value) => <option key={value} value={value}>中心偏离 ≤ {value} 个{sizeWord(settings.body)}{isFixedBody(settings.body) ? `（${round(value * 2 * bodyRadius(settings.body))}°）` : ""}</option>)}
           </select>
         </label>
         {settings.body === "moon" && <>
@@ -543,17 +528,8 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion, savin
               </select>
             </span>
           </div>
-          <fieldset className="alignment-sky">
-            <legend>天空条件</legend>
-            {skyConditions.map((sky) => (
-              <label key={sky}>
-                <input type="checkbox" checked={settings.sky.includes(sky)}
-                  onChange={() => change({ sky: settings.sky.includes(sky) ? settings.sky.filter((item) => item !== sky) : skyConditions.filter((item) => item === sky || settings.sky.includes(item)) })} />
-                {skyConditionNames[sky]}
-              </label>
-            ))}
-          </fieldset>
         </>}
+        {settings.body !== "sun" && <SkyChoices body={settings.body} sky={settings.sky} onChange={(sky) => change({ sky })} />}
       </div>
       <div className="alignment-section alignment-results" aria-label="推算结果">
         <h3>结果</h3>
@@ -582,7 +558,7 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion, savin
                       <small>容差内 {clockOf(found.from, plan.timeZone)}–{clockOf(found.to, plan.timeZone)}</small>
                     </span>
                     <span className="alignment-facts">
-                      {ratio < 0.02 ? "几乎居中" : `偏 ${round(ratio)} 个视直径 · ${found.offset}`}
+                      {ratio < 0.02 ? "几乎居中" : `偏 ${round(ratio)} 个${sizeWord(settings.body)} · ${found.offset}`}
                       {" · "}{skyConditionNames[found.sky]}
                       {found.illuminated !== null && ` · 亮面 ${Math.round(found.illuminated * 100)}%`}
                     </span>
@@ -602,5 +578,51 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion, savin
       </>}
       <SolveExport alignment={alignment} plan={plan} saving={saving} />
     </section>
+  );
+}
+
+/** 太阳 / 月亮 / 银心, or a named star or deep-sky target from the list. */
+export function BodyPicker({ body, onChange }: { body: AlignmentBody; onChange: (body: AlignmentBody) => void }) {
+  const choice = body === "sun" || body === "moon" || body === "galactic-center" ? body : "fixed";
+  const stars = fixedBodies.filter((item) => item.kind === "star"), deepSky = fixedBodies.filter((item) => item.kind === "deepSky");
+  return (
+    <div className="alignment-section">
+      <div className="alignment-bodies" role="radiogroup" aria-label="天体">
+        {([["sun", "太阳"], ["moon", "月亮"], ["galactic-center", "银心"], ["fixed", "恒星与深空"]] as const).map(([value, label]) => (
+          <label key={value}>
+            <input type="radio" name="alignment-body" value={value} checked={choice === value}
+              onChange={() => onChange(value === "fixed" ? stars[0].id : value)} />
+            {label}
+          </label>
+        ))}
+      </div>
+      {choice === "fixed" && <label className="field">
+        <span className="field-label">恒星或深空目标</span>
+        <select aria-label="恒星或深空目标" value={body} onChange={(event) => onChange(event.target.value as AlignmentBody)}>
+          <optgroup label="亮星">{stars.map((item) => <option key={item.id} value={item.id}>{item.name}{item.magnitude !== null ? ` · ${item.magnitude.toFixed(1)} 等` : ""}</option>)}</optgroup>
+          <optgroup label="深空目标">{deepSky.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</optgroup>
+        </select>
+      </label>}
+      {isFixedBody(body) && <p className="alignment-hint">
+        {bodyName(body)}在星空中方向固定，期望位置按直径 {round(2 * bodyRadius(body))}° 的标记画出；只在太阳低于 −6° 时推算，试看时开启{bodyLayer(body) === "milkyWay" ? "银河" : bodyLayer(body) === "deepSky" ? "深空" : "星空"}图层。
+      </p>}
+    </div>
+  );
+}
+
+/** The skies a result may fall in: all five for the Moon, twilight and night for a fixed body (the Sun at least 6° down). */
+export function SkyChoices({ body, sky, onChange, label = "天空条件" }: { body: AlignmentBody; sky: readonly SkyCondition[]; onChange: (sky: SkyCondition[]) => void; label?: string }) {
+  const choices = isFixedBody(body) ? skyConditions.filter((item) => item === "twilight" || item === "night") : skyConditions;
+  return (
+    <fieldset className="alignment-sky">
+      <legend>{label}</legend>
+      {choices.map((item) => (
+        <label key={item}>
+          <input type="checkbox" aria-label={`${label}：${skyConditionNames[item]}`} checked={sky.includes(item)}
+            onChange={() => onChange(sky.includes(item) ? sky.filter((other) => other !== item) : skyConditions.filter((other) => other === item || sky.includes(other)))} />
+          {skyConditionNames[item]}
+        </label>
+      ))}
+    </fieldset>
   );
 }

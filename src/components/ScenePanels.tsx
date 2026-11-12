@@ -59,6 +59,7 @@ import type { LayerGroupId } from "./layers";
 import { Detail, pollutionLevel } from "./readout";
 import { AlignmentMark, AlignmentPanel, placeFromPointer } from "./Alignment";
 import type { ShotSaving } from "./SolveLink";
+import { bodyName } from "../domain/sky-targets";
 import type { AlignmentState } from "./Alignment";
 
 const radians = (value: number) => (value * Math.PI) / 180;
@@ -504,7 +505,7 @@ export function PreviewPanel({
           <AlignmentMark alignment={alignment} view={view} frame={viewfinder} />
           {placing && (
             <p className="alignment-placing" role="status">
-              点击画面放下{alignment.settings.body === "sun" ? "太阳" : "月亮"}的期望位置 · Esc 取消
+              点击画面放下{bodyName(alignment.settings.body)}的期望位置 · Esc 取消
             </p>
           )}
           <svg
@@ -576,7 +577,7 @@ export function PreviewPanel({
             view={view}
             update={update}
             saving={shotSaving}
-            occlusion={alignedBody && plan.layers[alignment.settings.body]
+            occlusion={alignedBody && (alignment.settings.body === "sun" || alignment.settings.body === "moon") && plan.layers[alignment.settings.body]
               ? { state: alignedBody.state, occlusion: alignedBody.occlusion }
               : null}
           />,

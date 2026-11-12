@@ -37,8 +37,115 @@
     "body": {
       "enum": [
         "sun",
-        "moon"
-      ]
+        "moon",
+        "galactic-center",
+        "hyg-32263",
+        "hyg-30365",
+        "hyg-69451",
+        "hyg-71456",
+        "hyg-90979",
+        "hyg-24549",
+        "hyg-24378",
+        "hyg-37173",
+        "hyg-7574",
+        "hyg-27919",
+        "hyg-68483",
+        "hyg-97338",
+        "hyg-60530",
+        "hyg-21368",
+        "hyg-65269",
+        "hyg-80519",
+        "hyg-37718",
+        "hyg-113008",
+        "hyg-62239",
+        "hyg-101767",
+        "hyg-71453",
+        "hyg-49528",
+        "hyg-33492",
+        "hyg-36744",
+        "hyg-60893",
+        "hyg-85665",
+        "hyg-25273",
+        "hyg-25364",
+        "hyg-45106",
+        "hyg-26246",
+        "hyg-108922",
+        "hyg-26662",
+        "hyg-39840",
+        "hyg-62757",
+        "hyg-15824",
+        "hyg-89906",
+        "hyg-53905",
+        "hyg-34354",
+        "hyg-67088",
+        "hyg-40921",
+        "hyg-85965",
+        "hyg-28288",
+        "hyg-82022",
+        "hyg-31601",
+        "hyg-42794",
+        "hyg-100425",
+        "hyg-11734",
+        "hyg-30251",
+        "hyg-46259",
+        "hyg-9861",
+        "hyg-50440",
+        "hyg-3413",
+        "hyg-92564",
+        "hyg-68714",
+        "hyg-676",
+        "hyg-5436",
+        "hyg-27298",
+        "hyg-72380",
+        "hyg-111768",
+        "hyg-85769",
+        "hyg-14540",
+        "hyg-9618",
+        "hyg-57459",
+        "hyg-4417",
+        "hyg-61739",
+        "hyg-39318",
+        "hyg-45425",
+        "hyg-76035",
+        "hyg-44689",
+        "hyg-65173",
+        "hyg-100128",
+        "hyg-3172",
+        "hyg-87561",
+        "hyg-25865",
+        "hyg-744",
+        "hyg-78165",
+        "hyg-82144",
+        "hyg-53754",
+        "hyg-71879",
+        "hyg-106972",
+        "hyg-86403",
+        "hyg-2076",
+        "hyg-57828",
+        "hyg-83755",
+        "hyg-113521",
+        "hyg-35806",
+        "hyg-104861",
+        "hyg-45809",
+        "hyg-102157",
+        "hyg-113603",
+        "dso-ngc0224",
+        "dso-ngc1976",
+        "dso-mel022",
+        "dso-ngc6523",
+        "dso-ngc7000",
+        "dso-ngc1499",
+        "dso-ic1805",
+        "dso-ic1848",
+        "dso-ngc6514",
+        "dso-ngc0598",
+        "dso-ngc2237",
+        "dso-ic0434",
+        "dso-ngc2024",
+        "dso-sh2-276",
+        "dso-rhooph"
+      ],
+      "description": "\"sun\"、\"moon\"，或固定方向天体：\"galactic-center\"（银心）、亮星 hyg-…、深空目标 dso-…（见格式说明的列表）"
     },
     "mark": {
       "type": "object",
@@ -335,6 +442,25 @@
         "properties": {
           "phase": false,
           "sky": false
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "body"
+        ],
+        "properties": {
+          "body": {
+            "not": {
+              "const": "moon"
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "phase": false
         }
       }
     }

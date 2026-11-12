@@ -14,7 +14,7 @@ import { parseWeather, WEATHER_TTL } from '../src/domain/weather.ts';
 import { ellipsoidalRay } from '../src/domain/geodesy.ts';
 import { parseShotText, shotFromPlan, shotLink } from '../src/domain/shot.ts';
 import { parseSolveText } from '../src/domain/solve.ts';
-import { travel } from '../src/domain/position-alignment.ts';
+import { skyAt, travel } from '../src/domain/position-alignment.ts';
 import { dayEvents } from '../src/domain/day-events.ts';
 import { cameraHeightSlider, initialPlan } from '../src/domain/plan.ts';
 import { bodyPath } from '../src/domain/body-paths.ts';
@@ -3316,4 +3316,44 @@ test('检查机位：按需读取水体与建筑，各行标出水面与建筑�
   await settle(() => button('检查机位（水面、建筑）').click());
   await waitUntil(() => /检查失败：矢量瓦片请求失败（503）/.test(document.querySelector('.feasibility .field-error')?.textContent ?? ''));
   assert.ok(button('重试检查'));
+});
+
+test('固定方向天体：银心的找时间请求只在暗夜给出结果，试看开启银河、返回推算前关闭；恒星与深空从列表选择', async t => {
+  await workspace(t); await readyTerrain();
+  t.after(() => dom.window.history.replaceState(null, '', '/'));
+  const at = Date.parse('2026-08-15T12:00:00Z'); // 21:00 in Tokyo
+  const mark = skyAt('galactic-center', at, 35.4172, 138.8729, 'standard');
+  const request = { format: 'tamatamatori.solve', version: 1, kind: 'time', body: 'galactic-center', mark: { azimuth: Math.round(mark.azimuth * 1000) / 1000, elevation: Math.round(mark.elevation * 1000) / 1000 },
+    date: '2026-08-10', days: 30, timeZone: 'Asia/Tokyo' };
+  await settle(() => { dom.window.location.hash = `solve=json:${encodeURIComponent(JSON.stringify(request))}`; });
+  await waitUntil(() => document.querySelector('.solve-dialog')?.open);
+  assert.match(document.querySelector('.solve-dialog .shot-summary').textContent, /找时间 · 银心/);
+  await settle(() => button('载入并推算').click());
+  const items = () => [...document.querySelectorAll('.alignment-month li')];
+  await waitUntil(() => items().length > 0);
+  assert.equal(document.querySelector('input[name="alignment-body"][value="galactic-center"]').checked, true);
+  assert.match(document.querySelector('.alignment-bodies').parentElement.textContent, /银心在星空中方向固定，期望位置按直径 2° 的标记画出；只在太阳低于 −6° 时推算/);
+  assert.deepEqual([...document.querySelectorAll('.alignment-sky label')].map((label) => label.textContent.trim()), ['暮光', '暗夜']);
+  const august15 = items().find((item) => /8\/15 .* 21:0\d/.test(item.textContent));
+  assert.ok(august15, items().map((item) => item.textContent).join(' | '));
+  assert.match(august15.textContent, /个标记直径|几乎居中/);
+  assert.ok(items().every((item) => /暮光|暗夜/.test(item.textContent)), 'only dark skies');
+  const milkyWay = () => document.querySelector('[aria-label="显示银河"]');
+  assert.equal(milkyWay().checked, false);
+  await settle(() => august15.querySelector('button').click());
+  assert.equal(milkyWay().checked, true, 'the try-out shows the Milky Way');
+  assert.ok(document.querySelector('.alignment-mark-core'));
+  await settle(() => button('返回推算前').click());
+  assert.equal(milkyWay().checked, false);
+  // A star from the list: the brightest first, then any named star or deep-sky target.
+  await settle(() => document.querySelector('input[name="alignment-body"][value="fixed"]').click());
+  const select = () => document.querySelector('select[aria-label="恒星或深空目标"]');
+  assert.equal(select().value, 'hyg-32263');
+  assert.deepEqual([...select().querySelectorAll('optgroup')].map((group) => [group.label, group.children.length]), [['亮星', 90], ['深空目标', 15]]);
+  await settle(() => setControl(select(), 'hyg-90979'));
+  assert.match(document.querySelector('[data-alignment-mark] .alignment-handle').getAttribute('aria-label'), /^织女星期望位置/);
+  assert.ok(document.querySelector('.alignment-mark-star'));
+  await settle(() => document.querySelector('input[name="alignment-body"][value="moon"]').click());
+  assert.equal(select(), null);
+  assert.equal(document.querySelectorAll('.alignment-sky label').length, 5, 'all skies for the Moon');
 });

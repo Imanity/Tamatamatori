@@ -1,5 +1,6 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { landmarks } from "./landmarks.ts";
+import { fixedBodies, isSolveBody } from "./sky-targets.ts";
 import { skyConditions, spanChoices as timeSpans, targetElevationRange, toleranceChoices } from "./alignment.ts";
 import type { AlignmentBody, SkyCondition } from "./alignment.ts";
 import { spanChoices as rangeSpans } from "./range-alignment.ts";
@@ -20,7 +21,8 @@ export const SOLVE_TEXT_LIMIT = 16 * 1024;
 export const SOLVE_NAME_LIMIT = 40;
 export const solveKinds = ["time", "position", "range"] as const;
 export type SolveKind = (typeof solveKinds)[number];
-export const solveBodies = ["sun", "moon"] as const;
+/** The Sun, the Moon, then the fixed bodies (Galactic Centre, named stars, deep-sky targets). */
+export const solveBodies: readonly AlignmentBody[] = ["sun", "moon", ...fixedBodies.map((body) => body.id)];
 export const timeDays = timeSpans.map((choice) => choice.days);
 export const rangeDays = [...rangeSpans];
 export const shareLimits = [0.05, 0.5] as const;
@@ -111,8 +113,8 @@ export function parseSolve(value: unknown): SolveParse {
   if (value.version !== SOLVE_VERSION) errors.push(`version：应为 ${SOLVE_VERSION}，收到 ${shown(value.version)}`);
   const kind = solveKinds.includes(value.kind as SolveKind) ? (value.kind as SolveKind) : null;
   if (!kind) errors.push(`kind：应为 ${solveKinds.map((item) => `"${item}"`).join(" / ")} 之一，收到 ${shown(value.kind)}`);
-  const body = solveBodies.includes(value.body as AlignmentBody) ? (value.body as AlignmentBody) : null;
-  if (!body) errors.push(`body：应为 "sun" / "moon" 之一，收到 ${shown(value.body)}`);
+  const body = isSolveBody(value.body) ? value.body : null;
+  if (!body) errors.push(`body：应为 "sun"、"moon"、"galactic-center"，或亮星（hyg-…）、深空目标（dso-…）的 id，收到 ${shown(value.body)}`);
   if (kind) for (const key of Object.keys(value)) if (topKeys.includes(key) && !common.includes(key) && !kindKeys[kind].includes(key))
     errors.push(`${key}：kind 为 "${kind}" 时不使用该字段`);
 
@@ -237,17 +239,16 @@ export function parseSolve(value: unknown): SolveParse {
     errors.push(`timeZone：应为有效的 IANA 时区，例如 "Asia/Tokyo"，收到 ${shown(value.timeZone)}`);
   else request.timeZone = validTimeZone(value.timeZone)!;
 
-  for (const key of ["phase", "sky"] as const) {
-    if (value[key] === undefined || !kind || kind === "position") continue;
-    if (body !== "moon") errors.push(`${key}：只用于月亮`);
-  }
+  // Moon phase for the Moon; skies for the Moon and fixed bodies (never for the Sun).
+  if (value.phase !== undefined && body && kind && kind !== "position" && body !== "moon") errors.push("phase：只用于月亮");
+  if (value.sky !== undefined && body && kind && kind !== "position" && body === "sun") errors.push("sky：只用于月亮与固定方向天体");
   if (value.phase !== undefined && body === "moon" && kind !== "position") {
     const phase = value.phase;
     if (!Array.isArray(phase) || phase.length !== 2 || !phase.every((item) => phaseChoices.includes(item)) || phase[0] > phase[1])
       errors.push(`phase：应为 [下限, 上限]，取值 ${phaseChoices.join(" / ")}，下限不大于上限，收到 ${shown(phase)}`);
     else request.phase = [phase[0], phase[1]];
   }
-  if (value.sky !== undefined && body === "moon" && kind !== "position") {
+  if (value.sky !== undefined && body && body !== "sun" && kind !== "position") {
     const sky = value.sky;
     if (!Array.isArray(sky) || !sky.length || !sky.every((item) => skyConditions.includes(item)) || new Set(sky).size !== sky.length)
       errors.push(`sky：应为不重复的 ${skyConditions.map((item) => `"${item}"`).join(" / ")} 组成的非空数组，收到 ${shown(sky)}`);
@@ -338,10 +339,10 @@ export interface SolveState {
 export function solveRequestOf(state: SolveState): SolveRequest | null {
   const base = { format: SOLVE_FORMAT, version: SOLVE_VERSION, name: "", kind: state.kind, body: state.body } as const;
   const when = { date: state.date, timeZone: state.timeZone };
-  const filters = state.body === "moon" ? {
-    ...(state.phase[0] > 0 || state.phase[1] < 1 ? { phase: [state.phase[0], state.phase[1]] as const } : {}),
-    ...(state.sky.length < skyConditions.length ? { sky: skyConditions.filter((item) => state.sky.includes(item)) } : {}),
-  } : {};
+  const filters = {
+    ...(state.body === "moon" && (state.phase[0] > 0 || state.phase[1] < 1) ? { phase: [state.phase[0], state.phase[1]] as const } : {}),
+    ...(state.body !== "sun" && state.sky.length < skyConditions.length ? { sky: skyConditions.filter((item) => state.sky.includes(item)) } : {}),
+  };
   if (state.kind === "time") {
     if (!state.mark) return null;
     return { ...base, mark: { ...state.mark }, camera: { ...state.camera }, ...when, days: state.days, tolerance: state.tolerance, ...filters };

@@ -199,13 +199,13 @@ export function rangeCandidates(input: Pick<RangeInput, "body" | "target">, poin
   return candidates.sort((a, b) => a.start - b.start);
 }
 
-/** Moon phase and sky filters, counted once each (phase first) like "找时间". */
-export function filterCandidates(candidates: readonly RangeCandidate[], filters: { phase?: readonly [number, number]; sky?: readonly SkyCondition[] }) {
+/** Moon phase and sky filters, counted once each (phase first) like "找时间"; the Sun is never filtered. */
+export function filterCandidates(candidates: readonly RangeCandidate[], filters: { phase?: readonly [number, number]; sky?: readonly SkyCondition[] }, body?: AlignmentBody) {
   const kept: RangeCandidate[] = [];
   const filtered = { phase: 0, sky: 0 };
   for (const candidate of candidates) {
     if (candidate.illuminated !== null && filters.phase && (candidate.illuminated < filters.phase[0] || candidate.illuminated > filters.phase[1])) filtered.phase++;
-    else if (candidate.illuminated !== null && filters.sky && !filters.sky.includes(candidate.sky)) filtered.sky++;
+    else if (body !== "sun" && filters.sky && !filters.sky.includes(candidate.sky)) filtered.sky++;
     else kept.push(candidate);
   }
   return { kept, filtered };

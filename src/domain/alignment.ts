@@ -1,4 +1,4 @@
-import { Body, KM_PER_AU, MakeTime, Observer, Refraction, SearchAltitude, SearchHourAngle } from "astronomy-engine";
+import { KM_PER_AU, MakeTime, Observer, Refraction, SearchAltitude, SearchHourAngle } from "astronomy-engine";
 import { celestialBodies, degrees, direction, dot, sunPosition, topocentric, unit } from "./ephemeris.ts";
 import type { Vector3 } from "./ephemeris.ts";
 import { apparentElevation } from "./refraction.ts";
@@ -6,6 +6,8 @@ import { cameraBasis } from "./celestial-projection.ts";
 import type { View } from "./celestial-projection.ts";
 import { lightPeriodBounds } from "./timeline.ts";
 import type { ShootingPlan } from "./plan.ts";
+import { astroBody, DARK_SUN_ELEVATION, fixedPlace, isFixedBody } from "./sky-coordinates.ts";
+import type { SolveBodyId } from "./sky-coordinates.ts";
 
 /**
  * "Find the time" for a fixed camera: when does the Sun or Moon sit at a
@@ -15,7 +17,8 @@ import type { ShootingPlan } from "./plan.ts";
  * culminations; each is refined to the closest approach along the body's path.
  */
 
-export type AlignmentBody = "sun" | "moon";
+/** The Sun, the Moon or a fixed body (sky-targets.ts). */
+export type AlignmentBody = SolveBodyId;
 export interface AlignmentTarget {
   body: AlignmentBody;
   /** Apparent direction as drawn in the preview (the plan's refraction), degrees. */
@@ -38,7 +41,9 @@ export function skyCondition(sunElevation: number): SkyCondition {
 }
 
 /** Mean apparent radii, degrees; the mark is drawn with these. */
-export const meanRadius: Record<AlignmentBody, number> = { sun: 0.2666, moon: 0.2591 };
+export const meanRadius: Record<"sun" | "moon", number> = { sun: 0.2666, moon: 0.2591 };
+/** The radius of the drawn mark: the mean disc, or a fixed body's nominal size. */
+export const bodyRadius = (body: AlignmentBody) => (isFixedBody(body) ? fixedPlace(body)?.radius ?? 0.25 : meanRadius[body]);
 /** Apparent elevation of a mark: the disc must be drawn (upper limb above the sea-level horizon). */
 export const targetElevationRange = [-0.25, 89] as const;
 export const toleranceChoices = [0.1, 0.25, 0.5, 1] as const;
@@ -105,7 +110,6 @@ export interface AlignmentResult {
 }
 
 const DAY = 86_400_000;
-const bodies = { sun: Body.Sun, moon: Body.Moon } as const;
 const radiusKm = { sun: 695700, moon: 1737.4 } as const;
 const cross = (a: Vector3, b: Vector3): Vector3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
 const clampUnit = (value: number) => Math.max(-1, Math.min(1, value));
@@ -120,13 +124,13 @@ export function geometricElevation(apparent: number, refraction: ShootingPlan["r
 
 /** Apparent direction of the body for the camera's ground point, as the preview draws it. */
 function place(body: AlignmentBody, time: number, observer: Observer, refraction: ShootingPlan["refraction"]) {
-  const { equator, horizon } = topocentric(bodies[body], new Date(time), observer);
+  const { equator, horizon } = topocentric(astroBody(body), new Date(time), observer);
   const elevation = apparentElevation(horizon.altitude, refraction);
   return {
     ray: direction(horizon.azimuth, elevation),
     azimuth: horizon.azimuth,
     elevation,
-    radius: Math.asin(radiusKm[body] / (equator.dist * KM_PER_AU)) / degrees,
+    radius: isFixedBody(body) ? bodyRadius(body) : Math.asin(radiusKm[body] / (equator.dist * KM_PER_AU)) / degrees,
   };
 }
 
@@ -176,7 +180,7 @@ function closest(input: AlignmentInput, frame: MarkFrame, observer: Observer, se
 
 /** Crossings of the mark's elevation and both culminations inside [from, to). */
 function seeds(input: AlignmentInput, observer: Observer, from: number, to: number) {
-  const body = bodies[input.target.body];
+  const body = astroBody(input.target.body);
   const altitude = geometricElevation(input.target.elevation, input.refraction);
   const times: number[] = [];
   for (const way of [1, -1] as const) {
@@ -295,10 +299,11 @@ export function finishAlignment(input: AlignmentInput, scans: readonly Alignment
         filtered.phase++;
         continue;
       }
-      if (input.sky && !input.sky.includes(sky)) {
-        filtered.sky++;
-        continue;
-      }
+    }
+    // Fixed bodies only in a dark enough sky; then, like the Moon, the chosen skies.
+    if (input.target.body !== "sun" && ((isFixedBody(input.target.body) && sunElevation > DARK_SUN_ELEVATION) || (input.sky && !input.sky.includes(sky)))) {
+      filtered.sky++;
+      continue;
     }
     const [start, end] = alignedWindow((time) => angleTo(frame, at(time).ray), pass.time, limit);
     const position = at(pass.time);
@@ -310,7 +315,7 @@ export function finishAlignment(input: AlignmentInput, scans: readonly Alignment
       illuminated, phaseAngle, sunElevation, sky,
     });
   }
-  const mean = 2 * meanRadius[input.target.body] * input.tolerance;
+  const mean = 2 * bodyRadius(input.target.body) * input.tolerance;
   const reason: AlignmentReason | null = alignments.length ? null
     : filtered.phase + filtered.sky > 0 ? "filtered"
       : reach.max !== -Infinity && input.target.elevation - mean > reach.max ? "too-high"
@@ -343,7 +348,7 @@ export function frameDirection(view: View, x: number, y: number) {
 }
 
 /** Points of the mark's outline in the frame (normalised device coordinates), or null when behind the camera. */
-export function markOutline(view: View, target: AlignmentTarget, radius = meanRadius[target.body], samples = 48) {
+export function markOutline(view: View, target: AlignmentTarget, radius = bodyRadius(target.body), samples = 48) {
   const frame = markFrame(target), basis = cameraBasis(view), size = Math.tan(radius * degrees);
   const points: { x: number; y: number }[] = [];
   for (let index = 0; index < samples; index++) {
