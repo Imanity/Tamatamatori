@@ -146,11 +146,17 @@ export function solveRangeDay(input: RangeInput, day: { day: string; start: numb
   return points;
 }
 
-export interface RangeCandidate {
+/**
+ * A run of consecutive minutes of one alignment line (one day of it for
+ * 两者都找) whose sight to the target is not cut by the terrain: one row of the
+ * results, tried out at its middle minute.
+ */
+export interface Candidate<T extends PositionPoint = RangePoint> {
   key: string;
+  /** Local date for 两者都找; empty for 找机位 (one span). */
   day: string;
-  points: RangePoint[];
-  middle: RangePoint;
+  points: T[];
+  middle: T;
   start: number;
   end: number;
   near: number;
@@ -159,31 +165,40 @@ export interface RangeCandidate {
   sky: SkyCondition;
   /** Moon only. */
   illuminated: number | null;
-  /** Share of the minutes whose sight line clears the DEM. */
+  /** Share of the minutes with terrain data all along the sight line (the rest: data missing somewhere). */
   clear: number;
 }
+export type RangeCandidate = Candidate<RangePoint>;
 
-/** Runs of consecutive minutes of one branch on one day. */
-export function rangeCandidates(input: Pick<RangeInput, "body" | "target">, points: readonly RangePoint[]) {
-  const candidates: RangeCandidate[] = [];
-  const runs = new Map<string, RangePoint[][]>();
-  for (const point of [...points].sort((a, b) => a.time - b.time)) {
-    const key = `${point.day}/${point.branch}`;
+/**
+ * Runs of consecutive minutes of one branch (and day), leaving out the
+ * minutes whose sight line the terrain cuts: a run blocked in the middle
+ * becomes two. With `splitSky` (找机位: one long day per line) a run also
+ * breaks where the sky changes (day, golden hour, blue hour…), so each row has one.
+ * The key names the run and its middle, so a different solution never takes an old row's place.
+ */
+export function rangeCandidates<T extends PositionPoint & { day?: string; share?: number | null }>(input: Pick<RangeInput, "body" | "target">, points: readonly T[], options: { splitSky?: boolean } = {}): Candidate<T>[] {
+  const candidates: Candidate<T>[] = [];
+  const runs = new Map<string, { points: T[]; sky: SkyCondition | null }[]>();
+  const skyAt = (point: T) => skyCondition(sunPosition({ latitude: point.latitude, longitude: point.longitude, instant: new Date(point.time).toISOString() }).elevation);
+  for (const point of points.filter((item) => item.sight !== "blocked").sort((a, b) => a.time - b.time)) {
+    const key = `${point.day ?? ""}/${point.branch}`;
+    const sky = options.splitSky ? skyAt(point) : null;
     const list = runs.get(key) ?? [];
     const run = list.at(-1);
-    if (run && point.time - run.at(-1)!.time <= 60_000) run.push(point);
-    else list.push([point]);
+    if (run && point.time - run.points.at(-1)!.time <= 60_000 && run.sky === sky) run.points.push(point);
+    else list.push({ points: [point], sky });
     runs.set(key, list);
   }
   for (const [key, list] of runs)
-    list.forEach((run, index) => {
+    list.forEach(({ points: run, sky }, index) => {
       const middle = run[Math.floor(run.length / 2)];
       const instant = new Date(middle.time).toISOString();
       const position = { latitude: middle.latitude, longitude: middle.longitude, instant };
-      const shares = run.map((point) => point.share).filter((share): share is number => share !== null);
+      const shares = run.map((point) => point.share).filter((share): share is number => typeof share === "number");
       candidates.push({
-        key: `${key}/${index}`,
-        day: middle.day,
+        key: `${key}/${index}@${middle.time}/${middle.latitude.toFixed(6)}/${middle.longitude.toFixed(6)}`,
+        day: middle.day ?? "",
         points: run,
         middle,
         start: run[0].time,
@@ -191,7 +206,7 @@ export function rangeCandidates(input: Pick<RangeInput, "body" | "target">, poin
         near: Math.min(...run.map((point) => point.distance)),
         far: Math.max(...run.map((point) => point.distance)),
         share: shares.length ? [Math.min(...shares), Math.max(...shares)] : null,
-        sky: skyCondition(sunPosition(position).elevation),
+        sky: sky ?? skyCondition(sunPosition(position).elevation),
         illuminated: input.body === "moon" ? celestialBodies(position).moon.illuminatedFraction : null,
         clear: run.filter((point) => point.sight === "clear").length / run.length,
       });
@@ -199,9 +214,14 @@ export function rangeCandidates(input: Pick<RangeInput, "body" | "target">, poin
   return candidates.sort((a, b) => a.start - b.start);
 }
 
+/** Minutes (of each day) with a solution whose sight line the terrain cuts: counted, never listed. */
+export function blockedMinutes(points: readonly (PositionPoint & { day?: string })[]) {
+  return new Set(points.filter((point) => point.sight === "blocked").map((point) => `${point.day ?? ""}/${point.time}`)).size;
+}
+
 /** Moon phase and sky filters, counted once each (phase first) like "找时间"; the Sun is never filtered. */
-export function filterCandidates(candidates: readonly RangeCandidate[], filters: { phase?: readonly [number, number]; sky?: readonly SkyCondition[] }, body?: AlignmentBody) {
-  const kept: RangeCandidate[] = [];
+export function filterCandidates<T extends Candidate<PositionPoint>>(candidates: readonly T[], filters: { phase?: readonly [number, number]; sky?: readonly SkyCondition[] }, body?: AlignmentBody) {
+  const kept: T[] = [];
   const filtered = { phase: 0, sky: 0 };
   for (const candidate of candidates) {
     if (candidate.illuminated !== null && filters.phase && (candidate.illuminated < filters.phase[0] || candidate.illuminated > filters.phase[1])) filtered.phase++;
@@ -222,7 +242,7 @@ export function solveRange(input: RangeInput, days: ReturnType<typeof rangeDays>
   return points;
 }
 
-type Placed = { time: number; latitude: number; longitude: number };
+type Placed = { time: number; latitude: number; longitude: number; branch?: number };
 /**
  * Candidates of one day whose spans touch or overlap are one place in
  * practice (separate roots on the same sight line) when their middles lie
@@ -235,7 +255,9 @@ export function mergeCandidates<T extends { day?: string; start: number; end: nu
     outer.points.some((other) => other.time === point.time && groundDistance(other, point) < radius));
   const kept: T[] = [];
   for (const candidate of order) {
+    // Separate roots are different branches; pieces of one line (split by sky or terrain) stay apart.
     const twin = kept.some((other) => other.day === candidate.day &&
+      (other.points[0].branch === undefined || other.points[0].branch !== candidate.points[0].branch) &&
       candidate.start <= other.end + 60_000 && candidate.end >= other.start - 60_000 &&
       (groundDistance(other.middle, candidate.middle) < radius || covered(candidate, other)));
     if (!twin) kept.push(candidate);

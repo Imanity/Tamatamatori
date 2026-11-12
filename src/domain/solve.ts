@@ -43,6 +43,8 @@ export interface SolveRequest {
   camera?: { latitude: number; longitude: number; heightAboveGround?: number };
   /** 找机位 / 两者都找: resolved ground target. */
   target?: { landmark?: string; latitude: number; longitude: number; height: number; name: string };
+  /** 找机位 / 两者都找: where the target's top sits in the frame, 0—1 from the top-left; the centre when absent. */
+  frame?: { x: number; y: number };
   /** Local date: the day (找机位) or the first day (找时间、两者都找); the current shooting date when absent. */
   date?: string;
   days?: number;
@@ -67,12 +69,12 @@ const shown = (value: unknown) => {
 const normalizeAngle = (value: number) => (value >= 0 && value < 360 ? value : ((value % 360) + 360) % 360);
 const normalizeLongitude = (value: number) => (value >= -180 && value < 180 ? value : ((((value + 180) % 360) + 360) % 360) - 180);
 
-const topKeys = ["$schema", "format", "version", "name", "kind", "body", "mark", "camera", "target", "date", "days", "timeZone", "tolerance", "share", "maxDistance", "phase", "sky"];
+const topKeys = ["$schema", "format", "version", "name", "kind", "body", "mark", "camera", "target", "frame", "date", "days", "timeZone", "tolerance", "share", "maxDistance", "phase", "sky"];
 /** Fields each kind accepts besides the common ones. */
 const kindKeys: Record<SolveKind, readonly string[]> = {
   time: ["mark", "camera", "date", "days", "timeZone", "tolerance", "phase", "sky"],
-  position: ["target", "date", "timeZone", "maxDistance"],
-  range: ["target", "date", "days", "timeZone", "share", "maxDistance", "phase", "sky"],
+  position: ["target", "frame", "date", "timeZone", "maxDistance"],
+  range: ["target", "frame", "date", "days", "timeZone", "share", "maxDistance", "phase", "sky"],
 };
 const common = ["$schema", "format", "version", "name", "kind", "body"];
 
@@ -195,6 +197,14 @@ export function parseSolve(value: unknown): SolveParse {
             request.target = { latitude, longitude: normalizeLongitude(longitude), height: height ?? 0, name: label ?? "链接中的目标" };
         }
       }
+    }
+  }
+
+  if ((kind === "position" || kind === "range") && value.frame !== undefined) {
+    const frame = object("frame", ["x", "y"]);
+    if (frame) {
+      const x = number(frame, "frame.x", [0, 1]), y = number(frame, "frame.y", [0, 1]);
+      if (x !== null && y !== null) request.frame = { x, y };
     }
   }
 
@@ -333,7 +343,15 @@ export interface SolveState {
   /** Lit fraction bounds. */
   phase: readonly [number, number];
   sky: readonly SkyCondition[];
+  /** 找机位 / 两者都找: the target's place in the frame, normalised device coordinates (centre 0, 0; y down); the centre when absent. */
+  frame?: { x: number; y: number };
 }
+
+/** A frame place in normalised device coordinates (−1…1, y down) as the request writes it (0—1 from the top-left), rounded. */
+export const requestFrame = (point: { x: number; y: number }) =>
+  ({ x: Math.round(((point.x + 1) / 2) * 1000) / 1000, y: Math.round(((point.y + 1) / 2) * 1000) / 1000 });
+/** The request's frame place back in normalised device coordinates; the centre when absent. */
+export const frameOfRequest = (frame: SolveRequest["frame"]) => (frame ? { x: frame.x * 2 - 1, y: frame.y * 2 - 1 } : { x: 0, y: 0 });
 
 /** The panel's search as a self-contained request; null until it has a mark or a target. */
 export function solveRequestOf(state: SolveState): SolveRequest | null {
@@ -350,8 +368,10 @@ export function solveRequestOf(state: SolveState): SolveRequest | null {
   if (!state.target) return null;
   const { id, ...place } = state.target;
   const target = id ? { landmark: id, ...place } : place;
-  if (state.kind === "position") return { ...base, target, ...when, maxDistance: state.maxDistance };
-  return { ...base, target, ...when, days: state.days, share: state.share, maxDistance: state.maxDistance, ...filters };
+  const framed = requestFrame(state.frame ?? { x: 0, y: 0 });
+  const frame = framed.x === 0.5 && framed.y === 0.5 ? {} : { frame: framed };
+  if (state.kind === "position") return { ...base, target, ...frame, ...when, maxDistance: state.maxDistance };
+  return { ...base, target, ...frame, ...when, days: state.days, share: state.share, maxDistance: state.maxDistance, ...filters };
 }
 
 /** `#solve=json:` link: readable and easy for an AI to write (no base64). */

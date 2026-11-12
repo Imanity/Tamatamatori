@@ -165,7 +165,7 @@ export function checkLabel(check: PlaceCheck) {
   const parts: string[] = [];
   if (check.water) parts.push("机位在水面");
   if (check.inside) parts.push("机位在建筑轮廓内");
-  if (check.unknown) parts.push("机位地面高程不全，未查遮挡");
+  if (check.unknown) parts.push("机位处地形数据不全，未查遮挡");
   else if (check.blocked) parts.push(`${check.blocked.distance < 1 ? "紧邻的" : `${check.blocked.distance} m 处`}建筑高出视线 ${Math.max(1, check.blocked.above)} m`);
   else parts.push(`${CHECK_RADIUS / 1000} km 内无建筑遮挡`);
   return parts.join(" · ");

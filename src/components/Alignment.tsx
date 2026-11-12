@@ -13,20 +13,21 @@ import {
   targetElevationRange,
   toleranceChoices,
 } from "../domain/alignment";
-import type { AlignmentBody, AlignmentInput, AlignmentResult, AlignmentScan, SkyCondition } from "../domain/alignment";
+import type { AlignmentBody, AlignmentInput, AlignmentResult, AlignmentScan, FramePoint, SkyCondition } from "../domain/alignment";
 import { localDateTime } from "../domain/plan";
 import { bodyKind, bodyName, bodyLayer, fixedBodies, isFixedBody, sizeWord } from "../domain/sky-targets";
-import { restoredLayers, triedLayers } from "../domain/position-alignment";
+import { framedDirection, restoredLayers, triedLayers } from "../domain/position-alignment";
 import type { TriedLayers } from "../domain/position-alignment";
 import type { ShootingPlan } from "../domain/plan";
-import { solveRequestOf, solveStart } from "../domain/solve";
+import { frameOfRequest, solveRequestOf, solveStart } from "../domain/solve";
 import type { SolveRequest } from "../domain/solve";
+import { cameraBasis } from "../domain/celestial-projection";
 import type { View } from "../domain/celestial-projection";
 import { occlusionText } from "../domain/visibility";
 import type { Occlusion } from "../domain/visibility";
 import type { TimelineEvent } from "../domain/timeline";
 import { NumberField } from "./NumberField";
-import { PositionPanel, usePositionSearch } from "./PositionSearch";
+import { frameWords, PositionPanel, usePositionSearch } from "./PositionSearch";
 import { RangePanel, useRangeSearch } from "./RangeSearch";
 import { SolveExport } from "./SolveLink";
 import { CheckControls, checkTargets, useFeasibility } from "./Feasibility";
@@ -238,6 +239,21 @@ export function useAlignment(plan: ShootingPlan, update: UpdatePlan, active: boo
     detail: `${bodyName(settings.body)}中心距期望位置 ${round(found.separation / found.diameter)} 个${sizeWord(settings.body)}（容差内 ${clockOf(found.from, plan.timeZone)}–${clockOf(found.to, plan.timeZone)}）`,
   })) : []), [active, kind, result, plan.timeZone, settings.body]);
 
+  /**
+   * Moves the target's place in the frame (找机位、两者都找). During a try-out
+   * the camera turns at once so the body stays on the target at the new place.
+   */
+  const reframe = (frame: FramePoint) => {
+    const next = { x: Math.max(-1, Math.min(1, frame.x)), y: Math.max(-1, Math.min(1, frame.y)) };
+    position.setFrame(next);
+    const tried = kind === "position" ? position.currentPoint : kind === "range" ? range.currentPoint : null;
+    if (tried) {
+      const direction = framedDirection(tried, { frame: next, lens: latest.current });
+      latest.current = { ...latest.current, ...direction };
+      update(direction);
+    }
+  };
+
   /** Opens a request (from a link): its kind, body, mark or target and conditions; `opened` is the plan it applies to. */
   const load = (request: SolveRequest, opened: ShootingPlan) => {
     const start = solveStart(request, opened);
@@ -255,6 +271,7 @@ export function useAlignment(plan: ShootingPlan, update: UpdatePlan, active: boo
     if (!request.target) return;
     const { landmark, ...target } = request.target;
     position.setTarget(landmark ? { ...target, id: landmark } : target);
+    position.setFrame(frameOfRequest(request.frame));
     if (request.kind === "position") position.setMaxDistance(request.maxDistance ?? 30_000);
     if (request.kind === "range") {
       range.setShare(request.share ?? 0.3);
@@ -282,13 +299,14 @@ export function useAlignment(plan: ShootingPlan, update: UpdatePlan, active: boo
       maxDistance: kind === "position" ? position.maxDistance : range.maxDistance,
       phase: fraction(kind === "time" ? settings.phase : range.phase),
       sky: kind === "time" ? settings.sky : range.sky,
+      frame: position.frame,
     });
   };
 
   return {
     active, kind, setKind, position, range, settings, change, setTarget, place, placing, setPlacing, placeError, setPlaceError,
     run, stale, pending, result, recompute: () => settings.target && compute(settings),
-    tryOut, restore, canRestore: !!before, load, request,
+    tryOut, restore, canRestore: !!before, load, request, reframe,
     events: kind === "time" ? timeEvents : kind === "position" ? position.events : range.events,
   };
 }
@@ -383,6 +401,73 @@ export function AlignmentMark({ alignment, view, frame }: { alignment: Alignment
   );
 }
 
+/**
+ * 找机位、两者都找: where the target's top (and the body on it) should sit in
+ * the frame. A dashed circle of the body's size for the current lens, with the
+ * subject's share drawn down from it (两者都找); the handle drags it or nudges
+ * it with the arrow keys (2% of the frame, Shift 10%).
+ */
+export function FramingMark({ alignment, view, frame: element }: { alignment: AlignmentState; view: View; frame: RefObject<HTMLDivElement | null> }) {
+  const drag = useRef<number | null>(null);
+  const { position, range, settings } = alignment;
+  if (!alignment.active || alignment.kind === "time" || !position.target) return null;
+  const { x, y } = position.frame;
+  const { tx, ty } = cameraBasis(view);
+  const size = Math.tan(bodyRadius(settings.body) * Math.PI / 180);
+  const outline = Array.from({ length: 48 }, (_, index) => {
+    const angle = (2 * Math.PI * index) / 48;
+    return `${index ? "L" : "M"}${(x + (size / tx) * Math.cos(angle)).toFixed(5)},${(y + (size / ty) * Math.sin(angle)).toFixed(5)}`;
+  }).join(" ") + "Z";
+  const bar = alignment.kind === "range" && range.sized ? Math.min(1 - y, 2 * range.share) : 0;
+  const move = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (drag.current !== event.pointerId || !element.current) return;
+    const point = framePoint(element.current, event);
+    if (point) alignment.reframe(point);
+  };
+  const nudge = (event: KeyboardEvent<HTMLButtonElement>) => {
+    const steps: Record<string, [number, number]> = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+    const step = steps[event.key];
+    if (!step) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const size = event.shiftKey ? 0.2 : 0.04;
+    alignment.reframe({ x: x + step[0] * size, y: y + step[1] * size });
+  };
+  return (
+    <div className={`alignment-mark framing-mark alignment-mark-${bodyKind(settings.body)}`} data-framing-mark={`${x.toFixed(3)},${y.toFixed(3)}`}>
+      <svg viewBox="-1 -1 2 2" preserveAspectRatio="none" aria-hidden="true">
+        <path d={outline} vectorEffect="non-scaling-stroke" />
+        {bar > 0 && <path className="framing-subject" d={`M${x},${y} V${y + bar}`} vectorEffect="non-scaling-stroke" />}
+      </svg>
+      <button
+        type="button"
+        className="alignment-handle"
+        style={{ left: `${(x + 1) * 50}%`, top: `${(y + 1) * 50}%` }}
+        aria-label={`目标与${bodyName(settings.body)}在画面中的位置：${frameWords(position.frame)}。拖动或用方向键微调`}
+        title="拖动或用方向键微调目标在画面中的位置（Shift 加大步长）"
+        onPointerDown={(event) => {
+          if (event.button !== 0) return;
+          event.stopPropagation();
+          event.preventDefault();
+          event.currentTarget.setPointerCapture(event.pointerId);
+          drag.current = event.pointerId;
+        }}
+        onPointerMove={move}
+        onPointerUp={(event) => {
+          if (drag.current !== event.pointerId) return;
+          drag.current = null;
+          if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+        }}
+        onPointerCancel={() => (drag.current = null)}
+        onLostPointerCapture={() => (drag.current = null)}
+        onKeyDown={nudge}
+      >
+        <span>目标位置</span>
+      </button>
+    </div>
+  );
+}
+
 const percentChoices = [0, 10, 25, 50, 75, 90, 100];
 
 /** Right-rail panel of the mode: what to find, conditions and the listed instants. */
@@ -459,16 +544,16 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion, savin
         {alignment.kind === "time"
           ? <p>机位、方向与镜头保持不变，求{name}落到画面中期望位置的时刻。只按星历与海平面地平计算，不含天气。</p>
           : alignment.kind === "position"
-            ? <p>地面目标与日期已定，求在哪里拍能让{name}落在目标顶部。只按星历、DEM 与海平面地平计算，不含天气。</p>
-            : <p>地面目标与主体在画面中的大小已定，在一段日期内求哪天、在哪里拍能让{name}落在目标顶部。只按星历、DEM 与海平面地平计算，不含天气。</p>}
+            ? <p>选好要拍的目标和日期，求在哪里、几点拍能让{name}正好落在目标上。按星历与地形计算，不含天气。</p>
+            : <p>选好要拍的目标和它在画面中的大小，在一段日期内求哪天、在哪里拍能让{name}正好落在目标上。按星历与地形计算，不含天气。</p>}
       </header>
       <div className="alignment-section">
         <BodyPicker body={settings.body} onChange={(body) => change({ body })} />
       </div>
       {alignment.kind === "position" ? (
-        <PositionPanel search={alignment.position} plan={plan} body={settings.body} occlusion={occlusion} check={check} />
+        <PositionPanel search={alignment.position} plan={plan} body={settings.body} occlusion={occlusion} check={check} onFrame={alignment.reframe} />
       ) : alignment.kind === "range" ? (
-        <RangePanel search={alignment.range} position={alignment.position} plan={plan} body={settings.body} occlusion={occlusion} check={check} />
+        <RangePanel search={alignment.range} position={alignment.position} plan={plan} body={settings.body} occlusion={occlusion} check={check} onFrame={alignment.reframe} />
       ) : <>
       <div className="alignment-section">
         <h3>期望位置</h3>
@@ -572,7 +657,7 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion, savin
         ))}
         <p className="alignment-note">
           时刻按所选时区（{plan.timeZone}）。期望位置是天空中的一个方向，按{plan.refraction === "standard" ? "标准折射" : "无折射"}换算；
-          试看只改拍摄时刻并开启{name}图层，遮挡按当前 DEM，不代表实景一定可见。
+          试看只改拍摄时刻并开启{name}图层，遮挡只看地形，不代表实景一定可见。
         </p>
       </div>
       </>}

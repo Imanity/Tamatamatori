@@ -1,11 +1,10 @@
 import { skyConditionNames } from "./alignment.ts";
-import type { Alignment, AlignmentBody } from "./alignment.ts";
+import type { Alignment, AlignmentBody, FramePoint } from "./alignment.ts";
 import { localDateTime } from "./plan.ts";
 import type { ShootingPlan } from "./plan.ts";
 import { pointPlan } from "./position-alignment.ts";
 import type { PositionPoint } from "./position-alignment.ts";
-import { mergeCandidates } from "./range-alignment.ts";
-import type { RangeCandidate } from "./range-alignment.ts";
+import type { Candidate, RangeCandidate } from "./range-alignment.ts";
 import { SHOT_NAME_LIMIT, shotFromPlan, shotLink } from "./shot.ts";
 import { bodyLayer, bodyName, sizeWord } from "./sky-targets.ts";
 
@@ -82,12 +81,16 @@ export interface CalendarContext {
   place: string;
   /** Site base for the `#shot=` links. */
   site: string;
+  /** 找机位 / 两者都找: where the target sits in the frame (the centre when absent). */
+  frame?: FramePoint;
 }
 const percent = (fraction: number) => `${Math.round(fraction * 100)}%`;
 const km = (meters: number) => (meters / 1000).toFixed(meters < 10_000 ? 2 : 1);
 const clock = (time: number, timeZone: string) => localDateTime(new Date(time).toISOString(), timeZone).slice(11, 16);
-const sightNames = { clear: "通视", blocked: "被 DEM 挡住", unknown: "高程不全" } as const;
 const footer = "Tamatamatori 推算：基于星历与地形的构图模拟，不含天气，不代表实景一定可见。";
+const framed = (context: CalendarContext, point: PositionPoint) =>
+  pointPlan(context.plan.layers, point, context.body, context.frame ? { frame: context.frame, lens: context.plan } : undefined);
+const terrainNote = (clear: number) => (clear < 1 ? `；${percent(1 - clear)}的分钟地形数据不全` : "");
 function linkFor(context: CalendarContext, patch: Partial<ShootingPlan>) {
   const plan = { ...context.plan, ...patch };
   return shotLink(shotFromPlan(plan, solveShotName(context.place, context.body, plan.instant, plan.timeZone)), context.site);
@@ -115,25 +118,19 @@ export function timeEvents(alignments: readonly Alignment[], context: CalendarCo
   });
 }
 
-/** 找机位: each alignment line (nearly coincident lines once), placed at its middle minute. */
-export function positionEvents(points: readonly PositionPoint[], context: CalendarContext): CalendarEvent[] {
-  const branches = new Map<number, PositionPoint[]>();
-  for (const point of points) branches.set(point.branch, [...(branches.get(point.branch) ?? []), point]);
-  const segments = [...branches.values()].map((run) => ({
-    points: run, start: run[0].time, end: run.at(-1)!.time, middle: run[Math.floor(run.length / 2)],
-    clear: run.filter((point) => point.sight === "clear").length / run.length,
-  }));
-  return mergeCandidates(segments).candidates.map((segment, index) => {
-    const { middle } = segment, name = bodyName(context.body);
-    const url = linkFor(context, pointPlan(context.plan.layers, middle, context.body));
-    const distances = segment.points.map((point) => point.distance);
+/** 找机位: each listed stretch of an alignment line (sight not cut by the terrain), placed at its middle minute. */
+export function positionEvents(candidates: readonly Candidate<PositionPoint>[], context: CalendarContext): CalendarEvent[] {
+  return candidates.map((candidate, index) => {
+    const { middle } = candidate, name = bodyName(context.body);
+    const url = linkFor(context, framed(context, middle));
     return {
-      uid: `position-${stamp(segment.start)}-${index}@tamatamatori`,
-      start: segment.start, end: segment.end,
-      summary: `${name}对齐线 · ${context.place}`,
+      uid: `position-${stamp(candidate.start)}-${index}@tamatamatori`,
+      start: candidate.start, end: candidate.end,
+      summary: `${name}对齐 · ${context.place}`,
       description: [
-        `机位沿对齐线随时间移动，距目标 ${km(Math.min(...distances))}—${km(Math.max(...distances))} km；通视 ${percent(segment.clear)}（按 DEM）`,
-        `链接为 ${clock(middle.time, context.plan.timeZone)} 的机位，距目标 ${km(middle.distance)} km，${sightNames[middle.sight]}`,
+        `机位沿对齐线随时间移动，距目标 ${km(candidate.near)}—${km(candidate.far)} km；视线未被地形挡住${terrainNote(candidate.clear)}`,
+        `天空：${skyConditionNames[candidate.sky]}${candidate.illuminated === null ? "" : `，亮面 ${percent(candidate.illuminated)}`}`,
+        `链接为 ${clock(middle.time, context.plan.timeZone)} 的机位，距目标 ${km(middle.distance)} km`,
         `打开机位：${url}`, footer,
       ].join("\n"),
       location: { latitude: middle.latitude, longitude: middle.longitude },
@@ -147,7 +144,7 @@ export function rangeEvents(candidates: readonly RangeCandidate[], context: Cale
   const name = bodyName(context.body);
   return candidates.map((candidate, index) => {
     const { middle } = candidate;
-    const url = linkFor(context, pointPlan(context.plan.layers, middle, context.body));
+    const url = linkFor(context, framed(context, middle));
     const share = candidate.share ? `，主体占画面 ${percent(candidate.share[0])}—${percent(candidate.share[1])}` : "";
     return {
       uid: `range-${stamp(candidate.start)}-${index}@tamatamatori`,
@@ -155,7 +152,7 @@ export function rangeEvents(candidates: readonly RangeCandidate[], context: Cale
       summary: `${name} · ${context.place}`,
       description: [
         `距目标 ${km(candidate.near)}—${km(candidate.far)} km${share}`,
-        `天空：${skyConditionNames[candidate.sky]}${candidate.illuminated === null ? "" : `，亮面 ${percent(candidate.illuminated)}`}；通视 ${percent(candidate.clear)}（按 DEM）`,
+        `天空：${skyConditionNames[candidate.sky]}${candidate.illuminated === null ? "" : `，亮面 ${percent(candidate.illuminated)}`}；视线未被地形挡住${terrainNote(candidate.clear)}`,
         `链接为 ${clock(middle.time, context.plan.timeZone)} 的机位：${middle.latitude.toFixed(6)}, ${middle.longitude.toFixed(6)}`,
         `打开机位：${url}`, footer,
       ].join("\n"),

@@ -142,9 +142,27 @@ export async function groundElevation(
 // Decoded tiles kept for line sampling (推算 · 找机位); each is 1 MiB of RGBA.
 const lineCache = new Map<string, ElevationTile>();
 export const LINE_TILE_LIMIT = 40;
+/** Coarsest zoom a wide search may fall back to. */
+export const LINE_MIN_ZOOM = 10;
+
+/** The tiles under the points at the finest zoom (z12 down to z10) that stays within LINE_TILE_LIMIT. */
+export function lineTiles(points: readonly MapPoint[], inside: (point: MapPoint) => boolean = () => true) {
+  let keys = new Map<string, { z: number; x: number; y: number }>();
+  for (let zoom = TERRAIN_ZOOM; zoom >= LINE_MIN_ZOOM; zoom--) {
+    keys = new Map();
+    for (const point of points) {
+      if (!inside(point)) continue;
+      const tile = terrainTile(point, zoom);
+      keys.set(`${tile.z}/${tile.x}/${tile.y}`, tile);
+    }
+    if (keys.size <= LINE_TILE_LIMIT) return { zoom, keys };
+  }
+  throw new RangeError(`推算范围经过 ${keys.size} 块地形瓦片，超过单次 ${LINE_TILE_LIMIT} 块的上限，请缩小最远距离。`);
+}
 
 /**
- * Loads every z12 tile under the given points and returns a synchronous
+ * Loads every tile under the given points (z12, or a coarser zoom when z12
+ * would need more than LINE_TILE_LIMIT tiles) and returns a synchronous
  * sampler (null outside the loaded tiles, the source bounds or valid pixels).
  */
 export async function elevationTiles(
@@ -158,14 +176,7 @@ export async function elevationTiles(
   checkAbort(signal);
   const inside = (point: MapPoint) =>
     !info.bounds || (point.latitude >= info.bounds[1] && point.latitude <= info.bounds[3]);
-  const keys = new Map<string, { z: number; x: number; y: number }>();
-  for (const point of points) {
-    if (!inside(point)) continue;
-    const tile = terrainTile(point);
-    keys.set(`${tile.z}/${tile.x}/${tile.y}`, tile);
-  }
-  if (keys.size > LINE_TILE_LIMIT)
-    throw new RangeError(`对齐线经过 ${keys.size} 块高程瓦片，超过单次 ${LINE_TILE_LIMIT} 块的上限，请缩小最远距离。`);
+  const { zoom, keys } = lineTiles(points, inside);
   const loaded = new Map<string, ElevationTile>();
   let done = 0;
   onProgress?.(0, keys.size);
@@ -188,5 +199,5 @@ export async function elevationTiles(
   };
   await Promise.all([worker(), worker(), worker(), worker()]);
   // The tiles travel with the sampler so a worker can rebuild it (structured clone).
-  return Object.assign(tileSampler(loaded, info.bounds), { tiles: loaded as ReadonlyMap<string, ElevationTile>, bounds: info.bounds });
+  return Object.assign(tileSampler(loaded, info.bounds), { tiles: loaded as ReadonlyMap<string, ElevationTile>, bounds: info.bounds, zoom });
 }

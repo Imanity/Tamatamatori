@@ -335,6 +335,43 @@ export function solveAlignment(input: AlignmentInput, from: number, to: number, 
   return finishAlignment(input, scans, from, to);
 }
 
+/** A place in the frame: normalised device coordinates, x to the right and y down, −1…1; the centre is { x: 0, y: 0 }. */
+export interface FramePoint {
+  x: number;
+  y: number;
+}
+export const FRAME_CENTRE: FramePoint = { x: 0, y: 0 };
+
+/**
+ * The camera direction that shows an apparent direction at a place in the
+ * frame: the inverse of `frameDirection` for the same lens. The ray through
+ * (x, y) is forward + x·tx·right − y·ty·up with a level horizon, so the pitch
+ * follows from the ray's elevation alone and the azimuth from its sideways turn.
+ * A place no level camera can reach (a high body near a wide frame's top
+ * corner would need a pitch past the zenith) is moved toward the centre until it can.
+ */
+export function aimAt(lens: Omit<View, "azimuth" | "pitch">, target: { azimuth: number; elevation: number }, frame: FramePoint) {
+  const { tx, ty } = cameraBasis({ ...lens, azimuth: 0, pitch: 0 });
+  const solve = (scale: number) => {
+    const across = scale * frame.x * tx, up = -scale * frame.y * ty;
+    const sine = (Math.hypot(1, across, up) * Math.sin(target.elevation * degrees)) / Math.hypot(1, up);
+    if (Math.abs(sine) > 1) return null;
+    const pitch = Math.asin(sine) - Math.atan(up);
+    if (Math.abs(pitch) > Math.PI / 2) return null;
+    const azimuth = target.azimuth - Math.atan2(across, Math.cos(pitch) - up * Math.sin(pitch)) / degrees;
+    return { azimuth: ((azimuth % 360) + 360) % 360, pitch: pitch / degrees };
+  };
+  const exact = solve(1);
+  if (exact) return exact;
+  let low = 0, high = 1;
+  for (let pass = 0; pass < 30; pass++) {
+    const middle = (low + high) / 2;
+    if (solve(middle)) low = middle;
+    else high = middle;
+  }
+  return solve(low) ?? { azimuth: target.azimuth, pitch: Math.max(-90, Math.min(90, target.elevation)) };
+}
+
 /** Apparent direction through a point of the frame (normalised device coordinates, y down). */
 export function frameDirection(view: View, x: number, y: number) {
   const basis = cameraBasis(view);

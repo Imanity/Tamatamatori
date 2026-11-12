@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { calendarText, foldLine, positionEvents, rangeEvents, solveShotName, timeEvents, CALENDAR_LIMIT } from "../src/domain/solve-calendar.ts";
 import { distinctPoints, groundDistance, pointPlan, travel } from "../src/domain/position-alignment.ts";
-import { mergeCandidates } from "../src/domain/range-alignment.ts";
+import { mergeCandidates, rangeCandidates } from "../src/domain/range-alignment.ts";
 import { initialPlan } from "../src/domain/plan.ts";
 import { parseShotText, SHOT_NAME_LIMIT } from "../src/domain/shot.ts";
 
@@ -42,7 +42,7 @@ test("日历：CRLF 换行、75 字节折行不拆字符、文本转义、UTC �
   assert.equal(lines(many).filter((line) => line === "BEGIN:VEVENT").length, CALENDAR_LIMIT);
 });
 
-test("日历事件：找时间按容差时段、找机位按对齐线（重合的线一次）、两者都找按候选；链接打开同一个试看计划", () => {
+test("日历事件：找时间按容差时段、找机位按列出的时段（重合的线一次）、两者都找按候选；链接打开同一个试看计划并按画面位置对准", () => {
   const context = { plan, body: "sun", place: "富士山", site };
   const found = { instant: "2027-02-12T07:22:30Z", from: "2027-02-12T07:22:00Z", to: "2027-02-12T07:23:00Z", separation: 0.08, diameter: 0.54, offset: "偏左下",
     azimuth: 244.6, elevation: 10.7, illuminated: null, phaseAngle: null, sunElevation: 10.7, sky: "day" };
@@ -61,14 +61,21 @@ test("日历事件：找时间按容差时段、找机位按对齐线（重合�
     ...travel({ latitude: 35.43, longitude: 138.87 }, 60, index * 100 + offset), time: Date.parse("2026-02-04T07:10:00Z") + index * 60_000,
     distance: 14_000 + index * 100, azimuth: 241.2, elevation: 10.7, cameraGround: 985, residual: 0, sight: "clear", branch,
   }));
-  const segments = positionEvents([...line(0, 0), ...line(1, 30), ...line(2, 5000)], { ...context, place: "富士山顶正中" });
+  const stretches = mergeCandidates(rangeCandidates({ body: "sun" }, [...line(0, 0), ...line(1, 30), ...line(2, 5000)], { splitSky: true })).candidates;
+  const segments = positionEvents(stretches, { ...context, place: "富士山顶正中" });
   assert.equal(segments.length, 2);
   const middle = line(0, 0)[2];
   const segmentShot = parseShotText(segments[0].url);
   assert.deepEqual({ latitude: segmentShot.plan.latitude, longitude: segmentShot.plan.longitude, instant: segmentShot.plan.instant },
     { ...(({ latitude, longitude, instant }) => ({ latitude, longitude, instant }))(pointPlan(plan.layers, middle, "sun")) });
   assert.equal(segments[0].location.latitude, middle.latitude);
-  assert.match(segments[0].description, /距目标 14\.0—14\.4 km；通视 100%/);
+  assert.match(segments[0].description, /距目标 14\.0—14\.4 km；视线未被地形挡住\n天空：白天/);
+  // A framing below the centre: the link looks up so the top sits there; the bearing stays (straight below).
+  const [framed] = positionEvents(stretches, { ...context, place: "富士山顶正中", frame: { x: 0, y: 1 / 3 } });
+  const framedShot = parseShotText(framed.url);
+  assert.equal(framedShot.plan.instant, segmentShot.plan.instant);
+  assert.ok(framedShot.plan.pitch > segmentShot.plan.pitch + 1);
+  assert.ok(Math.abs(framedShot.plan.azimuth - segmentShot.plan.azimuth) < 1e-3);
   const candidate = { key: "a", day: "2026-11-25", points: line(0, 0).map((point) => ({ ...point, day: "2026-11-25", share: 0.3 })), middle: { ...middle, day: "2026-11-25", share: 0.3 },
     start: line(0, 0)[0].time, end: line(0, 0)[4].time, near: 14_000, far: 14_400, share: [0.28, 0.31], sky: "blue", illuminated: 0.99, clear: 1 };
   const [range] = rangeEvents([candidate], { ...context, body: "moon", place: "晴空塔" });

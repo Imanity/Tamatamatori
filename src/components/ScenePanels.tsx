@@ -57,7 +57,7 @@ import { EnvironmentSettings } from "./EnvironmentSettings";
 import { layerGroups } from "./layers";
 import type { LayerGroupId } from "./layers";
 import { Detail, pollutionLevel } from "./readout";
-import { AlignmentMark, AlignmentPanel, placeFromPointer } from "./Alignment";
+import { AlignmentMark, AlignmentPanel, FramingMark, placeFromPointer } from "./Alignment";
 import type { ShotSaving } from "./SolveLink";
 import { bodyName } from "../domain/sky-targets";
 import type { AlignmentState } from "./Alignment";
@@ -503,6 +503,7 @@ export function PreviewPanel({
             visibility={skyVisibility}
           />
           <AlignmentMark alignment={alignment} view={view} frame={viewfinder} />
+          <FramingMark alignment={alignment} view={view} frame={viewfinder} />
           {placing && (
             <p className="alignment-placing" role="status">
               点击画面放下{bodyName(alignment.settings.body)}的期望位置 · Esc 取消

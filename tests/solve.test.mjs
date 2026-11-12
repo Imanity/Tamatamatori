@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import {
-  SOLVE_FORMAT, SOLVE_VERSION, parseSolve, parseSolveText, solveJson, solveLink, solvePlan, solveRequestOf, solveStart,
+  SOLVE_FORMAT, SOLVE_VERSION, frameOfRequest, parseSolve, parseSolveText, solveJson, solveLink, solvePlan, solveRequestOf, solveStart,
 } from "../src/domain/solve.ts";
 import { describeSolve, positionRows, rangeRows, solveReport, timeRows, REPORT_ROWS } from "../src/domain/solve-report.ts";
 import { initialPlan, localDateTime } from "../src/domain/plan.ts";
@@ -139,6 +139,17 @@ test("复制推算请求：面板状态写成自足的请求，读回一致；�
   assert.deepEqual(parseSolve(JSON.parse(solveJson(placed))).request, placed);
   assert.equal(solveRequestOf({ ...state, kind: "time" }), null);
   assert.equal(solveRequestOf({ ...state, target: null }), null);
+  // The framing: written from the top-left (0—1) only when it is not the centre; read back to the panel's coordinates.
+  assert.equal(request.frame, undefined);
+  assert.equal(solveRequestOf({ ...state, frame: { x: 0, y: 0 } }).frame, undefined);
+  const framed = solveRequestOf({ ...state, frame: { x: -0.5, y: -1 / 3 } });
+  assert.deepEqual(framed.frame, { x: 0.25, y: 0.333 });
+  assert.deepEqual(Object.keys(JSON.parse(solveJson(framed))).slice(4, 7), ["target", "frame", "date"]);
+  assert.deepEqual(parseSolve(JSON.parse(solveJson(framed))).request, framed);
+  const back = frameOfRequest(framed.frame);
+  assert.ok(Math.abs(back.x + 0.5) < 1e-9 && Math.abs(back.y + 0.334) < 1e-9);
+  assert.deepEqual(frameOfRequest(undefined), { x: 0, y: 0 });
+  assert.equal(solveRequestOf({ ...state, kind: "time", mark: { azimuth: 1, elevation: 1 }, frame: { x: 0.5, y: 0.5 } }).frame, undefined, "找时间 has no framing");
 });
 
 test("复制结果：Markdown 列出请求、链接与结果表，超过上限只计数，单元格转义竖线", () => {
@@ -162,7 +173,7 @@ test("复制结果：Markdown 列出请求、链接与结果表，超过上限�
   assert.match(long, /另有 5 条未列出。/);
   assert.equal(long.split("\n").filter((line) => line.startsWith("| 20")).length, REPORT_ROWS);
   const point = { time: Date.parse("2026-12-21T07:30:00Z"), latitude: 35.6, longitude: 139.7, distance: 12345, azimuth: 61.2, elevation: 3.21, cameraGround: -0.4, residual: 0, sight: "blocked", branch: 0 };
-  assert.deepEqual(positionRows([point], "Asia/Tokyo").rows[0], ["2026-12-21 16:30", "12.3", "35.60000, 139.70000", "东北 61.2°", "3.21°", "0 m", "被 DEM 挡住"]);
+  assert.deepEqual(positionRows([point], "Asia/Tokyo").rows[0], ["2026-12-21 16:30", "12.3", "35.60000, 139.70000", "东北 61.2°", "3.21°", "0 m", "被地形挡住"]);
   const candidate = { key: "a", day: "2026-11-25", points: [point], middle: point, start: point.time, end: point.time + 600_000, near: 2100, far: 2400, share: [0.28, 0.33], sky: "blue", illuminated: 0.99, clear: 0.5 };
   assert.deepEqual(rangeRows([candidate], "Asia/Tokyo").rows[0], ["2026-11-25", "16:30–16:40", "2.10—2.40", "28%—33%", "35.60000, 139.70000", "蓝调", "99%", "50%"]);
 });

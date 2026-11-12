@@ -1,6 +1,6 @@
 # Tamatamatori 推算请求格式 v1
 
-推算请求（`tamatamatori.solve`）描述“想让太阳、月亮或银心、亮星、深空目标落在哪里”。应用在用户的浏览器中按星历、DEM 与海平面地平计算，结果由用户试看、挑选后成为普通机位。请求只是意图，链接里的数值不会被当作结果。
+推算请求（`tamatamatori.solve`）描述“想让太阳、月亮或银心、亮星、深空目标落在哪里”。应用在用户的浏览器中按星历、地形高程与海平面地平计算，结果由用户试看、挑选后成为普通机位。请求只是意图，链接里的数值不会被当作结果。
 
 - JSON Schema：https://imanity.github.io/Tamatamatori/solve.schema.json
 - 机位格式另见：https://imanity.github.io/Tamatamatori/shot-format.md
@@ -14,7 +14,7 @@
 | `kind` | 已知 | 求 | 必填 |
 | --- | --- | --- | --- |
 | `"time"` 找时间 | 机位与天体在天空中的期望位置 | 日期跨度内对齐的时刻 | `mark` |
-| `"position"` 找机位 | 地面目标与某一天 | 当天能让天体落在目标顶部的机位（对齐线） | `target` |
+| `"position"` 找机位 | 地面目标与某一天 | 当天能让天体落在目标顶部的机位（可拍时段） | `target` |
 | `"range"` 两者都找 | 地面目标、主体大小与一段日期 | 哪天、在哪里拍（候选） | `target` |
 
 ## 字段
@@ -26,7 +26,8 @@
 | `body` | 全部 | `"sun"` / `"moon"`，或下面“固定方向天体”中的 id | 必填 |
 | `mark` | time | `{ "azimuth", "elevation" }`：天体中心的视方位（度，正北 0、顺时针）与视高度（-0.25—89°，含所选折射） | 必填 |
 | `camera` | time | `{ "latitude", "longitude", "heightAboveGround" }`，离地 0.1—100 m | 沿用打开者当前机位 |
-| `target` | position、range | `{ "landmark": id }`，或 `{ "latitude", "longitude", "height", "name" }`；`height` 为目标顶部高出 DEM 地面的米数（0—1000） | 必填；地标高度缺省为其高度，坐标为 0 |
+| `target` | position、range | `{ "landmark": id }`，或 `{ "latitude", "longitude", "height", "name" }`；`height` 为天体要落在的点高出地面的米数（0—1000；山顶等地面上的点为 0，塔顶、楼顶为其高度） | 必填；地标高度缺省为其高度，坐标为 0 |
+| `frame` | position、range | `{ "x", "y" }`：目标顶部在画面中的位置，自左上角起算的比例（0—1）；只影响试看时的拍摄方向 | 画面中心 |
 | `date` | 全部 | 当地日期 `"YYYY-MM-DD"`：time、range 为起始日；position 为时间轴范围的起始日（开启夜空类图层时为当天中午起 24 小时） | 打开者当前拍摄日期 |
 | `days` | time | `30` / `90` / `365` / `1096` | 365 |
 | `days` | range | `7` / `30` / `90` / `365` | 30 |
@@ -182,7 +183,7 @@
 
 - 未知字段、不属于该求法的字段和越界取值报错并带字段路径；缺省项在预览中列出。
 - 找时间打开时转向期望位置（方位与俯仰），给出 `camera` 时移到该机位；找机位把拍摄日期移到 `date`；其他字段不改。
-- 天体位置按海平面地平与所选折射；通视只检查 DEM，不含建筑与树木；不含天气。结果是构图模拟，不保证实景可见。
+- 天体位置按海平面地平与所选折射；遮挡只看地形起伏，视线被地形挡住的机位不列出；不含建筑与树木；不含天气。结果是构图模拟，不保证实景可见。
 - 推算面板的“复制推算请求”给出同样的链接，“复制结果”给出 Markdown 表格，可交回 AI 挑选。
 
 ## 示例
@@ -243,7 +244,7 @@ https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatama
 https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A1%2C%22kind%22%3A%22position%22%2C%22body%22%3A%22sun%22%2C%22target%22%3A%7B%22landmark%22%3A%22tokyo-skytree%22%2C%22height%22%3A634%7D%2C%22date%22%3A%222026-12-21%22%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22maxDistance%22%3A30000%7D
 ```
 
-### 两者都找：90 天内晴空塔与接近满月的月亮，主体占画面 30%
+### 两者都找：90 天内晴空塔与接近满月的月亮，主体占画面 30%，塔尖在上三分线
 
 ```json
 {
@@ -256,6 +257,10 @@ https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatama
   "target": {
     "landmark": "tokyo-skytree",
     "height": 634
+  },
+  "frame": {
+    "x": 0.5,
+    "y": 0.333
   },
   "date": "2026-11-12",
   "days": 90,
@@ -275,7 +280,7 @@ https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatama
 ```
 
 ```text
-https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A1%2C%22name%22%3A%22%E6%99%B4%E7%A9%BA%E5%A1%94%E6%BB%A1%E6%9C%88%22%2C%22kind%22%3A%22range%22%2C%22body%22%3A%22moon%22%2C%22target%22%3A%7B%22landmark%22%3A%22tokyo-skytree%22%2C%22height%22%3A634%7D%2C%22date%22%3A%222026-11-12%22%2C%22days%22%3A90%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22share%22%3A0.3%2C%22maxDistance%22%3A30000%2C%22phase%22%3A%5B0.9%2C1%5D%2C%22sky%22%3A%5B%22blue%22%2C%22twilight%22%2C%22night%22%5D%7D
+https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A1%2C%22name%22%3A%22%E6%99%B4%E7%A9%BA%E5%A1%94%E6%BB%A1%E6%9C%88%22%2C%22kind%22%3A%22range%22%2C%22body%22%3A%22moon%22%2C%22target%22%3A%7B%22landmark%22%3A%22tokyo-skytree%22%2C%22height%22%3A634%7D%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.333%7D%2C%22date%22%3A%222026-11-12%22%2C%22days%22%3A90%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22share%22%3A0.3%2C%22maxDistance%22%3A30000%2C%22phase%22%3A%5B0.9%2C1%5D%2C%22sky%22%3A%5B%22blue%22%2C%22twilight%22%2C%22night%22%5D%7D
 ```
 
 ### 两者都找：12 个月内银心落在晴空塔塔尖（暗夜）
@@ -306,7 +311,7 @@ https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatama
 https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A1%2C%22kind%22%3A%22range%22%2C%22body%22%3A%22galactic-center%22%2C%22target%22%3A%7B%22landmark%22%3A%22tokyo-skytree%22%2C%22height%22%3A634%7D%2C%22date%22%3A%222027-03-01%22%2C%22days%22%3A365%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22share%22%3A0.25%2C%22maxDistance%22%3A30000%2C%22sky%22%3A%5B%22night%22%5D%7D
 ```
 
-### 两者都找：坐标目标（山顶，高度 0 表示 DEM 地面）
+### 两者都找：坐标目标（山顶，高度 0 表示地面）
 
 ```json
 {

@@ -539,7 +539,7 @@ export function TerrainScene({ plan, stations, comets, onVisibilityChange, onCam
   return (
     <div
       className="terrain-scene"
-      aria-label="真实 DEM 山体与静态水体预览，水面高程按 DEM 近似"
+      aria-label="真实地形山体与静态水体预览，水面高度按地形高程近似"
     >
       <div className="terrain-canvas" ref={container} data-ready={!!visible} data-rendered={retained} data-celestial-renderer="webgl-depth" data-terrain-projection="wgs84-enu" />
       {calibrationEnabled && calibration && visible && <>

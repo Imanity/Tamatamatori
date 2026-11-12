@@ -4,7 +4,6 @@ import type { CheckTarget, PlaceCheck } from "../domain/feasibility";
 import type { ShootingPlan } from "../domain/plan";
 import { DEFAULT_TERRAIN_URL, DEFAULT_WATER_URL, terrainTile } from "../domain/terrain";
 import type { AlignmentState } from "./Alignment";
-import { listedPoints, pointKey } from "./PositionSearch";
 
 const terrainUrl = import.meta.env.VITE_TERRAIN_TILEJSON_URL?.trim() || DEFAULT_TERRAIN_URL;
 const featureUrl = import.meta.env.VITE_WATER_TILEJSON_URL?.trim() || DEFAULT_WATER_URL;
@@ -13,7 +12,7 @@ const tileOf = (point: { latitude: number; longitude: number }) => {
   return `${tile.x}/${tile.y}`;
 };
 
-/** What "检查机位" looks at: the camera (找时间), the listed rows (找机位) or each candidate's middle (两者都找). */
+/** What "检查机位" looks at: the camera (找时间), or the middle of each listed stretch (找机位) or candidate (两者都找). */
 export function checkTargets(alignment: AlignmentState, plan: ShootingPlan): CheckTarget[] {
   const height = plan.cameraHeight;
   if (alignment.kind === "time") {
@@ -21,12 +20,8 @@ export function checkTargets(alignment: AlignmentState, plan: ShootingPlan): Che
     return mark ? [{ key: `camera/${plan.latitude}/${plan.longitude}/${mark.azimuth}/${mark.elevation}`, latitude: plan.latitude, longitude: plan.longitude,
       cameraHeight: height, azimuth: mark.azimuth, elevation: mark.elevation }] : [];
   }
-  if (alignment.kind === "position")
-    return listedPoints(alignment.position.points, plan.timeZone).map((point) => ({
-      key: pointKey(point), latitude: point.latitude, longitude: point.longitude, ground: point.cameraGround,
-      cameraHeight: height, azimuth: point.azimuth, elevation: point.elevation,
-    }));
-  return alignment.range.kept.map(({ key, middle }) => ({
+  const listed = alignment.kind === "position" ? alignment.position.candidates : alignment.range.kept;
+  return listed.map(({ key, middle }) => ({
     key, latitude: middle.latitude, longitude: middle.longitude, ground: middle.cameraGround,
     cameraHeight: height, azimuth: middle.azimuth, elevation: middle.elevation,
   }));
@@ -108,7 +103,7 @@ export function CheckControls({ check, single }: { check: Feasibility; single?: 
         : <p className="feasibility-summary" role="status">
           检查了 {run.checked}/{run.total} 个机位：水面 {count((item) => item.water)}、建筑轮廓内 {count((item) => item.inside)}、
           {CHECK_RADIUS / 1000} km 内被建筑挡住 {count((item) => !!item.blocked)}、未发现问题 {count((item) => !problem(item) && !item.unknown)}
-          {count((item) => item.unknown) > 0 && `、高程不全 ${count((item) => item.unknown)}`}。读取 {run.tiles} 块矢量瓦片（新下载 {run.fetched} 块）。
+          {count((item) => item.unknown) > 0 && `、地形数据不全 ${count((item) => item.unknown)}`}。读取 {run.tiles} 块矢量瓦片（新下载 {run.fetched} 块）。
           {run.checked < run.total && ` 只检查了前 ${run.checked} 个（单次最多 ${CHECK_LIMIT} 个机位、${CHECK_TILE_LIMIT} 块瓦片）。`}
         </p>)}
       <p className="alignment-hint">

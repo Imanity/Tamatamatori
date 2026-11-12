@@ -20,7 +20,7 @@
 | `name` / `note` | 文本，最多 40 / 500 字 | 空 |
 | `position.latitude` | -90—90° | 必填 |
 | `position.longitude` | 度，超出 ±180 取模 | 必填 |
-| `position.heightAboveGround` | 0.1—100 m（相机离 DEM 地面） | 1.6 |
+| `position.heightAboveGround` | 0.1—100 m（相机离地面） | 1.6 |
 | `view.azimuth` | 度，正北 0、顺时针，取模 | 必填 |
 | `view.pitch` | -90—90° | 4 |
 | `camera.focalLength` | 8—1000 mm | 35 |

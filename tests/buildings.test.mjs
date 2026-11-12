@@ -242,7 +242,7 @@ test("建筑开关改变遮挡身份，纯转向保留身份，读数不宣称 D
   const plan={...initialPlan,layers:{...initialPlan.layers,buildings:true}};
   assert.notEqual(skyLabelKey(plan),skyLabelKey(initialPlan));assert.equal(skyLabelKey(plan),skyLabelKey({...plan,azimuth:90,focalLength:1000}));
   assert.equal(occlusionText("clear",plan),"已载场景未遮挡");assert.equal(occlusionText("blocked",plan),"场景遮挡");
-  assert.equal(occlusionText("clear",initialPlan),"当前 DEM 未遮挡");
+  assert.equal(occlusionText("clear",initialPlan),"未被地形遮挡");
 });
 
 test("有界请求复用版本瓦片、缺高程不以零替代，失败和取消可恢复",async()=>{

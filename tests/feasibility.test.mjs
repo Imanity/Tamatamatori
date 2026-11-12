@@ -61,7 +61,7 @@ test("机位检查：前方高于视线的建筑挡住、略低的不挡；身�
   // No ground for the camera: the line cannot be placed.
   const unknown = checkPlace(target({ ground: undefined }), indexFeatures({ water: [], buildings: [{ rings: block(500, 90, 20), height: 300, base: 0 }] }), () => null);
   assert.deepEqual({ unknown: unknown.unknown, blocked: unknown.blocked }, { unknown: true, blocked: null });
-  assert.equal(checkLabel(unknown), "机位地面高程不全，未查遮挡");
+  assert.equal(checkLabel(unknown), "机位处地形数据不全，未查遮挡");
   assert.equal(checkLabel(tall), `490 m 处建筑高出视线 ${tall.blocked.above} m`);
   assert.equal(checkLabel({ water: true, inside: false, blocked: null, unknown: false }), "机位在水面 · 2 km 内无建筑遮挡");
   assert.equal(checkLabel({ water: false, inside: false, blocked: { distance: 0, above: 6, height: 20 }, unknown: false }), "紧邻的建筑高出视线 6 m");

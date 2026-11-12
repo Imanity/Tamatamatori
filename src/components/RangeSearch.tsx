@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { Temporal } from "@js-temporal/polyfill";
 import {
+  blockedMinutes,
   filterCandidates,
   MIN_SUBJECT,
   mergeCandidates,
@@ -19,6 +20,7 @@ import { distanceChoices, pointPlan, positionProfile, restoredLayers, travel, tr
 import type { TriedLayers } from "../domain/position-alignment";
 import { bodyKind, bodyName, fixedPlace, isFixedBody } from "../domain/sky-targets";
 import { bodyRadius } from "../domain/alignment";
+import type { FramePoint } from "../domain/alignment";
 import { SkyChoices } from "./Alignment";
 import type { GroundSampler } from "../domain/position-alignment";
 import { skyConditionNames, skyConditions } from "../domain/alignment";
@@ -30,7 +32,7 @@ import type { ElevationTile } from "../domain/terrain";
 import type { TimelineEvent } from "../domain/timeline";
 import { occlusionText } from "../domain/visibility";
 import type { Occlusion } from "../domain/visibility";
-import { ProfileChart, TargetSection } from "./PositionSearch";
+import { CoarseNote, FramingSection, frameWords, ProfileChart, TargetSection, tryingPoint } from "./PositionSearch";
 import type { PositionSearch } from "./PositionSearch";
 import { CheckControls, CheckTag } from "./Feasibility";
 import type { Feasibility } from "./Feasibility";
@@ -75,7 +77,7 @@ interface Before {
 const lensOf = (plan: ShootingPlan) => ({ focalLength: plan.focalLength, sensor: plan.sensor, customSensor: plan.customSensor, aspectRatio: plan.aspectRatio, orientation: plan.orientation });
 
 /**
- * Runs a range search: the day plan (usable minutes, corridor), the DEM tiles,
+ * Runs a range search: the day plan (usable minutes, corridor), the terrain tiles,
  * then the days. A module worker does the heavy parts when the browser has one;
  * otherwise (or if the worker fails to start) the main thread does them day by day.
  */
@@ -248,8 +250,8 @@ export function useRangeSearch(plan: ShootingPlan, update: UpdatePlan, active: b
     ...(moon && (phase[0] > 0 || phase[1] < 100) ? { phase: [phase[0] / 100, phase[1] / 100] as const } : {}),
     ...(body !== "sun" && sky.length < skyConditions.length ? { sky } : {}),
   }, body), [all, moon, body, phase, sky]);
-  const matches = (point: RangePoint) => iso(point.time) === plan.instant &&
-    Math.abs(point.latitude - plan.latitude) < 1e-6 && Math.abs(point.longitude - plan.longitude) < 1e-6;
+  const matches = tryingPoint(plan);
+  const blocked = done ? blockedMinutes(done.points) : 0;
   const current = kept.find((candidate) => candidate.points.some(matches)) ?? null;
   const currentPoint = current?.points.find(matches) ?? null;
 
@@ -259,7 +261,7 @@ export function useRangeSearch(plan: ShootingPlan, update: UpdatePlan, active: b
       latitude: now.latitude, longitude: now.longitude, instant: now.instant,
       azimuth: now.azimuth, pitch: now.pitch, layers: triedLayers(now.layers),
     });
-    const patch = pointPlan(now.layers, point, body);
+    const patch = pointPlan(now.layers, point, body, { frame: position.frame, lens: now });
     latest.current = { ...now, ...patch };
     update(patch);
   };
@@ -283,7 +285,7 @@ export function useRangeSearch(plan: ShootingPlan, update: UpdatePlan, active: b
 
   return {
     share, setShare, span, setSpan, start, setStart, maxDistance, setMaxDistance, phase, setPhase, sky, setSky,
-    sized, run, key, done, all, kept, filtered, merged: merging.merged, current, currentPoint,
+    sized, run, key, done, all, kept, filtered, merged: merging.merged, blocked, current, currentPoint,
     retry: () => setAttempt((value) => value + 1), tryOut, restore, canRestore: !!before, events,
   };
 }
@@ -328,19 +330,20 @@ export function rangeGeometry(search: RangeSearch | null, target: PositionSearch
   return { type: "FeatureCollection", features };
 }
 
-/** Frame, centre on the top, the body at its true size and the subject down to its share. */
-function CompositionSketch({ plan, share, body }: { plan: ShootingPlan; share: number; body: AlignmentBody }) {
+/** Frame, the body at its true size on the target's top at the chosen place, and the subject down to its share. */
+function CompositionSketch({ plan, share, body, frame }: { plan: ShootingPlan; share: number; body: AlignmentBody; frame: FramePoint }) {
   const height = 100, width = height * frameAspectRatio(plan);
   const fov = fieldOfView(plan);
   const radius = Math.max(0.8, (height / 2) * (Math.tan(bodyRadius(body) * degrees) / Math.tan((fov.vertical / 2) * degrees)));
-  const bar = Math.min(height / 2, share * height);
+  const x = ((frame.x + 1) / 2) * width, y = ((frame.y + 1) / 2) * height;
+  const bar = Math.max(0, Math.min(height - y, share * height));
   return (
     <svg className="composition-sketch" viewBox={`0 0 ${width.toFixed(1)} ${height}`} role="img"
-      aria-label={`构图草图：画面中心对准目标顶部，${bodyName(body)}按真实大小落在顶部，主体向下占画面高度 ${percent(share)}`}>
+      aria-label={`构图草图：目标顶部在${frameWords(frame)}，${bodyName(body)}按真实大小落在顶部，主体向下占画面高度 ${percent(share)}`}>
       <rect className="sketch-frame" x="0.5" y="0.5" width={width - 1} height={height - 1} />
       <path className="sketch-grid" d={`M${width / 3} 0V${height}M${(2 * width) / 3} 0V${height}M0 ${height / 3}H${width}M0 ${(2 * height) / 3}H${width}`} />
-      <rect className="sketch-subject" x={width / 2 - 2} y={height / 2} width="4" height={bar} />
-      <circle className={`sketch-body sketch-${bodyKind(body)}`} cx={width / 2} cy={height / 2} r={radius} />
+      <rect className="sketch-subject" x={x - 2} y={y} width="4" height={bar} />
+      <circle className={`sketch-body sketch-${bodyKind(body)}`} cx={x} cy={y} r={radius} />
     </svg>
   );
 }
@@ -351,13 +354,14 @@ function dateOf(time: number, timeZone: string) {
 }
 
 /** The "两者都找" part of the 推算 panel. */
-export function RangePanel({ search, position, plan, body, occlusion, check }: {
+export function RangePanel({ search, position, plan, body, occlusion, check, onFrame }: {
   search: RangeSearch;
   position: PositionSearch;
   plan: ShootingPlan;
   check?: Feasibility;
   body: AlignmentBody;
   occlusion: { state: string; occlusion: Occlusion } | null;
+  onFrame: (frame: FramePoint) => void;
 }) {
   const { run, done, kept, current, currentPoint } = search;
   const name = bodyName(body);
@@ -377,9 +381,9 @@ export function RangePanel({ search, position, plan, body, occlusion, check }: {
   const ground = target && run?.sampler ? run.sampler(target.latitude, target.longitude) : null;
   const spanLabel = (days: number) => (days === 365 ? "12 个月" : `${days} 天`);
   let summary: ReactNode = null;
-  if (!target) summary = <p className="alignment-hint">先在地图上放置目标，或选择已接入地标。</p>;
+  if (!target) summary = <p className="alignment-hint">先在地图上点选目标，或选择已接入地标。</p>;
   else if (!run || run.key !== search.key || run.phase === "planning") summary = <p className="alignment-status" role="status">规划中…</p>;
-  else if (run.phase === "loading") summary = <p className="alignment-status" role="status">读取高程{run.tiles[1] ? ` ${run.tiles[0]}/${run.tiles[1]} 块` : "中"}…</p>;
+  else if (run.phase === "loading") summary = <p className="alignment-status" role="status">读取地形{run.tiles[1] ? ` ${run.tiles[0]}/${run.tiles[1]} 块` : "中"}…</p>;
   else if (run.phase === "solving") summary = <p className="alignment-status" role="status">推算中 · {run.days[0]}/{run.days[1]} 天</p>;
   else if (run.phase === "error")
     summary = <div className="alignment-status is-error" role="status">
@@ -389,12 +393,14 @@ export function RangePanel({ search, position, plan, body, occlusion, check }: {
   else if (done) {
     const total = search.filtered.phase + search.filtered.sky;
     const reasons = [search.filtered.phase && `月相 ${search.filtered.phase}`, search.filtered.sky && `天空条件 ${search.filtered.sky}`].filter(Boolean).join("、");
+    const hidden = search.blocked > 0 ? `；另有 ${search.blocked} 分钟视线被地形挡住，未列出` : "";
     summary = kept.length
-      ? <p className="alignment-status" role="status">{spanLabel(search.span)}内 {kept.length} 个候选{total > 0 && `；另有 ${total} 个被筛掉（${reasons}）`}{search.merged > 0 && `；${search.merged} 个几乎重合的已合并`}</p>
+      ? <p className="alignment-status" role="status">{spanLabel(search.span)}内 {kept.length} 个候选{total > 0 && `；另有 ${total} 个被筛掉（${reasons}）`}{search.merged > 0 && `；${search.merged} 个几乎重合的已合并`}{hidden}</p>
       : <p className="alignment-status is-empty" role="status">
         {!done.sectors.length ? `${spanLabel(search.span)}内${name}达不到所需的高度。`
           : total > 0 ? `有 ${total} 个候选，但都不满足所选条件（${reasons}）。`
-            : `${spanLabel(search.span)}内在 ${km(done.near)}—${km(done.far)} km 没有${search.sized ? "主体大小合适的" : ""}解。`}
+            : search.blocked > 0 ? `有 ${search.blocked} 分钟${name}正好落在目标上，但视线都被地形挡住。可以换日期、调整主体大小或提高离地高度。`
+              : `${spanLabel(search.span)}内在 ${km(done.near)}—${km(done.far)} km 没有${search.sized ? "主体大小合适的" : ""}解。`}
       </p>;
   }
   const months = new Map<string, RangeCandidate[]>();
@@ -407,6 +413,8 @@ export function RangePanel({ search, position, plan, body, occlusion, check }: {
   return (
     <>
       <TargetSection search={position} ground={ground} />
+      <FramingSection frame={position.frame} onFrame={onFrame} name={name}
+        overflow={!!target && search.sized && position.frame.y + 2 * search.share > 1.001} />
       <div className="alignment-section alignment-conditions">
         <h3>构图与日期</h3>
         {target && search.sized && preview ? <>
@@ -415,7 +423,7 @@ export function RangePanel({ search, position, plan, body, occlusion, check }: {
             <input type="range" min={5} max={50} step={1} value={Math.round(search.share * 100)} aria-label="主体占画面高度"
               aria-valuetext={percent(search.share)} onChange={(event) => search.setShare(Number(event.target.value) / 100)} />
           </label>
-          <CompositionSketch plan={plan} share={search.share} body={body} />
+          <CompositionSketch plan={plan} share={search.share} body={body} frame={position.frame} />
           <p className="alignment-hint">
             {`${plan.focalLength} mm 下主体视高度约 ${preview.angle?.toFixed(2)}°，距目标约 ${km(preview.near)}—${km(preview.far)} km（占比 ±20%），`
               + `所需${name}视高度约 ${needed(preview.far).toFixed(1)}°—${needed(preview.near).toFixed(1)}°。`
@@ -457,6 +465,7 @@ export function RangePanel({ search, position, plan, body, occlusion, check }: {
       <div className="alignment-section alignment-results" aria-label="推算结果">
         <h3>候选</h3>
         {summary}
+        {target && <CoarseNote sampler={run?.key === search.key ? run.sampler : null} latitude={target.latitude} />}
         {check && kept.length > 0 && <CheckControls check={check} />}
         {current && currentPoint && <>
           <p className="alignment-current" role="status">
@@ -486,9 +495,9 @@ export function RangePanel({ search, position, plan, body, occlusion, check }: {
                       <small>距目标 {km(candidate.near)}—{km(candidate.far)} km · 目标在{compassDirection(candidate.middle.azimuth)}{candidate.share && ` · 主体 ${percent(candidate.share[0])}—${percent(candidate.share[1])}`}</small>
                       <CheckTag check={check?.result(candidate.key) ?? null} />
                     </span>
-                    <span className={`alignment-facts ${candidate.clear < 1 ? "sight-blocked" : ""}`}>
+                    <span className="alignment-facts">
                       {skyConditionNames[candidate.sky]}{candidate.illuminated !== null && ` · 亮面 ${Math.round(candidate.illuminated * 100)}%`}
-                      {` · ${candidate.clear === 1 ? "通视" : candidate.clear === 0 ? "被 DEM 挡住" : `通视 ${percent(candidate.clear)}`}`}
+                      {candidate.clear < 1 && " · 部分地形数据不全"}
                     </span>
                     <button type="button" aria-label={`试看 ${day} ${clock(candidate.middle.time, plan.timeZone)}`} aria-pressed={candidate === current}
                       onClick={() => search.tryOut(candidate.middle)}>试看</button>
@@ -499,8 +508,8 @@ export function RangePanel({ search, position, plan, body, occlusion, check }: {
           </section>
         ))}
         <p className="alignment-note">
-          每天按所选时区 0—24 时逐分钟推算，机位在距目标 {run ? `${km(run.input.minDistance)}—${km(run.input.maxDistance)}` : "—"} km 内搜索，主体大小按实际 DEM 重算后保留 ±20%。
-          {run?.worker ? " 在后台线程计算。" : ""} 通视只按 DEM，不含建筑、树木与天气；试看时画面中心对准目标顶部，焦距不变。
+          每天按所选时区 0—24 时逐分钟推算，机位在距目标 {run ? `${km(run.input.minDistance)}—${km(run.input.maxDistance)}` : "—"} km 内搜索，主体大小按实际地形重算后保留 ±20%。
+          {run?.worker ? " 在后台线程计算。" : ""} 视线被地形挡住的分钟不列出；遮挡只看地形，不含建筑、树木与天气。试看时目标按“画面位置”摆放，焦距不变。
         </p>
       </div>
     </>

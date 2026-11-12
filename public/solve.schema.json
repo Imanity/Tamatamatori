@@ -233,7 +233,7 @@
               "type": "number",
               "minimum": 0,
               "maximum": 1000,
-              "description": "目标顶部高出 DEM 地面的米数；地标缺省为其高度，坐标缺省为 0"
+              "description": "目标顶部高出地面（地形高程）的米数；地标缺省为其高度，坐标缺省为 0"
             },
             "name": {
               "type": "string",
@@ -265,7 +265,7 @@
               "type": "number",
               "minimum": 0,
               "maximum": 1000,
-              "description": "目标顶部高出 DEM 地面的米数；地标缺省为其高度，坐标缺省为 0"
+              "description": "目标顶部高出地面（地形高程）的米数；地标缺省为其高度，坐标缺省为 0"
             },
             "name": {
               "type": "string",
@@ -276,6 +276,27 @@
           }
         }
       ]
+    },
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "x",
+        "y"
+      ],
+      "description": "找机位、两者都找：目标顶部（天体落在其上）在画面中的位置，自左上角起算的比例；缺省为画面中心。只影响试看时的拍摄方向，不影响求解",
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
     },
     "date": {
       "type": "string",
@@ -374,6 +395,7 @@
             "default": 365
           },
           "target": false,
+          "frame": false,
           "share": false,
           "maxDistance": false
         }

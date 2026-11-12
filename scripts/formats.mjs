@@ -55,9 +55,9 @@ const solveExamples = [
     value: { format: SOLVE_FORMAT, version: SOLVE_VERSION, kind: 'position', body: 'sun', target: { landmark: 'tokyo-skytree' }, date: '2026-12-21', timeZone: 'Asia/Tokyo', maxDistance: 30000 },
   },
   {
-    title: '两者都找：90 天内晴空塔与接近满月的月亮，主体占画面 30%',
+    title: '两者都找：90 天内晴空塔与接近满月的月亮，主体占画面 30%，塔尖在上三分线',
     value: { format: SOLVE_FORMAT, version: SOLVE_VERSION, name: '晴空塔满月', kind: 'range', body: 'moon', target: { landmark: 'tokyo-skytree' },
-      date: '2026-11-12', days: 90, timeZone: 'Asia/Tokyo', share: 0.3, phase: [0.9, 1], sky: ['blue', 'twilight', 'night'] },
+      frame: { x: 0.5, y: 0.333 }, date: '2026-11-12', days: 90, timeZone: 'Asia/Tokyo', share: 0.3, phase: [0.9, 1], sky: ['blue', 'twilight', 'night'] },
   },
   {
     title: '两者都找：12 个月内银心落在晴空塔塔尖（暗夜）',
@@ -65,7 +65,7 @@ const solveExamples = [
       date: '2027-03-01', days: 365, timeZone: 'Asia/Tokyo', share: 0.25, sky: ['night'] },
   },
   {
-    title: '两者都找：坐标目标（山顶，高度 0 表示 DEM 地面）',
+    title: '两者都找：坐标目标（山顶，高度 0 表示地面）',
     value: { format: SOLVE_FORMAT, version: SOLVE_VERSION, kind: 'range', body: 'sun', target: { latitude: 35.3606, longitude: 138.7274, height: 0, name: '富士山顶' },
       date: '2027-01-01', days: 90, timeZone: 'Asia/Tokyo', maxDistance: 30000 },
   },
@@ -153,7 +153,7 @@ const shotSchema = {
 };
 
 const targetName = { type: 'string', minLength: 1, maxLength: SOLVE_NAME_LIMIT, description: '目标名称' };
-const targetHeight = { type: 'number', minimum: targetHeightLimits[0], maximum: targetHeightLimits[1], description: '目标顶部高出 DEM 地面的米数；地标缺省为其高度，坐标缺省为 0' };
+const targetHeight = { type: 'number', minimum: targetHeightLimits[0], maximum: targetHeightLimits[1], description: '目标顶部高出地面（地形高程）的米数；地标缺省为其高度，坐标缺省为 0' };
 const forbid = (...keys) => Object.fromEntries(keys.map((key) => [key, false]));
 const solveSchema = {
   $schema: DRAFT,
@@ -188,6 +188,11 @@ const solveSchema = {
         { type: 'object', additionalProperties: false, required: ['latitude', 'longitude'], properties: { latitude, longitude, height: targetHeight, name: targetName } },
       ],
     },
+    frame: {
+      type: 'object', additionalProperties: false, required: ['x', 'y'],
+      description: '找机位、两者都找：目标顶部（天体落在其上）在画面中的位置，自左上角起算的比例；缺省为画面中心。只影响试看时的拍摄方向，不影响求解',
+      properties: { x: { type: 'number', minimum: 0, maximum: 1 }, y: { type: 'number', minimum: 0, maximum: 1 } },
+    },
     date: { type: 'string', format: 'date', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: `当地日期（${range(shotLimits.year)} 年）；缺省为打开者当前拍摄日期` },
     days: { type: 'integer', description: '跨度，天' },
     timeZone: { type: 'string', description: 'IANA 时区；给出时日期按它解释，拍摄计划改为该固定时区' },
@@ -198,7 +203,7 @@ const solveSchema = {
     sky: { type: 'array', minItems: 1, uniqueItems: true, items: { enum: [...skyConditions] }, description: '天空条件（按太阳高度）' },
   },
   allOf: [
-    { if: { properties: { kind: { const: 'time' } } }, then: { required: ['mark'], properties: { days: { enum: [...timeDays], default: 365 }, ...forbid('target', 'share', 'maxDistance') } } },
+    { if: { properties: { kind: { const: 'time' } } }, then: { required: ['mark'], properties: { days: { enum: [...timeDays], default: 365 }, ...forbid('target', 'frame', 'share', 'maxDistance') } } },
     { if: { properties: { kind: { const: 'position' } } }, then: { required: ['target'], properties: forbid('mark', 'camera', 'days', 'tolerance', 'share', 'phase', 'sky') } },
     { if: { properties: { kind: { const: 'range' } } }, then: { required: ['target'], properties: { days: { enum: [...rangeDays], default: 30 }, ...forbid('mark', 'camera', 'tolerance') } } },
     { if: { properties: { body: { const: 'sun' } } }, then: { properties: forbid('phase', 'sky') } },
@@ -230,7 +235,7 @@ const shotMarkdown = `# Tamatamatori 机位格式 v${SHOT_VERSION}
 | \`name\` / \`note\` | 文本，最多 ${SHOT_NAME_LIMIT} / ${SHOT_NOTE_LIMIT} 字 | 空 |
 | \`position.latitude\` | ${range(shotLimits.latitude, '°')} | 必填 |
 | \`position.longitude\` | 度，超出 ±180 取模 | 必填 |
-| \`position.heightAboveGround\` | ${range(shotLimits.heightAboveGround, ' m')}（相机离 DEM 地面） | ${initialPlan.cameraHeight} |
+| \`position.heightAboveGround\` | ${range(shotLimits.heightAboveGround, ' m')}（相机离地面） | ${initialPlan.cameraHeight} |
 | \`view.azimuth\` | 度，正北 0、顺时针，取模 | 必填 |
 | \`view.pitch\` | ${range(shotLimits.pitch, '°')} | ${initialPlan.pitch} |
 | \`camera.focalLength\` | ${range(shotLimits.focalLength, ' mm')} | ${initialPlan.focalLength} |
@@ -272,7 +277,7 @@ ${shotLink(shot, PUBLIC_SITE)}
 
 const solveMarkdown = `# Tamatamatori 推算请求格式 v${SOLVE_VERSION}
 
-推算请求（\`${SOLVE_FORMAT}\`）描述“想让太阳、月亮或银心、亮星、深空目标落在哪里”。应用在用户的浏览器中按星历、DEM 与海平面地平计算，结果由用户试看、挑选后成为普通机位。请求只是意图，链接里的数值不会被当作结果。
+推算请求（\`${SOLVE_FORMAT}\`）描述“想让太阳、月亮或银心、亮星、深空目标落在哪里”。应用在用户的浏览器中按星历、地形高程与海平面地平计算，结果由用户试看、挑选后成为普通机位。请求只是意图，链接里的数值不会被当作结果。
 
 - JSON Schema：${solveSchemaUrl}
 - 机位格式另见：${PUBLIC_SITE}shot-format.md
@@ -286,7 +291,7 @@ const solveMarkdown = `# Tamatamatori 推算请求格式 v${SOLVE_VERSION}
 | \`kind\` | 已知 | 求 | 必填 |
 | --- | --- | --- | --- |
 | \`"time"\` 找时间 | 机位与天体在天空中的期望位置 | 日期跨度内对齐的时刻 | \`mark\` |
-| \`"position"\` 找机位 | 地面目标与某一天 | 当天能让天体落在目标顶部的机位（对齐线） | \`target\` |
+| \`"position"\` 找机位 | 地面目标与某一天 | 当天能让天体落在目标顶部的机位（可拍时段） | \`target\` |
 | \`"range"\` 两者都找 | 地面目标、主体大小与一段日期 | 哪天、在哪里拍（候选） | \`target\` |
 
 ## 字段
@@ -298,7 +303,8 @@ const solveMarkdown = `# Tamatamatori 推算请求格式 v${SOLVE_VERSION}
 | \`body\` | 全部 | \`"sun"\` / \`"moon"\`，或下面“固定方向天体”中的 id | 必填 |
 | \`mark\` | time | \`{ "azimuth", "elevation" }\`：天体中心的视方位（度，正北 0、顺时针）与视高度（${range(targetElevationRange, '°')}，含所选折射） | 必填 |
 | \`camera\` | time | \`{ "latitude", "longitude", "heightAboveGround" }\`，离地 ${range(shotLimits.heightAboveGround, ' m')} | 沿用打开者当前机位 |
-| \`target\` | position、range | \`{ "landmark": id }\`，或 \`{ "latitude", "longitude", "height", "name" }\`；\`height\` 为目标顶部高出 DEM 地面的米数（${range(targetHeightLimits)}） | 必填；地标高度缺省为其高度，坐标为 0 |
+| \`target\` | position、range | \`{ "landmark": id }\`，或 \`{ "latitude", "longitude", "height", "name" }\`；\`height\` 为天体要落在的点高出地面的米数（${range(targetHeightLimits)}；山顶等地面上的点为 0，塔顶、楼顶为其高度） | 必填；地标高度缺省为其高度，坐标为 0 |
+| \`frame\` | position、range | \`{ "x", "y" }\`：目标顶部在画面中的位置，自左上角起算的比例（0—1）；只影响试看时的拍摄方向 | 画面中心 |
 | \`date\` | 全部 | 当地日期 \`"YYYY-MM-DD"\`：time、range 为起始日；position 为时间轴范围的起始日（开启夜空类图层时为当天中午起 24 小时） | 打开者当前拍摄日期 |
 | \`days\` | time | ${list(timeDays)} | 365 |
 | \`days\` | range | ${list(rangeDays)} | 30 |
@@ -329,7 +335,7 @@ ${landmarks.map((landmark) => `| \`${landmark.id}\` | ${landmark.name} | ${landm
 
 - 未知字段、不属于该求法的字段和越界取值报错并带字段路径；缺省项在预览中列出。
 - 找时间打开时转向期望位置（方位与俯仰），给出 \`camera\` 时移到该机位；找机位把拍摄日期移到 \`date\`；其他字段不改。
-- 天体位置按海平面地平与所选折射；通视只检查 DEM，不含建筑与树木；不含天气。结果是构图模拟，不保证实景可见。
+- 天体位置按海平面地平与所选折射；遮挡只看地形起伏，视线被地形挡住的机位不列出；不含建筑与树木；不含天气。结果是构图模拟，不保证实景可见。
 - 推算面板的“复制推算请求”给出同样的链接，“复制结果”给出 Markdown 表格，可交回 AI 挑选。
 
 ## 示例

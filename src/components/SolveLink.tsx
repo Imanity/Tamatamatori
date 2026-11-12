@@ -123,20 +123,22 @@ function report(alignment: AlignmentState, plan: ShootingPlan, request: SolveReq
     return solveReport({ ...common, status, ...timeRows(result, plan.timeZone) });
   }
   if (alignment.kind === "position") {
-    const { result, points } = alignment.position;
+    const { result, points, candidates, blocked } = alignment.position;
     if (!result) return null;
     const listed = listedPoints(points, plan.timeZone);
+    const hidden = blocked ? `；另有 ${blocked} 分钟视线被地形挡住，未列出` : "";
     const status = points.length
-      ? `对齐线 ${result.minutes} 分钟 · 距目标 ${km(Math.min(...points.map((point) => point.distance)))}—${km(Math.max(...points.map((point) => point.distance)))} km；下表每 10 分钟一行。`
-      : "时段内没有解。";
+      ? `${candidates.length} 段可拍时段，共 ${new Set(points.map((point) => point.time)).size} 分钟，距目标 ${km(Math.min(...points.map((point) => point.distance)))}—${km(Math.max(...points.map((point) => point.distance)))} km${hidden}；下表每 10 分钟一行。`
+      : blocked ? `有 ${blocked} 分钟几何上对齐，但视线都被地形挡住。` : "时段内没有解。";
     return solveReport({ ...common, status, ...positionRows(listed, plan.timeZone) });
   }
   const range = alignment.range;
   if (!range.done) return null;
   const total = range.filtered.phase + range.filtered.sky;
+  const hidden = range.blocked ? `；另有 ${range.blocked} 分钟视线被地形挡住，未列出` : "";
   const status = range.kept.length
-    ? `${spanName(range.span)}内 ${range.kept.length} 个候选${total ? `；另有 ${total} 个不满足所选月相或天空条件` : ""}。`
-    : `${spanName(range.span)}内没有解。`;
+    ? `${spanName(range.span)}内 ${range.kept.length} 个候选${total ? `；另有 ${total} 个不满足所选月相或天空条件` : ""}${hidden}。`
+    : range.blocked ? `${spanName(range.span)}内有 ${range.blocked} 分钟几何上对齐，但视线都被地形挡住。` : `${spanName(range.span)}内没有解。`;
   return solveReport({ ...common, status, ...rangeRows(range.kept, plan.timeZone) });
 }
 
@@ -161,9 +163,9 @@ function trying(alignment: AlignmentState, plan: ShootingPlan) {
 }
 
 function calendarEvents(alignment: AlignmentState, plan: ShootingPlan, place: string): CalendarEvent[] | null {
-  const context = { plan, body: alignment.settings.body, place, site: site() };
+  const context = { plan, body: alignment.settings.body, place, site: site(), frame: alignment.kind === "time" ? undefined : alignment.position.frame };
   if (alignment.kind === "time") return alignment.result ? timeEvents(alignment.result.alignments, context) : null;
-  if (alignment.kind === "position") return alignment.position.result ? positionEvents(alignment.position.points, context) : null;
+  if (alignment.kind === "position") return alignment.position.result ? positionEvents(alignment.position.candidates, context) : null;
   return alignment.range.done ? rangeEvents(alignment.range.kept, context) : null;
 }
 

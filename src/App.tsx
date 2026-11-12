@@ -401,7 +401,7 @@ export default function App() {
             type="button"
             className={`solve-button ${solveMode ? "is-active" : ""}`}
             aria-pressed={solveMode}
-            title={solveMode ? "退出推算" : "推算：求日月落到画面中期望位置的时刻"}
+            title={solveMode ? "退出推算" : "推算：找拍摄时间或机位"}
             onClick={toggleSolve}
           >
             <Icon name="compass" size={15} />

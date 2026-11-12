@@ -5,8 +5,9 @@ import { ecefGeodetic, ellipsoidalRay, geodeticEcef } from "./geodesy.ts";
 import type { EllipsoidalPoint } from "./geodesy.ts";
 import { normalizeLongitude, signedAngle } from "./plan.ts";
 import type { ShootingPlan } from "./plan.ts";
-import { targetElevationRange } from "./alignment.ts";
-import type { AlignmentBody } from "./alignment.ts";
+import { aimAt, targetElevationRange } from "./alignment.ts";
+import type { AlignmentBody, FramePoint } from "./alignment.ts";
+import type { View } from "./celestial-projection.ts";
 import { astroBody, bodyLayer, DARK_SUN_ELEVATION, isFixedBody } from "./sky-coordinates.ts";
 
 /**
@@ -351,19 +352,33 @@ export function positionProfile(input: Pick<PositionInput, "target" | "cameraHei
   );
 }
 
+/** Where the target's top (and the body on it) should sit in the frame, and the lens that frames it. */
+export interface Framing {
+  frame: FramePoint;
+  lens: Omit<View, "azimuth" | "pitch">;
+}
+
 /**
  * The plan fields a try-out of a solved point writes: the camera, the
- * instant, the direction to the top and the body's layer. Rounded for the
- * input fields: 1e-6° is about 0.1 m, 1e-4° under 1 cm at 5 km.
+ * instant, the direction and the body's layer. The direction puts the
+ * target's top at the chosen place in the frame (the centre without a
+ * framing). Rounded for the input fields: 1e-6° is about 0.1 m, 1e-4° under 1 cm at 5 km.
  */
-export function pointPlan(layers: ShootingPlan["layers"], point: Pick<PositionPoint, "latitude" | "longitude" | "time" | "azimuth" | "elevation">, body: AlignmentBody) {
+export function pointPlan(layers: ShootingPlan["layers"], point: Pick<PositionPoint, "latitude" | "longitude" | "time" | "azimuth" | "elevation">, body: AlignmentBody, framing?: Framing) {
   const round = (value: number, digits: number) => Math.round(value * 10 ** digits) / 10 ** digits;
+  const aim = framing ? aimAt(framing.lens, point, framing.frame) : { azimuth: point.azimuth, pitch: point.elevation };
   return {
     latitude: round(point.latitude, 6), longitude: round(point.longitude, 6),
     instant: new Date(point.time).toISOString().replace(".000Z", "Z"),
-    azimuth: round(point.azimuth, 4), pitch: round(point.elevation, 4),
+    azimuth: round(aim.azimuth, 4), pitch: round(aim.pitch, 4),
     layers: { ...layers, [bodyLayer(body)]: true },
   };
+}
+
+/** The direction alone, for moving the framing during a try-out. */
+export function framedDirection(point: Pick<PositionPoint, "azimuth" | "elevation">, framing: Framing) {
+  const aim = aimAt(framing.lens, point, framing.frame);
+  return { azimuth: Math.round(aim.azimuth * 1e4) / 1e4, pitch: Math.round(aim.pitch * 1e4) / 1e4 };
 }
 
 /** The layers a try-out may switch on (the body's own), kept for "返回推算前". */

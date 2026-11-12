@@ -96,20 +96,26 @@ export function sampleElevationTile(tile: ElevationTile, u: number, v: number) {
   return height;
 }
 
+/** Ground size of one pixel of a 512 px terrain tile at this zoom and latitude, metres. */
+export const tilePixel = (zoom: number, latitude: number) => (40_075_016.686 * Math.cos((latitude * Math.PI) / 180)) / 2 ** zoom / 512;
+
 /** Key of a tile in `tileSampler` maps: "z/x/y". */
 export const tileKey = (tile: { z: number; x: number; y: number }) => `${tile.z}/${tile.x}/${tile.y}`;
 
 /**
- * Synchronous ground sampler over decoded z12 tiles: null outside the loaded
- * tiles, outside the source's latitude bounds or on invalid pixels. Shared by
- * the main thread and the 推算 worker.
+ * Synchronous ground sampler over decoded tiles of one zoom (z12, or coarser
+ * for a wide search; read from the keys): null outside the loaded tiles,
+ * outside the source's latitude bounds or on invalid pixels. Shared by the
+ * main thread and the 推算 worker.
  */
 export function tileSampler(tiles: ReadonlyMap<string, ElevationTile>, bounds?: readonly number[]) {
+  const first = tiles.keys().next().value;
+  const zoom = first === undefined ? TERRAIN_ZOOM : Number(first.split("/")[0]);
   return (latitude: number, longitude: number) => {
     if (bounds && (latitude < bounds[1] || latitude > bounds[3])) return null;
     let position;
     try {
-      position = terrainTile({ latitude, longitude });
+      position = terrainTile({ latitude, longitude }, zoom);
     } catch {
       return null;
     }

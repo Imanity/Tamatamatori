@@ -25,7 +25,13 @@ const iso = (time: number) => new Date(time).toISOString();
 const local = (instant: string, timeZone: string) => localDateTime(instant, timeZone).replace("T", " ");
 const clock = (instant: string, timeZone: string) => localDateTime(instant, timeZone).slice(11, 16);
 const day = (instant: string, timeZone: string) => Temporal.Instant.from(instant).toZonedDateTimeISO(timeZone).toPlainDate().toString();
-const sightNames = { clear: "通视", blocked: "被 DEM 挡住", unknown: "高程不全" } as const;
+const sightNames = { clear: "视线畅通", blocked: "被地形挡住", unknown: "地形数据不全" } as const;
+
+/** Where the target sits in the frame, in words: the centre, or percentages from the top-left. */
+export function framePlace(frame: SolveRequest["frame"]) {
+  if (!frame || (Math.abs(frame.x - 0.5) < 0.005 && Math.abs(frame.y - 0.5) < 0.005)) return "画面中心";
+  return `自左 ${percent(frame.x)}、自上 ${percent(frame.y)}`;
+}
 
 export interface SolveRow {
   label: string;
@@ -45,8 +51,9 @@ export function describeSolve(request: SolveRequest): SolveRow[] {
   }
   if (request.target) {
     const target = request.target;
-    rows.push({ label: "地面目标", value: `${target.name} · ${coordinate(target.latitude, target.longitude)} · 顶部高出地面 ${target.height} m` });
+    rows.push({ label: "拍摄目标", value: `${target.name} · ${coordinate(target.latitude, target.longitude)} · ${target.height > 0 ? `对准离地 ${target.height} m 处` : "对准地面"}` });
     rows.push({ label: "目标来源", value: target.landmark ? `已接入地标（${target.landmark}）` : "来自请求中的坐标，未核实" });
+    rows.push({ label: "画面位置", value: framePlace(request.frame) });
   }
   const date = request.date ?? "当前拍摄日期";
   rows.push({ label: "日期", value: request.kind === "position" ? `${date} 当天（时间轴范围）` : `${date} 起 ${spanName(request.days ?? 0)}` });
@@ -97,7 +104,7 @@ export function solveReport(input: SolveReportInput) {
     "",
     ...(input.rows.length ? [table(input.header, input.rows), ""] : []),
     `时刻按 ${input.timeZone}。${input.basis}`,
-    "数值由 Tamatamatori 在浏览器中本地计算，是基于地理与天文数据的构图模拟，不含天气；通视只按 DEM，不含建筑与树木，不代表实景一定可见。",
+    "数值由 Tamatamatori 在浏览器中本地计算，是基于地理与天文数据的构图模拟，不含天气；遮挡只看地形起伏，不含建筑与树木，不代表实景一定可见。",
     "",
   ].join("\n");
 }
@@ -119,9 +126,9 @@ export function timeRows(result: AlignmentResult, timeZone: string) {
   return { header, rows };
 }
 
-/** 找机位: the listed minutes (every ten) along the alignment lines. */
+/** 找机位: the listed minutes (every ten) of the listed stretches, whose sight the terrain does not cut. */
 export function positionRows(points: readonly PositionPoint[], timeZone: string) {
-  const header = ["时刻", "距目标 km", "机位", "目标方向", "天体视高度", "机位地面", "通视"];
+  const header = ["时刻", "距目标 km", "机位", "目标方向", "天体视高度", "机位地面", "视线"];
   const rows = points.map((point) => [
     local(iso(point.time), timeZone),
     km(point.distance),
@@ -137,7 +144,7 @@ export function positionRows(points: readonly PositionPoint[], timeZone: string)
 /** 两者都找: one row per candidate, placed at its middle minute. */
 export function rangeRows(candidates: readonly RangeCandidate[], timeZone: string) {
   const moon = candidates.some((candidate) => candidate.illuminated !== null);
-  const header = ["日期", "时段", "距目标 km", "主体占比", "中点机位", "天空", ...(moon ? ["亮面"] : []), "通视分钟"];
+  const header = ["日期", "时段", "距目标 km", "主体占比", "中点机位", "天空", ...(moon ? ["亮面"] : []), "地形数据完整"];
   const rows = candidates.map((candidate) => [
     candidate.day,
     `${clock(iso(candidate.start), timeZone)}–${clock(iso(candidate.end), timeZone)}`,
