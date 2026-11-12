@@ -58,9 +58,12 @@ export async function searchPlaces(query: string, signal: AbortSignal): Promise<
   for (let wait = lastRequest + MIN_INTERVAL - Date.now(); wait > 0; wait = lastRequest + MIN_INTERVAL - Date.now())
     await pause(wait, signal);
   signal.throwIfAborted();
-  lastRequest = Date.now();
   const parameters = new URLSearchParams({ q: text, format: "jsonv2", limit: "8", "accept-language": "zh-CN,zh,en" });
-  const response = await fetch(`${ENDPOINT}?${parameters}`, { signal });
+  // The gap counts from when the request leaves: taking the time before
+  // building and sending it let the next one start a millisecond short (CI: 1099 ms).
+  const sending = fetch(`${ENDPOINT}?${parameters}`, { signal });
+  lastRequest = Date.now();
+  const response = await sending;
   if (response.status === 429 || response.status === 403)
     throw new Error("地点搜索服务暂时拒绝请求，请稍后再试");
   if (!response.ok) throw new Error(`地点搜索失败（${response.status}）`);

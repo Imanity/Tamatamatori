@@ -63,3 +63,29 @@ test("定时器比墙上时钟早到时再等一次，相邻请求仍至少间�
   assert.equal(sent.length, 2);
   assert.ok(sent[1] - sent[0] >= 1100, `${sent[1] - sent[0]} ms apart`);
 });
+
+test("计时从请求发出算起：第一次请求在取时间与发出之间时钟走了 1 ms，下一次仍至少间隔 1.1 秒", async (t) => {
+  // CI on 2026-11-12 (Node 24) measured 1099 ms: the time was taken before the request was built and sent,
+  // and the clock moved on while the first one was being built but not while the second was.
+  const realNow = Date.now, realTimeout = globalThis.setTimeout, realFetch = globalThis.fetch, realParameters = globalThis.URLSearchParams;
+  t.after(() => { Date.now = realNow; globalThis.setTimeout = realTimeout; globalThis.fetch = realFetch; globalThis.URLSearchParams = realParameters; });
+  let now = realNow() + 7_200_000, built = 0;
+  Date.now = () => now;
+  globalThis.setTimeout = (callback, milliseconds) => realTimeout(() => {
+    now += milliseconds;
+    callback();
+  }, 0);
+  globalThis.URLSearchParams = class extends realParameters {
+    constructor(...args) {
+      super(...args);
+      if (built++ === 0) now += 1;
+    }
+  };
+  const sent = [];
+  globalThis.fetch = async () => { sent.push(now); return new Response("[]", { status: 200 }); };
+  const signal = new AbortController().signal;
+  await searchPlaces("ticking clock one", signal);
+  await searchPlaces("ticking clock two", signal);
+  assert.equal(sent.length, 2);
+  assert.ok(sent[1] - sent[0] >= 1100, `${sent[1] - sent[0]} ms apart`);
+});
