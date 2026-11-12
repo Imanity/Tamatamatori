@@ -141,6 +141,30 @@ test('彗星目录更新：周期彗星的下一次回归加入，本次回归�
   assert.deepEqual(report.added, [returns[1]]);
 });
 
+test('彗星目录更新：上游无应答先重试，仍无应答则沿用原目录、不暂停，下一次定时任务照常更新；无效数据仍暂停', async () => {
+  const previous = previousAt(30);
+  let attempts = 0;
+  const pauses = [];
+  const down = client({ fetchImpl: async () => { attempts++; throw new TypeError('fetch failed', { cause: { code: 'ENOTFOUND' } }); }, pause: async (ms) => { pauses.push(ms); } });
+  const { catalog, report } = await updateComets(previous, { now, http: down });
+  assert.equal(attempts, 3, 'retried like a 5xx');
+  assert.deepEqual(pauses, [5000, 10000]);
+  assert.deepEqual([catalog.status, catalog.blocked, catalog.error, catalog.fetchedAt, catalog.attemptedAt], ['ready', false, null, previous.fetchedAt, iso(now)]);
+  assert.deepEqual(catalog.comets, previous.comets);
+  assert.equal(report.unreachable, 'cobs.si 暂时无法连接（ENOTFOUND）');
+  validateCometCatalog(catalog, now);
+  assert.equal(catalogFreshness(catalog, now).paused, false);
+  const next = await updateComets(catalog, { now: now + COMET_REFRESH_MS, http: upstream().http });
+  assert.deepEqual([next.catalog.status, next.catalog.fetchedAt], ['ready', iso(now + COMET_REFRESH_MS)]);
+  // One unanswered request among answered ones is simply retried within the run.
+  const flaky = upstream();
+  let first = true;
+  const http = client({ fetchImpl: async (url, options) => { if (first) { first = false; throw new TypeError('fetch failed'); } return flaky.fetchImpl(url, options); }, pause: async () => {} });
+  assert.equal((await updateComets(previous, { now, http })).catalog.fetchedAt, iso(now));
+  const garbled = await updateComets(previous, { now, http: client({ fetchImpl: async () => new Response('{', { status: 200 }), pause: async () => {} }) });
+  assert.deepEqual([garbled.catalog.status, garbled.catalog.blocked], ['error', true]);
+});
+
 test('彗星目录更新：上游失败保留原目录并暂停，请求数有上限', async () => {
   const previous = previousAt(30);
   const failing = upstream({ failCobs: true });

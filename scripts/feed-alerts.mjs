@@ -1,11 +1,12 @@
-// Open a GitHub issue when a published data feed pauses its automatic updates, and close it on recovery.
+// Open a GitHub issue when a published data feed pauses its automatic updates, or has gone a day
+// without a successful update, and close it on recovery.
 //
 //   node --experimental-strip-types scripts/feed-alerts.mjs            CI job after the Pages deploy
 //   node --experimental-strip-types scripts/feed-alerts.mjs --dry-run  print the planned actions only
 //
 // Update scripts record an upstream failure in the published snapshot and exit successfully, so the
 // site keeps deploying; a run with only a warning annotation notifies nobody. This job reads what
-// the site actually serves and keeps one issue per paused feed: created once (mentioning the
+// the site actually serves and keeps one issue per paused or stale feed: created once (mentioning the
 // repository owner), left alone while the pause lasts, commented and closed after recovery.
 // An unreadable feed changes nothing, so a transient Pages hiccup neither opens nor closes issues.
 import { pathToFileURL } from 'node:url';
@@ -13,27 +14,54 @@ import { resolve } from 'node:path';
 
 const MARKER = (id) => `<!-- tamatamatori-feed:${id} -->`;
 const BOT = 'github-actions[bot]';
+// Unanswered upstream requests do not pause a feed (scripts/lib/transport.mjs); a day without a
+// successful update still deserves an issue, since the published data is then getting old.
+export const STALE_MS = 24 * 3_600_000;
 export const FEEDS = [
   {
-    id: 'stations', path: 'orbits/stations.json', title: '空间站轨道自动更新已暂停', resume: 'resume_orbits', command: 'npm run update:orbits -- --resume',
+    id: 'stations', path: 'orbits/stations.json', title: '空间站轨道自动更新已暂停', staleTitle: '空间站轨道超过 24 小时未成功更新',
+    resume: 'resume_orbits', command: 'npm run update:orbits -- --resume',
     doc: 'docs/plan/space-stations.md',
     detail: (data) => (data.objects ?? []).map((entry) => `${entry.OBJECT_NAME ?? entry.NORAD_CAT_ID} 历元 ${entry.EPOCH}`).join('；'),
   },
   {
-    id: 'comets', path: 'comets/catalog.json', title: '彗星目录自动更新已暂停', resume: 'resume_comets', command: 'npm run update:comets -- --resume',
+    id: 'comets', path: 'comets/catalog.json', title: '彗星目录自动更新已暂停', staleTitle: '彗星目录超过 24 小时未成功更新',
+    resume: 'resume_comets', command: 'npm run update:comets -- --resume',
     doc: 'docs/plan/comets.md',
     detail: (data) => `${(data.comets ?? []).length} 次回归`,
   },
 ];
 
-/** Status of one published feed: `paused`, `running`, or `unreadable` (no decision). */
-export function feedState(data) {
+/**
+ * Status of one published feed: `paused`, `stale` (still retrying, but no success for a day),
+ * `running`, or `unreadable` (no decision).
+ */
+export function feedState(data, now = Date.now()) {
   if (!data || typeof data !== 'object' || typeof data.blocked !== 'boolean' || !['seed', 'ready', 'error'].includes(data.status)) return { state: 'unreadable' };
-  return { state: data.blocked ? 'paused' : 'running', error: data.error ?? null, fetchedAt: data.fetchedAt ?? null, attemptedAt: data.attemptedAt ?? null };
+  const fetched = Date.parse(data.fetchedAt ?? '');
+  const state = data.blocked ? 'paused' : Number.isFinite(fetched) && now - fetched > STALE_MS ? 'stale' : 'running';
+  return { state, error: data.error ?? null, notice: data.notice ?? null, fetchedAt: data.fetchedAt ?? null, attemptedAt: data.attemptedAt ?? null };
 }
 
-export function issueBody(feed, data, { owner, runUrl }) {
-  const s = feedState(data);
+export function issueBody(feed, data, { owner, runUrl, now = Date.now() }) {
+  const s = feedState(data, now);
+  if (s.state === 'stale')
+    return [
+      MARKER(feed.id),
+      `${owner ? `@${owner} ` : ''}已发布的数据超过 24 小时没有成功从上游更新。自动更新没有暂停，仍按定时任务重试；站点继续提供最后一份有效数据。`,
+      '',
+      `- 最近一次尝试：${s.attemptedAt ?? '无'}`,
+      `- 最近一次成功：${s.fetchedAt ?? '无'}`,
+      ...(s.notice ? [`- 说明：${s.notice}`] : []),
+      `- 当前数据：${feed.detail(data) || '无'}`,
+      `- 发现于：${runUrl ?? '本地运行'}`,
+      '',
+      '处理：',
+      '1. 查看最近几次 CI 中该数据源的警告：上游是否长时间无法连接。',
+      `2. 上游恢复后无需操作，下一次成功更新会在这里留言并关闭此 Issue；也可在本地运行 \`${feed.command.replace(' -- --resume', '')}\` 后提交推送新的快照。`,
+      '',
+      `说明见 \`${feed.doc}\`。`,
+    ].join('\n');
   return [
     MARKER(feed.id),
     `${owner ? `@${owner} ` : ''}已发布的数据处于暂停状态：自动更新不会再访问上游，直到维护者恢复。站点继续提供暂停前的最后一份有效数据。`,
@@ -59,7 +87,7 @@ export function planAlerts(states, openIssues) {
   for (const feed of FEEDS) {
     const { data, state } = states[feed.id] ?? { state: 'unreadable' };
     const mine = openIssues.filter((issue) => !issue.pull_request && issue.user?.login === BOT && String(issue.body ?? '').includes(MARKER(feed.id)));
-    if (state === 'paused' && !mine.length) actions.push({ type: 'open', feed, data });
+    if ((state === 'paused' || state === 'stale') && !mine.length) actions.push({ type: 'open', feed, data, state });
     if (state === 'running') for (const issue of mine) actions.push({ type: 'close', feed, data, issue });
   }
   return actions;
@@ -84,7 +112,7 @@ function github({ token, repository, fetchImpl = fetch }) {
 }
 
 /** Read each published feed, bypassing the CDN copy; an unreadable feed is reported, never acted on. */
-export async function readFeeds(site, { runId = Date.now(), fetchImpl = fetch, pause = (ms) => new Promise((r) => setTimeout(r, ms)) } = {}) {
+export async function readFeeds(site, { runId = Date.now(), now = Date.now(), fetchImpl = fetch, pause = (ms) => new Promise((r) => setTimeout(r, ms)) } = {}) {
   const states = {};
   for (const feed of FEEDS) {
     let data = null;
@@ -95,25 +123,26 @@ export async function readFeeds(site, { runId = Date.now(), fetchImpl = fetch, p
       } catch {}
       if (!data && attempt < 2) await pause(10000);
     }
-    states[feed.id] = { data, ...feedState(data) };
+    states[feed.id] = { data, ...feedState(data, now) };
   }
   return states;
 }
 
-export async function runAlerts({ site, token, repository, owner, runUrl, runId, dryRun = false, fetchImpl = fetch, pause, log = console.log }) {
-  const states = await readFeeds(site, { runId, fetchImpl, pause });
+export async function runAlerts({ site, token, repository, owner, runUrl, runId, now = Date.now(), dryRun = false, fetchImpl = fetch, pause, log = console.log }) {
+  const states = await readFeeds(site, { runId, now, fetchImpl, pause });
   for (const feed of FEEDS) log(`${feed.id}: ${states[feed.id].state}${states[feed.id].error ? ` · ${states[feed.id].error}` : ''}`);
   const api = github({ token, repository, fetchImpl });
   const open = dryRun && !token ? [] : await api.openIssues();
   const actions = planAlerts(states, open);
   for (const action of actions) {
     if (action.type === 'open') {
-      log(`${dryRun ? '[dry-run] ' : ''}开 Issue：${action.feed.title}`);
-      if (!dryRun) await api.create(action.feed.title, issueBody(action.feed, action.data, { owner, runUrl }));
+      const title = action.state === 'stale' ? action.feed.staleTitle : action.feed.title;
+      log(`${dryRun ? '[dry-run] ' : ''}开 Issue：${title}`);
+      if (!dryRun) await api.create(title, issueBody(action.feed, action.data, { owner, runUrl, now }));
     } else {
       log(`${dryRun ? '[dry-run] ' : ''}关闭 Issue #${action.issue.number}：${action.feed.id} 已恢复`);
       if (!dryRun) {
-        const s = feedState(action.data);
+        const s = feedState(action.data, now);
         await api.comment(action.issue.number, `已恢复：最近一次成功 ${s.fetchedAt ?? '未知'}，当前数据 ${action.feed.detail(action.data) || '无'}。${runUrl ? `（${runUrl}）` : ''}`);
         await api.close(action.issue.number);
       }

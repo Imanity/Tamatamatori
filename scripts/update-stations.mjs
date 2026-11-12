@@ -2,6 +2,9 @@ import { readFile, writeFile, mkdir, rename } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { ORBIT_SOURCE, ORBIT_REFRESH_MS, orbitEpoch, stationCatalog, stationElements, validateOrbitSnapshot, assertOrbitProgress } from '../src/domain/orbit-data.ts';
+import { overNetwork, TransportError } from './lib/transport.mjs';
+
+const HOST = new URL(ORBIT_SOURCE).host;
 
 export async function updateStations(previous, { now = Date.now(), fetchImpl = fetch, resume = false, saveAttempt = async () => {} } = {}) {
   const lastAttempt = Date.parse(previous.attemptedAt ?? '');
@@ -11,9 +14,9 @@ export async function updateStations(previous, { now = Date.now(), fetchImpl = f
   const pending = { ...previous, attemptedAt, status: 'error', blocked: true, error: '上游检查未完成，自动更新已暂停' };
   await saveAttempt(pending);
   try {
-    const response = await fetchImpl(ORBIT_SOURCE, { signal: AbortSignal.timeout(20000), redirect: 'manual' });
+    const response = await overNetwork(HOST, () => fetchImpl(ORBIT_SOURCE, { signal: AbortSignal.timeout(20000), redirect: 'manual' }));
     if (response.status !== 200) throw new Error(`上游 HTTP ${response.status}`);
-    const text = await response.text();
+    const text = await overNetwork(HOST, () => response.text());
     if (text.length > 1_000_000) throw new Error('轨道响应超出大小限制');
     const upstream = stationElements(JSON.parse(text));
     if (!upstream.length) throw new Error('上游未提供所选空间站的轨道');
@@ -40,6 +43,10 @@ export async function updateStations(previous, { now = Date.now(), fetchImpl = f
     assertOrbitProgress(previous, next);
     return next;
   } catch (error) {
+    // No answer at all (2026-11-11 paused the feed for a day this way): keep the published
+    // orbits, say so, and let the next scheduled check try again. A paused feed stays paused.
+    if (error instanceof TransportError && previous.status === 'ready' && !previous.blocked)
+      return { ...previous, attemptedAt, notice: `${error.message}，沿用 ${previous.fetchedAt} 取得的轨道，下次定时检查重试` };
     return { ...pending, error: `${error instanceof Error ? error.message : '轨道响应无效'}，自动更新已暂停，需维护者检查后手动恢复` };
   }
 }
@@ -77,8 +84,8 @@ async function main() {
   await writeSnapshot(output, next);
   console.log(JSON.stringify({ status: next.status, fetchedAt: next.fetchedAt, attemptedAt: next.attemptedAt, objects: next.objects.length,
     epochs: next.objects.map((entry) => `${entry.NORAD_CAT_ID} ${entry.EPOCH}`), notice: next.notice ?? null }));
-  // A kept element is worth seeing in the run summary, without pausing anything.
-  if (next.notice && next.attemptedAt === next.fetchedAt) console.warn(`::warning::${next.notice.replaceAll('%', '%25').replaceAll(String.fromCharCode(13), '%0D').replaceAll(String.fromCharCode(10), '%0A')}`);
+  // A kept element or an unreachable upstream is worth seeing in the run summary, without pausing anything.
+  if (next.notice && next.attemptedAt !== previous.attemptedAt) console.warn(`::warning::${next.notice.replaceAll('%', '%25').replaceAll(String.fromCharCode(13), '%0D').replaceAll(String.fromCharCode(10), '%0A')}`);
   if (next.error) {
     const message = next.error.replaceAll('%', '%25').replaceAll('\r', '%0D').replaceAll('\n', '%0A');
     console.warn(`::warning::${message}`);

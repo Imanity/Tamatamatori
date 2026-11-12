@@ -11,10 +11,12 @@ const cometsReady = { version: 2, status: 'ready', blocked: false, error: null, 
 const cometsPaused = { ...cometsReady, status: 'error', blocked: true, error: 'cobs.si HTTP 500，自动更新已暂停，需维护者检查后手动恢复' };
 const bot = { login: 'github-actions[bot]' };
 const issue = (number, feed, extra = {}) => ({ number, user: bot, body: `<!-- tamatamatori-feed:${feed} -->\n…`, ...extra });
-const states = (stations, comets) => ({ stations: { data: stations, ...feedState(stations) }, comets: { data: comets, ...feedState(comets) } });
+// Alerts depend on the age of the last success; pin "now" a few hours after the fixtures.
+const NOW = Date.parse('2026-11-10T00:00:00Z');
+const states = (stations, comets, now = NOW) => ({ stations: { data: stations, ...feedState(stations, now) }, comets: { data: comets, ...feedState(comets, now) } });
 
 test('暂停提醒：暂停且无提醒时开一个，已有则不重复；恢复后关闭；读不到数据时不动；只认机器人带标记的 Issue', () => {
-  assert.deepEqual([feedState(stationsPaused).state, feedState(stationsReady).state, feedState(null).state, feedState({ status: 'ready' }).state],
+  assert.deepEqual([feedState(stationsPaused, NOW).state, feedState(stationsReady, NOW).state, feedState(null, NOW).state, feedState({ status: 'ready' }, NOW).state],
     ['paused', 'running', 'unreadable', 'unreadable']);
   const open = planAlerts(states(stationsPaused, cometsReady), []);
   assert.deepEqual(open.map((a) => [a.type, a.feed.id]), [['open', 'stations']]);
@@ -54,7 +56,33 @@ function fakeGitHub(feeds, issues) {
   return { calls, fetchImpl };
 }
 const run = (fake, extra = {}) => runAlerts({ site: 'https://site.test/', token: 'tok', repository: 'Imanity/Tamatamatori', owner: 'Imanity',
-  runUrl: 'https://github.com/Imanity/Tamatamatori/actions/runs/5', runId: 5, fetchImpl: fake.fetchImpl, pause: async () => {}, log: () => {}, ...extra });
+  runUrl: 'https://github.com/Imanity/Tamatamatori/actions/runs/5', runId: 5, now: NOW, fetchImpl: fake.fetchImpl, pause: async () => {}, log: () => {}, ...extra });
+
+test('长时间未成功更新：未暂停但超过 24 小时没有成功时开提醒（标题与说明不同于暂停），成功后关闭；暂停提醒不重复开', async () => {
+  // Unanswered requests no longer pause the feed; the published data just keeps getting older.
+  const unanswered = { ...stationsReady, attemptedAt: '2026-11-10T22:30:00Z', notice: 'celestrak.org 暂时无法连接（ECONNRESET），沿用 2026-11-09T19:28:10Z 取得的轨道，下次定时检查重试' };
+  const day = 24 * 3_600_000, fetched = Date.parse(stationsReady.fetchedAt);
+  assert.equal(feedState(unanswered, fetched + day).state, 'running');
+  assert.equal(feedState(unanswered, fetched + day + 1).state, 'stale');
+  const later = fetched + day + 3_600_000;
+  const plan = planAlerts(states(unanswered, { ...cometsReady, fetchedAt: new Date(later - 3_600_000).toISOString() }, later), []);
+  assert.deepEqual(plan.map((a) => [a.type, a.feed.id, a.state]), [['open', 'stations', 'stale']]);
+  // An open alert (paused or stale) is not repeated.
+  assert.deepEqual(planAlerts(states(unanswered, cometsReady, later), [issue(7, 'stations'), issue(9, 'comets')]).filter((a) => a.type === 'open'), []);
+  const body = issueBody(FEEDS[0], unanswered, { owner: 'Imanity', runUrl: 'https://example.test/run/2', now: later });
+  assert.match(body, /^<!-- tamatamatori-feed:stations -->\n@Imanity 已发布的数据超过 24 小时没有成功从上游更新。自动更新没有暂停/);
+  assert.match(body, /说明：celestrak\.org 暂时无法连接（ECONNRESET）/);
+  assert.match(body, /`npm run update:orbits`/);
+  assert.doesNotMatch(body, /resume/);
+  const opening = fakeGitHub({ stations: unanswered, comets: { ...cometsReady, fetchedAt: '2026-11-10T19:00:00Z', attemptedAt: '2026-11-10T19:00:00Z' } }, []);
+  await run(opening, { now: later });
+  const created = opening.calls.find((c) => c.method === 'POST');
+  assert.equal(created.body.title, '空间站轨道超过 24 小时未成功更新');
+  // A success closes it like a paused alert.
+  const closing = fakeGitHub({ stations: { ...stationsReady, fetchedAt: '2026-11-10T23:00:00Z', attemptedAt: '2026-11-10T23:00:00Z' }, comets: { ...cometsReady, fetchedAt: '2026-11-10T19:00:00Z', attemptedAt: '2026-11-10T19:00:00Z' } }, [issue(7, 'stations')]);
+  await run(closing, { now: later });
+  assert.deepEqual(closing.calls.filter((c) => c.method !== 'GET').map((c) => c.method), ['POST', 'PATCH']);
+});
 
 test('暂停提醒：读取已发布数据（绕过 CDN 缓存），按计划调用 GitHub 接口；演练模式不写入', async () => {
   const opening = fakeGitHub({ stations: stationsPaused, comets: cometsReady }, []);

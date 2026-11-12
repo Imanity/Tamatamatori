@@ -111,6 +111,37 @@ test('上游 HTTP/无效数据失败暂停，后续任务不重试，手动恢�
   }
 });
 
+test('上游无应答（连接失败、超时、响应中断）不暂停：沿用已发布轨道并记录说明，冷却后下一次定时检查重试；无效数据与已暂停的仍暂停', async () => {
+  // 2026-11-11: one "fetch failed" paused the feed for a day until a manual resume.
+  const unanswered = [
+    [() => { throw new TypeError('fetch failed', { cause: Object.assign(new Error('read'), { code: 'ECONNRESET' }) }); }, 'ECONNRESET'],
+    [() => { throw new DOMException('The operation was aborted due to timeout', 'TimeoutError'); }, '超时'],
+  ];
+  for (const [fail, reason] of unanswered) {
+    let calls = 0;
+    const kept = await updateStations(ready, { now: now + ORBIT_REFRESH_MS, fetchImpl: async () => { calls++; return fail(); } });
+    assert.equal(calls, 1);
+    assert.deepEqual([kept.status, kept.blocked, kept.error, kept.fetchedAt], ['ready', false, null, ready.fetchedAt]);
+    assert.equal(kept.attemptedAt, new Date(now + ORBIT_REFRESH_MS).toISOString());
+    assert.deepEqual(kept.objects, ready.objects);
+    assert.equal(kept.notice, `celestrak.org 暂时无法连接（${reason}），沿用 ${ready.fetchedAt} 取得的轨道，下次定时检查重试`);
+    assert.equal(validateOrbitSnapshot(kept, now + ORBIT_REFRESH_MS).notice, kept.notice);
+    // The cooldown still holds; the next scheduled check tries again without a resume.
+    assert.equal(await updateStations(kept, { now: now + ORBIT_REFRESH_MS * 2 - 1, fetchImpl: async () => { throw new Error('must cool down'); } }), kept);
+    const later = await updateStations(kept, { now: now + ORBIT_REFRESH_MS * 2, fetchImpl: async () => response(seed.objects) });
+    assert.deepEqual([later.status, later.blocked, later.notice], ['ready', false, null]);
+  }
+  const cut = await updateStations(ready, { now: now + ORBIT_REFRESH_MS, fetchImpl: async () => ({ status: 200, text: async () => { throw new TypeError('terminated'); } }) });
+  assert.deepEqual([cut.status, cut.blocked], ['ready', false]);
+  const garbled = await updateStations(ready, { now: now + ORBIT_REFRESH_MS, fetchImpl: async () => new Response('{', { status: 200 }) });
+  assert.deepEqual([garbled.status, garbled.blocked], ['error', true]);
+  // A feed paused for another reason and resumed by hand stays paused if upstream still does not answer.
+  const paused = await updateStations(ready, { now: now + ORBIT_REFRESH_MS, fetchImpl: async () => response({}, 500) });
+  const retried = await updateStations(paused, { now: now + ORBIT_REFRESH_MS * 2, resume: true, fetchImpl: async () => { throw new TypeError('fetch failed'); } });
+  assert.deepEqual([retried.status, retried.blocked], ['error', true]);
+  assert.match(retried.error, /celestrak\.org 暂时无法连接（fetch failed），自动更新已暂停/);
+});
+
 test('上游历元早于已发布版本或缺少某站时保留较新的轨道并记录说明，不暂停，下一次检查照常更新', async () => {
   const [iss, css] = ready.objects;
   // 2026-11-07: upstream served ISS with an epoch older than the published one; this paused every update for days.

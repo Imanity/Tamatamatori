@@ -20,8 +20,11 @@
 // added beside the earlier one. An incremental update only revisits apparitions whose observing
 // window (perihelion ± 550 days) was still open at the previous update; closed ones stay as they
 // were. Like the space station feed, a failed update keeps the previous catalogue, records the
-// error with the data and pauses automatic updates until a maintainer resumes them.
+// error with the data and pauses automatic updates until a maintainer resumes them. An upstream
+// that never answers (connection, DNS, timeout) is retried, then left for the next schedule
+// without a pause (see scripts/lib/transport.mjs).
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
+import { overNetwork, TransportError } from './lib/transport.mjs';
 import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { Body, HelioVector, MakeTime } from 'astronomy-engine';
@@ -72,10 +75,19 @@ export function client({ fetchImpl = fetch, pause = (ms) => new Promise((r) => s
     }
     if (++requests > maxRequests) throw new Error(`上游请求超过 ${maxRequests} 次上限`);
     let body;
+    const host = new URL(url).host;
     for (let attempt = 0; ; attempt++) {
-      const response = await fetchImpl(url, { headers: { 'User-Agent': AGENT }, signal: AbortSignal.timeout(30000) });
-      if (response.ok) { body = await response.json(); break; }
-      if (attempt === 2 || (response.status < 500 && response.status !== 429)) throw new Error(`${new URL(url).host} HTTP ${response.status}`);
+      let response;
+      try {
+        response = await overNetwork(host, () => fetchImpl(url, { headers: { 'User-Agent': AGENT }, signal: AbortSignal.timeout(30000) }));
+        if (response.ok) { body = await overNetwork(host, () => response.json()); break; }
+      } catch (error) {
+        // No answer: retried like a 5xx; invalid JSON and other errors stop the update.
+        if (!(error instanceof TransportError) || attempt === 2) throw error;
+        await pause(5000 * (attempt + 1));
+        continue;
+      }
+      if (attempt === 2 || (response.status < 500 && response.status !== 429)) throw new Error(`${host} HTTP ${response.status}`);
       await pause(5000 * (attempt + 1));
     }
     if (cacheDir && cacheName) {
@@ -277,6 +289,9 @@ export async function updateComets(previous, { now = Date.now(), resume = false,
     return { catalog, report: { ...report, requests: http.requests } };
   } catch (error) {
     if (!pending) throw error;
+    // Upstream never answered: keep the catalogue as published and try again on the next schedule.
+    if (error instanceof TransportError && !previous.blocked)
+      return { catalog: { ...previous, attemptedAt }, report: { ...report, requests: http.requests, unreachable: error.message } };
     return { catalog: { ...pending, error: `${error instanceof Error ? error.message : '更新失败'}，自动更新已暂停，需维护者检查后手动恢复` }, report: { ...report, requests: http.requests } };
   }
 }
@@ -321,6 +336,7 @@ async function main() {
   console.log(JSON.stringify({ status: catalog.status, fetchedAt: catalog.fetchedAt, attemptedAt: catalog.attemptedAt, comets: catalog.comets.length,
     ...(report ? { checked: report.checked, added: report.added.length, refreshed: report.refreshed.length, kept: report.kept, skipped: report.skipped.length, requests: report.requests } : { skippedRun: '冷却或已暂停，未访问上游' }) }));
   if (report && full) await writeFile(resolve('.cache/comets/skipped.json'), JSON.stringify(report.skipped, null, 1));
+  if (report?.unreachable) console.warn(`::warning::${report.unreachable}，沿用原目录，下次定时检查重试`);
   if (catalog.error) {
     const message = catalog.error.replaceAll('%', '%25').replaceAll('\r', '%0D').replaceAll('\n', '%0A');
     console.warn(`::warning::${message}`);
