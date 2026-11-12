@@ -44,3 +44,22 @@ test("地点搜索只在提交时请求：相同查询走缓存，相邻请求�
   await assert.rejects(pending);
   assert.equal(calls.some((call) => call.url.includes("Tokyo")), false, "aborted while waiting: never sent");
 });
+
+test("定时器比墙上时钟早到时再等一次，相邻请求仍至少间隔 1.1 秒", async (t) => {
+  // CI on 2026-11-12 measured 1098 ms: Node timers may fire early by the wall clock.
+  const realNow = Date.now, realTimeout = globalThis.setTimeout, realFetch = globalThis.fetch;
+  t.after(() => { Date.now = realNow; globalThis.setTimeout = realTimeout; globalThis.fetch = realFetch; });
+  let now = realNow() + 3_600_000;
+  Date.now = () => now;
+  globalThis.setTimeout = (callback, milliseconds) => realTimeout(() => {
+    now += milliseconds > 2 ? milliseconds - 2 : milliseconds;
+    callback();
+  }, 0);
+  const sent = [];
+  globalThis.fetch = async () => { sent.push(now); return new Response("[]", { status: 200 }); };
+  const signal = new AbortController().signal;
+  await searchPlaces("early timer one", signal);
+  await searchPlaces("early timer two", signal);
+  assert.equal(sent.length, 2);
+  assert.ok(sent[1] - sent[0] >= 1100, `${sent[1] - sent[0]} ms apart`);
+});

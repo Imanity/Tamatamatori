@@ -53,8 +53,10 @@ export async function searchPlaces(query: string, signal: AbortSignal): Promise<
   const key = text.toLowerCase();
   const cached = cache.get(key);
   if (cached) return cached;
-  const wait = lastRequest + MIN_INTERVAL - Date.now();
-  if (wait > 0) await pause(wait, signal);
+  // Timers run on a monotonic clock and may fire a millisecond or two early by
+  // the wall clock (seen in CI: 1098 ms); wait again until the gap really holds.
+  for (let wait = lastRequest + MIN_INTERVAL - Date.now(); wait > 0; wait = lastRequest + MIN_INTERVAL - Date.now())
+    await pause(wait, signal);
   signal.throwIfAborted();
   lastRequest = Date.now();
   const parameters = new URLSearchParams({ q: text, format: "jsonv2", limit: "8", "accept-language": "zh-CN,zh,en" });
