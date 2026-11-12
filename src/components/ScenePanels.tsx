@@ -57,6 +57,8 @@ import { EnvironmentSettings } from "./EnvironmentSettings";
 import { layerGroups } from "./layers";
 import type { LayerGroupId } from "./layers";
 import { Detail, pollutionLevel } from "./readout";
+import { AlignmentMark, AlignmentPanel, placeFromPointer } from "./Alignment";
+import type { AlignmentState } from "./Alignment";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -72,9 +74,14 @@ export function PreviewPanel({
   onToggleLayer,
   tides,
   aurora,
+  alignment,
+  solveHost,
 }: {
   plan: ShootingPlan;
   update: (patch: Partial<ShootingPlan>) => void;
+  /** The "推算" mode state (owned by the workspace, shared with the map) and where its panel goes. */
+  alignment: AlignmentState;
+  solveHost?: HTMLElement | null;
   infoHost?: HTMLElement | null;
   infoQuery?: string;
   infoNavigation?: InfoNavigation | null;
@@ -243,6 +250,8 @@ export function PreviewPanel({
       ? { ...plan, azimuth: camera.azimuth, pitch: camera.pitch }
       : plan;
   const celestialScene = useCelestialScene(plan, visibility, view);
+  const placing = alignment.active && alignment.kind === "time" && alignment.placing;
+  const alignedBody = celestialScene.views.find((entry) => entry.body.id === alignment.settings.body);
   const eclipses = useEclipses(plan);
   const obscuration = celestialScene.bodies?.sun.obscuration ?? 0;
   const moonLight = celestialScene.bodies?.moon.brightness ?? 1;
@@ -333,13 +342,20 @@ export function PreviewPanel({
         )}
         </div>
         <div
-          className={`viewfinder ${dragging ? "is-dragging" : ""}`}
+          className={`viewfinder ${dragging ? "is-dragging" : ""} ${placing ? "is-placing" : ""}`}
           ref={viewfinder}
           role="group"
-          aria-label="拍摄预览，拖动调整拍摄视角，滚轮或双指捏合调整焦距，也可使用方向键，Shift 加速"
+          aria-label={placing
+            ? "拍摄预览，点击放置期望位置，Esc 取消"
+            : "拍摄预览，拖动调整拍摄视角，滚轮或双指捏合调整焦距，也可使用方向键，Shift 加速"}
           tabIndex={0}
           onPointerDown={(event) => {
             if (event.button !== 0) return;
+            // While placing the "推算" mark, a click places it instead of turning the camera.
+            if (placeFromPointer(alignment, view, event.currentTarget, event)) {
+              event.preventDefault();
+              return;
+            }
             if (event.pointerType === "touch") {
               touches.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
               if (touches.current.size === 2) {
@@ -481,6 +497,12 @@ export function PreviewPanel({
             scene={stations}
             visibility={skyVisibility}
           />
+          <AlignmentMark alignment={alignment} view={view} frame={viewfinder} />
+          {placing && (
+            <p className="alignment-placing" role="status">
+              点击画面放下{alignment.settings.body === "sun" ? "太阳" : "月亮"}的期望位置 · Esc 取消
+            </p>
+          )}
           <svg
             viewBox="0 0 600 400"
             preserveAspectRatio="none"
@@ -540,7 +562,21 @@ export function PreviewPanel({
         forecast={plan.weather ? weatherFeed.forecast ?? null : null}
         tides={plan.layers.tides && tides?.phase === "ready" ? tides.series ?? null : null}
         aurora={plan.layers.aurora && aurora?.phase === "ready" ? auroraInputs : null}
+        extraEvents={alignment.events}
       />
+      {solveHost && alignment.active &&
+        createPortal(
+          <AlignmentPanel
+            alignment={alignment}
+            plan={plan}
+            view={view}
+            update={update}
+            occlusion={alignedBody && plan.layers[alignment.settings.body]
+              ? { state: alignedBody.state, occlusion: alignedBody.occlusion }
+              : null}
+          />,
+          solveHost,
+        )}
       {infoHost &&
         createPortal(
           <>

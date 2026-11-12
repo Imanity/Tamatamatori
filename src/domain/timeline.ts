@@ -79,7 +79,9 @@ export function sunElevationAcross(plan: Pick<ShootingPlan, "latitude" | "longit
 export type TimelineEventKind =
   | "dawn" | "sunrise" | "sunset" | "dusk" | "moonrise" | "moonset"
   | "core-rise" | "core-set" | "radiant-rise" | "radiant-set" | "comet-rise" | "comet-set" | "station-pass"
-  | "solar-eclipse" | "lunar-eclipse" | "tide-high" | "tide-low" | "aurora";
+  | "solar-eclipse" | "lunar-eclipse" | "tide-high" | "tide-low" | "aurora"
+  /** A listed instant of the "推算" mode (the Sun or Moon on its mark). */
+  | "alignment";
 
 export interface TimelineEvent {
   key: string;

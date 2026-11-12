@@ -138,3 +138,65 @@ export async function groundElevation(
     throw error;
   }
 }
+
+// Decoded tiles kept for line sampling (推算 · 找机位); each is 1 MiB of RGBA.
+const lineCache = new Map<string, ElevationTile>();
+export const LINE_TILE_LIMIT = 40;
+
+/**
+ * Loads every z12 tile under the given points and returns a synchronous
+ * sampler (null outside the loaded tiles, the source bounds or valid pixels).
+ */
+export async function elevationTiles(
+  points: readonly MapPoint[],
+  url: string,
+  signal: AbortSignal,
+  onProgress?: (done: number, total: number) => void,
+) {
+  checkAbort(signal);
+  const info = await metadata(url);
+  checkAbort(signal);
+  const inside = (point: MapPoint) =>
+    !info.bounds || (point.latitude >= info.bounds[1] && point.latitude <= info.bounds[3]);
+  const keys = new Map<string, { z: number; x: number; y: number }>();
+  for (const point of points) {
+    if (!inside(point)) continue;
+    const tile = terrainTile(point);
+    keys.set(`${tile.z}/${tile.x}/${tile.y}`, tile);
+  }
+  if (keys.size > LINE_TILE_LIMIT)
+    throw new RangeError(`对齐线经过 ${keys.size} 块高程瓦片，超过单次 ${LINE_TILE_LIMIT} 块的上限，请缩小最远距离。`);
+  const loaded = new Map<string, ElevationTile>();
+  let done = 0;
+  onProgress?.(0, keys.size);
+  const queue = [...keys];
+  const worker = async () => {
+    for (let next = queue.shift(); next; next = queue.shift()) {
+      const [key, tile] = next;
+      const tileUrl = info.tiles[0].replace("{z}", String(tile.z)).replace("{x}", String(tile.x)).replace("{y}", String(tile.y));
+      let decoded = lineCache.get(tileUrl);
+      if (!decoded) {
+        const blob = await request(tileUrl, (response) => response.blob(), signal);
+        decoded = await decodeImage(blob);
+        checkAbort(signal);
+        lineCache.set(tileUrl, decoded);
+        if (lineCache.size > LINE_TILE_LIMIT + 8) lineCache.delete(lineCache.keys().next().value!);
+      }
+      loaded.set(key, decoded);
+      onProgress?.(++done, keys.size);
+    }
+  };
+  await Promise.all([worker(), worker(), worker(), worker()]);
+  return (latitude: number, longitude: number) => {
+    const point = { latitude, longitude };
+    if (!inside(point)) return null;
+    const position = terrainTile(point);
+    const tile = loaded.get(`${position.z}/${position.x}/${position.y}`);
+    if (!tile) return null;
+    try {
+      return sampleElevationTile(tile, position.u, position.v);
+    } catch {
+      return null;
+    }
+  };
+}

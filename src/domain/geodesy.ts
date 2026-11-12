@@ -22,6 +22,18 @@ export function geodeticEcef(point: EllipsoidalPoint): Vector3 {
   return [(n + h) * cos * Math.cos(lambda), (n + h) * cos * Math.sin(lambda), (n * (1 - e2) + h) * sin];
 }
 
+/** Inverse of `geodeticEcef` (iterative; not meant for the poles' immediate neighbourhood). */
+export function ecefGeodetic([x, y, z]: readonly [number, number, number]): EllipsoidalPoint {
+  const p = Math.hypot(x, y);
+  let phi = Math.atan2(z, p * (1 - e2)), h = 0;
+  for (let pass = 0; pass < 8; pass++) {
+    const sin = Math.sin(phi), n = a / Math.sqrt(1 - e2 * sin * sin);
+    h = p / Math.cos(phi) - n;
+    phi = Math.atan2(z, p * (1 - (e2 * n) / (n + h)));
+  }
+  return { latitude: phi / radians, longitude: Math.atan2(y, x) / radians, ellipsoidalHeight: h };
+}
+
 /** Straight target ray in the observer's geodetic ENU basis; no air refraction. */
 export function ellipsoidalRay(eye: EllipsoidalPoint, target: EllipsoidalPoint): Vector3 {
   const origin = geodeticEcef(eye), destination = geodeticEcef(target);

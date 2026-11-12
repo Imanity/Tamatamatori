@@ -23,6 +23,8 @@ import type { MapMode, MapViewport } from "../domain/map";
 import { Icon } from "./Icon";
 import { MapSearch } from "./MapSearch";
 import type { MapTarget } from "./MapSearch";
+import { positionGeometry } from "./PositionSearch";
+import type { AlignmentState } from "./Alignment";
 
 const styleUrl =
   import.meta.env.VITE_MAP_STYLE_URL?.trim() ||
@@ -31,6 +33,8 @@ const viewSourceId = "tamatamatori-view";
 const linesSourceId = "tamatamatori-body-lines";
 const eclipseSourceId = "tamatamatori-eclipse";
 const environmentSourceId = "tamatamatori-environment";
+const alignmentSourceId = "tamatamatori-alignment";
+const emptyFeatures: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: [] };
 type EclipseMap = { kind: CentralPath["kind"]; path: CentralPath; footprint: [number, number][] | null } | null;
 
 /** Central eclipse band (both edges), its centre line and the umbra at the shooting instant. */
@@ -78,12 +82,15 @@ export function MapPanel({
   viewport,
   tides,
   aurora,
+  alignment,
 }: {
   plan: ShootingPlan;
   update: (patch: Partial<ShootingPlan>) => void;
   viewport: RefObject<MapViewport>;
   tides?: TideFeed;
   aurora?: AuroraFeed;
+  /** "推算 · 找机位": the target, its alignment line and target placement. */
+  alignment?: AlignmentState;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const instance = useRef<MapLibreMap | null>(null);
@@ -137,7 +144,16 @@ export function MapPanel({
     if (tideCell) features.push({ type: "Feature", properties: { kind: "tide-cell" }, geometry: { type: "Point", coordinates: [tideCell.longitude, tideCell.latitude] } });
     return { type: "FeatureCollection", features };
   }, [tideCell?.latitude, tideCell?.longitude, auroraKp, nowcast, auroraKp === null ? "" : plan.instant]);
-  const latest = useRef({ plan, update, mode, lines, eclipse, environment });
+  const search = alignment?.active && alignment.kind === "position" ? alignment.position : null;
+  const placingTarget = !!search?.placing;
+  const alignmentFeatures = useMemo(
+    () => (search ? positionGeometry(search, plan.timeZone) : emptyFeatures),
+    [search?.target, search?.result, plan.timeZone],
+  );
+  const alignmentBody = alignment?.settings.body ?? "sun";
+  const solveRef = useRef({ placing: placingTarget, place: search?.placeTarget, cancel: () => search?.setPlacing(false) });
+  solveRef.current = { placing: placingTarget, place: search?.placeTarget, cancel: () => search?.setPlacing(false) };
+  const latest = useRef({ plan, update, mode, lines, eclipse, environment, alignmentFeatures, alignmentBody });
   const [searchOpen, setSearchOpen] = useState(false);
   const [target, setTarget] = useState<MapTarget | null>(null);
   const [locating, setLocating] = useState(false);
@@ -152,9 +168,20 @@ export function MapPanel({
   const coverage = isMapPosition(plan);
 
   useEffect(() => {
-    latest.current = { plan, update, mode, lines, eclipse, environment };
+    latest.current = { plan, update, mode, lines, eclipse, environment, alignmentFeatures, alignmentBody };
     synchronize.current?.(true);
-  }, [plan, update, mode, lines, eclipse, environment]);
+  }, [plan, update, mode, lines, eclipse, environment, alignmentFeatures, alignmentBody]);
+  // A new 找机位 result: show the target and its whole line once.
+  const fittedResult = useRef<unknown>(null);
+  useEffect(() => {
+    const map = instance.current, result = search?.result;
+    if (!map || !search?.target || !result || fittedResult.current === result) return;
+    fittedResult.current = result;
+    const points = [search.target, ...result.points];
+    const longitudes = points.map((point) => nearbyLongitude(point.longitude, search.target!.longitude));
+    const latitudes = points.map((point) => point.latitude);
+    map.fitBounds([[Math.min(...longitudes), Math.min(...latitudes)], [Math.max(...longitudes), Math.max(...latitudes)]], { padding: 48, maxZoom: 14, duration: 600 });
+  }, [search?.result, search?.target]);
 
   // A searched place or the device position: shown and flown to; the shot
   // only changes through "设为机位".
@@ -234,6 +261,8 @@ export function MapPanel({
     let linesKey = "";
     let drawnEclipse: EclipseMap | undefined;
     let drawnEnvironment: GeoJSON.FeatureCollection | undefined;
+    let drawnAlignment: GeoJSON.FeatureCollection | undefined;
+    let drawnBody = "";
     let geometry = viewGeometry(latest.current.plan, viewport.current.zoom);
     let previousPosition = {
       longitude: latest.current.plan.longitude,
@@ -302,6 +331,17 @@ export function MapPanel({
       if (environmentSource && latest.current.environment !== drawnEnvironment) {
         environmentSource.setData(latest.current.environment);
         drawnEnvironment = latest.current.environment;
+      }
+      const alignmentSource = map.getSource(alignmentSourceId) as GeoJSONSource | undefined;
+      if (alignmentSource && latest.current.alignmentFeatures !== drawnAlignment) {
+        alignmentSource.setData(latest.current.alignmentFeatures);
+        drawnAlignment = latest.current.alignmentFeatures;
+      }
+      if (alignmentSource && latest.current.alignmentBody !== drawnBody) {
+        drawnBody = latest.current.alignmentBody;
+        const color = bodyColors[drawnBody as "sun" | "moon"];
+        for (const id of ["tamatamatori-alignment-clear", "tamatamatori-alignment-blocked", "tamatamatori-alignment-dot"])
+          map.setPaintProperty(id, id.endsWith("dot") ? "circle-color" : "line-color", color);
       }
       if (!valid) return;
       const longitude = nearbyLongitude(current.longitude, map.getCenter().lng);
@@ -489,6 +529,11 @@ export function MapPanel({
             )
           )
             return;
+          // Placing the 推算 target takes the click before the camera tools.
+          if (solveRef.current.placing && solveRef.current.place) {
+            solveRef.current.place(event.lngLat.lng, event.lngLat.lat);
+            return;
+          }
           if (latest.current.mode === "browse") return;
           if (choose(event.lngLat.lng, event.lngLat.lat, latest.current.mode)) {
             latest.current.mode = "browse";
@@ -604,6 +649,50 @@ export function MapPanel({
               filter: ["all", ["==", ["get", "kind"], "now"], ["get", "above"]],
               paint: { "line-color": lineColor, "line-width": 3, "line-opacity": 0.9 },
             });
+            // 推算 · 找机位: the line where the body sits on the target, by sight.
+            map.addSource(alignmentSourceId, { type: "geojson", data: latest.current.alignmentFeatures });
+            drawnAlignment = latest.current.alignmentFeatures;
+            drawnBody = latest.current.alignmentBody;
+            const alignmentColor = bodyColors[drawnBody as "sun" | "moon"];
+            map.addLayer({
+              id: "tamatamatori-alignment-casing", type: "line", source: alignmentSourceId,
+              filter: ["==", ["get", "kind"], "line"],
+              layout: { "line-cap": "round", "line-join": "round" },
+              paint: { "line-color": "#ffffff", "line-width": 6, "line-opacity": 0.8 },
+            });
+            map.addLayer({
+              id: "tamatamatori-alignment-clear", type: "line", source: alignmentSourceId,
+              filter: ["all", ["==", ["get", "kind"], "line"], ["==", ["get", "sight"], "clear"]],
+              layout: { "line-cap": "round", "line-join": "round" },
+              paint: { "line-color": alignmentColor, "line-width": 3.5 },
+            });
+            map.addLayer({
+              id: "tamatamatori-alignment-blocked", type: "line", source: alignmentSourceId,
+              filter: ["all", ["==", ["get", "kind"], "line"], ["!=", ["get", "sight"], "clear"]],
+              paint: {
+                "line-color": alignmentColor, "line-width": 3, "line-opacity": ["match", ["get", "sight"], "blocked", 0.75, 0.45],
+                "line-dasharray": ["match", ["get", "sight"], "blocked", ["literal", [2, 1.5]], ["literal", [0.6, 1.4]]],
+              },
+            });
+            map.addLayer({
+              id: "tamatamatori-alignment-dot", type: "circle", source: alignmentSourceId,
+              filter: ["==", ["get", "kind"], "dot"],
+              paint: { "circle-radius": 3.5, "circle-color": alignmentColor, "circle-stroke-color": "#ffffff", "circle-stroke-width": 1 },
+            });
+            map.addLayer({
+              id: "tamatamatori-alignment-labels", type: "symbol", source: alignmentSourceId,
+              filter: ["==", ["get", "kind"], "label"],
+              layout: {
+                "text-field": ["get", "label"], "text-font": ["Noto Sans Regular"], "text-size": 11,
+                "text-offset": [0, -1.1], "text-allow-overlap": false, "symbol-sort-key": 1,
+              },
+              paint: { "text-color": "#2f3b30", "text-halo-color": "#ffffff", "text-halo-width": 1.6 },
+            });
+            map.addLayer({
+              id: "tamatamatori-alignment-target", type: "circle", source: alignmentSourceId,
+              filter: ["==", ["get", "kind"], "target"],
+              paint: { "circle-radius": 7, "circle-color": "#b4372b", "circle-stroke-color": "#ffffff", "circle-stroke-width": 2.5 },
+            });
             map.addLayer({
               id: "tamatamatori-direction",
               type: "line",
@@ -678,6 +767,7 @@ export function MapPanel({
           latest.current.mode = "browse";
           setMode("browse");
           setNotice("");
+          if (solveRef.current.placing) solveRef.current.cancel();
         }
       }}
     >
@@ -793,7 +883,10 @@ export function MapPanel({
           </p>
         )}
         {notice && <p className="map-coverage-warning">{notice}</p>}
-        {status.phase === "ready" && coverage && !notice && mode !== "browse" && (
+        {placingTarget && (
+          <p className="map-interaction-hint" role="status">单击放置推算目标 · Escape 取消</p>
+        )}
+        {status.phase === "ready" && coverage && !notice && !placingTarget && mode !== "browse" && (
           <p className="map-interaction-hint">
             {mode === "position"
               ? "单击放置一次机位 · Escape 取消"
@@ -803,7 +896,7 @@ export function MapPanel({
           </p>
         )}
       </div>
-      {(lines.length > 0 || eclipse || auroraKp !== null || tideCell) && (
+      {(lines.length > 0 || eclipse || auroraKp !== null || tideCell || alignmentFeatures.features.length > 0) && (
         <div className="map-legend" aria-label="方位线图例">
           {(["sun", "moon", "core"] as const).filter((body) => lines.some((line) => line.body === body)).map((body) => (
             <span key={body}><i style={{ background: bodyColors[body] }} />{bodyNames[body]}</span>
@@ -816,6 +909,9 @@ export function MapPanel({
             <i className="map-legend-aurora" />极光带 · 虚线可见
           </span>}
           {tideCell && <span data-tide-legend title="潮位所用的海洋格点（约 8 km）"><i className="map-legend-tide" />潮位格点</span>}
+          {alignmentFeatures.features.length > 0 && <span data-alignment-legend title="红点为推算目标。对齐线上的每个机位，在标注的时刻看到天体落在目标顶部：实线按 DEM 通视，虚线被地形挡住，点线高程不全。不含建筑、树木与天气。">
+            <i className="map-legend-target" />目标 · 实线对齐、虚线被挡
+          </span>}
         </div>
       )}
       {target && (

@@ -366,7 +366,9 @@ before(async () => {
           if (id.replaceAll("\\", "/").endsWith("/src/preview/geocode.ts"))
             return "export const searchPlaces = (...args) => globalThis.__testPlaceSearch(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/preview/elevation.ts"))
-            return "export const groundElevation = (...args) => globalThis.__testGroundLoader(...args);";
+            return "export const groundElevation = (...args) => globalThis.__testGroundLoader(...args);\n" +
+              // Line sampling for 推算 · 找机位: flat ground at 0 m unless a test installs another.
+              "export const elevationTiles = (...args) => (globalThis.__testElevationTiles ?? (async (points, url, signal, progress) => { progress?.(1, 1); return () => 0; }))(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/map/sdk.ts"))
             return "export const {Map, Marker, NavigationControl, ScaleControl} = globalThis.__testMapSDK;";
         },
@@ -2852,4 +2854,204 @@ test('Open-Meteo 用量：开启天气或潮汐时在光照与环境中显示本
   // Still listed while weather is off, because calls were made today.
   await settle(() => document.querySelector('[aria-label="天气效果"]').click());
   assert.ok(line());
+});
+
+test('推算·找时间：页头进入模式，放置期望位置即推算，结果按月列出并标在时间轴；试看只改时刻与图层，返回推算前只恢复这两类字段；机位变化使结果过期', async t => {
+  await workspace(t); await readyTerrain();
+  const solveButton = () => document.querySelector('.solve-button');
+  const items = () => [...document.querySelectorAll('.alignment-month li')];
+  const status = () => document.querySelector('.alignment-status')?.textContent ?? '';
+  const sunSwitch = () => document.querySelector('[aria-label="显示太阳"]');
+  const railTab = (name) => [...document.querySelectorAll('.rail-tabs [role="tab"]')].find((tab) => tab.textContent.trim() === name);
+  assert.equal(solveButton().getAttribute('aria-pressed'), 'false');
+  assert.equal(document.querySelector('.alignment-panel'), null);
+  const before = shootingDateTime();
+  await settle(() => solveButton().click());
+  assert.equal(solveButton().getAttribute('aria-pressed'), 'true');
+  assert.ok(document.querySelector('.alignment-panel'));
+  assert.equal(document.querySelector('.info-sidebar').getAttribute('aria-label'), '推算');
+  assert.equal(document.querySelector('.info-body').hidden, true);
+  assert.match(document.querySelector('.alignment-hint').textContent, /先在预览中放置太阳的期望位置/);
+  // Placing: one click on the frame puts the mark there instead of turning the camera; Escape cancels.
+  const frame = document.querySelector('.viewfinder');
+  frame.getBoundingClientRect = () => ({ left: 0, top: 0, width: 600, height: 400 });
+  const azimuth = value('方位角'), pitch = value('俯仰角');
+  await settle(() => button('在预览中放置').click());
+  assert.ok(frame.classList.contains('is-placing'));
+  await settle(() => window.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'Escape' })));
+  assert.ok(!frame.classList.contains('is-placing'));
+  await settle(() => button('在预览中放置').click());
+  await settle(() => frame.dispatchEvent(new dom.window.PointerEvent('pointerdown', { pointerId: 1, button: 0, clientX: 300, clientY: 200, bubbles: true })));
+  assert.ok(!frame.classList.contains('is-placing'));
+  assert.equal(value('方位角'), azimuth, 'placing does not turn the camera');
+  assert.equal(value('俯仰角'), pitch);
+  assert.ok(Math.abs(value('方位') - azimuth) < 0.01 && Math.abs(value('视高度') - pitch) < 0.01, 'the frame centre is the camera direction');
+  const handle = document.querySelector('[data-alignment-mark="sun"] .alignment-handle');
+  assert.ok(handle);
+  // Dragging the handle moves the mark (right and up), not the camera; arrow keys nudge it by 0.05°.
+  const onHandle = (type, x, y) => handle.dispatchEvent(new dom.window.PointerEvent(type, { pointerId: 2, button: 0, clientX: x, clientY: y, bubbles: true }));
+  await settle(() => onHandle('pointerdown', 300, 200));
+  await settle(() => onHandle('pointermove', 330, 180));
+  await settle(() => onHandle('pointerup', 330, 180));
+  assert.ok(value('方位') > azimuth + 0.5 && value('视高度') > pitch + 0.5, 'dragged right and up');
+  assert.equal(value('方位角'), azimuth);
+  const lifted = value('视高度');
+  await settle(() => document.querySelector('.alignment-handle').dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true })));
+  assert.ok(Math.abs(value('视高度') - (lifted + 0.05)) < 0.006);
+  assert.equal(value('俯仰角'), pitch, 'the frame keeps its own arrow keys');
+  // The summit of Fuji from the default shore: the Sun sits there twice in the next 12 months.
+  await settle(() => setControl(input('方位'), 244.63));
+  await settle(() => setControl(input('视高度'), 10.74));
+  await waitUntil(() => items().length === 2 && /12 个月内 2 次/.test(status()));
+  assert.deepEqual([...document.querySelectorAll('.alignment-month h4')].map((h) => h.textContent), ['2027 年 2 月', '2027 年 10 月']);
+  assert.match(items()[0].textContent, /2\/12 周五 16:22.*容差内 16:22–16:23.*偏 0\.1\d 个视直径 · 偏左下 · 白天/);
+  // Turn the Sun off from the information groups; the try-out turns it on and only moves the instant.
+  await settle(() => railTab('信息').click());
+  assert.equal(document.querySelector('.info-body').hidden, false);
+  await settle(() => sunSwitch().click());
+  assert.equal(sunSwitch().checked, false);
+  await settle(() => railTab('推算').click());
+  await settle(() => items()[0].querySelector('button').click());
+  assert.equal(shootingDateTime(), '2027-02-12T16:22');
+  assert.equal(sunSwitch().checked, true);
+  assert.equal(value('方位角'), azimuth);
+  assert.ok(items()[0].classList.contains('is-current'));
+  const marker = document.querySelector('.time-marker[data-event="alignment"]');
+  assert.ok(marker && marker.classList.contains('is-current'));
+  assert.match(marker.title, /太阳中心距期望位置 0\.1\d 个视直径/);
+  // The timeline's own event steps reach the instant too.
+  await settle(() => document.querySelector('[aria-label="提前 1 小时"]').click());
+  assert.match(document.querySelectorAll('.time-event-step')[1].getAttribute('aria-label'), /下一事件：对齐 16:22/);
+  await settle(() => document.querySelectorAll('.time-event-step')[1].click());
+  assert.equal(shootingDateTime(), '2027-02-12T16:22');
+  await settle(() => button('下一个 ›').click());
+  assert.equal(shootingDateTime(), '2027-10-30T15:52');
+  assert.equal(button('下一个 ›').disabled, true);
+  await settle(() => button('‹ 上一个').click());
+  assert.equal(shootingDateTime(), '2027-02-12T16:22');
+  // The user's own edits survive "返回推算前"; the instant and the Sun switch go back.
+  await settle(() => setControl(input('焦距'), 85));
+  await settle(() => button('返回推算前').click());
+  assert.equal(shootingDateTime(), before);
+  assert.equal(sunSwitch().checked, false);
+  assert.equal(value('焦距'), 85);
+  assert.equal(button('返回推算前').disabled, true);
+  // Raising the camera makes the list stale until searched again.
+  await settle(() => setControl(input('离地高度'), 20));
+  assert.match(status(), /原结果已过期/);
+  assert.equal(items().length, 0);
+  assert.equal(document.querySelector('.time-marker[data-event="alignment"]'), null);
+  await settle(() => button('重新推算').click());
+  await waitUntil(() => items().length === 2);
+  // The Moon misses the summit by more than a quarter diameter all year; the nearest pass can be tried.
+  await settle(() => document.querySelector('input[name="alignment-body"][value="moon"]').click());
+  assert.ok(document.querySelector('select[aria-label="亮面下限"]'));
+  assert.equal(document.querySelectorAll('.alignment-sky input').length, 5);
+  await waitUntil(() => /没有落在容差内的一次/.test(status()));
+  assert.match(status(), /最接近：.*偏 0\.\d+ 个视直径 · 偏/);
+  // Leaving the mode removes the panel, the mark and the timeline instants.
+  await settle(() => solveButton().click());
+  assert.equal(document.querySelector('.alignment-panel'), null);
+  assert.equal(document.querySelector('.alignment-mark'), null);
+  assert.equal(document.querySelector('.info-body').hidden, false);
+  assert.equal(document.querySelector('.rail-tabs'), null);
+});
+
+test('推算：高纬度冬季给出达不到的原因，窄屏进入模式时出现并选中“推算”标签，退出后移除', async t => {
+  const listeners = new Set();
+  const narrow = { matches: true, addEventListener: (_, listener) => listeners.add(listener), removeEventListener: (_, listener) => listeners.delete(listener) };
+  const original = window.matchMedia;
+  window.matchMedia = (query) => query === '(max-width: 1099px)' ? narrow : { matches: false, addEventListener() {}, removeEventListener() {} };
+  t.after(() => { window.matchMedia = original; });
+  await workspace(t); await readyTerrain();
+  const layout = document.querySelector('.app-layout');
+  const tabs = () => [...document.querySelectorAll('.mobile-tabs [role="tab"]')].map((tab) => tab.textContent.trim());
+  const status = () => document.querySelector('.alignment-status')?.textContent ?? '';
+  await settle(() => setControl(input('纬度'), 69.65));
+  await settle(() => setControl(input('经度'), 18.96));
+  await setShootingDateTime('2026-11-25T12:00');
+  await settle(() => document.querySelector('.solve-button').click());
+  assert.deepEqual(tabs(), ['地图', '相机', '图层', '推算']);
+  assert.equal(layout.dataset.mobileTab, 'solve');
+  assert.equal(document.querySelector('.rail-tabs'), null, 'the bottom tabs choose the content on narrow screens');
+  assert.equal(document.querySelector('.solve-body').hidden, false);
+  await settle(() => setControl(document.querySelector('select[aria-label="推算跨度"]'), 30));
+  await settle(() => setControl(input('方位'), 180));
+  await settle(() => setControl(input('视高度'), 10));
+  await waitUntil(() => /最高只到约/.test(status()));
+  assert.match(status(), /30 天内太阳最高只到约 [0-9.]+°，达不到期望高度 10\.0°/);
+  await settle(() => [...document.querySelectorAll('.mobile-tabs [role="tab"]')].find((tab) => tab.textContent.trim() === '图层').click());
+  assert.equal(document.querySelector('.solve-body').hidden, true);
+  assert.equal(document.querySelector('.info-body').hidden, false);
+  await settle(() => document.querySelector('.solve-button').click());
+  assert.deepEqual(tabs(), ['地图', '相机', '图层']);
+});
+
+test('推算·找机位：选地标或在地图上放目标即求对齐线，地图画出目标与对齐线，时间轴标起止；滑杆与试看同时移动机位与时刻并对准目标，返回推算前恢复；换日期重算', async t => {
+  const { map } = await workspace(t); await readyTerrain();
+  const tiles = [];
+  installGlobal('__testElevationTiles', async (points, url, signal, progress) => { tiles.push(points.length); progress?.(3, 3); return () => 0; });
+  t.after(() => { delete globalThis.__testElevationTiles; });
+  const status = () => document.querySelector('.alignment-status')?.textContent ?? '';
+  const rows = () => [...document.querySelectorAll('.position-list li')];
+  const features = () => map.getSource('tamatamatori-alignment').data.features;
+  // Labels can fold into dots next to sunrise or sunset; the accessible name always names them.
+  const markers = () => [...document.querySelectorAll('.time-marker[data-event="alignment"]')].map((marker) => marker.getAttribute('aria-label').replace(/^跳到(\S+) .*$/, '$1'));
+  const before = { latitude: value('纬度'), longitude: value('经度'), time: shootingDateTime(), azimuth: value('方位角'), pitch: value('俯仰角') };
+  await settle(() => document.querySelector('.solve-button').click());
+  await settle(() => button('找机位').click());
+  assert.equal(button('找机位').getAttribute('aria-pressed'), 'true');
+  assert.match(document.querySelector('.alignment-results .alignment-hint').textContent, /先在地图上放置目标，或选择已接入地标/);
+  assert.equal(document.querySelector('.alignment-mark'), null, 'the 找时间 mark is not drawn');
+  // Tokyo Skytree from the landmark list: 634 m above the (flat test) ground.
+  await settle(() => setControl(document.querySelector('select[aria-label="选择地标"]'), 'tokyo-skytree'));
+  assert.equal(value('目标高出地面'), 634);
+  await waitUntil(() => rows().length > 10 && /对齐线 \d+ 分钟 · 距目标/.test(status()));
+  assert.ok(tiles.length === 1 && tiles[0] > 100, 'the DEM corridor is read once before solving');
+  assert.match(document.querySelector('.alignment-target').textContent, /晴空塔.*地面 ≈ 0\.0 m（DEM）/);
+  const kinds = new Set(features().map((feature) => feature.properties.kind));
+  assert.ok(kinds.has('target') && kinds.has('line') && kinds.has('label'));
+  assert.ok(features().filter((feature) => feature.properties.kind === 'label').every((feature) => /^\d\d:\d0$/.test(feature.properties.label)));
+  assert.ok(map.transitions.some((move) => move.bounds), 'the map fits the target and its line');
+  assert.ok(document.querySelector('[data-alignment-legend]'));
+  assert.deepEqual(markers(), ['对齐始', '对齐终']);
+  // The slider moves the camera and the instant together and aims at the top.
+  const slider = document.querySelector('input[aria-label="沿对齐线移动机位与时刻"]');
+  await settle(() => setControl(slider, 200));
+  assert.ok(Math.abs(value('纬度') - 35.71) < 0.3 && Math.abs(value('经度') - 139.81) < 0.3, 'camera moved near the tower');
+  assert.notEqual(shootingDateTime(), before.time);
+  assert.match(document.querySelector('.alignment-current').textContent, /正在试看 \d\d:\d\d · 距目标 [\d.]+ km（目标在.+） · 通视 · 太阳/);
+  assert.ok(document.querySelector('.position-profile svg'), 'profile from the camera to the top');
+  const moved = { azimuth: value('方位角'), pitch: value('俯仰角') };
+  assert.ok(moved.pitch > 0);
+  // A row's try-out does the same; "返回推算前" restores position, instant, direction.
+  await settle(() => rows()[3].querySelector('button').click());
+  assert.ok(rows()[3].classList.contains('is-current'));
+  await settle(() => button('返回推算前').click());
+  assert.equal(value('纬度'), before.latitude);
+  assert.equal(value('经度'), before.longitude);
+  assert.equal(shootingDateTime(), before.time);
+  assert.equal(value('方位角'), before.azimuth);
+  assert.equal(value('俯仰角'), before.pitch);
+  // The next day searches again.
+  const first = document.querySelector('.time-marker[data-event="alignment"]').title;
+  await settle(() => document.querySelector('[aria-label="后一天"]').click());
+  await waitUntil(() => tiles.length === 2 && /对齐线 \d+ 分钟/.test(status()));
+  assert.notEqual(document.querySelector('.time-marker[data-event="alignment"]').title, first);
+  // A target placed on the map: one click, Escape cancels; height 0 on flat ground cannot hold the noon Sun.
+  await settle(() => button('在地图上放置目标').click());
+  assert.match(document.querySelector('.map-interaction-hint').textContent, /单击放置推算目标/);
+  await settle(() => document.querySelector('.real-map').dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true })));
+  assert.equal(button('在地图上放置目标').getAttribute('aria-pressed'), 'false');
+  const latitude = value('纬度');
+  await settle(() => button('在地图上放置目标').click());
+  await settle(() => clickMap(map, 139.75, 35.68));
+  assert.equal(value('纬度'), latitude, 'placing the target does not move the camera');
+  assert.match(document.querySelector('.alignment-target').textContent, /地图上的目标.*35\.68000, 139\.75000/);
+  await settle(() => setControl(input('目标高出地面'), 300));
+  await waitUntil(() => rows().length > 10);
+  // Leaving the mode clears the map overlay and the timeline marks.
+  await settle(() => document.querySelector('.solve-button').click());
+  assert.equal(features().length, 0);
+  assert.deepEqual(markers(), []);
 });

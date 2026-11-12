@@ -72,9 +72,12 @@ export function Timeline({
   forecast = null,
   tides = null,
   aurora = null,
+  extraEvents,
 }: {
   plan: ShootingPlan;
   update: UpdatePlan;
+  /** Instants from outside the layers (the "推算" results); only those inside the span are marked. */
+  extraEvents?: TimelineEvent[];
   comets?: CometCatalog | null;
   orbits?: OrbitSnapshot | null;
   /** Weather forecast while the weather effect is on; drawn as hourly cloud cover. */
@@ -141,13 +144,22 @@ export function Timeline({
       return undefined;
     }
   }, [axis.start, axis.mode, latitude, longitude, timeZone]);
-  const { events, missing } = useMemo(() => {
+  const layerEvents = useMemo(() => {
     try {
       return timelineEvents({ latitude, longitude, refraction, cameraHeight, layers }, axis, { comets, orbits, tides, aurora });
     } catch {
       return { events: [] as TimelineEvent[], missing: [] as string[] };
     }
   }, [axis.start, axis.mode, latitude, longitude, refraction, cameraHeight, layerKey, comets, orbits, tides, aurora]);
+  const { events, missing } = useMemo(() => {
+    const start = Date.parse(axis.start), end = Date.parse(axis.end);
+    const inside = (extraEvents ?? []).filter((event) => Date.parse(event.instant) >= start && Date.parse(event.instant) < end);
+    if (!inside.length) return layerEvents;
+    return {
+      events: [...layerEvents.events, ...inside].sort((a, b) => Date.parse(a.instant) - Date.parse(b.instant) || a.key.localeCompare(b.key)),
+      missing: layerEvents.missing,
+    };
+  }, [layerEvents, extraEvents, axis.start, axis.end]);
   // Golden and blue hour belong to the Sun layer, like its rise and set.
   const periods = useMemo(() => {
     if (!layers.sun) return [] as LightPeriod[];

@@ -16,9 +16,10 @@ import type { MapViewport } from "./domain/map";
 import type { InfoGroupId, InfoNavigation } from "./components/InfoGroup";
 import { ShotMenu, ShotToast } from "./components/ShotMenu";
 import { browserStorage, readSession, writeSession } from "./domain/shot-library";
+import { useAlignment } from "./components/Alignment";
 
 type PanelId = "map" | "preview";
-type MobileTab = "map" | "camera" | "layers";
+type MobileTab = "map" | "camera" | "layers" | "solve";
 const panelInfo: Record<
   PanelId,
   { title: string; icon: IconName; tag: string }
@@ -211,6 +212,22 @@ export default function App() {
       return !current;
     });
   const [infoHost, setInfoHost] = useState<HTMLDivElement | null>(null);
+  // "推算" mode: its panel replaces the information rail until "信息" is chosen.
+  const [solveMode, setSolveMode] = useState(false);
+  const [railView, setRailView] = useState<"solve" | "info">("solve");
+  const [solveHost, setSolveHost] = useState<HTMLDivElement | null>(null);
+  const toggleSolve = () => {
+    const entering = !solveMode;
+    setSolveMode(entering);
+    if (entering) {
+      setRailView("solve");
+      setInfoCollapsed(false);
+      if (narrow) setMobileTab("solve");
+    } else if (mobileTab === "solve") setMobileTab("map");
+    setAnnouncement(entering ? "已进入推算模式" : "已退出推算模式");
+  };
+  // Narrow screens pick the rail's content with the bottom tabs instead.
+  const showSolve = solveMode && (narrow ? mobileTab === "solve" : railView === "solve");
   const [infoQuery, setInfoQuery] = useState("");
   const [infoNavigation, setInfoNavigation] = useState<InfoNavigation | null>(
     null,
@@ -274,6 +291,8 @@ export default function App() {
     });
     replacePlan(next, id);
   };
+  // The 推算 mode is shared by its panel, the preview mark, the timeline and the map.
+  const alignment = useAlignment(plan, updatePlan, solveMode, planGeneration);
   // Shared by the panel, the timeline and the map.
   const tides = useTides(plan);
   const aurora = useAurora(plan);
@@ -327,6 +346,16 @@ export default function App() {
           </span>
         </a>
         <div className="topbar-end">
+          <button
+            type="button"
+            className={`solve-button ${solveMode ? "is-active" : ""}`}
+            aria-pressed={solveMode}
+            title={solveMode ? "退出推算" : "推算：求日月落到画面中期望位置的时刻"}
+            onClick={toggleSolve}
+          >
+            <Icon name="compass" size={15} />
+            <span>推算</span>
+          </button>
           <ShotMenu
             plan={plan}
             activeId={activeShotId}
@@ -363,7 +392,7 @@ export default function App() {
         >
           <Panel id="map" onSwap={swapPanels}>
             <div className="map-stack">
-              <MapPanel plan={plan} update={updatePlan} viewport={mapViewport} tides={tides} aurora={aurora} />
+              <MapPanel plan={plan} update={updatePlan} viewport={mapViewport} tides={tides} aurora={aurora} alignment={alignment} />
               <PositionBar
                 key={planGeneration}
                 plan={plan}
@@ -396,6 +425,8 @@ export default function App() {
               onToggleLayer={toggleLayer}
               tides={tides}
               aurora={aurora}
+              alignment={alignment}
+              solveHost={solveHost}
             />
           </Panel>
         </div>
@@ -405,7 +436,7 @@ export default function App() {
           </section>
         )}
         <div className="mobile-tabs" role="tablist" aria-label="工作区分区">
-          {mobileTabs.map(({ id, title, icon }) => (
+          {[...mobileTabs, ...(solveMode ? [{ id: "solve" as const, title: "推算", icon: "compass" as const }] : [])].map(({ id, title, icon }) => (
             <button
               type="button"
               role="tab"
@@ -429,12 +460,36 @@ export default function App() {
         )}
         <aside
           className={`info-sidebar ${infoCollapsed ? "is-collapsed" : ""}`}
-          aria-label="图层与信息"
+          aria-label={showSolve ? "推算" : "图层与信息"}
           onKeyDown={(event) => {
-            if (event.key === "Escape") setInfoCollapsed(true);
+            if (event.key === "Escape" && !showSolve) setInfoCollapsed(true);
           }}
         >
-          <div className="info-search" role="search" aria-label="拍摄目标搜索">
+          {solveMode && !narrow && (
+            <div className="rail-tabs" role="tablist" aria-label="右栏内容">
+              {(["solve", "info"] as const).map((id) => (
+                <button
+                  key={id}
+                  type="button"
+                  role="tab"
+                  aria-selected={railView === id}
+                  onClick={() => setRailView(id)}
+                >
+                  {id === "solve" ? "推算" : "信息"}
+                </button>
+              ))}
+              <button
+                className="icon-button info-close-desktop"
+                aria-label="收起右栏"
+                onClick={() => setInfoCollapsed(true)}
+              >
+                <Icon name="arrow" size={17} />
+              </button>
+            </div>
+          )}
+          {/* Both stay mounted: the information groups keep their state under the panel. */}
+          <div className="solve-body" ref={setSolveHost} hidden={!showSolve} />
+          <div className="info-search" role="search" aria-label="拍摄目标搜索" hidden={showSolve}>
             <div className="info-search-tools">
               <label htmlFor="target-search">搜索目标</label>
               <label className="detail-toggle layer-toggle">
@@ -484,6 +539,7 @@ export default function App() {
           <div
             className={`info-body ${showDetails ? "show-details" : ""}`}
             ref={setInfoHost}
+            hidden={showSolve}
           />
         </aside>
       </main>

@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-12",
+  "build": "vite dev server (http://127.0.0.1:5173), Claude desktop built-in browser pane (hidden pane, rendering active)",
+  "scene": {
+    "camera": { "latitude": 35.4172, "longitude": 138.8729, "heightAboveGround": 1.6, "ground": 980.5 },
+    "target": "Fuji summit placed by clicking the 200 mm preview (azimuth 244.61°, apparent elevation 11.09°)",
+    "body": "sun",
+    "range": "12 months from 2026-11-04 (Asia/Tokyo)",
+    "tolerance": 0.25
+  },
+  "steps": [
+    { "viewport": "1440x900 (scaled)", "action": "enter 推算, place mark on the summit", "result": "12 个月内 2 次: 2/13 16:21 (偏 0.07, 偏右上, 白天), 10/29 15:51 (偏 0.08, 偏右上)", "evidence": "01-desktop-tryout-200mm.jpg" },
+    { "viewport": "1440x900 (scaled)", "action": "试看 2/13", "result": "time 2027-02-13 16:21:40, Sun inside the dashed circle, timeline 对齐 marker current, panel 正在试看 · 部分山体遮挡" },
+    { "viewport": "1024x768 (pane size, native pixels)", "action": "1000 mm, 朝向期望位置", "evidence": "02-tryout-1000mm.jpg",
+      "measurement": {
+        "cpuDiscCentreCss": [293.77, 317.92], "cpuDiscRadiusCss": 69.53,
+        "gpuDiscFitCss": [292.94, 318.78], "gpuDiscRadiusCss": 68.9,
+        "gpuMinusCpuCss": 1.2,
+        "markCentreCss": [286.66, 324.0],
+        "discToMarkCpuCss": 9.4, "discToMarkCpuDiameters": 0.067,
+        "discToMarkGpuCss": 8.2, "discToMarkGpuDiameters": 0.059,
+        "listed": "偏 0.07 个视直径 · 偏右上",
+        "method": "least-squares circle through the sky-side edge of the drawn disc in 03-disc-crop.png (screenshot scale 0.78125)"
+      } },
+    { "viewport": "375x812 (mobile preset)", "action": "header without overlap (推算 183–242, 机位 250–282, About 290–363 px), 推算 tab selected, tap-to-place on the ridge", "result": "no horizontal scroll, timeline 对齐 marker, 12 个月内 2 次", "evidence": "04-mobile-placed.jpg" },
+    { "viewport": "1440x900 (scaled)", "action": "离地高度 1.6 → 20 m", "result": "机位、离地高度或大气折射已改变，原结果已过期 + 重新推算; timeline 对齐 marker removed", "evidence": "05-stale.jpg" },
+    { "viewport": "1440x900 (scaled)", "action": "switch to 月亮", "result": "月相 and 天空条件 controls; 12 个月内月亮没有落在容差内的一次; 最接近 12/22 11:15 偏 0.72 个视直径 · 偏左下 with 试看", "evidence": "06-moon-nearest.jpg" },
+    { "viewport": "1440x900 (scaled)", "action": "exit 推算", "result": "panel, mark, rail tabs and timeline 对齐 markers removed; information groups visible; scrollWidth 1440; no console errors" }
+  ],
+  "issuesFoundAndFixed": [
+    "Hidden radio inputs took the global input width (100%) and widened the page to 2055 px; fixed with a more specific rule.",
+    "The pressed 取消放置 button lost contrast under the hover background; hover no longer applies to pressed buttons.",
+    "Radio circles were drawn at input size; the body choice is now a two-button segmented control."
+  ],
+  "notTested": ["physical phone", "GPU frame time", "terrain occlusion state for the Moon mark", "pane visible to the user during the run"],
+  "positionRound": {
+    "date": "2026-11-12",
+    "scene": { "target": "Tokyo Skytree (landmark catalogue, 634 m above DEM ground ≈ 2.0 m)", "body": "moon", "span": "2026-11-25 00:00–24:00 Asia/Tokyo", "maxDistance": 30000 },
+    "steps": [
+      { "viewport": "1440x900 (scaled)", "action": "推算 → 找机位 → 月亮 → 晴空塔", "result": "real Mapterhorn DEM read and solved in 1.5 s; 对齐线 763 分钟 · 距目标 0.20—27.4 km；5 分钟被 DEM 挡住; map fits the target and two branches (moonset toward Chiba, moonrise toward Kawasaki) with 10-minute labels; timeline 对齐始/对齐终", "evidence": "07-position-map-skytree.jpg" },
+      { "viewport": "1440x900 (scaled)", "action": "试看 17:00 (14.5 km, moon 2.3°), 400 mm, buildings off", "result": "moon disc centred on the frame centre, the direction of the tower top" },
+      { "viewport": "1440x900 (scaled)", "action": "camera height 100 m (line searched again: 733 minutes, 0.20—29.9 km), 试看 17:00 (12.1 km), buildings on", "result": "a nearby building fills the frame; panel says 月亮场景遮挡 — the DEM sight check does not include buildings", "evidence": "09-position-buildings-blocked.jpg" },
+      { "viewport": "1440x900 (scaled)", "action": "试看 17:40 (3.33 km, moon 9.1°), 200 mm, buildings on", "result": "the Skytree model stands under the moon, its tip at the disc centre; panel 月亮部分场景遮挡", "evidence": "08-position-tryout-skytree.jpg" },
+      { "viewport": "1024x768 (pane size, native pixels)", "action": "measure the same frame", "evidence": "11-skytree-tip-crop.png",
+        "measurement": {
+          "cpuMoonCentreCss": [286.66, 324.0], "frameCentreCss": [286.66, 324.0], "cpuMoonRadiusCss": 14.3,
+          "gpuDiscCentreCss": [285.8, 322.2], "gpuTowerTipYCss": 323.2,
+          "tipBelowDiscCentreCss": 1.0,
+          "method": "left/right extents of the bright disc per row and the dark-to-bright transition of the tower column in the crop (screenshot scale 0.78125)"
+        } },
+      { "viewport": "375x812 (mobile preset)", "action": "推算 tab with 找机位", "result": "no horizontal overflow; preview shows the moon on the tower tip", "evidence": "10-position-mobile.jpg" },
+      { "action": "返回推算前, then height, focal, date, buildings and mode reset", "result": "the pane's plan is back to 35.4172, 138.8729, 247°, 4°, 1.6 m, 35 mm, 2026-11-04 17:00" }
+    ],
+    "issuesFoundAndFixed": [
+      "A dev-server reload during editing left a stale module graph (blank page); restarting the dev server cleared it. Not a product defect.",
+      "Try-out wrote full-precision coordinates and angles into the fields; now rounded to 1e-6° and 1e-4°.",
+      "Camera ground printed as \"-0 m\" just below the datum."
+    ]
+  }
+}
