@@ -1581,3 +1581,10 @@ p.info-detail, span.info-detail { color: #8f9886; }
 .sight-blocked { color: #9a4e2c; }
 .sight-unknown { color: #8a947f; }
 .map-legend .map-legend-target { width: 8px; height: 8px; border-radius: 50%; background: #b4372b; }
+/* 推算 · 两者都找 */
+.composition-sketch { display: block; width: 100%; max-width: 260px; height: auto; margin: 4px 0 8px; border-radius: 4px; background: #24314a; }
+.composition-sketch .sketch-frame { fill: none; stroke: #9fb0c8; stroke-width: 1; }
+.composition-sketch .sketch-grid { stroke: #ffffff; stroke-opacity: .25; stroke-width: .5; }
+.composition-sketch .sketch-subject { fill: #1b2230; stroke: #c9d3e2; stroke-width: .6; }
+.composition-sketch .sketch-sun { fill: #ffe6a6; }
+.composition-sketch .sketch-moon { fill: #eef2fb; }

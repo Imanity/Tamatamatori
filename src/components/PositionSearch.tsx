@@ -222,7 +222,39 @@ export function positionGeometry(search: PositionSearch | null, timeZone: string
   return { type: "FeatureCollection", features };
 }
 
-function ProfileChart({ profile }: { profile: NonNullable<ReturnType<typeof positionProfile>> }) {
+/** Ground target: map placement or a landmark, and its height above the DEM; shared by 找机位 and 两者都找. */
+export function TargetSection({ search, ground }: { search: PositionSearch; ground: number | null }) {
+  const { target } = search;
+  return (
+    <div className="alignment-section">
+      <h3>地面目标</h3>
+      <div className="alignment-actions">
+        <button type="button" aria-pressed={search.placing} className={search.placing ? "is-active" : ""} onClick={() => search.setPlacing(!search.placing)}>
+          {search.placing ? "取消放置" : "在地图上放置目标"}
+        </button>
+        <select aria-label="选择地标" value={target?.id ?? ""} onChange={(event) => {
+          const landmark = landmarks.find((entry) => entry.id === event.target.value);
+          if (landmark) search.setTarget({ id: landmark.id, name: landmark.name, latitude: landmark.latitude, longitude: landmark.longitude, height: landmark.bounds.height });
+        }}>
+          <option value="">选择已接入地标…</option>
+          {landmarks.map((landmark) => <option key={landmark.id} value={landmark.id}>{landmark.name}</option>)}
+        </select>
+      </div>
+      {search.placing && <p className="alignment-hint" role="status">在地图上单击放置目标，Esc 取消。</p>}
+      {target && <>
+        <p className="alignment-target">
+          <strong>{target.name}</strong>
+          <small>{target.latitude.toFixed(5)}, {target.longitude.toFixed(5)}
+            {ground !== null && ` · 地面 ≈ ${ground.toFixed(1)} m（DEM）`}</small>
+        </p>
+        <NumberField label="目标高出地面" unit="m" min={0} max={1000} step={0.1} value={target.height}
+          onChange={(height) => search.setTarget({ ...target, height })} />
+      </>}
+    </div>
+  );
+}
+
+export function ProfileChart({ profile }: { profile: NonNullable<ReturnType<typeof positionProfile>> }) {
   const samples = profile.profile;
   const heights = samples.flatMap((sample) => (sample.ground === null ? [sample.sight] : [sample.sight, sample.ground]));
   const low = Math.min(...heights), high = Math.max(...heights), range = Math.max(1, high - low);
@@ -295,31 +327,7 @@ export function PositionPanel({ search, plan, body, occlusion }: {
     `${clock(point.time, plan.timeZone)} · 距目标 ${km(point.distance)} km（目标在${compassDirection(point.azimuth)}）`;
   return (
     <>
-      <div className="alignment-section">
-        <h3>地面目标</h3>
-        <div className="alignment-actions">
-          <button type="button" aria-pressed={search.placing} className={search.placing ? "is-active" : ""} onClick={() => search.setPlacing(!search.placing)}>
-            {search.placing ? "取消放置" : "在地图上放置目标"}
-          </button>
-          <select aria-label="选择地标" value={target?.id ?? ""} onChange={(event) => {
-            const landmark = landmarks.find((entry) => entry.id === event.target.value);
-            if (landmark) search.setTarget({ id: landmark.id, name: landmark.name, latitude: landmark.latitude, longitude: landmark.longitude, height: landmark.bounds.height });
-          }}>
-            <option value="">选择已接入地标…</option>
-            {landmarks.map((landmark) => <option key={landmark.id} value={landmark.id}>{landmark.name}</option>)}
-          </select>
-        </div>
-        {search.placing && <p className="alignment-hint" role="status">在地图上单击放置目标，Esc 取消。</p>}
-        {target && <>
-          <p className="alignment-target">
-            <strong>{target.name}</strong>
-            <small>{target.latitude.toFixed(5)}, {target.longitude.toFixed(5)}
-              {result?.targetGround != null && ` · 地面 ≈ ${result.targetGround.toFixed(1)} m（DEM）`}</small>
-          </p>
-          <NumberField label="目标高出地面" unit="m" min={0} max={1000} step={0.1} value={target.height}
-            onChange={(height) => search.setTarget({ ...target, height })} />
-        </>}
-      </div>
+      <TargetSection search={search} ground={result?.targetGround ?? null} />
       <div className="alignment-section alignment-conditions">
         <h3>条件</h3>
         <p className="alignment-hint">

@@ -96,6 +96,33 @@ export function sampleElevationTile(tile: ElevationTile, u: number, v: number) {
   return height;
 }
 
+/** Key of a tile in `tileSampler` maps: "z/x/y". */
+export const tileKey = (tile: { z: number; x: number; y: number }) => `${tile.z}/${tile.x}/${tile.y}`;
+
+/**
+ * Synchronous ground sampler over decoded z12 tiles: null outside the loaded
+ * tiles, outside the source's latitude bounds or on invalid pixels. Shared by
+ * the main thread and the 推算 worker.
+ */
+export function tileSampler(tiles: ReadonlyMap<string, ElevationTile>, bounds?: readonly number[]) {
+  return (latitude: number, longitude: number) => {
+    if (bounds && (latitude < bounds[1] || latitude > bounds[3])) return null;
+    let position;
+    try {
+      position = terrainTile({ latitude, longitude });
+    } catch {
+      return null;
+    }
+    const tile = tiles.get(tileKey(position));
+    if (!tile) return null;
+    try {
+      return sampleElevationTile(tile, position.u, position.v);
+    } catch {
+      return null;
+    }
+  };
+}
+
 export function terrainStyle(
   terrainUrl = DEFAULT_TERRAIN_URL,
   waterUrl = DEFAULT_WATER_URL,

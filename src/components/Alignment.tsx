@@ -21,6 +21,7 @@ import type { Occlusion } from "../domain/visibility";
 import type { TimelineEvent } from "../domain/timeline";
 import { NumberField } from "./NumberField";
 import { PositionPanel, usePositionSearch } from "./PositionSearch";
+import { RangePanel, useRangeSearch } from "./RangeSearch";
 
 type UpdatePlan = (patch: Partial<ShootingPlan>) => void;
 const DAY = 86_400_000;
@@ -90,8 +91,10 @@ export function useAlignment(plan: ShootingPlan, update: UpdatePlan, active: boo
     sky: skyConditions,
   });
   // "找时间" keeps the camera; "找机位" keeps a ground target and the timeline's span.
-  const [kind, setKind] = useState<"time" | "position">("time");
+  const [kind, setKind] = useState<"time" | "position" | "range">("time");
   const position = usePositionSearch(plan, update, active && kind === "position", generation, settings.body);
+  // "两者都找" shares the ground target (and its map placement) with "找机位".
+  const range = useRangeSearch(plan, update, active && kind === "range", generation, settings.body, position);
   const [placing, setPlacing] = useState(false);
   const [placeError, setPlaceError] = useState("");
   const [run, setRun] = useState<Run | null>(null);
@@ -239,10 +242,10 @@ export function useAlignment(plan: ShootingPlan, update: UpdatePlan, active: boo
   })) : []), [active, kind, result, plan.timeZone, settings.body]);
 
   return {
-    active, kind, setKind, position, settings, change, setTarget, place, placing, setPlacing, placeError, setPlaceError,
+    active, kind, setKind, position, range, settings, change, setTarget, place, placing, setPlacing, placeError, setPlaceError,
     run, stale, pending, result, recompute: () => settings.target && compute(settings),
     tryOut, restore, canRestore: !!before,
-    events: kind === "time" ? timeEvents : position.events,
+    events: kind === "time" ? timeEvents : kind === "position" ? position.events : range.events,
   };
 }
 export type AlignmentState = ReturnType<typeof useAlignment>;
@@ -400,15 +403,17 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion }: {
     <section className="alignment-panel" aria-label="推算">
       <header className="alignment-header">
         <div className="alignment-kinds" role="group" aria-label="求解对象">
-          {(["time", "position"] as const).map((kind) => (
+          {(["time", "position", "range"] as const).map((kind) => (
             <button key={kind} type="button" aria-pressed={alignment.kind === kind} onClick={() => alignment.setKind(kind)}>
-              {kind === "time" ? "找时间" : "找机位"}
+              {kind === "time" ? "找时间" : kind === "position" ? "找机位" : "两者都找"}
             </button>
           ))}
         </div>
         {alignment.kind === "time"
           ? <p>机位、方向与镜头保持不变，求{name}落到画面中期望位置的时刻。只按星历与海平面地平计算，不含天气。</p>
-          : <p>地面目标与日期已定，求在哪里拍能让{name}落在目标顶部。只按星历、DEM 与海平面地平计算，不含天气。</p>}
+          : alignment.kind === "position"
+            ? <p>地面目标与日期已定，求在哪里拍能让{name}落在目标顶部。只按星历、DEM 与海平面地平计算，不含天气。</p>
+            : <p>地面目标与主体在画面中的大小已定，在一段日期内求哪天、在哪里拍能让{name}落在目标顶部。只按星历、DEM 与海平面地平计算，不含天气。</p>}
       </header>
       <div className="alignment-section">
         <div className="alignment-bodies" role="radiogroup" aria-label="天体">
@@ -422,6 +427,8 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion }: {
       </div>
       {alignment.kind === "position" ? (
         <PositionPanel search={alignment.position} plan={plan} body={settings.body} occlusion={occlusion} />
+      ) : alignment.kind === "range" ? (
+        <RangePanel search={alignment.range} position={alignment.position} plan={plan} body={settings.body} occlusion={occlusion} />
       ) : <>
       <div className="alignment-section">
         <h3>期望位置</h3>

@@ -3055,3 +3055,54 @@ test('推算·找机位：选地标或在地图上放目标即求对齐线，地
   assert.equal(features().length, 0);
   assert.deepEqual(markers(), []);
 });
+
+test('推算·两者都找：主体占比给出距离带，跨度内逐日求候选并按月列出，地图画出两圈、扇区与按日期着色的对齐段；试看与候选内滑杆移动机位，返回推算前恢复；矮目标改用最远距离', async t => {
+  const { map } = await workspace(t); await readyTerrain();
+  const loads = [];
+  installGlobal('__testElevationTiles', async (points, url, signal, progress) => { loads.push(points.length); progress?.(2, 2); return () => 0; });
+  t.after(() => { delete globalThis.__testElevationTiles; });
+  const status = () => document.querySelector('.alignment-status')?.textContent ?? '';
+  const candidates = () => [...document.querySelectorAll('[data-candidate]')];
+  const kinds = () => map.getSource('tamatamatori-alignment').data.features.map((feature) => feature.properties.kind);
+  const before = { latitude: value('纬度'), longitude: value('经度'), time: shootingDateTime(), azimuth: value('方位角') };
+  await settle(() => document.querySelector('.solve-button').click());
+  await settle(() => button('两者都找').click());
+  assert.equal(button('两者都找').getAttribute('aria-pressed'), 'true');
+  await settle(() => setControl(document.querySelector('select[aria-label="两者都找跨度"]'), 7));
+  await settle(() => setControl(document.querySelector('select[aria-label="选择地标"]'), 'tokyo-skytree'));
+  // 35 mm full frame, 30 %: the tower is about 3 km away.
+  assert.ok(document.querySelector('.composition-sketch'));
+  assert.match(document.querySelector('.alignment-conditions .alignment-hint').textContent, /35 mm 下主体视高度约 11\.\d+°，距目标约 2\.\d+—3\.\d+ km（占比 ±20%），所需太阳视高度约/);
+  await waitUntil(() => candidates().length >= 7 && /7 天内 \d+ 个候选/.test(status()));
+  assert.equal(loads.length, 1, 'the DEM corridor is read once for all days');
+  assert.deepEqual(new Set(kinds()), new Set(['target', 'ring', 'sector', 'segment', 'label']));
+  assert.equal(kinds().filter((kind) => kind === 'ring').length, 2);
+  assert.match(candidates()[0].textContent, /\d+\/\d+ 周. \d\d:\d\d–\d\d:\d\d.*距目标 [\d.]+—[\d.]+ km · 目标在.+ · 主体 \d+%—\d+%/);
+  // Try-out moves camera, instant and direction; the slider moves inside the candidate.
+  await settle(() => candidates()[0].querySelector('button').click());
+  assert.ok(Math.abs(value('纬度') - 35.71) < 0.06 && Math.abs(value('经度') - 139.81) < 0.06);
+  assert.notEqual(shootingDateTime(), before.time);
+  assert.match(document.querySelector('.alignment-current').textContent, /正在试看 .* · 主体 \d+% · 目标在/);
+  assert.ok(candidates()[0].classList.contains('is-current'));
+  assert.ok(map.getSource('tamatamatori-alignment').data.features.some((feature) => feature.properties.kind === 'segment' && feature.properties.selected));
+  assert.ok(document.querySelector('.time-marker[data-event="alignment"]'), 'the candidate is marked on its day');
+  const slider = document.querySelector('input[aria-label="在候选内移动机位与时刻"]');
+  if (slider) {
+    const time = shootingDateTime();
+    await settle(() => setControl(slider, 0));
+    assert.ok(candidates()[0].classList.contains('is-current'));
+    assert.ok(shootingDateTime() <= time);
+  }
+  await settle(() => button('返回推算前').click());
+  assert.deepEqual({ latitude: value('纬度'), longitude: value('经度'), time: shootingDateTime(), azimuth: value('方位角') }, before);
+  // A larger share brings the band closer and searches again.
+  await settle(() => setControl(document.querySelector('input[aria-label="主体占画面高度"]'), 45));
+  await waitUntil(() => loads.length === 2 && candidates().length > 0);
+  assert.match(document.querySelector('.alignment-conditions .alignment-hint').textContent, /距目标约 [12]\.\d+—2\.\d+ km/);
+  // A low target has no size: the band becomes plain distances.
+  await settle(() => setControl(input('目标高出地面'), 5));
+  assert.equal(document.querySelector('input[aria-label="主体占画面高度"]'), null);
+  assert.ok(document.querySelector('.alignment-conditions select[aria-label="机位最远距离"]'));
+  await settle(() => document.querySelector('.solve-button').click());
+  assert.equal(map.getSource('tamatamatori-alignment').data.features.length, 0);
+});

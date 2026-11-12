@@ -52,7 +52,9 @@ flowchart TD
 
 第二轮“找机位”的求解器在 `src/domain/position-alignment.ts`，DEM 以同步取样函数注入：每分钟一次星历得到天体在地心坐标中的位置，再换到候选机位自己的地平；沿目标反方位扫描并二分出距离，按视线方位修正经线收敛，最后沿眼点到目标顶部的弦检查 DEM 通视。取样函数由 `src/preview/elevation.ts` 的 `elevationTiles` 先读入对齐线经过的 z12 瓦片（单次最多 40 块、独立缓存）后提供，求解按 60 分钟一段让出事件循环。
 
-推算状态由 App 中的 `useAlignment`（含找机位的 `usePositionSearch`）保存，地图、预览、时间轴与面板共用；不进入拍摄计划、机位与会话。面板经 portal 输出到右栏，时间轴通过 `extraEvents` 接收“对齐”刻度，地图用独立 GeoJSON 源画目标与对齐线。试看只经同一 `update` 修改拍摄计划：找时间改时刻与日月图层，找机位另改经纬度与方向。详见[机位推算](../plan/reverse-planning.md)。
+第三轮“两者都找”的求解在 `src/domain/range-alignment.ts`：主体占比换算距离带，按高度上限预筛分钟，逐日复用找机位的求解并按实际 DEM 重算主体占比。多日计算放在模块 Worker（`src/preview/range.worker.ts`）中，分 `plan`（可用分钟、走廊、扇区）与 `solve`（带瓦片逐日求解）两步；消息处理（`range-worker.ts`）不依赖 Worker 全局对象，浏览器不支持时主线程按日分段。DEM 取样函数 `tileSampler` 在 `src/domain/terrain.ts`，两边共用。
+
+推算状态由 App 中的 `useAlignment`（含找机位的 `usePositionSearch`、两者都找的 `useRangeSearch`）保存，地图、预览、时间轴与面板共用；不进入拍摄计划、机位与会话。面板经 portal 输出到右栏，时间轴通过 `extraEvents` 接收“对齐”刻度，地图用独立 GeoJSON 源画目标与对齐线。试看只经同一 `update` 修改拍摄计划：找时间改时刻与日月图层，找机位另改经纬度与方向。详见[机位推算](../plan/reverse-planning.md)。
 
 当地光污染开关属于拍摄计划，固定图集按经纬度异步采样，数据状态与天文几何分开。CPU 读数与 GPU 显示共用同一天空对比度计算，数据更新不重建地形或重新获取 DEM。静态数据、许可与显示近似边界见[光污染首步](../plan/light-pollution.md)。
 

@@ -151,7 +151,7 @@ export function skyField(body: AlignmentBody, time: number, origin: { latitude: 
 }
 
 /** Point at a ground distance and bearing on a sphere; the solver corrects bearings on the ellipsoid. */
-function travel(from: { latitude: number; longitude: number }, bearing: number, meters: number) {
+export function travel(from: { latitude: number; longitude: number }, bearing: number, meters: number) {
   const phi = from.latitude * degrees, angle = meters / EARTH, heading = bearing * degrees;
   const latitude = Math.asin(Math.sin(phi) * Math.cos(angle) + Math.cos(phi) * Math.sin(angle) * Math.cos(heading));
   const longitude = from.longitude * degrees + Math.atan2(Math.sin(heading) * Math.sin(angle) * Math.cos(phi), Math.cos(angle) - Math.sin(phi) * Math.sin(latitude));

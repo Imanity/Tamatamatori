@@ -1,4 +1,4 @@
-import { sampleElevationTile, terrainTile, TERRAIN_ZOOM } from "../domain/terrain.ts";
+import { sampleElevationTile, terrainTile, tileSampler, TERRAIN_ZOOM } from "../domain/terrain.ts";
 import type { ElevationTile } from "../domain/terrain.ts";
 import type { MapPoint } from "../domain/map.ts";
 
@@ -187,16 +187,6 @@ export async function elevationTiles(
     }
   };
   await Promise.all([worker(), worker(), worker(), worker()]);
-  return (latitude: number, longitude: number) => {
-    const point = { latitude, longitude };
-    if (!inside(point)) return null;
-    const position = terrainTile(point);
-    const tile = loaded.get(`${position.z}/${position.x}/${position.y}`);
-    if (!tile) return null;
-    try {
-      return sampleElevationTile(tile, position.u, position.v);
-    } catch {
-      return null;
-    }
-  };
+  // The tiles travel with the sampler so a worker can rebuild it (structured clone).
+  return Object.assign(tileSampler(loaded, info.bounds), { tiles: loaded as ReadonlyMap<string, ElevationTile>, bounds: info.bounds });
 }
