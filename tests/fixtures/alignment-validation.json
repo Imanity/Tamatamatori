@@ -1,0 +1,3576 @@
+{
+  "generated": "2026-11-12",
+  "method": {
+    "summit": {
+      "latitude": 35.360625,
+      "longitude": 138.727363
+    },
+    "summitRadius": 1400,
+    "topDrop": 100,
+    "demZoom": 14,
+    "eye": 1.6,
+    "zone": "Asia/Tokyo",
+    "refraction": "standard"
+  },
+  "sources": {
+    "photos": {
+      "name": "山中湖観光情報「山中湖村・忍野村からのダイヤモンド富士撮影ポイント」",
+      "url": "https://www.yamanakako.info/photo_diamond.php",
+      "note": "照片 EXIF 拍摄时刻；页面注明不是日落起止时刻、相机时钟可能有误；未写年份，按页面推断为 2025—26 季"
+    },
+    "mlit": {
+      "name": "出典：関東地方整備局ウェブサイト「関東の富士見百景」ダイヤモンド富士",
+      "url": "https://www.ktr.mlit.go.jp/chiiki/chiiki00000111.html",
+      "note": "Kashmir 3D 模拟、不计海拔、部分坐标为地图目测；无年份；公共数据利用规约（PDL1.0）。本文件只摘日期，已按对照需要整理"
+    },
+    "mlitYamanaka": {
+      "name": "出典：関東地方整備局ウェブサイト「【118】山中湖村からの富士」",
+      "url": "https://www.ktr.mlit.go.jp/chiiki/fujimi0118.html",
+      "note": "同上"
+    },
+    "skytree": {
+      "name": "东京晴空塔城公告（经媒体转载）",
+      "url": "https://www.enjoytokyo.jp/event/2004310/",
+      "note": "2026-11-08 约 16:30，天望甲板（350 m）与天望回廊（450 m）"
+    },
+    "takao": {
+      "name": "Walkerplus 高尾山钻石富士介绍",
+      "url": "https://www.walkerplus.com/article/1303736/",
+      "note": "2025-12-17—28，16:00—16:15 左右，山顶与もみじ台"
+    },
+    "kirara": {
+      "name": "たびねす「山中湖アイスキャンドルフェスティバル」",
+      "url": "https://tabi-mag.jp/yamanaka-icecandle/",
+      "note": "2026-02-22 会场きらら，钻石富士约 16:34"
+    },
+    "osm": {
+      "name": "OpenStreetMap 命名要素（ODbL）",
+      "url": "https://www.openstreetmap.org/"
+    },
+    "gsi": {
+      "name": "国土地理院 地名検索・標高 API・DEM（10 m 文本瓦片）",
+      "url": "https://maps.gsi.go.jp/development/ichiran.html"
+    }
+  },
+  "places": {
+    "panorama": {
+      "name": "パノラマ台",
+      "latitude": 35.41261,
+      "longitude": 138.90948,
+      "source": "OSM node 1668712785 tourism=viewpoint",
+      "uncertainty": 150
+    },
+    "asahigaoka": {
+      "name": "旭日丘湖畔緑地公園",
+      "latitude": 35.40833,
+      "longitude": 138.8786,
+      "source": "OSM node 12620594155 leisure=park",
+      "uncertainty": 300
+    },
+    "kirara": {
+      "name": "山中湖交流プラザきらら",
+      "latitude": 35.41982,
+      "longitude": 138.90135,
+      "source": "OSM way 251691762 (きらら) 中心",
+      "uncertainty": 400
+    },
+    "takazasu": {
+      "name": "高指山",
+      "latitude": 35.43292,
+      "longitude": 138.92638,
+      "source": "OSM node 2008147278 natural=peak",
+      "uncertainty": 50
+    },
+    "nagaike": {
+      "name": "長池親水公園",
+      "latitude": 35.42702,
+      "longitude": 138.87113,
+      "source": "OSM way 182491499 leisure=park 中心",
+      "uncertainty": 250
+    },
+    "ohira": {
+      "name": "大平山",
+      "latitude": 35.4391,
+      "longitude": 138.87944,
+      "source": "OSM node 2294516185 natural=peak",
+      "uncertainty": 50
+    },
+    "ishiwari": {
+      "name": "石割山",
+      "latitude": 35.45049,
+      "longitude": 138.90136,
+      "source": "OSM node 1863871113 natural=peak",
+      "uncertainty": 50
+    },
+    "hananomiyako": {
+      "name": "花の都公園",
+      "latitude": 35.43955,
+      "longitude": 138.85284,
+      "source": "OSM way 1153654786 leisure=park 中心",
+      "uncertainty": 500
+    },
+    "nijumagari": {
+      "name": "二十曲峠",
+      "latitude": 35.45704,
+      "longitude": 138.89234,
+      "source": "OSM node 11902780376 tourism=viewpoint",
+      "uncertainty": 100
+    },
+    "takao": {
+      "name": "高尾山",
+      "latitude": 35.62523,
+      "longitude": 139.24358,
+      "source": "国土地理院 地名検索",
+      "uncertainty": 100
+    },
+    "nokogiri": {
+      "name": "鋸山",
+      "latitude": 35.16042,
+      "longitude": 139.84086,
+      "source": "国土地理院 地名検索",
+      "uncertainty": 100
+    },
+    "ogusu": {
+      "name": "大楠山",
+      "latitude": 35.25007,
+      "longitude": 139.62812,
+      "source": "国土地理院 地名検索",
+      "uncertainty": 100
+    },
+    "shonandaira": {
+      "name": "湘南平",
+      "latitude": 35.31987,
+      "longitude": 139.30874,
+      "source": "OSM（Nominatim）natural=peak",
+      "uncertainty": 150
+    },
+    "azuma": {
+      "name": "吾妻山（二宮町）",
+      "latitude": 35.30038,
+      "longitude": 139.25063,
+      "source": "国土地理院 地名検索（吾妻山公園）",
+      "uncertainty": 200
+    },
+    "ono": {
+      "name": "大野山",
+      "latitude": 35.38601,
+      "longitude": 139.04879,
+      "source": "国土地理院 地名検索",
+      "uncertainty": 100
+    },
+    "kobo": {
+      "name": "弘法山",
+      "latitude": 35.37513,
+      "longitude": 139.25021,
+      "source": "国土地理院 地名検索",
+      "uncertainty": 100
+    },
+    "osanbashi": {
+      "name": "横浜港大さん橋",
+      "latitude": 35.45194,
+      "longitude": 139.64794,
+      "source": "OSM（Nominatim）ferry_terminal",
+      "uncertainty": 250,
+      "height": 15,
+      "ground": 0
+    },
+    "bunkyo": {
+      "name": "文京シビックセンター展望ラウンジ",
+      "latitude": 35.70801,
+      "longitude": 139.75222,
+      "source": "OSM（Nominatim）office",
+      "uncertainty": 50,
+      "height": 105
+    },
+    "minobu": {
+      "name": "身延山",
+      "latitude": 35.39755,
+      "longitude": 138.41627,
+      "source": "国土地理院 地名検索",
+      "uncertainty": 100
+    },
+    "skytree350": {
+      "name": "東京スカイツリー天望デッキ",
+      "latitude": 35.71005,
+      "longitude": 139.81071,
+      "source": "OSM（Nominatim）attraction",
+      "uncertainty": 30,
+      "height": 350
+    },
+    "skytree450": {
+      "name": "東京スカイツリー天望回廊",
+      "latitude": 35.71005,
+      "longitude": 139.81071,
+      "source": "OSM（Nominatim）attraction",
+      "uncertainty": 30,
+      "height": 450
+    }
+  },
+  "photos": [
+    {
+      "date": "2025-10-15",
+      "time": "16:22",
+      "place": "panorama",
+      "label": "パノラマ台上",
+      "source": "photos",
+      "observer": {
+        "place": "panorama",
+        "latitude": 35.41261,
+        "longitude": 138.90948,
+        "ground": 1089.4,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 251.511,
+        "elevation": 8.8176,
+        "topWidth": 3.51,
+        "distance": 17509,
+        "peak": {
+          "azimuth": 250.9122,
+          "elevation": 8.8474
+        },
+        "cell": {
+          "latitude": 35.364311,
+          "longitude": 138.733764,
+          "height": 3727
+        }
+      },
+      "pass": {
+        "instant": "2025-10-15T07:17:58Z",
+        "local": "2025-10-15T16:17",
+        "minutes": 4.03,
+        "ratio": 1.881,
+        "offset": "偏右上"
+      },
+      "best": {
+        "date": "2025-10-18",
+        "ratio": 0.166,
+        "days": -3
+      },
+      "line": {
+        "distance": 426,
+        "along": -57,
+        "across": 422,
+        "sight": "clear",
+        "latitude": 35.40913,
+        "longitude": 138.911452
+      }
+    },
+    {
+      "date": "2025-10-17",
+      "time": "16:10",
+      "place": "asahigaoka",
+      "label": "旭日丘湖畔",
+      "source": "photos",
+      "observer": {
+        "place": "asahigaoka",
+        "latitude": 35.40833,
+        "longitude": 138.8786,
+        "ground": 983.5,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 249.7261,
+        "elevation": 10.9821,
+        "topWidth": 4.14,
+        "distance": 14714,
+        "peak": {
+          "azimuth": 248.9727,
+          "elevation": 11.014
+        },
+        "cell": {
+          "latitude": 35.364381,
+          "longitude": 138.73385,
+          "height": 3724
+        }
+      },
+      "pass": {
+        "instant": "2025-10-17T07:06:19Z",
+        "local": "2025-10-17T16:06",
+        "minutes": 3.68,
+        "ratio": 0.529,
+        "offset": "偏右上"
+      },
+      "best": {
+        "date": "2025-10-18",
+        "ratio": 0.149,
+        "days": -1
+      },
+      "line": {
+        "distance": 669,
+        "along": -637,
+        "across": 204,
+        "sight": "clear",
+        "latitude": 35.408517,
+        "longitude": 138.885967
+      }
+    },
+    {
+      "date": "2025-10-24",
+      "time": "16:05",
+      "place": "kirara",
+      "label": "きらら前",
+      "source": "photos",
+      "observer": {
+        "place": "kirara",
+        "latitude": 35.41982,
+        "longitude": 138.90135,
+        "ground": 984,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 248.0972,
+        "elevation": 9.3902,
+        "topWidth": 3.62,
+        "distance": 17105,
+        "peak": {
+          "azimuth": 247.4333,
+          "elevation": 9.4228
+        },
+        "cell": {
+          "latitude": 35.364381,
+          "longitude": 138.733678,
+          "height": 3725.1
+        }
+      },
+      "pass": {
+        "instant": "2025-10-24T07:06:00Z",
+        "local": "2025-10-24T16:06",
+        "minutes": -1,
+        "ratio": 0.08,
+        "offset": "偏右上"
+      },
+      "best": {
+        "date": "2025-10-24",
+        "ratio": 0.08,
+        "days": 0
+      },
+      "line": {
+        "distance": 356,
+        "along": 355,
+        "across": 26,
+        "sight": "clear",
+        "latitude": 35.418829,
+        "longitude": 138.897617
+      }
+    },
+    {
+      "date": "2025-11-01",
+      "time": "16:07",
+      "place": "takazasu",
+      "label": "高指山",
+      "source": "photos",
+      "observer": {
+        "place": "takazasu",
+        "latitude": 35.43292,
+        "longitude": 138.92638,
+        "ground": 1173.1,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 246.655,
+        "elevation": 7.5073,
+        "topWidth": 3.189,
+        "distance": 19766,
+        "peak": {
+          "azimuth": 246.0389,
+          "elevation": 7.5522
+        },
+        "cell": {
+          "latitude": 35.364591,
+          "longitude": 138.733678,
+          "height": 3718.7
+        }
+      },
+      "pass": {
+        "instant": "2025-11-01T07:07:37Z",
+        "local": "2025-11-01T16:07",
+        "minutes": -0.62,
+        "ratio": 0.586,
+        "offset": "偏左下"
+      },
+      "best": {
+        "date": "2025-10-31",
+        "ratio": 0.008,
+        "days": 1
+      },
+      "line": {
+        "distance": 1475,
+        "along": -1471,
+        "across": 107,
+        "sight": "clear",
+        "latitude": 35.439143,
+        "longitude": 138.940744
+      }
+    },
+    {
+      "date": "2025-11-06",
+      "time": "15:45",
+      "place": "nagaike",
+      "label": "長池親水公園",
+      "source": "photos",
+      "observer": {
+        "place": "nagaike",
+        "latitude": 35.42702,
+        "longitude": 138.87113,
+        "ground": 984.8,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 241.1903,
+        "elevation": 10.7419,
+        "topWidth": 4.162,
+        "distance": 14988,
+        "peak": {
+          "azimuth": 240.7871,
+          "elevation": 10.8035
+        },
+        "cell": {
+          "latitude": 35.364871,
+          "longitude": 138.733506,
+          "height": 3712.6
+        }
+      },
+      "pass": {
+        "instant": "2025-11-06T06:43:01Z",
+        "local": "2025-11-06T15:43",
+        "minutes": 1.98,
+        "ratio": 0.203,
+        "offset": "偏右上"
+      },
+      "best": {
+        "date": "2025-11-06",
+        "ratio": 0.203,
+        "days": 0
+      },
+      "line": {
+        "distance": 328,
+        "along": -310,
+        "across": 108,
+        "sight": "clear",
+        "latitude": 35.427494,
+        "longitude": 138.874703
+      }
+    },
+    {
+      "date": "2025-11-07",
+      "time": "15:42",
+      "place": "nagaike",
+      "label": "長池親水公園",
+      "source": "photos",
+      "observer": {
+        "place": "nagaike",
+        "latitude": 35.42702,
+        "longitude": 138.87113,
+        "ground": 984.8,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 241.1903,
+        "elevation": 10.7419,
+        "topWidth": 4.162,
+        "distance": 14988,
+        "peak": {
+          "azimuth": 240.7871,
+          "elevation": 10.8035
+        },
+        "cell": {
+          "latitude": 35.364871,
+          "longitude": 138.733506,
+          "height": 3712.6
+        }
+      },
+      "pass": {
+        "instant": "2025-11-07T06:43:04Z",
+        "local": "2025-11-07T15:43",
+        "minutes": -1.07,
+        "ratio": 0.345,
+        "offset": "偏左下"
+      },
+      "best": {
+        "date": "2025-11-06",
+        "ratio": 0.203,
+        "days": 1
+      },
+      "line": {
+        "distance": 125,
+        "along": 103,
+        "across": 72,
+        "sight": "clear",
+        "latitude": 35.427132,
+        "longitude": 138.869756
+      }
+    },
+    {
+      "date": "2025-11-19",
+      "time": "15:44",
+      "place": "ohira",
+      "label": "大平山山頂",
+      "source": "photos",
+      "observer": {
+        "place": "ohira",
+        "latitude": 35.4391,
+        "longitude": 138.87944,
+        "ground": 1290.7,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 238.2412,
+        "elevation": 8.7402,
+        "topWidth": 3.862,
+        "distance": 16324,
+        "peak": {
+          "azimuth": 237.8501,
+          "elevation": 8.7973
+        },
+        "cell": {
+          "latitude": 35.365011,
+          "longitude": 138.733506,
+          "height": 3710.8
+        }
+      },
+      "pass": {
+        "instant": "2025-11-19T06:42:46Z",
+        "local": "2025-11-19T15:42",
+        "minutes": 1.23,
+        "ratio": 0.289,
+        "offset": "偏右上"
+      },
+      "best": {
+        "date": "2025-11-20",
+        "ratio": 0.132,
+        "days": -1
+      },
+      "line": {
+        "distance": 1038,
+        "along": -1034,
+        "across": 86,
+        "sight": "blocked",
+        "latitude": 35.443308,
+        "longitude": 138.889657
+      }
+    },
+    {
+      "date": "2025-11-23",
+      "time": "15:47",
+      "place": "ishiwari",
+      "label": "石割山頂",
+      "source": "photos",
+      "observer": {
+        "place": "ishiwari",
+        "latitude": 35.45049,
+        "longitude": 138.90136,
+        "ground": 1412.1,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 238.151,
+        "elevation": 7.2092,
+        "topWidth": 3.396,
+        "distance": 18681,
+        "peak": {
+          "azimuth": 237.4046,
+          "elevation": 7.2633
+        },
+        "cell": {
+          "latitude": 35.364871,
+          "longitude": 138.733506,
+          "height": 3712.6
+        }
+      },
+      "pass": {
+        "instant": "2025-11-23T06:48:17Z",
+        "local": "2025-11-23T15:48",
+        "minutes": -1.28,
+        "ratio": 0.713,
+        "offset": "偏右上"
+      },
+      "best": {
+        "date": "2025-11-25",
+        "ratio": 0.024,
+        "days": -2
+      },
+      "line": {
+        "distance": 282,
+        "along": 280,
+        "across": 34,
+        "sight": "blocked",
+        "latitude": 35.448904,
+        "longitude": 138.898936
+      }
+    },
+    {
+      "date": "2025-11-30",
+      "time": "15:23",
+      "place": "hananomiyako",
+      "label": "花の都公園",
+      "source": "photos",
+      "observer": {
+        "place": "hananomiyako",
+        "latitude": 35.43955,
+        "longitude": 138.85284,
+        "ground": 962.2,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 232.8768,
+        "elevation": 11.33,
+        "topWidth": 4.241,
+        "distance": 14372,
+        "peak": {
+          "azimuth": 232.2846,
+          "elevation": 11.3789
+        },
+        "cell": {
+          "latitude": 35.365361,
+          "longitude": 138.733249,
+          "height": 3710.9
+        }
+      },
+      "pass": {
+        "instant": "2025-11-30T06:22:25Z",
+        "local": "2025-11-30T15:22",
+        "minutes": 0.58,
+        "ratio": 0.049,
+        "offset": "偏左下"
+      },
+      "best": {
+        "date": "2025-11-30",
+        "ratio": 0.049,
+        "days": 0
+      },
+      "line": {
+        "distance": 124,
+        "along": -122,
+        "across": 17,
+        "sight": "clear",
+        "latitude": 35.44009,
+        "longitude": 138.854031
+      }
+    },
+    {
+      "date": "2026-02-04",
+      "time": "16:13",
+      "place": "nagaike",
+      "label": "長池親水公園",
+      "source": "photos",
+      "observer": {
+        "place": "nagaike",
+        "latitude": 35.42702,
+        "longitude": 138.87113,
+        "ground": 984.8,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 241.1903,
+        "elevation": 10.7419,
+        "topWidth": 4.162,
+        "distance": 14988,
+        "peak": {
+          "azimuth": 240.7871,
+          "elevation": 10.8035
+        },
+        "cell": {
+          "latitude": 35.364871,
+          "longitude": 138.733506,
+          "height": 3712.6
+        }
+      },
+      "pass": {
+        "instant": "2026-02-04T07:13:15Z",
+        "local": "2026-02-04T16:13",
+        "minutes": -0.25,
+        "ratio": 0.027,
+        "offset": "偏左下"
+      },
+      "best": {
+        "date": "2026-02-04",
+        "ratio": 0.027,
+        "days": 0
+      },
+      "line": {
+        "distance": 40,
+        "along": 39,
+        "across": 6,
+        "sight": "clear",
+        "latitude": 35.426895,
+        "longitude": 138.870722
+      }
+    },
+    {
+      "date": "2026-02-11",
+      "time": "16:37",
+      "place": "takazasu",
+      "label": "高指山",
+      "source": "photos",
+      "observer": {
+        "place": "takazasu",
+        "latitude": 35.43292,
+        "longitude": 138.92638,
+        "ground": 1173.1,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 246.655,
+        "elevation": 7.5073,
+        "topWidth": 3.189,
+        "distance": 19766,
+        "peak": {
+          "azimuth": 246.0389,
+          "elevation": 7.5522
+        },
+        "cell": {
+          "latitude": 35.364591,
+          "longitude": 138.733678,
+          "height": 3718.7
+        }
+      },
+      "pass": {
+        "instant": "2026-02-11T07:38:11Z",
+        "local": "2026-02-11T16:38",
+        "minutes": -1.18,
+        "ratio": 0.425,
+        "offset": "偏右上"
+      },
+      "best": {
+        "date": "2026-02-10",
+        "ratio": 0.178,
+        "days": 1
+      },
+      "line": {
+        "distance": 279,
+        "along": 279,
+        "across": 3,
+        "sight": "clear",
+        "latitude": 35.431899,
+        "longitude": 138.923571
+      }
+    },
+    {
+      "date": "2026-02-16",
+      "time": "16:34",
+      "place": "kirara",
+      "label": "山中湖交流プラザきらら",
+      "source": "photos",
+      "observer": {
+        "place": "kirara",
+        "latitude": 35.41982,
+        "longitude": 138.90135,
+        "ground": 984,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 248.0972,
+        "elevation": 9.3902,
+        "topWidth": 3.62,
+        "distance": 17105,
+        "peak": {
+          "azimuth": 247.4333,
+          "elevation": 9.4228
+        },
+        "cell": {
+          "latitude": 35.364381,
+          "longitude": 138.733678,
+          "height": 3725.1
+        }
+      },
+      "pass": {
+        "instant": "2026-02-16T07:35:51Z",
+        "local": "2026-02-16T16:35",
+        "minutes": -1.85,
+        "ratio": 0.709,
+        "offset": "偏左下"
+      },
+      "best": {
+        "date": "2026-02-17",
+        "ratio": 0.065,
+        "days": -1
+      },
+      "line": {
+        "distance": 223,
+        "along": 157,
+        "across": 159,
+        "sight": "clear",
+        "latitude": 35.420602,
+        "longitude": 138.899082
+      }
+    },
+    {
+      "date": "2026-02-22",
+      "time": "16:35",
+      "place": "asahigaoka",
+      "label": "旭日丘湖畔",
+      "source": "photos",
+      "observer": {
+        "place": "asahigaoka",
+        "latitude": 35.40833,
+        "longitude": 138.8786,
+        "ground": 983.5,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 249.7261,
+        "elevation": 10.9821,
+        "topWidth": 4.14,
+        "distance": 14714,
+        "peak": {
+          "azimuth": 248.9727,
+          "elevation": 11.014
+        },
+        "cell": {
+          "latitude": 35.364381,
+          "longitude": 138.73385,
+          "height": 3724
+        }
+      },
+      "pass": {
+        "instant": "2026-02-22T07:34:28Z",
+        "local": "2026-02-22T16:34",
+        "minutes": 0.53,
+        "ratio": 0.924,
+        "offset": "偏左下"
+      },
+      "best": {
+        "date": "2026-02-23",
+        "ratio": 0.246,
+        "days": -1
+      },
+      "line": {
+        "distance": 587,
+        "along": -583,
+        "across": 68,
+        "sight": "clear",
+        "latitude": 35.410758,
+        "longitude": 138.884351
+      }
+    },
+    {
+      "date": "2026-02-24",
+      "time": "16:45",
+      "place": "panorama",
+      "label": "パノラマ台上",
+      "source": "photos",
+      "observer": {
+        "place": "panorama",
+        "latitude": 35.41261,
+        "longitude": 138.90948,
+        "ground": 1089.4,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 251.511,
+        "elevation": 8.8176,
+        "topWidth": 3.51,
+        "distance": 17509,
+        "peak": {
+          "azimuth": 250.9122,
+          "elevation": 8.8474
+        },
+        "cell": {
+          "latitude": 35.364311,
+          "longitude": 138.733764,
+          "height": 3727
+        }
+      },
+      "pass": {
+        "instant": "2026-02-24T07:45:25Z",
+        "local": "2026-02-24T16:45",
+        "minutes": -0.42,
+        "ratio": 0.429,
+        "offset": "偏右上"
+      },
+      "best": {
+        "date": "2026-02-23",
+        "ratio": 0.252,
+        "days": 1
+      },
+      "line": {
+        "distance": 175,
+        "along": 171,
+        "across": 39,
+        "sight": "clear",
+        "latitude": 35.411789,
+        "longitude": 138.907831
+      }
+    }
+  ],
+  "schedules": [
+    {
+      "place": "nagaike",
+      "source": "mlitYamanaka",
+      "event": "sunset",
+      "ranges": [
+        [
+          "02-07",
+          "02-08"
+        ],
+        [
+          "11-03",
+          "11-04"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 241.1903,
+          "elevation": 10.7419,
+          "topWidth": 4.162,
+          "distance": 14988,
+          "peak": {
+            "azimuth": 240.7871,
+            "elevation": 10.8035
+          },
+          "cell": {
+            "latitude": 35.364871,
+            "longitude": 138.733506,
+            "height": 3712.6
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-02-04T16:13",
+            "bestRatio": 0.027,
+            "quarter": [
+              "2026-02-04"
+            ],
+            "half": [
+              "2026-02-04"
+            ],
+            "range": [
+              "02-07",
+              "02-08"
+            ],
+            "days": -3
+          },
+          {
+            "best": "2026-11-07T15:43",
+            "bestRatio": 0.212,
+            "quarter": [
+              "2026-11-07"
+            ],
+            "half": [
+              "2026-11-06",
+              "2026-11-07"
+            ],
+            "range": [
+              "11-03",
+              "11-04"
+            ],
+            "days": 3
+          }
+        ],
+        "observer": {
+          "place": "nagaike",
+          "latitude": 35.42702,
+          "longitude": 138.87113,
+          "ground": 984.8,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 986.4
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 241.2335,
+          "elevation": 14.5086,
+          "topWidth": 4.048,
+          "distance": 14988,
+          "peak": {
+            "azimuth": 240.8143,
+            "elevation": 14.5662
+          },
+          "cell": {
+            "latitude": 35.365081,
+            "longitude": 138.733506,
+            "height": 3710
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-02-12T16:02",
+            "bestRatio": 0.121,
+            "quarter": [
+              "2026-02-12"
+            ],
+            "half": [
+              "2026-02-12",
+              "2026-02-13"
+            ],
+            "range": [
+              "02-07",
+              "02-08"
+            ],
+            "days": 4
+          },
+          {
+            "best": "2026-10-29T15:31",
+            "bestRatio": 0.237,
+            "quarter": [
+              "2026-10-29"
+            ],
+            "half": [
+              "2026-10-29",
+              "2026-10-30"
+            ],
+            "range": [
+              "11-03",
+              "11-04"
+            ],
+            "days": -5
+          }
+        ],
+        "observer": {
+          "place": "nagaike",
+          "latitude": 35.42702,
+          "longitude": 138.87113,
+          "ground": 984.8,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "takazasu",
+      "source": "mlitYamanaka",
+      "event": "sunset",
+      "ranges": [
+        [
+          "02-10",
+          "02-11"
+        ],
+        [
+          "10-30",
+          "10-31"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 246.655,
+          "elevation": 7.5073,
+          "topWidth": 3.189,
+          "distance": 19766,
+          "peak": {
+            "azimuth": 246.0389,
+            "elevation": 7.5522
+          },
+          "cell": {
+            "latitude": 35.364591,
+            "longitude": 138.733678,
+            "height": 3718.7
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-02-10T16:38",
+            "bestRatio": 0.178,
+            "quarter": [
+              "2026-02-10"
+            ],
+            "half": [
+              "2026-02-10",
+              "2026-02-11"
+            ],
+            "range": [
+              "02-10",
+              "02-11"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-10-31T16:07",
+            "bestRatio": 0.155,
+            "quarter": [
+              "2026-10-31"
+            ],
+            "half": [
+              "2026-10-31",
+              "2026-11-01"
+            ],
+            "range": [
+              "10-30",
+              "10-31"
+            ],
+            "days": 0
+          }
+        ],
+        "observer": {
+          "place": "takazasu",
+          "latitude": 35.43292,
+          "longitude": 138.92638,
+          "ground": 1173.1,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 1174.7
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 246.6477,
+          "elevation": 10.942,
+          "topWidth": 3.135,
+          "distance": 19766,
+          "peak": {
+            "azimuth": 246.0506,
+            "elevation": 10.9782
+          },
+          "cell": {
+            "latitude": 35.364591,
+            "longitude": 138.733764,
+            "height": 3717.4
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-02-17T16:27",
+            "bestRatio": 0.101,
+            "quarter": [
+              "2026-02-17"
+            ],
+            "half": [
+              "2026-02-17"
+            ],
+            "range": [
+              "02-10",
+              "02-11"
+            ],
+            "days": 6
+          },
+          {
+            "best": "2026-10-25T15:57",
+            "bestRatio": 0.231,
+            "quarter": [
+              "2026-10-25"
+            ],
+            "half": [
+              "2026-10-24",
+              "2026-10-25"
+            ],
+            "range": [
+              "10-30",
+              "10-31"
+            ],
+            "days": -5
+          }
+        ],
+        "observer": {
+          "place": "takazasu",
+          "latitude": 35.43292,
+          "longitude": 138.92638,
+          "ground": 1173.1,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "ohira",
+      "source": "mlitYamanaka",
+      "event": "sunset",
+      "ranges": [
+        [
+          "01-28",
+          "01-29"
+        ],
+        [
+          "11-13",
+          "11-14"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 238.2412,
+          "elevation": 8.7402,
+          "topWidth": 3.862,
+          "distance": 16324,
+          "peak": {
+            "azimuth": 237.8501,
+            "elevation": 8.7973
+          },
+          "cell": {
+            "latitude": 35.365011,
+            "longitude": 138.733506,
+            "height": 3710.8
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-01-22T16:08",
+            "bestRatio": 0.058,
+            "quarter": [
+              "2026-01-22"
+            ],
+            "half": [
+              "2026-01-21",
+              "2026-01-22",
+              "2026-01-23"
+            ],
+            "range": [
+              "01-28",
+              "01-29"
+            ],
+            "days": -6
+          },
+          {
+            "best": "2026-11-20T15:42",
+            "bestRatio": 0.031,
+            "quarter": [
+              "2026-11-20"
+            ],
+            "half": [
+              "2026-11-19",
+              "2026-11-20",
+              "2026-11-21"
+            ],
+            "range": [
+              "11-13",
+              "11-14"
+            ],
+            "days": 6
+          }
+        ],
+        "observer": {
+          "place": "ohira",
+          "latitude": 35.4391,
+          "longitude": 138.87944,
+          "ground": 1290.7,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 1292.3
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 238.3015,
+          "elevation": 13.3086,
+          "topWidth": 3.733,
+          "distance": 16324,
+          "peak": {
+            "azimuth": 237.8742,
+            "elevation": 13.3585
+          },
+          "cell": {
+            "latitude": 35.365151,
+            "longitude": 138.73342,
+            "height": 3710.6
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-02-03T15:57",
+            "bestRatio": 0.006,
+            "quarter": [
+              "2026-02-03"
+            ],
+            "half": [
+              "2026-02-03"
+            ],
+            "range": [
+              "01-28",
+              "01-29"
+            ],
+            "days": 5
+          },
+          {
+            "best": "2026-11-08T15:27",
+            "bestRatio": 0.172,
+            "quarter": [
+              "2026-11-08"
+            ],
+            "half": [
+              "2026-11-07",
+              "2026-11-08"
+            ],
+            "range": [
+              "11-13",
+              "11-14"
+            ],
+            "days": -5
+          }
+        ],
+        "observer": {
+          "place": "ohira",
+          "latitude": 35.4391,
+          "longitude": 138.87944,
+          "ground": 1290.7,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "panorama",
+      "source": "mlitYamanaka",
+      "event": "sunset",
+      "ranges": [
+        [
+          "02-22",
+          "02-23"
+        ],
+        [
+          "10-18",
+          "10-19"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 251.511,
+          "elevation": 8.8176,
+          "topWidth": 3.51,
+          "distance": 17509,
+          "peak": {
+            "azimuth": 250.9122,
+            "elevation": 8.8474
+          },
+          "cell": {
+            "latitude": 35.364311,
+            "longitude": 138.733764,
+            "height": 3727
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-02-23T16:45",
+            "bestRatio": 0.252,
+            "quarter": [],
+            "half": [
+              "2026-02-23",
+              "2026-02-24"
+            ],
+            "range": [
+              "02-22",
+              "02-23"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-10-18T16:17",
+            "bestRatio": 0.004,
+            "quarter": [
+              "2026-10-18"
+            ],
+            "half": [
+              "2026-10-18"
+            ],
+            "range": [
+              "10-18",
+              "10-19"
+            ],
+            "days": 0
+          }
+        ],
+        "observer": {
+          "place": "panorama",
+          "latitude": 35.41261,
+          "longitude": 138.90948,
+          "ground": 1089.4,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 1091
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 251.4771,
+          "elevation": 12.4089,
+          "topWidth": 3.393,
+          "distance": 17509,
+          "peak": {
+            "azimuth": 250.9035,
+            "elevation": 12.4254
+          },
+          "cell": {
+            "latitude": 35.364241,
+            "longitude": 138.733935,
+            "height": 3726.9
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-03-01T16:33",
+            "bestRatio": 0.236,
+            "quarter": [
+              "2026-03-01"
+            ],
+            "half": [
+              "2026-03-01",
+              "2026-03-02"
+            ],
+            "range": [
+              "02-22",
+              "02-23"
+            ],
+            "days": 6
+          },
+          {
+            "best": "2026-10-12T16:07",
+            "bestRatio": 0.026,
+            "quarter": [
+              "2026-10-12"
+            ],
+            "half": [
+              "2026-10-12"
+            ],
+            "range": [
+              "10-18",
+              "10-19"
+            ],
+            "days": -6
+          }
+        ],
+        "observer": {
+          "place": "panorama",
+          "latitude": 35.41261,
+          "longitude": 138.90948,
+          "ground": 1089.4,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "asahigaoka",
+      "source": "mlitYamanaka",
+      "event": "sunset",
+      "ranges": [
+        [
+          "02-23",
+          "02-24"
+        ],
+        [
+          "10-18",
+          "10-19"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 249.7261,
+          "elevation": 10.9821,
+          "topWidth": 4.14,
+          "distance": 14714,
+          "peak": {
+            "azimuth": 248.9727,
+            "elevation": 11.014
+          },
+          "cell": {
+            "latitude": 35.364381,
+            "longitude": 138.73385,
+            "height": 3724
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-02-23T16:34",
+            "bestRatio": 0.246,
+            "quarter": [
+              "2026-02-23"
+            ],
+            "half": [
+              "2026-02-23",
+              "2026-02-24"
+            ],
+            "range": [
+              "02-23",
+              "02-24"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-10-18T16:06",
+            "bestRatio": 0.013,
+            "quarter": [
+              "2026-10-18"
+            ],
+            "half": [
+              "2026-10-18"
+            ],
+            "range": [
+              "10-18",
+              "10-19"
+            ],
+            "days": 0
+          }
+        ],
+        "observer": {
+          "place": "asahigaoka",
+          "latitude": 35.40833,
+          "longitude": 138.8786,
+          "ground": 983.5,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 985.1
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 249.6863,
+          "elevation": 14.8085,
+          "topWidth": 4.002,
+          "distance": 14714,
+          "peak": {
+            "azimuth": 249.0795,
+            "elevation": 14.8247
+          },
+          "cell": {
+            "latitude": 35.364311,
+            "longitude": 138.733935,
+            "height": 3724.5
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-03-02T16:20",
+            "bestRatio": 0.144,
+            "quarter": [
+              "2026-03-02"
+            ],
+            "half": [
+              "2026-03-02"
+            ],
+            "range": [
+              "02-23",
+              "02-24"
+            ],
+            "days": 6
+          },
+          {
+            "best": "2026-10-12T15:55",
+            "bestRatio": 0.344,
+            "quarter": [],
+            "half": [
+              "2026-10-11",
+              "2026-10-12"
+            ],
+            "range": [
+              "10-18",
+              "10-19"
+            ],
+            "days": -6
+          }
+        ],
+        "observer": {
+          "place": "asahigaoka",
+          "latitude": 35.40833,
+          "longitude": 138.8786,
+          "ground": 983.5,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "kirara",
+      "source": "mlitYamanaka",
+      "event": "sunset",
+      "ranges": [
+        [
+          "02-14",
+          "02-15"
+        ],
+        [
+          "10-26",
+          "10-27"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 248.0972,
+          "elevation": 9.3902,
+          "topWidth": 3.62,
+          "distance": 17105,
+          "peak": {
+            "azimuth": 247.4333,
+            "elevation": 9.4228
+          },
+          "cell": {
+            "latitude": 35.364381,
+            "longitude": 138.733678,
+            "height": 3725.1
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-02-17T16:35",
+            "bestRatio": 0.065,
+            "quarter": [
+              "2026-02-17"
+            ],
+            "half": [
+              "2026-02-17"
+            ],
+            "range": [
+              "02-14",
+              "02-15"
+            ],
+            "days": 2
+          },
+          {
+            "best": "2026-10-24T16:06",
+            "bestRatio": 0.237,
+            "quarter": [
+              "2026-10-24"
+            ],
+            "half": [
+              "2026-10-24",
+              "2026-10-25"
+            ],
+            "range": [
+              "10-26",
+              "10-27"
+            ],
+            "days": -2
+          }
+        ],
+        "observer": {
+          "place": "kirara",
+          "latitude": 35.41982,
+          "longitude": 138.90135,
+          "ground": 984,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 985.6
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 248.0897,
+          "elevation": 12.7008,
+          "topWidth": 3.534,
+          "distance": 17105,
+          "peak": {
+            "azimuth": 247.4478,
+            "elevation": 12.7258
+          },
+          "cell": {
+            "latitude": 35.364451,
+            "longitude": 138.73385,
+            "height": 3721.8
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-02-23T16:24",
+            "bestRatio": 0.008,
+            "quarter": [
+              "2026-02-23"
+            ],
+            "half": [
+              "2026-02-23"
+            ],
+            "range": [
+              "02-14",
+              "02-15"
+            ],
+            "days": 8
+          },
+          {
+            "best": "2026-10-18T15:56",
+            "bestRatio": 0.262,
+            "quarter": [],
+            "half": [
+              "2026-10-18",
+              "2026-10-19"
+            ],
+            "range": [
+              "10-26",
+              "10-27"
+            ],
+            "days": -8
+          }
+        ],
+        "observer": {
+          "place": "kirara",
+          "latitude": 35.41982,
+          "longitude": 138.90135,
+          "ground": 984,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "hananomiyako",
+      "source": "mlitYamanaka",
+      "event": "sunset",
+      "ranges": [
+        [
+          "12-14",
+          "12-31"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 232.8768,
+          "elevation": 11.33,
+          "topWidth": 4.241,
+          "distance": 14372,
+          "peak": {
+            "azimuth": 232.2846,
+            "elevation": 11.3789
+          },
+          "cell": {
+            "latitude": 35.365361,
+            "longitude": 138.733249,
+            "height": 3710.9
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-01-12T15:41",
+            "bestRatio": 0.055,
+            "quarter": [
+              "2026-01-11",
+              "2026-01-12"
+            ],
+            "half": [
+              "2026-01-11",
+              "2026-01-12",
+              "2026-01-13"
+            ],
+            "range": [
+              "12-14",
+              "12-31"
+            ],
+            "days": 12
+          },
+          {
+            "best": "2026-11-30T15:22",
+            "bestRatio": 0.024,
+            "quarter": [
+              "2026-11-30"
+            ],
+            "half": [
+              "2026-11-29",
+              "2026-11-30",
+              "2026-12-01"
+            ],
+            "range": [
+              "12-14",
+              "12-31"
+            ],
+            "days": -14
+          }
+        ],
+        "observer": {
+          "place": "hananomiyako",
+          "latitude": 35.43955,
+          "longitude": 138.85284,
+          "ground": 962.2,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 963.8
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 232.9479,
+          "elevation": 15.1704,
+          "topWidth": 4.19,
+          "distance": 14372,
+          "peak": {
+            "azimuth": 232.2846,
+            "elevation": 15.2037
+          },
+          "cell": {
+            "latitude": 35.365571,
+            "longitude": 138.733163,
+            "height": 3710.1
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-01-25T15:34",
+            "bestRatio": 0.211,
+            "quarter": [
+              "2026-01-25",
+              "2026-01-26"
+            ],
+            "half": [
+              "2026-01-25",
+              "2026-01-26"
+            ],
+            "range": [
+              "12-14",
+              "12-31"
+            ],
+            "days": 25
+          },
+          {
+            "best": "2026-11-16T15:07",
+            "bestRatio": 0.157,
+            "quarter": [
+              "2026-11-16"
+            ],
+            "half": [
+              "2026-11-16",
+              "2026-11-17"
+            ],
+            "range": [
+              "12-14",
+              "12-31"
+            ],
+            "days": -28
+          }
+        ],
+        "observer": {
+          "place": "hananomiyako",
+          "latitude": 35.43955,
+          "longitude": 138.85284,
+          "ground": 962.2,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "nijumagari",
+      "source": "mlit",
+      "event": "sunset",
+      "ranges": [
+        [
+          "01-06",
+          "01-08"
+        ],
+        [
+          "12-05",
+          "12-07"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 234.8196,
+          "elevation": 8.1645,
+          "topWidth": 3.386,
+          "distance": 18408,
+          "peak": {
+            "azimuth": 234.4176,
+            "elevation": 8.2118
+          },
+          "cell": {
+            "latitude": 35.365221,
+            "longitude": 138.733335,
+            "height": 3711
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-01-06T15:54",
+            "bestRatio": 0.106,
+            "quarter": [
+              "2026-01-05",
+              "2026-01-06"
+            ],
+            "half": [
+              "2026-01-03",
+              "2026-01-04",
+              "2026-01-05",
+              "2026-01-06",
+              "2026-01-07"
+            ],
+            "range": [
+              "01-06",
+              "01-08"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-12-06T15:40",
+            "bestRatio": 0.085,
+            "quarter": [
+              "2026-12-06",
+              "2026-12-07"
+            ],
+            "half": [
+              "2026-12-05",
+              "2026-12-06",
+              "2026-12-07",
+              "2026-12-08"
+            ],
+            "range": [
+              "12-05",
+              "12-07"
+            ],
+            "days": 0
+          }
+        ],
+        "observer": {
+          "place": "nijumagari",
+          "latitude": 35.45704,
+          "longitude": 138.89234,
+          "ground": 1147.8,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 1149.4
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 234.8666,
+          "elevation": 11.7758,
+          "topWidth": 3.291,
+          "distance": 18408,
+          "peak": {
+            "azimuth": 234.4381,
+            "elevation": 11.817
+          },
+          "cell": {
+            "latitude": 35.365291,
+            "longitude": 138.733335,
+            "height": 3710.2
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-01-21T15:49",
+            "bestRatio": 0.143,
+            "quarter": [
+              "2026-01-21"
+            ],
+            "half": [
+              "2026-01-20",
+              "2026-01-21"
+            ],
+            "range": [
+              "01-06",
+              "01-08"
+            ],
+            "days": 13
+          },
+          {
+            "best": "2026-11-21T15:23",
+            "bestRatio": 0.07,
+            "quarter": [
+              "2026-11-21"
+            ],
+            "half": [
+              "2026-11-20",
+              "2026-11-21",
+              "2026-11-22"
+            ],
+            "range": [
+              "12-05",
+              "12-07"
+            ],
+            "days": -14
+          }
+        ],
+        "observer": {
+          "place": "nijumagari",
+          "latitude": 35.45704,
+          "longitude": 138.89234,
+          "ground": 1147.8,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "takao",
+      "source": "mlit",
+      "event": "sunset",
+      "ranges": [
+        [
+          "12-17",
+          "12-26"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 238.183,
+          "elevation": 3.0209,
+          "topWidth": 1.134,
+          "distance": 55261,
+          "peak": {
+            "azimuth": 238.5494,
+            "elevation": 3.0499
+          },
+          "cell": {
+            "latitude": 35.364731,
+            "longitude": 138.733335,
+            "height": 3715.5
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-12-22T16:12",
+            "bestRatio": 0.224,
+            "quarter": [
+              "2026-12-20",
+              "2026-12-21",
+              "2026-12-22",
+              "2026-12-23"
+            ],
+            "half": [
+              "2026-12-16",
+              "2026-12-17",
+              "2026-12-18",
+              "2026-12-19",
+              "2026-12-20",
+              "2026-12-21",
+              "2026-12-22",
+              "2026-12-23",
+              "2026-12-24",
+              "2026-12-25",
+              "2026-12-26",
+              "2026-12-27"
+            ],
+            "range": [
+              "12-17",
+              "12-26"
+            ],
+            "days": 0
+          }
+        ],
+        "observer": {
+          "place": "takao",
+          "latitude": 35.62523,
+          "longitude": 139.24358,
+          "ground": 598.3,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 599.9
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 238.183,
+          "elevation": 3.6481,
+          "topWidth": 1.134,
+          "distance": 55261,
+          "peak": {
+            "azimuth": 238.5494,
+            "elevation": 3.6751
+          },
+          "cell": {
+            "latitude": 35.364731,
+            "longitude": 138.733335,
+            "height": 3715.5
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-01-01T16:15",
+            "bestRatio": 0.247,
+            "quarter": [
+              "2026-01-01"
+            ],
+            "half": [
+              "2026-01-01",
+              "2026-01-02"
+            ],
+            "range": [
+              "12-17",
+              "12-26"
+            ],
+            "days": 6
+          },
+          {
+            "best": "2026-12-13T16:06",
+            "bestRatio": 0.039,
+            "quarter": [
+              "2026-12-11",
+              "2026-12-12",
+              "2026-12-13",
+              "2026-12-14",
+              "2026-12-29",
+              "2026-12-30",
+              "2026-12-31"
+            ],
+            "half": [
+              "2026-12-10",
+              "2026-12-11",
+              "2026-12-12",
+              "2026-12-13",
+              "2026-12-14",
+              "2026-12-15",
+              "2026-12-16",
+              "2026-12-17",
+              "2026-12-18",
+              "2026-12-25",
+              "2026-12-26",
+              "2026-12-27",
+              "2026-12-28",
+              "2026-12-29",
+              "2026-12-30",
+              "2026-12-31"
+            ],
+            "range": [
+              "12-17",
+              "12-26"
+            ],
+            "days": -4
+          }
+        ],
+        "observer": {
+          "place": "takao",
+          "latitude": 35.62523,
+          "longitude": 139.24358,
+          "ground": 598.3,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "nokogiri",
+      "source": "mlit",
+      "event": "sunset",
+      "ranges": [
+        [
+          "04-18",
+          "04-19"
+        ],
+        [
+          "08-23",
+          "08-24"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 282.8707,
+          "elevation": 1.43,
+          "topWidth": 0.584,
+          "distance": 103630,
+          "peak": {
+            "azimuth": 282.6845,
+            "elevation": 1.4361
+          },
+          "cell": {
+            "latitude": 35.362561,
+            "longitude": 138.734021,
+            "height": 3740.4
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-04-19T18:06",
+            "bestRatio": 0.203,
+            "quarter": [
+              "2026-04-19"
+            ],
+            "half": [
+              "2026-04-18",
+              "2026-04-19"
+            ],
+            "range": [
+              "04-18",
+              "04-19"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-08-24T18:09",
+            "bestRatio": 0.162,
+            "quarter": [
+              "2026-08-24"
+            ],
+            "half": [
+              "2026-08-23",
+              "2026-08-24"
+            ],
+            "range": [
+              "08-23",
+              "08-24"
+            ],
+            "days": 0
+          }
+        ],
+        "observer": {
+          "place": "nokogiri",
+          "latitude": 35.16042,
+          "longitude": 139.84086,
+          "ground": 327.2,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 328.8
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 282.8707,
+          "elevation": 1.6123,
+          "topWidth": 0.584,
+          "distance": 103630,
+          "peak": {
+            "azimuth": 282.6845,
+            "elevation": 1.6175
+          },
+          "cell": {
+            "latitude": 35.362561,
+            "longitude": 138.734021,
+            "height": 3740.4
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-04-19T18:05",
+            "bestRatio": 0.01,
+            "quarter": [
+              "2026-04-19"
+            ],
+            "half": [
+              "2026-04-19"
+            ],
+            "range": [
+              "04-18",
+              "04-19"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-08-23T18:09",
+            "bestRatio": 0.249,
+            "quarter": [
+              "2026-08-23"
+            ],
+            "half": [
+              "2026-08-23",
+              "2026-08-24"
+            ],
+            "range": [
+              "08-23",
+              "08-24"
+            ],
+            "days": 0
+          }
+        ],
+        "observer": {
+          "place": "nokogiri",
+          "latitude": 35.16042,
+          "longitude": 139.84086,
+          "ground": 327.2,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "ogusu",
+      "source": "mlit",
+      "event": "sunset",
+      "ranges": [
+        [
+          "04-11",
+          "04-11"
+        ],
+        [
+          "08-31",
+          "09-01"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 279.0013,
+          "elevation": 2.0648,
+          "topWidth": 0.749,
+          "distance": 82748,
+          "peak": {
+            "azimuth": 278.7741,
+            "elevation": 2.0689
+          },
+          "cell": {
+            "latitude": 35.362771,
+            "longitude": 138.734107,
+            "height": 3740.1
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-04-11T17:57",
+            "bestRatio": 0.016,
+            "quarter": [
+              "2026-04-11"
+            ],
+            "half": [
+              "2026-04-11"
+            ],
+            "range": [
+              "04-11",
+              "04-11"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-09-01T17:56",
+            "bestRatio": 0.286,
+            "quarter": [],
+            "half": [
+              "2026-08-31",
+              "2026-09-01"
+            ],
+            "range": [
+              "08-31",
+              "09-01"
+            ],
+            "days": 0
+          }
+        ],
+        "observer": {
+          "place": "ogusu",
+          "latitude": 35.25007,
+          "longitude": 139.62812,
+          "ground": 240.8,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 242.4
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 279.0013,
+          "elevation": 2.2333,
+          "topWidth": 0.749,
+          "distance": 82748,
+          "peak": {
+            "azimuth": 278.7741,
+            "elevation": 2.2362
+          },
+          "cell": {
+            "latitude": 35.362771,
+            "longitude": 138.734107,
+            "height": 3740.1
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-04-11T17:57",
+            "bestRatio": 0.176,
+            "quarter": [
+              "2026-04-11"
+            ],
+            "half": [
+              "2026-04-11",
+              "2026-04-12"
+            ],
+            "range": [
+              "04-11",
+              "04-11"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-08-31T17:56",
+            "bestRatio": 0.188,
+            "quarter": [
+              "2026-08-31"
+            ],
+            "half": [
+              "2026-08-31",
+              "2026-09-01"
+            ],
+            "range": [
+              "08-31",
+              "09-01"
+            ],
+            "days": 0
+          }
+        ],
+        "observer": {
+          "place": "ogusu",
+          "latitude": 35.25007,
+          "longitude": 139.62812,
+          "ground": 240.8,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "shonandaira",
+      "source": "mlit",
+      "event": "sunset",
+      "ranges": [
+        [
+          "04-04",
+          "04-05"
+        ],
+        [
+          "09-07",
+          "09-07"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 275.3985,
+          "elevation": 3.6413,
+          "topWidth": 1.164,
+          "distance": 52987,
+          "peak": {
+            "azimuth": 275.3554,
+            "elevation": 3.6456
+          },
+          "cell": {
+            "latitude": 35.362911,
+            "longitude": 138.734279,
+            "height": 3735.2
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-04-06T17:46",
+            "bestRatio": 0.228,
+            "quarter": [
+              "2026-04-06"
+            ],
+            "half": [
+              "2026-04-05",
+              "2026-04-06"
+            ],
+            "range": [
+              "04-04",
+              "04-05"
+            ],
+            "days": 1
+          },
+          {
+            "best": "2026-09-06T17:42",
+            "bestRatio": 0.022,
+            "quarter": [
+              "2026-09-06"
+            ],
+            "half": [
+              "2026-09-06"
+            ],
+            "range": [
+              "09-07",
+              "09-07"
+            ],
+            "days": -1
+          }
+        ],
+        "observer": {
+          "place": "shonandaira",
+          "latitude": 35.31987,
+          "longitude": 139.30874,
+          "ground": 179,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 180.6
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 275.3985,
+          "elevation": 3.8377,
+          "topWidth": 1.164,
+          "distance": 52987,
+          "peak": {
+            "azimuth": 275.3554,
+            "elevation": 3.842
+          },
+          "cell": {
+            "latitude": 35.362911,
+            "longitude": 138.734279,
+            "height": 3735.2
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-04-06T17:45",
+            "bestRatio": 0.01,
+            "quarter": [
+              "2026-04-06"
+            ],
+            "half": [
+              "2026-04-06"
+            ],
+            "range": [
+              "04-04",
+              "04-05"
+            ],
+            "days": 1
+          },
+          {
+            "best": "2026-09-06T17:41",
+            "bestRatio": 0.241,
+            "quarter": [
+              "2026-09-06"
+            ],
+            "half": [
+              "2026-09-05",
+              "2026-09-06"
+            ],
+            "range": [
+              "09-07",
+              "09-07"
+            ],
+            "days": -1
+          }
+        ],
+        "observer": {
+          "place": "shonandaira",
+          "latitude": 35.31987,
+          "longitude": 139.30874,
+          "ground": 179,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "azuma",
+      "source": "mlit",
+      "event": "sunset",
+      "ranges": [
+        [
+          "04-13",
+          "04-15"
+        ],
+        [
+          "09-08",
+          "09-08"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 278.5287,
+          "elevation": 4.1655,
+          "topWidth": 1.256,
+          "distance": 47991,
+          "peak": {
+            "azimuth": 278.5157,
+            "elevation": 4.1656
+          },
+          "cell": {
+            "latitude": 35.362701,
+            "longitude": 138.734107,
+            "height": 3740.2
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-04-13T17:50",
+            "bestRatio": 0.28,
+            "quarter": [],
+            "half": [
+              "2026-04-13",
+              "2026-04-14"
+            ],
+            "range": [
+              "04-13",
+              "04-15"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-08-29T17:50",
+            "bestRatio": 0.069,
+            "quarter": [
+              "2026-08-29"
+            ],
+            "half": [
+              "2026-08-29"
+            ],
+            "range": [
+              "09-08",
+              "09-08"
+            ],
+            "days": -10
+          }
+        ],
+        "observer": {
+          "place": "azuma",
+          "latitude": 35.30038,
+          "longitude": 139.25063,
+          "ground": 102.9,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 104.5
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 278.5287,
+          "elevation": 4.2909,
+          "topWidth": 1.256,
+          "distance": 47991,
+          "peak": {
+            "azimuth": 278.5157,
+            "elevation": 4.291
+          },
+          "cell": {
+            "latitude": 35.362701,
+            "longitude": 138.734107,
+            "height": 3740.2
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-04-14T17:49",
+            "bestRatio": 0.253,
+            "quarter": [],
+            "half": [
+              "2026-04-13",
+              "2026-04-14"
+            ],
+            "range": [
+              "04-13",
+              "04-15"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-08-29T17:50",
+            "bestRatio": 0.07,
+            "quarter": [
+              "2026-08-29"
+            ],
+            "half": [
+              "2026-08-29"
+            ],
+            "range": [
+              "09-08",
+              "09-08"
+            ],
+            "days": -10
+          }
+        ],
+        "observer": {
+          "place": "azuma",
+          "latitude": 35.30038,
+          "longitude": 139.25063,
+          "ground": 102.9,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "ono",
+      "source": "mlit",
+      "event": "sunset",
+      "ranges": [
+        [
+          "03-18",
+          "03-19"
+        ],
+        [
+          "09-24",
+          "09-25"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 265.1266,
+          "elevation": 5.8445,
+          "topWidth": 2.084,
+          "distance": 29312,
+          "peak": {
+            "azimuth": 264.9389,
+            "elevation": 5.8659
+          },
+          "cell": {
+            "latitude": 35.363611,
+            "longitude": 138.734107,
+            "height": 3728.4
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-03-19T17:21",
+            "bestRatio": 0.282,
+            "quarter": [],
+            "half": [
+              "2026-03-18",
+              "2026-03-19"
+            ],
+            "range": [
+              "03-18",
+              "03-19"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-09-24T17:06",
+            "bestRatio": 0.25,
+            "quarter": [],
+            "half": [
+              "2026-09-24",
+              "2026-09-25"
+            ],
+            "range": [
+              "09-24",
+              "09-25"
+            ],
+            "days": 0
+          }
+        ],
+        "observer": {
+          "place": "ono",
+          "latitude": 35.38601,
+          "longitude": 139.04879,
+          "ground": 722.4,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 724
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 265.1119,
+          "elevation": 7.27,
+          "topWidth": 2.024,
+          "distance": 29312,
+          "peak": {
+            "azimuth": 264.9389,
+            "elevation": 7.2909
+          },
+          "cell": {
+            "latitude": 35.363611,
+            "longitude": 138.734107,
+            "height": 3728.4
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-03-21T17:16",
+            "bestRatio": 0.2,
+            "quarter": [
+              "2026-03-21"
+            ],
+            "half": [
+              "2026-03-21"
+            ],
+            "range": [
+              "03-18",
+              "03-19"
+            ],
+            "days": 2
+          },
+          {
+            "best": "2026-09-22T17:01",
+            "bestRatio": 0.149,
+            "quarter": [
+              "2026-09-22"
+            ],
+            "half": [
+              "2026-09-22"
+            ],
+            "range": [
+              "09-24",
+              "09-25"
+            ],
+            "days": -2
+          }
+        ],
+        "observer": {
+          "place": "ono",
+          "latitude": 35.38601,
+          "longitude": 139.04879,
+          "ground": 722.4,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "kobo",
+      "source": "mlit",
+      "event": "sunset",
+      "ranges": [
+        [
+          "03-24",
+          "03-24"
+        ],
+        [
+          "09-18",
+          "09-18"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 268.5686,
+          "elevation": 4.0466,
+          "topWidth": 1.309,
+          "distance": 47489,
+          "peak": {
+            "azimuth": 268.4653,
+            "elevation": 4.0563
+          },
+          "cell": {
+            "latitude": 35.363401,
+            "longitude": 138.734193,
+            "height": 3731.4
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-03-23T17:33",
+            "bestRatio": 0.032,
+            "quarter": [
+              "2026-03-23"
+            ],
+            "half": [
+              "2026-03-23"
+            ],
+            "range": [
+              "03-24",
+              "03-24"
+            ],
+            "days": -1
+          },
+          {
+            "best": "2026-09-20T17:20",
+            "bestRatio": 0.062,
+            "quarter": [
+              "2026-09-20"
+            ],
+            "half": [
+              "2026-09-20"
+            ],
+            "range": [
+              "09-18",
+              "09-18"
+            ],
+            "days": 2
+          }
+        ],
+        "observer": {
+          "place": "kobo",
+          "latitude": 35.37513,
+          "longitude": 139.25021,
+          "ground": 236.7,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 238.3
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 268.5639,
+          "elevation": 4.336,
+          "topWidth": 1.3,
+          "distance": 47489,
+          "peak": {
+            "azimuth": 268.4653,
+            "elevation": 4.3456
+          },
+          "cell": {
+            "latitude": 35.363401,
+            "longitude": 138.734193,
+            "height": 3731.4
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-03-23T17:32",
+            "bestRatio": 0.282,
+            "quarter": [],
+            "half": [
+              "2026-03-23",
+              "2026-03-24"
+            ],
+            "range": [
+              "03-24",
+              "03-24"
+            ],
+            "days": -1
+          },
+          {
+            "best": "2026-09-19T17:19",
+            "bestRatio": 0.346,
+            "quarter": [],
+            "half": [
+              "2026-09-19",
+              "2026-09-20"
+            ],
+            "range": [
+              "09-18",
+              "09-18"
+            ],
+            "days": 1
+          }
+        ],
+        "observer": {
+          "place": "kobo",
+          "latitude": 35.37513,
+          "longitude": 139.25021,
+          "ground": 236.7,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "osanbashi",
+      "source": "mlit",
+      "event": "sunset",
+      "ranges": [
+        [
+          "03-09",
+          "03-10"
+        ],
+        [
+          "10-03",
+          "10-04"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 263.5511,
+          "elevation": 2.1674,
+          "topWidth": 0.762,
+          "distance": 84141,
+          "peak": {
+            "azimuth": 263.3565,
+            "elevation": 2.1766
+          },
+          "cell": {
+            "latitude": 35.363891,
+            "longitude": 138.734021,
+            "height": 3727.6
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-03-10T17:30",
+            "bestRatio": 0.188,
+            "quarter": [
+              "2026-03-10"
+            ],
+            "half": [
+              "2026-03-10"
+            ],
+            "range": [
+              "03-09",
+              "03-10"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-10-03T17:09",
+            "bestRatio": 0.252,
+            "quarter": [],
+            "half": [
+              "2026-10-03",
+              "2026-10-04"
+            ],
+            "range": [
+              "10-03",
+              "10-04"
+            ],
+            "days": 0
+          }
+        ],
+        "observer": {
+          "place": "osanbashi",
+          "latitude": 35.45194,
+          "longitude": 139.64794,
+          "ground": 0,
+          "groundSource": "固定值（码头面近似）",
+          "height": 15
+        },
+        "ellipsoidalHeight": 15
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 263.5511,
+          "elevation": 2.1776,
+          "topWidth": 0.762,
+          "distance": 84141,
+          "peak": {
+            "azimuth": 263.3565,
+            "elevation": 2.1868
+          },
+          "cell": {
+            "latitude": 35.363891,
+            "longitude": 138.734021,
+            "height": 3727.6
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-03-10T17:30",
+            "bestRatio": 0.177,
+            "quarter": [
+              "2026-03-10"
+            ],
+            "half": [
+              "2026-03-10"
+            ],
+            "range": [
+              "03-09",
+              "03-10"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-10-03T17:09",
+            "bestRatio": 0.241,
+            "quarter": [
+              "2026-10-03"
+            ],
+            "half": [
+              "2026-10-03",
+              "2026-10-04"
+            ],
+            "range": [
+              "10-03",
+              "10-04"
+            ],
+            "days": 0
+          }
+        ],
+        "observer": {
+          "place": "osanbashi",
+          "latitude": 35.45194,
+          "longitude": 139.64794,
+          "ground": 0,
+          "groundSource": "固定值（码头面近似）",
+          "height": 15
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "bunkyo",
+      "source": "mlit",
+      "event": "sunset",
+      "ranges": [
+        [
+          "02-01",
+          "02-02"
+        ],
+        [
+          "11-09",
+          "11-10"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 247.8804,
+          "elevation": 1.6195,
+          "topWidth": 0.626,
+          "distance": 100547,
+          "peak": {
+            "azimuth": 247.7731,
+            "elevation": 1.6321
+          },
+          "cell": {
+            "latitude": 35.364451,
+            "longitude": 138.733506,
+            "height": 3722.1
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-02-01T16:56",
+            "bestRatio": 0.092,
+            "quarter": [
+              "2026-02-01"
+            ],
+            "half": [
+              "2026-02-01",
+              "2026-02-02"
+            ],
+            "range": [
+              "02-01",
+              "02-02"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-11-09T16:27",
+            "bestRatio": 0.228,
+            "quarter": [
+              "2026-11-09"
+            ],
+            "half": [
+              "2026-11-09",
+              "2026-11-10"
+            ],
+            "range": [
+              "11-09",
+              "11-10"
+            ],
+            "days": 0
+          }
+        ],
+        "observer": {
+          "place": "bunkyo",
+          "latitude": 35.70801,
+          "longitude": 139.75222,
+          "ground": 6.8,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 105
+        },
+        "ellipsoidalHeight": 111.8
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 247.8804,
+          "elevation": 1.6836,
+          "topWidth": 0.626,
+          "distance": 100547,
+          "peak": {
+            "azimuth": 248.082,
+            "elevation": 1.6959
+          },
+          "cell": {
+            "latitude": 35.364451,
+            "longitude": 138.733506,
+            "height": 3722.1
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-02-01T16:56",
+            "bestRatio": 0.169,
+            "quarter": [
+              "2026-02-01"
+            ],
+            "half": [
+              "2026-02-01",
+              "2026-02-02"
+            ],
+            "range": [
+              "02-01",
+              "02-02"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-11-09T16:26",
+            "bestRatio": 0.15,
+            "quarter": [
+              "2026-11-09"
+            ],
+            "half": [
+              "2026-11-09",
+              "2026-11-10"
+            ],
+            "range": [
+              "11-09",
+              "11-10"
+            ],
+            "days": 0
+          }
+        ],
+        "observer": {
+          "place": "bunkyo",
+          "latitude": 35.70801,
+          "longitude": 139.75222,
+          "ground": 6.8,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 105
+        },
+        "ellipsoidalHeight": 0
+      }
+    },
+    {
+      "place": "minobu",
+      "source": "mlit",
+      "event": "sunrise",
+      "ranges": [
+        [
+          "03-13",
+          "03-13"
+        ],
+        [
+          "10-02",
+          "10-02"
+        ]
+      ],
+      "year": 2026,
+      "eye": {
+        "mark": {
+          "azimuth": 97.5031,
+          "elevation": 5.0636,
+          "topWidth": 2.029,
+          "distance": 28533,
+          "peak": {
+            "azimuth": 98.1602,
+            "elevation": 5.1174
+          },
+          "cell": {
+            "latitude": 35.363681,
+            "longitude": 138.726983,
+            "height": 3738.8
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-03-13T06:29",
+            "bestRatio": 0.353,
+            "quarter": [],
+            "half": [
+              "2026-03-12",
+              "2026-03-13"
+            ],
+            "range": [
+              "03-13",
+              "03-13"
+            ],
+            "days": 0
+          },
+          {
+            "best": "2026-10-01T06:09",
+            "bestRatio": 0.332,
+            "quarter": [],
+            "half": [
+              "2026-10-01",
+              "2026-10-02"
+            ],
+            "range": [
+              "10-02",
+              "10-02"
+            ],
+            "days": -1
+          }
+        ],
+        "observer": {
+          "place": "minobu",
+          "latitude": 35.39755,
+          "longitude": 138.41627,
+          "ground": 1148.5,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 1150.1
+      },
+      "sea": {
+        "mark": {
+          "azimuth": 97.508,
+          "elevation": 7.3485,
+          "topWidth": 2.025,
+          "distance": 28533,
+          "peak": {
+            "azimuth": 98.1625,
+            "elevation": 7.3952
+          },
+          "cell": {
+            "latitude": 35.363681,
+            "longitude": 138.726983,
+            "height": 3738.8
+          }
+        },
+        "seasons": [
+          {
+            "best": "2026-03-16T06:36",
+            "bestRatio": 0.023,
+            "quarter": [
+              "2026-03-16"
+            ],
+            "half": [
+              "2026-03-16"
+            ],
+            "range": [
+              "03-13",
+              "03-13"
+            ],
+            "days": 3
+          },
+          {
+            "best": "2026-09-28T06:18",
+            "bestRatio": 0.044,
+            "quarter": [
+              "2026-09-28"
+            ],
+            "half": [
+              "2026-09-28"
+            ],
+            "range": [
+              "10-02",
+              "10-02"
+            ],
+            "days": -4
+          }
+        ],
+        "observer": {
+          "place": "minobu",
+          "latitude": 35.39755,
+          "longitude": 138.41627,
+          "ground": 1148.5,
+          "groundSource": "国土地理院標高 API（1m（レーザ））",
+          "height": 1.6
+        },
+        "ellipsoidalHeight": 0
+      }
+    }
+  ],
+  "announcements": [
+    {
+      "place": "skytree350",
+      "source": "skytree",
+      "date": "2026-11-08",
+      "time": "16:30",
+      "approximate": true,
+      "observer": {
+        "place": "skytree350",
+        "latitude": 35.71005,
+        "longitude": 139.81071,
+        "ground": 1.9,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 350
+      },
+      "mark": {
+        "azimuth": 248.8832,
+        "elevation": 1.3686,
+        "topWidth": 0.591,
+        "distance": 105541,
+        "peak": {
+          "azimuth": 248.7789,
+          "elevation": 1.381
+        },
+        "cell": {
+          "latitude": 35.364381,
+          "longitude": 138.733506,
+          "height": 3724
+        }
+      },
+      "passes": [
+        {
+          "local": "2026-11-08T16:30",
+          "instant": "2026-11-08T07:30:26Z",
+          "ratio": 0.368,
+          "offset": "偏左下"
+        }
+      ],
+      "best": {
+        "local": "2026-11-07T16:30",
+        "ratio": 0.153
+      }
+    },
+    {
+      "place": "skytree450",
+      "source": "skytree",
+      "date": "2026-11-08",
+      "time": "16:30",
+      "approximate": true,
+      "observer": {
+        "place": "skytree450",
+        "latitude": 35.71005,
+        "longitude": 139.81071,
+        "ground": 1.9,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 450
+      },
+      "mark": {
+        "azimuth": 248.8832,
+        "elevation": 1.3141,
+        "topWidth": 0.591,
+        "distance": 105541,
+        "peak": {
+          "azimuth": 248.7789,
+          "elevation": 1.3268
+        },
+        "cell": {
+          "latitude": 35.364381,
+          "longitude": 138.733506,
+          "height": 3724
+        }
+      },
+      "passes": [
+        {
+          "local": "2026-11-08T16:30",
+          "instant": "2026-11-08T07:30:37Z",
+          "ratio": 0.302,
+          "offset": "偏左下"
+        }
+      ],
+      "best": {
+        "local": "2026-11-07T16:30",
+        "ratio": 0.219
+      }
+    },
+    {
+      "place": "takao",
+      "source": "takao",
+      "dates": [
+        "2025-12-17",
+        "2025-12-28"
+      ],
+      "window": [
+        "16:00",
+        "16:15"
+      ],
+      "observer": {
+        "place": "takao",
+        "latitude": 35.62523,
+        "longitude": 139.24358,
+        "ground": 598.3,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 238.183,
+        "elevation": 3.0209,
+        "topWidth": 1.134,
+        "distance": 55261,
+        "peak": {
+          "azimuth": 238.5494,
+          "elevation": 3.0499
+        },
+        "cell": {
+          "latitude": 35.364731,
+          "longitude": 138.733335,
+          "height": 3715.5
+        }
+      },
+      "passes": [
+        {
+          "local": "2025-12-17T16:10",
+          "instant": "2025-12-17T07:10:19Z",
+          "ratio": 0.355,
+          "offset": "偏右上"
+        },
+        {
+          "local": "2025-12-18T16:10",
+          "instant": "2025-12-18T07:10:49Z",
+          "ratio": 0.301,
+          "offset": "偏右上"
+        },
+        {
+          "local": "2025-12-19T16:11",
+          "instant": "2025-12-19T07:11:19Z",
+          "ratio": 0.26,
+          "offset": "偏右上"
+        },
+        {
+          "local": "2025-12-20T16:11",
+          "instant": "2025-12-20T07:11:49Z",
+          "ratio": 0.235,
+          "offset": "偏右上"
+        },
+        {
+          "local": "2025-12-21T16:12",
+          "instant": "2025-12-21T07:12:19Z",
+          "ratio": 0.223,
+          "offset": "偏右上"
+        },
+        {
+          "local": "2025-12-22T16:12",
+          "instant": "2025-12-22T07:12:49Z",
+          "ratio": 0.225,
+          "offset": "偏右上"
+        },
+        {
+          "local": "2025-12-23T16:13",
+          "instant": "2025-12-23T07:13:19Z",
+          "ratio": 0.242,
+          "offset": "偏右上"
+        },
+        {
+          "local": "2025-12-24T16:13",
+          "instant": "2025-12-24T07:13:48Z",
+          "ratio": 0.273,
+          "offset": "偏右上"
+        },
+        {
+          "local": "2025-12-25T16:14",
+          "instant": "2025-12-25T07:14:18Z",
+          "ratio": 0.318,
+          "offset": "偏右上"
+        },
+        {
+          "local": "2025-12-26T16:14",
+          "instant": "2025-12-26T07:14:47Z",
+          "ratio": 0.377,
+          "offset": "偏右上"
+        },
+        {
+          "local": "2025-12-27T16:15",
+          "instant": "2025-12-27T07:15:16Z",
+          "ratio": 0.45,
+          "offset": "偏右上"
+        },
+        {
+          "local": "2025-12-28T16:15",
+          "instant": "2025-12-28T07:15:45Z",
+          "ratio": 0.538,
+          "offset": "偏右上"
+        }
+      ],
+      "best": {
+        "local": "2025-12-21T16:12",
+        "ratio": 0.223
+      }
+    },
+    {
+      "place": "kirara",
+      "source": "kirara",
+      "date": "2026-02-22",
+      "time": "16:34",
+      "approximate": true,
+      "observer": {
+        "place": "kirara",
+        "latitude": 35.41982,
+        "longitude": 138.90135,
+        "ground": 984,
+        "groundSource": "国土地理院標高 API（1m（レーザ））",
+        "height": 1.6
+      },
+      "mark": {
+        "azimuth": 248.0972,
+        "elevation": 9.3902,
+        "topWidth": 3.62,
+        "distance": 17105,
+        "peak": {
+          "azimuth": 247.4333,
+          "elevation": 9.4228
+        },
+        "cell": {
+          "latitude": 35.364381,
+          "longitude": 138.733678,
+          "height": 3725.1
+        }
+      },
+      "passes": [
+        {
+          "local": "2026-02-22T16:35",
+          "instant": "2026-02-22T07:35:13Z",
+          "ratio": 3.245,
+          "offset": "偏右上"
+        }
+      ],
+      "best": {
+        "local": "2026-02-17T16:35",
+        "ratio": 0.065
+      }
+    }
+  ]
+}
