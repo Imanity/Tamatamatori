@@ -9,32 +9,19 @@ import {
   shareCode,
   shotFromPlan,
   shotJson,
+  shotLayerNames,
+  shotLink,
   shotSignature,
   SHOT_NAME_LIMIT,
 } from "../domain/shot";
+import { SHOT_SCHEMA_FILE, siteBase } from "../domain/site";
 import type { Shot, ShotParse } from "../domain/shot";
 import { sensors } from "../domain/plan";
 import type { ShootingPlan } from "../domain/plan";
 import { landmarkDistance, landmarks } from "../domain/landmarks";
 import type { SavedShot } from "../domain/shot-library";
 
-const layerNames: Record<keyof Shot["layers"], string> = {
-  buildings: "建筑",
-  sun: "太阳",
-  sunPath: "太阳轨迹",
-  moon: "月亮",
-  moonPath: "月亮轨迹",
-  stars: "星空",
-  constellations: "星座",
-  milkyWay: "银河",
-  deepSky: "深空天体",
-  stations: "空间站",
-  meteors: "流星雨",
-  meteorDensity: "流星密度",
-  comets: "彗星",
-  tides: "潮汐",
-  aurora: "极光",
-};
+const layerNames = shotLayerNames;
 
 const coordinates = (p: { latitude: number; longitude: number }) =>
   `${Math.abs(p.latitude).toFixed(3)}°${p.latitude >= 0 ? "N" : "S"} ${Math.abs(p.longitude).toFixed(3)}°${p.longitude >= 0 ? "E" : "W"}`;
@@ -53,12 +40,13 @@ const lens = (shot: Shot) =>
 export const suggestShotName = (shot: Shot) =>
   `${place(shot.position).replace(/附近$/, "")} · ${shot.time.local.slice(5, 16).replace("T", " ")}`.slice(0, SHOT_NAME_LIMIT);
 
-async function copyText(text: string, field: HTMLTextAreaElement | null) {
+export async function copyText(text: string, field: HTMLTextAreaElement | null) {
   try {
     await navigator.clipboard.writeText(text);
     return "已复制";
   } catch {
-    field?.focus();
+    // The field may sit far from the button; selecting it must not scroll the page.
+    field?.focus({ preventScroll: true });
     field?.select();
     return "无法访问剪贴板，已选中文本，请手动复制";
   }
@@ -69,11 +57,17 @@ export function ShotMenu({
   activeId,
   onActiveChange,
   onApply,
+  link = null,
+  onLinkDone,
 }: {
   plan: ShootingPlan;
   activeId: string | null;
   onActiveChange: (id: string | null) => void;
   onApply: (plan: ShootingPlan, id: string | null, name: string) => void;
+  /** A shot opened from a `#shot=` link; previewed in the import dialog before anything changes. */
+  link?: { text: string; serial: number } | null;
+  /** The link's preview closed (applied or not), so the page can drop the hash. */
+  onLinkDone?: () => void;
 }) {
   const shots = useShotLibrary();
   const { library } = shots;
@@ -86,6 +80,14 @@ export function ShotMenu({
   const [notice, setNotice] = useState<{ text: string; undo?: () => void } | null>(null);
   const [sharing, setSharing] = useState<Shot | null>(null);
   const [importing, setImporting] = useState(false);
+  const [importText, setImportText] = useState("");
+  const fromLink = useRef(false);
+  useEffect(() => {
+    if (!link) return;
+    fromLink.current = true;
+    setImportText(link.text);
+    setImporting(true);
+  }, [link?.serial]);
   const root = useRef<HTMLDivElement>(null), button = useRef<HTMLButtonElement>(null), panel = useRef<HTMLDivElement>(null);
   const active = library.shots.find((entry) => entry.id === activeId) ?? null;
   useEffect(() => {
@@ -322,6 +324,7 @@ export function ShotMenu({
             <button
               type="button"
               onClick={() => {
+                setImportText("");
                 setImporting(true);
                 close(false);
               }}
@@ -332,7 +335,13 @@ export function ShotMenu({
           </footer>
         </div>
       )}
-      <ImportDialog open={importing} canSave={writable} onClose={() => setImporting(false)} onImport={imported} />
+      <ImportDialog open={importing} initialText={importText} canSave={writable} onImport={imported} onClose={() => {
+        setImporting(false);
+        if (fromLink.current) {
+          fromLink.current = false;
+          onLinkDone?.();
+        }
+      }} />
       <ShareDialog shot={sharing} onClose={() => setSharing(null)} />
     </div>
   );
@@ -358,11 +367,13 @@ function ShotSummary({ shot }: { shot: Shot }) {
 
 function ImportDialog({
   open,
+  initialText = "",
   canSave,
   onClose,
   onImport,
 }: {
   open: boolean;
+  initialText?: string;
   canSave: boolean;
   onClose: () => void;
   onImport: (parsed: Extract<ShotParse, { ok: true }>, name: string, keep: boolean) => boolean;
@@ -374,11 +385,11 @@ function ImportDialog({
   const parsed = useMemo(() => (text.trim() ? parseShotText(text) : null), [text]);
   useEffect(() => {
     if (open) {
-      setText("");
+      setText(initialText);
       setCopied("");
       if (!dialog.current?.open) dialog.current?.showModal();
     } else if (dialog.current?.open) dialog.current.close();
-  }, [open]);
+  }, [open, initialText]);
   useEffect(() => {
     if (parsed?.ok) setName(parsed.shot.name || suggestShotName(parsed.shot));
   }, [parsed]);
@@ -454,8 +465,11 @@ function ImportDialog({
 function ShareDialog({ shot, onClose }: { shot: Shot | null; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null), codeField = useRef<HTMLTextAreaElement>(null), jsonField = useRef<HTMLTextAreaElement>(null);
   const [copied, setCopied] = useState("");
+  const site = typeof window === "undefined" ? "" : siteBase(window.location, import.meta.env.BASE_URL);
+  const linkField = useRef<HTMLTextAreaElement>(null);
+  const link = useMemo(() => (shot ? shotLink(shot, site) : ""), [shot, site]);
   const code = useMemo(() => (shot ? shareCode(shot) : ""), [shot]);
-  const json = useMemo(() => (shot ? shotJson(shot) : ""), [shot]);
+  const json = useMemo(() => (shot ? shotJson(shot, site + SHOT_SCHEMA_FILE) : ""), [shot, site]);
   useEffect(() => {
     setCopied("");
     if (shot && !dialog.current?.open) dialog.current?.showModal();
@@ -473,17 +487,24 @@ function ShareDialog({ shot, onClose }: { shot: Shot | null; onClose: () => void
         </button>
       </header>
       <div className="about-body shot-dialog-body">
-        <p>把分享码发给对方，对方在“机位 → 导入机位”中粘贴即可得到同样的设置。</p>
+        <p>把链接发给对方，打开后先预览、确认才会应用。也可以复制分享码，在“机位 → 导入机位”中粘贴。</p>
         <label className="field">
-          <span className="field-label">分享码</span>
-          <textarea ref={codeField} aria-label="分享码" readOnly value={code} rows={4} spellCheck={false} />
+          <span className="field-label">分享链接</span>
+          <textarea ref={linkField} aria-label="分享链接" readOnly value={link} rows={3} spellCheck={false} />
         </label>
         <div className="shot-copy-row">
-          <button type="button" className="shot-primary" onClick={async () => setCopied(await copyText(code, codeField.current))}>
+          <button type="button" className="shot-primary" onClick={async () => setCopied(await copyText(link, linkField.current))}>
+            复制链接
+          </button>
+          <button type="button" onClick={async () => setCopied(await copyText(code, codeField.current))}>
             复制分享码
           </button>
           <span role="status">{copied}</span>
         </div>
+        <label className="field">
+          <span className="field-label">分享码</span>
+          <textarea ref={codeField} aria-label="分享码" readOnly value={code} rows={3} spellCheck={false} />
+        </label>
         <details className="shot-json">
           <summary>JSON 格式</summary>
           <textarea ref={jsonField} aria-label="机位 JSON" readOnly value={json} rows={12} spellCheck={false} />

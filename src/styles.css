@@ -1588,3 +1588,11 @@ p.info-detail, span.info-detail { color: #8f9886; }
 .composition-sketch .sketch-subject { fill: #1b2230; stroke: #c9d3e2; stroke-width: .6; }
 .composition-sketch .sketch-sun { fill: #ffe6a6; }
 .composition-sketch .sketch-moon { fill: #eef2fb; }
+.alignment-export { position: relative; }
+.alignment-export .alignment-copied { display: block; min-height: 1.4em; color: #6c7e61; font-size: 11px; }
+.solve-dialog .shot-summary .solve-row { display: contents; }
+.solve-changes { display: grid; gap: 4px; padding: 10px 12px; border-radius: 6px; background: #f7f3e8; color: #6a5a35; font-size: 11px; line-height: 1.6; }
+.solve-changes strong { font-weight: 600; }
+.solve-changes ul, .solve-changes p { margin: 0; }
+.solve-changes ul { padding-left: 18px; }
+.solve-changes li + li { margin-top: 2px; }

@@ -45,6 +45,30 @@ export const shotLayerKeys = [
   "aurora",
 ] as const;
 type LayerKey = (typeof shotLayerKeys)[number];
+export const shotLayerNames: Record<LayerKey, string> = {
+  buildings: "建筑",
+  sun: "太阳",
+  sunPath: "太阳轨迹",
+  moon: "月亮",
+  moonPath: "月亮轨迹",
+  stars: "星空",
+  constellations: "星座",
+  milkyWay: "银河",
+  deepSky: "深空天体",
+  stations: "空间站",
+  meteors: "流星雨",
+  meteorDensity: "流星密度",
+  comets: "彗星",
+  tides: "潮汐",
+  aurora: "极光",
+};
+/** A layer that only exists on top of another (constellation figures on the stars, a path on its body). */
+export const shotLayerRequires: Partial<Record<LayerKey, LayerKey>> = {
+  constellations: "stars",
+  sunPath: "sun",
+  moonPath: "moon",
+  meteorDensity: "meteors",
+};
 // Adding a layer to the plan without listing it here fails to compile.
 const allLayersListed: [Exclude<keyof ShootingPlan["layers"], LayerKey>] extends [never] ? true : never = true;
 void allLayersListed;
@@ -177,8 +201,14 @@ export function shotSignature(shot: Shot) {
 }
 export const planSignature = (plan: ShootingPlan) => shotSignature(shotFromPlan(plan));
 
-export function shotJson(shot: Shot) {
-  return JSON.stringify(shot, null, 2);
+/** The shot as JSON; `$schema` first when given (an absolute URL of shot.schema.json, for an AI reading it). */
+export function shotJson(shot: Shot, schema?: string) {
+  return JSON.stringify(schema ? { $schema: schema, ...shot } : shot, null, 2);
+}
+
+/** Site link that opens the shot (after a preview): `<site>#shot=tmt1:…`. */
+export function shotLink(shot: Shot, site: string) {
+  return `${site}#shot=${shareCode(shot)}`;
 }
 
 function toBase64Url(bytes: Uint8Array) {
@@ -430,10 +460,8 @@ export function parseShot(value: unknown): ShotParse {
   const layerValues = Object.fromEntries(
     shotLayerKeys.map((key) => [key, flag(layers, `layers.${key}`, !!initialPlan.layers[key])]),
   ) as Shot["layers"];
-  if (layerValues.constellations && !layerValues.stars) errors.push("layers.constellations：需要同时开启 layers.stars");
-  if (layerValues.sunPath && !layerValues.sun) errors.push("layers.sunPath：需要同时开启 layers.sun");
-  if (layerValues.moonPath && !layerValues.moon) errors.push("layers.moonPath：需要同时开启 layers.moon");
-  if (layerValues.meteorDensity && !layerValues.meteors) errors.push("layers.meteorDensity：需要同时开启 layers.meteors");
+  for (const [key, base] of Object.entries(shotLayerRequires) as [LayerKey, LayerKey][])
+    if (layerValues[key] && !layerValues[base]) errors.push(`layers.${key}：需要同时开启 layers.${base}`);
   const sky = group("sky", false);
   const milkyWayContrast = number(sky, "sky.milkyWayContrast", initialPlan.milkyWayContrast, shotLimits.milkyWayContrast);
   const environment = group("environment", false);

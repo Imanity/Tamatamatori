@@ -548,3 +548,90 @@
 - 瓦片上限 40 块：距离带很宽或跨度很长时可能需要缩小范围。
 - Worker 只在 Chromium 内核的内置浏览器中验证；未测 Firefox、Safari 与实体手机。
 - 通视只按 DEM，不含建筑、树木与天气。
+
+## 12. 第四轮：链接与公开格式
+
+2026-11-12 用户确认按评估顺序推进，本轮为第一项。目标：机位与推算条件都能以链接分享，并以公开、可校验的格式给外部 AI 使用（AI 第一级）。不新增后端，不在页面上放面向 AI 的说明入口。
+
+### 范围
+
+- **机位链接**（[机位保存与分享](shot-presets.md#5-ai-生成机位第二步仅设计)第二步）：
+  - 分享对话框以“分享链接”为主：站点地址加 `#shot=tmt1:…`；分享码与 JSON 保留，导出的 JSON 带 `$schema` 绝对地址。
+  - 打开带 `#shot=` 的链接（分享码或 `json:` 加 URL 编码 JSON）时，弹出与“导入机位”相同的预览，确认后才应用；无论应用与否都从地址中清除 hash。页面已打开时改 hash 同样处理。
+- **推算请求格式 `tamatamatori.solve` v1**（`src/domain/solve.ts`）：
+  - 字段：`kind`（`time` / `position` / `range`）、`body`；找时间的 `mark`（视方位、视高度）与可选 `camera`（机位与离地高度）；找机位与两者都找的 `target`（地标 `landmark` id，或经纬度加 `height`、`name`）；`date` 与 `days`、`timeZone`、`tolerance`、`share`、`maxDistance`、月亮的 `phase` 与 `sky`。
+  - 规则沿用机位格式：未知字段与越界报错并带字段路径，缺省项用默认值并列出，`$schema` 忽略，高于 v1 的版本拒绝。
+- **推算请求链接**：
+  - 打开 `#solve=json:…` 时先弹出预览：求法、天体、目标（注明来自地标目录，或“来自请求中的坐标，未核实”）、日期与条件，以及会改动的拍摄计划字段。
+  - 确认后进入推算模式并开始推算，改动的字段可撤销；取消则不改任何东西。之后清除 hash。
+- **导出**：推算面板增加“复制推算请求”（链接）与“复制结果”（Markdown 摘要：请求链接与结果列表，便于交给 AI 挑选）。
+- **公开说明**：
+  - `public/` 下的 `llms.txt`、`shot-format.md`、`solve-format.md`、`shot.schema.json`、`solve.schema.json` 由 `scripts/formats.mjs` 按代码中的常量（范围、枚举、图层、地标）生成，检查模式发现漂移即失败。
+  - `index.html` 以 `<link rel="alternate">` 指向 `llms.txt` 与两份说明。
+
+### 暂不处理
+
+- 地名解析（`target` 只接受地标 id 或坐标）；MCP 或 CLI 工具（AI 第二级）；页面内对话。
+- 短链接服务与二维码。
+
+### 验收
+
+- **自动检查**：
+  - 两种格式往返；推算请求的报错路径、默认值与版本拒绝。
+  - 机位与推算请求链接的编码与解析；生成文件与代码常量一致，schema 能接受导出的样例。
+- **交互检查**：
+  - 带 `#shot=` 打开时弹出预览，应用后 hash 被清除；分享对话框的链接可解析回同一机位。
+  - 带 `#solve=` 打开时弹出预览，确认后进入对应求法并得到结果，撤销恢复计划，取消不改计划。
+  - 复制推算请求与复制结果。
+- **浏览器画面**：链接打开、预览与清除 hash；`llms.txt` 与 schema 在子路径构建下可访问。
+
+### 第四轮执行记录
+
+2026-11-12 完成本地验收，尚未提交推送。
+
+#### 实现
+
+- **推算请求格式**（`src/domain/solve.ts`）：
+  - `parseSolveText` 接受纯 JSON、代码块、`#solve=` 链接（URL 编码或原样 JSON）；`parseSolve` 按求法检查字段，错误带字段路径一次列全，缺省项列出，高于 v1 的版本拒绝。
+  - `solveJson` 按文档顺序写出字段，地标目标只写 id 与高度，空名称不写；`solveLink` 生成 `#solve=json:` 链接。
+  - `solvePlan` 给出载入后的拍摄计划：找时间转向期望位置（方位与俯仰），给出 `camera` 时移到该机位；找机位把拍摄时刻移到 `date`，若保留原钟点会落到前一天的时间轴范围（夜空类图层的中午到次日中午），改为当天 12:00；给出 `timeZone` 时改为该固定时区。两者都找不改计划。
+  - `solveRequestOf` 把推算面板的状态写回请求，供“复制推算请求”使用；与读取往返一致。
+- **机位链接**（`src/domain/shot.ts`、`src/components/ShotMenu.tsx`）：分享对话框以“分享链接”为主，另有“复制分享码”；导出的 JSON 带 `$schema`。链接与 `$schema` 按页面自己的地址生成（`src/domain/site.ts`），本地或其他部署指向自身；公开说明里的示例使用正式站点地址。
+- **打开链接**（`src/App.tsx`）：页面载入和 hash 改变时读取 `#shot=` 与 `#solve=`。
+  - 机位链接打开与“导入机位”相同的预览；推算请求打开新的预览对话框（`src/components/SolveLink.tsx`），列出请求与“载入后”会改动的字段。
+  - 关闭预览（应用、载入或取消）后用 `history.replaceState` 清除 hash，刷新不再询问。
+  - “载入并推算”替换计划、写入推算面板状态并进入推算模式；提示条的“撤销”恢复计划，并在原本未开推算模式时退出。
+- **导出**：推算面板末尾“导出”组，“复制推算请求”给出链接，“复制结果”给出 Markdown（请求各项、链接、状态行、结果表与限制说明，`src/domain/solve-report.ts`）；表格最多 200 行，其余计数。剪贴板不可用时选中隐藏文本，选中时不滚动页面。
+- **公开说明**（`scripts/formats.mjs`）：按代码常量生成 `public/llms.txt`、`shot-format.md`、`solve-format.md`、`shot.schema.json`、`solve.schema.json`（JSON Schema 2020-12）。示例先经应用自己的解析器读出再写入，地标表来自目录。`npm run formats` 生成，`npm run formats:verify`（构建时运行）发现漂移即失败。`index.html` 以 `<link rel="alternate">` 指向 `llms.txt` 与两份说明。
+- 图层中文名与依赖关系移入 `shot.ts`（`shotLayerNames`、`shotLayerRequires`），机位面板、解析与生成脚本共用。
+
+#### 自动检查
+
+- `npm test` 共 432 项通过（本轮新增 10 项）。
+- `tests/solve.test.mjs`（8 项）：
+  - 三种求法的 JSON、代码块与链接往返；地标按目录补齐坐标与高度，写出时只留 id 与高度；原样 JSON 链接可读。
+  - 缺省项与默认值、方位与经度取模、时区大小写规范。
+  - 19 组错误输入的报错都带字段路径；高版本、坏编码、超长与无法识别的输入分别报错。
+  - `solvePlan`：找时间的机位与方向、无机位时只转向；找机位保留钟点或改为中午（夜空类图层下的 05:00）、换时区后的当地钟点；两者都找不改计划。
+  - 面板状态写成请求后读回一致；全部天空条件不写出；缺期望位置或目标时为空。
+  - Markdown：请求各行、链接、表头与行（含竖线转义）、超过 200 行只计数；找机位与两者都找的行格式。
+  - 机位链接与带 `$schema` 的 JSON 读回同一机位；`siteBase` 的子路径与根路径。
+  - 生成文件与代码一致；以测试内的 JSON Schema 子集求值器检查：应用写出的机位与请求、说明文档中的示例都通过 schema，解析器拒绝的 14 种情形 schema 也拒绝；`llms.txt` 与 `index.html` 的链接齐全。
+- `tests/interactions.test.mjs`（新增 2 项，修改 1 项）：
+  - 带 `#shot=` 打开：预览、应用、清除 hash、撤销；关闭预览不改计划；坏链接列出问题。分享对话框的链接读回同一机位，JSON 的 `$schema` 为页面地址。
+  - 带 `#solve=` 打开：预览内容与“载入后”字段；取消不改计划；载入后进入找时间、转向期望位置、得到 2 次对齐；复制推算请求读回同一请求，复制结果含两行；撤销恢复计划并退出模式；找机位请求选中地标、改最远距离与日期并开始推算；坏请求不能载入。
+- `tsc --noEmit`、`formats:verify` 与子路径构建通过。
+
+#### 浏览器画面
+
+逐步记录见 [browser-results.json](reverse-planning-evidence/browser-results.json) 的 `linkRound`。
+
+- **开发服务器**：打开两者都找的请求（晴空塔、月亮、30 天、主体 30%、亮面 75%—100%），预览与取消、载入后得到 17 个候选。内置浏览器拒绝写剪贴板，退回选中文本；首次退回时页面整体滚动 1633 px，已把隐藏文本框限定在导出组内并以 `preventScroll` 选中，复查后不再滚动。打开 `#shot=` 链接后预览、应用、清除 hash。
+- **子路径构建**（`/Tamatamatori/`）：五个公开文件都可读取，页头的 alternate 链接带子路径。分享对话框的链接与 `$schema` 指向 `/Tamatamatori/`，见[截图](reverse-planning-evidence/18-shot-share-link.jpg)。找时间请求（富士山顶夕阳）的[预览](reverse-planning-evidence/16-solve-link-preview.jpg)列出方向与时区改动；按真实 DEM [载入](reverse-planning-evidence/17-solve-link-loaded.jpg)后画面朝向期望位置，12 个月内 2 次（2/12 16:22、10/30 15:52）。
+
+#### 限制与观察
+
+- 未测真实剪贴板写入（内置浏览器拒绝）、Firefox、Safari、实体手机，以及从其他应用打开链接。
+- 请求不解析地名；坐标目标只标“未核实”，不检查是否在陆地或有 DEM。
+- 撤销不恢复推算面板之前的条件，只恢复拍摄计划与是否处于推算模式。
+- 观察到（第三轮已有）：200 mm 两者都找时，约 20 km 处同一分钟的多个根在列表中显示为几乎相同的单分钟候选。留待“推算实用补强”合并。

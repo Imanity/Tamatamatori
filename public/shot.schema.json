@@ -1,0 +1,427 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://imanity.github.io/Tamatamatori/shot.schema.json",
+  "title": "Tamatamatori 机位 v1",
+  "description": "拍摄计划的全部字段。未知字段报错；缺省项取应用默认值。说明见 https://imanity.github.io/Tamatamatori/shot-format.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "position",
+    "view",
+    "time"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "可写本 schema 的地址，读取时忽略"
+    },
+    "format": {
+      "const": "tamatamatori.shot"
+    },
+    "version": {
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 40,
+      "description": "名称，纯文本"
+    },
+    "note": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "备注，纯文本"
+    },
+    "position": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90,
+          "description": "纬度，北正南负"
+        },
+        "longitude": {
+          "type": "number",
+          "description": "经度，东正西负；超出 ±180 时取模归一"
+        },
+        "heightAboveGround": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 100,
+          "description": "相机离地高度，米",
+          "default": 1.6
+        }
+      }
+    },
+    "view": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "azimuth"
+      ],
+      "properties": {
+        "azimuth": {
+          "type": "number",
+          "description": "镜头方位角，度，正北为 0、顺时针；超出 0—360 时取模归一"
+        },
+        "pitch": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90,
+          "default": 4,
+          "description": "俯仰角，度，上正下负"
+        }
+      }
+    },
+    "camera": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "focalLength": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 1000,
+          "default": 35,
+          "description": "焦距，毫米；视场由传感器与画幅共同决定"
+        },
+        "sensor": {
+          "enum": [
+            "full-frame",
+            "aps-c",
+            "micro-four-thirds",
+            "custom"
+          ],
+          "default": "full-frame"
+        },
+        "sensorSize": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "width",
+            "height"
+          ],
+          "description": "只在 sensor 为 \"custom\" 时使用，毫米",
+          "properties": {
+            "width": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "height": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        },
+        "aspectRatio": {
+          "enum": [
+            "3:2",
+            "16:9",
+            "1:1"
+          ],
+          "default": "3:2"
+        },
+        "orientation": {
+          "enum": [
+            "landscape",
+            "portrait"
+          ],
+          "default": "landscape"
+        },
+        "response": {
+          "enum": [
+            "stock",
+            "ha-modified"
+          ],
+          "default": "stock",
+          "description": "深空显示：未改机或 Hα 天文改机（示意）"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "sensor"
+            ],
+            "properties": {
+              "sensor": {
+                "const": "custom"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "sensorSize"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "sensorSize"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "time": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "instant": {
+          "type": "string",
+          "format": "date-time",
+          "description": "带 Z 或时差的 ISO 时刻；与 local 同时给出时以它为准"
+        },
+        "local": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2})?$",
+          "description": "当地日期时间，需配合 timeZone 或 followLocalZone"
+        },
+        "timeZone": {
+          "type": "string",
+          "description": "IANA 时区，例如 \"Asia/Tokyo\""
+        },
+        "followLocalZone": {
+          "type": "boolean",
+          "default": false,
+          "description": "显示时区跟随机位"
+        },
+        "refraction": {
+          "enum": [
+            "standard",
+            "none"
+          ],
+          "default": "standard",
+          "description": "大气折射"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "instant"
+          ]
+        },
+        {
+          "required": [
+            "local"
+          ]
+        }
+      ]
+    },
+    "layers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "buildings": {
+          "type": "boolean",
+          "default": false,
+          "description": "建筑"
+        },
+        "sun": {
+          "type": "boolean",
+          "default": true,
+          "description": "太阳"
+        },
+        "sunPath": {
+          "type": "boolean",
+          "default": false,
+          "description": "太阳轨迹"
+        },
+        "moon": {
+          "type": "boolean",
+          "default": true,
+          "description": "月亮"
+        },
+        "moonPath": {
+          "type": "boolean",
+          "default": false,
+          "description": "月亮轨迹"
+        },
+        "stars": {
+          "type": "boolean",
+          "default": false,
+          "description": "星空"
+        },
+        "constellations": {
+          "type": "boolean",
+          "default": false,
+          "description": "星座"
+        },
+        "milkyWay": {
+          "type": "boolean",
+          "default": false,
+          "description": "银河"
+        },
+        "deepSky": {
+          "type": "boolean",
+          "default": false,
+          "description": "深空天体"
+        },
+        "stations": {
+          "type": "boolean",
+          "default": false,
+          "description": "空间站"
+        },
+        "meteors": {
+          "type": "boolean",
+          "default": false,
+          "description": "流星雨"
+        },
+        "meteorDensity": {
+          "type": "boolean",
+          "default": false,
+          "description": "流星密度"
+        },
+        "comets": {
+          "type": "boolean",
+          "default": false,
+          "description": "彗星"
+        },
+        "tides": {
+          "type": "boolean",
+          "default": false,
+          "description": "潮汐"
+        },
+        "aurora": {
+          "type": "boolean",
+          "default": false,
+          "description": "极光"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "constellations"
+            ],
+            "properties": {
+              "constellations": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "stars"
+            ],
+            "properties": {
+              "stars": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "sunPath"
+            ],
+            "properties": {
+              "sunPath": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "sun"
+            ],
+            "properties": {
+              "sun": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "moonPath"
+            ],
+            "properties": {
+              "moonPath": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "moon"
+            ],
+            "properties": {
+              "moon": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "meteorDensity"
+            ],
+            "properties": {
+              "meteorDensity": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "meteors"
+            ],
+            "properties": {
+              "meteors": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "sky": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "milkyWayContrast": {
+          "type": "number",
+          "minimum": 25,
+          "maximum": 200,
+          "default": 100
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lightPollution": {
+          "type": "boolean",
+          "default": false
+        },
+        "weather": {
+          "type": "boolean",
+          "default": false
+        },
+        "weatherModel": {
+          "enum": [
+            "best_match",
+            "gfs_seamless",
+            "icon_seamless",
+            "ecmwf_ifs"
+          ],
+          "default": "best_match"
+        }
+      }
+    }
+  }
+}

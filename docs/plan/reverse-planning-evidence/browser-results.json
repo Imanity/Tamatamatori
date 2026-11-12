@@ -221,5 +221,64 @@
     "issues": [
       "dev server served a mid-edit module twice after multi-step edits; restarted (environment, not product)"
     ]
+  },
+  "linkRound": {
+    "date": "2026-11-12",
+    "builds": [
+      "dev server (http://127.0.0.1:5173/)",
+      "vite preview of the subpath build (http://127.0.0.1:4173/Tamatamatori/)"
+    ],
+    "steps": [
+      {
+        "build": "dev",
+        "action": "open #solve=json: range request (晴空塔、月亮、30 天、主体 30%、亮面 75%—100%)",
+        "result": "preview lists 两者都找 · 月亮, 晴空塔 634 m 已接入地标, 2026-11-12 起 30 天, conditions, change 时区固定为 Asia/Tokyo; 取消 closes it and clears the hash; 载入并推算 enters the mode, hash cleared, 30 天内 17 个候选（月相筛掉 42）"
+      },
+      {
+        "build": "dev",
+        "action": "复制推算请求 / 复制结果 (clipboard refused by the browser pane)",
+        "result": "fallback selects the hidden field; first attempt scrolled the whole page by 1633 px (fixed: field inside the section, focus with preventScroll); after the fix the page stays put. Copied link reads back with target {landmark, height}; Markdown table lists date, span, distance, share, middle position, sky, lit, clear"
+      },
+      {
+        "build": "dev",
+        "action": "open #shot=tmt1: link (晴空塔 · 满月, 200 mm, 离地 100 m)",
+        "result": "import preview with the shot summary and name; 仅应用 applies (focal 200), hash cleared, toast with undo"
+      },
+      {
+        "build": "subpath",
+        "action": "fetch llms.txt, shot-format.md, solve-format.md, shot.schema.json, solve.schema.json",
+        "result": "all 200 (text/plain, text/markdown, application/json); index.html alternate links are /Tamatamatori/…"
+      },
+      {
+        "build": "subpath",
+        "action": "机位 → 分享",
+        "result": "分享链接 http://127.0.0.1:4173/Tamatamatori/#shot=tmt1:…, JSON $schema http://127.0.0.1:4173/Tamatamatori/shot.schema.json",
+        "evidence": "18-shot-share-link.jpg"
+      },
+      {
+        "build": "subpath",
+        "action": "open #solve=json: time request (富士山顶夕阳, mark 244.63°/10.74°, from 2026-11-12, 12 months)",
+        "result": "preview with 方向 and 时区 changes",
+        "evidence": "16-solve-link-preview.jpg"
+      },
+      {
+        "build": "subpath",
+        "action": "载入并推算 (real DEM)",
+        "result": "view faces the mark, 12 个月内 2 次: 2/12 16:22 and 10/30 15:52, toast 已载入推算请求「富士山顶夕阳」",
+        "evidence": "17-solve-link-loaded.jpg"
+      }
+    ],
+    "issuesFoundAndFixed": [
+      "copy fallback scrolled the page (hidden field positioned against the page)",
+      "extra gap between change lines in the preview"
+    ],
+    "observed": [
+      "range list at 200 mm shows several single-minute candidates that round to the same row (separate roots near 20 km); existing round-3 behaviour, not changed here"
+    ],
+    "notTested": [
+      "real clipboard write (the browser pane refuses it)",
+      "Firefox, Safari, physical phones",
+      "a link opened from another app (only in-pane navigation)"
+    ]
   }
 }

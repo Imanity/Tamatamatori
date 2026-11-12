@@ -17,6 +17,9 @@ import type { InfoGroupId, InfoNavigation } from "./components/InfoGroup";
 import { ShotMenu, ShotToast } from "./components/ShotMenu";
 import { browserStorage, readSession, writeSession } from "./domain/shot-library";
 import { useAlignment } from "./components/Alignment";
+import { SolveLinkDialog } from "./components/SolveLink";
+import { parseSolveText, solvePlan } from "./domain/solve";
+import type { SolveParse, SolveRequest } from "./domain/solve";
 
 type PanelId = "map" | "preview";
 type MobileTab = "map" | "camera" | "layers" | "solve";
@@ -191,8 +194,29 @@ export default function App() {
   const [planGeneration, setPlanGeneration] = useState(0);
   const [shotNotice, setShotNotice] = useState<{
     text: string;
-    undo: { plan: ShootingPlan; activeId: string | null };
+    /** `solveMode` is restored too when a loaded 推算 request is undone. */
+    undo: { plan: ShootingPlan; activeId: string | null; solveMode?: boolean };
   } | null>(null);
+  // `#shot=` and `#solve=` links open a preview; nothing changes until it is confirmed.
+  const [shotLink, setShotLink] = useState<{ text: string; serial: number } | null>(null);
+  const [solveLink, setSolveLink] = useState<{ parse: SolveParse; serial: number } | null>(null);
+  useEffect(() => {
+    const read = () => {
+      const hash = window.location.hash;
+      if (hash.startsWith("#shot="))
+        setShotLink((current) => ({ text: hash, serial: (current?.serial ?? 0) + 1 }));
+      else if (hash.startsWith("#solve="))
+        setSolveLink((current) => ({ parse: parseSolveText(hash), serial: (current?.serial ?? 0) + 1 }));
+    };
+    read();
+    window.addEventListener("hashchange", read);
+    return () => window.removeEventListener("hashchange", read);
+  }, []);
+  // A handled link leaves the address bar, so a reload does not ask again.
+  const clearLinkHash = () => {
+    if (/^#(shot|solve)=/.test(window.location.hash))
+      window.history.replaceState(window.history.state, "", window.location.pathname + window.location.search);
+  };
   const [previewFirst, setPreviewFirst] = useState(false);
   const [mapShare, setMapShare] = useState(defaultMapShare);
   const [resizing, setResizing] = useState(false);
@@ -293,6 +317,22 @@ export default function App() {
   };
   // The 推算 mode is shared by its panel, the preview mark, the timeline and the map.
   const alignment = useAlignment(plan, updatePlan, solveMode, planGeneration);
+  const loadSolve = (request: SolveRequest) => {
+    const next = solvePlan(request, plan);
+    setShotNotice({
+      text: `已载入推算请求${request.name ? `「${request.name}」` : ""}`,
+      undo: { plan, activeId: activeShotId, solveMode },
+    });
+    replacePlan(next, activeShotId);
+    alignment.load(request, next);
+    if (!solveMode) {
+      setSolveMode(true);
+      setAnnouncement("已进入推算模式");
+    }
+    setRailView("solve");
+    setInfoCollapsed(false);
+    if (narrow) setMobileTab("solve");
+  };
   // Shared by the panel, the timeline and the map.
   const tides = useTides(plan);
   const aurora = useAurora(plan);
@@ -361,15 +401,34 @@ export default function App() {
             activeId={activeShotId}
             onActiveChange={setActiveShotId}
             onApply={applyShot}
+            link={shotLink}
+            onLinkDone={() => {
+              setShotLink(null);
+              clearLinkHash();
+            }}
           />
           <About />
         </div>
       </header>
+      <SolveLinkDialog
+        link={solveLink}
+        plan={plan}
+        onLoad={loadSolve}
+        onClose={() => {
+          setSolveLink(null);
+          clearLinkHash();
+        }}
+      />
       {shotNotice && (
         <ShotToast
           text={shotNotice.text}
           onUndo={() => {
             replacePlan(shotNotice.undo.plan, shotNotice.undo.activeId);
+            if (shotNotice.undo.solveMode === false) {
+              setSolveMode(false);
+              if (mobileTab === "solve") setMobileTab("map");
+              setAnnouncement("已退出推算模式");
+            }
             setShotNotice(null);
           }}
           onClose={() => setShotNotice(null)}

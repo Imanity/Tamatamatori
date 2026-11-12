@@ -15,6 +15,8 @@ import {
 import type { AlignmentBody, AlignmentInput, AlignmentResult, AlignmentScan, SkyCondition } from "../domain/alignment";
 import { localDateTime } from "../domain/plan";
 import type { ShootingPlan } from "../domain/plan";
+import { solveRequestOf, solveStart } from "../domain/solve";
+import type { SolveRequest } from "../domain/solve";
 import type { View } from "../domain/celestial-projection";
 import { occlusionText } from "../domain/visibility";
 import type { Occlusion } from "../domain/visibility";
@@ -22,6 +24,7 @@ import type { TimelineEvent } from "../domain/timeline";
 import { NumberField } from "./NumberField";
 import { PositionPanel, usePositionSearch } from "./PositionSearch";
 import { RangePanel, useRangeSearch } from "./RangeSearch";
+import { SolveExport } from "./SolveLink";
 
 type UpdatePlan = (patch: Partial<ShootingPlan>) => void;
 const DAY = 86_400_000;
@@ -241,10 +244,57 @@ export function useAlignment(plan: ShootingPlan, update: UpdatePlan, active: boo
     detail: `${names[settings.body]}中心距期望位置 ${round(found.separation / found.diameter)} 个视直径（容差内 ${clockOf(found.from, plan.timeZone)}–${clockOf(found.to, plan.timeZone)}）`,
   })) : []), [active, kind, result, plan.timeZone, settings.body]);
 
+  /** Opens a request (from a link): its kind, body, mark or target and conditions; `opened` is the plan it applies to. */
+  const load = (request: SolveRequest, opened: ShootingPlan) => {
+    const start = solveStart(request, opened);
+    const phase = request.phase ? [Math.round(request.phase[0] * 100), Math.round(request.phase[1] * 100)] as const : [0, 100] as const;
+    const sky = request.sky ?? skyConditions;
+    setKind(request.kind);
+    setPlacing(false);
+    setPlaceError("");
+    position.setPlacing(false);
+    if (request.kind === "time" && request.mark) {
+      setSettings((current) => ({ ...current, body: request.body, target: clampTarget(request.mark!), start, days: request.days ?? current.days, tolerance: request.tolerance ?? current.tolerance, phase, sky }));
+      return;
+    }
+    setSettings((current) => ({ ...current, body: request.body }));
+    if (!request.target) return;
+    const { landmark, ...target } = request.target;
+    position.setTarget(landmark ? { ...target, id: landmark } : target);
+    if (request.kind === "position") position.setMaxDistance(request.maxDistance ?? 30_000);
+    if (request.kind === "range") {
+      range.setShare(request.share ?? 0.3);
+      range.setSpan(request.days ?? 30);
+      range.setStart(start);
+      range.setMaxDistance(request.maxDistance ?? 30_000);
+      range.setPhase(phase);
+      range.setSky(sky);
+    }
+  };
+  /** The current search as a request ("复制推算请求"); null until it has a mark or a target. */
+  const request = () => {
+    const current = latest.current;
+    const today = localDateTime(current.instant, current.timeZone).slice(0, 10);
+    const fraction = (value: readonly [number, number]) => [value[0] / 100, value[1] / 100] as const;
+    return solveRequestOf({
+      kind, body: settings.body, mark: settings.target,
+      camera: { latitude: current.latitude, longitude: current.longitude, heightAboveGround: current.cameraHeight },
+      target: position.target ? { ...position.target, name: position.target.name ?? "地面目标" } : null,
+      date: kind === "time" ? settings.start || today : kind === "range" ? range.start || today : position.span.date,
+      days: kind === "time" ? settings.days : range.span,
+      timeZone: current.timeZone,
+      tolerance: settings.tolerance,
+      share: range.share,
+      maxDistance: kind === "position" ? position.maxDistance : range.maxDistance,
+      phase: fraction(kind === "time" ? settings.phase : range.phase),
+      sky: kind === "time" ? settings.sky : range.sky,
+    });
+  };
+
   return {
     active, kind, setKind, position, range, settings, change, setTarget, place, placing, setPlacing, placeError, setPlaceError,
     run, stale, pending, result, recompute: () => settings.target && compute(settings),
-    tryOut, restore, canRestore: !!before,
+    tryOut, restore, canRestore: !!before, load, request,
     events: kind === "time" ? timeEvents : kind === "position" ? position.events : range.events,
   };
 }
@@ -544,6 +594,7 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion }: {
         </p>
       </div>
       </>}
+      <SolveExport alignment={alignment} plan={plan} />
     </section>
   );
 }

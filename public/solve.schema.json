@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://imanity.github.io/Tamatamatori/solve.schema.json",
+  "title": "Tamatamatori 推算请求 v1",
+  "description": "求拍摄时间或机位的条件，由应用在本机推算。未知字段与不属于该求法的字段报错。说明见 https://imanity.github.io/Tamatamatori/solve-format.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "kind",
+    "body"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "可写本 schema 的地址，读取时忽略"
+    },
+    "format": {
+      "const": "tamatamatori.solve"
+    },
+    "version": {
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "kind": {
+      "enum": [
+        "time",
+        "position",
+        "range"
+      ],
+      "description": "time 找时间（机位已定）；position 找机位（某一天）；range 两者都找（一段日期）"
+    },
+    "body": {
+      "enum": [
+        "sun",
+        "moon"
+      ]
+    },
+    "mark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "azimuth",
+        "elevation"
+      ],
+      "description": "天体中心的视方位与视高度（含所选折射），度",
+      "properties": {
+        "azimuth": {
+          "type": "number",
+          "description": "正北为 0、顺时针；取模归一"
+        },
+        "elevation": {
+          "type": "number",
+          "minimum": -0.25,
+          "maximum": 89
+        }
+      }
+    },
+    "camera": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "description": "找时间的机位；缺省沿用打开者当前机位",
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90,
+          "description": "纬度，北正南负"
+        },
+        "longitude": {
+          "type": "number",
+          "description": "经度，东正西负；超出 ±180 时取模归一"
+        },
+        "heightAboveGround": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 100,
+          "description": "相机离地高度，米"
+        }
+      }
+    },
+    "target": {
+      "description": "地面目标：已接入地标的 id，或坐标",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "landmark"
+          ],
+          "properties": {
+            "landmark": {
+              "enum": [
+                "big-ben",
+                "burj-al-arab",
+                "burj-khalifa",
+                "chrysler-building",
+                "cn-tower",
+                "eiffel-tower",
+                "empire-state-building",
+                "lotte-world-tower",
+                "metlife-building",
+                "one-world-trade-center",
+                "oriental-pearl",
+                "osaka-castle",
+                "petronas-towers",
+                "shanghai-tower",
+                "shanghai-wfc",
+                "sydney-opera-house",
+                "taipei-101",
+                "three-world-trade-center",
+                "tokyo-skytree",
+                "tokyo-tower",
+                "willis-tower"
+              ]
+            },
+            "height": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000,
+              "description": "目标顶部高出 DEM 地面的米数；地标缺省为其高度，坐标缺省为 0"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40,
+              "description": "目标名称"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "latitude",
+            "longitude"
+          ],
+          "properties": {
+            "latitude": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90,
+              "description": "纬度，北正南负"
+            },
+            "longitude": {
+              "type": "number",
+              "description": "经度，东正西负；超出 ±180 时取模归一"
+            },
+            "height": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000,
+              "description": "目标顶部高出 DEM 地面的米数；地标缺省为其高度，坐标缺省为 0"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40,
+              "description": "目标名称"
+            }
+          }
+        }
+      ]
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "当地日期（1900—2100 年）；缺省为打开者当前拍摄日期"
+    },
+    "days": {
+      "type": "integer",
+      "description": "跨度，天"
+    },
+    "timeZone": {
+      "type": "string",
+      "description": "IANA 时区；给出时日期按它解释，拍摄计划改为该固定时区"
+    },
+    "tolerance": {
+      "enum": [
+        0.1,
+        0.25,
+        0.5,
+        1
+      ],
+      "default": 0.25,
+      "description": "中心偏离期望位置的上限，视直径"
+    },
+    "share": {
+      "type": "number",
+      "minimum": 0.05,
+      "maximum": 0.5,
+      "default": 0.3,
+      "description": "主体占画面高度的比例（目标不足 10 m 时改用 maxDistance）"
+    },
+    "maxDistance": {
+      "enum": [
+        10000,
+        20000,
+        30000
+      ],
+      "default": 30000,
+      "description": "机位离目标的最远距离，米"
+    },
+    "phase": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "enum": [
+          0,
+          0.1,
+          0.25,
+          0.5,
+          0.75,
+          0.9,
+          1
+        ]
+      },
+      "description": "月亮亮面比例 [下限, 上限]，下限不大于上限"
+    },
+    "sky": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "day",
+          "golden",
+          "blue",
+          "twilight",
+          "night"
+        ]
+      },
+      "description": "天空条件（按太阳高度）"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "time"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "mark"
+        ],
+        "properties": {
+          "days": {
+            "enum": [
+              30,
+              90,
+              365,
+              1096
+            ],
+            "default": 365
+          },
+          "target": false,
+          "share": false,
+          "maxDistance": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "position"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "target"
+        ],
+        "properties": {
+          "mark": false,
+          "camera": false,
+          "days": false,
+          "tolerance": false,
+          "share": false,
+          "phase": false,
+          "sky": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "range"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "target"
+        ],
+        "properties": {
+          "days": {
+            "enum": [
+              7,
+              30,
+              90,
+              365
+            ],
+            "default": 30
+          },
+          "mark": false,
+          "camera": false,
+          "tolerance": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "body": {
+            "const": "sun"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "phase": false,
+          "sky": false
+        }
+      }
+    }
+  ]
+}

@@ -12,9 +12,10 @@ import {deepSkyScene} from '../src/domain/deep-sky.ts';
 import { weatherResponse } from './fixtures/weather.mjs';
 import { parseWeather, WEATHER_TTL } from '../src/domain/weather.ts';
 import { ellipsoidalRay } from '../src/domain/geodesy.ts';
-import { parseShotText } from '../src/domain/shot.ts';
+import { parseShotText, shotFromPlan, shotLink } from '../src/domain/shot.ts';
+import { parseSolveText } from '../src/domain/solve.ts';
 import { dayEvents } from '../src/domain/day-events.ts';
-import { cameraHeightSlider } from '../src/domain/plan.ts';
+import { cameraHeightSlider, initialPlan } from '../src/domain/plan.ts';
 import { bodyPath } from '../src/domain/body-paths.ts';
 import { activeShowers, meteorEstimate } from '../src/domain/meteor-showers.ts';
 import { cometScene } from '../src/domain/comets.ts';
@@ -1999,7 +2000,11 @@ test('导入机位：错误带字段路径，部分 JSON 补默认值，任意�
   const parsed = parseShotText(code);
   assert.equal(parsed.ok, true); assert.equal(parsed.shot.name, '埃菲尔铁塔 · 冬夜'); assert.equal(parsed.plan.timeZone, 'Europe/Paris');
   assert.equal(parsed.plan.instant, '2026-12-20T21:15:00Z'); assert.equal(parsed.plan.focalLength, 200);
-  assert.deepEqual(JSON.parse(share.querySelector('[aria-label="机位 JSON"]').value), parsed.shot);
+  const { $schema, ...written } = JSON.parse(share.querySelector('[aria-label="机位 JSON"]').value);
+  assert.equal($schema, 'http://localhost/shot.schema.json'); assert.deepEqual(written, parsed.shot);
+  // The link leads the dialog and reads back to the same shot.
+  const link = share.querySelector('[aria-label="分享链接"]').value;
+  assert.ok(link.startsWith('http://localhost/#shot=tmt1:')); assert.deepEqual(parseShotText(link).shot, parsed.shot);
   await settle(() => share.querySelector('header button').click());
   assert.equal(share.open, false);
 });
@@ -3105,4 +3110,105 @@ test('推算·两者都找：主体占比给出距离带，跨度内逐日求候
   assert.ok(document.querySelector('.alignment-conditions select[aria-label="机位最远距离"]'));
   await settle(() => document.querySelector('.solve-button').click());
   assert.equal(map.getSource('tamatamatori-alignment').data.features.length, 0);
+});
+
+test('机位链接：打开带 #shot= 的地址先预览，应用后清除 hash 并可撤销；关闭预览不改计划', async t => {
+  await workspace(t); await readyTerrain();
+  t.after(() => dom.window.history.replaceState(null, '', '/'));
+  const before = { focal: value('焦距'), azimuth: value('方位角') };
+  const dialog = () => document.querySelector('.shot-dialog[open]');
+  const hashOf = (shot) => shotLink(shot, 'http://localhost/').slice('http://localhost/'.length);
+  await settle(() => { dom.window.location.hash = hashOf(shotFromPlan({ ...initialPlan, focalLength: 85, azimuth: 200 }, '链接机位')); });
+  await waitUntil(() => dialog());
+  assert.match(dialog().querySelector('h2').textContent, /导入机位/);
+  assert.match(dialog().querySelector('.shot-summary').textContent, /方位 200\.0°.*85 mm/s);
+  assert.equal(dialog().querySelector('[aria-label="导入机位名称"]').value, '链接机位');
+  assert.equal(value('焦距'), before.focal, 'nothing changes before confirming');
+  await settle(() => [...dialog().querySelectorAll('footer button')].find((b) => b.textContent === '仅应用').click());
+  assert.equal(dialog(), null);
+  assert.equal(dom.window.location.hash, '');
+  assert.equal(value('焦距'), 85); assert.equal(value('方位角'), 200);
+  assert.match(document.querySelector('.shot-toast').textContent, /已应用「链接机位」/);
+  await settle(() => [...document.querySelectorAll('.shot-toast button')].find((b) => b.textContent === '撤销').click());
+  assert.equal(value('焦距'), before.focal); assert.equal(value('方位角'), before.azimuth);
+  // Closing the preview leaves the plan and still drops the hash; a broken link lists its problems.
+  await settle(() => { dom.window.location.hash = hashOf(shotFromPlan({ ...initialPlan, focalLength: 50 }, '不应用')); });
+  await waitUntil(() => dialog());
+  await settle(() => dialog().querySelector('header button').click());
+  assert.equal(dom.window.location.hash, ''); assert.equal(value('焦距'), before.focal);
+  await settle(() => { dom.window.location.hash = 'shot=json:' + encodeURIComponent('{"format":"tamatamatori.shot","version":1}'); });
+  await waitUntil(() => dialog());
+  assert.match(dialog().querySelector('.shot-errors').textContent, /position：缺少该字段/);
+  await settle(() => dialog().querySelector('header button').click());
+  assert.equal(dom.window.location.hash, '');
+});
+
+test('推算请求链接：先预览请求与将改动的字段，取消不改计划；确认后进入对应求法并推算，撤销恢复计划与模式；复制推算请求与结果', async t => {
+  await workspace(t); await readyTerrain();
+  t.after(() => dom.window.history.replaceState(null, '', '/'));
+  const copied = [];
+  Object.defineProperty(dom.window.navigator, 'clipboard', { configurable: true, value: { writeText: async (text) => { copied.push(text); } } });
+  t.after(() => { delete dom.window.navigator.clipboard; });
+  installGlobal('__testElevationTiles', async (points, url, signal, progress) => { progress?.(3, 3); return () => 0; });
+  t.after(() => { delete globalThis.__testElevationTiles; });
+  const request = { format: 'tamatamatori.solve', version: 1, name: '富士山顶夕阳', kind: 'time', body: 'sun', mark: { azimuth: 244.63, elevation: 10.74 }, date: '2026-11-04', days: 365, timeZone: 'Asia/Tokyo' };
+  const open = async (value) => {
+    await settle(() => { dom.window.location.hash = `solve=json:${encodeURIComponent(JSON.stringify(value))}`; });
+    await waitUntil(() => document.querySelector('.solve-dialog')?.open);
+    return document.querySelector('.solve-dialog');
+  };
+  const items = () => [...document.querySelectorAll('.alignment-month li')];
+  const before = { azimuth: value('方位角'), pitch: value('俯仰角'), time: shootingDateTime() };
+  let dialog = await open(request);
+  assert.match(dialog.querySelector('.shot-summary').textContent, /找时间 · 太阳.*富士山顶夕阳.*方位 244\.63°（西南），视高度 10\.74°.*沿用当前机位.*2026-11-04 起 12 个月.*Asia\/Tokyo/s);
+  assert.match(dialog.querySelector('.solve-changes').textContent, /方向：朝向期望位置（方位 244\.63°，俯仰 10\.74°）.*时区：固定为 Asia\/Tokyo（不再随机位）/s);
+  await settle(() => button('取消').click());
+  assert.equal(dialog.open, false); assert.equal(dom.window.location.hash, '');
+  assert.equal(value('方位角'), before.azimuth); assert.equal(document.querySelector('.alignment-panel'), null);
+  // Confirming enters 找时间 with the mark, faces it and searches from the given date.
+  dialog = await open(request);
+  await settle(() => button('载入并推算').click());
+  assert.equal(dom.window.location.hash, '');
+  assert.equal(document.querySelector('.solve-button').getAttribute('aria-pressed'), 'true');
+  assert.equal(button('找时间').getAttribute('aria-pressed'), 'true');
+  assert.equal(value('方位角'), 244.63); assert.equal(value('俯仰角'), 10.74);
+  assert.equal(value('方位'), 244.63); assert.equal(value('视高度'), 10.74);
+  assert.equal(document.querySelector('input[aria-label="推算起始日期"]').value, '2026-11-04');
+  assert.match(document.querySelector('.shot-toast').textContent, /已载入推算请求「富士山顶夕阳」/);
+  await waitUntil(() => items().length === 2);
+  // "复制推算请求" writes a self-contained link; "复制结果" a Markdown table.
+  await settle(() => button('复制推算请求').click());
+  await waitUntil(() => copied.length === 1);
+  assert.ok(copied[0].startsWith('http://localhost/#solve=json:'));
+  const back = parseSolveText(copied[0]);
+  assert.equal(back.ok, true);
+  assert.deepEqual({ ...back.request, camera: undefined }, { ...parseSolveText(JSON.stringify(request)).request, name: '', tolerance: 0.25, camera: undefined });
+  assert.deepEqual(back.request.camera, { latitude: value('纬度'), longitude: value('经度'), heightAboveGround: value('离地高度') });
+  await settle(() => button('复制结果').click());
+  await waitUntil(() => copied.length === 2);
+  assert.match(copied[1], /^## Tamatamatori 推算结果/);
+  assert.match(copied[1], /\| 2027-02-12 \| 16:22 \|[\s\S]*\| 2027-10-30 \| 15:52 \|/);
+  assert.match(document.querySelector('.alignment-copied').textContent, /已复制结果/);
+  // Undo restores the plan and leaves the mode it entered.
+  await settle(() => [...document.querySelectorAll('.shot-toast button')].find((b) => b.textContent === '撤销').click());
+  assert.equal(value('方位角'), before.azimuth); assert.equal(value('俯仰角'), before.pitch);
+  assert.equal(document.querySelector('.solve-button').getAttribute('aria-pressed'), 'false');
+  assert.equal(document.querySelector('.alignment-panel'), null);
+  // A 找机位 request selects the landmark, moves the shooting date and starts the search.
+  dialog = await open({ format: 'tamatamatori.solve', version: 1, kind: 'position', body: 'sun', target: { landmark: 'tokyo-skytree' }, date: '2026-12-21', maxDistance: 20000 });
+  assert.match(dialog.querySelector('.shot-summary').textContent, /找机位 · 太阳.*晴空塔.*顶部高出地面 634 m.*已接入地标（tokyo-skytree）.*2026-12-21 当天/s);
+  assert.match(dialog.querySelector('.solve-changes').textContent, /拍摄时刻：2026-11-04 17:00（Asia\/Tokyo） → 2026-12-21 17:00（Asia\/Tokyo）/);
+  await settle(() => button('载入并推算').click());
+  assert.equal(button('找机位').getAttribute('aria-pressed'), 'true');
+  assert.equal(document.querySelector('select[aria-label="选择地标"]').value, 'tokyo-skytree');
+  assert.equal(value('目标高出地面'), 634);
+  assert.equal(document.querySelector('select[aria-label="机位最远距离"]').value, '20000');
+  assert.equal(shootingDateTime(), '2026-12-21T17:00');
+  await waitUntil(() => /对齐线 \d+ 分钟/.test(document.querySelector('.alignment-status')?.textContent ?? ''));
+  // A broken request lists its problems and cannot be loaded.
+  dialog = await open({ ...request, kind: 'range' });
+  assert.match(dialog.querySelector('.shot-errors').textContent, /mark：kind 为 "range" 时不使用该字段[\s\S]*target：需要地面目标/);
+  assert.equal(button('载入并推算').disabled, true);
+  await settle(() => button('取消').click());
+  assert.equal(dom.window.location.hash, '');
 });
