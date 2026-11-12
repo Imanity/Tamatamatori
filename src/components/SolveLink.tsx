@@ -5,7 +5,11 @@ import { solveLink, solvePlan } from "../domain/solve";
 import type { SolveParse, SolveRequest } from "../domain/solve";
 import { describeSolve, positionRows, rangeRows, solveReport, timeRows } from "../domain/solve-report";
 import { siteBase } from "../domain/site";
-import { copyText } from "./ShotMenu";
+import { distinctPoints } from "../domain/position-alignment";
+import { shotFromPlan } from "../domain/shot";
+import { CALENDAR_LIMIT, calendarText, positionEvents, rangeEvents, solveShotName, timeEvents } from "../domain/solve-calendar";
+import type { CalendarEvent } from "../domain/solve-calendar";
+import { copyText, suggestShotName } from "./ShotMenu";
 import type { AlignmentState } from "./Alignment";
 
 const coordinate = (latitude: number, longitude: number) => `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
@@ -121,7 +125,7 @@ function report(alignment: AlignmentState, plan: ShootingPlan, request: SolveReq
   if (alignment.kind === "position") {
     const { result, points } = alignment.position;
     if (!result) return null;
-    const listed = points.filter((point) => localDateTime(new Date(point.time).toISOString(), plan.timeZone).endsWith("0"));
+    const listed = distinctPoints(points.filter((point) => localDateTime(new Date(point.time).toISOString(), plan.timeZone).endsWith("0")));
     const status = points.length
       ? `对齐线 ${result.minutes} 分钟 · 距目标 ${km(Math.min(...points.map((point) => point.distance)))}—${km(Math.max(...points.map((point) => point.distance)))} km；下表每 10 分钟一行。`
       : "时段内没有解。";
@@ -136,15 +140,60 @@ function report(alignment: AlignmentState, plan: ShootingPlan, request: SolveReq
   return solveReport({ ...common, status, ...rangeRows(range.kept, plan.timeZone) });
 }
 
-/** "复制推算请求" (a `#solve=` link) and "复制结果" (Markdown) for the current search. */
-export function SolveExport({ alignment, plan }: { alignment: AlignmentState; plan: ShootingPlan }) {
+/** "存为机位" from the 推算 panel, provided by the workspace. */
+export interface ShotSaving {
+  save: (name: string) => boolean;
+  error: string;
+  writable: boolean;
+}
+
+/** Where a saved result or a calendar event is named after: the target, or the camera's place for 找时间. */
+function placeOf(alignment: AlignmentState, plan: ShootingPlan) {
+  if (alignment.kind !== "time" && alignment.position.target?.name) return alignment.position.target.name;
+  return suggestShotName(shotFromPlan(plan)).split(" · ")[0];
+}
+
+/** Whether the plan is the try-out of a listed result (the instant and, away from 找时间, the camera match). */
+function trying(alignment: AlignmentState, plan: ShootingPlan) {
+  if (alignment.kind === "time") return !!alignment.result?.alignments.some((found) => found.instant === plan.instant);
+  if (alignment.kind === "position") return !!alignment.position.current;
+  return !!alignment.range.currentPoint;
+}
+
+function calendarEvents(alignment: AlignmentState, plan: ShootingPlan, place: string): CalendarEvent[] | null {
+  const context = { plan, body: alignment.settings.body, place, site: site() };
+  if (alignment.kind === "time") return alignment.result ? timeEvents(alignment.result.alignments, context) : null;
+  if (alignment.kind === "position") return alignment.position.result ? positionEvents(alignment.position.points, context) : null;
+  return alignment.range.done ? rangeEvents(alignment.range.kept, context) : null;
+}
+
+function download(text: string, filename: string) {
+  const url = URL.createObjectURL(new Blob([text], { type: "text/calendar;charset=utf-8" }));
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.hidden = true;
+  document.body.append(anchor);
+  anchor.click();
+  anchor.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10_000);
+}
+
+/** "存为机位" and "导出日历" for results; "复制推算请求" (a `#solve=` link) and "复制结果" (Markdown) for the search. */
+export function SolveExport({ alignment, plan, saving }: { alignment: AlignmentState; plan: ShootingPlan; saving?: ShotSaving }) {
   const [copied, setCopied] = useState("");
   const [text, setText] = useState("");
   const field = useRef<HTMLTextAreaElement>(null);
   const request = alignment.request();
   const link = request ? solveLink(request, site()) : "";
   const markdown = request ? report(alignment, plan, request, link) : null;
+  const place = placeOf(alignment, plan);
+  const trial = trying(alignment, plan);
+  const ready = alignment.kind === "time" ? !!alignment.result : alignment.kind === "position" ? !!alignment.position.result : !!alignment.range.done;
   useEffect(() => setCopied(""), [link, markdown]);
+  useEffect(() => {
+    if (saving?.error) setCopied(`无法保存机位：${saving.error}`);
+  }, [saving?.error]);
   const copy = async (value: string, done: string) => {
     setText(value);
     // The fallback selects this field before React renders the new text.
@@ -152,17 +201,34 @@ export function SolveExport({ alignment, plan }: { alignment: AlignmentState; pl
     const status = await copyText(value, field.current);
     setCopied(status === "已复制" ? done : status);
   };
+  const save = () => {
+    if (!saving) return;
+    const name = solveShotName(place, alignment.settings.body, plan.instant, plan.timeZone);
+    if (saving.save(name)) setCopied(`已存为机位「${name}」，可在“机位”中改名`);
+    else setCopied(`无法保存机位${saving.error ? `：${saving.error}` : ""}`);
+  };
+  const exportCalendar = () => {
+    const events = calendarEvents(alignment, plan, place);
+    if (!events?.length) return;
+    const date = (request?.date ?? localDateTime(plan.instant, plan.timeZone).slice(0, 10)).replace(/-/g, "");
+    download(calendarText(events, `Tamatamatori 推算 · ${place}`), `tamatamatori-${alignment.kind}-${date}.ics`);
+    setCopied(events.length > CALENDAR_LIMIT ? `已导出前 ${CALENDAR_LIMIT} 个事件（共 ${events.length} 个）` : `已导出 ${events.length} 个事件`);
+  };
   return (
     <div className="alignment-section alignment-export">
-      <h3>导出</h3>
+      <h3>保存与导出</h3>
       <div className="alignment-actions">
+        <button type="button" disabled={!saving?.writable || !trial} onClick={save}
+          title={!trial ? "先试看一个结果" : !saving?.writable ? "本机存储不可用" : "把正在试看的结果存为机位"}>存为机位</button>
+        <button type="button" disabled={!ready} onClick={exportCalendar}>导出日历</button>
         <button type="button" disabled={!request} onClick={() => copy(link, "已复制推算请求链接")}>复制推算请求</button>
         <button type="button" disabled={!markdown} onClick={() => markdown && copy(markdown, "已复制结果（Markdown）")}>复制结果</button>
       </div>
       <span className="alignment-copied" role="status">{copied}</span>
       <textarea ref={field} className="shot-copy-source" readOnly value={text} aria-hidden="true" tabIndex={-1} />
       <p className="alignment-hint">
-        推算请求是一个链接，打开后先预览、确认才会在对方本机推算；结果为 Markdown 表格，可贴给人或 AI 阅读。
+        {trial ? "存为机位保存正在试看的结果。" : "试看一个结果后可存为机位。"}
+        日历（.ics）每个结果一个事件，附打开机位的链接。推算请求是一个链接，打开后先预览、确认才会在对方本机推算；结果为 Markdown 表格，可贴给人或 AI 阅读。
       </p>
     </div>
   );

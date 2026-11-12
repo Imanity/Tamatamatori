@@ -18,6 +18,8 @@ import { ShotMenu, ShotToast } from "./components/ShotMenu";
 import { browserStorage, readSession, writeSession } from "./domain/shot-library";
 import { useAlignment } from "./components/Alignment";
 import { SolveLinkDialog } from "./components/SolveLink";
+import { useShotLibrary } from "./components/useShotLibrary";
+import { shotFromPlan } from "./domain/shot";
 import { parseSolveText, solvePlan } from "./domain/solve";
 import type { SolveParse, SolveRequest } from "./domain/solve";
 
@@ -195,7 +197,7 @@ export default function App() {
   const [shotNotice, setShotNotice] = useState<{
     text: string;
     /** `solveMode` is restored too when a loaded 推算 request is undone. */
-    undo: { plan: ShootingPlan; activeId: string | null; solveMode?: boolean };
+    undo?: { plan: ShootingPlan; activeId: string | null; solveMode?: boolean };
   } | null>(null);
   // `#shot=` and `#solve=` links open a preview; nothing changes until it is confirmed.
   const [shotLink, setShotLink] = useState<{ text: string; serial: number } | null>(null);
@@ -317,6 +319,15 @@ export default function App() {
   };
   // The 推算 mode is shared by its panel, the preview mark, the timeline and the map.
   const alignment = useAlignment(plan, updatePlan, solveMode, planGeneration);
+  // "存为机位" from the 推算 panel; the shot menu sees the new entry at once (one library per page).
+  const shotLibrary = useShotLibrary();
+  const saveShot = (name: string) => {
+    const entry = shotLibrary.saveNew(shotFromPlan(plan, name));
+    if (!entry) return false;
+    setActiveShotId(entry.id);
+    setShotNotice({ text: `已存为机位「${name}」` });
+    return true;
+  };
   const loadSolve = (request: SolveRequest) => {
     const next = solvePlan(request, plan);
     setShotNotice({
@@ -422,15 +433,16 @@ export default function App() {
       {shotNotice && (
         <ShotToast
           text={shotNotice.text}
-          onUndo={() => {
-            replacePlan(shotNotice.undo.plan, shotNotice.undo.activeId);
-            if (shotNotice.undo.solveMode === false) {
+          onUndo={shotNotice.undo && (() => {
+            const undo = shotNotice.undo!;
+            replacePlan(undo.plan, undo.activeId);
+            if (undo.solveMode === false) {
               setSolveMode(false);
               if (mobileTab === "solve") setMobileTab("map");
               setAnnouncement("已退出推算模式");
             }
             setShotNotice(null);
-          }}
+          })}
           onClose={() => setShotNotice(null)}
         />
       )}
@@ -486,6 +498,7 @@ export default function App() {
               aurora={aurora}
               alignment={alignment}
               solveHost={solveHost}
+              shotSaving={{ save: saveShot, error: shotLibrary.error, writable: shotLibrary.library.phase === "ready" }}
             />
           </Panel>
         </div>

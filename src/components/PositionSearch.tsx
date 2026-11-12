@@ -5,8 +5,10 @@ import {
   bodyTrack,
   corridor,
   distanceChoices,
+  distinctPoints,
   finishPositions,
   MIN_DISTANCE,
+  pointPlan,
   positionProfile,
   solvePositions,
 } from "../domain/position-alignment";
@@ -28,7 +30,6 @@ const iso = (time: number) => new Date(time).toISOString().replace(".000Z", "Z")
 const clock = (time: number, timeZone: string) => localDateTime(iso(time), timeZone).slice(11, 16);
 const km = (meters: number) => (meters / 1000).toFixed(meters < 10_000 ? 2 : 1);
 const sightNames = { clear: "通视", blocked: "被 DEM 挡住", unknown: "高程不全" } as const;
-const round = (value: number, digits: number) => Math.round(value * 10 ** digits) / 10 ** digits;
 // Whole metres without a "-0" for ground just below the datum.
 const metres = (value: number) => `${Math.round(value) || 0} m`;
 
@@ -138,11 +139,7 @@ export function usePositionSearch(plan: ShootingPlan, update: UpdatePlan, active
       latitude: now.latitude, longitude: now.longitude, instant: now.instant,
       azimuth: now.azimuth, pitch: now.pitch, sun: now.layers.sun, moon: now.layers.moon,
     });
-    // Rounded for the input fields: 1e-6° is about 0.1 m, 1e-4° under 1 cm at 5 km.
-    const patch = {
-      latitude: round(point.latitude, 6), longitude: round(point.longitude, 6), instant: iso(point.time),
-      azimuth: round(point.azimuth, 4), pitch: round(point.elevation, 4), layers: { ...now.layers, [body]: true },
-    };
+    const patch = pointPlan(now.layers, point, body);
     latest.current = { ...now, ...patch };
     update(patch);
   };
@@ -297,7 +294,8 @@ export function PositionPanel({ search, plan, body, occlusion }: {
     }
   }, [target, run?.sampler, plan.latitude, plan.longitude, plan.cameraHeight]);
   const index = current ? points.indexOf(current) : -1;
-  const listed = points.filter((point) => clock(point.time, plan.timeZone).endsWith("0"));
+  // Every ten minutes; nearly coincident solutions of a minute are listed once.
+  const listed = distinctPoints(points.filter((point) => clock(point.time, plan.timeZone).endsWith("0")));
   let summary: ReactNode = null;
   if (!target) summary = <p className="alignment-hint">先在地图上放置目标，或选择已接入地标。</p>;
   else if (!run || run.key !== search.key || run.phase === "loading")

@@ -5,7 +5,7 @@ import { fieldOfView } from "./plan.ts";
 import type { ShootingPlan } from "./plan.ts";
 import { skyCondition } from "./alignment.ts";
 import type { AlignmentBody, SkyCondition } from "./alignment.ts";
-import { bodyTrack, finishPositions, MIN_DISTANCE, solvePositions, travel } from "./position-alignment.ts";
+import { bodyTrack, finishPositions, groundDistance, MIN_DISTANCE, solvePositions, travel } from "./position-alignment.ts";
 import type { GroundSampler, GroundTarget, PositionPoint, SkySample } from "./position-alignment.ts";
 
 /**
@@ -220,4 +220,25 @@ export function solveRange(input: RangeInput, days: ReturnType<typeof rangeDays>
     onDay?.(index, found);
   });
   return points;
+}
+
+type Placed = { time: number; latitude: number; longitude: number };
+/**
+ * Candidates of one day whose spans touch or overlap are one place in
+ * practice (separate roots on the same sight line) when their middles lie
+ * within `radius` metres, or when every minute of one has a point of the
+ * other at the same minute within `radius`. The one with the most minutes stays.
+ */
+export function mergeCandidates<T extends { day?: string; start: number; end: number; middle: Placed; points: readonly Placed[]; clear: number }>(candidates: readonly T[], radius = 300) {
+  const order = [...candidates].sort((a, b) => b.points.length - a.points.length || b.clear - a.clear || a.start - b.start);
+  const covered = (inner: T, outer: T) => inner.points.every((point) =>
+    outer.points.some((other) => other.time === point.time && groundDistance(other, point) < radius));
+  const kept: T[] = [];
+  for (const candidate of order) {
+    const twin = kept.some((other) => other.day === candidate.day &&
+      candidate.start <= other.end + 60_000 && candidate.end >= other.start - 60_000 &&
+      (groundDistance(other.middle, candidate.middle) < radius || covered(candidate, other)));
+    if (!twin) kept.push(candidate);
+  }
+  return { candidates: kept.sort((a, b) => a.start - b.start), merged: candidates.length - kept.length };
 }

@@ -25,6 +25,7 @@ import { NumberField } from "./NumberField";
 import { PositionPanel, usePositionSearch } from "./PositionSearch";
 import { RangePanel, useRangeSearch } from "./RangeSearch";
 import { SolveExport } from "./SolveLink";
+import type { ShotSaving } from "./SolveLink";
 
 type UpdatePlan = (patch: Partial<ShootingPlan>) => void;
 const DAY = 86_400_000;
@@ -392,11 +393,12 @@ export function AlignmentMark({ alignment, view, frame }: { alignment: Alignment
 const percentChoices = [0, 10, 25, 50, 75, 90, 100];
 
 /** Right-rail panel of the mode: what to find, conditions and the listed instants. */
-export function AlignmentPanel({ alignment, plan, view, update, occlusion }: {
+export function AlignmentPanel({ alignment, plan, view, update, occlusion, saving }: {
   alignment: AlignmentState;
   plan: ShootingPlan;
   view: View;
   update: UpdatePlan;
+  saving?: ShotSaving;
   /** The body's state in the current preview, for the try-out in view. */
   occlusion: { state: string; occlusion: Occlusion } | null;
 }) {
@@ -594,7 +596,7 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion }: {
         </p>
       </div>
       </>}
-      <SolveExport alignment={alignment} plan={plan} />
+      <SolveExport alignment={alignment} plan={plan} saving={saving} />
     </section>
   );
 }

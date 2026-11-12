@@ -3212,3 +3212,55 @@ test('推算请求链接：先预览请求与将改动的字段，取消不改�
   await settle(() => button('取消').click());
   assert.equal(dom.window.location.hash, '');
 });
+
+test('推算结果落地：试看后一键存为机位并成为当前机位，机位面板同步；导出日历每个结果一个事件，链接打开同一试看', async t => {
+  await workspace(t); await readyTerrain();
+  t.after(() => dom.window.history.replaceState(null, '', '/'));
+  const blobs = [], downloads = [];
+  const { createObjectURL, revokeObjectURL } = URL, click = dom.window.HTMLAnchorElement.prototype.click;
+  URL.createObjectURL = (blob) => { blobs.push(blob); return `blob:test/${blobs.length}`; };
+  URL.revokeObjectURL = () => {};
+  dom.window.HTMLAnchorElement.prototype.click = function () { downloads.push({ name: this.download, href: this.href }); };
+  t.after(() => { URL.createObjectURL = createObjectURL; URL.revokeObjectURL = revokeObjectURL; dom.window.HTMLAnchorElement.prototype.click = click; });
+  const request = { format: 'tamatamatori.solve', version: 1, kind: 'time', body: 'sun', mark: { azimuth: 244.63, elevation: 10.74 }, date: '2026-11-04', days: 365, timeZone: 'Asia/Tokyo' };
+  await settle(() => { dom.window.location.hash = `solve=json:${encodeURIComponent(JSON.stringify(request))}`; });
+  await waitUntil(() => document.querySelector('.solve-dialog')?.open);
+  await settle(() => button('载入并推算').click());
+  const items = () => [...document.querySelectorAll('.alignment-month li')];
+  await waitUntil(() => items().length === 2);
+  const status = () => document.querySelector('.alignment-copied').textContent;
+  assert.match(document.querySelector('.alignment-export h3').textContent, /保存与导出/);
+  assert.equal(button('存为机位').disabled, true, 'nothing tried out yet');
+  assert.match(document.querySelector('.alignment-export .alignment-hint').textContent, /试看一个结果后可存为机位/);
+  // Try the first one and keep it.
+  await settle(() => items()[0].querySelector('button').click());
+  assert.equal(shootingDateTime(), '2027-02-12T16:22');
+  assert.equal(button('存为机位').disabled, false);
+  await settle(() => button('存为机位').click());
+  const name = '35.417°N 138.873°E · 太阳 02-12 16:22';
+  assert.match(status(), new RegExp(`已存为机位「${name}」`));
+  assert.equal(savedShots().length, 1);
+  assert.equal(savedShots()[0].shot.name, name);
+  assert.equal(savedShots()[0].shot.time.instant.slice(0, 16), '2027-02-12T07:22');
+  assert.equal(savedShots()[0].shot.layers.sun, true);
+  assert.equal(shotButton().textContent.trim(), name, 'it becomes the current shot');
+  assert.match(document.querySelector('.shot-toast').textContent, /已存为机位/);
+  await openShots();
+  assert.ok([...document.querySelectorAll('.shot-list .shot-apply strong')].some((item) => item.textContent.includes(name)), 'the shot menu sees it at once');
+  await settle(() => shotButton().click());
+  // The calendar: both alignments, in UTC, each with a link to its try-out.
+  await settle(() => button('导出日历').click());
+  assert.equal(downloads.length, 1);
+  assert.equal(downloads[0].name, 'tamatamatori-time-20261104.ics');
+  const text = await blobs[0].text();
+  assert.equal(blobs[0].type, 'text/calendar;charset=utf-8');
+  const unfolded = text.replace(/\r\n /g, '').split('\r\n');
+  assert.equal(unfolded.filter((line) => line === 'BEGIN:VEVENT').length, 2);
+  assert.ok(unfolded.includes('DTSTART:20270212T072225Z'), unfolded.filter((line) => line.startsWith('DTSTART')).join());
+  assert.ok(unfolded.some((line) => line.startsWith('DTSTART:20271030T0651')));
+  assert.ok(unfolded.includes('SUMMARY:太阳对齐 · 35.417°N 138.873°E'));
+  const link = unfolded.find((line) => line.startsWith('URL:')).slice(4);
+  assert.ok(link.startsWith('http://localhost/#shot=tmt1:'));
+  assert.equal(parseShotText(link).plan.instant.slice(0, 16), '2027-02-12T07:22');
+  assert.match(status(), /已导出 2 个事件/);
+});

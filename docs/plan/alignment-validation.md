@@ -45,7 +45,7 @@
 
 ## 执行记录
 
-2026-11-12 完成本地对照，尚未提交推送。数据见 `tests/fixtures/alignment-validation.json`（由 `npm run validate:alignment` 联网生成，读取国土地理院 74 块 DEM 瓦片），离线复算见 `tests/alignment-validation.test.mjs`。
+2026-11-12 完成本地对照，已按用户授权提交推送为 `87f0621`。数据见 `tests/fixtures/alignment-validation.json`（由 `npm run validate:alignment` 联网生成，读取国土地理院 74 块 DEM 瓦片），离线复算见 `tests/alignment-validation.test.mjs`。
 
 ### 山顶正中
 
@@ -88,7 +88,7 @@
 - 由链接载入长池亲水公园的找时间请求（期望位置取自上表），应用给出 2/4 16:13、0.03 个视直径，与照片 16:13 相同。
 - 找机位以同一山顶格点为目标，应用用 Mapterhorn 地形求出 2/4 16:13 的机位 35.426932, 138.870805。与国土地理院 DEM 的独立结果相距约 9 m，离公园中心约 31 m。
 - 高尾山找时间：12/20—23 的 16:11—16:13，偏离 0.22—0.24 个视直径。
-- **未验**：GPU 画面（预览中太阳落在山顶）。浏览器面板处于隐藏状态，`requestAnimationFrame` 不出帧，地图与三维预览初始化超时；不记为通过。
+- **GPU 画面**：对照当时浏览器面板隐藏，`requestAnimationFrame` 不出帧，地图与三维预览初始化超时，未记为通过。第六轮时面板恢复出帧，补验长池亲水公园 2/4 16:13、300 mm、朝向期望位置的画面：太阳在画框中央、落在山顶平台中间，下半部被山顶挡住（Mapterhorn 地形）。按截图估计，太阳中心与轮廓的高度差在 0.1° 以内，见[截图](alignment-validation-evidence/01-nagaike-20260204-1613.jpg)。
 
 ### 结论
 

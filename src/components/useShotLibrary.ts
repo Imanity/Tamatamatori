@@ -10,6 +10,9 @@ import {
 import type { SavedShot, ShotLibrary } from "../domain/shot-library";
 import type { Shot } from "../domain/shot";
 
+// Same-page instances (the shot menu and the 推算 panel's save) re-read after a write; `storage` only fires in other tabs.
+const LOCAL_CHANGE = "tamatamatori:shots";
+
 export function useShotLibrary() {
   const [storage] = useState(browserStorage);
   const [library, setLibrary] = useState<ShotLibrary>(() => readLibrary(storage));
@@ -21,8 +24,13 @@ export function useShotLibrary() {
     const changed = (event: StorageEvent) => {
       if (event.key === null || event.key === SHOT_LIBRARY_KEY) setLibrary(readLibrary(storage));
     };
+    const local = () => setLibrary(readLibrary(storage));
     window.addEventListener("storage", changed);
-    return () => window.removeEventListener("storage", changed);
+    window.addEventListener(LOCAL_CHANGE, local);
+    return () => {
+      window.removeEventListener("storage", changed);
+      window.removeEventListener(LOCAL_CHANGE, local);
+    };
   }, [storage]);
   const commit = (next: ShotLibrary) => {
     try {
@@ -34,6 +42,7 @@ export function useShotLibrary() {
     latest.current = next;
     setLibrary(next);
     setError("");
+    window.dispatchEvent(new Event(LOCAL_CHANGE));
     return true;
   };
   const now = () => new Date().toISOString();

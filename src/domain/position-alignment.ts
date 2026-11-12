@@ -346,3 +346,41 @@ export function positionProfile(input: Pick<PositionInput, "target" | "cameraHei
     sampler,
   );
 }
+
+/**
+ * The plan fields a try-out of a solved point writes: the camera, the
+ * instant, the direction to the top and the body's layer. Rounded for the
+ * input fields: 1e-6° is about 0.1 m, 1e-4° under 1 cm at 5 km.
+ */
+export function pointPlan(layers: ShootingPlan["layers"], point: Pick<PositionPoint, "latitude" | "longitude" | "time" | "azimuth" | "elevation">, body: AlignmentBody) {
+  const round = (value: number, digits: number) => Math.round(value * 10 ** digits) / 10 ** digits;
+  return {
+    latitude: round(point.latitude, 6), longitude: round(point.longitude, 6),
+    instant: new Date(point.time).toISOString().replace(".000Z", "Z"),
+    azimuth: round(point.azimuth, 4), pitch: round(point.elevation, 4),
+    layers: { ...layers, [body]: true },
+  };
+}
+
+/** Solutions of the same minute closer than `radius` metres to an earlier listed one are left out (clear sight listed first). */
+export function distinctPoints<T extends Pick<PositionPoint, "time" | "latitude" | "longitude" | "sight">>(points: readonly T[], radius = 200) {
+  const rank = { clear: 0, unknown: 1, blocked: 2 } as const;
+  const kept: T[] = [];
+  const byTime = new Map<number, T[]>();
+  for (const point of points) byTime.set(point.time, [...(byTime.get(point.time) ?? []), point]);
+  for (const group of byTime.values()) {
+    const chosen: T[] = [];
+    for (const point of [...group].sort((a, b) => rank[a.sight] - rank[b.sight]))
+      if (!chosen.some((other) => groundDistance(other, point) < radius)) chosen.push(point);
+    kept.push(...group.filter((point) => chosen.includes(point)));
+  }
+  return kept.sort((a, b) => a.time - b.time);
+}
+
+/** Great-circle distance in metres (mean radius); enough to compare nearby solutions. */
+export function groundDistance(a: { latitude: number; longitude: number }, b: { latitude: number; longitude: number }) {
+  const phi1 = a.latitude * degrees, phi2 = b.latitude * degrees;
+  const dPhi = phi2 - phi1, dLambda = (b.longitude - a.longitude) * degrees;
+  const h = Math.sin(dPhi / 2) ** 2 + Math.cos(phi1) * Math.cos(phi2) * Math.sin(dLambda / 2) ** 2;
+  return 2 * EARTH * Math.asin(Math.min(1, Math.sqrt(h)));
+}

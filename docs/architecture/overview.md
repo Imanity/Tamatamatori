@@ -58,6 +58,8 @@ flowchart TD
 
 推算请求是推算条件的对外表示（`src/domain/solve.ts`，格式 `tamatamatori.solve` v1），与机位格式并列：请求只描述意图，数值总在本机求解，求出的结果经试看成为普通机位，因此机位格式不加意图字段。`solvePlan` 给出载入后的计划，`solveRequestOf` 把面板状态写回请求，`useAlignment.load` 写入面板状态。App 在载入与 hash 改变时读取 `#shot=`、`#solve=`，经预览确认后才改计划，关闭预览即以 `history.replaceState` 清除 hash；hash 不发送给服务器。链接与 `$schema` 按页面自身地址生成（`src/domain/site.ts`）。对外说明 `public/llms.txt`、两份格式说明与 JSON Schema 由 `scripts/formats.mjs` 按代码常量生成，构建时校验不漂移；应用解析器仍是格式的权威，schema 只镜像其规则。
 
+推算结果的落地（第六轮）只在界面层组合纯函数：`pointPlan` 给出试看写入的字段，找机位、两者都找与日历链接共用；`solve-calendar.ts` 生成 RFC 5545 文本（UTC、75 字节折行、转义）；`mergeCandidates` 与 `distinctPoints` 合并同一视线上的近似重根。“存为机位”由 App 持有的机位库实例保存；同一页面的多个 `useShotLibrary` 实例在写入后经本地事件重读存储，避免旧列表覆盖新机位。
+
 当地光污染开关属于拍摄计划，固定图集按经纬度异步采样，数据状态与天文几何分开。CPU 读数与 GPU 显示共用同一天空对比度计算，数据更新不重建地形或重新获取 DEM。静态数据、许可与显示近似边界见[光污染首步](../plan/light-pollution.md)。
 
 天气使用 Open-Meteo 七天 UTC 小时序列，按机位与所选模型按需请求，客户端缓存 30 分钟与最多四个机位/模型组合。天气状态与拍摄计划分开，云层在既有日月自定义图层末尾合成，使用实际摄影相机射线与 DEM 天空深度。CPU 标记与 GPU 云层采用一致的方向覆盖模型，降水合成到前景。标注保留的方向遮挡状态与当前视场测量状态分开，转向重投影，新观测条件清空。时效、缺测与标注连续性见[天气首步](../plan/weather.md)和[环境优化](../plan/environment-refinement.md)。

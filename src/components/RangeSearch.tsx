@@ -4,6 +4,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import {
   filterCandidates,
   MIN_SUBJECT,
+  mergeCandidates,
   rangeCandidates,
   rangeDays,
   rangeDistances,
@@ -14,7 +15,7 @@ import {
   spanChoices,
 } from "../domain/range-alignment";
 import type { RangeCandidate, RangeInput, RangePoint } from "../domain/range-alignment";
-import { distanceChoices, positionProfile, travel } from "../domain/position-alignment";
+import { distanceChoices, pointPlan, positionProfile, travel } from "../domain/position-alignment";
 import type { GroundSampler } from "../domain/position-alignment";
 import { meanRadius, skyConditionNames, skyConditions } from "../domain/alignment";
 import type { AlignmentBody, SkyCondition } from "../domain/alignment";
@@ -37,7 +38,6 @@ const iso = (time: number) => new Date(time).toISOString().replace(".000Z", "Z")
 const clock = (time: number, timeZone: string) => localDateTime(iso(time), timeZone).slice(11, 16);
 const km = (meters: number) => (meters / 1000).toFixed(meters < 10_000 ? 2 : 1);
 const percent = (share: number) => `${Math.round(share * 100)}%`;
-const round = (value: number, digits: number) => Math.round(value * 10 ** digits) / 10 ** digits;
 const degrees = Math.PI / 180;
 const EARTH = 6_371_008.8;
 const percentChoices = [0, 10, 25, 50, 75, 90, 100];
@@ -235,7 +235,9 @@ export function useRangeSearch(plan: ShootingPlan, update: UpdatePlan, active: b
   }, [active, key]);
 
   const done = run?.key === key && run.phase === "done" ? run : null;
-  const all = useMemo(() => (done ? rangeCandidates(done.input, done.points) : []), [done]);
+  // Separate roots on the same sight line are one place: merged before listing.
+  const merging = useMemo(() => (done ? mergeCandidates(rangeCandidates(done.input, done.points)) : { candidates: [], merged: 0 }), [done]);
+  const all = merging.candidates;
   const moon = body === "moon";
   const { kept, filtered } = useMemo(() => filterCandidates(all, moon ? {
     ...(phase[0] > 0 || phase[1] < 100 ? { phase: [phase[0] / 100, phase[1] / 100] as const } : {}),
@@ -252,10 +254,7 @@ export function useRangeSearch(plan: ShootingPlan, update: UpdatePlan, active: b
       latitude: now.latitude, longitude: now.longitude, instant: now.instant,
       azimuth: now.azimuth, pitch: now.pitch, sun: now.layers.sun, moon: now.layers.moon,
     });
-    const patch = {
-      latitude: round(point.latitude, 6), longitude: round(point.longitude, 6), instant: iso(point.time),
-      azimuth: round(point.azimuth, 4), pitch: round(point.elevation, 4), layers: { ...now.layers, [body]: true },
-    };
+    const patch = pointPlan(now.layers, point, body);
     latest.current = { ...now, ...patch };
     update(patch);
   };
@@ -279,7 +278,7 @@ export function useRangeSearch(plan: ShootingPlan, update: UpdatePlan, active: b
 
   return {
     share, setShare, span, setSpan, start, setStart, maxDistance, setMaxDistance, phase, setPhase, sky, setSky,
-    sized, run, key, done, all, kept, filtered, current, currentPoint,
+    sized, run, key, done, all, kept, filtered, merged: merging.merged, current, currentPoint,
     retry: () => setAttempt((value) => value + 1), tryOut, restore, canRestore: !!before, events,
   };
 }
@@ -385,7 +384,7 @@ export function RangePanel({ search, position, plan, body, occlusion }: {
     const total = search.filtered.phase + search.filtered.sky;
     const reasons = [search.filtered.phase && `月相 ${search.filtered.phase}`, search.filtered.sky && `天空条件 ${search.filtered.sky}`].filter(Boolean).join("、");
     summary = kept.length
-      ? <p className="alignment-status" role="status">{spanLabel(search.span)}内 {kept.length} 个候选{total > 0 && `；另有 ${total} 个被筛掉（${reasons}）`}</p>
+      ? <p className="alignment-status" role="status">{spanLabel(search.span)}内 {kept.length} 个候选{total > 0 && `；另有 ${total} 个被筛掉（${reasons}）`}{search.merged > 0 && `；${search.merged} 个几乎重合的已合并`}</p>
       : <p className="alignment-status is-empty" role="status">
         {!done.sectors.length ? `${spanLabel(search.span)}内${name}达不到所需的高度。`
           : total > 0 ? `有 ${total} 个候选，但都不满足所选条件（${reasons}）。`

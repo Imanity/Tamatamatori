@@ -58,6 +58,7 @@ import { layerGroups } from "./layers";
 import type { LayerGroupId } from "./layers";
 import { Detail, pollutionLevel } from "./readout";
 import { AlignmentMark, AlignmentPanel, placeFromPointer } from "./Alignment";
+import type { ShotSaving } from "./SolveLink";
 import type { AlignmentState } from "./Alignment";
 
 const radians = (value: number) => (value * Math.PI) / 180;
@@ -76,12 +77,15 @@ export function PreviewPanel({
   aurora,
   alignment,
   solveHost,
+  shotSaving,
 }: {
   plan: ShootingPlan;
   update: (patch: Partial<ShootingPlan>) => void;
   /** The "推算" mode state (owned by the workspace, shared with the map) and where its panel goes. */
   alignment: AlignmentState;
   solveHost?: HTMLElement | null;
+  /** "存为机位" from the 推算 panel: saves the current plan under a name and binds it. */
+  shotSaving?: ShotSaving;
   infoHost?: HTMLElement | null;
   infoQuery?: string;
   infoNavigation?: InfoNavigation | null;
@@ -571,6 +575,7 @@ export function PreviewPanel({
             plan={plan}
             view={view}
             update={update}
+            saving={shotSaving}
             occlusion={alignedBody && plan.layers[alignment.settings.body]
               ? { state: alignedBody.state, occlusion: alignedBody.occlusion }
               : null}
