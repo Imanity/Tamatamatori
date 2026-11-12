@@ -14,6 +14,7 @@ import { parseWeather, WEATHER_TTL } from '../src/domain/weather.ts';
 import { ellipsoidalRay } from '../src/domain/geodesy.ts';
 import { parseShotText, shotFromPlan, shotLink } from '../src/domain/shot.ts';
 import { parseSolveText } from '../src/domain/solve.ts';
+import { travel } from '../src/domain/position-alignment.ts';
 import { dayEvents } from '../src/domain/day-events.ts';
 import { cameraHeightSlider, initialPlan } from '../src/domain/plan.ts';
 import { bodyPath } from '../src/domain/body-paths.ts';
@@ -370,6 +371,8 @@ before(async () => {
             return "export const groundElevation = (...args) => globalThis.__testGroundLoader(...args);\n" +
               // Line sampling for 推算 · 找机位: flat ground at 0 m unless a test installs another.
               "export const elevationTiles = (...args) => (globalThis.__testElevationTiles ?? (async (points, url, signal, progress) => { progress?.(1, 1); return () => 0; }))(...args);";
+          if (id.replaceAll("\\", "/").endsWith("/src/preview/feasibility.ts"))
+            return "export const loadFeatures = (...args) => (globalThis.__testFeatures ?? (async () => ({ features: { water: [], buildings: [] }, tiles: 0, fetched: 0 })))(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/map/sdk.ts"))
             return "export const {Map, Marker, NavigationControl, ScaleControl} = globalThis.__testMapSDK;";
         },
@@ -3263,4 +3266,54 @@ test('推算结果落地：试看后一键存为机位并成为当前机位，�
   assert.ok(link.startsWith('http://localhost/#shot=tmt1:'));
   assert.equal(parseShotText(link).plan.instant.slice(0, 16), '2027-02-12T07:22');
   assert.match(status(), /已导出 2 个事件/);
+});
+
+test('检查机位：按需读取水体与建筑，各行标出水面与建筑遮挡并汇总；结果改变后清空；失败可重试', async t => {
+  await workspace(t); await readyTerrain();
+  installGlobal('__testElevationTiles', async (points, url, signal, progress) => { progress?.(2, 2); return () => 0; });
+  const requests = [];
+  // Water around the first listed position; a 500 m building 250 m along the second one's sight line.
+  const around = (point, size) => [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([east, north]) => travel(travel(point, 90, east * size / 2), 0, north * size / 2));
+  installGlobal('__testFeatures', async (points, url, signal, progress) => {
+    requests.push(points.length);
+    progress?.(3, 3);
+    return { features: { water: [{ rings: [around(points[0], 60)] }], buildings: [{ rings: [around(points[10], 40)], height: 500, base: 0 }] }, tiles: 3, fetched: 3 };
+  });
+  t.after(() => { delete globalThis.__testElevationTiles; delete globalThis.__testFeatures; });
+  const rows = () => [...document.querySelectorAll('.position-list li')];
+  const status = () => document.querySelector('.alignment-status')?.textContent ?? '';
+  await settle(() => document.querySelector('.solve-button').click());
+  await settle(() => button('找机位').click());
+  await settle(() => setControl(document.querySelector('select[aria-label="选择地标"]'), 'tokyo-skytree'));
+  await waitUntil(() => rows().length > 10 && /对齐线 \d+ 分钟/.test(status()));
+  assert.equal(document.querySelectorAll('.feasibility-tag').length, 0, 'nothing is read before asking');
+  assert.equal(requests.length, 0);
+  await settle(() => button('检查机位（水面、建筑）').click());
+  await waitUntil(() => document.querySelector('.feasibility-summary'));
+  assert.equal(requests.length, 1);
+  const listed = rows().length, checked = Math.min(listed, 60);
+  assert.ok(listed > 60, 'this line lists more rows than one check takes');
+  assert.equal(requests[0], 9 * checked, 'the camera and eight points along each sight line');
+  const tags = rows().map((row) => row.querySelector('.feasibility-tag')?.textContent ?? '');
+  assert.match(tags[0], /^机位在水面 · 2 km 内无建筑遮挡$/);
+  assert.ok(rows()[0].querySelector('.feasibility-tag').classList.contains('is-problem'));
+  assert.match(tags[1], /^2\d\d m 处建筑高出视线 \d+ m$/);
+  assert.ok(tags.slice(2, checked).every((tag) => tag === '2 km 内无建筑遮挡'));
+  assert.ok(tags.slice(checked).every((tag) => tag === ''), 'rows past the limit are not tagged');
+  assert.match(document.querySelector('.feasibility-summary').textContent,
+    new RegExp(`检查了 ${checked}/${listed} 个机位：水面 1、建筑轮廓内 0、2 km 内被建筑挡住 1、未发现问题 ${checked - 2}。读取 3 块矢量瓦片（新下载 3 块）。 只检查了前 ${checked} 个（单次最多 60 个机位、40 块瓦片）`));
+  assert.equal(button('重新检查机位').disabled, false);
+  // The same positions keep their tags (here every solution lies within 20 km) ...
+  await settle(() => setControl(document.querySelector('select[aria-label="机位最远距离"]'), '20000'));
+  await waitUntil(() => /对齐线 \d+ 分钟/.test(status()) && document.querySelector('select[aria-label="机位最远距离"]').value === '20000');
+  assert.ok(document.querySelector('.feasibility-summary'));
+  // ... a higher camera moves every position: the old tags go.
+  await settle(() => setControl(input('离地高度'), 20));
+  await waitUntil(() => /对齐线 \d+ 分钟/.test(status()) && !document.querySelector('.feasibility-summary'));
+  assert.equal(document.querySelectorAll('.feasibility-tag').length, 0);
+  // A failure says so and can be retried.
+  installGlobal('__testFeatures', async () => { throw new Error('矢量瓦片请求失败（503）'); });
+  await settle(() => button('检查机位（水面、建筑）').click());
+  await waitUntil(() => /检查失败：矢量瓦片请求失败（503）/.test(document.querySelector('.feasibility .field-error')?.textContent ?? ''));
+  assert.ok(button('重试检查'));
 });

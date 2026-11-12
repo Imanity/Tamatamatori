@@ -25,6 +25,7 @@ import { NumberField } from "./NumberField";
 import { PositionPanel, usePositionSearch } from "./PositionSearch";
 import { RangePanel, useRangeSearch } from "./RangeSearch";
 import { SolveExport } from "./SolveLink";
+import { CheckControls, checkTargets, useFeasibility } from "./Feasibility";
 import type { ShotSaving } from "./SolveLink";
 
 type UpdatePlan = (patch: Partial<ShootingPlan>) => void;
@@ -403,6 +404,8 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion, savin
   occlusion: { state: string; occlusion: Occlusion } | null;
 }) {
   const { settings, change, run, result } = alignment;
+  // "检查机位" belongs to the panel: it is asked for, and lasts while the listed results do.
+  const check = useFeasibility(alignment, plan);
   const name = names[settings.body];
   const target = settings.target;
   const outline = target ? markOutline(view, { body: settings.body, ...target }) : null;
@@ -478,9 +481,9 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion, savin
         </div>
       </div>
       {alignment.kind === "position" ? (
-        <PositionPanel search={alignment.position} plan={plan} body={settings.body} occlusion={occlusion} />
+        <PositionPanel search={alignment.position} plan={plan} body={settings.body} occlusion={occlusion} check={check} />
       ) : alignment.kind === "range" ? (
-        <RangePanel search={alignment.range} position={alignment.position} plan={plan} body={settings.body} occlusion={occlusion} />
+        <RangePanel search={alignment.range} position={alignment.position} plan={plan} body={settings.body} occlusion={occlusion} check={check} />
       ) : <>
       <div className="alignment-section">
         <h3>期望位置</h3>
@@ -555,6 +558,7 @@ export function AlignmentPanel({ alignment, plan, view, update, occlusion, savin
       <div className="alignment-section alignment-results" aria-label="推算结果">
         <h3>结果</h3>
         {summary}
+        <CheckControls check={check} single={checkTargets(alignment, plan)[0]?.key} />
         {(list.length > 0 || alignment.canRestore) && <div className="alignment-actions">
           <button type="button" disabled={!previous} onClick={() => previous && alignment.tryOut(previous.instant)}>‹ 上一个</button>
           <button type="button" disabled={!next} onClick={() => next && alignment.tryOut(next.instant)}>下一个 ›</button>

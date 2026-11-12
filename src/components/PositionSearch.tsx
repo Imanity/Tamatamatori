@@ -22,6 +22,8 @@ import { DEFAULT_TERRAIN_URL } from "../domain/terrain";
 import { occlusionText } from "../domain/visibility";
 import type { Occlusion } from "../domain/visibility";
 import { NumberField } from "./NumberField";
+import { CheckControls, CheckTag } from "./Feasibility";
+import type { Feasibility } from "./Feasibility";
 
 type UpdatePlan = (patch: Partial<ShootingPlan>) => void;
 const terrainUrl = import.meta.env.VITE_TERRAIN_TILEJSON_URL?.trim() || DEFAULT_TERRAIN_URL;
@@ -34,6 +36,14 @@ const sightNames = { clear: "通视", blocked: "被 DEM 挡住", unknown: "高�
 const metres = (value: number) => `${Math.round(value) || 0} m`;
 
 export type PlacedTarget = GroundTarget & { id?: string };
+
+/** The list rows: every ten minutes of local time, nearly coincident solutions of a minute once. */
+export function listedPoints(points: readonly PositionPoint[], timeZone: string) {
+  return distinctPoints(points.filter((point) => clock(point.time, timeZone).endsWith("0")));
+}
+/** Identifies a solved position across renders (and for its 检查机位 result). */
+export const pointKey = (point: Pick<PositionPoint, "time" | "latitude" | "longitude">) =>
+  `${point.time}/${point.latitude.toFixed(6)}/${point.longitude.toFixed(6)}`;
 
 interface Run {
   id: number;
@@ -277,9 +287,10 @@ export function ProfileChart({ profile }: { profile: NonNullable<ReturnType<type
 }
 
 /** The "找机位" part of the 推算 panel. */
-export function PositionPanel({ search, plan, body, occlusion }: {
+export function PositionPanel({ search, plan, body, occlusion, check }: {
   search: PositionSearch;
   plan: ShootingPlan;
+  check?: Feasibility;
   body: AlignmentBody;
   occlusion: { state: string; occlusion: Occlusion } | null;
 }) {
@@ -294,8 +305,7 @@ export function PositionPanel({ search, plan, body, occlusion }: {
     }
   }, [target, run?.sampler, plan.latitude, plan.longitude, plan.cameraHeight]);
   const index = current ? points.indexOf(current) : -1;
-  // Every ten minutes; nearly coincident solutions of a minute are listed once.
-  const listed = distinctPoints(points.filter((point) => clock(point.time, plan.timeZone).endsWith("0")));
+  const listed = listedPoints(points, plan.timeZone);
   let summary: ReactNode = null;
   if (!target) summary = <p className="alignment-hint">先在地图上放置目标，或选择已接入地标。</p>;
   else if (!run || run.key !== search.key || run.phase === "loading")
@@ -341,6 +351,7 @@ export function PositionPanel({ search, plan, body, occlusion }: {
       <div className="alignment-section alignment-results" aria-label="推算结果">
         <h3>结果</h3>
         {summary}
+        {check && points.length > 0 && <CheckControls check={check} />}
         {points.length > 0 && <>
           <label className="field alignment-scrub">
             <span className="field-label">沿对齐线（机位与时刻一起移动）</span>
@@ -364,6 +375,7 @@ export function PositionPanel({ search, plan, body, occlusion }: {
                 <span className="alignment-when">
                   <strong>{clock(point.time, plan.timeZone)} · {km(point.distance)} km</strong>
                   <small>目标在{compassDirection(point.azimuth)} · {name}高 {point.elevation.toFixed(1)}° · 机位地面 {metres(point.cameraGround)}</small>
+                  <CheckTag check={check?.result(pointKey(point)) ?? null} />
                 </span>
                 <span className={`alignment-facts sight-${point.sight}`}>{sightNames[point.sight]}</span>
                 <button type="button" aria-label={`试看 ${clock(point.time, plan.timeZone)} 距目标 ${km(point.distance)} km`}

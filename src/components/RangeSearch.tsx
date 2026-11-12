@@ -28,6 +28,8 @@ import { occlusionText } from "../domain/visibility";
 import type { Occlusion } from "../domain/visibility";
 import { ProfileChart, TargetSection } from "./PositionSearch";
 import type { PositionSearch } from "./PositionSearch";
+import { CheckControls, CheckTag } from "./Feasibility";
+import type { Feasibility } from "./Feasibility";
 import type { RangeDay, RangeMessage, RangeReply } from "../preview/range-worker";
 
 type UpdatePlan = (patch: Partial<ShootingPlan>) => void;
@@ -346,10 +348,11 @@ function dateOf(time: number, timeZone: string) {
 }
 
 /** The "两者都找" part of the 推算 panel. */
-export function RangePanel({ search, position, plan, body, occlusion }: {
+export function RangePanel({ search, position, plan, body, occlusion, check }: {
   search: RangeSearch;
   position: PositionSearch;
   plan: ShootingPlan;
+  check?: Feasibility;
   body: AlignmentBody;
   occlusion: { state: string; occlusion: Occlusion } | null;
 }) {
@@ -460,6 +463,7 @@ export function RangePanel({ search, position, plan, body, occlusion }: {
       <div className="alignment-section alignment-results" aria-label="推算结果">
         <h3>候选</h3>
         {summary}
+        {check && kept.length > 0 && <CheckControls check={check} />}
         {current && currentPoint && <>
           <p className="alignment-current" role="status">
             正在试看 {dateOf(currentPoint.time, plan.timeZone).day} {describe(currentPoint)} · 目标在{compassDirection(currentPoint.azimuth)}
@@ -486,6 +490,7 @@ export function RangePanel({ search, position, plan, body, occlusion }: {
                     <span className="alignment-when">
                       <strong>{day} {clock(candidate.start, plan.timeZone)}–{clock(candidate.end, plan.timeZone)}</strong>
                       <small>距目标 {km(candidate.near)}—{km(candidate.far)} km · 目标在{compassDirection(candidate.middle.azimuth)}{candidate.share && ` · 主体 ${percent(candidate.share[0])}—${percent(candidate.share[1])}`}</small>
+                      <CheckTag check={check?.result(candidate.key) ?? null} />
                     </span>
                     <span className={`alignment-facts ${candidate.clear < 1 ? "sight-blocked" : ""}`}>
                       {skyConditionNames[candidate.sky]}{candidate.illuminated !== null && ` · 亮面 ${Math.round(candidate.illuminated * 100)}%`}

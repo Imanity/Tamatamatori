@@ -1596,3 +1596,9 @@ p.info-detail, span.info-detail { color: #8f9886; }
 .solve-changes ul, .solve-changes p { margin: 0; }
 .solve-changes ul { padding-left: 18px; }
 .solve-changes li + li { margin-top: 2px; }
+.feasibility { display: grid; gap: 4px; margin: 6px 0 4px; }
+.feasibility-summary { margin: 0; color: #4f6248; font-size: 11px; line-height: 1.6; }
+.feasibility-tag { display: block; margin-top: 2px; font-size: 10px; line-height: 1.5; }
+.feasibility-tag.is-clear { color: #5f7a55; }
+.feasibility-tag.is-problem { color: #a14a2a; }
+.feasibility-tag.is-unknown { color: #8a947f; }

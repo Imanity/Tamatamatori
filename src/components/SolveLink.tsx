@@ -5,12 +5,12 @@ import { solveLink, solvePlan } from "../domain/solve";
 import type { SolveParse, SolveRequest } from "../domain/solve";
 import { describeSolve, positionRows, rangeRows, solveReport, timeRows } from "../domain/solve-report";
 import { siteBase } from "../domain/site";
-import { distinctPoints } from "../domain/position-alignment";
 import { shotFromPlan } from "../domain/shot";
 import { CALENDAR_LIMIT, calendarText, positionEvents, rangeEvents, solveShotName, timeEvents } from "../domain/solve-calendar";
 import type { CalendarEvent } from "../domain/solve-calendar";
 import { copyText, suggestShotName } from "./ShotMenu";
 import type { AlignmentState } from "./Alignment";
+import { listedPoints } from "./PositionSearch";
 
 const coordinate = (latitude: number, longitude: number) => `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
 const local = (plan: ShootingPlan) => `${localDateTime(plan.instant, plan.timeZone).replace("T", " ")}（${plan.timeZone}）`;
@@ -125,7 +125,7 @@ function report(alignment: AlignmentState, plan: ShootingPlan, request: SolveReq
   if (alignment.kind === "position") {
     const { result, points } = alignment.position;
     if (!result) return null;
-    const listed = distinctPoints(points.filter((point) => localDateTime(new Date(point.time).toISOString(), plan.timeZone).endsWith("0")));
+    const listed = listedPoints(points, plan.timeZone);
     const status = points.length
       ? `对齐线 ${result.minutes} 分钟 · 距目标 ${km(Math.min(...points.map((point) => point.distance)))}—${km(Math.max(...points.map((point) => point.distance)))} km；下表每 10 分钟一行。`
       : "时段内没有解。";
