@@ -20,8 +20,9 @@
 | 一个地面点 + 一个天体，机位固定 | 天体经过画面位置的时刻（按容差） |
 | 一个天体，机位与朝向都固定 | 天体落到画面位置的时刻 |
 | 两个天体 | 两者到达设定相对位置的时刻；与机位基本无关 |
+| 两个地面点（没有天体），机位不限或在某点周围 | 机位：两点的相对位置只取决于机位与朝向，与时间无关；每个机位带一片第二个点不超出容差的范围，两点的视线都不被地形挡住 |
 | 以上任一种再加第三、四个目标 | 第一个地面点与第一个天体（没有地面点时为前两个天体）定机位与时刻，其余目标在每个候选分钟按容差检查：天体须在地平线上，地面点的视线不被地形挡住 |
-| 只有一个目标（朝向不固定）、只有地面点、固定朝向时有地面点、机位与时刻都固定 | 不搜索，报出原因 |
+| 只有一个目标（朝向不固定）、只有一个地面点、机位固定时只有地面点、固定朝向时有地面点、机位与时刻都固定 | 不搜索，报出原因 |
 
 ## 顶层字段
 
@@ -614,6 +615,64 @@ https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatama
 
 ```text
 https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22lens%22%3A%7B%22focalLength%22%3A200%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.45%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.03%2C%22skyline%22%3Atrue%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22moon%22%2C%22frame%22%3A%7B%22x%22%3A0.58%2C%22y%22%3A0.42%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22fixed%22%2C%22latitude%22%3A35.4172%2C%22longitude%22%3A138.8729%2C%22heightAboveGround%22%3A1.6%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A1096%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%5D%7D
+```
+
+### 两个地面点：晴空塔塔顶在左上、富士山顶在右下，200 mm 横幅（结果为机位，与时间无关）
+
+```json
+{
+  "$schema": "https://imanity.github.io/Tamatamatori/solve.schema.json",
+  "format": "tamatamatori.solve",
+  "version": 2,
+  "name": "晴空塔与富士山",
+  "lens": {
+    "focalLength": 200,
+    "sensor": "full-frame",
+    "aspectRatio": "3:2",
+    "orientation": "landscape"
+  },
+  "targets": [
+    {
+      "type": "ground",
+      "landmark": "tokyo-skytree",
+      "height": 634,
+      "reference": "ground",
+      "frame": {
+        "x": 0.42,
+        "y": 0.3
+      },
+      "tolerance": 0.03
+    },
+    {
+      "type": "ground",
+      "latitude": 35.3606,
+      "longitude": 138.7274,
+      "name": "富士山顶",
+      "height": 0,
+      "reference": "ground",
+      "frame": {
+        "x": 0.62,
+        "y": 0.58
+      },
+      "tolerance": 0.03,
+      "skyline": true
+    }
+  ],
+  "camera": {
+    "mode": "free",
+    "maxDistance": 30000,
+    "minDistance": 2000
+  },
+  "time": {
+    "mode": "range",
+    "days": 30
+  },
+  "filters": []
+}
+```
+
+```text
+https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22name%22%3A%22%E6%99%B4%E7%A9%BA%E5%A1%94%E4%B8%8E%E5%AF%8C%E5%A3%AB%E5%B1%B1%22%2C%22lens%22%3A%7B%22focalLength%22%3A200%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22landmark%22%3A%22tokyo-skytree%22%2C%22height%22%3A634%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.42%2C%22y%22%3A0.3%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.62%2C%22y%22%3A0.58%7D%2C%22tolerance%22%3A0.03%2C%22skyline%22%3Atrue%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%2C%22minDistance%22%3A2000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22days%22%3A30%7D%2C%22filters%22%3A%5B%5D%7D
 ```
 
 ### 两个天体：月亮在昴星团左下方（与机位基本无关）

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  classify, conditionsAt, daySpans, extraGap, filterResult, frameGap, frameSeparation, lineItems, ndc, nightSearch, pairGap, passes, prefilterOf, scanPair, shootingDay, templates,
+  classify, conditionsAt, daySpans, extraGap, placeItem, filterResult, frameGap, frameSeparation, lineItems, ndc, nightSearch, pairGap, passes, prefilterOf, scanPair, shootingDay, templates,
   toleranceAngle, toleranceDiameters, tryPatch, windowItem, windowMark, zenithBrightness,
 } from "../src/domain/composition.ts";
 import { aimAt, frameDirection, solveAlignment } from "../src/domain/alignment.ts";
@@ -9,6 +9,7 @@ import { projectDirection } from "../src/domain/celestial-projection.ts";
 import { direction } from "../src/domain/ephemeris.ts";
 import { findPositions, highestNear, lineOfSight, SKYLINE_RADIUS, skyAt, skylineTop, terrainGrid, toRay, travel } from "../src/domain/position-alignment.ts";
 import { altitudeCeiling, rangeDays, rangeTrack, skySeparation, solveRangeDay } from "../src/domain/range-alignment.ts";
+import { evaluatePair, pairSight, solveGroundPair } from "../src/domain/ground-pair.ts";
 import { fixedBodies } from "../src/domain/sky-targets.ts";
 import { compositionOf, parseAnySolve, requestOf, solveJson2, solvePlan2 } from "../src/domain/solve.ts";
 import { describeSolve2, resultRows } from "../src/domain/solve-report.ts";
@@ -34,7 +35,10 @@ test("可解性：每种目标、范围与筛选的组合给出结果形式或�
     [at([]), null, /先加目标/],
     [at([sky("sun")]), null, /只有一个天体/],
     [at([fuji]), null, /只有一个地面点/],
-    [at([fuji, { ...skytree, id: "t" }]), null, /两个地面点作主约束将在第三步支持/],
+    [at([fuji, { ...skytree, id: "t" }]), "places", /结果为机位：两个地面点的相对位置只取决于机位，与时间无关/],
+    [at([fuji, { ...skytree, id: "t" }], { camera: fixed() }), null, /机位固定时，两个地面点在画面中的位置已由机位决定/],
+    [at([fuji, { ...skytree, id: "t" }, { ...skytree, id: "u", latitude: 35.6586, longitude: 139.7454 }]), "places", /另有 1 个地面点按容差检查/],
+    [at([fuji, { ...skytree, id: "t" }], { filters: [{ kind: "moonDown" }] }), "places", /筛选条件与时间有关，这里不用/],
     [at([fuji, sky("sun"), sky("moon"), sky("dso-mel022"), sky("dso-ngc0224")]), null, /最多 4 个目标/],
     [at([fuji, sky("moon"), sky("dso-mel022")]), "lines", /机位线.*另有 1 个目标按容差逐分钟检查/],
     [at([fuji, { ...skytree, id: "t" }, sky("moon"), sky("dso-mel022")]), "lines", /另有 2 个目标/],
@@ -567,4 +571,57 @@ test("看得见的最高处：请求的读取、往返与报错；钻石富士�
   assert.equal(read({ ...base, targets: [{ type: "ground", landmark: "tokyo-skytree" }] }).request.targets[0].skyline, undefined);
   for (const id of ["diamond-fuji", "deep-sky-over-summit"]) assert.equal(templates.find((template) => template.id === id).build(initialPlan, "2026-11-13").targets[0].skyline, true, id);
   assert.equal(templates.find((template) => template.id === "moon-on-tower").build(initialPlan, "2026-11-13").targets[0].skyline, undefined);
+});
+
+// Two towers on flat ground: 600 m and, 5 km west, 300 m; a 50 mm landscape frame.
+const towers = {
+  first: { latitude: 35.70, longitude: 139.80, height: 600 }, firstFrame: { x: -0.2, y: -0.4 },
+  second: { latitude: 35.70, longitude: 139.745, height: 300 }, secondFrame: { x: 0.3, y: 0.1 }, tolerance: 0.03,
+  lens: { focalLength: 50, sensor: "full-frame", aspectRatio: "3:2", orientation: "landscape" }, cameraHeight: 1.6,
+  center: { latitude: 35.70, longitude: 139.80 }, minDistance: 200, maxDistance: 30_000,
+};
+const level = () => 0;
+
+test("两个地面点：机位让两点各落在设定位置，与独立的正向投影一致；容差内范围的边界偏差等于容差；左右对调得到另一侧的机位", () => {
+  const { places, evaluated } = solveGroundPair(towers, level);
+  assert.ok(evaluated > 50_000, `${evaluated}`);
+  assert.equal(places.length, 1, JSON.stringify(places.map((place) => [place.latitude, place.longitude])));
+  const place = places[0];
+  // Independently: the rays through each point's frame place, from the aim found, point at the two tops.
+  const view = { ...towers.lens, ...place.aim };
+  assert.ok(separation(frameDirection(view, towers.firstFrame.x, towers.firstFrame.y), place.first) < 1e-4);
+  assert.ok(separation(frameDirection(view, towers.secondFrame.x, towers.secondFrame.y), place.second) < 1e-4);
+  assert.ok(place.gap < 1e-6);
+  // The outline: at its points the second tower is just at the tolerance.
+  assert.equal(place.area.length, 24);
+  for (const point of place.area) {
+    const gap = evaluatePair(towers, point, level).gap;
+    assert.ok(Math.abs(gap - towers.tolerance) < 0.002, `${gap}`);
+  }
+  assert.ok(place.reach.shortest > 10 && place.reach.longest < 5_000 && place.reach.longest >= place.reach.shortest);
+  assert.deepEqual(pairSight(towers, place, level), { first: "clear", second: "clear" });
+  // Swapped left and right: the camera stands on the other side of the line between the towers.
+  const swapped = solveGroundPair({ ...towers, firstFrame: { x: 0.2, y: -0.4 }, secondFrame: { x: -0.3, y: 0.1 } }, level).places;
+  assert.equal(swapped.length, 1);
+  assert.ok(Math.sign(swapped[0].latitude - 35.70) === -Math.sign(place.latitude - 35.70), `${swapped[0].latitude} vs ${place.latitude}`);
+  // Out of reach: the lower, farther tower cannot stand above the higher one in the frame from anywhere this close.
+  assert.equal(solveGroundPair({ ...towers, firstFrame: { x: 0, y: 0.4 }, secondFrame: { x: 0.05, y: -0.4 }, maxDistance: 3_000 }, level).places.length, 0);
+});
+
+test("两个地面点：中间有山时第二个点的视线被挡；结果行与试看只给机位和朝向", () => {
+  const place = solveGroundPair(towers, level).places[0];
+  // A 1000 m hill halfway along the camera's line to the second tower.
+  const middle = { latitude: (place.latitude + towers.second.latitude) / 2, longitude: (place.longitude + towers.second.longitude) / 2 };
+  const hill = (latitude, longitude) => (Math.hypot((latitude - middle.latitude) * 111_000, (longitude - middle.longitude) * 90_000) < 300 ? 1000 : 0);
+  assert.deepEqual(pairSight(towers, place, hill), { first: "clear", second: "blocked" });
+  const instant = Date.parse("2026-11-13T12:00:00Z");
+  const item = placeItem(place, instant);
+  assert.equal(item.place.area.length, 24);
+  assert.equal(item.deviation, place.gap);
+  const patch = tryPatch(item, { lens: towers.lens, ground: null, bodies: [] }, initialPlan.layers);
+  assert.deepEqual(Object.keys(patch).sort(), ["azimuth", "latitude", "longitude", "pitch"], "neither the time nor the layers");
+  const { rows } = resultRows([item], "Asia/Tokyo");
+  assert.equal(rows[0][0], "—");
+  assert.equal(rows[0][1], "与时间无关");
+  assert.match(rows[0][3], /^[东南西北]+ [\d.]+ km；[东南西北]+ [\d.]+ km$/);
 });

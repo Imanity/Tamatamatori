@@ -3333,6 +3333,46 @@ test('推算·看得见的山顶：山顶可勾选、塔不可；“移到附近
   assert.match(row().querySelector('.composition-editor .alignment-hint').textContent, /^35\.360\d\d, 138\.727\d\d$/);
 });
 
+test('推算·两个地面点：结果为与时间无关的机位，地图画出机位与容差内范围；试看只改机位与朝向；导出日历不可用', async t => {
+  const { map } = await workspace(t); await readyTerrain();
+  installGlobal('__testElevationTiles', async (points, url, signal, progress) => { progress?.(1, 1); return () => 0; });
+  t.after(() => { delete globalThis.__testElevationTiles; });
+  await settle(() => document.querySelector('.solve-button').click());
+  // Skytree's top upper left, Tokyo Tower's top lower right.
+  await settle(() => button('+ 地面点').click());
+  await settle(() => setControl(document.querySelector('.composition-pending select[aria-label="选择地标"]'), 'tokyo-skytree'));
+  await settle(() => button('+ 地面点').click());
+  await settle(() => setControl(document.querySelector('.composition-pending select[aria-label="选择地标"]'), 'tokyo-tower'));
+  assert.match(solvability(), /结果为机位：两个地面点的相对位置只取决于机位，与时间无关/);
+  const edit = async (name) => { if (!targetRow(name).querySelector('.composition-editor')) await settle(() => targetRow(name).querySelector('.composition-target-name').click()); };
+  await edit('东京塔');
+  await settle(() => setControl(inputIn(targetRow('东京塔'), '自左'), 62));
+  await settle(() => setControl(inputIn(targetRow('东京塔'), '自上'), 58));
+  await edit('晴空塔');
+  await settle(() => setControl(inputIn(targetRow('晴空塔'), '自左'), 42));
+  await settle(() => setControl(inputIn(targetRow('晴空塔'), '自上'), 30));
+  const before = shootingDateTime();
+  await searchNow(); await searched();
+  assert.match(resultStatus(), /^\d+ 个机位/);
+  const places = () => [...document.querySelectorAll('.composition-places > li')];
+  assert.ok(places().length >= 1);
+  assert.match(places()[0].textContent, /机位 1.*“晴空塔”在.+ km · “东京塔”在.+ km.*容差内约 \d+×\d+ m/s);
+  assert.equal(document.querySelectorAll('.composition-days > li').length, 0, 'not listed by day');
+  const kinds = () => map.getSource('tamatamatori-alignment').data.features.map((feature) => feature.properties.kind);
+  assert.ok(['area', 'dot', 'label'].every((kind) => kinds().includes(kind)), kinds().join());
+  assert.match(document.querySelector('[data-alignment-legend]').textContent, /目标 · 机位与容差内范围/);
+  // A try-out moves the camera and turns it; the time stays.
+  await settle(() => places()[0].querySelector('button').click());
+  assert.equal(shootingDateTime(), before);
+  assert.match(document.querySelector('.alignment-results .alignment-current').textContent, /正在试看机位 1 · 距“晴空塔” [\d.]+ km、距“东京塔” [\d.]+ km/);
+  const eye = { latitude: value('纬度'), longitude: value('经度'), ellipsoidalHeight: 1.6 };
+  const skytreeTop = placed(toRay(eye, { latitude: 35.71004508243534, longitude: 139.81071889400482, ellipsoidalHeight: 634 }).ray);
+  assert.ok(Math.abs((skytreeTop.x + 1) / 2 - 0.42) < 2e-3 && Math.abs((skytreeTop.y + 1) / 2 - 0.30) < 2e-3, JSON.stringify(skytreeTop));
+  assert.equal(button('导出日历').disabled, true);
+  assert.match(button('导出日历').title, /与时间无关/);
+  assert.equal(button('存为机位').disabled, false);
+});
+
 test('推算请求链接：先预览镜头、目标、范围与将改动的字段，取消不改计划；确认后载入条件并自动搜索，撤销恢复计划与模式；复制推算请求与结果；版本 1 转换；报错', async t => {
   await workspace(t); await readyTerrain();
   t.after(() => dom.window.history.replaceState(null, '', '/'));

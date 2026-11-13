@@ -5,7 +5,7 @@ import { solveLink2, solvePlan2 } from "../domain/solve";
 import type { SolveParse2, SolveRequest2 } from "../domain/solve";
 import { describeSolve2, resultRows, solveReport } from "../domain/solve-report";
 import { siteBase } from "../domain/site";
-import { shotFromPlan } from "../domain/shot";
+import { SHOT_NAME_LIMIT, shotFromPlan } from "../domain/shot";
 import { dayLabel, targetName } from "../domain/composition";
 import { CALENDAR_LIMIT, calendarText, resultEvents, solveShotName } from "../domain/solve-calendar";
 import { bodyName } from "../domain/sky-targets";
@@ -164,6 +164,8 @@ export function SolveExport({ state, plan, saving }: { state: CompositionState; 
   const place = placeOf(state, plan);
   const trial = !!state.current;
   const ready = state.run?.phase === "done" && state.run.items.length > 0;
+  // Camera places for two ground points have no time to put in a calendar.
+  const timeless = state.run?.shape === "places";
   useEffect(() => setCopied(""), [link, markdown]);
   useEffect(() => {
     if (saving?.error) setCopied(`无法保存机位：${saving.error}`);
@@ -177,7 +179,10 @@ export function SolveExport({ state, plan, saving }: { state: CompositionState; 
   };
   const save = () => {
     if (!saving) return;
-    const name = solveShotName(place, state.run?.basis.bodies[0] ?? "sun", plan.instant, plan.timeZone);
+    const run = state.run;
+    const name = run?.strategy.kind === "grounds"
+      ? [...`${run.strategy.first.name} · ${run.strategy.second.name} 机位 ${run.items.indexOf(state.current!) + 1}`].slice(0, SHOT_NAME_LIMIT).join("")
+      : solveShotName(place, run?.basis.bodies[0] ?? "sun", plan.instant, plan.timeZone);
     if (saving.save(name)) setCopied(`已存为机位「${name}」，可在“机位”中改名`);
     else setCopied(`无法保存机位${saving.error ? `：${saving.error}` : ""}`);
   };
@@ -195,7 +200,8 @@ export function SolveExport({ state, plan, saving }: { state: CompositionState; 
       <div className="alignment-actions">
         <button type="button" disabled={!saving?.writable || !trial} onClick={save}
           title={!trial ? "先试看一个结果" : !saving?.writable ? "本机存储不可用" : "把正在试看的结果存为机位"}>存为机位</button>
-        <button type="button" disabled={!ready} onClick={exportCalendar} title="下载 .ics：每个结果一个事件，附打开该机位的链接">导出日历</button>
+        <button type="button" disabled={!ready || timeless} onClick={exportCalendar}
+          title={timeless ? "两个地面点的机位与时间无关，没有可写入日历的时刻" : "下载 .ics：每个结果一个事件，附打开该机位的链接"}>导出日历</button>
         <button type="button" disabled={!request} onClick={() => copy(link, "已复制推算请求链接")} title="链接：对方打开后先预览，确认才在其本机推算">复制推算请求</button>
         <button type="button" disabled={!markdown} onClick={() => markdown && copy(markdown, "已复制结果（Markdown）")} title="Markdown 表格，可贴给人或 AI 阅读">复制结果</button>
       </div>

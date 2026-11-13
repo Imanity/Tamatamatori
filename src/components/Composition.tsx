@@ -13,6 +13,7 @@ import {
   daySpans,
   distanceChoices,
   extraGap,
+  placeItem,
   filterResult,
   filterNames,
   groundAim,
@@ -60,6 +61,8 @@ import { aimAt, finishAlignment, scanAlignment, skyConditionNames, skyConditions
 import type { AlignmentBody, AlignmentInput, AlignmentScan, SkyCondition } from "../domain/alignment";
 import { blockedMinutes, baseDistances, rangeDays } from "../domain/range-alignment";
 import type { RangeInput, RangePoint } from "../domain/range-alignment";
+import { clearSpot, refinePlace, sightPoints, solveGroundPair } from "../domain/ground-pair";
+import type { GroundPairInput } from "../domain/ground-pair";
 import { groundDistance, highestNear, lineOfSight, MIN_DISTANCE, positionProfile, restoredLayers, SKYLINE_DROP, SKYLINE_RADIUS, skyAt, toRay, topSeen, travel, triedLayers } from "../domain/position-alignment";
 import type { GroundSampler, GroundTarget, TriedLayers } from "../domain/position-alignment";
 import { bodyKind, bodyName, fixedBodies, isFixedBody, sizeWord } from "../domain/sky-targets";
@@ -282,7 +285,7 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
     const now = latest.current, lens = lensOf(now), snapshot = composition;
     const bodies = snapshot.targets.filter((target): target is SkySpec => target.kind === "sky").map((target) => target.body);
     const basis: SearchBasis = {
-      lens, ground: strategy.kind === "pair" ? null : strategy.ground, bodies,
+      lens, ground: strategy.kind === "pair" ? null : strategy.kind === "grounds" ? strategy.first : strategy.ground, bodies,
       ...(strategy.kind === "pair" ? { follow: { body: strategy.first.body, frame: strategy.first.frame, refraction: now.refraction } } : {}),
     };
     setRun({
@@ -292,6 +295,7 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
     try {
       if (strategy.kind === "line") await searchLine(id, strategy, snapshot, now, lens, abort.signal);
       else if (strategy.kind === "window") await searchWindow(id, strategy, snapshot, now, lens, abort.signal);
+      else if (strategy.kind === "grounds") await searchGrounds(id, strategy, snapshot, now, lens, abort.signal);
       else await searchPair(id, strategy, snapshot, now, lens, abort.signal);
     } catch (error) {
       if (abort.signal.aborted) return;
@@ -332,6 +336,63 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
     return (place: { latitude: number; longitude: number }) => values.get(cell(place)) ?? null;
   }
   const darkSky = (snapshot: Composition) => snapshot.filters.some((filter) => filter.kind === "darkSky");
+
+  /** Two ground points: camera places over the range (the grid on the main thread), then the sight lines. */
+  async function searchGrounds(id: number, strategy: Extract<Strategy, { kind: "grounds" }>, snapshot: Composition, now: ShootingPlan, lens: Lens, signal: AbortSignal) {
+    const { first, second } = strategy;
+    const camera = snapshot.camera;
+    const center = camera.mode === "near" ? { latitude: camera.latitude, longitude: camera.longitude } : { latitude: first.latitude, longitude: first.longitude };
+    const minDistance = camera.mode === "free" ? Math.max(MIN_DISTANCE, camera.minDistance) : 0;
+    const maxDistance = camera.mode === "free" ? camera.maxDistance : camera.mode === "near" ? camera.radius : 30_000;
+    const rings: Run["rings"] = [{ ...center, radius: maxDistance }, ...(minDistance > MIN_DISTANCE ? [{ ...center, radius: minDistance }] : [])];
+    const input: GroundPairInput = {
+      first: groundTarget(first), firstFrame: ndc(first.frame), second: groundTarget(second), secondFrame: ndc(second.frame),
+      tolerance: second.tolerance, lens, cameraHeight: now.cameraHeight, center, minDistance, maxDistance,
+    };
+    const skylineRing = (target: GroundSpec) => (target.skyline && canSkyline(target) ? [0, 90, 180, 270].map((bearing) => travel(target, bearing, SKYLINE_RADIUS)) : []);
+    // The terrain over the whole range, and around each ground point.
+    const area = [center, ...Array.from({ length: 24 }, (_, index) => [0.25, 0.5, 0.75, 1].map((share) => travel(center, index * 15, maxDistance * share))).flat()];
+    const grounds = [first, second, ...strategy.extras.filter((extra): extra is GroundSpec => extra.kind === "ground")];
+    set(id, { rings, stage: "读取地形中…" });
+    const elevation = await import("../preview/elevation");
+    const sampler = await elevation.elevationTiles([...area, ...grounds.flatMap((ground) => [ground, ...skylineRing(ground)])], terrainUrl, signal,
+      (done, total) => set(id, { stage: `读取地形 ${done}/${total} 块…` }));
+    if (signal.aborted) return;
+    set(id, { stage: "推算中…" });
+    await yieldNow();
+    const solved = solveGroundPair(input, sampler);
+    if (signal.aborted) return;
+    // The sight lines of each place, with the terrain all along them.
+    let blocked = 0, extraMissed = 0;
+    const items: ResultItem[] = [];
+    let lines: LoadedSampler | null = null;
+    if (solved.places.length) {
+      set(id, { stage: "检查视线…" });
+      lines = await elevation.elevationTiles([...solved.places.flatMap((place) => sightPoints(place)), ...grounds.flatMap((ground) => [ground, ...skylineRing(ground)])], terrainUrl, signal,
+        (done, total) => set(id, { stage: `读取视线上的地形 ${done}/${total} 块…` }));
+      if (signal.aborted) return;
+      const instant = Date.parse(now.instant);
+      for (const coarse of solved.places) {
+        // Settled again on the sight lines' finer terrain.
+        const refined = refinePlace(input, coarse, lines);
+        if (!refined) continue;
+        // The exact place, or the clear spot within its tolerance that lands the second point nearest.
+        const clear = clearSpot(input, refined, lines);
+        if (!clear) { blocked++; continue; }
+        const { place, sight, moved } = clear;
+        const other = strategy.extras.length ? extraGap(strategy.extras, { latitude: place.latitude, longitude: place.longitude, ground: place.ground }, instant, place.aim,
+          { lens, refraction: now.refraction, cameraHeight: now.cameraHeight, sampler: lines }) : 0;
+        if (other === null) { extraMissed++; continue; }
+        const item = placeItem(place, instant, sight.first === "unknown" || sight.second === "unknown", moved);
+        items.push(other > item.deviation ? { ...item, deviation: other } : item);
+      }
+    }
+    const note = items.length ? ""
+      : blocked ? `有 ${blocked} 个机位能让两点落在设定位置，但视线被地形挡住。`
+        : extraMissed ? `有 ${extraMissed} 个机位能让两点落在设定位置，但其他地面点不在设定位置。`
+          : `所选范围内没有机位能让“${second.name}”落在设定位置（容差 ±${percent(second.tolerance)}）。`;
+    set(id, { phase: "done", items, blocked, extraMissed, sampler: lines ?? sampler, rings, note });
+  }
 
   async function searchLine(id: number, strategy: Extract<Strategy, { kind: "line" }>, snapshot: Composition, now: ShootingPlan, lens: Lens, signal: AbortSignal) {
     const { ground, sky } = strategy;
@@ -548,7 +609,8 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
   const sameCamera = (camera: { latitude: number; longitude: number }) => Math.abs(camera.latitude - plan.latitude) < 1e-6 && Math.abs(camera.longitude - plan.longitude) < 1e-6;
   const current = items.find((item) => (item.points
     ? item.points.some((point) => point.time === time && sameCamera(point))
-    : sameCamera(item.camera) && time >= Math.floor(item.start / MINUTE) * MINUTE && time <= item.end)) ?? null;
+    : item.place ? sameCamera(item.camera)
+      : sameCamera(item.camera) && time >= Math.floor(item.start / MINUTE) * MINUTE && time <= item.end)) ?? null;
 
   const tryOut = (item: ResultItem, at = item.best) => {
     if (!done) return;
@@ -577,6 +639,7 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
   };
 
   const events = useMemo<TimelineEvent[]>(() => (active && done ? done.items.flatMap((item) => {
+    if (item.place) return [];
     const where = item.near !== null ? `，机位距地面目标 ${km(item.near)}—${km(item.far!)} km` : "";
     return item.start === item.end || item.end - item.start < MINUTE
       ? [{ key: `result-${item.key}`, kind: "alignment" as const, label: "对齐", instant: iso(item.best), detail: `结果${where}` }]
@@ -659,6 +722,14 @@ export function compositionGeometry(state: CompositionState | null, timeZone: st
       const far = arc(run.composition.camera.mode === "near" ? 30_000 : outer), near = arc(MIN_DISTANCE).reverse();
       features.push({ type: "Feature", properties: { kind: "sector" }, geometry: { type: "Polygon", coordinates: [[...far, ...near, far[0]]] } });
     }
+  run.items.filter((item) => item.place).forEach((item, index) => {
+    const selected = item === state.current;
+    const outline = item.place!.area.map((point) => [point.longitude, point.latitude]);
+    if (outline.length > 2) features.push({ type: "Feature", properties: { kind: "area", selected }, geometry: { type: "Polygon", coordinates: [[...outline, outline[0]]] } });
+    const at = [item.camera.longitude, item.camera.latitude];
+    features.push({ type: "Feature", properties: { kind: "dot", selected }, geometry: { type: "Point", coordinates: at } });
+    features.push({ type: "Feature", properties: { kind: "label", label: `机位 ${index + 1}` }, geometry: { type: "Point", coordinates: at } });
+  });
   const lines = run.items.filter((item) => item.points);
   const single = run.composition.time.mode === "instant" || (run.composition.time.mode === "range" && run.composition.time.days === 1);
   lines.forEach((item, index) => {
@@ -1052,7 +1123,9 @@ function ResultsSection({ state, plan, occlusion, check }: {
   check: ReturnType<typeof useFeasibility>;
 }) {
   const { run, current } = state;
-  const groups = useMemo(() => groupByDay(run?.phase === "done" ? run.items : []), [run]);
+  // Camera places for two ground points are listed on their own, not by day.
+  const places = run?.phase === "done" && run.shape === "places";
+  const groups = useMemo(() => groupByDay(run?.phase === "done" && run.shape !== "places" ? run.items : []), [run]);
   const single = groups.length === 1;
   const [open, setOpen] = useState<Set<string>>(new Set());
   const ground = run?.basis.ground ?? null;
@@ -1069,8 +1142,8 @@ function ResultsSection({ state, plan, occlusion, check }: {
   const done = run.phase === "done";
   const minutes = new Set(run.items.flatMap((item) => (item.points ? item.points.map((point) => point.time) : [item.best]))).size;
   const hidden = [
-    run.blocked > 0 && `另有 ${run.blocked} 分钟视线被地形挡住`,
-    run.extraMissed > 0 && `${run.extraMissed} ${run.strategy.kind === "line" ? "分钟" : "次"}其他目标不在位置`,
+    run.blocked > 0 && (run.shape === "places" ? `${run.blocked} 个机位视线被地形挡住` : `另有 ${run.blocked} 分钟视线被地形挡住`),
+    run.extraMissed > 0 && `${run.extraMissed} ${run.strategy.kind === "line" ? "分钟" : run.shape === "places" ? "个机位" : "次"}其他目标不在位置`,
     run.filtered > 0 && `${run.filtered} ${run.strategy.kind === "line" ? "分钟" : "次"}不满足筛选`,
     run.missing > 0 && `${run.missing} ${run.strategy.kind === "line" ? "分钟" : "次"}缺少光污染数据`,
     run.merged > 0 && `${run.merged} 段几乎重合的已合并`,
@@ -1090,12 +1163,16 @@ function ResultsSection({ state, plan, occlusion, check }: {
       {run.phase === "running" && <p className="alignment-status" role="status">{run.stage}</p>}
       {run.phase === "error" && <p className="alignment-status is-error" role="status">{run.message === "已取消" ? "已取消。" : `搜索失败：${run.message}`}</p>}
       {done && (run.items.length
-        ? <p className="alignment-status" role="status">{label} {groups.length} 天、{run.items.length} 段，共 {minutes} 分钟{hidden && `；${hidden}`}</p>
+        ? <p className="alignment-status" role="status">{places ? `${run.items.length} 个机位` : `${label} ${groups.length} 天、${run.items.length} 段，共 ${minutes} 分钟`}{hidden && `；${hidden}`}</p>
         : <p className="alignment-status is-empty" role="status">{run.note || "没有结果。"}{hidden && `（${hidden}）`}</p>)}
       {done && run.items.length > 0 && run.note && <p className="alignment-hint is-warning">{run.note}</p>}
       {done && ground && <CoarseNote sampler={run.sampler} latitude={ground.latitude} />}
       {done && run.items.length > 0 && <CheckControls check={check} />}
-      {current && <>
+      {current?.place && <p className="alignment-current" role="status">
+        正在试看机位 {run.items.indexOf(current) + 1}
+        {` · 距“${run.strategy.kind === "grounds" ? run.strategy.first.name : ""}” ${km(current.place.first.distance)} km、距“${run.strategy.kind === "grounds" ? run.strategy.second.name : ""}” ${km(current.place.second.distance)} km`}
+      </p>}
+      {current && !current.place && <>
         <p className="alignment-current" role="status">
           正在试看 {words(current.day)} {clock(Date.parse(plan.instant), plan.timeZone)}
           {currentPoint && ` · 距地面目标 ${km(currentPoint.distance)} km（目标在${compassDirection(currentPoint.azimuth)}）`}
@@ -1112,6 +1189,24 @@ function ResultsSection({ state, plan, occlusion, check }: {
       {(current || state.canRestore) && <div className="alignment-actions">
         <button type="button" disabled={!state.canRestore} onClick={state.restore}>返回推算前</button>
       </div>}
+      {places && run.items.length > 0 && <ol className="position-list composition-places">
+        {run.items.map((item, index) => {
+          const facts = item.place!;
+          const pair = run.strategy.kind === "grounds" ? run.strategy : null;
+          const size = facts.reach.longest >= 4_999 ? "容差内范围超过 5 km" : `容差内约 ${Math.round(facts.reach.shortest * 2)}×${Math.round(facts.reach.longest * 2)} m`;
+          return (
+            <li key={item.key} className={item === current ? "is-current" : undefined} data-candidate={item.key}>
+              <span className="alignment-when">
+                <strong>机位 {index + 1}</strong>
+                <small>{`“${pair?.first.name}”在${compassDirection(facts.first.azimuth)} ${km(facts.first.distance)} km · “${pair?.second.name}”在${compassDirection(facts.second.azimuth)} ${km(facts.second.distance)} km`}</small>
+                <small>{`${size}${facts.moved >= 1 ? ` · 正中的视线被地形挡住，已移 ${Math.round(facts.moved)} m` : ""}${item.deviation >= 0.001 ? ` · 偏差 ${(item.deviation * 100).toFixed(1)}%` : ""}${facts.unknown ? " · 部分地形数据不全" : ""}`}</small>
+                <CheckTag check={check.result(item.key)} />
+              </span>
+              <button type="button" aria-label={`试看 机位 ${index + 1}`} aria-pressed={item === current} onClick={() => state.tryOut(item)}>试看</button>
+            </li>
+          );
+        })}
+      </ol>}
       {groups.length > 0 && <ol className="composition-days">
         {groups.map((group) => {
           const expanded = single || open.has(group.day);

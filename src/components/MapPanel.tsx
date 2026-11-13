@@ -713,6 +713,12 @@ export function MapPanel({
               filter: ["==", ["get", "kind"], "sector"],
               paint: { "fill-color": lineColor_, "fill-opacity": 0.1 },
             });
+            // Two ground points: the ground around each camera place where the second point stays within tolerance.
+            map.addLayer({
+              id: "tamatamatori-alignment-area", type: "fill", source: alignmentSourceId,
+              filter: ["==", ["get", "kind"], "area"],
+              paint: { "fill-color": "#b4372b", "fill-opacity": ["case", ["get", "selected"], 0.3, 0.16], "fill-outline-color": "#b4372b" },
+            });
             map.addLayer({
               id: "tamatamatori-alignment-ring", type: "line", source: alignmentSourceId,
               filter: ["==", ["get", "kind"], "ring"],
@@ -997,8 +1003,11 @@ export function MapPanel({
             <i className="map-legend-aurora" />极光带 · 虚线可见
           </span>}
           {tideCell && <span data-tide-legend title="潮位所用的海洋格点（约 8 km）"><i className="map-legend-tide" />潮位格点</span>}
-          {alignmentFeatures.features.length > 0 && (
-            <span data-alignment-legend title="红点为地面目标，虚线圈为机位范围，淡色扇形为所选日期内机位可能所在的方位。线上每个机位，在标注的时刻看到各目标落在设定的画面位置；颜色由浅到深按日期先后，加粗的是正在试看的一段，另标每 10 分钟。视线被地形挡住的分钟不画；遮挡只看地形，不含建筑、树木与天气。">
+          {alignmentFeatures.features.length > 0 && (alignmentFeatures.features.some((feature) => feature.properties?.kind === "area")
+            ? <span data-alignment-legend title="红点为地面目标，虚线圈为机位范围。“机位 N”处两个地面点各在设定的画面位置（与时间无关），淡红色范围内第二个点不超出容差；遮挡只看地形，不含建筑、树木与天气。">
+              <i className="map-legend-target" />目标 · 机位与容差内范围
+            </span>
+            : <span data-alignment-legend title="红点为地面目标，虚线圈为机位范围，淡色扇形为所选日期内机位可能所在的方位。线上每个机位，在标注的时刻看到各目标落在设定的画面位置；颜色由浅到深按日期先后，加粗的是正在试看的一段，另标每 10 分钟。视线被地形挡住的分钟不画；遮挡只看地形，不含建筑、树木与天气。">
               <i className="map-legend-target" />目标 · 线上各点在标注时刻对齐
             </span>
           )}

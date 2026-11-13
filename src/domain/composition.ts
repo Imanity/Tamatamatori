@@ -9,6 +9,7 @@ import { fieldOfView, frameAspectRatio } from "./plan.ts";
 import type { ShootingPlan } from "./plan.ts";
 import { lineOfSight, pointPlan, SKYLINE_RADIUS, skyAt, toRay, topHeight } from "./position-alignment.ts";
 import type { GroundSampler, GroundTarget, PositionPoint } from "./position-alignment.ts";
+import type { GroundPlace } from "./ground-pair.ts";
 import { skyBrightness } from "./meteor-showers.ts";
 import { mergeCandidates, MIN_SUBJECT, rangeCandidates, skySeparation } from "./range-alignment.ts";
 import type { Prefilter } from "./range-alignment.ts";
@@ -126,8 +127,9 @@ export function heightWords(target: GroundSpec) {
 export type Strategy =
   | { kind: "line"; ground: GroundSpec; sky: SkySpec; extras: TargetSpec[] }
   | { kind: "window"; ground: GroundSpec | null; sky: SkySpec; extras: TargetSpec[] }
-  | { kind: "pair"; first: SkySpec; second: SkySpec; extras: TargetSpec[] };
-export type Shape = "lines" | "points" | "windows";
+  | { kind: "pair"; first: SkySpec; second: SkySpec; extras: TargetSpec[] }
+  | { kind: "grounds"; first: GroundSpec; second: GroundSpec; extras: TargetSpec[] };
+export type Shape = "lines" | "points" | "windows" | "places";
 export interface Solvability {
   strategy: Strategy | null;
   shape: Shape | null;
@@ -143,10 +145,7 @@ export function classify(composition: Composition): Solvability {
   const stop = (message: string): Solvability => ({ strategy: null, shape: null, message });
   if (!targets.length) return stop("先加目标：一个地面点和一个天体，或两个天体。");
   if (targets.length > TARGET_LIMIT) return stop(`最多 ${TARGET_LIMIT} 个目标。`);
-  if (!skies.length)
-    return stop(grounds.length > 1
-      ? "只有地面点：两个地面点作主约束将在第三步支持；请再加一个天体。"
-      : "只有一个地面点：任何机位都能对准它。再加一个天体。");
+  if (!skies.length && grounds.length < 2) return stop("只有一个地面点：任何机位都能对准它。再加一个地面点或天体。");
   if (skies.some((sky) => sky.body === "moon") && filters.some((filter) => filter.kind === "moonDown"))
     return stop("目标里有月亮，却要求“月亮在地平线下”：请删掉其中一个。");
   for (const ground of grounds) {
@@ -155,6 +154,16 @@ export function classify(composition: Composition): Solvability {
     if (ground.base <= ground.frame.y) return stop(`“${ground.name}”的底部应在顶部下方。`);
   }
   const fixed = camera.mode === "fixed";
+  if (!skies.length) {
+    // Two ground points: their places in the frame depend on the camera's place and aim alone.
+    if (fixed) return stop("机位固定时，两个地面点在画面中的位置已由机位决定：直接看预览即可。");
+    const extras = grounds.slice(2);
+    return {
+      strategy: { kind: "grounds", first: grounds[0], second: grounds[1], extras },
+      shape: "places",
+      message: `结果为机位：两个地面点的相对位置只取决于机位，与时间无关。${extras.length ? `另有 ${extras.length} 个地面点按容差检查。` : ""}${filters.length ? "筛选条件与时间有关，这里不用。" : ""}`,
+    };
+  }
   if (fixed && time.mode === "instant") return stop("机位与时刻都已固定，没有可搜索的量；直接看预览即可。");
   const more = (extras: TargetSpec[]) => (extras.length ? `另有 ${extras.length} 个目标按容差逐分钟检查。` : "");
   if (fixed && camera.aim) {
@@ -483,6 +492,34 @@ export interface ResultItem {
   /** Share of the minutes with terrain data all along the sight line. */
   clear: number;
   aim: { azimuth: number; pitch: number } | null;
+  /** A camera place for two ground points: not tied to a time (start, end and best are the search's instant). */
+  place?: PlaceFacts;
+}
+export interface PlaceFacts {
+  /** Ground distance and direction from the camera to each of the two points. */
+  first: { distance: number; azimuth: number };
+  second: { distance: number; azimuth: number };
+  /** Outline of the ground where the second point stays within its tolerance, and its reach from the place. */
+  area: { latitude: number; longitude: number }[];
+  reach: { longest: number; shortest: number };
+  /** Some sight line crosses ground without terrain data. */
+  unknown: boolean;
+  /** Metres moved from the exact place, inside the tolerance, to a spot whose sight lines are not cut. */
+  moved: number;
+}
+/** A result row for a camera place found from two ground points. */
+export function placeItem(place: GroundPlace, instant: number, unknown = false, moved = 0): ResultItem {
+  const camera = { latitude: place.latitude, longitude: place.longitude };
+  const conditions = conditionsAt(instant, camera.latitude, camera.longitude);
+  return {
+    key: `place/${camera.latitude.toFixed(6)}/${camera.longitude.toFixed(6)}`, day: "", start: instant, end: instant, best: instant,
+    points: null, camera, near: place.first.distance, far: place.first.distance, bearing: place.first.azimuth, deviation: place.gap, share: null,
+    sky: conditions.sky, moonElevation: conditions.moonElevation, moonLit: conditions.moonLit, clear: unknown ? 0 : 1, aim: place.aim,
+    place: {
+      first: { distance: place.first.distance, azimuth: place.first.azimuth }, second: { distance: place.second.distance, azimuth: place.second.azimuth },
+      area: place.area, reach: place.reach, unknown, moved,
+    },
+  };
 }
 export interface DayGroup {
   day: string;
@@ -495,6 +532,7 @@ export interface DayGroup {
  * from noon to noon and are named after their evening.
  */
 export function nightSearch(composition: Pick<Composition, "filters">, strategy: Strategy) {
+  if (strategy.kind === "grounds") return false;
   const lead = strategy.kind === "pair" ? [strategy.first, strategy.second] : [strategy.sky];
   if (lead.every((sky) => isFixedBody(sky.body))) return true;
   return composition.filters.some((filter) => filter.kind === "darkSky"
@@ -586,12 +624,15 @@ const iso = (time: number) => new Date(time).toISOString().replace(".000Z", "Z")
  * the top goes to its place; a still camera keeps its aim.
  */
 export function tryPatch(item: ResultItem, basis: SearchBasis, layers: ShootingPlan["layers"], time = item.best): Partial<ShootingPlan> {
+  const round = (value: number, digits: number) => Math.round(value * 10 ** digits) / 10 ** digits;
+  // A camera place for two ground points: the place and the aim, never the time.
+  if (item.place && item.aim)
+    return { latitude: round(item.camera.latitude, 6), longitude: round(item.camera.longitude, 6), azimuth: round(item.aim.azimuth, 4), pitch: round(item.aim.pitch, 4) };
   if (item.points && basis.ground) {
     const point = item.points.find((entry) => entry.time === time) ?? item.points.find((entry) => entry.time === item.best) ?? item.points[0];
     const patch = pointPlan(layers, point, basis.bodies[0], { frame: ndc(basis.ground.frame), lens: basis.lens });
     return { ...patch, layers: { ...patch.layers, ...Object.fromEntries(basis.bodies.map((body) => [bodyLayer(body), true])) } };
   }
-  const round = (value: number, digits: number) => Math.round(value * 10 ** digits) / 10 ** digits;
   const aim = basis.follow
     ? aimAt(basis.lens, skyAt(basis.follow.body, time, item.camera.latitude, item.camera.longitude, basis.follow.refraction), ndc(basis.follow.frame))
     : item.aim;

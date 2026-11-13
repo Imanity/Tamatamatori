@@ -82,6 +82,12 @@ const solveExamples = [
       camera: { mode: 'fixed', latitude: 35.4172, longitude: 138.8729, heightAboveGround: 1.6 }, time: { mode: 'range', date: '2026-11-13', days: 1096 }, timeZone: 'Asia/Tokyo' },
   },
   {
+    title: '两个地面点：晴空塔塔顶在左上、富士山顶在右下，200 mm 横幅（结果为机位，与时间无关）',
+    value: { format: SOLVE_FORMAT, version: SOLVE_VERSION_2, name: '晴空塔与富士山', lens: { focalLength: 200, sensor: 'full-frame', aspectRatio: '3:2', orientation: 'landscape' },
+      targets: [{ type: 'ground', landmark: 'tokyo-skytree', frame: { x: 0.42, y: 0.3 } }, { ...fujiSummit, frame: { x: 0.62, y: 0.58 } }],
+      camera: { mode: 'free', maxDistance: 30000, minDistance: 2000 } },
+  },
+  {
     title: '两个天体：月亮在昴星团左下方（与机位基本无关）',
     value: { format: SOLVE_FORMAT, version: SOLVE_VERSION_2, lens: { focalLength: 135, sensor: 'full-frame', aspectRatio: '3:2', orientation: 'landscape' },
       targets: [{ type: 'body', body: 'dso-mel022', frame: { x: 0.6, y: 0.4 } }, { type: 'body', body: 'moon', frame: { x: 0.4, y: 0.6 }, tolerance: 0.05 }],
@@ -360,8 +366,9 @@ const solveMarkdown = `# Tamatamatori 推算请求格式 v${SOLVE_VERSION_2}
 | 一个地面点 + 一个天体，机位固定 | 天体经过画面位置的时刻（按容差） |
 | 一个天体，机位与朝向都固定 | 天体落到画面位置的时刻 |
 | 两个天体 | 两者到达设定相对位置的时刻；与机位基本无关 |
+| 两个地面点（没有天体），机位不限或在某点周围 | 机位：两点的相对位置只取决于机位与朝向，与时间无关；每个机位带一片第二个点不超出容差的范围，两点的视线都不被地形挡住 |
 | 以上任一种再加第三、四个目标 | 第一个地面点与第一个天体（没有地面点时为前两个天体）定机位与时刻，其余目标在每个候选分钟按容差检查：天体须在地平线上，地面点的视线不被地形挡住 |
-| 只有一个目标（朝向不固定）、只有地面点、固定朝向时有地面点、机位与时刻都固定 | 不搜索，报出原因 |
+| 只有一个目标（朝向不固定）、只有一个地面点、机位固定时只有地面点、固定朝向时有地面点、机位与时刻都固定 | 不搜索，报出原因 |
 
 ## 顶层字段
 

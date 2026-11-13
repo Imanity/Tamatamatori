@@ -113,7 +113,11 @@ export function filterWords(filter: FilterSpec) {
 /** Result rows: one per stretch or window, the camera and the gap from the places. */
 export function resultRows(items: readonly ResultItem[], timeZone: string) {
   const header = ["日期", "时段", "机位（试看处）", "目标方向与距离", "最大偏差", "天空", "月亮"];
-  const rows = items.map((item) => [
+  const rows = items.map((item) => item.place ? [
+    "—", "与时间无关", coordinate(item.camera.latitude, item.camera.longitude),
+    `${compassDirection(item.place.first.azimuth)} ${km(item.place.first.distance)} km；${compassDirection(item.place.second.azimuth)} ${km(item.place.second.distance)} km`,
+    `${(item.deviation * 100).toFixed(1)}%`, "—", "—",
+  ] : [
     // The date the stretch starts on (a night's rows may begin after midnight).
     localDateTime(iso(item.start), timeZone).slice(0, 10),
     item.start === item.end ? clock(iso(item.start), timeZone) : `${clock(iso(item.start), timeZone)}–${clock(iso(item.end), timeZone)}`,
