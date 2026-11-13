@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { aimAt, frameDirection } from "../src/domain/alignment.ts";
-import { findPositions, framedDirection, pointPlan } from "../src/domain/position-alignment.ts";
+import { findPositions, pointPlan } from "../src/domain/position-alignment.ts";
 import { blockedMinutes, mergeCandidates, rangeCandidates } from "../src/domain/range-alignment.ts";
 import { skyCondition } from "../src/domain/alignment.ts";
 import { sunPosition } from "../src/domain/ephemeris.ts";
@@ -71,7 +71,6 @@ test("画面位置：试看与就地转动写入的方向让目标顶部落在�
   assert.deepEqual([centred.azimuth, centred.pitch], [Math.round(point.azimuth * 1e4) / 1e4, Math.round(point.elevation * 1e4) / 1e4]);
   const seen = frameDirection({ ...plan, azimuth: framed.azimuth, pitch: framed.pitch }, 0.25, 1 / 3);
   assert.ok(separation(seen, point) < 1e-3, "the top (and the Moon on it) sits at the frame place, to the rounding of the fields");
-  assert.deepEqual(framedDirection(point, { frame: { x: 0.25, y: 1 / 3 }, lens: plan }), { azimuth: framed.azimuth, pitch: framed.pitch });
 });
 
 test("可拍时段：被地形挡住的分钟不列出并单独计数，一段在被挡处拆开；找机位另按天空条件分段，键名含中点", () => {

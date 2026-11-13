@@ -35,7 +35,7 @@ export function rangeWorker(post: (reply: RangeReply) => void) {
         if (message.fixed) registerFixedBodies([message.fixed]);
         const tracks = message.days.map((day) => rangeTrack(message.input, day));
         planned = { ...message, tracks };
-        post({ id: message.id, type: "planned", corridor: rangeCorridor(message.input, tracks), sectors: reachableSectors(tracks),
+        post({ id: message.id, type: "planned", corridor: rangeCorridor(message.input, tracks), sectors: reachableSectors(tracks, message.input.frames),
           minutes: tracks.reduce((sum, track) => sum + track.length, 0) });
         return;
       }

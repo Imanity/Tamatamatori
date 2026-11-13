@@ -1,12 +1,14 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { landmarks } from "./landmarks.ts";
 import { fixedBodies, isSolveBody } from "./sky-targets.ts";
-import { skyConditions, spanChoices as timeSpans, targetElevationRange, toleranceChoices } from "./alignment.ts";
+import { bodyRadius, skyConditions, spanChoices as timeSpans, targetElevationRange, toleranceChoices } from "./alignment.ts";
 import type { AlignmentBody, SkyCondition } from "./alignment.ts";
-import { spanChoices as rangeSpans } from "./range-alignment.ts";
+import { MIN_SUBJECT, spanChoices as rangeSpans } from "./range-alignment.ts";
 import { distanceChoices } from "./position-alignment.ts";
 import { shotLimits, validTimeZone } from "./shot.ts";
-import { instantFromLocal, instantOnDate, localDateTime } from "./plan.ts";
+import { aspectRatios, customSensorLimits, fieldOfView, initialPlan, instantFromLocal, instantOnDate, localDateTime, sensors } from "./plan.ts";
+import { dayChoices, dayLabel, DEFAULT_TOLERANCE, MAX_LINE_DAYS, TARGET_LIMIT } from "./composition.ts";
+import type { CameraRange, Composition, FilterSpec, FrameSpot, HeightReference, Lens, TargetSpec, TimeRange } from "./composition.ts";
 import type { ShootingPlan } from "./plan.ts";
 import { timelineMode, timelineWindow } from "./timeline.ts";
 
@@ -27,6 +29,8 @@ export const timeDays = timeSpans.map((choice) => choice.days);
 export const rangeDays = [...rangeSpans];
 export const shareLimits = [0.05, 0.5] as const;
 export const targetHeightLimits = [0, 1000] as const;
+/** Elevations a "sea" (海拔) height may take, metres. */
+export const seaHeightLimits = [-500, 9000] as const;
 /** Moon phase bounds follow the panel's choices (lit fraction). */
 export const phaseChoices = [0, 0.1, 0.25, 0.5, 0.75, 0.9, 1] as const;
 export const landmarkIds = landmarks.map((landmark) => landmark.id);
@@ -78,11 +82,12 @@ const kindKeys: Record<SolveKind, readonly string[]> = {
 };
 const common = ["$schema", "format", "version", "name", "kind", "body"];
 
-/** Accepts plain JSON (optionally in a code fence) or a link carrying `#solve=`. */
-export function parseSolveText(text: string): SolveParse {
-  if (text.length > SOLVE_TEXT_LIMIT) return fail(`内容超过 ${SOLVE_TEXT_LIMIT / 1024} KB，不是有效的推算请求`);
+/** The JSON value in plain JSON (optionally in a code fence) or a link carrying `#solve=`. */
+export function extractSolveJson(text: string): { ok: true; value: unknown } | { ok: false; errors: string[] } {
+  const no = (error: string) => ({ ok: false as const, errors: [error] });
+  if (text.length > SOLVE_TEXT_LIMIT) return no(`内容超过 ${SOLVE_TEXT_LIMIT / 1024} KB，不是有效的推算请求`);
   let body = text.trim();
-  if (!body) return fail("内容为空");
+  if (!body) return no("内容为空");
   const fenced = body.match(/```[a-zA-Z]*\s*([\s\S]*?)```/);
   if (fenced) body = fenced[1].trim();
   const hash = body.match(/#solve=([\s\S]+)$/);
@@ -90,18 +95,16 @@ export function parseSolveText(text: string): SolveParse {
     try {
       body = decodeURIComponent(hash[1].trim());
     } catch {
-      return fail("链接中的推算请求编码无效");
+      return no("链接中的推算请求编码无效");
     }
   }
   if (body.startsWith("json:")) body = body.slice(5).trim();
-  if (!body.startsWith("{")) return fail("无法识别：应为以 { 开头的 JSON，或带 #solve=json: 的链接");
-  let value: unknown;
+  if (!body.startsWith("{")) return no("无法识别：应为以 { 开头的 JSON，或带 #solve=json: 的链接");
   try {
-    value = JSON.parse(body);
+    return { ok: true, value: JSON.parse(body) };
   } catch (error) {
-    return fail(`JSON 格式错误：${(error as Error).message}`);
+    return no(`JSON 格式错误：${(error as Error).message}`);
   }
-  return parseSolve(value);
 }
 
 /** Validates a request; reports every problem with its field path. */
@@ -268,113 +271,445 @@ export function parseSolve(value: unknown): SolveParse {
   return { ok: true, request, defaults, landmark };
 }
 
-/** The request as JSON; `$schema` first when given (an absolute URL of solve.schema.json). */
-export function solveJson(request: SolveRequest, schema?: string) {
-  const { target, name, ...rest } = request;
-  const written: Record<string, unknown> = {
-    ...rest,
-    ...(name ? { name } : {}),
-    // A landmark target is written by its id; the resolved coordinates are not part of the request.
-    ...(target ? { target: target.landmark ? { landmark: target.landmark, height: target.height } : { latitude: target.latitude, longitude: target.longitude, height: target.height, name: target.name } } : {}),
+// ---------------------------------------------------------------- 版本 2
+
+/**
+ * Version 2 (构图约束搜索): targets with their frame places, the lens that
+ * frames them, the search range and filters. Version 1 requests are read
+ * and converted (`upgradeSolve`), so old links keep opening.
+ */
+export const SOLVE_VERSION_2 = 2;
+export const toleranceLimits = [0.005, 0.2] as const;
+export const nearLimits = [500, 30_000] as const;
+
+export interface RequestLens {
+  focalLength: number;
+  sensor: ShootingPlan["sensor"];
+  sensorSize?: { width: number; height: number };
+  aspectRatio: ShootingPlan["aspectRatio"];
+  orientation: ShootingPlan["orientation"];
+}
+export type RequestTarget =
+  | { type: "ground"; landmark?: string; latitude: number; longitude: number; height: number; reference: HeightReference; name: string; frame: FrameSpot; base: number | null; tolerance: number }
+  | { type: "body"; body: AlignmentBody; frame: FrameSpot; tolerance: number };
+export type RequestCamera =
+  | { mode: "free"; maxDistance: number; heightAboveGround?: number }
+  | { mode: "near"; latitude: number; longitude: number; radius: number; heightAboveGround?: number }
+  | { mode: "fixed"; latitude?: number; longitude?: number; aim?: { azimuth: number; pitch: number }; heightAboveGround?: number };
+export type RequestTime = { mode: "range"; date?: string; days: number } | { mode: "instant"; instant: string };
+
+export interface SolveRequest2 {
+  format: typeof SOLVE_FORMAT;
+  version: typeof SOLVE_VERSION_2;
+  name: string;
+  lens?: RequestLens;
+  targets: RequestTarget[];
+  camera: RequestCamera;
+  time: RequestTime;
+  timeZone?: string;
+  filters: FilterSpec[];
+}
+export type SolveParse2 =
+  | { ok: true; request: SolveRequest2; defaults: string[]; landmark: boolean; from: 1 | 2 }
+  | { ok: false; errors: string[] };
+
+const topKeys2 = ["$schema", "format", "version", "name", "lens", "targets", "camera", "time", "timeZone", "filters"];
+const roundTo = (value: number, digits: number) => Math.round(value * 10 ** digits) / 10 ** digits;
+
+/** Validates a version 2 request; every problem with its field path. */
+export function parseSolve2(value: Record<string, unknown>): SolveParse2 {
+  const errors: string[] = [], defaults: string[] = [];
+  for (const key of Object.keys(value)) if (!topKeys2.includes(key)) errors.push(`${key}：未知字段`);
+  if (value.format !== SOLVE_FORMAT) errors.push(`format：应为 "${SOLVE_FORMAT}"，收到 ${shown(value.format)}`);
+  let name = "";
+  if (value.name !== undefined) {
+    if (typeof value.name !== "string") errors.push(`name：应为文本，收到 ${shown(value.name)}`);
+    else if ([...value.name.trim()].length > SOLVE_NAME_LIMIT) errors.push(`name：最多 ${SOLVE_NAME_LIMIT} 字`);
+    else name = value.name.trim();
+  }
+  const number = (source: Record<string, unknown>, key: string, path: string, range?: readonly [number, number]) => {
+    const item = source[key];
+    if (typeof item !== "number" || !Number.isFinite(item)) {
+      errors.push(`${path}：应为数字，收到 ${shown(item)}`);
+      return null;
+    }
+    if (range && (item < range[0] || item > range[1])) {
+      errors.push(`${path}：应在 ${range[0]}～${range[1]} 之间，收到 ${item}`);
+      return null;
+    }
+    return item;
   };
-  // Fields in the documented order, whatever order the request was built in.
-  const ordered = Object.fromEntries(topKeys.slice(1).filter((key) => written[key] !== undefined).map((key) => [key, written[key]]));
-  return JSON.stringify(schema ? { $schema: schema, ...ordered } : ordered, null, 2);
+  const object = (item: unknown, path: string, fields: readonly string[]) => {
+    if (!isObject(item)) {
+      errors.push(`${path}：应为对象，收到 ${shown(item)}`);
+      return null;
+    }
+    for (const field of Object.keys(item)) if (!fields.includes(field)) errors.push(`${path}.${field}：未知字段`);
+    return item;
+  };
+  const spot = (item: unknown, path: string): FrameSpot | null => {
+    if (item === undefined) return { x: 0.5, y: 0.5 };
+    const frame = object(item, path, ["x", "y"]);
+    if (!frame) return null;
+    const x = number(frame, "x", `${path}.x`, [0, 1]), y = number(frame, "y", `${path}.y`, [0, 1]);
+    return x === null || y === null ? null : { x, y };
+  };
+  const tolerance = (source: Record<string, unknown>, path: string) =>
+    source.tolerance === undefined ? DEFAULT_TOLERANCE : number(source, "tolerance", `${path}.tolerance`, toleranceLimits);
+  let landmark = false;
+
+  let lens: RequestLens | undefined;
+  if (value.lens === undefined) defaults.push("lens");
+  else {
+    const item = object(value.lens, "lens", ["focalLength", "sensor", "sensorSize", "aspectRatio", "orientation"]);
+    if (item) {
+      const focalLength = number(item, "focalLength", "lens.focalLength", shotLimits.focalLength);
+      const sensorIds = [...Object.keys(sensors), "custom"];
+      const sensor = item.sensor === undefined ? initialPlan.sensor : sensorIds.includes(item.sensor as string) ? item.sensor as ShootingPlan["sensor"] : null;
+      if (sensor === null) errors.push(`lens.sensor：应为 ${sensorIds.map((id) => `"${id}"`).join(" / ")} 之一，收到 ${shown(item.sensor)}`);
+      let sensorSize: RequestLens["sensorSize"];
+      if (item.sensorSize !== undefined) {
+        const size = object(item.sensorSize, "lens.sensorSize", ["width", "height"]);
+        if (sensor !== "custom") errors.push(`lens.sensorSize：只在 lens.sensor 为 "custom" 时使用`);
+        else if (size) {
+          const width = number(size, "width", "lens.sensorSize.width", customSensorLimits), height = number(size, "height", "lens.sensorSize.height", customSensorLimits);
+          if (width !== null && height !== null) sensorSize = { width, height };
+        }
+      } else if (sensor === "custom") errors.push(`lens.sensorSize：自定义传感器需要宽和高，例如 { "width": 43.8, "height": 32.9 }`);
+      const ratios = Object.keys(aspectRatios);
+      const aspectRatio = item.aspectRatio === undefined ? initialPlan.aspectRatio : ratios.includes(item.aspectRatio as string) ? item.aspectRatio as ShootingPlan["aspectRatio"] : null;
+      if (aspectRatio === null) errors.push(`lens.aspectRatio：应为 ${ratios.map((id) => `"${id}"`).join(" / ")} 之一，收到 ${shown(item.aspectRatio)}`);
+      const orientation = item.orientation === undefined ? initialPlan.orientation : item.orientation === "landscape" || item.orientation === "portrait" ? item.orientation : null;
+      if (orientation === null) errors.push(`lens.orientation：应为 "landscape" / "portrait" 之一，收到 ${shown(item.orientation)}`);
+      if (focalLength !== null && sensor && aspectRatio && orientation)
+        lens = { focalLength, sensor, ...(sensorSize ? { sensorSize } : {}), aspectRatio, orientation };
+    }
+  }
+
+  const targets: RequestTarget[] = [];
+  if (!Array.isArray(value.targets) || !value.targets.length) errors.push(`targets：需要 1—${TARGET_LIMIT} 个目标组成的数组，收到 ${shown(value.targets)}`);
+  else if (value.targets.length > TARGET_LIMIT) errors.push(`targets：目前最多 ${TARGET_LIMIT} 个目标，收到 ${value.targets.length} 个`);
+  else value.targets.forEach((entry, index) => {
+    const path = `targets[${index}]`;
+    if (!isObject(entry)) {
+      errors.push(`${path}：应为对象，收到 ${shown(entry)}`);
+      return;
+    }
+    if (entry.type === "body") {
+      const item = object(entry, path, ["type", "body", "frame", "tolerance"]);
+      if (!item) return;
+      const body = isSolveBody(item.body) ? item.body : null;
+      if (!body) errors.push(`${path}.body：应为 "sun"、"moon"、"galactic-center"，或亮星（hyg-…）、深空目标（dso-…）的 id，收到 ${shown(item.body)}`);
+      const frame = spot(item.frame, `${path}.frame`), allowed = tolerance(item, path);
+      if (body && frame && allowed !== null) targets.push({ type: "body", body, frame, tolerance: allowed });
+      return;
+    }
+    if (entry.type !== "ground") {
+      errors.push(`${path}.type：应为 "ground" 或 "body"，收到 ${shown(entry.type)}`);
+      return;
+    }
+    const item = object(entry, path, ["type", "landmark", "latitude", "longitude", "height", "reference", "name", "frame", "base", "tolerance"]);
+    if (!item) return;
+    const reference = item.reference === undefined ? "ground" : item.reference === "ground" || item.reference === "sea" ? item.reference : null;
+    if (reference === null) errors.push(`${path}.reference：应为 "ground"（距地表）或 "sea"（海拔），收到 ${shown(item.reference)}`);
+    const height = item.height === undefined ? undefined : number(item, "height", `${path}.height`, reference === "sea" ? seaHeightLimits : targetHeightLimits);
+    let label: string | undefined;
+    if (item.name !== undefined) {
+      if (typeof item.name !== "string" || ![...item.name.trim()].length || [...item.name.trim()].length > SOLVE_NAME_LIMIT)
+        errors.push(`${path}.name：应为 1—${SOLVE_NAME_LIMIT} 字的文本，收到 ${shown(item.name)}`);
+      else label = item.name.trim();
+    }
+    const frame = spot(item.frame, `${path}.frame`), allowed = tolerance(item, path);
+    let base: number | null = null, baseOk = true;
+    if (item.base !== undefined && item.base !== null) {
+      const foot = number(item, "base", `${path}.base`, [0, 1]);
+      if (foot === null) baseOk = false;
+      else if (frame && foot <= frame.y) {
+        errors.push(`${path}.base：底部应在 frame.y 下方（更大），收到 ${foot}`);
+        baseOk = false;
+      } else base = foot;
+    }
+    let place: { landmark?: string; latitude: number; longitude: number; height: number; name: string } | null = null;
+    if (item.landmark !== undefined) {
+      const found = landmarks.find((entry) => entry.id === item.landmark);
+      if (item.latitude !== undefined || item.longitude !== undefined) errors.push(`${path}：landmark 与 latitude/longitude 只能二选一`);
+      if (!found) errors.push(`${path}.landmark：未知地标 ${shown(item.landmark)}，可用：${landmarkIds.join("、")}`);
+      else if (height !== null) {
+        landmark = true;
+        place = { landmark: found.id, latitude: found.latitude, longitude: found.longitude, height: height ?? (reference === "sea" ? 0 : found.bounds.height), name: label ?? found.name };
+      }
+    } else {
+      const latitude = number(item, "latitude", `${path}.latitude`, shotLimits.latitude), longitude = number(item, "longitude", `${path}.longitude`);
+      if (height === undefined) defaults.push(`${path}.height`);
+      if (latitude !== null && longitude !== null && height !== null)
+        place = { latitude, longitude: normalizeLongitude(longitude), height: height ?? 0, name: label ?? "链接中的目标" };
+    }
+    if (place && reference && frame && allowed !== null && baseOk)
+      targets.push({ type: "ground", ...place, reference, frame, base, tolerance: allowed });
+  });
+
+  let camera: RequestCamera = { mode: "free", maxDistance: 30_000 };
+  if (value.camera === undefined) defaults.push("camera");
+  else if (isObject(value.camera)) {
+    const mode = value.camera.mode;
+    const path = "camera";
+    const height = (item: Record<string, unknown>) => (item.heightAboveGround === undefined ? undefined : number(item, "heightAboveGround", "camera.heightAboveGround", shotLimits.heightAboveGround));
+    if (mode === "free") {
+      const item = object(value.camera, path, ["mode", "maxDistance", "heightAboveGround"]);
+      if (item) {
+        const maxDistance = item.maxDistance === undefined ? 30_000 : (distanceChoices as readonly number[]).includes(item.maxDistance as number) ? item.maxDistance as number : null;
+        if (maxDistance === null) errors.push(`camera.maxDistance：应为 ${distanceChoices.join(" / ")} 之一，收到 ${shown(item.maxDistance)}`);
+        const eye = height(item);
+        if (maxDistance !== null && eye !== null) camera = { mode, maxDistance, ...(eye === undefined ? {} : { heightAboveGround: eye }) };
+      }
+    } else if (mode === "near") {
+      const item = object(value.camera, path, ["mode", "latitude", "longitude", "radius", "heightAboveGround"]);
+      if (item) {
+        const latitude = number(item, "latitude", "camera.latitude", shotLimits.latitude), longitude = number(item, "longitude", "camera.longitude");
+        const radius = number(item, "radius", "camera.radius", nearLimits), eye = height(item);
+        if (latitude !== null && longitude !== null && radius !== null && eye !== null)
+          camera = { mode, latitude, longitude: normalizeLongitude(longitude), radius, ...(eye === undefined ? {} : { heightAboveGround: eye }) };
+      }
+    } else if (mode === "fixed") {
+      const item = object(value.camera, path, ["mode", "latitude", "longitude", "aim", "heightAboveGround"]);
+      if (item) {
+        const given = item.latitude !== undefined || item.longitude !== undefined;
+        const latitude = given ? number(item, "latitude", "camera.latitude", shotLimits.latitude) : undefined;
+        const longitude = given ? number(item, "longitude", "camera.longitude") : undefined;
+        let aim: { azimuth: number; pitch: number } | undefined | null;
+        if (item.aim !== undefined) {
+          const direction = object(item.aim, "camera.aim", ["azimuth", "pitch"]);
+          const azimuth = direction ? number(direction, "azimuth", "camera.aim.azimuth") : null, pitch = direction ? number(direction, "pitch", "camera.aim.pitch", shotLimits.pitch) : null;
+          aim = azimuth === null || pitch === null ? null : { azimuth: normalizeAngle(azimuth), pitch };
+        }
+        const eye = height(item);
+        if (latitude !== null && longitude !== null && aim !== null && eye !== null)
+          camera = { mode, ...(given ? { latitude: latitude!, longitude: normalizeLongitude(longitude!) } : {}), ...(aim ? { aim } : {}), ...(eye === undefined ? {} : { heightAboveGround: eye }) };
+      }
+    } else errors.push(`camera.mode：应为 "free" / "near" / "fixed" 之一，收到 ${shown(mode)}`);
+  } else errors.push(`camera：应为对象，收到 ${shown(value.camera)}`);
+
+  let time: RequestTime = { mode: "range", days: 30 };
+  if (value.time === undefined) defaults.push("time");
+  else if (isObject(value.time) && value.time.mode === "instant") {
+    const item = object(value.time, "time", ["mode", "instant"]);
+    if (item) {
+      const instant = typeof item.instant === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?Z$/.test(item.instant) && Number.isFinite(Date.parse(item.instant)) ? item.instant : null;
+      if (!instant) errors.push(`time.instant：应为 UTC 时刻，例如 "2026-11-25T08:10:00Z"，收到 ${shown(item.instant)}`);
+      else time = { mode: "instant", instant: new Date(Date.parse(instant)).toISOString().replace(".000Z", "Z") };
+    }
+  } else if (isObject(value.time) && (value.time.mode === "range" || value.time.mode === undefined)) {
+    const item = object(value.time, "time", ["mode", "date", "days"]);
+    if (item) {
+      let date: string | undefined;
+      if (item.date === undefined) defaults.push("time.date");
+      else {
+        try {
+          if (typeof item.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(item.date)) throw new TypeError();
+          const parsed = Temporal.PlainDate.from(item.date);
+          if (parsed.year < shotLimits.year[0] || parsed.year > shotLimits.year[1]) errors.push(`time.date：只支持 ${shotLimits.year[0]}—${shotLimits.year[1]} 年`);
+          else date = parsed.toString();
+        } catch {
+          errors.push(`time.date：应为当地日期，例如 "2026-11-25"，收到 ${shown(item.date)}`);
+        }
+      }
+      const days = item.days === undefined ? 30 : (dayChoices as readonly number[]).includes(item.days as number) ? item.days as number : null;
+      if (days === null) errors.push(`time.days：应为 ${dayChoices.join(" / ")} 之一，收到 ${shown(item.days)}`);
+      if (days !== null) time = { mode: "range", ...(date ? { date } : {}), days };
+    }
+  } else errors.push(`time.mode：应为 "range" / "instant" 之一，收到 ${shown(isObject(value.time) ? value.time.mode : value.time)}`);
+  if (time.mode === "range" && time.days > MAX_LINE_DAYS && camera.mode !== "fixed")
+    errors.push(`time.days：机位不固定时最多 ${MAX_LINE_DAYS} 天；${dayLabel(time.days)}只用于固定机位`);
+
+  let timeZone: string | undefined;
+  if (value.timeZone === undefined) defaults.push("timeZone");
+  else if (typeof value.timeZone !== "string" || !validTimeZone(value.timeZone))
+    errors.push(`timeZone：应为有效的 IANA 时区，例如 "Asia/Tokyo"，收到 ${shown(value.timeZone)}`);
+  else timeZone = validTimeZone(value.timeZone)!;
+
+  const filters: FilterSpec[] = [];
+  if (value.filters !== undefined) {
+    if (!Array.isArray(value.filters)) errors.push(`filters：应为数组，收到 ${shown(value.filters)}`);
+    else value.filters.forEach((entry, index) => {
+      const path = `filters[${index}]`;
+      if (!isObject(entry)) return void errors.push(`${path}：应为对象，收到 ${shown(entry)}`);
+      if (entry.type === "sky") {
+        const item = object(entry, path, ["type", "sky"]);
+        const sky = item?.sky;
+        if (!Array.isArray(sky) || !sky.length || !sky.every((one) => skyConditions.includes(one)) || new Set(sky).size !== sky.length)
+          errors.push(`${path}.sky：应为不重复的 ${skyConditions.map((one) => `"${one}"`).join(" / ")} 组成的非空数组，收到 ${shown(sky)}`);
+        else filters.push({ kind: "sky", sky: skyConditions.filter((one) => sky.includes(one)) });
+      } else if (entry.type === "moonDown") {
+        if (object(entry, path, ["type"])) filters.push({ kind: "moonDown" });
+      } else if (entry.type === "moonLit") {
+        const item = object(entry, path, ["type", "range"]);
+        const range = item?.range;
+        if (!Array.isArray(range) || range.length !== 2 || !range.every((one) => phaseChoices.includes(one)) || range[0] > range[1])
+          errors.push(`${path}.range：应为 [下限, 上限]，取值 ${phaseChoices.join(" / ")}，下限不大于上限，收到 ${shown(range)}`);
+        else filters.push({ kind: "moonLit", range: [range[0], range[1]] });
+      } else errors.push(`${path}.type：应为 "sky" / "moonDown" / "moonLit" 之一，收到 ${shown(entry.type)}`);
+    });
+  }
+  if (errors.length) return { ok: false, errors };
+  return { ok: true, request: { format: SOLVE_FORMAT, version: SOLVE_VERSION_2, name, ...(lens ? { lens } : {}), targets, camera, time, ...(timeZone ? { timeZone } : {}), filters }, defaults, landmark, from: 2 };
 }
 
 /**
- * The plan a loaded request opens on. 找时间 moves to its camera (when given)
- * and faces the mark so it is in view; 找机位 moves the shooting instant to its
- * day (the timeline span it searches). A given time zone becomes the plan's
- * fixed zone, so the dates mean what the request says. Everything else stays.
+ * A version 1 request in version 2 terms. The lens is the opener's (v1 had
+ * none): 找时间's tolerance in diameters becomes a share of that frame's height.
  */
-export function solvePlan(request: SolveRequest, plan: ShootingPlan): ShootingPlan {
+export function upgradeSolve(request: SolveRequest, lens: Lens): SolveRequest2 {
+  const filters: FilterSpec[] = [];
+  if (request.sky) filters.push({ kind: "sky", sky: [...request.sky] });
+  if (request.phase) filters.push({ kind: "moonLit", range: [request.phase[0], request.phase[1]] });
+  const base = { format: SOLVE_FORMAT, version: SOLVE_VERSION_2, name: request.name, ...(request.timeZone ? { timeZone: request.timeZone } : {}), filters } as const;
+  if (request.kind === "time") {
+    const diameters = request.tolerance ?? 0.25;
+    const tolerance = Math.max(toleranceLimits[0], Math.min(toleranceLimits[1], roundTo((diameters * 2 * bodyRadius(request.body)) / fieldOfView(lens).vertical, 4)));
+    return {
+      ...base,
+      targets: [{ type: "body", body: request.body, frame: { x: 0.5, y: 0.5 }, tolerance }],
+      camera: {
+        mode: "fixed",
+        ...(request.camera ? { latitude: request.camera.latitude, longitude: request.camera.longitude } : {}),
+        ...(request.mark ? { aim: { azimuth: request.mark.azimuth, pitch: request.mark.elevation } } : {}),
+        ...(request.camera?.heightAboveGround !== undefined ? { heightAboveGround: request.camera.heightAboveGround } : {}),
+      },
+      time: { mode: "range", ...(request.date ? { date: request.date } : {}), days: request.days ?? 365 },
+    };
+  }
+  const target = request.target!;
+  const frame = request.frame ?? { x: 0.5, y: 0.5 };
+  const sized = request.kind === "range" && target.height >= MIN_SUBJECT;
+  return {
+    ...base,
+    targets: [
+      { type: "ground", ...(target.landmark ? { landmark: target.landmark } : {}), latitude: target.latitude, longitude: target.longitude, height: target.height, reference: "ground", name: target.name,
+        frame, base: sized ? roundTo(Math.min(1, frame.y + (request.share ?? 0.3)), 3) : null, tolerance: DEFAULT_TOLERANCE },
+      { type: "body", body: request.body, frame, tolerance: DEFAULT_TOLERANCE },
+    ],
+    camera: { mode: "free", maxDistance: request.maxDistance ?? 30_000 },
+    time: { mode: "range", ...(request.date ? { date: request.date } : {}), days: request.kind === "position" ? 1 : request.days ?? 30 },
+  };
+}
+
+/** Reads a request object of either version; version 1 is converted with the opener's lens. */
+export function parseAnySolve(value: unknown, lens: Lens): SolveParse2 {
+  if (!isObject(value)) return fail2("顶层应为 JSON 对象");
+  if (typeof value.version === "number" && Number.isInteger(value.version) && value.version > SOLVE_VERSION_2)
+    return fail2(`version：此推算请求来自更新版本的应用（版本 ${value.version}），请刷新页面后再打开`);
+  if (value.version === SOLVE_VERSION_2) return parseSolve2(value);
+  const old = parseSolve(value);
+  if (!old.ok) return old;
+  return { ok: true, request: upgradeSolve(old.request, lens), defaults: old.defaults, landmark: old.landmark, from: 1 };
+}
+const fail2 = (...errors: string[]): SolveParse2 => ({ ok: false, errors });
+
+/** Plain JSON (optionally fenced) or a link carrying `#solve=`, of either version. */
+export function parseSolveText2(text: string, lens: Lens): SolveParse2 {
+  const extracted = extractSolveJson(text);
+  if (!extracted.ok) return fail2(...extracted.errors);
+  return parseAnySolve(extracted.value, lens);
+}
+
+/** The panel's search as a version 2 request. */
+export function requestOf(composition: Composition, lens: Lens, extra: { name?: string; timeZone?: string; cameraHeight?: number } = {}): SolveRequest2 {
+  const targets: RequestTarget[] = composition.targets.map((target) => target.kind === "sky"
+    ? { type: "body", body: target.body, frame: { ...target.frame }, tolerance: target.tolerance }
+    : { type: "ground", ...(target.landmark ? { landmark: target.landmark } : {}), latitude: target.latitude, longitude: target.longitude, height: target.height, reference: target.reference, name: target.name, frame: { ...target.frame }, base: target.base, tolerance: target.tolerance });
+  const height = extra.cameraHeight === undefined ? {} : { heightAboveGround: extra.cameraHeight };
+  const camera: RequestCamera = composition.camera.mode === "free" ? { mode: "free", maxDistance: composition.camera.maxDistance, ...height }
+    : composition.camera.mode === "near" ? { mode: "near", latitude: composition.camera.latitude, longitude: composition.camera.longitude, radius: composition.camera.radius, ...height }
+      : { mode: "fixed", latitude: composition.camera.latitude, longitude: composition.camera.longitude, ...(composition.camera.aim ? { aim: { ...composition.camera.aim } } : {}), ...height };
+  const sensorSize = lens.sensor === "custom" && lens.customSensor ? { sensorSize: { ...lens.customSensor } } : {};
+  return {
+    format: SOLVE_FORMAT, version: SOLVE_VERSION_2, name: extra.name ?? "",
+    lens: { focalLength: lens.focalLength, sensor: lens.sensor, ...sensorSize, aspectRatio: lens.aspectRatio, orientation: lens.orientation },
+    targets, camera, time: { ...composition.time } as RequestTime,
+    ...(extra.timeZone ? { timeZone: extra.timeZone } : {}),
+    filters: composition.filters.map((filter) => (filter.kind === "sky" ? { kind: "sky", sky: [...filter.sky] } : filter.kind === "moonLit" ? { kind: "moonLit", range: [...filter.range] as [number, number] } : { kind: "moonDown" })),
+  };
+}
+
+/** The request's search in panel terms, completed from the plan it opens on (current camera, shooting date). */
+export function compositionOf(request: SolveRequest2, plan: ShootingPlan): Composition {
+  let id = 0;
+  const targets: TargetSpec[] = request.targets.map((target) => target.type === "body"
+    ? { kind: "sky", id: `link${++id}`, body: target.body, frame: { ...target.frame }, tolerance: target.tolerance }
+    : { kind: "ground", id: `link${++id}`, name: target.name, ...(target.landmark ? { landmark: target.landmark } : {}), latitude: target.latitude, longitude: target.longitude, height: target.height, reference: target.reference, frame: { ...target.frame }, base: target.base, tolerance: target.tolerance });
+  const camera: CameraRange = request.camera.mode === "free" ? { mode: "free", maxDistance: request.camera.maxDistance }
+    : request.camera.mode === "near" ? { mode: "near", latitude: request.camera.latitude, longitude: request.camera.longitude, radius: request.camera.radius }
+      : { mode: "fixed", latitude: request.camera.latitude ?? plan.latitude, longitude: request.camera.longitude ?? plan.longitude, aim: request.camera.aim ? { ...request.camera.aim } : null };
+  const time: TimeRange = request.time.mode === "instant" ? { mode: "instant", instant: request.time.instant }
+    : { mode: "range", date: request.time.date ?? localDateTime(plan.instant, plan.timeZone).slice(0, 10), days: request.time.days };
+  return { targets, camera, time, filters: request.filters.map((filter) => ({ ...filter })) as FilterSpec[] };
+}
+
+/**
+ * The plan a loaded version 2 request opens on: its lens, a fixed camera
+ * and its aim, the camera height, a fixed instant or a one-day range's date
+ * (the timeline then shows that day), and a given time zone (fixed).
+ */
+export function solvePlan2(request: SolveRequest2, plan: ShootingPlan): ShootingPlan {
   const next: ShootingPlan = { ...plan };
   if (request.timeZone) {
     next.timeZone = request.timeZone;
     next.followLocalZone = false;
   }
-  if (request.kind === "time") {
-    if (request.camera) {
-      next.latitude = request.camera.latitude;
-      next.longitude = request.camera.longitude;
-      if (request.camera.heightAboveGround !== undefined) next.cameraHeight = request.camera.heightAboveGround;
+  if (request.lens) {
+    next.focalLength = request.lens.focalLength;
+    next.sensor = request.lens.sensor;
+    next.customSensor = request.lens.sensorSize ? { ...request.lens.sensorSize } : next.sensor === "custom" ? next.customSensor : null;
+    next.aspectRatio = request.lens.aspectRatio;
+    next.orientation = request.lens.orientation;
+  }
+  const camera = request.camera;
+  if (camera.heightAboveGround !== undefined) next.cameraHeight = camera.heightAboveGround;
+  if (camera.mode === "fixed") {
+    if (camera.latitude !== undefined && camera.longitude !== undefined) {
+      next.latitude = camera.latitude;
+      next.longitude = camera.longitude;
     }
-    if (request.mark) {
-      next.azimuth = request.mark.azimuth;
-      next.pitch = request.mark.elevation;
+    if (camera.aim) {
+      next.azimuth = camera.aim.azimuth;
+      next.pitch = camera.aim.pitch;
     }
   }
-  if (request.kind === "position" && request.date) {
-    // The date is the timeline span's first day: keep the clock time when the
-    // span still starts that day, otherwise noon (in both the calendar-day and
-    // the noon-to-noon span). A kept time in a daylight-saving gap also goes to noon.
+  if (request.time.mode === "instant") next.instant = request.time.instant;
+  else if (request.time.days === 1 && request.time.date) {
+    const date = request.time.date;
+    // Keep the clock time when the timeline still starts that day, otherwise noon (as version 1's 找机位).
     let instant: string | null = null;
     try {
-      instant = instantOnDate(plan.instant, next.timeZone, request.date);
+      instant = instantOnDate(plan.instant, next.timeZone, date);
     } catch {
       instant = null;
     }
-    if (!instant || timelineWindow(instant, next.timeZone, timelineMode(next.layers)).date !== request.date)
-      instant = instantFromLocal(`${request.date}T12:00`, next.timeZone);
+    if (!instant || timelineWindow(instant, next.timeZone, timelineMode(next.layers)).date !== date)
+      instant = instantFromLocal(`${date}T12:00`, next.timeZone);
     next.instant = instant;
   }
   return next;
 }
 
-/** The local date a loaded request starts from: its own, or the shooting date of the plan it opens on. */
-export function solveStart(request: SolveRequest, plan: ShootingPlan) {
-  return request.date ?? localDateTime(plan.instant, plan.timeZone).slice(0, 10);
-}
-
-/** What the 推算 panel holds, as the request "复制推算请求" writes. */
-export interface SolveState {
-  kind: SolveKind;
-  body: AlignmentBody;
-  mark: { azimuth: number; elevation: number } | null;
-  camera: { latitude: number; longitude: number; heightAboveGround: number };
-  target: { id?: string; latitude: number; longitude: number; height: number; name: string } | null;
-  date: string;
-  days: number;
-  timeZone: string;
-  tolerance: number;
-  share: number;
-  maxDistance: number;
-  /** Lit fraction bounds. */
-  phase: readonly [number, number];
-  sky: readonly SkyCondition[];
-  /** 找机位 / 两者都找: the target's place in the frame, normalised device coordinates (centre 0, 0; y down); the centre when absent. */
-  frame?: { x: number; y: number };
-}
-
-/** A frame place in normalised device coordinates (−1…1, y down) as the request writes it (0—1 from the top-left), rounded. */
-export const requestFrame = (point: { x: number; y: number }) =>
-  ({ x: Math.round(((point.x + 1) / 2) * 1000) / 1000, y: Math.round(((point.y + 1) / 2) * 1000) / 1000 });
-/** The request's frame place back in normalised device coordinates; the centre when absent. */
-export const frameOfRequest = (frame: SolveRequest["frame"]) => (frame ? { x: frame.x * 2 - 1, y: frame.y * 2 - 1 } : { x: 0, y: 0 });
-
-/** The panel's search as a self-contained request; null until it has a mark or a target. */
-export function solveRequestOf(state: SolveState): SolveRequest | null {
-  const base = { format: SOLVE_FORMAT, version: SOLVE_VERSION, name: "", kind: state.kind, body: state.body } as const;
-  const when = { date: state.date, timeZone: state.timeZone };
-  const filters = {
-    ...(state.body === "moon" && (state.phase[0] > 0 || state.phase[1] < 1) ? { phase: [state.phase[0], state.phase[1]] as const } : {}),
-    ...(state.body !== "sun" && state.sky.length < skyConditions.length ? { sky: skyConditions.filter((item) => state.sky.includes(item)) } : {}),
+/** A version 2 request as JSON in the documented order; `$schema` first when given. */
+export function solveJson2(request: SolveRequest2, schema?: string) {
+  const { name, ...rest } = request;
+  const written: Record<string, unknown> = {
+    ...rest,
+    ...(name ? { name } : {}),
+    // A landmark target is written by its id; the resolved coordinates are not part of the request.
+    targets: request.targets.map((target) => {
+      if (target.type === "body") return { type: "body", body: target.body, frame: target.frame, tolerance: target.tolerance };
+      const place = target.landmark ? { landmark: target.landmark } : { latitude: target.latitude, longitude: target.longitude, name: target.name };
+      return { type: "ground", ...place, height: target.height, reference: target.reference, frame: target.frame, ...(target.base !== null ? { base: target.base } : {}), tolerance: target.tolerance };
+    }),
+    filters: request.filters.map((filter) => (filter.kind === "sky" ? { type: "sky", sky: filter.sky } : filter.kind === "moonLit" ? { type: "moonLit", range: filter.range } : { type: "moonDown" })),
   };
-  if (state.kind === "time") {
-    if (!state.mark) return null;
-    return { ...base, mark: { ...state.mark }, camera: { ...state.camera }, ...when, days: state.days, tolerance: state.tolerance, ...filters };
-  }
-  if (!state.target) return null;
-  const { id, ...place } = state.target;
-  const target = id ? { landmark: id, ...place } : place;
-  const framed = requestFrame(state.frame ?? { x: 0, y: 0 });
-  const frame = framed.x === 0.5 && framed.y === 0.5 ? {} : { frame: framed };
-  if (state.kind === "position") return { ...base, target, ...frame, ...when, maxDistance: state.maxDistance };
-  return { ...base, target, ...frame, ...when, days: state.days, share: state.share, maxDistance: state.maxDistance, ...filters };
+  const ordered = Object.fromEntries(topKeys2.slice(1).filter((key) => written[key] !== undefined).map((key) => [key, written[key]]));
+  return JSON.stringify(schema ? { $schema: schema, ...ordered } : ordered, null, 2);
 }
-
-/** `#solve=json:` link: readable and easy for an AI to write (no base64). */
-export function solveLink(request: SolveRequest, site: string) {
-  return `${site}#solve=json:${encodeURIComponent(JSON.stringify(JSON.parse(solveJson(request))))}`;
+/** `#solve=json:` link of a version 2 request. */
+export function solveLink2(request: SolveRequest2, site: string) {
+  return `${site}#solve=json:${encodeURIComponent(JSON.stringify(JSON.parse(solveJson2(request))))}`;
 }

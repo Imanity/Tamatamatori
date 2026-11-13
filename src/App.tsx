@@ -16,12 +16,13 @@ import type { MapViewport } from "./domain/map";
 import type { InfoGroupId, InfoNavigation } from "./components/InfoGroup";
 import { ShotMenu, ShotToast } from "./components/ShotMenu";
 import { browserStorage, readSession, writeSession } from "./domain/shot-library";
-import { useAlignment } from "./components/Alignment";
+import { useComposition } from "./components/Composition";
 import { SolveLinkDialog } from "./components/SolveLink";
 import { useShotLibrary } from "./components/useShotLibrary";
 import { shotFromPlan } from "./domain/shot";
-import { parseSolveText, solvePlan } from "./domain/solve";
-import type { SolveParse, SolveRequest } from "./domain/solve";
+import { parseSolveText2, solvePlan2 } from "./domain/solve";
+import type { SolveParse2, SolveRequest2 } from "./domain/solve";
+import { lensOf } from "./domain/composition";
 
 type PanelId = "map" | "preview";
 type MobileTab = "map" | "camera" | "layers" | "solve";
@@ -201,14 +202,17 @@ export default function App() {
   } | null>(null);
   // `#shot=` and `#solve=` links open a preview; nothing changes until it is confirmed.
   const [shotLink, setShotLink] = useState<{ text: string; serial: number } | null>(null);
-  const [solveLink, setSolveLink] = useState<{ parse: SolveParse; serial: number } | null>(null);
+  const [solveLink, setSolveLink] = useState<{ parse: SolveParse2; serial: number } | null>(null);
+  // A version 1 request is read with the opener's lens (its tolerance becomes a share of that frame).
+  const planRef = useRef(plan);
+  planRef.current = plan;
   useEffect(() => {
     const read = () => {
       const hash = window.location.hash;
       if (hash.startsWith("#shot="))
         setShotLink((current) => ({ text: hash, serial: (current?.serial ?? 0) + 1 }));
       else if (hash.startsWith("#solve="))
-        setSolveLink((current) => ({ parse: parseSolveText(hash), serial: (current?.serial ?? 0) + 1 }));
+        setSolveLink((current) => ({ parse: parseSolveText2(hash, lensOf(planRef.current)), serial: (current?.serial ?? 0) + 1 }));
     };
     read();
     window.addEventListener("hashchange", read);
@@ -317,8 +321,8 @@ export default function App() {
     });
     replacePlan(next, id);
   };
-  // The 推算 mode is shared by its panel, the preview mark, the timeline and the map.
-  const alignment = useAlignment(plan, updatePlan, solveMode, planGeneration);
+  // The 推算 mode is shared by its panel, the preview marks, the timeline and the map.
+  const alignment = useComposition(plan, updatePlan, solveMode, planGeneration);
   // "存为机位" from the 推算 panel; the shot menu sees the new entry at once (one library per page).
   const shotLibrary = useShotLibrary();
   const saveShot = (name: string) => {
@@ -328,8 +332,8 @@ export default function App() {
     setShotNotice({ text: `已存为机位「${name}」` });
     return true;
   };
-  const loadSolve = (request: SolveRequest) => {
-    const next = solvePlan(request, plan);
+  const loadSolve = (request: SolveRequest2) => {
+    const next = solvePlan2(request, plan);
     setShotNotice({
       text: `已载入推算请求${request.name ? `「${request.name}」` : ""}`,
       undo: { plan, activeId: activeShotId, solveMode },

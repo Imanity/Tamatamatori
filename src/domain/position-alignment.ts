@@ -1,11 +1,11 @@
 import { KM_PER_AU, Observer } from "astronomy-engine";
-import { degrees, direction, dot, topocentric, unit } from "./ephemeris.ts";
+import { degrees, direction, dot, topocentric } from "./ephemeris.ts";
 import { apparentElevation } from "./refraction.ts";
 import { ecefGeodetic, ellipsoidalRay, geodeticEcef } from "./geodesy.ts";
 import type { EllipsoidalPoint } from "./geodesy.ts";
 import { normalizeLongitude, signedAngle } from "./plan.ts";
 import type { ShootingPlan } from "./plan.ts";
-import { aimAt, targetElevationRange } from "./alignment.ts";
+import { aimAt, frameDirection, targetElevationRange } from "./alignment.ts";
 import type { AlignmentBody, FramePoint } from "./alignment.ts";
 import type { View } from "./celestial-projection.ts";
 import { astroBody, bodyLayer, DARK_SUN_ELEVATION, isFixedBody } from "./sky-coordinates.ts";
@@ -23,10 +23,44 @@ import { astroBody, bodyLayer, DARK_SUN_ELEVATION, isFixedBody } from "./sky-coo
 export interface GroundTarget {
   latitude: number;
   longitude: number;
-  /** Height of the aimed point above the DEM ground, metres (0 for a summit). */
+  /** Height of the aimed point above the DEM ground, metres (0 for a summit); with `absolute`, its own elevation. */
   height: number;
+  /** The height is the point's elevation (the terrain's own numbers), not a height above the ground. */
+  absolute?: boolean;
   name?: string;
 }
+
+/**
+ * Where the target's top and the body should appear in the frame, for the
+ * lens that frames them (normalised device coordinates, −1…1, y down). Equal
+ * places put the body on the top, as without frames.
+ */
+export interface PairFrames {
+  lens: Omit<View, "azimuth" | "pitch">;
+  target: FramePoint;
+  body: FramePoint;
+}
+
+/** The body direction wanted when the top is seen along `ray`: the camera aims the top at its place, the body sits at its own. */
+export function wantedDirection(ray: { azimuth: number; elevation: number }, frames: PairFrames | undefined) {
+  if (!frames || (frames.target.x === frames.body.x && frames.target.y === frames.body.y)) return { azimuth: ray.azimuth, elevation: ray.elevation };
+  const aim = aimAt(frames.lens, ray, frames.target);
+  return frameDirection({ ...frames.lens, ...aim }, frames.body.x, frames.body.y);
+}
+
+/** Bearing from the target to the camera for a body direction: opposite to where the camera must look at the top. */
+export function cameraBearing(sample: { azimuth: number; elevation: number }, frames: PairFrames | undefined) {
+  const wanted = wantedDirection(sample, frames);
+  // First order: the top is where the body is, less the body's offset from the top.
+  return sample.azimuth - signedAngle(wanted.azimuth - sample.azimuth) + 180;
+}
+/** Elevation of the top for a body elevation, to first order (the same idea as `cameraBearing`). */
+export function topElevation(sample: { azimuth: number; elevation: number }, frames: PairFrames | undefined) {
+  return sample.elevation - (wantedDirection(sample, frames).elevation - sample.elevation);
+}
+
+/** Elevation of the aimed point above the ground under it, or its own elevation for `absolute`. */
+export const topHeight = (target: GroundTarget, ground: number) => (target.absolute ? target.height : ground + target.height);
 /** DEM ground at a point, or null where the source has no value. */
 export type GroundSampler = (latitude: number, longitude: number) => number | null;
 
@@ -40,6 +74,8 @@ export interface PositionInput {
   cameraHeight: number;
   maxDistance: number;
   minDistance?: number;
+  /** Where the top and the body sit in the frame; the body on the top when absent. */
+  frames?: PairFrames;
 }
 
 export interface SkySample {
@@ -54,11 +90,11 @@ export interface PositionPoint {
   longitude: number;
   /** Ground distance from the target, metres. */
   distance: number;
-  /** From the camera to the target's top, degrees: equal to the body's azimuth and elevation. */
+  /** From the camera to the target's top, degrees (the body's direction when it sits on the top). */
   azimuth: number;
   elevation: number;
   cameraGround: number;
-  /** Angle between the ray to the top and the body seen from the camera, degrees. */
+  /** Angle between where the body should be (from the ray to the top and the frames) and where it is, degrees. */
   residual: number;
   sight: Sight;
   /** Distance from the camera to the first DEM obstruction, metres. */
@@ -170,11 +206,11 @@ export function corridor(input: PositionInput, track: readonly SkySample[], spac
   const chosen = track.filter((_, index) => index % step === 0 || index === track.length - 1);
   for (const sample of chosen)
     for (let distance = spacing / 2; distance <= input.maxDistance + spacing / 2; distance += spacing / 2)
-      points.push(travel(input.target, sample.azimuth + 180, Math.min(distance, input.maxDistance)));
+      points.push(travel(input.target, cameraBearing(sample, input.frames), Math.min(distance, input.maxDistance)));
   return points;
 }
 
-const toRay = (eye: EllipsoidalPoint, top: EllipsoidalPoint) => {
+export const toRay = (eye: EllipsoidalPoint, top: EllipsoidalPoint) => {
   const ray = ellipsoidalRay(eye, top);
   const length = Math.hypot(...ray);
   return {
@@ -215,7 +251,8 @@ export function solvePositions(input: PositionInput, track: readonly SkySample[]
   const angles = { min: Infinity, max: -Infinity };
   let gaps = 0;
   if (targetGround === null) return { points, angles, gaps: track.length };
-  const top = { latitude: input.target.latitude, longitude: input.target.longitude, ellipsoidalHeight: targetGround + input.target.height };
+  const top = { latitude: input.target.latitude, longitude: input.target.longitude, ellipsoidalHeight: topHeight(input.target, targetGround) };
+  const want = (ray: { azimuth: number; elevation: number }) => wantedDirection(ray, input.frames);
   const minimum = input.minDistance ?? MIN_DISTANCE;
   const eyeAt = (bearing: number, distance: number) => {
     const point = travel(input.target, bearing, distance);
@@ -224,10 +261,10 @@ export function solvePositions(input: PositionInput, track: readonly SkySample[]
   };
   for (const sample of track) {
     const sky = skyField(input.body, sample.time, input.target, input.refraction);
-    // Elevation of the top seen from a point of the line, minus the body's there.
+    // Elevation where the body should be (from the top seen at a point of the line), minus the body's there.
     const offset = (bearing: number, distance: number) => {
       const eye = eyeAt(bearing, distance);
-      return eye ? toRay(eye.eye, top).elevation - sky(eye.latitude, eye.longitude).elevation : null;
+      return eye ? want(toRay(eye.eye, top)).elevation - sky(eye.latitude, eye.longitude).elevation : null;
     };
     const root = (bearing: number, low: number, high: number) => {
       let a = low, b = high, fa = offset(bearing, a);
@@ -240,16 +277,16 @@ export function solvePositions(input: PositionInput, track: readonly SkySample[]
       }
       return (a + b) / 2;
     };
-    const start = sample.azimuth + 180;
+    const start = cameraBearing(sample, input.frames);
     let previous: number | null = null, gap = false;
     const brackets: [number, number][] = [];
     for (let distance = minimum; distance <= input.maxDistance + 1e-6; distance += SCAN_STEP) {
       const eye = eyeAt(start, distance);
       if (!eye) { gap = true; previous = null; continue; }
-      const elevation = toRay(eye.eye, top).elevation;
-      angles.min = Math.min(angles.min, elevation);
-      angles.max = Math.max(angles.max, elevation);
-      const value = elevation - sky(eye.latitude, eye.longitude).elevation;
+      const ray = toRay(eye.eye, top);
+      angles.min = Math.min(angles.min, ray.elevation);
+      angles.max = Math.max(angles.max, ray.elevation);
+      const value = want(ray).elevation - sky(eye.latitude, eye.longitude).elevation;
       if (previous !== null && Math.sign(value) !== Math.sign(previous) && value !== 0)
         brackets.push([distance - SCAN_STEP, distance]);
       previous = value;
@@ -257,11 +294,11 @@ export function solvePositions(input: PositionInput, track: readonly SkySample[]
     if (gap) gaps++;
     for (const [low, high] of brackets) {
       let bearing = start, distance = root(bearing, low, high);
-      // Meridians converge: turn the line until the ray's own azimuth matches the body's.
-      for (let pass = 0; pass < 4 && distance !== null; pass++) {
+      // Meridians converge (and an offset depends on the pitch): turn the line until the wanted azimuth matches the body's.
+      for (let pass = 0; pass < 6 && distance !== null; pass++) {
         const eye = eyeAt(bearing, distance);
         if (!eye) { distance = null; break; }
-        const turn = signedAngle(sky(eye.latitude, eye.longitude).azimuth - toRay(eye.eye, top).azimuth);
+        const turn = signedAngle(sky(eye.latitude, eye.longitude).azimuth - want(toRay(eye.eye, top)).azimuth);
         if (Math.abs(turn) < 1e-7) break;
         bearing += turn;
         const near = distance;
@@ -278,8 +315,9 @@ export function solvePositions(input: PositionInput, track: readonly SkySample[]
       const wanted = skyAt(input.body, sample.time, eye.latitude, eye.longitude, input.refraction);
       if (wanted.elevation < targetElevationRange[0]) continue;
       const seen = toRay(eye.eye, top);
+      const aimed = want(seen);
       const body = direction(wanted.azimuth, wanted.elevation);
-      const residual = Math.acos(Math.max(-1, Math.min(1, dot(unit(seen.ray), body)))) / degrees;
+      const residual = Math.acos(Math.max(-1, Math.min(1, dot(direction(aimed.azimuth, aimed.elevation), body)))) / degrees;
       const sight = lineOfSight(eye.eye, top, sampler);
       points.push({
         time: sample.time, latitude: eye.latitude, longitude: eye.longitude, distance,
@@ -347,7 +385,7 @@ export function positionProfile(input: Pick<PositionInput, "target" | "cameraHei
   if (targetGround === null || cameraGround === null) return null;
   return lineOfSight(
     { ...camera, ellipsoidalHeight: cameraGround + input.cameraHeight },
-    { latitude: input.target.latitude, longitude: input.target.longitude, ellipsoidalHeight: targetGround + input.target.height },
+    { latitude: input.target.latitude, longitude: input.target.longitude, ellipsoidalHeight: topHeight(input.target, targetGround) },
     sampler,
   );
 }
@@ -375,12 +413,6 @@ export function pointPlan(layers: ShootingPlan["layers"], point: Pick<PositionPo
   };
 }
 
-/** The direction alone, for moving the framing during a try-out. */
-export function framedDirection(point: Pick<PositionPoint, "azimuth" | "elevation">, framing: Framing) {
-  const aim = aimAt(framing.lens, point, framing.frame);
-  return { azimuth: Math.round(aim.azimuth * 1e4) / 1e4, pitch: Math.round(aim.pitch * 1e4) / 1e4 };
-}
-
 /** The layers a try-out may switch on (the body's own), kept for "返回推算前". */
 export type TriedLayers = Pick<ShootingPlan["layers"], "sun" | "moon" | "stars" | "milkyWay" | "deepSky">;
 export const triedLayers = (layers: ShootingPlan["layers"]): TriedLayers =>
@@ -392,21 +424,6 @@ export function restoredLayers(current: ShootingPlan["layers"], before: TriedLay
     sunPath: before.sun && !!current.sunPath, moonPath: before.moon && !!current.moonPath,
     constellations: before.stars && current.constellations,
   };
-}
-
-/** Solutions of the same minute closer than `radius` metres to an earlier listed one are left out (clear sight listed first). */
-export function distinctPoints<T extends Pick<PositionPoint, "time" | "latitude" | "longitude" | "sight">>(points: readonly T[], radius = 200) {
-  const rank = { clear: 0, unknown: 1, blocked: 2 } as const;
-  const kept: T[] = [];
-  const byTime = new Map<number, T[]>();
-  for (const point of points) byTime.set(point.time, [...(byTime.get(point.time) ?? []), point]);
-  for (const group of byTime.values()) {
-    const chosen: T[] = [];
-    for (const point of [...group].sort((a, b) => rank[a.sight] - rank[b.sight]))
-      if (!chosen.some((other) => groundDistance(other, point) < radius)) chosen.push(point);
-    kept.push(...group.filter((point) => chosen.includes(point)));
-  }
-  return kept.sort((a, b) => a.time - b.time);
 }
 
 /** Great-circle distance in metres (mean radius); enough to compare nearby solutions. */

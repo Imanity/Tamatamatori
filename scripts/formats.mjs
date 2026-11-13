@@ -11,14 +11,15 @@ import {
   shotLimits, shotLayerKeys, shotLayerNames, shotLayerRequires, parseShot, shotJson, shotLink,
 } from '../src/domain/shot.ts';
 import {
-  SOLVE_FORMAT, SOLVE_VERSION, SOLVE_TEXT_LIMIT, SOLVE_NAME_LIMIT, solveKinds, solveBodies, timeDays, rangeDays,
-  shareLimits, targetHeightLimits, phaseChoices, parseSolve, solveJson, solveLink,
+  SOLVE_FORMAT, SOLVE_VERSION, SOLVE_VERSION_2, SOLVE_TEXT_LIMIT, SOLVE_NAME_LIMIT, solveBodies,
+  targetHeightLimits, seaHeightLimits, phaseChoices, toleranceLimits, nearLimits, parseAnySolve, solveJson2, solveLink2,
 } from '../src/domain/solve.ts';
+import { dayChoices, dayLabel, DEFAULT_TOLERANCE, distanceChoices as cameraDistances, MAX_LINE_DAYS, TARGET_LIMIT } from '../src/domain/composition.ts';
 import { PUBLIC_SITE, SHOT_SCHEMA_FILE, SOLVE_SCHEMA_FILE } from '../src/domain/site.ts';
 import { aspectRatios, customSensorLimits, initialPlan, sensors } from '../src/domain/plan.ts';
+import { lensOf } from '../src/domain/composition.ts';
 import { weatherModels } from '../src/domain/weather.ts';
-import { skyConditions, skyConditionNames, targetElevationRange, toleranceChoices } from '../src/domain/alignment.ts';
-import { distanceChoices } from '../src/domain/position-alignment.ts';
+import { skyConditions, skyConditionNames } from '../src/domain/alignment.ts';
 import { landmarks } from '../src/domain/landmarks.ts';
 import { DARK_SUN_ELEVATION, fixedBodies } from '../src/domain/sky-targets.ts';
 
@@ -44,36 +45,50 @@ function shotExample() {
   if (!parsed.ok) throw new Error(`机位示例无效：${parsed.errors.join('；')}`);
   return parsed.shot;
 }
+const lens105 = { focalLength: 105, sensor: 'full-frame', aspectRatio: '3:2', orientation: 'portrait' };
+const fujiSummit = { type: 'ground', latitude: 35.3606, longitude: 138.7274, height: 0, reference: 'ground', name: '富士山顶' };
 const solveExamples = [
   {
-    title: '找时间：月亮从期望位置经过',
-    value: { format: SOLVE_FORMAT, version: SOLVE_VERSION, kind: 'time', body: 'moon', mark: { azimuth: 244.6, elevation: 10.7 },
-      camera: { latitude: 35.4172, longitude: 138.8729, heightAboveGround: 1.6 }, date: '2026-11-12', days: 365, timeZone: 'Asia/Tokyo', tolerance: 0.25, phase: [0.9, 1] },
+    title: '深空天体在山顶上方：仙女座星系在富士山顶正上方，105 mm 竖幅，90 天内暗夜、月亮在地平线下',
+    value: { format: SOLVE_FORMAT, version: SOLVE_VERSION_2, name: 'M31 与富士山', lens: lens105,
+      targets: [{ ...fujiSummit, frame: { x: 0.5, y: 0.67 } }, { type: 'body', body: 'dso-ngc0224', frame: { x: 0.5, y: 0.52 } }],
+      camera: { mode: 'free', maxDistance: 30000 }, time: { mode: 'range', date: '2026-11-13', days: 90 }, timeZone: 'Asia/Tokyo',
+      filters: [{ type: 'sky', sky: ['night'] }, { type: 'moonDown' }] },
   },
   {
-    title: '找机位：某天让太阳落在晴空塔塔尖',
-    value: { format: SOLVE_FORMAT, version: SOLVE_VERSION, kind: 'position', body: 'sun', target: { landmark: 'tokyo-skytree' }, date: '2026-12-21', timeZone: 'Asia/Tokyo', maxDistance: 30000 },
+    title: '钻石富士：太阳落在富士山顶正中，机位不限',
+    value: { format: SOLVE_FORMAT, version: SOLVE_VERSION_2, lens: { focalLength: 400, sensor: 'full-frame', aspectRatio: '3:2', orientation: 'landscape' },
+      targets: [{ ...fujiSummit, frame: { x: 0.5, y: 0.6 } }, { type: 'body', body: 'sun', frame: { x: 0.5, y: 0.6 } }],
+      camera: { mode: 'free', maxDistance: 30000 }, time: { mode: 'range', date: '2027-01-01', days: 90 }, timeZone: 'Asia/Tokyo' },
   },
   {
-    title: '两者都找：90 天内晴空塔与接近满月的月亮，主体占画面 30%，塔尖在上三分线',
-    value: { format: SOLVE_FORMAT, version: SOLVE_VERSION, name: '晴空塔满月', kind: 'range', body: 'moon', target: { landmark: 'tokyo-skytree' },
-      frame: { x: 0.5, y: 0.333 }, date: '2026-11-12', days: 90, timeZone: 'Asia/Tokyo', share: 0.3, phase: [0.9, 1], sky: ['blue', 'twilight', 'night'] },
+    title: '月亮落在晴空塔塔尖，塔身占画面约 35%（塔顶加底部）',
+    value: { format: SOLVE_FORMAT, version: SOLVE_VERSION_2, lens: { focalLength: 200, sensor: 'full-frame', aspectRatio: '3:2', orientation: 'portrait' },
+      targets: [{ type: 'ground', landmark: 'tokyo-skytree', frame: { x: 0.5, y: 0.35 }, base: 0.7 }, { type: 'body', body: 'moon', frame: { x: 0.5, y: 0.35 } }],
+      camera: { mode: 'free', maxDistance: 30000 }, time: { mode: 'range', date: '2026-11-13', days: 30 }, timeZone: 'Asia/Tokyo',
+      filters: [{ type: 'moonLit', range: [0.9, 1] }] },
   },
   {
-    title: '两者都找：12 个月内银心落在晴空塔塔尖（暗夜）',
-    value: { format: SOLVE_FORMAT, version: SOLVE_VERSION, kind: 'range', body: 'galactic-center', target: { landmark: 'tokyo-skytree' },
-      date: '2027-03-01', days: 365, timeZone: 'Asia/Tokyo', share: 0.25, sky: ['night'] },
+    title: '固定机位：月亮从富士山顶右上方经过的时刻（3 年内）',
+    value: { format: SOLVE_FORMAT, version: SOLVE_VERSION_2, lens: { focalLength: 200, sensor: 'full-frame', aspectRatio: '3:2', orientation: 'landscape' },
+      targets: [{ ...fujiSummit, frame: { x: 0.45, y: 0.6 } }, { type: 'body', body: 'moon', frame: { x: 0.58, y: 0.42 } }],
+      camera: { mode: 'fixed', latitude: 35.4172, longitude: 138.8729, heightAboveGround: 1.6 }, time: { mode: 'range', date: '2026-11-13', days: 1096 }, timeZone: 'Asia/Tokyo' },
   },
   {
-    title: '两者都找：坐标目标（山顶，高度 0 表示地面）',
-    value: { format: SOLVE_FORMAT, version: SOLVE_VERSION, kind: 'range', body: 'sun', target: { latitude: 35.3606, longitude: 138.7274, height: 0, name: '富士山顶' },
-      date: '2027-01-01', days: 90, timeZone: 'Asia/Tokyo', maxDistance: 30000 },
+    title: '两个天体：月亮在昴星团左下方（与机位基本无关）',
+    value: { format: SOLVE_FORMAT, version: SOLVE_VERSION_2, lens: { focalLength: 135, sensor: 'full-frame', aspectRatio: '3:2', orientation: 'landscape' },
+      targets: [{ type: 'body', body: 'dso-mel022', frame: { x: 0.6, y: 0.4 } }, { type: 'body', body: 'moon', frame: { x: 0.4, y: 0.6 }, tolerance: 0.05 }],
+      time: { mode: 'range', date: '2026-11-13', days: 365 }, timeZone: 'Asia/Tokyo' },
   },
 ].map((example) => {
-  const parsed = parseSolve(example.value);
+  const parsed = parseAnySolve(example.value, lensOf(initialPlan));
   if (!parsed.ok) throw new Error(`推算请求示例「${example.title}」无效：${parsed.errors.join('；')}`);
   return { ...example, request: parsed.request };
 });
+// A version 1 request, to show the conversion.
+const v1Example = { format: SOLVE_FORMAT, version: SOLVE_VERSION, kind: 'range', body: 'moon', target: { landmark: 'tokyo-skytree' }, date: '2026-11-12', days: 90, share: 0.3, phase: [0.9, 1] };
+const v1Converted = parseAnySolve(v1Example, lensOf(initialPlan));
+if (!v1Converted.ok) throw new Error('v1 示例无效');
 
 // ---- JSON Schemas (draft 2020-12). The app's parser stays the authority; the schema mirrors its rules.
 const latitude = { type: 'number', minimum: shotLimits.latitude[0], maximum: shotLimits.latitude[1], description: '纬度，北正南负' };
@@ -153,62 +168,101 @@ const shotSchema = {
 };
 
 const targetName = { type: 'string', minLength: 1, maxLength: SOLVE_NAME_LIMIT, description: '目标名称' };
-const targetHeight = { type: 'number', minimum: targetHeightLimits[0], maximum: targetHeightLimits[1], description: '目标顶部高出地面（地形高程）的米数；地标缺省为其高度，坐标缺省为 0' };
-const forbid = (...keys) => Object.fromEntries(keys.map((key) => [key, false]));
+const frameSpot = {
+  type: 'object', additionalProperties: false, required: ['x', 'y'], description: '在画面中的位置，自左上角起算的比例；缺省为画面中心',
+  properties: { x: { type: 'number', minimum: 0, maximum: 1 }, y: { type: 'number', minimum: 0, maximum: 1 } },
+};
+const tolerance = { type: 'number', minimum: toleranceLimits[0], maximum: toleranceLimits[1], default: DEFAULT_TOLERANCE, description: '容差：与画面位置相差多少仍算对齐，画面高度的比例' };
+const eyeHeight = { ...height, description: '相机离地高度，米；缺省沿用打开者当前值' };
 const solveSchema = {
   $schema: DRAFT,
   $id: solveSchemaUrl,
-  title: `Tamatamatori 推算请求 v${SOLVE_VERSION}`,
-  description: `求拍摄时间或机位的条件，由应用在本机推算。未知字段与不属于该求法的字段报错。说明见 ${PUBLIC_SITE}solve-format.md`,
+  title: `Tamatamatori 推算请求 v${SOLVE_VERSION_2}`,
+  description: `构图约束搜索：画面里的目标与它们的位置、镜头、搜索范围与筛选，由应用在本机搜索拍摄时间或机位。未知字段报错。版本 1 的请求仍可打开（按规则转换）。说明见 ${PUBLIC_SITE}solve-format.md`,
   type: 'object',
   additionalProperties: false,
-  required: ['format', 'version', 'kind', 'body'],
+  required: ['format', 'version', 'targets'],
   properties: {
     $schema: { type: 'string', description: '可写本 schema 的地址，读取时忽略' },
     format: { const: SOLVE_FORMAT },
-    version: { const: SOLVE_VERSION },
+    version: { const: SOLVE_VERSION_2 },
     name: { type: 'string', maxLength: SOLVE_NAME_LIMIT },
-    kind: { enum: [...solveKinds], description: 'time 找时间（机位已定）；position 找机位（某一天）；range 两者都找（一段日期）' },
-    body: { enum: [...solveBodies], description: '"sun"、"moon"，或固定方向天体："galactic-center"（银心）、亮星 hyg-…、深空目标 dso-…（见格式说明的列表）' },
-    mark: {
-      type: 'object', additionalProperties: false, required: ['azimuth', 'elevation'], description: '天体中心的视方位与视高度（含所选折射），度',
+    lens: {
+      type: 'object', additionalProperties: false, required: ['focalLength'], description: '画面位置所依据的镜头；缺省沿用打开者当前镜头。给出时打开后改为此镜头',
       properties: {
-        azimuth: { type: 'number', description: '正北为 0、顺时针；取模归一' },
-        elevation: { type: 'number', minimum: targetElevationRange[0], maximum: targetElevationRange[1] },
+        focalLength: { type: 'number', minimum: shotLimits.focalLength[0], maximum: shotLimits.focalLength[1], description: '焦距，毫米' },
+        sensor: { enum: [...Object.keys(sensors), 'custom'], default: initialPlan.sensor },
+        sensorSize: { type: 'object', additionalProperties: false, required: ['width', 'height'], description: '只在 sensor 为 "custom" 时，毫米',
+          properties: { width: { type: 'number', minimum: customSensorLimits[0], maximum: customSensorLimits[1] }, height: { type: 'number', minimum: customSensorLimits[0], maximum: customSensorLimits[1] } } },
+        aspectRatio: { enum: Object.keys(aspectRatios), default: initialPlan.aspectRatio },
+        orientation: { enum: ['landscape', 'portrait'], default: initialPlan.orientation },
+      },
+    },
+    targets: {
+      type: 'array', minItems: 1, maxItems: TARGET_LIMIT, description: `画面里的目标，目前最多 ${TARGET_LIMIT} 个：一个地面点加一个天体，或两个天体`,
+      items: {
+        oneOf: [
+          {
+            type: 'object', additionalProperties: false, required: ['type'], description: '地面点：已接入地标，或坐标',
+            properties: {
+              type: { const: 'ground' },
+              landmark: { enum: landmarks.map((landmark) => landmark.id) },
+              latitude, longitude,
+              height: { type: 'number', minimum: seaHeightLimits[0], maximum: Math.max(targetHeightLimits[1], seaHeightLimits[1]), description: `米：reference 为 "ground" 时为高出地面（${range(targetHeightLimits)}，山顶 0，塔顶为塔高；地标缺省为其高度），为 "sea" 时为海拔（${range(seaHeightLimits)}）` },
+              reference: { enum: ['ground', 'sea'], default: 'ground', description: 'ground 距地表；sea 海拔（与应用的地形高程同一套数值，基准未核定）' },
+              name: targetName,
+              frame: frameSpot,
+              base: { type: 'number', minimum: 0, maximum: 1, description: '底部（点下方的地面）在画面中的纵坐标，用来定主体大小；只用于 reference 为 "ground" 且高度不低于 10 m，须大于 frame.y' },
+              tolerance,
+            },
+            oneOf: [
+              { required: ['landmark'], not: { anyOf: [{ required: ['latitude'] }, { required: ['longitude'] }] } },
+              { required: ['latitude', 'longitude'], not: { required: ['landmark'] } },
+            ],
+          },
+          {
+            type: 'object', additionalProperties: false, required: ['type', 'body'], description: '天体',
+            properties: {
+              type: { const: 'body' },
+              body: { enum: [...solveBodies], description: '"sun"、"moon"，或固定方向天体："galactic-center"（银心）、亮星 hyg-…、深空目标 dso-…（见格式说明的列表）' },
+              frame: frameSpot,
+              tolerance,
+            },
+          },
+        ],
       },
     },
     camera: {
-      type: 'object', additionalProperties: false, required: ['latitude', 'longitude'], description: '找时间的机位；缺省沿用打开者当前机位',
-      properties: { latitude, longitude, heightAboveGround: height },
-    },
-    target: {
-      description: '地面目标：已接入地标的 id，或坐标',
+      description: '机位的搜索范围；缺省为不限（以地面点为中心，最远 30 km）',
       oneOf: [
-        { type: 'object', additionalProperties: false, required: ['landmark'], properties: { landmark: { enum: landmarks.map((landmark) => landmark.id) }, height: targetHeight, name: targetName } },
-        { type: 'object', additionalProperties: false, required: ['latitude', 'longitude'], properties: { latitude, longitude, height: targetHeight, name: targetName } },
+        { type: 'object', additionalProperties: false, required: ['mode'], properties: { mode: { const: 'free' }, maxDistance: { enum: [...cameraDistances], default: 30000, description: '离地面点最远，米' }, heightAboveGround: eyeHeight } },
+        { type: 'object', additionalProperties: false, required: ['mode', 'latitude', 'longitude', 'radius'], properties: { mode: { const: 'near' }, latitude, longitude, radius: { type: 'number', minimum: nearLimits[0], maximum: nearLimits[1], description: '以该点为中心的半径，米' }, heightAboveGround: eyeHeight } },
+        { type: 'object', additionalProperties: false, required: ['mode'], properties: {
+          mode: { const: 'fixed' }, latitude, longitude,
+          aim: { type: 'object', additionalProperties: false, required: ['azimuth', 'pitch'], description: '同时固定朝向：此时只能有一个天体目标，不能有地面点', properties: { azimuth: { type: 'number' }, pitch: { type: 'number', minimum: shotLimits.pitch[0], maximum: shotLimits.pitch[1] } } },
+          heightAboveGround: eyeHeight,
+        } },
       ],
     },
-    frame: {
-      type: 'object', additionalProperties: false, required: ['x', 'y'],
-      description: '找机位、两者都找：目标顶部（天体落在其上）在画面中的位置，自左上角起算的比例；缺省为画面中心。只影响试看时的拍摄方向，不影响求解',
-      properties: { x: { type: 'number', minimum: 0, maximum: 1 }, y: { type: 'number', minimum: 0, maximum: 1 } },
+    time: {
+      description: '时间的搜索范围；缺省为打开者当前日期起 30 天',
+      oneOf: [
+        { type: 'object', additionalProperties: false, properties: { mode: { const: 'range' }, date: { type: 'string', format: 'date', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: `当地起始日期（${range(shotLimits.year)} 年）` }, days: { enum: [...dayChoices], default: 30, description: `跨度，天；${dayLabel(1096)}只用于固定机位` } } },
+        { type: 'object', additionalProperties: false, required: ['mode', 'instant'], properties: { mode: { const: 'instant' }, instant: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2})?Z$', description: 'UTC 时刻' } } },
+      ],
     },
-    date: { type: 'string', format: 'date', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: `当地日期（${range(shotLimits.year)} 年）；缺省为打开者当前拍摄日期` },
-    days: { type: 'integer', description: '跨度，天' },
     timeZone: { type: 'string', description: 'IANA 时区；给出时日期按它解释，拍摄计划改为该固定时区' },
-    tolerance: { enum: [...toleranceChoices], default: 0.25, description: '中心偏离期望位置的上限，视直径' },
-    share: { type: 'number', minimum: shareLimits[0], maximum: shareLimits[1], default: 0.3, description: '主体占画面高度的比例（目标不足 10 m 时改用 maxDistance）' },
-    maxDistance: { enum: [...distanceChoices], default: 30000, description: '机位离目标的最远距离，米' },
-    phase: { type: 'array', minItems: 2, maxItems: 2, items: { enum: [...phaseChoices] }, description: '月亮亮面比例 [下限, 上限]，下限不大于上限' },
-    sky: { type: 'array', minItems: 1, uniqueItems: true, items: { enum: [...skyConditions] }, description: '天空条件（按太阳高度）' },
+    filters: {
+      type: 'array', description: '筛选条件，可为空',
+      items: {
+        oneOf: [
+          { type: 'object', additionalProperties: false, required: ['type', 'sky'], properties: { type: { const: 'sky' }, sky: { type: 'array', minItems: 1, uniqueItems: true, items: { enum: [...skyConditions] }, description: '天空条件（按太阳高度）' } } },
+          { type: 'object', additionalProperties: false, required: ['type'], properties: { type: { const: 'moonDown' } }, description: '月亮在地平线下' },
+          { type: 'object', additionalProperties: false, required: ['type', 'range'], properties: { type: { const: 'moonLit' }, range: { type: 'array', minItems: 2, maxItems: 2, items: { enum: [...phaseChoices] }, description: '月亮亮面比例 [下限, 上限]' } } },
+        ],
+      },
+    },
   },
-  allOf: [
-    { if: { properties: { kind: { const: 'time' } } }, then: { required: ['mark'], properties: { days: { enum: [...timeDays], default: 365 }, ...forbid('target', 'frame', 'share', 'maxDistance') } } },
-    { if: { properties: { kind: { const: 'position' } } }, then: { required: ['target'], properties: forbid('mark', 'camera', 'days', 'tolerance', 'share', 'phase', 'sky') } },
-    { if: { properties: { kind: { const: 'range' } } }, then: { required: ['target'], properties: { days: { enum: [...rangeDays], default: 30 }, ...forbid('mark', 'camera', 'tolerance') } } },
-    { if: { properties: { body: { const: 'sun' } } }, then: { properties: forbid('phase', 'sky') } },
-    { if: { required: ['body'], properties: { body: { not: { const: 'moon' } } } }, then: { properties: forbid('phase') } },
-  ],
 };
 
 // ---- Markdown descriptions.
@@ -275,49 +329,80 @@ ${shotLink(shot, PUBLIC_SITE)}
 \`\`\`
 `;
 
-const solveMarkdown = `# Tamatamatori 推算请求格式 v${SOLVE_VERSION}
+const solveMarkdown = `# Tamatamatori 推算请求格式 v${SOLVE_VERSION_2}
 
-推算请求（\`${SOLVE_FORMAT}\`）描述“想让太阳、月亮或银心、亮星、深空目标落在哪里”。应用在用户的浏览器中按星历、地形高程与海平面地平计算，结果由用户试看、挑选后成为普通机位。请求只是意图，链接里的数值不会被当作结果。
+推算请求（\`${SOLVE_FORMAT}\`）描述“画面里要有什么、各在画面哪里”，再给出机位与时间的搜索范围和筛选条件。应用在用户的浏览器中按星历、地形高程与海平面地平搜索拍摄时间或机位，结果由用户试看、挑选后成为普通机位。请求只是意图，链接里的数值不会被当作结果。
 
 - JSON Schema：${solveSchemaUrl}
 - 机位格式另见：${PUBLIC_SITE}shot-format.md
 
 ## 交给用户的方式
 
-链接：\`${PUBLIC_SITE}#solve=json:\` 后接 URL 编码的 JSON（\`encodeURIComponent\`）。用户打开后先看到预览：求法、天体、目标（注明来自地标目录，或“来自请求中的坐标，未核实”）、日期、条件以及会改动的拍摄计划字段；确认后才进入推算模式，可撤销。整段不超过 ${SOLVE_TEXT_LIMIT / 1024} KB。
+链接：\`${PUBLIC_SITE}#solve=json:\` 后接 URL 编码的 JSON（\`encodeURIComponent\`）。用户打开后先看到预览：镜头、各目标（注明来自地标目录，或“来自请求中的坐标，未核实”）、搜索范围、筛选以及会改动的拍摄计划字段；确认后进入推算模式并开始搜索，可撤销。整段不超过 ${SOLVE_TEXT_LIMIT / 1024} KB。
 
-## 三种求法
+## 能求出什么
 
-| \`kind\` | 已知 | 求 | 必填 |
-| --- | --- | --- | --- |
-| \`"time"\` 找时间 | 机位与天体在天空中的期望位置 | 日期跨度内对齐的时刻 | \`mark\` |
-| \`"position"\` 找机位 | 地面目标与某一天 | 当天能让天体落在目标顶部的机位（可拍时段） | \`target\` |
-| \`"range"\` 两者都找 | 地面目标、主体大小与一段日期 | 哪天、在哪里拍（候选） | \`target\` |
+相机保持水平，焦距与画幅由 \`lens\` 给定。剩下机位经纬度、时刻、相机方位与俯仰五个量，每个“目标在画面某处”用掉两个。
 
-## 字段
+| 目标与范围 | 结果 |
+| --- | --- |
+| 一个地面点 + 一个天体，机位不限或在某点周围 | 机位线：每个时刻一处机位 |
+| 同上，时刻固定 | 机位点 |
+| 一个地面点 + 一个天体，机位固定 | 天体经过画面位置的时刻（按容差） |
+| 一个天体，机位与朝向都固定 | 天体落到画面位置的时刻 |
+| 两个天体 | 两者到达设定相对位置的时刻；与机位基本无关 |
+| 只有一个目标（朝向不固定）、两个地面点、三个以上目标、机位与时刻都固定 | 不搜索，报出原因 |
 
-| 字段 | 求法 | 取值 | 缺省 |
-| --- | --- | --- | --- |
-| \`format\` / \`version\` | 全部 | \`"${SOLVE_FORMAT}"\` / \`${SOLVE_VERSION}\` | 必填；更高版本拒绝读取 |
-| \`name\` | 全部 | 文本，最多 ${SOLVE_NAME_LIMIT} 字 | 空 |
-| \`body\` | 全部 | \`"sun"\` / \`"moon"\`，或下面“固定方向天体”中的 id | 必填 |
-| \`mark\` | time | \`{ "azimuth", "elevation" }\`：天体中心的视方位（度，正北 0、顺时针）与视高度（${range(targetElevationRange, '°')}，含所选折射） | 必填 |
-| \`camera\` | time | \`{ "latitude", "longitude", "heightAboveGround" }\`，离地 ${range(shotLimits.heightAboveGround, ' m')} | 沿用打开者当前机位 |
-| \`target\` | position、range | \`{ "landmark": id }\`，或 \`{ "latitude", "longitude", "height", "name" }\`；\`height\` 为天体要落在的点高出地面的米数（${range(targetHeightLimits)}；山顶等地面上的点为 0，塔顶、楼顶为其高度） | 必填；地标高度缺省为其高度，坐标为 0 |
-| \`frame\` | position、range | \`{ "x", "y" }\`：目标顶部在画面中的位置，自左上角起算的比例（0—1）；只影响试看时的拍摄方向 | 画面中心 |
-| \`date\` | 全部 | 当地日期 \`"YYYY-MM-DD"\`：time、range 为起始日；position 为时间轴范围的起始日（开启夜空类图层时为当天中午起 24 小时） | 打开者当前拍摄日期 |
-| \`days\` | time | ${list(timeDays)} | 365 |
-| \`days\` | range | ${list(rangeDays)} | 30 |
-| \`timeZone\` | 全部 | IANA 时区；给出时按它解释日期，并改为该固定时区 | 沿用打开者当前时区 |
-| \`tolerance\` | time | ${list([...toleranceChoices])}（中心偏离期望位置的视直径；固定方向天体按标记直径） | 0.25 |
-| \`share\` | range | ${range(shareLimits)}，主体占画面高度（目标不足 10 m 时改用 \`maxDistance\`） | 0.3 |
-| \`maxDistance\` | position、range | ${list([...distanceChoices])}，米 | 30000 |
-| \`phase\` | time、range，月亮 | \`[下限, 上限]\`，取 ${list([...phaseChoices])} | 不限 |
-| \`sky\` | time、range，月亮与固定方向天体 | 非空数组：${skyConditions.map((sky) => `\`"${sky}"\` ${skyConditionNames[sky]}`).join('、')} | 不限 |
+## 顶层字段
+
+| 字段 | 取值 | 缺省 |
+| --- | --- | --- |
+| \`format\` / \`version\` | \`"${SOLVE_FORMAT}"\` / \`${SOLVE_VERSION_2}\` | 必填；更高版本拒绝读取；\`1\` 按下文转换 |
+| \`name\` | 文本，最多 ${SOLVE_NAME_LIMIT} 字 | 空 |
+| \`lens\` | \`{ "focalLength", "sensor", "sensorSize", "aspectRatio", "orientation" }\`：焦距 ${range(shotLimits.focalLength, ' mm')}；传感器 ${[...Object.keys(sensors), 'custom'].map((id) => `\`"${id}"\``).join(' / ')}；画幅 ${Object.keys(aspectRatios).map((id) => `\`"${id}"\``).join(' / ')}；\`"landscape"\` 横幅 / \`"portrait"\` 竖幅 | 沿用打开者当前镜头 |
+| \`targets\` | 1—${TARGET_LIMIT} 个目标，见下 | 必填 |
+| \`camera\` | 机位的搜索范围，见下 | 不限，最远 30 km |
+| \`time\` | 时间的搜索范围，见下 | 打开者当前日期起 30 天 |
+| \`timeZone\` | IANA 时区；给出时按它解释日期，并改为该固定时区 | 沿用打开者当前时区 |
+| \`filters\` | 筛选条件数组，见下 | 无 |
+
+## 目标
+
+所有目标都有 \`frame\`（\`{ "x", "y" }\`，自画面左上角起算的比例，缺省为中心）与 \`tolerance\`（画面高度的比例，${range(toleranceLimits)}，缺省 ${DEFAULT_TOLERANCE}）。
+
+| \`type\` | 字段 | 说明 |
+| --- | --- | --- |
+| \`"ground"\` 地面点 | \`landmark\`（已接入地标 id），或 \`latitude\` 与 \`longitude\`；\`name\` | 坐标目标标为“未核实”，须在地图上确认 |
+| | \`height\` 与 \`reference\` | \`"ground"\`（缺省）：高出地面的米数（${range(targetHeightLimits)}），山顶为 0，塔顶为塔高；地标缺省为其高度。\`"sea"\`：海拔（${range(seaHeightLimits)}），与应用的地形高程同一套数值，基准未核定 |
+| | \`base\` | 可选：点下方地面在画面中的纵坐标（大于 \`frame.y\`），用来定主体大小；只用于 \`"ground"\` 且高度不低于 10 m |
+| \`"body"\` 天体 | \`body\` | \`"sun"\` / \`"moon"\`，或下面“固定方向天体”中的 id |
+
+## 搜索范围
+
+| \`camera.mode\` | 字段 | 说明 |
+| --- | --- | --- |
+| \`"free"\` | \`maxDistance\`：${list([...cameraDistances])} 米 | 以地面点为中心 |
+| \`"near"\` | \`latitude\`、\`longitude\`、\`radius\`（${range(nearLimits)} 米） | 只列这个范围内的机位 |
+| \`"fixed"\` | \`latitude\`、\`longitude\`（缺省为打开者当前机位）、\`aim\`（\`{ "azimuth", "pitch" }\`，可选） | 给出 \`aim\` 时同时固定朝向，只能有一个天体目标 |
+
+三种机位都可带 \`heightAboveGround\`（${range(shotLimits.heightAboveGround, ' m')}），打开后改为该离地高度。
+
+| \`time.mode\` | 字段 |
+| --- | --- |
+| \`"range"\` | \`date\`（当地起始日期，缺省为打开者当前拍摄日期）、\`days\`：${list([...dayChoices])}；机位不固定时最多 ${MAX_LINE_DAYS} 天 |
+| \`"instant"\` | \`instant\`：UTC 时刻，例如 \`"2026-11-25T08:10:00Z"\` |
+
+## 筛选
+
+| \`type\` | 字段 | 说明 |
+| --- | --- | --- |
+| \`"sky"\` | \`sky\`：非空数组，${skyConditions.map((sky) => `\`"${sky}"\` ${skyConditionNames[sky]}`).join('、')} | 按太阳高度 |
+| \`"moonDown"\` | — | 月亮在地平线下；目标里有月亮时报错 |
+| \`"moonLit"\` | \`range\`：\`[下限, 上限]\`，取 ${list([...phaseChoices])} | 月亮亮面比例 |
 
 ## 固定方向天体
 
-银心、有中文名的亮星与已收录的深空目标，方向相对恒星固定（J2000 坐标经岁差与章动换算）。它们没有日月那样的视直径，期望位置按“标记直径”画出，容差也按它计；只在太阳中心低于地平线 ${-DARK_SUN_ELEVATION}° 时推算，\`sky\` 只有 \`"twilight"\` 与 \`"night"\` 起作用。
+银心、有中文名的亮星与已收录的深空目标，方向相对恒星固定（J2000 坐标经岁差与章动换算）。它们没有日月那样的视直径，画面中按“标记直径”画出；只在太阳中心低于地平线 ${-DARK_SUN_ELEVATION}° 时搜索。
 
 | id | 名称 | 类型 | 标记直径 |
 | --- | --- | --- | --- |
@@ -331,10 +416,31 @@ ${landmarks.map((landmark) => `| \`${landmark.id}\` | ${landmark.name} | ${landm
 
 其他目标请给坐标。应用不解析地名；不确定坐标时请让用户在应用中放置目标，不要猜测。
 
+## 版本 1
+
+\`"version": 1\` 的请求（\`kind\` 为 \`"time"\` / \`"position"\` / \`"range"\`）仍可打开，读入时转换：
+
+- \`"time"\`：机位固定（\`camera\` 或打开者当前机位），朝向固定为 \`mark\`，天体在画面中心；\`tolerance\`（视直径）按打开者镜头换成画面高度的比例。
+- \`"position"\`：地面点与天体在同一画面位置（\`frame\`，缺省中心），机位不限，时间为 \`date\` 当天。
+- \`"range"\`：同上，跨度为 \`days\`；\`share\` 换成底部位置 \`base = frame.y + share\`（目标不足 10 m 时不设）。原来“±20%”的主体占比改为底部位置的容差。
+- \`phase\` 换成 \`moonLit\`，\`sky\` 换成 \`sky\` 筛选。
+
+例：
+
+\`\`\`json
+${JSON.stringify(v1Example, null, 2)}
+\`\`\`
+
+读入后等同于：
+
+\`\`\`json
+${solveJson2(v1Converted.request)}
+\`\`\`
+
 ## 规则与限制
 
-- 未知字段、不属于该求法的字段和越界取值报错并带字段路径；缺省项在预览中列出。
-- 找时间打开时转向期望位置（方位与俯仰），给出 \`camera\` 时移到该机位；找机位把拍摄日期移到 \`date\`；其他字段不改。
+- 未知字段、组合不支持与越界取值报错并带字段路径（如 \`targets[1].frame.x\`）；缺省项在预览中列出。
+- 打开时：给出 \`lens\` 则改为该镜头；固定机位移到该机位（给出 \`aim\` 时转向）；\`"instant"\` 移到该时刻；只搜一天时把拍摄日期移到 \`date\`；其他字段不改。
 - 天体位置按海平面地平与所选折射；遮挡只看地形起伏，视线被地形挡住的机位不列出；不含建筑与树木；不含天气。结果是构图模拟，不保证实景可见。
 - 推算面板的“复制推算请求”给出同样的链接，“复制结果”给出 Markdown 表格，可交回 AI 挑选。
 
@@ -343,11 +449,11 @@ ${landmarks.map((landmark) => `| \`${landmark.id}\` | ${landmark.name} | ${landm
 ${solveExamples.map((example) => `### ${example.title}
 
 \`\`\`json
-${solveJson(example.request, solveSchemaUrl)}
+${solveJson2(example.request, solveSchemaUrl)}
 \`\`\`
 
 \`\`\`text
-${solveLink(example.request, PUBLIC_SITE)}
+${solveLink2(example.request, PUBLIC_SITE)}
 \`\`\`
 `).join('\n')}`;
 
@@ -358,14 +464,14 @@ const llms = `# Tamatamatori
 AI 可以用两种链接把结果交给用户，用户打开后先看到预览，确认才应用：
 
 - 机位链接 \`${PUBLIC_SITE}#shot=json:<URL 编码的机位 JSON>\`：一个完整的拍摄计划。
-- 推算请求链接 \`${PUBLIC_SITE}#solve=json:<URL 编码的推算请求 JSON>\`：让应用求拍摄时间或机位（例如让月亮或银心落在某座塔的塔尖）。
+- 推算请求链接 \`${PUBLIC_SITE}#solve=json:<URL 编码的推算请求 JSON>\`：说明画面里要有什么、各在画面哪里（例如仙女座星系在富士山顶正上方、月亮落在塔尖），让应用搜索拍摄时间或机位。
 
 写之前请读对应格式说明；字段错误会被逐条指出，可据此修正。地点请给坐标或已接入地标的 id，不要猜测坐标。预览与推算都是基于地理和天文数据的构图模拟，不代表实景一定可见。
 
 ## 格式
 
 - [机位格式 v${SHOT_VERSION}](${PUBLIC_SITE}shot-format.md)：字段、取值范围、默认值与示例
-- [推算请求格式 v${SOLVE_VERSION}](${PUBLIC_SITE}solve-format.md)：找时间、找机位、两者都找，已接入地标列表
+- [推算请求格式 v${SOLVE_VERSION_2}](${PUBLIC_SITE}solve-format.md)：目标与画面位置、镜头、搜索范围与筛选，已接入地标列表，版本 1 的转换
 - [机位 JSON Schema](${shotSchemaUrl})
 - [推算请求 JSON Schema](${solveSchemaUrl})
 

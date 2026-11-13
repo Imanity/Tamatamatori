@@ -57,10 +57,10 @@ import { EnvironmentSettings } from "./EnvironmentSettings";
 import { layerGroups } from "./layers";
 import type { LayerGroupId } from "./layers";
 import { Detail, pollutionLevel } from "./readout";
-import { AlignmentMark, AlignmentPanel, FramingMark, placeFromPointer } from "./Alignment";
+import { CompositionPanel } from "./Composition";
+import type { CompositionState } from "./Composition";
+import { CompositionMarks } from "./CompositionMarks";
 import type { ShotSaving } from "./SolveLink";
-import { bodyName } from "../domain/sky-targets";
-import type { AlignmentState } from "./Alignment";
 
 const radians = (value: number) => (value * Math.PI) / 180;
 
@@ -83,7 +83,7 @@ export function PreviewPanel({
   plan: ShootingPlan;
   update: (patch: Partial<ShootingPlan>) => void;
   /** The "推算" mode state (owned by the workspace, shared with the map) and where its panel goes. */
-  alignment: AlignmentState;
+  alignment: CompositionState;
   solveHost?: HTMLElement | null;
   /** "存为机位" from the 推算 panel: saves the current plan under a name and binds it. */
   shotSaving?: ShotSaving;
@@ -255,8 +255,9 @@ export function PreviewPanel({
       ? { ...plan, azimuth: camera.azimuth, pitch: camera.pitch }
       : plan;
   const celestialScene = useCelestialScene(plan, visibility, view);
-  const placing = alignment.active && alignment.kind === "time" && alignment.placing;
-  const alignedBody = celestialScene.views.find((entry) => entry.body.id === alignment.settings.body);
+  // The try-out's first body (the Sun or the Moon has an occlusion reading).
+  const triedBody = alignment.run?.basis.bodies.find((body) => body === "sun" || body === "moon") ?? null;
+  const alignedBody = triedBody ? celestialScene.views.find((entry) => entry.body.id === triedBody) : undefined;
   const eclipses = useEclipses(plan);
   const obscuration = celestialScene.bodies?.sun.obscuration ?? 0;
   const moonLight = celestialScene.bodies?.moon.brightness ?? 1;
@@ -347,20 +348,13 @@ export function PreviewPanel({
         )}
         </div>
         <div
-          className={`viewfinder ${dragging ? "is-dragging" : ""} ${placing ? "is-placing" : ""}`}
+          className={`viewfinder ${dragging ? "is-dragging" : ""}`}
           ref={viewfinder}
           role="group"
-          aria-label={placing
-            ? "拍摄预览，点击放置期望位置，Esc 取消"
-            : "拍摄预览，拖动调整拍摄视角，滚轮或双指捏合调整焦距，也可使用方向键，Shift 加速"}
+          aria-label="拍摄预览，拖动调整拍摄视角，滚轮或双指捏合调整焦距，也可使用方向键，Shift 加速"
           tabIndex={0}
           onPointerDown={(event) => {
             if (event.button !== 0) return;
-            // While placing the "推算" mark, a click places it instead of turning the camera.
-            if (placeFromPointer(alignment, view, event.currentTarget, event)) {
-              event.preventDefault();
-              return;
-            }
             if (event.pointerType === "touch") {
               touches.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
               if (touches.current.size === 2) {
@@ -502,13 +496,7 @@ export function PreviewPanel({
             scene={stations}
             visibility={skyVisibility}
           />
-          <AlignmentMark alignment={alignment} view={view} frame={viewfinder} />
-          <FramingMark alignment={alignment} view={view} frame={viewfinder} />
-          {placing && (
-            <p className="alignment-placing" role="status">
-              点击画面放下{bodyName(alignment.settings.body)}的期望位置 · Esc 取消
-            </p>
-          )}
+          <CompositionMarks state={alignment} view={view} frame={viewfinder} />
           <svg
             viewBox="0 0 600 400"
             preserveAspectRatio="none"
@@ -572,13 +560,11 @@ export function PreviewPanel({
       />
       {solveHost && alignment.active &&
         createPortal(
-          <AlignmentPanel
-            alignment={alignment}
+          <CompositionPanel
+            state={alignment}
             plan={plan}
-            view={view}
-            update={update}
             saving={shotSaving}
-            occlusion={alignedBody && (alignment.settings.body === "sun" || alignment.settings.body === "moon") && plan.layers[alignment.settings.body]
+            occlusion={alignedBody && triedBody && plan.layers[triedBody]
               ? { state: alignedBody.state, occlusion: alignedBody.occlusion }
               : null}
           />,

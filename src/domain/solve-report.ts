@@ -1,71 +1,26 @@
-import { Temporal } from "@js-temporal/polyfill";
 import { skyConditionNames } from "./alignment.ts";
-import type { AlignmentBody, AlignmentResult } from "./alignment.ts";
-import { bodyName, sizeWord } from "./sky-targets.ts";
-import { compassDirection, localDateTime } from "./plan.ts";
-import type { PositionPoint } from "./position-alignment.ts";
-import type { RangeCandidate } from "./range-alignment.ts";
-import type { SolveKind, SolveRequest } from "./solve.ts";
+import { bodyName } from "./sky-targets.ts";
+import { compassDirection, localDateTime, sensors } from "./plan.ts";
+import type { SolveRequest2 } from "./solve.ts";
+import { dayLabel, heightWords, spotWords } from "./composition.ts";
+import type { FilterSpec, GroundSpec, ResultItem } from "./composition.ts";
 
 /**
  * Plain-text wording of a 推算 request and its results, shared by the link
  * preview and "复制结果" (Markdown a person or an AI can read back).
  */
-export const solveKindNames: Record<SolveKind, string> = { time: "找时间", position: "找机位", range: "两者都找" };
-/** Names for any solve body (the Sun, the Moon, the Galactic Centre, stars and deep-sky targets). */
-export const solveBodyName = (body: AlignmentBody) => bodyName(body);
 /** Rows beyond this are counted, not listed. */
 export const REPORT_ROWS = 200;
 
 const percent = (fraction: number) => `${Math.round(fraction * 100)}%`;
 const km = (meters: number) => (meters / 1000).toFixed(meters < 10_000 ? 2 : 1);
 const coordinate = (latitude: number, longitude: number) => `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
-const spanName = (days: number) => (days === 365 ? "12 个月" : days === 1096 ? "3 年" : `${days} 天`);
 const iso = (time: number) => new Date(time).toISOString();
-const local = (instant: string, timeZone: string) => localDateTime(instant, timeZone).replace("T", " ");
 const clock = (instant: string, timeZone: string) => localDateTime(instant, timeZone).slice(11, 16);
-const day = (instant: string, timeZone: string) => Temporal.Instant.from(instant).toZonedDateTimeISO(timeZone).toPlainDate().toString();
-const sightNames = { clear: "视线畅通", blocked: "被地形挡住", unknown: "地形数据不全" } as const;
-
-/** Where the target sits in the frame, in words: the centre, or percentages from the top-left. */
-export function framePlace(frame: SolveRequest["frame"]) {
-  if (!frame || (Math.abs(frame.x - 0.5) < 0.005 && Math.abs(frame.y - 0.5) < 0.005)) return "画面中心";
-  return `自左 ${percent(frame.x)}、自上 ${percent(frame.y)}`;
-}
 
 export interface SolveRow {
   label: string;
   value: string;
-}
-
-/** The request as labelled rows; absent fields say what the app uses instead. */
-export function describeSolve(request: SolveRequest): SolveRow[] {
-  const rows: SolveRow[] = [{ label: "求解", value: `${solveKindNames[request.kind]} · ${bodyName(request.body)}` }];
-  if (request.name) rows.push({ label: "名称", value: request.name });
-  if (request.kind === "time" && request.mark) {
-    rows.push({ label: "期望位置", value: `方位 ${request.mark.azimuth.toFixed(2)}°（${compassDirection(request.mark.azimuth)}），视高度 ${request.mark.elevation.toFixed(2)}°` });
-    const camera = request.camera;
-    rows.push({ label: "机位", value: camera
-      ? `${coordinate(camera.latitude, camera.longitude)}${camera.heightAboveGround === undefined ? "，离地高度沿用当前" : `，离地 ${camera.heightAboveGround} m`}`
-      : "沿用当前机位" });
-  }
-  if (request.target) {
-    const target = request.target;
-    rows.push({ label: "拍摄目标", value: `${target.name} · ${coordinate(target.latitude, target.longitude)} · ${target.height > 0 ? `对准离地 ${target.height} m 处` : "对准地面"}` });
-    rows.push({ label: "目标来源", value: target.landmark ? `已接入地标（${target.landmark}）` : "来自请求中的坐标，未核实" });
-    rows.push({ label: "画面位置", value: framePlace(request.frame) });
-  }
-  const date = request.date ?? "当前拍摄日期";
-  rows.push({ label: "日期", value: request.kind === "position" ? `${date} 当天（时间轴范围）` : `${date} 起 ${spanName(request.days ?? 0)}` });
-  rows.push({ label: "时区", value: request.timeZone ?? "沿用当前时区" });
-  const conditions: string[] = [];
-  if (request.tolerance !== undefined) conditions.push(`中心偏离 ≤ ${request.tolerance} 个${sizeWord(request.body)}`);
-  if (request.share !== undefined) conditions.push(`主体占画面高度 ${percent(request.share)}（目标不足 10 m 时改用最远距离）`);
-  if (request.maxDistance !== undefined) conditions.push(`最远 ${request.maxDistance / 1000} km`);
-  if (request.phase) conditions.push(`亮面 ${percent(request.phase[0])}—${percent(request.phase[1])}`);
-  if (request.sky) conditions.push(`天空：${request.sky.map((sky) => skyConditionNames[sky]).join("、")}`);
-  if (conditions.length) rows.push({ label: "条件", value: conditions.join("；") });
-  return rows;
 }
 
 const cell = (value: string) => value.replace(/\|/g, "\\|").replace(/\n/g, " ");
@@ -80,7 +35,7 @@ function table(header: string[], rows: string[][]) {
 }
 
 export interface SolveReportInput {
-  request: SolveRequest;
+  request: SolveRequest2;
   /** `#solve=` link that opens the same request. */
   link: string;
   timeZone: string;
@@ -97,7 +52,7 @@ export function solveReport(input: SolveReportInput) {
   return [
     "## Tamatamatori 推算结果",
     "",
-    ...describeSolve(input.request).map((row) => `- ${row.label}：${row.value}`),
+    ...describeSolve2(input.request).map((row) => `- ${row.label}：${row.value}`),
     `- 推算请求：${input.link}`,
     "",
     input.status,
@@ -109,51 +64,60 @@ export function solveReport(input: SolveReportInput) {
   ].join("\n");
 }
 
-/** 找时间: one row per alignment. */
-export function timeRows(result: AlignmentResult, timeZone: string) {
-  const moon = result.alignments.some((found) => found.illuminated !== null);
-  const header = ["日期", "时刻", "容差内", "偏离（视直径）", "方位", "视高度", "天空", ...(moon ? ["亮面"] : [])];
-  const rows = result.alignments.map((found) => [
-    day(found.instant, timeZone),
-    clock(found.instant, timeZone),
-    `${clock(found.from, timeZone)}–${clock(found.to, timeZone)}`,
-    `${(found.separation / found.diameter).toFixed(2)}${found.separation / found.diameter < 0.02 ? "" : `（${found.offset}）`}`,
-    `${found.azimuth.toFixed(2)}°`,
-    `${found.elevation.toFixed(2)}°`,
-    skyConditionNames[found.sky],
-    ...(moon ? [found.illuminated === null ? "" : percent(found.illuminated)] : []),
-  ]);
-  return { header, rows };
+// ---------------------------------------------------------------- 版本 2
+
+const sensorWords = (lens: NonNullable<SolveRequest2["lens"]>) =>
+  lens.sensor === "custom" && lens.sensorSize ? `${lens.sensorSize.width} × ${lens.sensorSize.height} mm` : sensors[lens.sensor as keyof typeof sensors]?.label ?? lens.sensor;
+const toleranceWords = (tolerance: number) => `±${Number((tolerance * 100).toFixed(1))}%`;
+
+/** A version 2 request as labelled rows; absent fields say what the app uses instead. */
+export function describeSolve2(request: SolveRequest2): SolveRow[] {
+  const rows: SolveRow[] = [];
+  if (request.name) rows.push({ label: "名称", value: request.name });
+  const lens = request.lens;
+  rows.push({ label: "镜头", value: lens ? `${lens.focalLength} mm · ${sensorWords(lens)} · ${lens.aspectRatio} ${lens.orientation === "portrait" ? "竖幅" : "横幅"}` : "沿用当前镜头" });
+  request.targets.forEach((target, index) => {
+    const words = spotWords(target.frame);
+    const place = `${words === "画面中心" ? words : `画面${words}`} · 容差 ${toleranceWords(target.tolerance)}`;
+    rows.push({
+      label: `目标 ${index + 1}`,
+      value: target.type === "body"
+        ? `${bodyName(target.body)} · ${place}`
+        : `${target.name} · ${coordinate(target.latitude, target.longitude)} · ${heightWords({ ...target, kind: "ground", id: "", base: target.base } as GroundSpec)} · ${place}`
+          + `${target.base !== null ? ` · 底部自上 ${percent(target.base)}` : ""} · ${target.landmark ? `已接入地标（${target.landmark}）` : "来自请求中的坐标，未核实"}`,
+    });
+  });
+  const camera = request.camera;
+  const eye = camera.heightAboveGround === undefined ? "" : `，离地 ${camera.heightAboveGround} m`;
+  rows.push({
+    label: "机位",
+    value: camera.mode === "free"
+      ? (request.targets.some((target) => target.type === "ground") ? `不限，离地面目标最远 ${camera.maxDistance / 1000} km${eye}` : `不限（只有天体时与机位基本无关，按打开者当前机位计算）${eye}`)
+      : camera.mode === "near" ? `${coordinate(camera.latitude, camera.longitude)} 周围 ${camera.radius / 1000} km${eye}`
+        : `${camera.latitude !== undefined && camera.longitude !== undefined ? `固定于 ${coordinate(camera.latitude, camera.longitude)}` : "固定为当前机位"}${camera.aim ? `，朝向固定（方位 ${camera.aim.azimuth.toFixed(2)}°，俯仰 ${camera.aim.pitch.toFixed(2)}°）` : ""}${eye}`,
+  });
+  rows.push({ label: "时间", value: request.time.mode === "instant" ? `固定为 ${request.time.instant.replace("T", " ").replace("Z", " UTC")}` : request.time.days === 1 ? `${request.time.date ?? "当前拍摄日期"} 当天` : `${request.time.date ?? "当前拍摄日期"} 起 ${dayLabel(request.time.days)}` });
+  rows.push({ label: "时区", value: request.timeZone ?? "沿用当前时区" });
+  rows.push({ label: "筛选", value: request.filters.length ? request.filters.map(filterWords).join("；") : "无" });
+  return rows;
+}
+export function filterWords(filter: FilterSpec) {
+  return filter.kind === "sky" ? `天空：${filter.sky.map((sky) => skyConditionNames[sky]).join("、")}`
+    : filter.kind === "moonDown" ? "月亮在地平线下"
+      : `月亮亮面 ${percent(filter.range[0])}—${percent(filter.range[1])}`;
 }
 
-/** 找机位: the listed minutes (every ten) of the listed stretches, whose sight the terrain does not cut. */
-export function positionRows(points: readonly PositionPoint[], timeZone: string) {
-  const header = ["时刻", "距目标 km", "机位", "目标方向", "天体视高度", "机位地面", "视线"];
-  const rows = points.map((point) => [
-    local(iso(point.time), timeZone),
-    km(point.distance),
-    coordinate(point.latitude, point.longitude),
-    `${compassDirection(point.azimuth)} ${point.azimuth.toFixed(1)}°`,
-    `${point.elevation.toFixed(2)}°`,
-    `${Math.round(point.cameraGround) || 0} m`,
-    sightNames[point.sight],
-  ]);
-  return { header, rows };
-}
-
-/** 两者都找: one row per candidate, placed at its middle minute. */
-export function rangeRows(candidates: readonly RangeCandidate[], timeZone: string) {
-  const moon = candidates.some((candidate) => candidate.illuminated !== null);
-  const header = ["日期", "时段", "距目标 km", "主体占比", "中点机位", "天空", ...(moon ? ["亮面"] : []), "地形数据完整"];
-  const rows = candidates.map((candidate) => [
-    candidate.day,
-    `${clock(iso(candidate.start), timeZone)}–${clock(iso(candidate.end), timeZone)}`,
-    candidate.near === candidate.far ? km(candidate.near) : `${km(candidate.near)}—${km(candidate.far)}`,
-    candidate.share ? (candidate.share[0] === candidate.share[1] ? percent(candidate.share[0]) : `${percent(candidate.share[0])}—${percent(candidate.share[1])}`) : "—",
-    coordinate(candidate.middle.latitude, candidate.middle.longitude),
-    skyConditionNames[candidate.sky],
-    ...(moon ? [candidate.illuminated === null ? "" : percent(candidate.illuminated)] : []),
-    percent(candidate.clear),
+/** Result rows: one per stretch or window, the camera and the gap from the places. */
+export function resultRows(items: readonly ResultItem[], timeZone: string) {
+  const header = ["日期", "时段", "机位（试看处）", "目标方向与距离", "最大偏差", "天空", "月亮"];
+  const rows = items.map((item) => [
+    item.day,
+    item.start === item.end ? clock(iso(item.start), timeZone) : `${clock(iso(item.start), timeZone)}–${clock(iso(item.end), timeZone)}`,
+    coordinate(item.camera.latitude, item.camera.longitude),
+    item.bearing === null ? "—" : `${compassDirection(item.bearing)} ${item.near === item.far ? km(item.near!) : `${km(item.near!)}—${km(item.far!)}`} km`,
+    `${(item.deviation * 100).toFixed(1)}%`,
+    skyConditionNames[item.sky],
+    item.moonElevation < 0 ? "地平线下" : `高 ${item.moonElevation.toFixed(0)}° · 亮面 ${percent(item.moonLit)}`,
   ]);
   return { header, rows };
 }

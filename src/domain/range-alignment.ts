@@ -1,12 +1,15 @@
 import { Temporal } from "@js-temporal/polyfill";
+import { Body, Illumination } from "astronomy-engine";
 import { celestialBodies, degrees, sunPosition } from "./ephemeris.ts";
 import { ellipsoidalRay } from "./geodesy.ts";
 import { fieldOfView } from "./plan.ts";
+import { aimAt } from "./alignment.ts";
+import { projectDirection } from "./celestial-projection.ts";
 import type { ShootingPlan } from "./plan.ts";
 import { skyCondition } from "./alignment.ts";
 import type { AlignmentBody, SkyCondition } from "./alignment.ts";
-import { bodyTrack, finishPositions, groundDistance, MIN_DISTANCE, solvePositions, travel } from "./position-alignment.ts";
-import type { GroundSampler, GroundTarget, PositionPoint, SkySample } from "./position-alignment.ts";
+import { bodyTrack, cameraBearing, finishPositions, groundDistance, MIN_DISTANCE, skyAt, solvePositions, travel } from "./position-alignment.ts";
+import type { GroundSampler, GroundTarget, PairFrames, PositionPoint, SkySample } from "./position-alignment.ts";
 
 /**
  * "推算 · 两者都找": a ground target over a range of dates. The composition
@@ -58,6 +61,50 @@ export interface RangeInput {
   /** Searched distances: the share band widened, or MIN_DISTANCE to the chosen maximum. */
   minDistance: number;
   maxDistance: number;
+  /** Where the top and the body sit in the frame (the body on the top at the centre when absent). */
+  frames?: PairFrames;
+  /**
+   * Where the target's foot (the ground under it) should appear, as a frame
+   * y (normalised device coordinates), and how far it may be, as a share of
+   * the frame height. Replaces `share` when given.
+   */
+  base?: { y: number; tolerance: number };
+  /** Filters checked at the target before solving, with a margin (results are checked exactly afterwards). */
+  prefilter?: Prefilter;
+}
+
+/** The search's sky and Moon filters, as a pre-check of each minute at the target. */
+export interface Prefilter {
+  sky?: readonly SkyCondition[];
+  moonDown?: boolean;
+  moonLit?: readonly [number, number];
+}
+// Cameras stand within about 30 km: the Sun and Moon there differ by under 0.3° from the target.
+const PREFILTER_MARGIN = 0.5;
+/** Whether a minute can pass the filters somewhere near the target. */
+export function prefilterPasses(filter: Prefilter, time: number, latitude: number, longitude: number) {
+  if (filter.sky) {
+    const sun = skyAt("sun", time, latitude, longitude, "none").elevation;
+    if (![sun - PREFILTER_MARGIN, sun, sun + PREFILTER_MARGIN].some((elevation) => filter.sky!.includes(skyCondition(elevation)))) return false;
+  }
+  if (filter.moonDown && skyAt("moon", time, latitude, longitude, "none").elevation > PREFILTER_MARGIN) return false;
+  if (filter.moonLit) {
+    const lit = Illumination(Body.Moon, new Date(time)).phase_fraction;
+    if (lit < filter.moonLit[0] - 0.01 || lit > filter.moonLit[1] + 0.01) return false;
+  }
+  return true;
+}
+
+/**
+ * Distances to search for a foot at frame y `base` below a top at `top`
+ * (normalised device coordinates). The band of `shareBand` assumes the top at
+ * the centre, so it is widened; solutions are kept by their actual foot.
+ */
+export function baseDistances(target: GroundTarget, top: number, base: number, lens: Lens, maxDistance: number) {
+  const share = (base - top) / 2;
+  if (!(share > 0) || target.absolute || target.height < MIN_SUBJECT) return null;
+  const band = shareBand(target.height, share, lens);
+  return { share, near: band.near, far: Math.min(band.far, maxDistance), minDistance: Math.max(MIN_DISTANCE, band.near * 0.6), maxDistance: Math.min(maxDistance, band.far * 1.6) };
 }
 
 /** The distances to search and the band shown, for a share or for plain distances. */
@@ -86,20 +133,28 @@ export function rangeDays(start: string, days: number, timeZone: string) {
  * band: the top seen from the nearest searched distance, from ground as low
  * as BELOW_TARGET under the target's own ground.
  */
-export function altitudeCeiling(input: Pick<RangeInput, "target" | "minDistance">) {
-  return Math.atan((input.target.height + BELOW_TARGET) / input.minDistance) / degrees;
+export function altitudeCeiling(input: Pick<RangeInput, "target" | "minDistance" | "frames">) {
+  // An absolute top is compared with camera ground near sea level at the lowest.
+  const rise = input.target.absolute ? input.target.height + 50 : input.target.height + BELOW_TARGET;
+  const top = Math.atan(rise / input.minDistance) / degrees;
+  if (!input.frames) return top;
+  // The body may sit above the top in the frame: add that much, generously (it is only a pre-filter).
+  const lift = Math.max(0, (input.frames.target.y - input.frames.body.y) / 2) * fieldOfView(input.frames.lens).vertical;
+  return top + lift * 1.2 + 1;
 }
 
 /** The body's minutes of one day that can still give a solution in the band. */
 export function rangeTrack(input: RangeInput, span: { start: number; end: number }) {
   const ceiling = altitudeCeiling(input);
-  return bodyTrack({ ...input, start: span.start, end: span.end }).filter((sample) => sample.elevation <= ceiling);
+  const { prefilter, target } = input;
+  return bodyTrack({ ...input, start: span.start, end: span.end }).filter((sample) => sample.elevation <= ceiling
+    && (!prefilter || prefilterPasses(prefilter, sample.time, target.latitude, target.longitude)));
 }
 
 /** Points from the target out to the band's far edge along every bearing used, for loading DEM tiles. */
 export function rangeCorridor(input: RangeInput, tracks: readonly (readonly SkySample[])[], spacing = 500) {
   const bearings = new Set<number>();
-  for (const track of tracks) for (const sample of track) bearings.add(Math.round(((sample.azimuth + 180) % 360) * 4) / 4);
+  for (const track of tracks) for (const sample of track) bearings.add(Math.round((((cameraBearing(sample, input.frames) % 360) + 360) % 360) * 4) / 4);
   const points = [{ latitude: input.target.latitude, longitude: input.target.longitude }];
   for (const bearing of bearings)
     for (let distance = spacing; distance <= input.maxDistance + spacing; distance += spacing)
@@ -108,8 +163,8 @@ export function rangeCorridor(input: RangeInput, tracks: readonly (readonly SkyS
 }
 
 /** Bearings from the target (merged within 1°) where the camera can be over the range. */
-export function reachableSectors(tracks: readonly (readonly SkySample[])[]) {
-  const bearings = [...new Set(tracks.flatMap((track) => track.map((sample) => Math.round(((sample.azimuth + 180) % 360) * 10) / 10)))].sort((a, b) => a - b);
+export function reachableSectors(tracks: readonly (readonly SkySample[])[], frames?: PairFrames) {
+  const bearings = [...new Set(tracks.flatMap((track) => track.map((sample) => Math.round((((cameraBearing(sample, frames) % 360) + 360) % 360) * 10) / 10)))].sort((a, b) => a - b);
   const sectors: [number, number][] = [];
   for (const bearing of bearings) {
     const last = sectors.at(-1);
@@ -132,11 +187,19 @@ export function solveRangeDay(input: RangeInput, day: { day: string; start: numb
   if (targetGround === null || !track.length) return [];
   const position = { ...input, start: day.start, end: day.end };
   const result = finishPositions(track, [solvePositions(position, track, sampler)], targetGround);
-  const base = { latitude: input.target.latitude, longitude: input.target.longitude, ellipsoidalHeight: targetGround };
+  const foot = { latitude: input.target.latitude, longitude: input.target.longitude, ellipsoidalHeight: targetGround };
   const low = input.share === null ? 0 : input.share * (1 - SHARE_TOLERANCE), high = input.share === null ? Infinity : input.share * (1 + SHARE_TOLERANCE);
   const points: RangePoint[] = [];
   for (const point of result.points) {
-    const ray = ellipsoidalRay({ latitude: point.latitude, longitude: point.longitude, ellipsoidalHeight: point.cameraGround + input.cameraHeight }, base);
+    const ray = ellipsoidalRay({ latitude: point.latitude, longitude: point.longitude, ellipsoidalHeight: point.cameraGround + input.cameraHeight }, foot);
+    if (input.base && input.frames) {
+      // The foot where the camera, aimed so the top sits at its place, actually shows it.
+      const aim = aimAt(input.frames.lens, point, input.frames.target);
+      const seen = projectDirection({ ...input.frames.lens, ...aim }, [ray[0], ray[1], ray[2]]);
+      if (!seen || Math.abs(seen.y - input.base.y) / 2 > input.base.tolerance) continue;
+      points.push({ ...point, day: day.day, share: (seen.y - input.frames.target.y) / 2 });
+      continue;
+    }
     const below = Math.asin(ray[2] / Math.hypot(...ray)) / degrees;
     const angle = point.elevation - below;
     const share = input.share === null ? null : shareOf(angle, input.lens);
@@ -177,7 +240,7 @@ export type RangeCandidate = Candidate<RangePoint>;
  * breaks where the sky changes (day, golden hour, blue hour…), so each row has one.
  * The key names the run and its middle, so a different solution never takes an old row's place.
  */
-export function rangeCandidates<T extends PositionPoint & { day?: string; share?: number | null }>(input: Pick<RangeInput, "body" | "target">, points: readonly T[], options: { splitSky?: boolean } = {}): Candidate<T>[] {
+export function rangeCandidates<T extends PositionPoint & { day?: string; share?: number | null }>(input: Pick<RangeInput, "body">, points: readonly T[], options: { splitSky?: boolean } = {}): Candidate<T>[] {
   const candidates: Candidate<T>[] = [];
   const runs = new Map<string, { points: T[]; sky: SkyCondition | null }[]>();
   const skyAt = (point: T) => skyCondition(sunPosition({ latitude: point.latitude, longitude: point.longitude, instant: new Date(point.time).toISOString() }).elevation);

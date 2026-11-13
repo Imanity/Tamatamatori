@@ -1,46 +1,77 @@
-# Tamatamatori 推算请求格式 v1
+# Tamatamatori 推算请求格式 v2
 
-推算请求（`tamatamatori.solve`）描述“想让太阳、月亮或银心、亮星、深空目标落在哪里”。应用在用户的浏览器中按星历、地形高程与海平面地平计算，结果由用户试看、挑选后成为普通机位。请求只是意图，链接里的数值不会被当作结果。
+推算请求（`tamatamatori.solve`）描述“画面里要有什么、各在画面哪里”，再给出机位与时间的搜索范围和筛选条件。应用在用户的浏览器中按星历、地形高程与海平面地平搜索拍摄时间或机位，结果由用户试看、挑选后成为普通机位。请求只是意图，链接里的数值不会被当作结果。
 
 - JSON Schema：https://imanity.github.io/Tamatamatori/solve.schema.json
 - 机位格式另见：https://imanity.github.io/Tamatamatori/shot-format.md
 
 ## 交给用户的方式
 
-链接：`https://imanity.github.io/Tamatamatori/#solve=json:` 后接 URL 编码的 JSON（`encodeURIComponent`）。用户打开后先看到预览：求法、天体、目标（注明来自地标目录，或“来自请求中的坐标，未核实”）、日期、条件以及会改动的拍摄计划字段；确认后才进入推算模式，可撤销。整段不超过 16 KB。
+链接：`https://imanity.github.io/Tamatamatori/#solve=json:` 后接 URL 编码的 JSON（`encodeURIComponent`）。用户打开后先看到预览：镜头、各目标（注明来自地标目录，或“来自请求中的坐标，未核实”）、搜索范围、筛选以及会改动的拍摄计划字段；确认后进入推算模式并开始搜索，可撤销。整段不超过 16 KB。
 
-## 三种求法
+## 能求出什么
 
-| `kind` | 已知 | 求 | 必填 |
-| --- | --- | --- | --- |
-| `"time"` 找时间 | 机位与天体在天空中的期望位置 | 日期跨度内对齐的时刻 | `mark` |
-| `"position"` 找机位 | 地面目标与某一天 | 当天能让天体落在目标顶部的机位（可拍时段） | `target` |
-| `"range"` 两者都找 | 地面目标、主体大小与一段日期 | 哪天、在哪里拍（候选） | `target` |
+相机保持水平，焦距与画幅由 `lens` 给定。剩下机位经纬度、时刻、相机方位与俯仰五个量，每个“目标在画面某处”用掉两个。
 
-## 字段
+| 目标与范围 | 结果 |
+| --- | --- |
+| 一个地面点 + 一个天体，机位不限或在某点周围 | 机位线：每个时刻一处机位 |
+| 同上，时刻固定 | 机位点 |
+| 一个地面点 + 一个天体，机位固定 | 天体经过画面位置的时刻（按容差） |
+| 一个天体，机位与朝向都固定 | 天体落到画面位置的时刻 |
+| 两个天体 | 两者到达设定相对位置的时刻；与机位基本无关 |
+| 只有一个目标（朝向不固定）、两个地面点、三个以上目标、机位与时刻都固定 | 不搜索，报出原因 |
 
-| 字段 | 求法 | 取值 | 缺省 |
-| --- | --- | --- | --- |
-| `format` / `version` | 全部 | `"tamatamatori.solve"` / `1` | 必填；更高版本拒绝读取 |
-| `name` | 全部 | 文本，最多 40 字 | 空 |
-| `body` | 全部 | `"sun"` / `"moon"`，或下面“固定方向天体”中的 id | 必填 |
-| `mark` | time | `{ "azimuth", "elevation" }`：天体中心的视方位（度，正北 0、顺时针）与视高度（-0.25—89°，含所选折射） | 必填 |
-| `camera` | time | `{ "latitude", "longitude", "heightAboveGround" }`，离地 0.1—100 m | 沿用打开者当前机位 |
-| `target` | position、range | `{ "landmark": id }`，或 `{ "latitude", "longitude", "height", "name" }`；`height` 为天体要落在的点高出地面的米数（0—1000；山顶等地面上的点为 0，塔顶、楼顶为其高度） | 必填；地标高度缺省为其高度，坐标为 0 |
-| `frame` | position、range | `{ "x", "y" }`：目标顶部在画面中的位置，自左上角起算的比例（0—1）；只影响试看时的拍摄方向 | 画面中心 |
-| `date` | 全部 | 当地日期 `"YYYY-MM-DD"`：time、range 为起始日；position 为时间轴范围的起始日（开启夜空类图层时为当天中午起 24 小时） | 打开者当前拍摄日期 |
-| `days` | time | `30` / `90` / `365` / `1096` | 365 |
-| `days` | range | `7` / `30` / `90` / `365` | 30 |
-| `timeZone` | 全部 | IANA 时区；给出时按它解释日期，并改为该固定时区 | 沿用打开者当前时区 |
-| `tolerance` | time | `0.1` / `0.25` / `0.5` / `1`（中心偏离期望位置的视直径；固定方向天体按标记直径） | 0.25 |
-| `share` | range | 0.05—0.5，主体占画面高度（目标不足 10 m 时改用 `maxDistance`） | 0.3 |
-| `maxDistance` | position、range | `10000` / `20000` / `30000`，米 | 30000 |
-| `phase` | time、range，月亮 | `[下限, 上限]`，取 `0` / `0.1` / `0.25` / `0.5` / `0.75` / `0.9` / `1` | 不限 |
-| `sky` | time、range，月亮与固定方向天体 | 非空数组：`"day"` 白天、`"golden"` 黄金、`"blue"` 蓝调、`"twilight"` 暮光、`"night"` 暗夜 | 不限 |
+## 顶层字段
+
+| 字段 | 取值 | 缺省 |
+| --- | --- | --- |
+| `format` / `version` | `"tamatamatori.solve"` / `2` | 必填；更高版本拒绝读取；`1` 按下文转换 |
+| `name` | 文本，最多 40 字 | 空 |
+| `lens` | `{ "focalLength", "sensor", "sensorSize", "aspectRatio", "orientation" }`：焦距 8—1000 mm；传感器 `"full-frame"` / `"aps-c"` / `"micro-four-thirds"` / `"custom"`；画幅 `"3:2"` / `"16:9"` / `"1:1"`；`"landscape"` 横幅 / `"portrait"` 竖幅 | 沿用打开者当前镜头 |
+| `targets` | 1—2 个目标，见下 | 必填 |
+| `camera` | 机位的搜索范围，见下 | 不限，最远 30 km |
+| `time` | 时间的搜索范围，见下 | 打开者当前日期起 30 天 |
+| `timeZone` | IANA 时区；给出时按它解释日期，并改为该固定时区 | 沿用打开者当前时区 |
+| `filters` | 筛选条件数组，见下 | 无 |
+
+## 目标
+
+所有目标都有 `frame`（`{ "x", "y" }`，自画面左上角起算的比例，缺省为中心）与 `tolerance`（画面高度的比例，0.005—0.2，缺省 0.03）。
+
+| `type` | 字段 | 说明 |
+| --- | --- | --- |
+| `"ground"` 地面点 | `landmark`（已接入地标 id），或 `latitude` 与 `longitude`；`name` | 坐标目标标为“未核实”，须在地图上确认 |
+| | `height` 与 `reference` | `"ground"`（缺省）：高出地面的米数（0—1000），山顶为 0，塔顶为塔高；地标缺省为其高度。`"sea"`：海拔（-500—9000），与应用的地形高程同一套数值，基准未核定 |
+| | `base` | 可选：点下方地面在画面中的纵坐标（大于 `frame.y`），用来定主体大小；只用于 `"ground"` 且高度不低于 10 m |
+| `"body"` 天体 | `body` | `"sun"` / `"moon"`，或下面“固定方向天体”中的 id |
+
+## 搜索范围
+
+| `camera.mode` | 字段 | 说明 |
+| --- | --- | --- |
+| `"free"` | `maxDistance`：`10000` / `20000` / `30000` 米 | 以地面点为中心 |
+| `"near"` | `latitude`、`longitude`、`radius`（500—30000 米） | 只列这个范围内的机位 |
+| `"fixed"` | `latitude`、`longitude`（缺省为打开者当前机位）、`aim`（`{ "azimuth", "pitch" }`，可选） | 给出 `aim` 时同时固定朝向，只能有一个天体目标 |
+
+三种机位都可带 `heightAboveGround`（0.1—100 m），打开后改为该离地高度。
+
+| `time.mode` | 字段 |
+| --- | --- |
+| `"range"` | `date`（当地起始日期，缺省为打开者当前拍摄日期）、`days`：`1` / `7` / `30` / `90` / `365` / `1096`；机位不固定时最多 365 天 |
+| `"instant"` | `instant`：UTC 时刻，例如 `"2026-11-25T08:10:00Z"` |
+
+## 筛选
+
+| `type` | 字段 | 说明 |
+| --- | --- | --- |
+| `"sky"` | `sky`：非空数组，`"day"` 白天、`"golden"` 黄金、`"blue"` 蓝调、`"twilight"` 暮光、`"night"` 暗夜 | 按太阳高度 |
+| `"moonDown"` | — | 月亮在地平线下；目标里有月亮时报错 |
+| `"moonLit"` | `range`：`[下限, 上限]`，取 `0` / `0.1` / `0.25` / `0.5` / `0.75` / `0.9` / `1` | 月亮亮面比例 |
 
 ## 固定方向天体
 
-银心、有中文名的亮星与已收录的深空目标，方向相对恒星固定（J2000 坐标经岁差与章动换算）。它们没有日月那样的视直径，期望位置按“标记直径”画出，容差也按它计；只在太阳中心低于地平线 6° 时推算，`sky` 只有 `"twilight"` 与 `"night"` 起作用。
+银心、有中文名的亮星与已收录的深空目标，方向相对恒星固定（J2000 坐标经岁差与章动换算）。它们没有日月那样的视直径，画面中按“标记直径”画出；只在太阳中心低于地平线 6° 时搜索。
 
 | id | 名称 | 类型 | 标记直径 |
 | --- | --- | --- | --- |
@@ -179,161 +210,382 @@
 
 其他目标请给坐标。应用不解析地名；不确定坐标时请让用户在应用中放置目标，不要猜测。
 
+## 版本 1
+
+`"version": 1` 的请求（`kind` 为 `"time"` / `"position"` / `"range"`）仍可打开，读入时转换：
+
+- `"time"`：机位固定（`camera` 或打开者当前机位），朝向固定为 `mark`，天体在画面中心；`tolerance`（视直径）按打开者镜头换成画面高度的比例。
+- `"position"`：地面点与天体在同一画面位置（`frame`，缺省中心），机位不限，时间为 `date` 当天。
+- `"range"`：同上，跨度为 `days`；`share` 换成底部位置 `base = frame.y + share`（目标不足 10 m 时不设）。原来“±20%”的主体占比改为底部位置的容差。
+- `phase` 换成 `moonLit`，`sky` 换成 `sky` 筛选。
+
+例：
+
+```json
+{
+  "format": "tamatamatori.solve",
+  "version": 1,
+  "kind": "range",
+  "body": "moon",
+  "target": {
+    "landmark": "tokyo-skytree"
+  },
+  "date": "2026-11-12",
+  "days": 90,
+  "share": 0.3,
+  "phase": [
+    0.9,
+    1
+  ]
+}
+```
+
+读入后等同于：
+
+```json
+{
+  "format": "tamatamatori.solve",
+  "version": 2,
+  "targets": [
+    {
+      "type": "ground",
+      "landmark": "tokyo-skytree",
+      "height": 634,
+      "reference": "ground",
+      "frame": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "base": 0.8,
+      "tolerance": 0.03
+    },
+    {
+      "type": "body",
+      "body": "moon",
+      "frame": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "tolerance": 0.03
+    }
+  ],
+  "camera": {
+    "mode": "free",
+    "maxDistance": 30000
+  },
+  "time": {
+    "mode": "range",
+    "date": "2026-11-12",
+    "days": 90
+  },
+  "filters": [
+    {
+      "type": "moonLit",
+      "range": [
+        0.9,
+        1
+      ]
+    }
+  ]
+}
+```
+
 ## 规则与限制
 
-- 未知字段、不属于该求法的字段和越界取值报错并带字段路径；缺省项在预览中列出。
-- 找时间打开时转向期望位置（方位与俯仰），给出 `camera` 时移到该机位；找机位把拍摄日期移到 `date`；其他字段不改。
+- 未知字段、组合不支持与越界取值报错并带字段路径（如 `targets[1].frame.x`）；缺省项在预览中列出。
+- 打开时：给出 `lens` 则改为该镜头；固定机位移到该机位（给出 `aim` 时转向）；`"instant"` 移到该时刻；只搜一天时把拍摄日期移到 `date`；其他字段不改。
 - 天体位置按海平面地平与所选折射；遮挡只看地形起伏，视线被地形挡住的机位不列出；不含建筑与树木；不含天气。结果是构图模拟，不保证实景可见。
 - 推算面板的“复制推算请求”给出同样的链接，“复制结果”给出 Markdown 表格，可交回 AI 挑选。
 
 ## 示例
 
-### 找时间：月亮从期望位置经过
+### 深空天体在山顶上方：仙女座星系在富士山顶正上方，105 mm 竖幅，90 天内暗夜、月亮在地平线下
 
 ```json
 {
   "$schema": "https://imanity.github.io/Tamatamatori/solve.schema.json",
   "format": "tamatamatori.solve",
-  "version": 1,
-  "kind": "time",
-  "body": "moon",
-  "mark": {
-    "azimuth": 244.6,
-    "elevation": 10.7
+  "version": 2,
+  "name": "M31 与富士山",
+  "lens": {
+    "focalLength": 105,
+    "sensor": "full-frame",
+    "aspectRatio": "3:2",
+    "orientation": "portrait"
   },
+  "targets": [
+    {
+      "type": "ground",
+      "latitude": 35.3606,
+      "longitude": 138.7274,
+      "name": "富士山顶",
+      "height": 0,
+      "reference": "ground",
+      "frame": {
+        "x": 0.5,
+        "y": 0.67
+      },
+      "tolerance": 0.03
+    },
+    {
+      "type": "body",
+      "body": "dso-ngc0224",
+      "frame": {
+        "x": 0.5,
+        "y": 0.52
+      },
+      "tolerance": 0.03
+    }
+  ],
   "camera": {
+    "mode": "free",
+    "maxDistance": 30000
+  },
+  "time": {
+    "mode": "range",
+    "date": "2026-11-13",
+    "days": 90
+  },
+  "timeZone": "Asia/Tokyo",
+  "filters": [
+    {
+      "type": "sky",
+      "sky": [
+        "night"
+      ]
+    },
+    {
+      "type": "moonDown"
+    }
+  ]
+}
+```
+
+```text
+https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22name%22%3A%22M31%20%E4%B8%8E%E5%AF%8C%E5%A3%AB%E5%B1%B1%22%2C%22lens%22%3A%7B%22focalLength%22%3A105%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22portrait%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.67%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22dso-ngc0224%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.52%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A90%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%7B%22type%22%3A%22sky%22%2C%22sky%22%3A%5B%22night%22%5D%7D%2C%7B%22type%22%3A%22moonDown%22%7D%5D%7D
+```
+
+### 钻石富士：太阳落在富士山顶正中，机位不限
+
+```json
+{
+  "$schema": "https://imanity.github.io/Tamatamatori/solve.schema.json",
+  "format": "tamatamatori.solve",
+  "version": 2,
+  "lens": {
+    "focalLength": 400,
+    "sensor": "full-frame",
+    "aspectRatio": "3:2",
+    "orientation": "landscape"
+  },
+  "targets": [
+    {
+      "type": "ground",
+      "latitude": 35.3606,
+      "longitude": 138.7274,
+      "name": "富士山顶",
+      "height": 0,
+      "reference": "ground",
+      "frame": {
+        "x": 0.5,
+        "y": 0.6
+      },
+      "tolerance": 0.03
+    },
+    {
+      "type": "body",
+      "body": "sun",
+      "frame": {
+        "x": 0.5,
+        "y": 0.6
+      },
+      "tolerance": 0.03
+    }
+  ],
+  "camera": {
+    "mode": "free",
+    "maxDistance": 30000
+  },
+  "time": {
+    "mode": "range",
+    "date": "2027-01-01",
+    "days": 90
+  },
+  "timeZone": "Asia/Tokyo",
+  "filters": []
+}
+```
+
+```text
+https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22lens%22%3A%7B%22focalLength%22%3A400%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22sun%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222027-01-01%22%2C%22days%22%3A90%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%5D%7D
+```
+
+### 月亮落在晴空塔塔尖，塔身占画面约 35%（塔顶加底部）
+
+```json
+{
+  "$schema": "https://imanity.github.io/Tamatamatori/solve.schema.json",
+  "format": "tamatamatori.solve",
+  "version": 2,
+  "lens": {
+    "focalLength": 200,
+    "sensor": "full-frame",
+    "aspectRatio": "3:2",
+    "orientation": "portrait"
+  },
+  "targets": [
+    {
+      "type": "ground",
+      "landmark": "tokyo-skytree",
+      "height": 634,
+      "reference": "ground",
+      "frame": {
+        "x": 0.5,
+        "y": 0.35
+      },
+      "base": 0.7,
+      "tolerance": 0.03
+    },
+    {
+      "type": "body",
+      "body": "moon",
+      "frame": {
+        "x": 0.5,
+        "y": 0.35
+      },
+      "tolerance": 0.03
+    }
+  ],
+  "camera": {
+    "mode": "free",
+    "maxDistance": 30000
+  },
+  "time": {
+    "mode": "range",
+    "date": "2026-11-13",
+    "days": 30
+  },
+  "timeZone": "Asia/Tokyo",
+  "filters": [
+    {
+      "type": "moonLit",
+      "range": [
+        0.9,
+        1
+      ]
+    }
+  ]
+}
+```
+
+```text
+https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22lens%22%3A%7B%22focalLength%22%3A200%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22portrait%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22landmark%22%3A%22tokyo-skytree%22%2C%22height%22%3A634%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.35%7D%2C%22base%22%3A0.7%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22moon%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.35%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A30%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%7B%22type%22%3A%22moonLit%22%2C%22range%22%3A%5B0.9%2C1%5D%7D%5D%7D
+```
+
+### 固定机位：月亮从富士山顶右上方经过的时刻（3 年内）
+
+```json
+{
+  "$schema": "https://imanity.github.io/Tamatamatori/solve.schema.json",
+  "format": "tamatamatori.solve",
+  "version": 2,
+  "lens": {
+    "focalLength": 200,
+    "sensor": "full-frame",
+    "aspectRatio": "3:2",
+    "orientation": "landscape"
+  },
+  "targets": [
+    {
+      "type": "ground",
+      "latitude": 35.3606,
+      "longitude": 138.7274,
+      "name": "富士山顶",
+      "height": 0,
+      "reference": "ground",
+      "frame": {
+        "x": 0.45,
+        "y": 0.6
+      },
+      "tolerance": 0.03
+    },
+    {
+      "type": "body",
+      "body": "moon",
+      "frame": {
+        "x": 0.58,
+        "y": 0.42
+      },
+      "tolerance": 0.03
+    }
+  ],
+  "camera": {
+    "mode": "fixed",
     "latitude": 35.4172,
     "longitude": 138.8729,
     "heightAboveGround": 1.6
   },
-  "date": "2026-11-12",
-  "days": 365,
+  "time": {
+    "mode": "range",
+    "date": "2026-11-13",
+    "days": 1096
+  },
   "timeZone": "Asia/Tokyo",
-  "tolerance": 0.25,
-  "phase": [
-    0.9,
-    1
-  ]
+  "filters": []
 }
 ```
 
 ```text
-https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A1%2C%22kind%22%3A%22time%22%2C%22body%22%3A%22moon%22%2C%22mark%22%3A%7B%22azimuth%22%3A244.6%2C%22elevation%22%3A10.7%7D%2C%22camera%22%3A%7B%22latitude%22%3A35.4172%2C%22longitude%22%3A138.8729%2C%22heightAboveGround%22%3A1.6%7D%2C%22date%22%3A%222026-11-12%22%2C%22days%22%3A365%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22tolerance%22%3A0.25%2C%22phase%22%3A%5B0.9%2C1%5D%7D
+https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22lens%22%3A%7B%22focalLength%22%3A200%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.45%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22moon%22%2C%22frame%22%3A%7B%22x%22%3A0.58%2C%22y%22%3A0.42%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22fixed%22%2C%22latitude%22%3A35.4172%2C%22longitude%22%3A138.8729%2C%22heightAboveGround%22%3A1.6%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A1096%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%5D%7D
 ```
 
-### 找机位：某天让太阳落在晴空塔塔尖
+### 两个天体：月亮在昴星团左下方（与机位基本无关）
 
 ```json
 {
   "$schema": "https://imanity.github.io/Tamatamatori/solve.schema.json",
   "format": "tamatamatori.solve",
-  "version": 1,
-  "kind": "position",
-  "body": "sun",
-  "target": {
-    "landmark": "tokyo-skytree",
-    "height": 634
+  "version": 2,
+  "lens": {
+    "focalLength": 135,
+    "sensor": "full-frame",
+    "aspectRatio": "3:2",
+    "orientation": "landscape"
   },
-  "date": "2026-12-21",
-  "timeZone": "Asia/Tokyo",
-  "maxDistance": 30000
-}
-```
-
-```text
-https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A1%2C%22kind%22%3A%22position%22%2C%22body%22%3A%22sun%22%2C%22target%22%3A%7B%22landmark%22%3A%22tokyo-skytree%22%2C%22height%22%3A634%7D%2C%22date%22%3A%222026-12-21%22%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22maxDistance%22%3A30000%7D
-```
-
-### 两者都找：90 天内晴空塔与接近满月的月亮，主体占画面 30%，塔尖在上三分线
-
-```json
-{
-  "$schema": "https://imanity.github.io/Tamatamatori/solve.schema.json",
-  "format": "tamatamatori.solve",
-  "version": 1,
-  "name": "晴空塔满月",
-  "kind": "range",
-  "body": "moon",
-  "target": {
-    "landmark": "tokyo-skytree",
-    "height": 634
-  },
-  "frame": {
-    "x": 0.5,
-    "y": 0.333
-  },
-  "date": "2026-11-12",
-  "days": 90,
-  "timeZone": "Asia/Tokyo",
-  "share": 0.3,
-  "maxDistance": 30000,
-  "phase": [
-    0.9,
-    1
+  "targets": [
+    {
+      "type": "body",
+      "body": "dso-mel022",
+      "frame": {
+        "x": 0.6,
+        "y": 0.4
+      },
+      "tolerance": 0.03
+    },
+    {
+      "type": "body",
+      "body": "moon",
+      "frame": {
+        "x": 0.4,
+        "y": 0.6
+      },
+      "tolerance": 0.05
+    }
   ],
-  "sky": [
-    "blue",
-    "twilight",
-    "night"
-  ]
-}
-```
-
-```text
-https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A1%2C%22name%22%3A%22%E6%99%B4%E7%A9%BA%E5%A1%94%E6%BB%A1%E6%9C%88%22%2C%22kind%22%3A%22range%22%2C%22body%22%3A%22moon%22%2C%22target%22%3A%7B%22landmark%22%3A%22tokyo-skytree%22%2C%22height%22%3A634%7D%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.333%7D%2C%22date%22%3A%222026-11-12%22%2C%22days%22%3A90%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22share%22%3A0.3%2C%22maxDistance%22%3A30000%2C%22phase%22%3A%5B0.9%2C1%5D%2C%22sky%22%3A%5B%22blue%22%2C%22twilight%22%2C%22night%22%5D%7D
-```
-
-### 两者都找：12 个月内银心落在晴空塔塔尖（暗夜）
-
-```json
-{
-  "$schema": "https://imanity.github.io/Tamatamatori/solve.schema.json",
-  "format": "tamatamatori.solve",
-  "version": 1,
-  "kind": "range",
-  "body": "galactic-center",
-  "target": {
-    "landmark": "tokyo-skytree",
-    "height": 634
+  "camera": {
+    "mode": "free",
+    "maxDistance": 30000
   },
-  "date": "2027-03-01",
-  "days": 365,
-  "timeZone": "Asia/Tokyo",
-  "share": 0.25,
-  "maxDistance": 30000,
-  "sky": [
-    "night"
-  ]
-}
-```
-
-```text
-https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A1%2C%22kind%22%3A%22range%22%2C%22body%22%3A%22galactic-center%22%2C%22target%22%3A%7B%22landmark%22%3A%22tokyo-skytree%22%2C%22height%22%3A634%7D%2C%22date%22%3A%222027-03-01%22%2C%22days%22%3A365%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22share%22%3A0.25%2C%22maxDistance%22%3A30000%2C%22sky%22%3A%5B%22night%22%5D%7D
-```
-
-### 两者都找：坐标目标（山顶，高度 0 表示地面）
-
-```json
-{
-  "$schema": "https://imanity.github.io/Tamatamatori/solve.schema.json",
-  "format": "tamatamatori.solve",
-  "version": 1,
-  "kind": "range",
-  "body": "sun",
-  "target": {
-    "latitude": 35.3606,
-    "longitude": 138.7274,
-    "height": 0,
-    "name": "富士山顶"
+  "time": {
+    "mode": "range",
+    "date": "2026-11-13",
+    "days": 365
   },
-  "date": "2027-01-01",
-  "days": 90,
   "timeZone": "Asia/Tokyo",
-  "share": 0.3,
-  "maxDistance": 30000
+  "filters": []
 }
 ```
 
 ```text
-https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A1%2C%22kind%22%3A%22range%22%2C%22body%22%3A%22sun%22%2C%22target%22%3A%7B%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22height%22%3A0%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%7D%2C%22date%22%3A%222027-01-01%22%2C%22days%22%3A90%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22share%22%3A0.3%2C%22maxDistance%22%3A30000%7D
+https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22lens%22%3A%7B%22focalLength%22%3A135%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22body%22%2C%22body%22%3A%22dso-mel022%22%2C%22frame%22%3A%7B%22x%22%3A0.6%2C%22y%22%3A0.4%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22moon%22%2C%22frame%22%3A%7B%22x%22%3A0.4%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.05%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A365%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%5D%7D
 ```

@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { CHECK_LIMIT, CHECK_RADIUS, CHECK_TILE_LIMIT, CHECK_ZOOM, checkLabel, checkPlace, checkPoints, fitTargets, indexFeatures } from "../domain/feasibility";
 import type { CheckTarget, PlaceCheck } from "../domain/feasibility";
-import type { ShootingPlan } from "../domain/plan";
 import { DEFAULT_TERRAIN_URL, DEFAULT_WATER_URL, terrainTile } from "../domain/terrain";
-import type { AlignmentState } from "./Alignment";
 
 const terrainUrl = import.meta.env.VITE_TERRAIN_TILEJSON_URL?.trim() || DEFAULT_TERRAIN_URL;
 const featureUrl = import.meta.env.VITE_WATER_TILEJSON_URL?.trim() || DEFAULT_WATER_URL;
@@ -11,21 +9,6 @@ const tileOf = (point: { latitude: number; longitude: number }) => {
   const tile = terrainTile(point, CHECK_ZOOM);
   return `${tile.x}/${tile.y}`;
 };
-
-/** What "检查机位" looks at: the camera (找时间), or the middle of each listed stretch (找机位) or candidate (两者都找). */
-export function checkTargets(alignment: AlignmentState, plan: ShootingPlan): CheckTarget[] {
-  const height = plan.cameraHeight;
-  if (alignment.kind === "time") {
-    const mark = alignment.settings.target;
-    return mark ? [{ key: `camera/${plan.latitude}/${plan.longitude}/${mark.azimuth}/${mark.elevation}`, latitude: plan.latitude, longitude: plan.longitude,
-      cameraHeight: height, azimuth: mark.azimuth, elevation: mark.elevation }] : [];
-  }
-  const listed = alignment.kind === "position" ? alignment.position.candidates : alignment.range.kept;
-  return listed.map(({ key, middle }) => ({
-    key, latitude: middle.latitude, longitude: middle.longitude, ground: middle.cameraGround,
-    cameraHeight: height, azimuth: middle.azimuth, elevation: middle.elevation,
-  }));
-}
 
 interface CheckRun {
   basis: string;
@@ -40,12 +23,11 @@ interface CheckRun {
 }
 
 /**
- * "检查机位", run on request. The results belong to the listed positions and
- * the camera height: when either changes they are no longer shown.
+ * "检查机位", run on request for the listed camera places. The results belong
+ * to those places and the camera height: when either changes they are no longer shown.
  */
-export function useFeasibility(alignment: AlignmentState, plan: ShootingPlan) {
-  const targets = checkTargets(alignment, plan);
-  const basis = `${alignment.kind}/${plan.cameraHeight}/${targets.map((target) => target.key).join("|")}`;
+export function useFeasibility(targets: readonly CheckTarget[], cameraHeight: number) {
+  const basis = `${cameraHeight}/${targets.map((target) => target.key).join("|")}`;
   const [run, setRun] = useState<CheckRun | null>(null);
   const controller = useRef<AbortController | null>(null);
   useEffect(() => () => controller.current?.abort(), []);

@@ -1,8 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { calendarText, foldLine, positionEvents, rangeEvents, solveShotName, timeEvents, CALENDAR_LIMIT } from "../src/domain/solve-calendar.ts";
-import { distinctPoints, groundDistance, pointPlan, travel } from "../src/domain/position-alignment.ts";
+import { calendarText, foldLine, resultEvents, solveShotName, CALENDAR_LIMIT } from "../src/domain/solve-calendar.ts";
+import { groundDistance, pointPlan, travel } from "../src/domain/position-alignment.ts";
 import { mergeCandidates, rangeCandidates } from "../src/domain/range-alignment.ts";
+import { lineItems, windowItem } from "../src/domain/composition.ts";
 import { initialPlan } from "../src/domain/plan.ts";
 import { parseShotText, SHOT_NAME_LIMIT } from "../src/domain/shot.ts";
 
@@ -42,49 +43,41 @@ test("日历：CRLF 换行、75 字节折行不拆字符、文本转义、UTC �
   assert.equal(lines(many).filter((line) => line === "BEGIN:VEVENT").length, CALENDAR_LIMIT);
 });
 
-test("日历事件：找时间按容差时段、找机位按列出的时段（重合的线一次）、两者都找按候选；链接打开同一个试看计划并按画面位置对准", () => {
-  const context = { plan, body: "sun", place: "富士山", site };
-  const found = { instant: "2027-02-12T07:22:30Z", from: "2027-02-12T07:22:00Z", to: "2027-02-12T07:23:00Z", separation: 0.08, diameter: 0.54, offset: "偏左下",
-    azimuth: 244.6, elevation: 10.7, illuminated: null, phaseAngle: null, sunElevation: 10.7, sky: "day" };
-  const [time] = timeEvents([found], context);
-  assert.equal(time.start, Date.parse(found.from));
-  assert.equal(time.end, Date.parse(found.to));
-  assert.equal(time.summary, "太阳对齐 · 富士山");
-  assert.match(time.description, /16:22（Asia\/Tokyo）太阳中心偏离期望位置 0\.15 个视直径（偏左下）[\s\S]*天空：白天[\s\S]*打开机位：https:/);
-  const opened = parseShotText(time.url);
-  assert.equal(opened.ok, true);
-  assert.equal(opened.plan.instant, "2027-02-12T07:22:30Z");
-  assert.equal(opened.plan.layers.sun, true, "the body's layer is on, as in a try-out");
-  assert.equal(opened.shot.name, "富士山 · 太阳 02-12 16:22");
-  // Two branches 30 m apart over the same minutes are one line.
+test("日历事件：每个结果一个事件——机位线按段、固定机位按时段；重合的线只一次，链接打开同一试看并按画面位置对准", () => {
+  const lens = { focalLength: 200, sensor: "full-frame", aspectRatio: "3:2", orientation: "landscape" };
+  const ground = { kind: "ground", id: "g", name: "富士山顶正中", latitude: 35.3606, longitude: 138.7274, height: 0, reference: "ground", frame: { x: 0.5, y: 0.6 }, base: null, tolerance: 0.03 };
+  // Two branches 30 m apart over the same minutes are one line; a third 5 km away is another.
   const line = (branch, offset) => Array.from({ length: 5 }, (_, index) => ({
     ...travel({ latitude: 35.43, longitude: 138.87 }, 60, index * 100 + offset), time: Date.parse("2026-02-04T07:10:00Z") + index * 60_000,
-    distance: 14_000 + index * 100, azimuth: 241.2, elevation: 10.7, cameraGround: 985, residual: 0, sight: "clear", branch,
+    distance: 14_000 + index * 100, azimuth: 241.2, elevation: 10.7, cameraGround: 985, residual: 0, sight: "clear", branch, day: "2026-02-04", share: null,
   }));
-  const stretches = mergeCandidates(rangeCandidates({ body: "sun" }, [...line(0, 0), ...line(1, 30), ...line(2, 5000)], { splitSky: true })).candidates;
-  const segments = positionEvents(stretches, { ...context, place: "富士山顶正中" });
-  assert.equal(segments.length, 2);
-  const middle = line(0, 0)[2];
-  const segmentShot = parseShotText(segments[0].url);
-  assert.deepEqual({ latitude: segmentShot.plan.latitude, longitude: segmentShot.plan.longitude, instant: segmentShot.plan.instant },
-    { ...(({ latitude, longitude, instant }) => ({ latitude, longitude, instant }))(pointPlan(plan.layers, middle, "sun")) });
-  assert.equal(segments[0].location.latitude, middle.latitude);
-  assert.match(segments[0].description, /距目标 14\.0—14\.4 km；视线未被地形挡住\n天空：白天/);
-  // A framing below the centre: the link looks up so the top sits there; the bearing stays (straight below).
-  const [framed] = positionEvents(stretches, { ...context, place: "富士山顶正中", frame: { x: 0, y: 1 / 3 } });
-  const framedShot = parseShotText(framed.url);
-  assert.equal(framedShot.plan.instant, segmentShot.plan.instant);
-  assert.ok(framedShot.plan.pitch > segmentShot.plan.pitch + 1);
-  assert.ok(Math.abs(framedShot.plan.azimuth - segmentShot.plan.azimuth) < 1e-3);
-  const candidate = { key: "a", day: "2026-11-25", points: line(0, 0).map((point) => ({ ...point, day: "2026-11-25", share: 0.3 })), middle: { ...middle, day: "2026-11-25", share: 0.3 },
-    start: line(0, 0)[0].time, end: line(0, 0)[4].time, near: 14_000, far: 14_400, share: [0.28, 0.31], sky: "blue", illuminated: 0.99, clear: 1 };
-  const [range] = rangeEvents([candidate], { ...context, body: "moon", place: "晴空塔" });
-  assert.equal(range.summary, "月亮 · 晴空塔");
-  assert.match(range.description, /主体占画面 28%—31%[\s\S]*天空：蓝调，亮面 99%/);
-  assert.equal(parseShotText(range.url).plan.layers.moon, true);
+  const { items } = lineItems([...line(0, 0), ...line(1, 30), ...line(2, 5000)], { body: "sun", filters: [], splitSky: true, share: null });
+  assert.equal(items.length, 2);
+  const basis = { lens, ground, bodies: ["sun"] };
+  const events = resultEvents(items, { plan, body: "sun", place: "富士山顶正中", site, basis, names: "太阳" });
+  assert.equal(events.length, 2);
+  assert.equal(events[0].summary, "太阳 · 富士山顶正中");
+  assert.equal(events[0].start, items[0].start);
+  assert.match(events[0].description, /机位沿线随时间移动；最大偏差 0\.0% 画面高\n距地面目标 14\.0—14\.4 km\n天空：白天；月亮/);
+  const middle = items[0].points.find((point) => point.time === items[0].best);
+  const opened = parseShotText(events[0].url);
+  assert.equal(opened.ok, true);
+  assert.deepEqual([opened.plan.latitude, opened.plan.longitude, opened.plan.instant], [Math.round(middle.latitude * 1e6) / 1e6, Math.round(middle.longitude * 1e6) / 1e6, "2026-02-04T07:12:00Z"]);
+  assert.equal(opened.plan.layers.sun, true, "the body's layer is on, as in a try-out");
+  assert.equal(opened.shot.name, "富士山顶正中 · 太阳 02-04 16:12");
+  // The top below the centre: the link looks up, on the same bearing (the top straight below the centre).
+  assert.deepEqual([opened.plan.azimuth, opened.plan.pitch > middle.elevation], [pointPlan(plan.layers, middle, "sun").azimuth, true]);
+  // A still camera: its window, its aim.
+  const still = windowItem({ start: Date.parse("2027-02-12T07:22:00Z"), end: Date.parse("2027-02-12T07:23:00Z"), best: Date.parse("2027-02-12T07:22:30Z"), deviation: 0.01 },
+    { latitude: 35.4172, longitude: 138.8729 }, { azimuth: 244.6, pitch: 10.7 }, "2027-02-12");
+  const [time] = resultEvents([still], { plan, body: "sun", place: "35.417°N 138.873°E", site, basis: { lens, ground: null, bodies: ["sun"] }, names: "太阳" });
+  assert.equal(time.start, still.start);
+  assert.equal(time.end, still.end);
+  assert.match(time.description, /16:22–16:23（Asia\/Tokyo）机位固定；最大偏差 1\.0% 画面高/);
+  const shot = parseShotText(time.url);
+  assert.deepEqual([shot.plan.instant, shot.plan.azimuth, shot.plan.pitch, shot.plan.layers.sun], ["2027-02-12T07:22:30Z", 244.6, 10.7, true]);
 });
-
-test("合并几乎重合的结果：同一天、时段相接且中点不到 300 m 才合并，保留分钟多的；同一分钟不到 200 m 的解只列一个且优先通视", () => {
+test("合并几乎重合的结果：同一天、时段相接且中点不到 300 m 才合并，保留分钟多的", () => {
   const at = (distance) => travel({ latitude: 35.7, longitude: 139.8 }, 240, distance);
   // Minutes step 100 m along the line from `distance`; the middle is the middle minute.
   const candidate = (key, day, start, minutes, distance, clear = 1) => {
@@ -109,9 +102,6 @@ test("合并几乎重合的结果：同一天、时段相接且中点不到 300 
   assert.ok(groundDistance(long.middle, at(14_900)) > 1000);
   assert.deepEqual(mergeCandidates([long, candidate("once", "d", t, 1, 14_950)]).candidates.map((item) => item.key), ["long"]);
   assert.equal(mergeCandidates([long, candidate("apart", "d", t, 1, 15_500)]).merged, 0);
-  const point = (distance, sight, time = t) => ({ ...at(distance), time, sight, id: `${distance}/${sight}` });
-  const listed = distinctPoints([point(24_500, "blocked"), point(24_550, "clear"), point(25_100, "clear"), point(25_150, "clear"), point(27_000, "unknown"), point(24_500, "clear", t + 600_000)]);
-  assert.deepEqual(listed.map((item) => item.id), ["24550/clear", "25100/clear", "27000/unknown", "24500/clear"]);
 });
 
 test("试看计划：机位与方向取整到输入框精度，时刻为整秒 UTC，只开启对应天体图层", () => {

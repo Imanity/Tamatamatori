@@ -54,7 +54,9 @@ flowchart TD
 
 第三轮“两者都找”的求解在 `src/domain/range-alignment.ts`：主体占比换算距离带，按高度上限预筛分钟，逐日复用找机位的求解并按实际 DEM 重算主体占比。多日计算放在模块 Worker（`src/preview/range.worker.ts`）中，分 `plan`（可用分钟、走廊、扇区）与 `solve`（带瓦片逐日求解）两步；消息处理（`range-worker.ts`）不依赖 Worker 全局对象，浏览器不支持时主线程按日分段。DEM 取样函数 `tileSampler` 在 `src/domain/terrain.ts`，两边共用。
 
-推算状态由 App 中的 `useAlignment`（含找机位的 `usePositionSearch`、两者都找的 `useRangeSearch`）保存，地图、预览、时间轴与面板共用；不进入拍摄计划、机位与会话。面板经 portal 输出到右栏，时间轴通过 `extraEvents` 接收“对齐”刻度，地图用独立 GeoJSON 源画目标与对齐线。试看只经同一 `update` 修改拍摄计划：找时间改时刻与日月图层，找机位另改经纬度与方向。详见[机位推算](../plan/reverse-planning.md)。
+第十轮起三种求法统一为构图约束搜索（`src/domain/composition.ts`）：目标（地面点或天体，各带画面位置与容差）、搜索范围与筛选组成条件，`classify` 判断能求出什么并选择求解器——地面点加天体且机位不固定时用找机位的求解器（`PairFrames` 把两者的画面位置差按俯仰换算成方位差与高度差，底部位置按实际投影检查），机位固定时由地面点或固定朝向定出天体方向后用找时间的求解器，两个天体时按分钟扫描相对画面位置。`aimAt` 是 `frameDirection` 的逆，求出把某方向放到画面某处的相机朝向；`tryPatch` 统一写出试看字段。筛选先在目标处带余量预筛分钟（`Prefilter`），求解后逐分钟精确检查。推算请求 v2 在 `solve.ts`，v1 读入时按打开者镜头转换。
+
+推算状态由 App 中的 `useComposition`（`src/components/Composition.tsx`）保存，地图、预览标记（`CompositionMarks.tsx`）、时间轴与面板共用；不进入拍摄计划、机位与会话。搜索显式触发，结果属于发起搜索时的条件快照，条件改变只标为过期。多日机位线经 `solve-runner.ts` 交给模块 Worker。面板经 portal 输出到右栏，时间轴通过 `extraEvents` 接收“对齐”刻度，地图用独立 GeoJSON 源画地面点、范围与结果线。试看只经同一 `update` 修改拍摄计划。详见[构图约束搜索](../plan/composition-search.md)。
 
 推算请求是推算条件的对外表示（`src/domain/solve.ts`，格式 `tamatamatori.solve` v1），与机位格式并列：请求只描述意图，数值总在本机求解，求出的结果经试看成为普通机位，因此机位格式不加意图字段。`solvePlan` 给出载入后的计划，`solveRequestOf` 把面板状态写回请求，`useAlignment.load` 写入面板状态。App 在载入与 hash 改变时读取 `#shot=`、`#solve=`，经预览确认后才改计划，关闭预览即以 `history.replaceState` 清除 hash；hash 不发送给服务器。链接与 `$schema` 按页面自身地址生成（`src/domain/site.ts`）。对外说明 `public/llms.txt`、两份格式说明与 JSON Schema 由 `scripts/formats.mjs` 按代码常量生成，构建时校验不漂移；应用解析器仍是格式的权威，schema 只镜像其规则。
 

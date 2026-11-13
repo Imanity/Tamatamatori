@@ -1,15 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://imanity.github.io/Tamatamatori/solve.schema.json",
-  "title": "Tamatamatori 推算请求 v1",
-  "description": "求拍摄时间或机位的条件，由应用在本机推算。未知字段与不属于该求法的字段报错。说明见 https://imanity.github.io/Tamatamatori/solve-format.md",
+  "title": "Tamatamatori 推算请求 v2",
+  "description": "构图约束搜索：画面里的目标与它们的位置、镜头、搜索范围与筛选，由应用在本机搜索拍摄时间或机位。未知字段报错。版本 1 的请求仍可打开（按规则转换）。说明见 https://imanity.github.io/Tamatamatori/solve-format.md",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "format",
     "version",
-    "kind",
-    "body"
+    "targets"
   ],
   "properties": {
     "$schema": {
@@ -20,226 +19,399 @@
       "const": "tamatamatori.solve"
     },
     "version": {
-      "const": 1
+      "const": 2
     },
     "name": {
       "type": "string",
       "maxLength": 40
     },
-    "kind": {
-      "enum": [
-        "time",
-        "position",
-        "range"
-      ],
-      "description": "time 找时间（机位已定）；position 找机位（某一天）；range 两者都找（一段日期）"
-    },
-    "body": {
-      "enum": [
-        "sun",
-        "moon",
-        "galactic-center",
-        "hyg-32263",
-        "hyg-30365",
-        "hyg-69451",
-        "hyg-71456",
-        "hyg-90979",
-        "hyg-24549",
-        "hyg-24378",
-        "hyg-37173",
-        "hyg-7574",
-        "hyg-27919",
-        "hyg-68483",
-        "hyg-97338",
-        "hyg-60530",
-        "hyg-21368",
-        "hyg-65269",
-        "hyg-80519",
-        "hyg-37718",
-        "hyg-113008",
-        "hyg-62239",
-        "hyg-101767",
-        "hyg-71453",
-        "hyg-49528",
-        "hyg-33492",
-        "hyg-36744",
-        "hyg-60893",
-        "hyg-85665",
-        "hyg-25273",
-        "hyg-25364",
-        "hyg-45106",
-        "hyg-26246",
-        "hyg-108922",
-        "hyg-26662",
-        "hyg-39840",
-        "hyg-62757",
-        "hyg-15824",
-        "hyg-89906",
-        "hyg-53905",
-        "hyg-34354",
-        "hyg-67088",
-        "hyg-40921",
-        "hyg-85965",
-        "hyg-28288",
-        "hyg-82022",
-        "hyg-31601",
-        "hyg-42794",
-        "hyg-100425",
-        "hyg-11734",
-        "hyg-30251",
-        "hyg-46259",
-        "hyg-9861",
-        "hyg-50440",
-        "hyg-3413",
-        "hyg-92564",
-        "hyg-68714",
-        "hyg-676",
-        "hyg-5436",
-        "hyg-27298",
-        "hyg-72380",
-        "hyg-111768",
-        "hyg-85769",
-        "hyg-14540",
-        "hyg-9618",
-        "hyg-57459",
-        "hyg-4417",
-        "hyg-61739",
-        "hyg-39318",
-        "hyg-45425",
-        "hyg-76035",
-        "hyg-44689",
-        "hyg-65173",
-        "hyg-100128",
-        "hyg-3172",
-        "hyg-87561",
-        "hyg-25865",
-        "hyg-744",
-        "hyg-78165",
-        "hyg-82144",
-        "hyg-53754",
-        "hyg-71879",
-        "hyg-106972",
-        "hyg-86403",
-        "hyg-2076",
-        "hyg-57828",
-        "hyg-83755",
-        "hyg-113521",
-        "hyg-35806",
-        "hyg-104861",
-        "hyg-45809",
-        "hyg-102157",
-        "hyg-113603",
-        "dso-ngc0224",
-        "dso-ngc1976",
-        "dso-mel022",
-        "dso-ngc6523",
-        "dso-ngc7000",
-        "dso-ngc1499",
-        "dso-ic1805",
-        "dso-ic1848",
-        "dso-ngc6514",
-        "dso-ngc0598",
-        "dso-ngc2237",
-        "dso-ic0434",
-        "dso-ngc2024",
-        "dso-sh2-276",
-        "dso-rhooph"
-      ],
-      "description": "\"sun\"、\"moon\"，或固定方向天体：\"galactic-center\"（银心）、亮星 hyg-…、深空目标 dso-…（见格式说明的列表）"
-    },
-    "mark": {
+    "lens": {
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "azimuth",
-        "elevation"
+        "focalLength"
       ],
-      "description": "天体中心的视方位与视高度（含所选折射），度",
+      "description": "画面位置所依据的镜头；缺省沿用打开者当前镜头。给出时打开后改为此镜头",
       "properties": {
-        "azimuth": {
+        "focalLength": {
           "type": "number",
-          "description": "正北为 0、顺时针；取模归一"
+          "minimum": 8,
+          "maximum": 1000,
+          "description": "焦距，毫米"
         },
-        "elevation": {
-          "type": "number",
-          "minimum": -0.25,
-          "maximum": 89
+        "sensor": {
+          "enum": [
+            "full-frame",
+            "aps-c",
+            "micro-four-thirds",
+            "custom"
+          ],
+          "default": "full-frame"
+        },
+        "sensorSize": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "width",
+            "height"
+          ],
+          "description": "只在 sensor 为 \"custom\" 时，毫米",
+          "properties": {
+            "width": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "height": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        },
+        "aspectRatio": {
+          "enum": [
+            "3:2",
+            "16:9",
+            "1:1"
+          ],
+          "default": "3:2"
+        },
+        "orientation": {
+          "enum": [
+            "landscape",
+            "portrait"
+          ],
+          "default": "landscape"
         }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "description": "画面里的目标，目前最多 2 个：一个地面点加一个天体，或两个天体",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type"
+            ],
+            "description": "地面点：已接入地标，或坐标",
+            "properties": {
+              "type": {
+                "const": "ground"
+              },
+              "landmark": {
+                "enum": [
+                  "big-ben",
+                  "burj-al-arab",
+                  "burj-khalifa",
+                  "chrysler-building",
+                  "cn-tower",
+                  "eiffel-tower",
+                  "empire-state-building",
+                  "lotte-world-tower",
+                  "metlife-building",
+                  "one-world-trade-center",
+                  "oriental-pearl",
+                  "osaka-castle",
+                  "petronas-towers",
+                  "shanghai-tower",
+                  "shanghai-wfc",
+                  "sydney-opera-house",
+                  "taipei-101",
+                  "three-world-trade-center",
+                  "tokyo-skytree",
+                  "tokyo-tower",
+                  "willis-tower"
+                ]
+              },
+              "latitude": {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90,
+                "description": "纬度，北正南负"
+              },
+              "longitude": {
+                "type": "number",
+                "description": "经度，东正西负；超出 ±180 时取模归一"
+              },
+              "height": {
+                "type": "number",
+                "minimum": -500,
+                "maximum": 9000,
+                "description": "米：reference 为 \"ground\" 时为高出地面（0—1000，山顶 0，塔顶为塔高；地标缺省为其高度），为 \"sea\" 时为海拔（-500—9000）"
+              },
+              "reference": {
+                "enum": [
+                  "ground",
+                  "sea"
+                ],
+                "default": "ground",
+                "description": "ground 距地表；sea 海拔（与应用的地形高程同一套数值，基准未核定）"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "description": "目标名称"
+              },
+              "frame": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "description": "在画面中的位置，自左上角起算的比例；缺省为画面中心",
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "y": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                }
+              },
+              "base": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "底部（点下方的地面）在画面中的纵坐标，用来定主体大小；只用于 reference 为 \"ground\" 且高度不低于 10 m，须大于 frame.y"
+              },
+              "tolerance": {
+                "type": "number",
+                "minimum": 0.005,
+                "maximum": 0.2,
+                "default": 0.03,
+                "description": "容差：与画面位置相差多少仍算对齐，画面高度的比例"
+              }
+            },
+            "oneOf": [
+              {
+                "required": [
+                  "landmark"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "latitude"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "longitude"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "latitude",
+                  "longitude"
+                ],
+                "not": {
+                  "required": [
+                    "landmark"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "body"
+            ],
+            "description": "天体",
+            "properties": {
+              "type": {
+                "const": "body"
+              },
+              "body": {
+                "enum": [
+                  "sun",
+                  "moon",
+                  "galactic-center",
+                  "hyg-32263",
+                  "hyg-30365",
+                  "hyg-69451",
+                  "hyg-71456",
+                  "hyg-90979",
+                  "hyg-24549",
+                  "hyg-24378",
+                  "hyg-37173",
+                  "hyg-7574",
+                  "hyg-27919",
+                  "hyg-68483",
+                  "hyg-97338",
+                  "hyg-60530",
+                  "hyg-21368",
+                  "hyg-65269",
+                  "hyg-80519",
+                  "hyg-37718",
+                  "hyg-113008",
+                  "hyg-62239",
+                  "hyg-101767",
+                  "hyg-71453",
+                  "hyg-49528",
+                  "hyg-33492",
+                  "hyg-36744",
+                  "hyg-60893",
+                  "hyg-85665",
+                  "hyg-25273",
+                  "hyg-25364",
+                  "hyg-45106",
+                  "hyg-26246",
+                  "hyg-108922",
+                  "hyg-26662",
+                  "hyg-39840",
+                  "hyg-62757",
+                  "hyg-15824",
+                  "hyg-89906",
+                  "hyg-53905",
+                  "hyg-34354",
+                  "hyg-67088",
+                  "hyg-40921",
+                  "hyg-85965",
+                  "hyg-28288",
+                  "hyg-82022",
+                  "hyg-31601",
+                  "hyg-42794",
+                  "hyg-100425",
+                  "hyg-11734",
+                  "hyg-30251",
+                  "hyg-46259",
+                  "hyg-9861",
+                  "hyg-50440",
+                  "hyg-3413",
+                  "hyg-92564",
+                  "hyg-68714",
+                  "hyg-676",
+                  "hyg-5436",
+                  "hyg-27298",
+                  "hyg-72380",
+                  "hyg-111768",
+                  "hyg-85769",
+                  "hyg-14540",
+                  "hyg-9618",
+                  "hyg-57459",
+                  "hyg-4417",
+                  "hyg-61739",
+                  "hyg-39318",
+                  "hyg-45425",
+                  "hyg-76035",
+                  "hyg-44689",
+                  "hyg-65173",
+                  "hyg-100128",
+                  "hyg-3172",
+                  "hyg-87561",
+                  "hyg-25865",
+                  "hyg-744",
+                  "hyg-78165",
+                  "hyg-82144",
+                  "hyg-53754",
+                  "hyg-71879",
+                  "hyg-106972",
+                  "hyg-86403",
+                  "hyg-2076",
+                  "hyg-57828",
+                  "hyg-83755",
+                  "hyg-113521",
+                  "hyg-35806",
+                  "hyg-104861",
+                  "hyg-45809",
+                  "hyg-102157",
+                  "hyg-113603",
+                  "dso-ngc0224",
+                  "dso-ngc1976",
+                  "dso-mel022",
+                  "dso-ngc6523",
+                  "dso-ngc7000",
+                  "dso-ngc1499",
+                  "dso-ic1805",
+                  "dso-ic1848",
+                  "dso-ngc6514",
+                  "dso-ngc0598",
+                  "dso-ngc2237",
+                  "dso-ic0434",
+                  "dso-ngc2024",
+                  "dso-sh2-276",
+                  "dso-rhooph"
+                ],
+                "description": "\"sun\"、\"moon\"，或固定方向天体：\"galactic-center\"（银心）、亮星 hyg-…、深空目标 dso-…（见格式说明的列表）"
+              },
+              "frame": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "description": "在画面中的位置，自左上角起算的比例；缺省为画面中心",
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "y": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                }
+              },
+              "tolerance": {
+                "type": "number",
+                "minimum": 0.005,
+                "maximum": 0.2,
+                "default": 0.03,
+                "description": "容差：与画面位置相差多少仍算对齐，画面高度的比例"
+              }
+            }
+          }
+        ]
       }
     },
     "camera": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "latitude",
-        "longitude"
-      ],
-      "description": "找时间的机位；缺省沿用打开者当前机位",
-      "properties": {
-        "latitude": {
-          "type": "number",
-          "minimum": -90,
-          "maximum": 90,
-          "description": "纬度，北正南负"
-        },
-        "longitude": {
-          "type": "number",
-          "description": "经度，东正西负；超出 ±180 时取模归一"
-        },
-        "heightAboveGround": {
-          "type": "number",
-          "minimum": 0.1,
-          "maximum": 100,
-          "description": "相机离地高度，米"
-        }
-      }
-    },
-    "target": {
-      "description": "地面目标：已接入地标的 id，或坐标",
+      "description": "机位的搜索范围；缺省为不限（以地面点为中心，最远 30 km）",
       "oneOf": [
         {
           "type": "object",
           "additionalProperties": false,
           "required": [
-            "landmark"
+            "mode"
           ],
           "properties": {
-            "landmark": {
+            "mode": {
+              "const": "free"
+            },
+            "maxDistance": {
               "enum": [
-                "big-ben",
-                "burj-al-arab",
-                "burj-khalifa",
-                "chrysler-building",
-                "cn-tower",
-                "eiffel-tower",
-                "empire-state-building",
-                "lotte-world-tower",
-                "metlife-building",
-                "one-world-trade-center",
-                "oriental-pearl",
-                "osaka-castle",
-                "petronas-towers",
-                "shanghai-tower",
-                "shanghai-wfc",
-                "sydney-opera-house",
-                "taipei-101",
-                "three-world-trade-center",
-                "tokyo-skytree",
-                "tokyo-tower",
-                "willis-tower"
-              ]
+                10000,
+                20000,
+                30000
+              ],
+              "default": 30000,
+              "description": "离地面点最远，米"
             },
-            "height": {
+            "heightAboveGround": {
               "type": "number",
-              "minimum": 0,
-              "maximum": 1000,
-              "description": "目标顶部高出地面（地形高程）的米数；地标缺省为其高度，坐标缺省为 0"
-            },
-            "name": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 40,
-              "description": "目标名称"
+              "minimum": 0.1,
+              "maximum": 100,
+              "description": "相机离地高度，米；缺省沿用打开者当前值"
             }
           }
         },
@@ -247,10 +419,15 @@
           "type": "object",
           "additionalProperties": false,
           "required": [
+            "mode",
             "latitude",
-            "longitude"
+            "longitude",
+            "radius"
           ],
           "properties": {
+            "mode": {
+              "const": "near"
+            },
             "latitude": {
               "type": "number",
               "minimum": -90,
@@ -261,230 +438,201 @@
               "type": "number",
               "description": "经度，东正西负；超出 ±180 时取模归一"
             },
-            "height": {
+            "radius": {
               "type": "number",
-              "minimum": 0,
-              "maximum": 1000,
-              "description": "目标顶部高出地面（地形高程）的米数；地标缺省为其高度，坐标缺省为 0"
+              "minimum": 500,
+              "maximum": 30000,
+              "description": "以该点为中心的半径，米"
             },
-            "name": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 40,
-              "description": "目标名称"
+            "heightAboveGround": {
+              "type": "number",
+              "minimum": 0.1,
+              "maximum": 100,
+              "description": "相机离地高度，米；缺省沿用打开者当前值"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode"
+          ],
+          "properties": {
+            "mode": {
+              "const": "fixed"
+            },
+            "latitude": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90,
+              "description": "纬度，北正南负"
+            },
+            "longitude": {
+              "type": "number",
+              "description": "经度，东正西负；超出 ±180 时取模归一"
+            },
+            "aim": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "azimuth",
+                "pitch"
+              ],
+              "description": "同时固定朝向：此时只能有一个天体目标，不能有地面点",
+              "properties": {
+                "azimuth": {
+                  "type": "number"
+                },
+                "pitch": {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90
+                }
+              }
+            },
+            "heightAboveGround": {
+              "type": "number",
+              "minimum": 0.1,
+              "maximum": 100,
+              "description": "相机离地高度，米；缺省沿用打开者当前值"
             }
           }
         }
       ]
     },
-    "frame": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "x",
-        "y"
-      ],
-      "description": "找机位、两者都找：目标顶部（天体落在其上）在画面中的位置，自左上角起算的比例；缺省为画面中心。只影响试看时的拍摄方向，不影响求解",
-      "properties": {
-        "x": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 1
+    "time": {
+      "description": "时间的搜索范围；缺省为打开者当前日期起 30 天",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "const": "range"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "description": "当地起始日期（1900—2100 年）"
+            },
+            "days": {
+              "enum": [
+                1,
+                7,
+                30,
+                90,
+                365,
+                1096
+              ],
+              "default": 30,
+              "description": "跨度，天；3 年只用于固定机位"
+            }
+          }
         },
-        "y": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 1
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "instant"
+          ],
+          "properties": {
+            "mode": {
+              "const": "instant"
+            },
+            "instant": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2})?Z$",
+              "description": "UTC 时刻"
+            }
+          }
         }
-      }
-    },
-    "date": {
-      "type": "string",
-      "format": "date",
-      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
-      "description": "当地日期（1900—2100 年）；缺省为打开者当前拍摄日期"
-    },
-    "days": {
-      "type": "integer",
-      "description": "跨度，天"
+      ]
     },
     "timeZone": {
       "type": "string",
       "description": "IANA 时区；给出时日期按它解释，拍摄计划改为该固定时区"
     },
-    "tolerance": {
-      "enum": [
-        0.1,
-        0.25,
-        0.5,
-        1
-      ],
-      "default": 0.25,
-      "description": "中心偏离期望位置的上限，视直径"
-    },
-    "share": {
-      "type": "number",
-      "minimum": 0.05,
-      "maximum": 0.5,
-      "default": 0.3,
-      "description": "主体占画面高度的比例（目标不足 10 m 时改用 maxDistance）"
-    },
-    "maxDistance": {
-      "enum": [
-        10000,
-        20000,
-        30000
-      ],
-      "default": 30000,
-      "description": "机位离目标的最远距离，米"
-    },
-    "phase": {
+    "filters": {
       "type": "array",
-      "minItems": 2,
-      "maxItems": 2,
+      "description": "筛选条件，可为空",
       "items": {
-        "enum": [
-          0,
-          0.1,
-          0.25,
-          0.5,
-          0.75,
-          0.9,
-          1
-        ]
-      },
-      "description": "月亮亮面比例 [下限, 上限]，下限不大于上限"
-    },
-    "sky": {
-      "type": "array",
-      "minItems": 1,
-      "uniqueItems": true,
-      "items": {
-        "enum": [
-          "day",
-          "golden",
-          "blue",
-          "twilight",
-          "night"
-        ]
-      },
-      "description": "天空条件（按太阳高度）"
-    }
-  },
-  "allOf": [
-    {
-      "if": {
-        "properties": {
-          "kind": {
-            "const": "time"
-          }
-        }
-      },
-      "then": {
-        "required": [
-          "mark"
-        ],
-        "properties": {
-          "days": {
-            "enum": [
-              30,
-              90,
-              365,
-              1096
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "sky"
             ],
-            "default": 365
+            "properties": {
+              "type": {
+                "const": "sky"
+              },
+              "sky": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "day",
+                    "golden",
+                    "blue",
+                    "twilight",
+                    "night"
+                  ]
+                },
+                "description": "天空条件（按太阳高度）"
+              }
+            }
           },
-          "target": false,
-          "frame": false,
-          "share": false,
-          "maxDistance": false
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "kind": {
-            "const": "position"
-          }
-        }
-      },
-      "then": {
-        "required": [
-          "target"
-        ],
-        "properties": {
-          "mark": false,
-          "camera": false,
-          "days": false,
-          "tolerance": false,
-          "share": false,
-          "phase": false,
-          "sky": false
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "kind": {
-            "const": "range"
-          }
-        }
-      },
-      "then": {
-        "required": [
-          "target"
-        ],
-        "properties": {
-          "days": {
-            "enum": [
-              7,
-              30,
-              90,
-              365
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type"
             ],
-            "default": 30
+            "properties": {
+              "type": {
+                "const": "moonDown"
+              }
+            },
+            "description": "月亮在地平线下"
           },
-          "mark": false,
-          "camera": false,
-          "tolerance": false
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "body": {
-            "const": "sun"
-          }
-        }
-      },
-      "then": {
-        "properties": {
-          "phase": false,
-          "sky": false
-        }
-      }
-    },
-    {
-      "if": {
-        "required": [
-          "body"
-        ],
-        "properties": {
-          "body": {
-            "not": {
-              "const": "moon"
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "range"
+            ],
+            "properties": {
+              "type": {
+                "const": "moonLit"
+              },
+              "range": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "enum": [
+                    0,
+                    0.1,
+                    0.25,
+                    0.5,
+                    0.75,
+                    0.9,
+                    1
+                  ]
+                },
+                "description": "月亮亮面比例 [下限, 上限]"
+              }
             }
           }
-        }
-      },
-      "then": {
-        "properties": {
-          "phase": false
-        }
+        ]
       }
     }
-  ]
+  }
 }

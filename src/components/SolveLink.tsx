@@ -1,21 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { localDateTime } from "../domain/plan";
 import type { ShootingPlan } from "../domain/plan";
-import { solveLink, solvePlan } from "../domain/solve";
-import type { SolveParse, SolveRequest } from "../domain/solve";
-import { describeSolve, positionRows, rangeRows, solveReport, timeRows } from "../domain/solve-report";
+import { solveLink2, solvePlan2 } from "../domain/solve";
+import type { SolveParse2, SolveRequest2 } from "../domain/solve";
+import { describeSolve2, resultRows, solveReport } from "../domain/solve-report";
 import { siteBase } from "../domain/site";
 import { shotFromPlan } from "../domain/shot";
-import { CALENDAR_LIMIT, calendarText, positionEvents, rangeEvents, solveShotName, timeEvents } from "../domain/solve-calendar";
-import type { CalendarEvent } from "../domain/solve-calendar";
+import { dayLabel, targetName } from "../domain/composition";
+import { CALENDAR_LIMIT, calendarText, resultEvents, solveShotName } from "../domain/solve-calendar";
+import { bodyName } from "../domain/sky-targets";
 import { copyText, suggestShotName } from "./ShotMenu";
-import type { AlignmentState } from "./Alignment";
-import { listedPoints } from "./PositionSearch";
+import type { CompositionState } from "./Composition";
 
 const coordinate = (latitude: number, longitude: number) => `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
 const local = (plan: ShootingPlan) => `${localDateTime(plan.instant, plan.timeZone).replace("T", " ")}（${plan.timeZone}）`;
-const km = (meters: number) => (meters / 1000).toFixed(meters < 10_000 ? 2 : 1);
-const spanName = (days: number) => (days === 365 ? "12 个月" : days === 1096 ? "3 年" : `${days} 天`);
 const site = () => (typeof window === "undefined" ? "" : siteBase(window.location, import.meta.env.BASE_URL));
 
 /** What loading the request changes in the shooting plan, in words. */
@@ -24,8 +22,10 @@ export function solveChanges(before: ShootingPlan, after: ShootingPlan) {
   if (before.latitude !== after.latitude || before.longitude !== after.longitude)
     changes.push(`机位：${coordinate(before.latitude, before.longitude)} → ${coordinate(after.latitude, after.longitude)}`);
   if (before.cameraHeight !== after.cameraHeight) changes.push(`离地高度：${before.cameraHeight} m → ${after.cameraHeight} m`);
+  if (before.focalLength !== after.focalLength || before.sensor !== after.sensor || before.aspectRatio !== after.aspectRatio || before.orientation !== after.orientation)
+    changes.push(`镜头：${after.focalLength} mm · ${after.aspectRatio} ${after.orientation === "portrait" ? "竖幅" : "横幅"}（目标的画面位置按此镜头）`);
   if (before.azimuth !== after.azimuth || before.pitch !== after.pitch)
-    changes.push(`方向：朝向期望位置（方位 ${after.azimuth.toFixed(2)}°，俯仰 ${after.pitch.toFixed(2)}°）`);
+    changes.push(`方向：固定为请求中的朝向（方位 ${after.azimuth.toFixed(2)}°，俯仰 ${after.pitch.toFixed(2)}°）`);
   if (before.timeZone !== after.timeZone || !!before.followLocalZone !== !!after.followLocalZone)
     changes.push(`时区：固定为 ${after.timeZone}${before.followLocalZone ? "（不再随机位）" : ""}`);
   if (before.instant !== after.instant) changes.push(`拍摄时刻：${local(before)} → ${local(after)}`);
@@ -37,9 +37,9 @@ export function solveChanges(before: ShootingPlan, after: ShootingPlan) {
  * either way lets the page drop the hash.
  */
 export function SolveLinkDialog({ link, plan, onLoad, onClose }: {
-  link: { parse: SolveParse; serial: number } | null;
+  link: { parse: SolveParse2; serial: number } | null;
   plan: ShootingPlan;
-  onLoad: (request: SolveRequest) => void;
+  onLoad: (request: SolveRequest2) => void;
   onClose: () => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null), errors = useRef<HTMLTextAreaElement>(null);
@@ -50,7 +50,7 @@ export function SolveLinkDialog({ link, plan, onLoad, onClose }: {
     else if (!link && dialog.current?.open) dialog.current.close();
   }, [link?.serial]);
   const parse = link?.parse ?? null;
-  const changes = parse?.ok ? solveChanges(plan, solvePlan(parse.request, plan)) : [];
+  const changes = parse?.ok ? solveChanges(plan, solvePlan2(parse.request, plan)) : [];
   return (
     <dialog ref={dialog} className="shot-dialog solve-dialog" aria-labelledby="solve-link-title" onClose={onClose}>
       <header className="about-header">
@@ -78,9 +78,9 @@ export function SolveLinkDialog({ link, plan, onLoad, onClose }: {
         )}
         {parse?.ok && (
           <div className="shot-preview">
-            <p>链接带来一份推算请求。确认后才会载入并在本机推算，数值不来自链接。</p>
+            <p>链接带来一份推算请求。确认后才会载入并在本机推算，数值不来自链接。{parse.from === 1 && "这是旧版（v1）请求，已按当前镜头转换。"}</p>
             <dl className="shot-summary">
-              {describeSolve(parse.request).map((row) => (
+              {describeSolve2(parse.request).map((row) => (
                 <div key={row.label} className="solve-row">
                   <dt>{row.label}</dt>
                   <dd>{row.value}</dd>
@@ -90,7 +90,7 @@ export function SolveLinkDialog({ link, plan, onLoad, onClose }: {
             <div className="solve-changes">
               <strong>载入后</strong>
               {changes.length ? <ul>{changes.map((change) => <li key={change}>{change}</li>)}</ul> : <p>拍摄计划不变，只载入推算条件。</p>}
-              <p>进入推算模式并开始计算；可在提示条中撤销。</p>
+              <p>进入推算模式并开始搜索；可在提示条中撤销。</p>
             </div>
           </div>
         )}
@@ -110,36 +110,14 @@ export function SolveLinkDialog({ link, plan, onLoad, onClose }: {
 }
 
 /** The current search's results as Markdown, or null while there are none to copy. */
-function report(alignment: AlignmentState, plan: ShootingPlan, request: SolveRequest, link: string) {
+function report(state: CompositionState, plan: ShootingPlan, request: SolveRequest2, link: string) {
+  const run = state.run;
+  if (!run || run.phase !== "done") return null;
   const basis = `机位离地 ${plan.cameraHeight} m，按${plan.refraction === "standard" ? "标准折射" : "无折射"}与海平面地平计算。`;
-  const common = { request, link, timeZone: plan.timeZone, basis };
-  if (alignment.kind === "time") {
-    const result = alignment.result;
-    if (!result) return null;
-    const total = result.filtered.phase + result.filtered.sky;
-    const status = result.alignments.length
-      ? `${spanName(alignment.settings.days)}内 ${result.alignments.length} 次${total ? `；另有 ${total} 次不满足所选月相或天空条件` : ""}。`
-      : "没有落在容差内的一次。";
-    return solveReport({ ...common, status, ...timeRows(result, plan.timeZone) });
-  }
-  if (alignment.kind === "position") {
-    const { result, points, candidates, blocked } = alignment.position;
-    if (!result) return null;
-    const listed = listedPoints(points, plan.timeZone);
-    const hidden = blocked ? `；另有 ${blocked} 分钟视线被地形挡住，未列出` : "";
-    const status = points.length
-      ? `${candidates.length} 段可拍时段，共 ${new Set(points.map((point) => point.time)).size} 分钟，距目标 ${km(Math.min(...points.map((point) => point.distance)))}—${km(Math.max(...points.map((point) => point.distance)))} km${hidden}；下表每 10 分钟一行。`
-      : blocked ? `有 ${blocked} 分钟几何上对齐，但视线都被地形挡住。` : "时段内没有解。";
-    return solveReport({ ...common, status, ...positionRows(listed, plan.timeZone) });
-  }
-  const range = alignment.range;
-  if (!range.done) return null;
-  const total = range.filtered.phase + range.filtered.sky;
-  const hidden = range.blocked ? `；另有 ${range.blocked} 分钟视线被地形挡住，未列出` : "";
-  const status = range.kept.length
-    ? `${spanName(range.span)}内 ${range.kept.length} 个候选${total ? `；另有 ${total} 个不满足所选月相或天空条件` : ""}${hidden}。`
-    : range.blocked ? `${spanName(range.span)}内有 ${range.blocked} 分钟几何上对齐，但视线都被地形挡住。` : `${spanName(range.span)}内没有解。`;
-  return solveReport({ ...common, status, ...rangeRows(range.kept, plan.timeZone) });
+  const span = run.composition.time.mode === "instant" ? "所选时刻" : `${dayLabel(run.composition.time.days)}内`;
+  const hidden = [run.blocked && `另有 ${run.blocked} 分钟视线被地形挡住`, run.filtered && `${run.filtered} ${run.strategy.kind === "line" ? "分钟" : "次"}不满足筛选`].filter(Boolean).join("，");
+  const status = run.items.length ? `${span} ${run.items.length} 段${hidden ? `；${hidden}` : ""}。` : run.note || "没有结果。";
+  return solveReport({ request, link, timeZone: run.timeZone, basis, status, ...resultRows(run.items, run.timeZone) });
 }
 
 /** "存为机位" from the 推算 panel, provided by the workspace. */
@@ -149,24 +127,18 @@ export interface ShotSaving {
   writable: boolean;
 }
 
-/** Where a saved result or a calendar event is named after: the target, or the camera's place for 找时间. */
-function placeOf(alignment: AlignmentState, plan: ShootingPlan) {
-  if (alignment.kind !== "time" && alignment.position.target?.name) return alignment.position.target.name;
+/** Where a saved result or a calendar event is named after: the ground target, or the camera's place. */
+function placeOf(state: CompositionState, plan: ShootingPlan) {
+  const ground = (state.run?.basis.ground ?? null) || state.composition.targets.find((target) => target.kind === "ground");
+  if (ground) return targetName(ground);
   return suggestShotName(shotFromPlan(plan)).split(" · ")[0];
 }
 
-/** Whether the plan is the try-out of a listed result (the instant and, away from 找时间, the camera match). */
-function trying(alignment: AlignmentState, plan: ShootingPlan) {
-  if (alignment.kind === "time") return !!alignment.result?.alignments.some((found) => found.instant === plan.instant);
-  if (alignment.kind === "position") return !!alignment.position.current;
-  return !!alignment.range.currentPoint;
-}
-
-function calendarEvents(alignment: AlignmentState, plan: ShootingPlan, place: string): CalendarEvent[] | null {
-  const context = { plan, body: alignment.settings.body, place, site: site(), frame: alignment.kind === "time" ? undefined : alignment.position.frame };
-  if (alignment.kind === "time") return alignment.result ? timeEvents(alignment.result.alignments, context) : null;
-  if (alignment.kind === "position") return alignment.position.result ? positionEvents(alignment.position.candidates, context) : null;
-  return alignment.range.done ? rangeEvents(alignment.range.kept, context) : null;
+function calendarEvents(state: CompositionState, plan: ShootingPlan, place: string) {
+  const run = state.run;
+  if (!run || run.phase !== "done") return null;
+  const names = run.basis.bodies.map(bodyName).join("、");
+  return resultEvents(run.items, { plan, body: run.basis.bodies[0] ?? "sun", place, site: site(), basis: run.basis, names });
 }
 
 function download(text: string, filename: string) {
@@ -182,16 +154,16 @@ function download(text: string, filename: string) {
 }
 
 /** "存为机位" and "导出日历" for results; "复制推算请求" (a `#solve=` link) and "复制结果" (Markdown) for the search. */
-export function SolveExport({ alignment, plan, saving }: { alignment: AlignmentState; plan: ShootingPlan; saving?: ShotSaving }) {
+export function SolveExport({ state, plan, saving }: { state: CompositionState; plan: ShootingPlan; saving?: ShotSaving }) {
   const [copied, setCopied] = useState("");
   const [text, setText] = useState("");
   const field = useRef<HTMLTextAreaElement>(null);
-  const request = alignment.request();
-  const link = request ? solveLink(request, site()) : "";
-  const markdown = request ? report(alignment, plan, request, link) : null;
-  const place = placeOf(alignment, plan);
-  const trial = trying(alignment, plan);
-  const ready = alignment.kind === "time" ? !!alignment.result : alignment.kind === "position" ? !!alignment.position.result : !!alignment.range.done;
+  const request = state.request();
+  const link = request ? solveLink2(request, site()) : "";
+  const markdown = request ? report(state, plan, request, link) : null;
+  const place = placeOf(state, plan);
+  const trial = !!state.current;
+  const ready = state.run?.phase === "done" && state.run.items.length > 0;
   useEffect(() => setCopied(""), [link, markdown]);
   useEffect(() => {
     if (saving?.error) setCopied(`无法保存机位：${saving.error}`);
@@ -205,15 +177,16 @@ export function SolveExport({ alignment, plan, saving }: { alignment: AlignmentS
   };
   const save = () => {
     if (!saving) return;
-    const name = solveShotName(place, alignment.settings.body, plan.instant, plan.timeZone);
+    const name = solveShotName(place, state.run?.basis.bodies[0] ?? "sun", plan.instant, plan.timeZone);
     if (saving.save(name)) setCopied(`已存为机位「${name}」，可在“机位”中改名`);
     else setCopied(`无法保存机位${saving.error ? `：${saving.error}` : ""}`);
   };
   const exportCalendar = () => {
-    const events = calendarEvents(alignment, plan, place);
+    const events = calendarEvents(state, plan, place);
     if (!events?.length) return;
-    const date = (request?.date ?? localDateTime(plan.instant, plan.timeZone).slice(0, 10)).replace(/-/g, "");
-    download(calendarText(events, `Tamatamatori 推算 · ${place}`), `tamatamatori-${alignment.kind}-${date}.ics`);
+    const time = state.run!.composition.time;
+    const date = (time.mode === "range" ? time.date : localDateTime(time.instant, plan.timeZone).slice(0, 10)).replace(/-/g, "");
+    download(calendarText(events, `Tamatamatori 推算 · ${place}`), `tamatamatori-solve-${date}.ics`);
     setCopied(events.length > CALENDAR_LIMIT ? `已导出前 ${CALENDAR_LIMIT} 个事件（共 ${events.length} 个）` : `已导出 ${events.length} 个事件`);
   };
   return (

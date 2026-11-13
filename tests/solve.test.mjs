@@ -3,9 +3,10 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import {
-  SOLVE_FORMAT, SOLVE_VERSION, frameOfRequest, parseSolve, parseSolveText, solveJson, solveLink, solvePlan, solveRequestOf, solveStart,
+  SOLVE_FORMAT, SOLVE_VERSION, parseAnySolve, parseSolve, parseSolveText2, requestOf, solveJson2, solveLink2, solvePlan2,
 } from "../src/domain/solve.ts";
-import { describeSolve, positionRows, rangeRows, solveReport, timeRows, REPORT_ROWS } from "../src/domain/solve-report.ts";
+import { lensOf } from "../src/domain/composition.ts";
+import { describeSolve2, resultRows, solveReport, REPORT_ROWS } from "../src/domain/solve-report.ts";
 import { initialPlan, localDateTime } from "../src/domain/plan.ts";
 import { parseShotText, shotFromPlan, shotJson, shotLink, SHARE_PREFIX } from "../src/domain/shot.ts";
 import { PUBLIC_SITE, siteBase } from "../src/domain/site.ts";
@@ -24,32 +25,37 @@ const errorsOf = (value) => {
   return parsed.errors.join("\n");
 };
 
-test("推算请求：三种求法读出并往返 JSON 与链接，地标目标按目录补齐坐标与高度", () => {
+test("推算请求：版本 1 的三种求法读出并转换为版本 2，往返 JSON 与链接，地标目标按目录补齐坐标与高度", () => {
+  const lens = lensOf(initialPlan);
   for (const value of [time, position, range]) {
     const parsed = parseSolve(value);
     assert.equal(parsed.ok, true, JSON.stringify(parsed.errors));
-    const again = parseSolve(JSON.parse(solveJson(parsed.request)));
-    assert.deepEqual(again.request, parsed.request, `${value.kind} JSON round trip`);
-    const link = solveLink(parsed.request, PUBLIC_SITE);
+    const converted = parseAnySolve(value, lens);
+    assert.equal(converted.ok, true);
+    assert.equal(converted.from, 1);
+    const again = parseAnySolve(JSON.parse(solveJson2(converted.request)), lens);
+    assert.equal(again.from, 2);
+    assert.deepEqual(again.request, converted.request, `${value.kind} JSON round trip`);
+    const link = solveLink2(converted.request, PUBLIC_SITE);
     assert.ok(link.startsWith(`${PUBLIC_SITE}#solve=json:%7B`));
-    assert.deepEqual(parseSolveText(link).request, parsed.request, `${value.kind} link round trip`);
+    assert.deepEqual(parseSolveText2(link, lens).request, converted.request, `${value.kind} link round trip`);
     // `$schema` is written first and ignored on reading; code fences are accepted.
-    const withSchema = solveJson(parsed.request, `${PUBLIC_SITE}solve.schema.json`);
+    const withSchema = solveJson2(converted.request, `${PUBLIC_SITE}solve.schema.json`);
     assert.equal(Object.keys(JSON.parse(withSchema))[0], "$schema");
-    assert.deepEqual(parseSolveText("```json\n" + withSchema + "\n```").request, parsed.request);
+    assert.deepEqual(parseSolveText2("```json\n" + withSchema + "\n```", lens).request, converted.request);
   }
   const landmark = parseSolve(position);
   assert.equal(landmark.landmark, true);
   assert.deepEqual(landmark.request.target, { landmark: "tokyo-skytree", latitude: skytree.latitude, longitude: skytree.longitude, height: skytree.bounds.height, name: skytree.name });
-  // The landmark is written by its id only; a lower height is kept.
-  assert.deepEqual(JSON.parse(solveJson(parseSolve({ ...position, target: { landmark: "tokyo-skytree", height: 450 } }).request)).target, { landmark: "tokyo-skytree", height: 450 });
+  // A landmark target is written by its id only; a lower height is kept.
+  const lower = parseAnySolve({ ...position, target: { landmark: "tokyo-skytree", height: 450 } }, lens).request;
+  assert.deepEqual(JSON.parse(solveJson2(lower)).targets[0], { type: "ground", landmark: "tokyo-skytree", height: 450, reference: "ground", frame: { x: 0.5, y: 0.5 }, tolerance: 0.03 });
   const placed = parseSolve(range);
   assert.equal(placed.landmark, false);
   assert.equal(placed.request.name, "富士山顶");
   // Raw (unencoded) JSON after #solve= reads too, as an AI might write it.
-  assert.equal(parseSolveText(`https://example.org/#solve=json:${JSON.stringify(time)}`).ok, true);
+  assert.equal(parseSolveText2(`https://example.org/#solve=json:${JSON.stringify(time)}`, lens).ok, true);
 });
-
 test("推算请求：缺省项给默认值并列出，经度与方位取模，月亮条件只用于月亮", () => {
   const minimal = parseSolve({ ...base, kind: "time", body: "sun", mark: { azimuth: -15, elevation: 3 } });
   assert.equal(minimal.ok, true);
@@ -86,98 +92,58 @@ test("推算请求：错误一次列全并带字段路径，高版本拒绝", ()
   assert.match(errorsOf({ ...time, date: "2101-01-01" }), /date：只支持 1900—2100 年/);
   assert.match(errorsOf({ ...time, format: "tamatamatori.shot" }), /format：应为 "tamatamatori.solve"/);
   assert.match(errorsOf({ ...time, name: "名".repeat(41) }), /name：最多 40 字/);
-  const newer = parseSolve({ ...time, version: 2 });
-  assert.deepEqual(newer, { ok: false, errors: ["version：此推算请求来自更新版本的应用（版本 2），请刷新页面后再打开"] });
-  assert.match(parseSolveText("#solve=json:%E0%A4%A").errors[0], /编码无效/);
-  assert.match(parseSolveText("x".repeat(17 * 1024)).errors[0], /超过 16 KB/);
-  assert.match(parseSolveText("solve please").errors[0], /无法识别/);
+  const lens = lensOf(initialPlan);
+  assert.deepEqual(parseAnySolve({ ...time, version: 3 }, lens), { ok: false, errors: ["version：此推算请求来自更新版本的应用（版本 3），请刷新页面后再打开"] });
+  assert.match(parseSolveText2("#solve=json:%E0%A4%A", lens).errors[0], /编码无效/);
+  assert.match(parseSolveText2("x".repeat(17 * 1024), lens).errors[0], /超过 16 KB/);
+  assert.match(parseSolveText2("solve please", lens).errors[0], /无法识别/);
 });
 
-test("载入请求：找时间转向期望位置并移到给出的机位，找机位把时刻移到当天，时区改为固定；两者都找不改计划", () => {
+test("载入请求（版本 1 转换后）：找时间转向期望位置并移到给出的机位，找机位把时刻移到当天，时区改为固定；两者都找不改计划", () => {
   const plan = { ...initialPlan, followLocalZone: true };
-  const opened = solvePlan(parseSolve(time).request, plan);
+  const lens = lensOf(plan);
+  const convert = (value) => parseAnySolve(value, lens).request;
+  const opened = solvePlan2(convert(time), plan);
   assert.deepEqual({ latitude: opened.latitude, longitude: opened.longitude, cameraHeight: opened.cameraHeight, azimuth: opened.azimuth, pitch: opened.pitch },
     { latitude: 35.4172, longitude: 138.8729, cameraHeight: 1.6, azimuth: 244.6, pitch: 10.7 });
   assert.equal(opened.instant, plan.instant);
   assert.equal(opened.followLocalZone, false);
-  assert.equal(solveStart(parseSolve(time).request, opened), "2026-11-12");
-  // Without a camera, the date falls back to the shooting date in the plan's own zone.
-  const loose = parseSolve({ ...base, kind: "time", body: "sun", mark: { azimuth: 10, elevation: 5 } }).request;
-  assert.equal(solveStart(loose, plan), localDateTime(plan.instant, plan.timeZone).slice(0, 10));
-  assert.deepEqual(solvePlan(loose, plan), { ...plan, azimuth: 10, pitch: 5 });
+  // Without a camera, the current one stays; the direction turns to the mark.
+  const loose = convert({ ...base, kind: "time", body: "sun", mark: { azimuth: 10, elevation: 5 } });
+  assert.deepEqual(solvePlan2(loose, plan), { ...plan, azimuth: 10, pitch: 5 });
   // 找机位: the clock time stays when the span still starts that day, else noon.
-  const day = parseSolve(position).request;
-  const kept = solvePlan(day, { ...plan, instant: "2026-11-04T08:00:00Z" });
+  const day = convert(position);
+  const kept = solvePlan2(day, { ...plan, instant: "2026-11-04T08:00:00Z" });
   assert.equal(localDateTime(kept.instant, "Asia/Tokyo"), "2026-12-21T17:00");
-  const night = solvePlan(day, { ...plan, instant: "2026-11-04T20:00:00Z", layers: { ...plan.layers, stars: true } });
+  const night = solvePlan2(day, { ...plan, instant: "2026-11-04T20:00:00Z", layers: { ...plan.layers, stars: true } });
   assert.equal(localDateTime(night.instant, "Asia/Tokyo"), "2026-12-21T12:00", "05:00 would belong to the night before");
-  const zoned = solvePlan({ ...day, timeZone: "Europe/Paris" }, { ...plan, instant: "2026-11-04T08:00:00Z" });
+  const zoned = solvePlan2({ ...day, timeZone: "Europe/Paris" }, { ...plan, instant: "2026-11-04T08:00:00Z" });
   assert.equal(zoned.timeZone, "Europe/Paris");
   assert.equal(localDateTime(zoned.instant, "Europe/Paris"), "2026-12-21T09:00");
-  const unchanged = solvePlan({ ...parseSolve(range).request, timeZone: undefined }, plan);
-  assert.deepEqual(unchanged, plan);
+  assert.deepEqual(solvePlan2({ ...convert(range), timeZone: undefined }, plan), plan);
 });
-
-test("复制推算请求：面板状态写成自足的请求，读回一致；缺期望位置或目标时为空", () => {
-  const state = {
-    kind: "range", body: "moon", mark: null, camera: { latitude: 35.4, longitude: 138.8, heightAboveGround: 1.6 },
-    target: { id: "tokyo-skytree", latitude: skytree.latitude, longitude: skytree.longitude, height: 634, name: skytree.name },
-    date: "2026-11-12", days: 30, timeZone: "Asia/Tokyo", tolerance: 0.25, share: 0.3, maxDistance: 30000, phase: [0.9, 1], sky: ["day", "golden", "blue", "twilight", "night"],
-  };
-  const request = solveRequestOf(state);
-  assert.equal(request.sky, undefined, "all sky conditions are the default");
-  assert.deepEqual(request.phase, [0.9, 1]);
-  assert.deepEqual(JSON.parse(solveJson(request)).target, { landmark: "tokyo-skytree", height: 634 });
-  assert.deepEqual(parseSolveText(solveLink(request, "http://localhost/")).request, request);
-  const time = solveRequestOf({ ...state, kind: "time", body: "sun", mark: { azimuth: 244.63, elevation: 10.74 }, days: 365, phase: [0, 1] });
-  assert.deepEqual(Object.keys(time), ["format", "version", "name", "kind", "body", "mark", "camera", "date", "timeZone", "days", "tolerance"]);
-  assert.equal(JSON.parse(solveJson(time)).name, undefined, "an empty name is not written");
-  assert.deepEqual(parseSolve(JSON.parse(solveJson(time))).request, time);
-  const placed = solveRequestOf({ ...state, kind: "position", target: { ...state.target, id: undefined, name: "地图上的目标" } });
-  assert.deepEqual(placed.target, { latitude: skytree.latitude, longitude: skytree.longitude, height: 634, name: "地图上的目标" });
-  assert.equal(placed.days, undefined);
-  assert.deepEqual(parseSolve(JSON.parse(solveJson(placed))).request, placed);
-  assert.equal(solveRequestOf({ ...state, kind: "time" }), null);
-  assert.equal(solveRequestOf({ ...state, target: null }), null);
-  // The framing: written from the top-left (0—1) only when it is not the centre; read back to the panel's coordinates.
-  assert.equal(request.frame, undefined);
-  assert.equal(solveRequestOf({ ...state, frame: { x: 0, y: 0 } }).frame, undefined);
-  const framed = solveRequestOf({ ...state, frame: { x: -0.5, y: -1 / 3 } });
-  assert.deepEqual(framed.frame, { x: 0.25, y: 0.333 });
-  assert.deepEqual(Object.keys(JSON.parse(solveJson(framed))).slice(4, 7), ["target", "frame", "date"]);
-  assert.deepEqual(parseSolve(JSON.parse(solveJson(framed))).request, framed);
-  const back = frameOfRequest(framed.frame);
-  assert.ok(Math.abs(back.x + 0.5) < 1e-9 && Math.abs(back.y + 0.334) < 1e-9);
-  assert.deepEqual(frameOfRequest(undefined), { x: 0, y: 0 });
-  assert.equal(solveRequestOf({ ...state, kind: "time", mark: { azimuth: 1, elevation: 1 }, frame: { x: 0.5, y: 0.5 } }).frame, undefined, "找时间 has no framing");
-});
-
 test("复制结果：Markdown 列出请求、链接与结果表，超过上限只计数，单元格转义竖线", () => {
-  const request = parseSolve(time).request;
-  const rows = describeSolve(request);
-  assert.deepEqual(rows.map((row) => row.label), ["求解", "期望位置", "机位", "日期", "时区", "条件"]);
-  assert.match(rows.at(-1).value, /中心偏离 ≤ 0.25 个视直径；亮面 90%—100%；天空：蓝调、暗夜/);
-  assert.match(describeSolve(parseSolve(range).request).find((row) => row.label === "目标来源").value, /未核实/);
-  assert.match(describeSolve(parseSolve({ ...base, kind: "time", body: "sun", mark: { azimuth: 1, elevation: 1 } }).request).find((row) => row.label === "机位").value, /沿用当前机位/);
-  const found = { instant: "2027-02-12T07:22:30Z", from: "2027-02-12T07:22:00Z", to: "2027-02-12T07:23:00Z", separation: 0.05, diameter: 0.5, offset: "偏左|下",
-    azimuth: 244.6, elevation: 10.7, illuminated: 0.95, phaseAngle: 20, sunElevation: -10, sky: "night" };
-  const table = timeRows({ alignments: [found], filtered: { phase: 0, sky: 0 }, nearest: null, reach: { max: 60, min: -60 }, reason: null }, "Asia/Tokyo");
-  const markdown = solveReport({ request, link: "https://example.org/#solve=json:x", timeZone: "Asia/Tokyo", basis: "机位离地 1.6 m。", status: "12 个月内 1 次。", ...table });
-  assert.match(markdown, /^## Tamatamatori 推算结果\n\n- 求解：找时间 · 月亮\n/);
+  const request = parseAnySolve(time, lensOf(initialPlan)).request;
+  const rows = describeSolve2(request);
+  assert.deepEqual(rows.map((row) => row.label), ["镜头", "目标 1", "机位", "时间", "时区", "筛选"]);
+  assert.match(rows.at(-1).value, /天空：蓝调、暗夜；月亮亮面 90%—100%/);
+  assert.match(rows.find((row) => row.label === "机位").value, /固定于 35\.41720, 138\.87290，朝向固定（方位 244\.60°，俯仰 10\.70°），离地 1\.6 m/);
+  const item = { key: "a", day: "2027-02-12", start: Date.parse("2027-02-12T07:22:00Z"), end: Date.parse("2027-02-12T07:23:00Z"), best: Date.parse("2027-02-12T07:22:30Z"), points: null,
+    camera: { latitude: 35.4172, longitude: 138.8729 }, near: null, far: null, bearing: null, deviation: 0.012, share: null, sky: "night", moonElevation: -5, moonLit: 0.95, clear: 1, aim: { azimuth: 244.6, pitch: 10.7 } };
+  const table = resultRows([item, { ...item, key: "b", points: [], near: 12_300, far: 14_000, bearing: 61.2, moonElevation: 20 }], "Asia/Tokyo");
+  assert.deepEqual(table.header, ["日期", "时段", "机位（试看处）", "目标方向与距离", "最大偏差", "天空", "月亮"]);
+  assert.deepEqual(table.rows[0], ["2027-02-12", "16:22–16:23", "35.41720, 138.87290", "—", "1.2%", "暗夜", "地平线下"]);
+  assert.deepEqual(table.rows[1].slice(3), ["东北 12.3—14.0 km", "1.2%", "暗夜", "高 20° · 亮面 95%"]);
+  const markdown = solveReport({ request, link: "https://example.org/#solve=json:x", timeZone: "Asia/Tokyo", basis: "机位离地 1.6 m。", status: "12 个月内 1 段。", ...table });
+  assert.match(markdown, /^## Tamatamatori 推算结果\n\n- 镜头：沿用当前镜头\n- 目标 1：月亮 · 画面中心 · 容差 ±0\.5%/);
   assert.match(markdown, /- 推算请求：https:\/\/example.org\/#solve=json:x/);
-  assert.match(markdown, /\| 日期 \| 时刻 \| 容差内 \| 偏离（视直径） \| 方位 \| 视高度 \| 天空 \| 亮面 \|/);
-  assert.match(markdown, /\| 2027-02-12 \| 16:22 \| 16:22–16:23 \| 0.10（偏左\\\|下） \| 244.60° \| 10.70° \| 暗夜 \| 95% \|/);
+  assert.match(markdown, /\| 日期 \| 时段 \| 机位（试看处） \| 目标方向与距离 \| 最大偏差 \| 天空 \| 月亮 \|/);
   assert.match(markdown, /时刻按 Asia\/Tokyo。机位离地 1.6 m。\n.*不代表实景一定可见/);
-  const many = Array.from({ length: REPORT_ROWS + 5 }, (_, index) => ({ ...found, instant: new Date(Date.parse(found.instant) + index * 86_400_000).toISOString() }));
-  const long = solveReport({ request, link: "", timeZone: "UTC", basis: "", status: "", ...timeRows({ ...many.length && { alignments: many }, filtered: { phase: 0, sky: 0 }, nearest: null, reach: { max: 0, min: 0 }, reason: null }, "UTC") });
-  assert.match(long, /另有 5 条未列出。/);
-  assert.equal(long.split("\n").filter((line) => line.startsWith("| 20")).length, REPORT_ROWS);
-  const point = { time: Date.parse("2026-12-21T07:30:00Z"), latitude: 35.6, longitude: 139.7, distance: 12345, azimuth: 61.2, elevation: 3.21, cameraGround: -0.4, residual: 0, sight: "blocked", branch: 0 };
-  assert.deepEqual(positionRows([point], "Asia/Tokyo").rows[0], ["2026-12-21 16:30", "12.3", "35.60000, 139.70000", "东北 61.2°", "3.21°", "0 m", "被地形挡住"]);
-  const candidate = { key: "a", day: "2026-11-25", points: [point], middle: point, start: point.time, end: point.time + 600_000, near: 2100, far: 2400, share: [0.28, 0.33], sky: "blue", illuminated: 0.99, clear: 0.5 };
-  assert.deepEqual(rangeRows([candidate], "Asia/Tokyo").rows[0], ["2026-11-25", "16:30–16:40", "2.10—2.40", "28%—33%", "35.60000, 139.70000", "蓝调", "99%", "50%"]);
+  const many = solveReport({ request, link: "", timeZone: "UTC", basis: "", status: "", header: ["a"], rows: Array.from({ length: REPORT_ROWS + 5 }, (_, index) => [`20${index}|x`]) });
+  assert.match(many, /另有 5 条未列出。/);
+  assert.equal(many.split("\n").filter((line) => line.startsWith("| 20")).length, REPORT_ROWS);
+  assert.match(many, /\| 200\\\|x \|/, "a vertical bar in a cell is escaped");
 });
-
 test("机位链接：分享链接与带 $schema 的 JSON 都能读回同一机位", () => {
   const shot = shotFromPlan({ ...initialPlan, focalLength: 85 }, "富士");
   const site = siteBase({ origin: "https://imanity.github.io" }, "/Tamatamatori/");
@@ -240,13 +206,29 @@ test("公开格式：生成文件与代码常量一致，schema 接受应用写�
   // Everything the app writes is accepted.
   const custom = shotFromPlan({ ...initialPlan, sensor: "custom", customSensor: { width: 43.8, height: 32.9 }, layers: { ...initialPlan.layers, stars: true, constellations: true } }, "中画幅");
   for (const shot of [shotFromPlan(initialPlan), custom]) assert.deepEqual(validate(shotSchema, JSON.parse(shotJson(shot, shotSchema.$id))), []);
-  for (const value of [time, position, range]) assert.deepEqual(validate(solveSchema, JSON.parse(solveJson(parseSolve(value).request, solveSchema.$id))), [], value.kind);
-  // The documents' own examples are valid too.
+  const lens = lensOf(initialPlan);
+  // Version 1 requests as converted, and a version 2 request using every part.
+  for (const value of [time, position, range]) assert.deepEqual(validate(solveSchema, JSON.parse(solveJson2(parseAnySolve(value, lens).request, solveSchema.$id))), [], value.kind);
+  const everything = requestOf({
+    targets: [
+      { kind: "ground", id: "a", name: "晴空塔", landmark: "tokyo-skytree", latitude: skytree.latitude, longitude: skytree.longitude, height: 634, reference: "ground", frame: { x: 0.5, y: 0.35 }, base: 0.7, tolerance: 0.02 },
+      { kind: "sky", id: "b", body: "moon", frame: { x: 0.52, y: 0.33 }, tolerance: 0.03 },
+    ],
+    camera: { mode: "near", latitude: 35.7, longitude: 139.75, radius: 3000 },
+    time: { mode: "instant", instant: "2026-11-25T08:10:00Z" },
+    filters: [{ kind: "sky", sky: ["blue", "twilight"] }, { kind: "moonLit", range: [0.9, 1] }],
+  }, lens, { timeZone: "Asia/Tokyo", cameraHeight: 1.6 });
+  assert.deepEqual(validate(solveSchema, JSON.parse(solveJson2(everything, solveSchema.$id))), []);
+  assert.deepEqual(parseAnySolve(JSON.parse(solveJson2(everything)), lens).request, everything, "a written request reads back the same");
+  // The documents' own examples are valid too (version 1 examples by the version 1 reader).
   for (const [file, schema] of [["public/shot-format.md", shotSchema], ["public/solve-format.md", solveSchema]]) {
     // Line endings as checked out (CRLF on Windows with autocrlf).
     const examples = [...readFileSync(file, "utf8").replace(/\r\n/g, "\n").matchAll(/```json\n([\s\S]*?)\n```/g)].map((match) => JSON.parse(match[1]));
     assert.ok(examples.length >= 1, file);
-    for (const example of examples) assert.deepEqual(validate(schema, example), [], file);
+    for (const example of examples) {
+      if (example.format === SOLVE_FORMAT && example.version === 1) assert.equal(parseSolve(example).ok, true, file);
+      else assert.deepEqual(validate(schema, example), [], file);
+    }
   }
   // Cases the parser rejects are rejected by the schema as well.
   const shot = JSON.parse(shotJson(shotFromPlan(initialPlan)));
@@ -258,17 +240,22 @@ test("公开格式：生成文件与代码常量一致，schema 接受应用写�
     { ...shot, position: { ...shot.position, heightAboveGround: 0 } },
     { ...shot, time: { timeZone: "Asia/Tokyo" } },
   ]) assert.ok(validate(shotSchema, broken).length, JSON.stringify(broken).slice(0, 80));
+  const v2 = (extra) => ({ format: SOLVE_FORMAT, version: 2, targets: [{ type: "body", body: "sun" }], ...extra });
   for (const broken of [
-    { ...time, target: { landmark: "tokyo-skytree" } },
-    { ...position, days: 7 },
-    { ...range, phase: [0, 1] },
-    { ...range, days: 1096 },
-    { ...position, target: { landmark: "tokyo-skytree", latitude: 1, longitude: 2 } },
-    { ...position, target: { landmark: "fuji" } },
-    { ...base, kind: "time", body: "sun" },
-    { ...time, sky: ["night", "night"] },
+    v2({ extra: 1 }),
+    v2({ kind: "time" }),
+    v2({ targets: [] }),
+    v2({ targets: [{ type: "body", body: "sun" }, { type: "body", body: "moon" }, { type: "body", body: "galactic-center" }] }),
+    v2({ targets: [{ type: "ground", landmark: "tokyo-skytree", latitude: 1, longitude: 2 }] }),
+    v2({ targets: [{ type: "ground", landmark: "fuji" }] }),
+    v2({ targets: [{ type: "body", body: "sun", frame: { x: 1.5, y: 0.5 } }] }),
+    v2({ targets: [{ type: "body", body: "sun", tolerance: 0.5 }] }),
+    v2({ camera: { mode: "orbit" } }),
+    v2({ time: { mode: "range", days: 2 } }),
+    v2({ filters: [{ type: "sky", sky: ["night", "night"] }] }),
+    v2({ lens: { focalLength: 2 } }),
   ]) {
-    assert.equal(parseSolve(broken).ok, false);
+    assert.equal(parseAnySolve(broken, lens).ok, false, JSON.stringify(broken).slice(0, 80));
     assert.ok(validate(solveSchema, broken).length, JSON.stringify(broken).slice(0, 80));
   }
   const llms = readFileSync("public/llms.txt", "utf8");
