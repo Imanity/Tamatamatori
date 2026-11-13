@@ -19,7 +19,8 @@ import { stationPosition } from "../src/domain/stations.ts";
 import { sunPosition } from "../src/domain/ephemeris.ts";
 import { initialPlan } from "../src/domain/plan.ts";
 
-const orbits = JSON.parse(readFileSync(new URL("../public/orbits/stations.json", import.meta.url), "utf8"));
+// A fixed snapshot: CI refreshes public/orbits/stations.json before the tests, which would move these passes.
+const orbits = JSON.parse(readFileSync(new URL("./fixtures/stations-timeline.json", import.meta.url), "utf8"));
 const comets = JSON.parse(readFileSync(new URL("../public/comets/catalog.json", import.meta.url), "utf8"));
 const noLayers = { sun: false, moon: false, stars: false, milkyWay: false, constellations: false, deepSky: false, stations: false, meteors: false, comets: false };
 const plan = (latitude, longitude, layers) => ({ latitude, longitude, refraction: "standard", cameraHeight: 1.6, layers: { ...noLayers, ...layers } });
