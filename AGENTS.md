@@ -138,7 +138,12 @@ Tamatamatori 是摄影规划 Web App。用户通过地图确定机位与拍摄�
 
 - 486 项检查与子路径构建通过；构建模块与分块不变，合并出的 CSS 逐字节相同。
 - `styles.css` 拆为 `src/styles/` 下 12 个文件；`Composition.tsx` 拆为 5 个文件；`App.tsx` 的布局部件移出。
-- `MapPanel`、`ScenePanels` 与 `starfield-layer` 的拆分要改变闭包状态的传递，留待下一轮。
+- 随后按用户要求拆完其余三个文件（本地提交，尚未推送）：
+  - `MapPanel` 拆出地图叠加层、要画的内容与图例；
+  - `ScenePanels` 拆出预览手势、构图线、“光照与环境”分组与星空子设置；
+  - `starfield-layer` 移出着色器源码。
+  - 拆分前后的右栏 HTML 与地图图层快照逐字节相同。
+  - `MapPanel` 1037 → 657 行，`ScenePanels` 873 → 532 行。
 
 按用户要求核实外部服务用量并显示 Open-Meteo 用量（2026-11-11，见[外部服务用量](docs/plan/api-usage.md)）。
 

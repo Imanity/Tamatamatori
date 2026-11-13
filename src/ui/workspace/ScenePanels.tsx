@@ -1,13 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { createPortal } from "react-dom";
-import {
-  dragView,
-  frameAspectRatio,
-  fieldOfView,
-  signedAngle,
-  zoomFocalLength,
-} from "../../domain/core/plan";
+import { frameAspectRatio, fieldOfView } from "../../domain/core/plan";
 import type { ShootingPlan } from "../../domain/core/plan";
 import { Icon } from "../common/Icon";
 import { TerrainScene } from "../preview/TerrainScene";
@@ -37,32 +31,31 @@ import { StationLabels, StationReadout } from "../sky/StationScene";
 import { matchingStations } from "../../domain/stations/orbit-data";
 import { stationScene } from "../../domain/stations/stations";
 import { useLightPollution } from "../environment/useLightPollution";
-import { lightPollutionAtlas } from "../../domain/environment/light-pollution";
 import { useWeather } from "../environment/useWeather";
-import { WeatherReadout, WeatherActions, weatherMessage } from "../environment/WeatherReadout";
+import { WeatherActions, weatherMessage } from "../environment/WeatherReadout";
 import { emptyBuildings, buildingKey } from "../../domain/buildings/buildings";
 import { BuildingReadout } from "../preview/BuildingReadout";
 import { MeteorLabels, MeteorReadout, meteorFact, useMeteorScene } from "../sky/MeteorScene";
 import { CometLabels, CometReadout, useCometScene } from "../sky/CometScene";
 import { LunarEclipseReadout, SolarEclipseReadout, eclipseFact, moonInUmbra, useEclipses } from "../sky/EclipseReadout";
 import { TideReadout, tideFact } from "../environment/TideScene";
-import { OpenMeteoUsage } from "../environment/ApiUsage";
 import type { TideFeed } from "../environment/TideScene";
 import { AuroraReadout, auroraFact } from "../environment/AuroraScene";
 import type { AuroraFeed } from "../environment/AuroraScene";
 import { useCometCatalog } from "../sky/useCometCatalog";
 import { CameraBar } from "../preview/CameraBar";
 import { Timeline } from "./Timeline";
-import { EnvironmentSettings } from "../environment/EnvironmentSettings";
 import { layerGroups } from "../common/layers";
 import type { LayerGroupId } from "../common/layers";
-import { Detail, pollutionLevel } from "../common/readout";
 import { CompositionPanel } from "../solve/Composition";
 import type { CompositionState } from "../solve/useComposition";
 import { CompositionMarks } from "../solve/CompositionMarks";
 import type { ShotSaving } from "../solve/SolveLink";
+import { usePreviewGestures } from "../preview/usePreviewGestures";
+import { FrameGuides } from "../preview/FrameGuides";
+import { LightingGroup } from "../environment/LightingGroup";
+import { CameraResponseSelect, ConstellationSwitch, GalaxyContrast } from "../sky/SkySettings";
 
-const radians = (value: number) => (value * Math.PI) / 180;
 
 export function PreviewPanel({
   plan,
@@ -156,34 +149,6 @@ export function PreviewPanel({
     const { id, open } = infoNavigation;
     setExpanded((current) => ({ ...current, [id]: open }));
   }, [infoNavigation]);
-  useEffect(() => {
-    const element = viewfinder.current;
-    if (!element) return;
-    const wheel = (event: WheelEvent) => {
-      if (
-        event.ctrlKey ||
-        event.metaKey ||
-        !Number.isFinite(event.deltaY) ||
-        event.deltaY === 0
-      )
-        return;
-      event.preventDefault();
-      const scale =
-        event.deltaMode === 1
-          ? 16
-          : event.deltaMode === 2
-            ? element.clientHeight
-            : 1;
-      const focalLength = zoomFocalLength(
-        latestPlan.current.focalLength,
-        event.deltaY * scale,
-      );
-      latestPlan.current = { ...latestPlan.current, focalLength };
-      update({ focalLength });
-    };
-    element.addEventListener("wheel", wheel, { passive: false });
-    return () => element.removeEventListener("wheel", wheel);
-  }, [update]);
   const group = (id: InfoGroupId, title: string, children: ReactNode) => {
     const layer = layerGroups.find((entry) => entry.id === id);
     return (
@@ -204,7 +169,7 @@ export function PreviewPanel({
     );
   };
   const [grid, setGrid] = useState(true);
-  const [dragging, setDragging] = useState(false);
+  const { dragging, handlers: gestureHandlers } = usePreviewGestures(plan, update, latestPlan, viewfinder);
   const [visibility, setVisibility] = useState(emptyVisibility);
   const [skyVisibility, setSkyVisibility] = useState(emptySkyVisibility);
   const [camera, setCamera] = useState<RenderedCamera | null>(null);
@@ -229,25 +194,6 @@ export function PreviewPanel({
       observerAltitude,
     ],
   );
-  // Touch points on the frame; two of them pinch the focal length.
-  const touches = useRef(new Map<number, { x: number; y: number }>());
-  const pinch = useRef<{ distance: number; focalLength: number } | null>(null);
-  const touchSpread = () => {
-    const [a, b] = [...touches.current.values()];
-    return Math.hypot(a.x - b.x, a.y - b.y);
-  };
-  const endPointer = (pointerId: number) => {
-    touches.current.delete(pointerId);
-    if (pinch.current && touches.current.size < 2) pinch.current = null;
-  };
-  const drag = useRef<{
-    pointerId: number;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    plan: ShootingPlan;
-  } | null>(null);
   const fov = fieldOfView(plan);
   const sun = solarPosition(plan);
   const view =
@@ -281,7 +227,6 @@ export function PreviewPanel({
   const meteorNote = meteorFact(meteorScene);
   const cometFeed = useCometCatalog(!!plan.layers.comets);
   const comets = useCometScene(plan, cometFeed, artificialMcd ?? 0);
-  const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   // The sky note repeats the lighting phase in daylight ("白昼 · 白昼 · …"); keep its remainder.
   const phase = daylightPhase(sun.elevation);
   const skyLabel = starScene.appearance ? skyAppearanceLabel(starScene.appearance) : "";
@@ -353,118 +298,7 @@ export function PreviewPanel({
           role="group"
           aria-label="拍摄预览，拖动调整拍摄视角，滚轮或双指捏合调整焦距，也可使用方向键，Shift 加速"
           tabIndex={0}
-          onPointerDown={(event) => {
-            if (event.button !== 0) return;
-            if (event.pointerType === "touch") {
-              touches.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-              if (touches.current.size === 2) {
-                // A second finger turns the drag into a pinch for the focal length.
-                event.preventDefault();
-                event.currentTarget.setPointerCapture(event.pointerId);
-                drag.current = null;
-                setDragging(false);
-                const spread = touchSpread();
-                pinch.current =
-                  spread > 0
-                    ? { distance: spread, focalLength: latestPlan.current.focalLength }
-                    : null;
-                return;
-              }
-            }
-            if (drag.current || pinch.current) return;
-            const bounds = event.currentTarget.getBoundingClientRect();
-            if (bounds.width <= 0 || bounds.height <= 0) return;
-            event.preventDefault();
-            event.currentTarget.focus();
-            event.currentTarget.setPointerCapture(event.pointerId);
-            drag.current = {
-              pointerId: event.pointerId,
-              x: event.clientX,
-              y: event.clientY,
-              width: bounds.width,
-              height: bounds.height,
-              plan: { ...plan },
-            };
-            setDragging(true);
-          }}
-          onPointerMove={(event) => {
-            if (touches.current.has(event.pointerId)) {
-              touches.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-              const zoom = pinch.current;
-              if (zoom && touches.current.size >= 2) {
-                const focalLength =
-                  Math.round(
-                    Math.max(8, Math.min(1000, (zoom.focalLength * touchSpread()) / zoom.distance)) * 10,
-                  ) / 10;
-                latestPlan.current = { ...latestPlan.current, focalLength };
-                update({ focalLength });
-                return;
-              }
-            }
-            const start = drag.current;
-            if (
-              !start ||
-              start.pointerId !== event.pointerId ||
-              !event.currentTarget.hasPointerCapture(event.pointerId)
-            )
-              return;
-            update(
-              dragView(
-                start.plan,
-                event.clientX - start.x,
-                event.clientY - start.y,
-                start.width,
-                start.height,
-              ),
-            );
-          }}
-          onPointerUp={(event) => {
-            endPointer(event.pointerId);
-            if (drag.current?.pointerId !== event.pointerId) return;
-            drag.current = null;
-            setDragging(false);
-            if (event.currentTarget.hasPointerCapture(event.pointerId))
-              event.currentTarget.releasePointerCapture(event.pointerId);
-          }}
-          onPointerCancel={(event) => {
-            endPointer(event.pointerId);
-            drag.current = null;
-            setDragging(false);
-          }}
-          onLostPointerCapture={(event) => {
-            endPointer(event.pointerId);
-            if (drag.current?.pointerId !== event.pointerId) return;
-            drag.current = null;
-            setDragging(false);
-          }}
-          onKeyDown={(event) => {
-            if (
-              !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(
-                event.key,
-              )
-            )
-              return;
-            event.preventDefault();
-            const step = event.shiftKey ? 5 : 1;
-            if (event.key === "ArrowLeft" || event.key === "ArrowRight")
-              update({
-                azimuth:
-                  (plan.azimuth +
-                    (event.key === "ArrowRight" ? step : -step) +
-                    360) %
-                  360,
-              });
-            else
-              update({
-                pitch: Math.max(
-                  -90,
-                  Math.min(
-                    90,
-                    plan.pitch + (event.key === "ArrowUp" ? step : -step),
-                  ),
-                ),
-              });
-          }}
+          {...gestureHandlers}
           style={
             {
               aspectRatio: frameAspectRatio(plan),
@@ -497,53 +331,7 @@ export function PreviewPanel({
             visibility={skyVisibility}
           />
           <CompositionMarks state={alignment} view={view} frame={viewfinder} />
-          <svg
-            viewBox="0 0 600 400"
-            preserveAspectRatio="none"
-            role="img"
-            aria-label={`取景辅助线，水平视场 ${fov.horizontal.toFixed(1)} 度，垂直视场 ${fov.vertical.toFixed(1)} 度。`}
-          >
-            {grid && (
-              <path
-                d="M200 0V400M400 0V400M0 133.33H600M0 266.67H600"
-                stroke="white"
-                opacity="0.4"
-                strokeWidth="0.8"
-              />
-            )}
-            <path
-              d="M290 200h20m-10-10v20"
-              stroke="#fff"
-              opacity="0.9"
-              strokeWidth="1"
-            />
-            {directions.map((label, index) => {
-              const delta = signedAngle(index * 45 - view.azimuth);
-              if (Math.abs(delta) > fov.horizontal / 2) return null;
-              const x =
-                300 +
-                (300 * Math.tan(radians(delta))) /
-                  Math.tan(radians(fov.horizontal / 2));
-              return (
-                <g key={label}>
-                  <path d={`M${x} 0v13`} stroke="white" opacity="0.8" />
-                  <text
-                    x={Math.max(16, Math.min(584, x))}
-                    y="32"
-                    textAnchor="middle"
-                    fill="white"
-                    stroke="#182535"
-                    strokeWidth="0.4"
-                    paintOrder="stroke"
-                    fontSize="15"
-                    fontFamily="monospace"
-                  >
-                    {label}
-                  </text>
-                </g>
-              );
-            })}
-          </svg>
+          <FrameGuides grid={grid} azimuth={view.azimuth} fov={fov} />
         </div>
       </div>
       {showCameraBar && <CameraBar key={`camera-${generation}`} plan={plan} update={update} />}
@@ -601,76 +389,18 @@ export function PreviewPanel({
                 {group(
                   "global",
                   "光照与环境",
-                  <>
-                    <section className="info-section">
-                      <p className="preview-lighting" aria-label="预览光照状态">
-                        <strong>{phase}</strong>
-                        {skyNote && (
-                          <span className="sky-appearance" role="status">
-                            {" · "}{skyNote}
-                          </span>
-                        )}
-                        <Detail>太阳高度 {sun.elevation.toFixed(1)}°</Detail>
-                        {sun.elevation < -6 && celestialScene.bodies && (
-                          <span className="preview-moonlight">
-                            {celestialScene.bodies.moon.elevation > 0
-                              ? `月亮在地平线上，亮面 ${(celestialScene.bodies.moon.illuminatedFraction * 100).toFixed(0)}%`
-                              : "月亮在地平线下，无月光"}
-                            <Detail>
-                              月亮亮面 {(celestialScene.bodies.moon.illuminatedFraction * 100).toFixed(0)}% · 高度{" "}
-                              {celestialScene.bodies.moon.elevation.toFixed(1)}°
-                            </Detail>
-                          </span>
-                        )}
-                      </p>
-                    </section>
-                    <section className="info-section environment-section">
-                      <EnvironmentSettings plan={plan} update={update} autoSource={weatherFeed.autoSource}>
-                        {{
-                          pollution: (
-                            <div className="pollution-readout" aria-label="当地光污染数据">
-                              <p>
-                                {pollution.phase === "off"
-                                  ? "当地光污染已关闭"
-                                  : pollution.phase === "ready"
-                                    ? <>
-                                        {pollutionLevel(artificialMcd!)}
-                                        <Detail>{lightPollutionAtlas.year} 天顶人工亮度 ≈ {artificialMcd!.toFixed(3)} mcd/m²</Detail>
-                                      </>
-                                    : pollution.phase === "loading"
-                                      ? "正在读取当地光污染，效果待应用"
-                                      : pollution.message}
-                              </p>
-                              {pollution.phase === "error" && (
-                                <button type="button" onClick={pollution.retry}>
-                                  重试光污染数据
-                                </button>
-                              )}
-                            </div>
-                          ),
-                          weather: <WeatherReadout feed={weatherFeed} update={update} />,
-                        }}
-                      </EnvironmentSettings>
-                      <OpenMeteoUsage active={!!plan.weather || !!plan.layers.tides} />
-                    </section>
-                    <section className="info-section info-detail-section">
-                      <h3>取景参数</h3>
-                      <div className="preview-readout info-detail">
-                        <span>
-                          方位 <strong>{view.azimuth.toFixed(1)}°</strong>
-                        </span>
-                        <span>
-                          俯仰 <strong>{view.pitch.toFixed(1)}°</strong>
-                        </span>
-                        <span>
-                          水平视场 <strong>{fov.horizontal.toFixed(1)}°</strong>
-                        </span>
-                        <span>
-                          垂直视场 <strong>{fov.vertical.toFixed(1)}°</strong>
-                        </span>
-                      </div>
-                    </section>
-                  </>,
+                  <LightingGroup
+                    plan={plan}
+                    update={update}
+                    phase={phase}
+                    skyNote={skyNote}
+                    sunElevation={sun.elevation}
+                    moon={celestialScene.bodies?.moon ?? null}
+                    pollution={pollution}
+                    weatherFeed={weatherFeed}
+                    view={view}
+                    fov={fov}
+                  />,
                 )}
                 {group("buildings","建筑",<BuildingReadout status={buildingStatus} retry={()=>setBuildingAttempt(v=>v+1)}
                   plan={plan} update={update} eyeAltitude={observerAltitude} cameraGround={terrainInfo.ground} />)}
@@ -718,24 +448,7 @@ export function PreviewPanel({
                   "stars",
                   "星空",
                   <>
-                    <label className="subsetting-toggle layer-toggle">
-                      <span>星座名称与连线</span>
-                      <input
-                        type="checkbox"
-                        role="switch"
-                        aria-label="显示星座名称与连线"
-                        checked={plan.layers.constellations}
-                        disabled={!plan.layers.stars}
-                        onChange={() =>
-                          update({
-                            layers: {
-                              ...plan.layers,
-                              constellations: !plan.layers.constellations,
-                            },
-                          })
-                        }
-                      />
-                    </label>
+                    <ConstellationSwitch plan={plan} update={update} />
                     {!plan.layers.stars ? (
                       <p className="info-empty">星空已关闭</p>
                     ) : (
@@ -752,43 +465,7 @@ export function PreviewPanel({
                   "milkyWay",
                   "银河",
                   <>
-                    <div
-                      className="galaxy-contrast"
-                      role="group"
-                      aria-label="银河显示对比度"
-                    >
-                      <div className="galaxy-contrast-heading">
-                        <label htmlFor="galaxy-contrast">对比度</label>
-                        <output htmlFor="galaxy-contrast">
-                          {plan.milkyWayContrast}%
-                        </output>
-                      </div>
-                      <input
-                        id="galaxy-contrast"
-                        type="range"
-                        min="25"
-                        max="200"
-                        step="5"
-                        aria-label="银河对比度"
-                        disabled={!plan.layers.milkyWay}
-                        aria-valuetext={`${plan.milkyWayContrast}%`}
-                        value={plan.milkyWayContrast}
-                        onChange={(event) =>
-                          update({
-                            milkyWayContrast: Number(event.target.value),
-                          })
-                        }
-                      />
-                      <button
-                        className="contrast-reset"
-                        type="button"
-                        aria-label="重置银河对比度"
-                        disabled={plan.milkyWayContrast === 100}
-                        onClick={() => update({ milkyWayContrast: 100 })}
-                      >
-                        重置
-                      </button>
-                    </div>
+                    <GalaxyContrast plan={plan} update={update} />
                     {!plan.layers.milkyWay ? (
                       <p className="info-empty">银河已关闭</p>
                     ) : (
@@ -805,25 +482,7 @@ export function PreviewPanel({
                   "deepSky",
                   "深空天体",
                   <>
-                    <label
-                      className="subsetting-select"
-                      title="未改机仍保留红色，改机额外增强红光。两模式沿用处理后的源图，非同机型实拍对比。"
-                    >
-                      <span>相机响应</span>
-                      <select
-                        aria-label="深空相机响应"
-                        value={plan.cameraResponse}
-                        onChange={(event) =>
-                          update({
-                            cameraResponse: event.target
-                              .value as ShootingPlan["cameraResponse"],
-                          })
-                        }
-                      >
-                        <option value="stock">未改机 · 近似参考</option>
-                        <option value="ha-modified">天文改机 · Hα 增强示意</option>
-                      </select>
-                    </label>
+                    <CameraResponseSelect plan={plan} update={update} />
                     {!plan.layers.deepSky ? (
                       <p className="info-empty">深空天体已关闭</p>
                     ) : (
