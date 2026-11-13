@@ -6,6 +6,6 @@ dist/
 !.env.example
 .sites-runtime/
 
-tests/.dev-config-*/
+tests/**/.dev-config-*/
 scripts/__pycache__/
 .cache/

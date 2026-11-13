@@ -10,7 +10,7 @@
 
 检查现有山体与静态水体预览能否稳定表达机位、朝向和镜头构图；本轮不接入天空、天文图层或水面特效。发现能复现的产品问题再修复，不凭数值测试结果推定实景精度。
 
-固定输入保存在 [terrain-scenes.mjs](../../tests/fixtures/terrain-scenes.mjs)，相机验证保存在 [camera-calibration.test.mjs](../../tests/camera-calibration.test.mjs)。运行全部检查使用 `npm test`；只运行地形与相机数值检查使用 `npm run test:terrain`。Windows PowerShell 如禁止运行 npm.ps1，可使用 `npm.cmd`。
+固定输入保存在 [terrain-scenes.mjs](../../tests/fixtures/terrain-scenes.mjs)，相机验证保存在 [camera-calibration.test.mjs](../../tests/core/camera-calibration.test.mjs)。运行全部检查使用 `npm test`；只运行地形与相机数值检查使用 `npm run test:terrain`。Windows PowerShell 如禁止运行 npm.ps1，可使用 `npm.cmd`。
 
 ## 固定场景
 

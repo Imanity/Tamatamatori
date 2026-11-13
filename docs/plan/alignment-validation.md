@@ -26,7 +26,7 @@
 4. **找机位**：A 组另用应用的 `solvePositions` 求照片时刻的对齐线（地面取国土地理院 DEM），量出命名地点到对齐线的距离。这一项不依赖照片日期与地点的精确性，最能说明“地点合不合”。
 5. **产品画面**：在内置浏览器里用应用自己的 DEM（Mapterhorn）对两个场景走一遍：打开推算链接、试看，确认预览中太阳落在山顶，并与第 2 步的独立结果对比。
 
-脚本 `scripts/alignment-validation.mjs` 联网读取上述资料，结果写入 `tests/fixtures/alignment-validation.json`。`tests/alignment-validation.test.mjs` 离线检查：由记录的期望位置重算第 3 步，与记录一致，且落在下面的验收范围内。
+脚本 `scripts/alignment-validation.mjs` 联网读取上述资料，结果写入 `tests/fixtures/alignment-validation.json`。`tests/solve/alignment-validation.test.mjs` 离线检查：由记录的期望位置重算第 3 步，与记录一致，且落在下面的验收范围内。
 
 ## 暂不处理
 
@@ -45,7 +45,7 @@
 
 ## 执行记录
 
-2026-11-12 完成本地对照，已按用户授权提交推送为 `87f0621`。数据见 `tests/fixtures/alignment-validation.json`（由 `npm run validate:alignment` 联网生成，读取国土地理院 74 块 DEM 瓦片），离线复算见 `tests/alignment-validation.test.mjs`。
+2026-11-12 完成本地对照，已按用户授权提交推送为 `87f0621`。数据见 `tests/fixtures/alignment-validation.json`（由 `npm run validate:alignment` 联网生成，读取国土地理院 74 块 DEM 瓦片），离线复算见 `tests/solve/alignment-validation.test.mjs`。
 
 ### 山顶正中
 

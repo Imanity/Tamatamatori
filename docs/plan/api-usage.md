@@ -36,7 +36,7 @@
 
 ## 验证
 
-- `npm test` 401 项全部通过。新增 `tests/api-usage.test.mjs`：
+- `npm test` 401 项全部通过。新增 `tests/environment/api-usage.test.mjs`：
   - 计费估算与实测响应头一致。
   - 滚动窗口与过期丢弃。
   - 存储读取校验、`Retry-After` 解析。

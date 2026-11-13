@@ -1,5 +1,5 @@
 // Pure helpers shared by scripts/alignment-validation.mjs (online) and
-// tests/alignment-validation.test.mjs (offline recomputation).
+// tests/solve/alignment-validation.test.mjs (offline recomputation).
 import { solveAlignment } from '../../src/domain/alignment.ts';
 import { instantFromLocal, localDateTime } from '../../src/domain/plan.ts';
 

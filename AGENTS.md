@@ -62,7 +62,7 @@ Tamatamatori 是摄影规划 Web App。用户通过地图确定机位与拍摄�
 - 参考：山中湖観光情報的实拍时刻（14 条，EXIF，年份推断）、国交省“关东富士见百景”日期（PDL1.0，18 处）、晴空塔与高尾山等公告时刻。坐标取 OSM 与国土地理院，山顶附近地形取国土地理院 DEM，与应用的 Mapterhorn 独立。
 - 山顶正中定义为“低于最高点不到 100 m 的平台中点”。实拍时刻与预测中位差 1.1 分钟、平均 +0.3 分钟；对齐线到拍摄地点横向中位 70 m。关东远处日期与国交省多为 0—1 天；山中湖周边的差异与照片一致，可由国交省点位解释。
 - 结论：近地平线折射与高程基准暂不值得投入；离地高度上限 100 m 挡住展望台场景。
-- `scripts/alignment-validation.mjs`（`npm run validate:alignment`，联网）生成 `tests/fixtures/alignment-validation.json`；`tests/alignment-validation.test.mjs` 离线复算并检查验收范围。应用内找时间、找机位结果与独立计算一致（机位差约 9 m）；GPU 画面在第六轮补验：长池亲水公园 2/4 16:13 太阳落在山顶平台中间。
+- `scripts/alignment-validation.mjs`（`npm run validate:alignment`，联网）生成 `tests/fixtures/alignment-validation.json`；`tests/solve/alignment-validation.test.mjs` 离线复算并检查验收范围。应用内找时间、找机位结果与独立计算一致（机位差约 9 m）；GPU 画面在第六轮补验：长池亲水公园 2/4 16:13 太阳落在山顶平台中间。
 
 第三项“推算实用补强”拆为第六轮“结果落地”与第七轮“机位可行性”（水面、附近建筑）；离地高度上限 100 m 另行评估。第六轮已完成并按用户授权提交推送为 `a0308ce`（2026-11-12，见[第六轮](docs/plan/reverse-planning.md#第六轮执行记录)）：
 
@@ -127,6 +127,12 @@ Tamatamatori 是摄影规划 Web App。用户通过地图确定机位与拍摄�
 - 搜索流程移到 `src/domain/composition-run.ts`（`runComposition`），地形、光污染与逐日求解以函数注入；面板改用它，结果不变。
 - `npm run solve -- 请求` 输出 JSON（每个结果附 `#shot=` 试看链接）或 Markdown。
 - 484 项检查与子路径构建通过；Node 与浏览器解码同一地形瓦片逐像素一致。真实网络下钻石富士与晴空塔、富士山的结果与浏览器相同。
+
+用户随后认为代码文件全部平铺，确认先提交第十六轮（`cb60407`）再整理（2026-11-14，见[代码结构整理](docs/plan/code-structure.md)）。原则：只移动、不改文件名，行为不变，`scripts/` 不移动。分三步：
+
+1. 测试分组，并拆分交互测试；
+2. 源码按层（`domain` / `io` / `render` / `ui`）与功能分目录，并检查依赖方向；
+3. 拆大文件。
 
 按用户要求核实外部服务用量并显示 Open-Meteo 用量（2026-11-11，见[外部服务用量](docs/plan/api-usage.md)）。
 

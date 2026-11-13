@@ -45,7 +45,7 @@
 
 ### 自动检查
 
-- `npm test` 396 项全部通过。新增 `tests/tides.test.mjs`：
+- `npm test` 396 项全部通过。新增 `tests/environment/tides.test.mjs`：
   - 探测点布置与日期边距。
   - 最近有效格点、全为空、格式错误、非逐小时序列。
   - 与解析正弦潮对照：高度差 ≤ 2 cm，高低潮时刻差 ≤ 6 分钟。
