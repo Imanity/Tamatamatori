@@ -7,15 +7,15 @@
 // 退出码：0 完成（没有结果也算），1 搜索失败，2 请求无效，3 不能搜索。
 import { readFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
-import { classify, lensOf, tryPatch } from '../src/domain/composition.ts';
-import { runComposition, searchBasis } from '../src/domain/composition-run.ts';
-import { skyConditionNames } from '../src/domain/alignment.ts';
-import { compassDirection, initialPlan, localDateTime, sensors } from '../src/domain/plan.ts';
-import { compositionOf, parseSolveText2, solveJson2, solveLink2, solvePlan2 } from '../src/domain/solve.ts';
-import { describeSolve2, outcomeReport } from '../src/domain/solve-report.ts';
-import { parseShotText, shotFromPlan, shotLink } from '../src/domain/shot.ts';
-import { PUBLIC_SITE } from '../src/domain/site.ts';
-import { DEFAULT_TERRAIN_URL } from '../src/domain/terrain.ts';
+import { classify, lensOf, tryPatch } from '../src/domain/solve/composition.ts';
+import { runComposition, searchBasis } from '../src/domain/solve/composition-run.ts';
+import { skyConditionNames } from '../src/domain/solve/alignment.ts';
+import { compassDirection, initialPlan, localDateTime, sensors } from '../src/domain/core/plan.ts';
+import { compositionOf, parseSolveText2, solveJson2, solveLink2, solvePlan2 } from '../src/domain/solve/solve.ts';
+import { describeSolve2, outcomeReport } from '../src/domain/solve/solve-report.ts';
+import { parseShotText, shotFromPlan, shotLink } from '../src/domain/shots/shot.ts';
+import { PUBLIC_SITE } from '../src/domain/core/site.ts';
+import { DEFAULT_TERRAIN_URL } from '../src/domain/core/terrain.ts';
 import { nodeEnvironment } from './lib/solve-node.mjs';
 
 export const RESULT_FORMAT = 'tamatamatori.solve-result';

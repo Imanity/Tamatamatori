@@ -3,10 +3,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { setTimeout as delay } from "node:timers/promises";
 import { act } from "react";
-import { bodyPath } from "../../src/domain/body-paths.ts";
-import { meteorEstimate } from "../../src/domain/meteor-showers.ts";
-import { cometScene } from "../../src/domain/comets.ts";
-import { validateCometCatalog } from "../../src/domain/comet-catalog.ts";
+import { bodyPath } from "../../src/domain/sun-moon/body-paths.ts";
+import { meteorEstimate } from "../../src/domain/sky/meteor-showers.ts";
+import { cometScene } from "../../src/domain/comets/comets.ts";
+import { validateCometCatalog } from "../../src/domain/comets/comet-catalog.ts";
 import { stubs, TestCelestialLayer, TestStarfieldLayer, TestMarker, server, dom, groundRequests, installGlobal, settle, workspace, input, chooseTimeZone, shootingDateTime, setShootingDateTime, value, setControl, waitUntil, terrainMap, readyTerrain, cometCatalogAt } from "./harness.mjs";
 
 test('太阳、月亮分组各有运行轨迹开关：从属于天体图层，开启后预览得到轨迹线与整点标注', async t => {
@@ -228,7 +228,7 @@ test('天气“自动匹配”在选项后标注拍摄时刻的云量来源，�
   let resolveSource;
   installGlobal('__testWeatherSourceLoader', () => new Promise((resolve) => { resolveSource = resolve; }));
   t.after(() => { delete globalThis.__testWeatherSourceLoader; });
-  const { parseBestMatchSeries } = await server.ssrLoadModule('/src/domain/weather-source.ts');
+  const { parseBestMatchSeries } = await server.ssrLoadModule('/src/domain/environment/weather-source.ts');
   await workspace(t); await readyTerrain();
   const option = () => document.querySelector('[aria-label="天气预测模型"] option[value="best_match"]');
   assert.equal(option().textContent, '自动匹配', 'weather off: nothing to identify');
@@ -487,7 +487,7 @@ test('月食与下次：月亮分组给出月偏食与接触时刻（不标半�
 
 test('潮汐图层：读取最近海洋格点，右栏给出潮位与涨落，时间轴标高低潮，地图标格点；失败可重试，超出范围与无海洋格点分别说明', async t => {
   const { map } = await workspace(t); await readyTerrain();
-  const tides = await server.ssrLoadModule('/src/domain/tides.ts');
+  const tides = await server.ssrLoadModule('/src/domain/environment/tides.ts');
   const requests = [];
   const series = (span) => {
     const start = Date.parse(span.start) - 3 * 3_600_000;
@@ -571,7 +571,7 @@ test('极光图层：按拍摄时刻选 Kp 口径，给出能否看到与方向�
 
 test('Open-Meteo 用量：开启天气或潮汐时在光照与环境中显示本浏览器的近 24 小时用量，接近上限与限流分别提示', async t => {
   await workspace(t); await readyTerrain();
-  const usage = await server.ssrLoadModule('/src/preview/api-usage.ts');
+  const usage = await server.ssrLoadModule('/src/io/api-usage.ts');
   const line = () => document.querySelector('.api-usage');
   assert.equal(line(), null);
   await settle(() => document.querySelector('[aria-label="天气效果"]').click());

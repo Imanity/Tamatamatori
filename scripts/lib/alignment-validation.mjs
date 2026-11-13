@@ -1,7 +1,7 @@
 // Pure helpers shared by scripts/alignment-validation.mjs (online) and
 // tests/solve/alignment-validation.test.mjs (offline recomputation).
-import { solveAlignment } from '../../src/domain/alignment.ts';
-import { instantFromLocal, localDateTime } from '../../src/domain/plan.ts';
+import { solveAlignment } from '../../src/domain/solve/alignment.ts';
+import { instantFromLocal, localDateTime } from '../../src/domain/core/plan.ts';
 
 export const ZONE = 'Asia/Tokyo';
 export const DAY = 86_400_000;

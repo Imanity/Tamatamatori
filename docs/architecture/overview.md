@@ -44,27 +44,41 @@ flowchart TD
 
 这里的模块是职责划分，不要求立即建立对应目录、抽象接口或服务。先用小规模实现验证边界，再在确有替换或复杂度需要时提取。
 
+2026-11-14 起源码按层分目录，层内再按功能分子目录（[代码结构整理](../plan/code-structure.md)）：
+
+| 目录 | 内容 | 可引用 |
+| --- | --- | --- |
+| `src/domain/` | 纯函数：`core`（计划、坐标、地形取样、星历、折射、投影）、`time`、`sun-moon`、`sky`、`comets`、`stations`、`environment`、`buildings`、`shots`、`solve` | `domain`、`data` |
+| `src/io/` | 联网或读文件的加载器与后台线程 | 以上与 `io` |
+| `src/render/` | MapLibre 自定义图层、着色器与纹理：`scene`（地形、相机、建筑）、`sky`（星空、日月、天体与天气效果） | 以上与 `render` |
+| `src/ui/` | React 组件与数据钩子：`common`、`map`、`preview`、`workspace` 与各分组 | 全部 |
+| `src/data/` | 静态数据 | — |
+
+- 依赖方向由 `tests/core/boundaries.test.mjs` 检查，它同时要求领域、绘制与界面层的文件都放在功能子目录中。
+- 领域层要能在浏览器、Worker、命令行与 Node 测试中直接加载，因此不引用加载、绘制与界面。
+- 测试按同样的功能分在 `tests/` 的子目录中，界面交互测试在 `tests/ui/`。
+
 工作区的右栏折叠状态与定位请求由 React 界面保存，与拍摄计划分开。地图与预览的左右顺序、宽度比例和窄屏标签同样只属于界面状态；对调只改变 CSS 排列，不重新挂载地图或预览。预览把地面高程回传给工作区，供地图下方的机位条显示。图层分组的初始展开状态取自当时的图层开关，之后左栏开关发出带展开/折叠标记的定位请求，不移动焦点；滚动在展开内容提交后进行，信息栏隐藏时延后到其获得尺寸，期间关闭图层会撤销待定位。预览继续共享既有场景计算，将分组读数通过现有 portal 输出到右栏。地形通过结构化回调向预览信息条提供高程、实际相机与等待状态，保留最后一次有效画布，持续等待才显示加载反馈。画幅和容器尺寸变更在应用摄影姿态前同步渲染器尺寸。详见[工作区调整](../plan/workspace-ui.md)。
 
-机位格式是拍摄计划的对外表示：`src/domain/shot.ts` 负责编解码、校验与分享码，读取函数穷举计划全部字段；`src/domain/shot-library.ts` 读写浏览器本地存储中的机位库与会话，存储以参数注入便于测试不可用、配额不足与损坏。应用机位整体替换计划、关联机位与各参数输入框的草稿，并发出右栏同步请求；会话在计划变化后 300 ms 写入、页面隐藏时补写。构图线、面板布局和地图浏览状态不进入机位。详见[机位保存与分享](../plan/shot-presets.md)。
+机位格式是拍摄计划的对外表示：`src/domain/shots/shot.ts` 负责编解码、校验与分享码，读取函数穷举计划全部字段；`src/domain/shots/shot-library.ts` 读写浏览器本地存储中的机位库与会话，存储以参数注入便于测试不可用、配额不足与损坏。应用机位整体替换计划、关联机位与各参数输入框的草稿，并发出右栏同步请求；会话在计划变化后 300 ms 写入、页面隐藏时补写。构图线、面板布局和地图浏览状态不进入机位。详见[机位保存与分享](../plan/shot-presets.md)。
 
-推算（第一轮“找时间”）的求解器在 `src/domain/alignment.ts`，为不依赖 DOM 的纯函数：期望位置是视方位与视高度，天体位置与预览共用参考椭球观察者、`topocentric` 与折射；以期望高度的穿越和上下中天为种子，在切平面上迭代求最接近时刻。扫描可按时间段切分后合并，界面在主线程每 30 天让出一次事件循环，旧推算作废；以后需要时可原样移入 Worker 或供 AI 工具调用。
+推算（第一轮“找时间”）的求解器在 `src/domain/solve/alignment.ts`，为不依赖 DOM 的纯函数：期望位置是视方位与视高度，天体位置与预览共用参考椭球观察者、`topocentric` 与折射；以期望高度的穿越和上下中天为种子，在切平面上迭代求最接近时刻。扫描可按时间段切分后合并，界面在主线程每 30 天让出一次事件循环，旧推算作废；以后需要时可原样移入 Worker 或供 AI 工具调用。
 
-第二轮“找机位”的求解器在 `src/domain/position-alignment.ts`，DEM 以同步取样函数注入：每分钟一次星历得到天体在地心坐标中的位置，再换到候选机位自己的地平；沿目标反方位扫描并二分出距离，按视线方位修正经线收敛，最后沿眼点到目标顶部的弦检查 DEM 通视。取样函数由 `src/preview/elevation.ts` 的 `elevationTiles` 先读入对齐线经过的 z12 瓦片（单次最多 40 块、独立缓存）后提供，求解按 60 分钟一段让出事件循环。
+第二轮“找机位”的求解器在 `src/domain/solve/position-alignment.ts`，DEM 以同步取样函数注入：每分钟一次星历得到天体在地心坐标中的位置，再换到候选机位自己的地平；沿目标反方位扫描并二分出距离，按视线方位修正经线收敛，最后沿眼点到目标顶部的弦检查 DEM 通视。取样函数由 `src/io/elevation.ts` 的 `elevationTiles` 先读入对齐线经过的 z12 瓦片（单次最多 40 块、独立缓存）后提供，求解按 60 分钟一段让出事件循环。
 
-第三轮“两者都找”的求解在 `src/domain/range-alignment.ts`：主体占比换算距离带，按高度上限预筛分钟，逐日复用找机位的求解并按实际 DEM 重算主体占比。多日计算放在模块 Worker（`src/preview/range.worker.ts`）中，分 `plan`（可用分钟、走廊、扇区）与 `solve`（带瓦片逐日求解）两步；消息处理（`range-worker.ts`）不依赖 Worker 全局对象，浏览器不支持时主线程按日分段。DEM 取样函数 `tileSampler` 在 `src/domain/terrain.ts`，两边共用。
+第三轮“两者都找”的求解在 `src/domain/solve/range-alignment.ts`：主体占比换算距离带，按高度上限预筛分钟，逐日复用找机位的求解并按实际 DEM 重算主体占比。多日计算放在模块 Worker（`src/io/range.worker.ts`）中，分 `plan`（可用分钟、走廊、扇区）与 `solve`（带瓦片逐日求解）两步；消息处理（`range-worker.ts`）不依赖 Worker 全局对象，浏览器不支持时主线程按日分段。DEM 取样函数 `tileSampler` 在 `src/domain/core/terrain.ts`，两边共用。
 
-第十轮起三种求法统一为构图约束搜索（`src/domain/composition.ts`）：目标（地面点或天体，各带画面位置与容差）、搜索范围与筛选组成条件，`classify` 判断能求出什么并选择求解器——地面点加天体且机位不固定时用找机位的求解器（`PairFrames` 把两者的画面位置差按俯仰换算成方位差与高度差，底部位置按实际投影检查），机位固定时由地面点或固定朝向定出天体方向后用找时间的求解器，两个天体时按分钟扫描相对画面位置。`aimAt` 是 `frameDirection` 的逆，求出把某方向放到画面某处的相机朝向；`tryPatch` 统一写出试看字段。筛选先在目标处带余量预筛分钟（`Prefilter`），求解后逐分钟精确检查。第十一轮起最多 4 个目标：主约束以外的目标由 `extraGap` 按试看朝向逐分钟检查；画面两点的夹角与朝向无关，机位线搜索前按其余天体与主天体的角距预筛（`prefilterOf`）。星空可见性在求解后按机位读取光污染，与月光、自然天光合成天顶亮度（`zenithBrightness`）。第十五轮起两个地面点（没有天体）由 `src/domain/ground-pair.ts` 求机位：在搜索圆环上铺网格算第二个点的画面偏差，局部极小处用高斯—牛顿法收敛，再在视线经过的较细地形上重新收敛并检查视线；结果条目带 `place`（与时间无关），试看只写机位与朝向。推算请求 v2 在 `solve.ts`，v1 读入时按打开者镜头转换。第十六轮起，搜索流程在 `src/domain/composition-run.ts`（`runComposition`）中，地形、光污染与机位线逐日求解以函数注入：面板注入浏览器的读取与 Worker；命令行 `scripts/solve.mjs` 注入 Node 的读取，其中 WebP 用 `@jsquash/webp` 解码，光污染读仓库文件。
+第十轮起三种求法统一为构图约束搜索（`src/domain/solve/composition.ts`）：目标（地面点或天体，各带画面位置与容差）、搜索范围与筛选组成条件，`classify` 判断能求出什么并选择求解器——地面点加天体且机位不固定时用找机位的求解器（`PairFrames` 把两者的画面位置差按俯仰换算成方位差与高度差，底部位置按实际投影检查），机位固定时由地面点或固定朝向定出天体方向后用找时间的求解器，两个天体时按分钟扫描相对画面位置。`aimAt` 是 `frameDirection` 的逆，求出把某方向放到画面某处的相机朝向；`tryPatch` 统一写出试看字段。筛选先在目标处带余量预筛分钟（`Prefilter`），求解后逐分钟精确检查。第十一轮起最多 4 个目标：主约束以外的目标由 `extraGap` 按试看朝向逐分钟检查；画面两点的夹角与朝向无关，机位线搜索前按其余天体与主天体的角距预筛（`prefilterOf`）。星空可见性在求解后按机位读取光污染，与月光、自然天光合成天顶亮度（`zenithBrightness`）。第十五轮起两个地面点（没有天体）由 `src/domain/solve/ground-pair.ts` 求机位：在搜索圆环上铺网格算第二个点的画面偏差，局部极小处用高斯—牛顿法收敛，再在视线经过的较细地形上重新收敛并检查视线；结果条目带 `place`（与时间无关），试看只写机位与朝向。推算请求 v2 在 `solve.ts`，v1 读入时按打开者镜头转换。第十六轮起，搜索流程在 `src/domain/solve/composition-run.ts`（`runComposition`）中，地形、光污染与机位线逐日求解以函数注入：面板注入浏览器的读取与 Worker；命令行 `scripts/solve.mjs` 注入 Node 的读取，其中 WebP 用 `@jsquash/webp` 解码，光污染读仓库文件。
 
-推算状态由 App 中的 `useComposition`（`src/components/Composition.tsx`）保存，地图、预览标记（`CompositionMarks.tsx`）、时间轴与面板共用；不进入拍摄计划、机位与会话。搜索显式触发，结果属于发起搜索时的条件快照，条件改变只标为过期。多日机位线经 `solve-runner.ts` 交给模块 Worker。面板经 portal 输出到右栏，时间轴通过 `extraEvents` 接收“对齐”刻度，地图用独立 GeoJSON 源画地面点、范围与结果线。试看只经同一 `update` 修改拍摄计划。详见[构图约束搜索](../plan/composition-search.md)。
+推算状态由 App 中的 `useComposition`（`src/ui/solve/Composition.tsx`）保存，地图、预览标记（`CompositionMarks.tsx`）、时间轴与面板共用；不进入拍摄计划、机位与会话。搜索显式触发，结果属于发起搜索时的条件快照，条件改变只标为过期。多日机位线经 `solve-runner.ts` 交给模块 Worker。面板经 portal 输出到右栏，时间轴通过 `extraEvents` 接收“对齐”刻度，地图用独立 GeoJSON 源画地面点、范围与结果线。试看只经同一 `update` 修改拍摄计划。详见[构图约束搜索](../plan/composition-search.md)。
 
-推算请求是推算条件的对外表示（`src/domain/solve.ts`，格式 `tamatamatori.solve` v1），与机位格式并列：请求只描述意图，数值总在本机求解，求出的结果经试看成为普通机位，因此机位格式不加意图字段。`solvePlan` 给出载入后的计划，`solveRequestOf` 把面板状态写回请求，`useAlignment.load` 写入面板状态。App 在载入与 hash 改变时读取 `#shot=`、`#solve=`，经预览确认后才改计划，关闭预览即以 `history.replaceState` 清除 hash；hash 不发送给服务器。链接与 `$schema` 按页面自身地址生成（`src/domain/site.ts`）。对外说明 `public/llms.txt`、两份格式说明与 JSON Schema 由 `scripts/formats.mjs` 按代码常量生成，构建时校验不漂移；应用解析器仍是格式的权威，schema 只镜像其规则。
+推算请求是推算条件的对外表示（`src/domain/solve/solve.ts`，格式 `tamatamatori.solve` v1），与机位格式并列：请求只描述意图，数值总在本机求解，求出的结果经试看成为普通机位，因此机位格式不加意图字段。`solvePlan` 给出载入后的计划，`solveRequestOf` 把面板状态写回请求，`useAlignment.load` 写入面板状态。App 在载入与 hash 改变时读取 `#shot=`、`#solve=`，经预览确认后才改计划，关闭预览即以 `history.replaceState` 清除 hash；hash 不发送给服务器。链接与 `$schema` 按页面自身地址生成（`src/domain/core/site.ts`）。对外说明 `public/llms.txt`、两份格式说明与 JSON Schema 由 `scripts/formats.mjs` 按代码常量生成，构建时校验不漂移；应用解析器仍是格式的权威，schema 只镜像其规则。
 
 推算结果的落地（第六轮）只在界面层组合纯函数：`pointPlan` 给出试看写入的字段，找机位、两者都找与日历链接共用；`solve-calendar.ts` 生成 RFC 5545 文本（UTC、75 字节折行、转义）；`mergeCandidates` 与 `distinctPoints` 合并同一视线上的近似重根。“存为机位”由 App 持有的机位库实例保存；同一页面的多个 `useShotLibrary` 实例在写入后经本地事件重读存储，避免旧列表覆盖新机位。
 
-固定方向天体（第八轮）由 `src/domain/sky-targets.ts` 从星表与深空目录生成并登记到 `sky-coordinates.ts`；求解器只经后者把天体换成 astronomy-engine 的自定义恒星，因此两者都找的 Worker 不带目录，由规划消息登记所需天体。天暗判断用 `Date` 计算的太阳高度，避免 Worker 引入 Temporal。
+固定方向天体（第八轮）由 `src/domain/sky/sky-targets.ts` 从星表与深空目录生成并登记到 `sky-coordinates.ts`；求解器只经后者把天体换成 astronomy-engine 的自定义恒星，因此两者都找的 Worker 不带目录，由规划消息登记所需天体。天暗判断用 `Date` 计算的太阳高度，避免 Worker 引入 Temporal。
 
-“检查机位”（第七轮）按需运行：`src/domain/feasibility.ts` 只做几何判断（点在带洞多边形内、射线与轮廓求交、含曲率视线高度、按瓦片上限截取对象），`src/preview/feasibility.ts` 读取与预览同源的 OpenFreeMap z14 矢量瓦片，只解码 `water` 与 `building` 并按页面缓存。建筑基底取推算用的 DEM 采样器。检查结果由推算面板持有，按列出的机位与离地高度判定是否仍然有效，不进入拍摄计划、导出或地图。
+“检查机位”（第七轮）按需运行：`src/domain/solve/feasibility.ts` 只做几何判断（点在带洞多边形内、射线与轮廓求交、含曲率视线高度、按瓦片上限截取对象），`src/io/feasibility.ts` 读取与预览同源的 OpenFreeMap z14 矢量瓦片，只解码 `water` 与 `building` 并按页面缓存。建筑基底取推算用的 DEM 采样器。检查结果由推算面板持有，按列出的机位与离地高度判定是否仍然有效，不进入拍摄计划、导出或地图。
 
 当地光污染开关属于拍摄计划，固定图集按经纬度异步采样，数据状态与天文几何分开。CPU 读数与 GPU 显示共用同一天空对比度计算，数据更新不重建地形或重新获取 DEM。静态数据、许可与显示近似边界见[光污染首步](../plan/light-pollution.md)。
 
@@ -84,7 +98,7 @@ P2 首步以 DEM 三维场景替换预览平面，独立获取机位高程，再
 
 P2 时间天空由机位与 UTC 驱动天空、雾、地表配色与坡面阴影。通过现有实例的样式接口更新环境，时间修改不重建预览、不重新取高程或移动相机；算法、误差与范围见[时间天空设计](time-sky.md)。
 
-P3 日月接入 Astronomy Engine 后，太阳位置与基础环境统一算法。日月开关和折射模型属于拍摄计划；圆盘及月相按同一摄影相机的三维针孔模型投影，再由公开的 MapLibre 自定义三维图层共享地形深度。异步 GPU 查询区分当前 DEM 的无遮挡、部分遮挡和完全遮挡，数据更新使旧结果失效；不新增通用图层框架。详见[日月设计](sun-moon.md)与[遮挡和折射设计](occlusion-refraction.md)。日食与月食不新增数据源：本地食况用 Astronomy Engine，中心食带与地影几何在 `src/domain/eclipses.ts`、`src/domain/eclipse-geometry.ts` 自行计算；日月位置带出遮挡比例与等效太阳高度，各明暗模型共用，见[日食与月食](../plan/eclipses.md)。潮汐读取 Open-Meteo Marine（`src/preview/tides.ts`），极光读取 NOAA SWPC（`src/preview/aurora.ts`），二者都由浏览器直连、无密钥，数据在应用层读取一次，供右栏、时间轴与地图共用；模型与口径见[潮汐](../plan/tides.md)、[极光](../plan/aurora.md)。
+P3 日月接入 Astronomy Engine 后，太阳位置与基础环境统一算法。日月开关和折射模型属于拍摄计划；圆盘及月相按同一摄影相机的三维针孔模型投影，再由公开的 MapLibre 自定义三维图层共享地形深度。异步 GPU 查询区分当前 DEM 的无遮挡、部分遮挡和完全遮挡，数据更新使旧结果失效；不新增通用图层框架。详见[日月设计](sun-moon.md)与[遮挡和折射设计](occlusion-refraction.md)。日食与月食不新增数据源：本地食况用 Astronomy Engine，中心食带与地影几何在 `src/domain/sun-moon/eclipses.ts`、`src/domain/core/eclipse-geometry.ts` 自行计算；日月位置带出遮挡比例与等效太阳高度，各明暗模型共用，见[日食与月食](../plan/eclipses.md)。潮汐读取 Open-Meteo Marine（`src/io/tides.ts`），极光读取 NOAA SWPC（`src/io/aurora.ts`），二者都由浏览器直连、无密钥，数据在应用层读取一次，供右栏、时间轴与地图共用；模型与口径见[潮汐](../plan/tides.md)、[极光](../plan/aurora.md)。
 
 近地相机校准已发现引擎避让可能改变实际眼点和俯仰。预览读取公开绘制矩阵和相机角度，按实际姿态同步日月及读数，计划参数独立保留。开发校准器及模型精度边界见[相机校准设计](camera-calibration.md)。
 
@@ -111,7 +125,7 @@ P3 亮星、金木星、银河与星座参考沿用实际摄影相机、参考�
 
 机位变更默认保留 UTC 时刻；修改显示时区默认只改变呈现方式，用户编辑当地时间才改变实际时刻。夏令时歧义在输入转换处处理。“当地时区”是可选的跟随模式：计划仍保存解析后的 IANA 时区，另以 `followLocalZone` 标记随机位重新查询（`@photostructure/tz-lookup`，有损的本地网格，边境与海上可能不准）；固定时区不受机位影响。
 
-时间滑杆表达一个 24 小时时段内的当地钟点（白天模式为所选日期 00:00 起，夜空类图层开启时为当晚 12:00 起），以一分钟为步长；时段、事件刻度与上一/下一事件由 `src/domain/timeline.ts` 计算；不把当地钟点简单等同于 UTC 加固定时长。沿用 Temporal 的 `disambiguation: reject` 处理夏令时缺失或重复钟点，校验失败时保留原计划并显示错误。参考 [Temporal 时区语义](https://tc39.es/proposal-temporal/docs/zoneddatetime.html)。
+时间滑杆表达一个 24 小时时段内的当地钟点（白天模式为所选日期 00:00 起，夜空类图层开启时为当晚 12:00 起），以一分钟为步长；时段、事件刻度与上一/下一事件由 `src/domain/time/timeline.ts` 计算；不把当地钟点简单等同于 UTC 加固定时长。沿用 Temporal 的 `disambiguation: reject` 处理夏令时缺失或重复钟点，校验失败时保留原计划并显示错误。参考 [Temporal 时区语义](https://tc39.es/proposal-temporal/docs/zoneddatetime.html)。
 
 地图浏览相机与拍摄相机分别管理。界面展示角度的约定与引擎、天文算法内部坐标不同，需要在各自适配边界转换；更详细的坐标系与误差规范在进入相应计算目标时补充。
 
@@ -120,7 +134,7 @@ P3 亮星、金木星、银河与星座参考沿用实际摄影相机、参考�
 1. **摄影相机**：从机位、地形高度、相机离地高度、方向与视场建立观察关系。地图缩放级别不能替代焦距。
 2. **地面**：从有来源的高程与地表信息建立可解释的地面参考；数据缺失时显式降级。选点覆盖全球不等于全球都拥有精细三维场景。
 3. **基础天空**：根据机位与 UTC 时刻计算太阳位置、月亮亮面比例与几何高度，驱动昼夜、暮光和夜间月光的近似配色；不能只按固定当地钟点切换颜色。细则见[环境架构](time-sky.md)。
-4. **天文图层**：把目标方向转换到同一观察坐标系并投影进视场；银河、深空天体、太阳/月亮与空间站分别逐项接入。流星雨（`src/domain/meteor-showers.ts`）由工作表数据按 J2000 太阳黄经换算辐射点与 ZHR。辐射点和示意流星复用星空图层的深度与遮挡查询；数量估算和示意抽样共用同一速率模型，按 10 分钟 UTC 网格缓存，时段为拍摄时刻所在的整晚（地方平太阳时正午到次日正午中的天文暗夜）；两者都按固定机位拍摄、再用天球旋转对齐到拍摄时刻的叠加方式取舍。示意流星只随相机朝向与焦距重建，不重建星点；流星条带与辐射点符号在着色器中按设备像素距离做抗锯齿，不依赖画布多重采样。见[流星雨计划](../plan/meteor-showers.md)。彗星（`src/domain/comet-orbit.ts`、`src/domain/comets.ts`）读取站点静态目录 `comets/catalog.json`（`src/domain/comet-catalog.ts` 校验，开启图层时由 `useCometCatalog` 读取）。目录与空间站快照一样由 CI 定时增量更新并随站点发布：`scripts/update-comets.mjs` 只重新处理观测窗口未结束的回归，2 小时冷却（定时任务每 3 小时一次），失败保留原目录并暂停。界面层算出彗星场景后经 `TerrainScene` 交给星空图层。计算上，JPL Horizons 近日点密切根数按普适变量二体传播，计入光行时与测站视差；COBS 目视星等拟合的近日点前/后亮度定律给出星等，Kammerer 经验公式给出彗尾物理长度。离子尾沿太阳风相对彗星的方向伸直，尘埃尾取同动力曲线（β = 0.5），两者以三维点列投影为天球方向的条带，在星空图层中与地形共享深度；网格只随地点、时刻、折射和光污染重建，转动与变焦不重建。见[彗星计划](../plan/comets.md)。
+4. **天文图层**：把目标方向转换到同一观察坐标系并投影进视场；银河、深空天体、太阳/月亮与空间站分别逐项接入。流星雨（`src/domain/sky/meteor-showers.ts`）由工作表数据按 J2000 太阳黄经换算辐射点与 ZHR。辐射点和示意流星复用星空图层的深度与遮挡查询；数量估算和示意抽样共用同一速率模型，按 10 分钟 UTC 网格缓存，时段为拍摄时刻所在的整晚（地方平太阳时正午到次日正午中的天文暗夜）；两者都按固定机位拍摄、再用天球旋转对齐到拍摄时刻的叠加方式取舍。示意流星只随相机朝向与焦距重建，不重建星点；流星条带与辐射点符号在着色器中按设备像素距离做抗锯齿，不依赖画布多重采样。见[流星雨计划](../plan/meteor-showers.md)。彗星（`src/domain/comets/comet-orbit.ts`、`src/domain/comets/comets.ts`）读取站点静态目录 `comets/catalog.json`（`src/domain/comets/comet-catalog.ts` 校验，开启图层时由 `useCometCatalog` 读取）。目录与空间站快照一样由 CI 定时增量更新并随站点发布：`scripts/update-comets.mjs` 只重新处理观测窗口未结束的回归，2 小时冷却（定时任务每 3 小时一次），失败保留原目录并暂停。界面层算出彗星场景后经 `TerrainScene` 交给星空图层。计算上，JPL Horizons 近日点密切根数按普适变量二体传播，计入光行时与测站视差；COBS 目视星等拟合的近日点前/后亮度定律给出星等，Kammerer 经验公式给出彗尾物理长度。离子尾沿太阳风相对彗星的方向伸直，尘埃尾取同动力曲线（β = 0.5），两者以三维点列投影为天球方向的条带，在星空图层中与地形共享深度；网格只随地点、时刻、折射和光污染重建，转动与变焦不重建。见[彗星计划](../plan/comets.md)。
 
 地形遮挡、几何地平线判断、目标亮度与真实成像可见性是不同层次。尚未具备的能力以状态说明，不用视觉效果代替计算结论。
 
@@ -135,7 +149,7 @@ OpenStreetMap 公共标准瓦片服务有署名、缓存和访问限制，也不
 - 对未变化的数据减少重复请求；缓存遵守提供方要求，不提前承诺离线地图。
 - 轨道数据需保留轨道历元、获取时间及来源；预测适用范围在 P4 确定，不能只用下载时间判断可信度。
 - 无外部数据时仍可编辑计划，并明确说明预览中哪些部分不可用。
-- 地点搜索调用 OpenStreetMap Nominatim 公共服务（`src/preview/geocode.ts`），按其使用条款只由用户提交触发、本页请求间隔至少 1.1 秒并缓存；服务地址集中在该模块，需要时可换自建或第三方服务。浏览器定位结果只在本机使用。
+- 地点搜索调用 OpenStreetMap Nominatim 公共服务（`src/io/geocode.ts`），按其使用条款只由用户提交触发、本页请求间隔至少 1.1 秒并缓存；服务地址集中在该模块，需要时可换自建或第三方服务。浏览器定位结果只在本机使用。
 - 不保存计划到云端。机位与工作状态保存在浏览器本地存储，跨设备靠分享码；需要保密凭据、受限跨域访问或服务端配额控制时，再设计最小服务端能力。
 
 ## 6. 后续决策与验证

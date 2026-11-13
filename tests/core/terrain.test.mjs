@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { MercatorCoordinate } from "maplibre-gl";
-import { initialPlan, fieldOfView } from "../../src/domain/plan.ts";
+import { initialPlan, fieldOfView } from "../../src/domain/core/plan.ts";
 import {
   decodeTerrarium,
   sampleElevationTile,
@@ -9,8 +9,8 @@ import {
   terrainStyle,
   TERRAIN_SOURCE,
   WATER_SOURCE,
-} from "../../src/domain/terrain.ts";
-import { terrainCamera } from "../../src/preview/camera.ts";
+} from "../../src/domain/core/terrain.ts";
+import { terrainCamera } from "../../src/render/scene/camera.ts";
 
 const close = (actual, expected, tolerance = 1e-7) =>
   assert.ok(

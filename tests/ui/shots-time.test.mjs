@@ -3,9 +3,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { setTimeout as delay } from "node:timers/promises";
 import { act } from "react";
-import { parseShotText } from "../../src/domain/shot.ts";
-import { dayEvents } from "../../src/domain/day-events.ts";
-import { cameraHeightSlider } from "../../src/domain/plan.ts";
+import { parseShotText } from "../../src/domain/shots/shot.ts";
+import { dayEvents } from "../../src/domain/time/day-events.ts";
+import { cameraHeightSlider } from "../../src/domain/core/plan.ts";
 import { dom, settle, waitForMap, workspace, input, chooseTimeZone, shootingDateTime, setShootingDateTime, value, setControl, terrainMap, readyTerrain, shotButton, panelButton, openShots, saveShotAs, savedShots, keydown } from "./harness.mjs";
 
 test('页头删去调试文本；机位保存、修改标记、切换应用与撤销，参数、图层与右栏同步', async t => {

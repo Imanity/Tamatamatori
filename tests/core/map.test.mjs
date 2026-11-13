@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { initialPlan, fieldOfView } from "../../src/domain/plan.ts";
+import { initialPlan, fieldOfView } from "../../src/domain/core/plan.ts";
 import {
   MAX_MAP_LATITUDE,
   destination,
@@ -11,7 +11,7 @@ import {
   nearbyLongitude,
   viewGeometry,
   viewRadiusMeters,
-} from "../../src/domain/map.ts";
+} from "../../src/domain/core/map.ts";
 
 const close = (actual, expected, tolerance = 1e-7) =>
   assert.ok(

@@ -5,9 +5,9 @@ import { createRequire } from "node:module";
 import encode, { init as initEncode } from "@jsquash/webp/encode.js";
 import { decodeTile } from "../../scripts/lib/solve-node.mjs";
 import { defaultPlan, RESULT_FORMAT, solveCommand } from "../../scripts/solve.mjs";
-import { parseShotText, shotFromPlan, shotLink } from "../../src/domain/shot.ts";
-import { initialPlan } from "../../src/domain/plan.ts";
-import { sampleElevationTile } from "../../src/domain/terrain.ts";
+import { parseShotText, shotFromPlan, shotLink } from "../../src/domain/shots/shot.ts";
+import { initialPlan } from "../../src/domain/core/plan.ts";
+import { sampleElevationTile } from "../../src/domain/core/terrain.ts";
 
 const require = createRequire(import.meta.url);
 const NOW = Date.parse("2026-11-14T03:00:00Z");

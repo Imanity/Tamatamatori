@@ -149,12 +149,12 @@
 实施时再把需要的部分写入 `docs/architecture/`，本节只记录评估结论。
 
 - **星历**：
-  - `src/domain/ephemeris.ts`、`src/domain/day-events.ts`（`SearchAltitude`）可以直接复用；固定天体复用 `src/domain/timeline.ts` 的 `fixedHorizontal`；彗星与空间站已有位置函数。
+  - `src/domain/core/ephemeris.ts`、`src/domain/time/day-events.ts`（`SearchAltitude`）可以直接复用；固定天体复用 `src/domain/time/timeline.ts` 的 `fixedHorizontal`；彗星与空间站已有位置函数。
   - “找时间”不需要新数据源。
   - 月亮视差随机位变化，但机位移动几十千米只带来角秒级差异；求解时可先按目标附近的观察者计算，落点后再复核。
 - **遮挡**：
   - 现有遮挡是针对当前计划的 GPU 查询，无法批量用于候选。
-  - 推算需要 CPU 剖面采样，可在 `src/preview/elevation.ts` 已有的 z12 Terrarium 解码上扩展为沿线采样。
+  - 推算需要 CPU 剖面采样，可在 `src/io/elevation.ts` 已有的 z12 Terrarium 解码上扩展为沿线采样。
   - Mapterhorn 是公共服务，只对选中的线或少数候选检查，并且缓存，不对全年的所有对齐线全量请求瓦片。
 - **目标高度**：地标取 `src/data/landmarks.generated.json` 的 `bounds.height`。普通建筑只在机位周边约 5 km 内有数据，不作为推算目标的高度来源。
 - **计算量**：12 个月按 10 分钟网格粗扫约 5 万次星历，再在候选附近细化。这符合[全局架构](../architecture/overview.md#5-外部数据与运行边界)中“出现实际性能问题后再评估 Worker”的条件。
@@ -306,7 +306,7 @@
 
 #### 实现
 
-- **求解**（`src/domain/alignment.ts`，纯函数）：
+- **求解**（`src/domain/solve/alignment.ts`，纯函数）：
   - 天体位置与预览同一来源：参考椭球上的观察者、`topocentric` 与所选折射，因此试看时圆面落在标记处。期望位置是视方位与视高度；搜索高度时用迭代换回几何高度。
   - 种子：期望高度的升、降两个方向穿越（`SearchAltitude`），加上上、下中天（`SearchHourAngle`），后者覆盖天体只在中天附近擦过期望位置的情形，同时给出所选范围内的最高与最低高度。
   - 每个种子在期望位置的切平面上按局部直线运动做牛顿迭代，求最接近的时刻；同一过程的种子在 20 分钟内合并，再按容差、月相、天空条件分类，用二分求容差内的起止。
@@ -406,14 +406,14 @@
 
 #### 实现
 
-- **求解**（`src/domain/position-alignment.ts`，纯函数，DEM 取样函数以参数传入）：
+- **求解**（`src/domain/solve/position-alignment.ts`，纯函数，DEM 取样函数以参数传入）：
   - 每分钟用一次星历求天体在地心坐标中的位置，再换到线上每个点自己的地平（`skyField`）。机位离目标 30 km 时，当地地平相对目标处倾斜约 0.27°，必须这样换算。
   - 沿目标的反方位每 100 m 扫描：眼点高度 = DEM 地面 + 离地高度，比较椭球直线方向的仰角与天体视高度，变号处二分求距离；再按视线自身方位修正经线收敛（最多 4 次），每次在原距离附近重新求根。
   - 通视：眼点到目标顶部的弦每 50 m 取一点，换回经纬高后与 DEM 地面比较（留 0.5 m 余量，不含眼点附近 20 m 与目标附近 50 m）。
   - 连续分钟的解按距离连成分支，允许的跳变随距离放大（低空时每分钟可移动数千米）。
   - 无解原因：时段内天体都在地平线下、仰角范围与天体高度没有交点（写出两者范围）、目标处无高程。
   - Node 中合成平地上一天约 0.1—0.2 秒；内置浏览器中晴空塔一天连同读取 DEM 约 1.5 秒。
-- **高程**（`src/preview/elevation.ts` 的 `elevationTiles`）：按对齐线经过的点读 z12 瓦片，并发 4 个，超过 40 块即报错并提示缩小最远距离；解码结果另设缓存，返回同步取样函数。
+- **高程**（`src/io/elevation.ts` 的 `elevationTiles`）：按对齐线经过的点读 z12 瓦片，并发 4 个，超过 40 块即报错并提示缩小最远距离；解码结果另设缓存，返回同步取样函数。
 - **界面**（`src/components/PositionSearch.tsx`）：
   - 推算状态从预览面板提到 App，由地图、预览、时间轴与面板共用。
   - 面板含求法切换、地标列表与地图放置目标、目标高度、最远距离、滑杆、试看列表、剖面图与“返回推算前”。
@@ -502,16 +502,16 @@
 
 #### 实现
 
-- **求解**（`src/domain/range-alignment.ts`，纯函数）：
+- **求解**（`src/domain/solve/range-alignment.ts`，纯函数）：
   - 主体占比按直线投影换算：画面中心对准顶部时，向下 θ 角的物体占画面高度 tan θ / (2·tan(垂直视场/2))。距离带取占比 ±20% 对应的距离；搜索时再放宽到 0.8—1.25 倍，每个解按实际 DEM 重算“顶部仰角 − 底部仰角”，超出 ±20% 的舍去。
   - 高度上限按“机位地面不低于目标地面 300 m”估计，只保留低于上限的分钟；DEM 走廊只沿这些分钟的方位线（0.25° 去重、每 500 m 一点）从目标到搜索外缘。
   - 每天沿用第二轮的求解，只在距离带内求根；同一天同一分支连续的分钟为一个候选，中间时刻给出天空条件与月相，另计通视比例。
   - 可达方位扇区由各天保留分钟的反方位合并（间隔 1° 内连成一片，跨北方向相接）。
-- **Worker**（`src/preview/range-worker.ts`、`range.worker.ts`）：
+- **Worker**（`src/io/range-worker.ts`、`range.worker.ts`）：
   - 分两步：`plan` 计算各天可用分钟、走廊与扇区；主线程读入瓦片后，`solve` 连同瓦片数据（结构化复制一次）逐日求解并回报进度。
   - 浏览器没有 Worker、Worker 启动失败或取样器不带瓦片（测试替身）时，主线程按日分段计算。
   - 消息处理不依赖 Worker 全局对象，测试中直接调用。
-- **高程**：`tileSampler` 移到 `src/domain/terrain.ts`，主线程与 Worker 共用；`elevationTiles` 的返回值附带瓦片与范围。
+- **高程**：`tileSampler` 移到 `src/domain/core/terrain.ts`，主线程与 Worker 共用；`elevationTiles` 的返回值附带瓦片与范围。
 - **界面**（`src/components/RangeSearch.tsx`）：
   - 求解对象增加“两者都找”，地面目标区与剖面图从找机位提取后共用。
   - 构图草图按当前画幅绘制，天体按真实角大小。面板写出距离带与所需天体高度，目标不足 10 m 时改为最远距离。
@@ -558,7 +558,7 @@
 - **机位链接**（[机位保存与分享](shot-presets.md#5-ai-生成机位第二步仅设计)第二步）：
   - 分享对话框以“分享链接”为主：站点地址加 `#shot=tmt1:…`；分享码与 JSON 保留，导出的 JSON 带 `$schema` 绝对地址。
   - 打开带 `#shot=` 的链接（分享码或 `json:` 加 URL 编码 JSON）时，弹出与“导入机位”相同的预览，确认后才应用；无论应用与否都从地址中清除 hash。页面已打开时改 hash 同样处理。
-- **推算请求格式 `tamatamatori.solve` v1**（`src/domain/solve.ts`）：
+- **推算请求格式 `tamatamatori.solve` v1**（`src/domain/solve/solve.ts`）：
   - 字段：`kind`（`time` / `position` / `range`）、`body`；找时间的 `mark`（视方位、视高度）与可选 `camera`（机位与离地高度）；找机位与两者都找的 `target`（地标 `landmark` id，或经纬度加 `height`、`name`）；`date` 与 `days`、`timeZone`、`tolerance`、`share`、`maxDistance`、月亮的 `phase` 与 `sky`。
   - 规则沿用机位格式：未知字段与越界报错并带字段路径，缺省项用默认值并列出，`$schema` 忽略，高于 v1 的版本拒绝。
 - **推算请求链接**：
@@ -591,17 +591,17 @@
 
 #### 实现
 
-- **推算请求格式**（`src/domain/solve.ts`）：
+- **推算请求格式**（`src/domain/solve/solve.ts`）：
   - `parseSolveText` 接受纯 JSON、代码块、`#solve=` 链接（URL 编码或原样 JSON）；`parseSolve` 按求法检查字段，错误带字段路径一次列全，缺省项列出，高于 v1 的版本拒绝。
   - `solveJson` 按文档顺序写出字段，地标目标只写 id 与高度，空名称不写；`solveLink` 生成 `#solve=json:` 链接。
   - `solvePlan` 给出载入后的拍摄计划：找时间转向期望位置（方位与俯仰），给出 `camera` 时移到该机位；找机位把拍摄时刻移到 `date`，若保留原钟点会落到前一天的时间轴范围（夜空类图层的中午到次日中午），改为当天 12:00；给出 `timeZone` 时改为该固定时区。两者都找不改计划。
   - `solveRequestOf` 把推算面板的状态写回请求，供“复制推算请求”使用；与读取往返一致。
-- **机位链接**（`src/domain/shot.ts`、`src/components/ShotMenu.tsx`）：分享对话框以“分享链接”为主，另有“复制分享码”；导出的 JSON 带 `$schema`。链接与 `$schema` 按页面自己的地址生成（`src/domain/site.ts`），本地或其他部署指向自身；公开说明里的示例使用正式站点地址。
+- **机位链接**（`src/domain/shots/shot.ts`、`src/ui/shots/ShotMenu.tsx`）：分享对话框以“分享链接”为主，另有“复制分享码”；导出的 JSON 带 `$schema`。链接与 `$schema` 按页面自己的地址生成（`src/domain/core/site.ts`），本地或其他部署指向自身；公开说明里的示例使用正式站点地址。
 - **打开链接**（`src/App.tsx`）：页面载入和 hash 改变时读取 `#shot=` 与 `#solve=`。
-  - 机位链接打开与“导入机位”相同的预览；推算请求打开新的预览对话框（`src/components/SolveLink.tsx`），列出请求与“载入后”会改动的字段。
+  - 机位链接打开与“导入机位”相同的预览；推算请求打开新的预览对话框（`src/ui/solve/SolveLink.tsx`），列出请求与“载入后”会改动的字段。
   - 关闭预览（应用、载入或取消）后用 `history.replaceState` 清除 hash，刷新不再询问。
   - “载入并推算”替换计划、写入推算面板状态并进入推算模式；提示条的“撤销”恢复计划，并在原本未开推算模式时退出。
-- **导出**：推算面板末尾“导出”组，“复制推算请求”给出链接，“复制结果”给出 Markdown（请求各项、链接、状态行、结果表与限制说明，`src/domain/solve-report.ts`）；表格最多 200 行，其余计数。剪贴板不可用时选中隐藏文本，选中时不滚动页面。
+- **导出**：推算面板末尾“导出”组，“复制推算请求”给出链接，“复制结果”给出 Markdown（请求各项、链接、状态行、结果表与限制说明，`src/domain/solve/solve-report.ts`）；表格最多 200 行，其余计数。剪贴板不可用时选中隐藏文本，选中时不滚动页面。
 - **公开说明**（`scripts/formats.mjs`）：按代码常量生成 `public/llms.txt`、`shot-format.md`、`solve-format.md`、`shot.schema.json`、`solve.schema.json`（JSON Schema 2020-12）。示例先经应用自己的解析器读出再写入，地标表来自目录。`npm run formats` 生成，`npm run formats:verify`（构建时运行）发现漂移即失败。`index.html` 以 `<link rel="alternate">` 指向 `llms.txt` 与两份说明。
 - 图层中文名与依赖关系移入 `shot.ts`（`shotLayerNames`、`shotLayerRequires`），机位面板、解析与生成脚本共用。
 
@@ -686,11 +686,11 @@
 
 #### 实现
 
-- **存为机位**（`src/components/SolveLink.tsx`、`src/App.tsx`）：
+- **存为机位**（`src/ui/solve/SolveLink.tsx`、`src/App.tsx`）：
   - “保存与导出”组的“存为机位”只在计划正是某个结果的试看时可用：找时间按时刻判断，找机位与两者都找按时刻与机位判断。
-  - 名称由 `solveShotName` 生成（`src/domain/solve-calendar.ts`）。App 持有的机位库实例保存并设为当前机位，提示条写明已保存。
+  - 名称由 `solveShotName` 生成（`src/domain/solve/solve-calendar.ts`）。App 持有的机位库实例保存并设为当前机位，提示条写明已保存。
   - `useShotLibrary` 写入后派发页面内事件，同页其他实例重读存储，机位面板立即看到新机位。
-- **导出日历**（`src/domain/solve-calendar.ts`）：
+- **导出日历**（`src/domain/solve/solve-calendar.ts`）：
   - `calendarText` 生成 RFC 5545 文本：CRLF、按 UTF-8 字节在 75 处折行且不拆字符、转义 `\ ; ,` 与换行；时刻为 UTC 整秒，最短 1 分钟；`GEO` 与 `LOCATION`；最多 200 个事件。
   - `timeEvents`、`positionEvents`（每条对齐线，重合的线合并）、`rangeEvents` 生成事件；每个事件附 `#shot=` 链接，内容与该结果的试看相同。
   - 浏览器以 Blob 下载 `tamatamatori-<求法>-<日期>.ics`。
@@ -762,13 +762,13 @@
 
 #### 实现
 
-- **纯函数**（`src/domain/feasibility.ts`）：
+- **纯函数**（`src/domain/solve/feasibility.ts`）：
   - `insideRings` 按奇偶规则判断点在带洞多边形内。
   - `rayCrossings` 求射线与轮廓边的交点距离，`sightHeight` 计算含地球曲率的视线高度。
   - `checkPlace` 给出水面、建筑轮廓内与最近遮挡（距离、高出视线多少）。眼点所在轮廓只报告为“建筑内”；视线从下方穿过的悬空部分不计；先按外框快速排除。
   - `checkPoints` 取机位与视线方向 250 m 一点直到 2 km；`fitTargets` 按列表顺序截取，最多 60 个机位、40 块 z14 瓦片。
-- **读取**（`src/preview/feasibility.ts`）：读取 OpenFreeMap TileJSON，并检查其中有 z14 的 `water` 与 `building` 图层。每块瓦片最多 3 MiB、4 路并行，按页面缓存最近 64 块解码结果。建筑高度沿用预览的 `buildingHeights`。
-- **界面**（`src/components/Feasibility.tsx`）：
+- **读取**（`src/io/feasibility.ts`）：读取 OpenFreeMap TileJSON，并检查其中有 z14 的 `water` 与 `building` 图层。每块瓦片最多 3 MiB、4 路并行，按页面缓存最近 64 块解码结果。建筑高度沿用预览的 `buildingHeights`。
+- **界面**（`src/ui/solve/Feasibility.tsx`）：
   - 三种求法的结果区都有“检查机位（水面、建筑）”。读取中显示进度，失败可重试。
   - 结果按机位标签显示：问题为红色，未发现问题为绿色。汇总写明各类数量、读取与新下载的瓦片数，以及截断说明。
   - 列出的机位或离地高度改变后，旧标签不再显示；同一批机位保持不变。
@@ -850,8 +850,8 @@
 #### 实现
 
 - **目标表**：
-  - `src/domain/sky-targets.ts` 由星表与深空目录生成 106 个固定方向天体：银心、90 颗有名亮星（按星等排序）、15 个深空目标，并给出名称、类别与标记大小。
-  - 求解器只依赖不含目录的 `src/domain/sky-coordinates.ts`：主线程导入目标表时登记坐标，两者都找的 Worker 从规划消息里登记所需的那一个。Worker 包因此只增加 0.7 KB（149.5 KB）。
+  - `src/domain/sky/sky-targets.ts` 由星表与深空目录生成 106 个固定方向天体：银心、90 颗有名亮星（按星等排序）、15 个深空目标，并给出名称、类别与标记大小。
+  - 求解器只依赖不含目录的 `src/domain/sky/sky-coordinates.ts`：主线程导入目标表时登记坐标，两者都找的 Worker 从规划消息里登记所需的那一个。Worker 包因此只增加 0.7 KB（149.5 KB）。
   - 第一版直接引用目录时 Worker 增至 447 KB。拆出登记表后仍有 310 KB，原因是天暗判断用的 `sunPosition` 带入了 Temporal；改用 `Date` 计算的太阳高度后恢复。
 - **求解**：
   - 固定方向天体用 astronomy-engine 的自定义恒星（`DefineStar`），与日月共用找时间的种子与最近点迭代，以及找机位的逐点地平。

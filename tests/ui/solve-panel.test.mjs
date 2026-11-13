@@ -1,11 +1,11 @@
 // Workspace interaction tests: the solve (推算) panel and shot links. Setup lives in harness.mjs.
 import test from "node:test";
 import assert from "node:assert/strict";
-import { parseShotText, shotFromPlan, shotLink } from "../../src/domain/shot.ts";
-import { parseSolveText2 } from "../../src/domain/solve.ts";
-import { skyAt, toRay, travel } from "../../src/domain/position-alignment.ts";
-import { direction } from "../../src/domain/ephemeris.ts";
-import { initialPlan } from "../../src/domain/plan.ts";
+import { parseShotText, shotFromPlan, shotLink } from "../../src/domain/shots/shot.ts";
+import { parseSolveText2 } from "../../src/domain/solve/solve.ts";
+import { skyAt, toRay, travel } from "../../src/domain/solve/position-alignment.ts";
+import { direction } from "../../src/domain/core/ephemeris.ts";
+import { initialPlan } from "../../src/domain/core/plan.ts";
 import { stubs, dom, pollutionRequests, installGlobal, settle, workspace, input, inputIn, shootingDateTime, setShootingDateTime, value, button, clickMap, setControl, waitUntil, readyTerrain, shotButton, openShots, savedShots, panel, solvability, resultStatus, dayRows, rowItems, targetRow, searchNow, searched, tokyoTime, placed, fujiRequest, openSolveLink } from "./harness.mjs";
 
 test('推算·固定机位与朝向：加天体、固定机位与朝向后搜索，结果按天列出并标在时间轴；试看只改时刻与图层，返回推算前只恢复这两类字段；改动条件后结果标为过期', async t => {

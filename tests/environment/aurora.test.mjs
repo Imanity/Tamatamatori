@@ -4,7 +4,7 @@ import {
   AURORA_TOP_KM, DIPOLE_CENTRE, GEOMAGNETIC_POLE, VIEW_ELEVATION, auroraChances, auroraElevation, auroraLines, auroraView,
   geographic, geomagnetic, kpAt, kpLabel, magneticLocalTime, ovalBoundary, ovationApplies, ovationAt, ovationCells,
   parseKpForecast, parseOutlook, parseOvation, subsolarPoint, viewArc,
-} from "../../src/domain/aurora.ts";
+} from "../../src/domain/environment/aurora.ts";
 
 const within = (actual, expected, tolerance, label = "") =>
   assert.ok(Math.abs(actual - expected) <= tolerance, `${label} ${actual} vs ${expected} (±${tolerance})`);

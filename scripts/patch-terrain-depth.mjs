@@ -5,7 +5,7 @@ const require = createRequire(import.meta.url);
 const root=dirname(require.resolve("maplibre-gl/package.json"));
 if(JSON.parse(readFileSync(join(root,"package.json"),"utf8")).version!=="6.16.0")throw new Error("摄影地形深度需要重新验证 SDK");
 const marker="TAMATAMATORI_TERRAIN_DEPTH_V1";
-const prefix=`// ${marker}\n${readFileSync(new URL("../src/preview/terrain-depth.glsl",import.meta.url),"utf8")}\n`;
+const prefix=`// ${marker}\n${readFileSync(new URL("../src/render/scene/terrain-depth.glsl",import.meta.url),"utf8")}\n`;
 const paths=["src/shaders/glsl/terrain.fragment.glsl","src/shaders/glsl/terrain.fragment.glsl.g.ts","dist/maplibre-gl.mjs"];
 const contents=paths.map(path=>readFileSync(join(root,path),"utf8").replaceAll("\r\n","\n"));
 const once=(text,before,after)=>{if(text.split(before).length!==2)throw new Error("摄影地形深度补丁签名不匹配");return text.replace(before,after);};

@@ -4,7 +4,7 @@
 
 ## 独立坐标基准
 
-`src/domain/geodesy.ts` 不依赖 MapLibre。采用 [NGA WGS84 定义](https://earth-info.nga.mil/index.php?action=wgs84&dir=wgs84)：长半轴 a = 6378137 m、扁率 f = 1 / 298.257223563，e² = f(2−f)。输入为测地经纬度和 **椭球高**，单位为度、米；字段显式命名 `ellipsoidalHeight`。
+`src/domain/core/geodesy.ts` 不依赖 MapLibre。采用 [NGA WGS84 定义](https://earth-info.nga.mil/index.php?action=wgs84&dir=wgs84)：长半轴 a = 6378137 m、扁率 f = 1 / 298.257223563，e² = f(2−f)。输入为测地经纬度和 **椭球高**，单位为度、米；字段显式命名 `ellipsoidalHeight`。
 
 令纬度 φ、经度 λ、椭球高 h，N = a / √(1−e²sin²φ)。地心地固坐标为：
 

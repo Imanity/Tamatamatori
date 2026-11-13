@@ -1,11 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { Body, Equator, Horizon, Observer } from "astronomy-engine";
-import { bodyTrack, corridor, findPositions, positionProfile, skyAt, skyField } from "../../src/domain/position-alignment.ts";
-import { ecefGeodetic, ellipsoidalRay, geodeticEcef } from "../../src/domain/geodesy.ts";
-import { direction } from "../../src/domain/ephemeris.ts";
-import { apparentElevation } from "../../src/domain/refraction.ts";
-import { destination } from "../../src/domain/map.ts";
+import { bodyTrack, corridor, findPositions, positionProfile, skyAt, skyField } from "../../src/domain/solve/position-alignment.ts";
+import { ecefGeodetic, ellipsoidalRay, geodeticEcef } from "../../src/domain/core/geodesy.ts";
+import { direction } from "../../src/domain/core/ephemeris.ts";
+import { apparentElevation } from "../../src/domain/core/refraction.ts";
+import { destination } from "../../src/domain/core/map.ts";
 
 const rad = Math.PI / 180;
 const R = 6_371_008.8;

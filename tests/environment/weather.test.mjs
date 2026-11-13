@@ -1,11 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { weatherResponse } from "../fixtures/weather.mjs";
-import { parseWeather, sampleWeather, weatherLocationKey, WEATHER_TTL } from "../../src/domain/weather.ts";
-import { loadWeather } from "../../src/preview/weather.ts";
-import { cloudOpacity, cloudLayerOpacities, CLOUD_LAYERS, weatherClouds } from "../../src/domain/weather-appearance.ts";
-import { direction } from "../../src/domain/ephemeris.ts";
-import { environmentForSky } from "../../src/preview/environment.ts";
+import { parseWeather, sampleWeather, weatherLocationKey, WEATHER_TTL } from "../../src/domain/environment/weather.ts";
+import { loadWeather } from "../../src/io/weather.ts";
+import { cloudOpacity, cloudLayerOpacities, CLOUD_LAYERS, weatherClouds } from "../../src/domain/environment/weather-appearance.ts";
+import { direction } from "../../src/domain/core/ephemeris.ts";
+import { environmentForSky } from "../../src/render/scene/environment.ts";
 
 const start = Date.UTC(2026, 10, 4);
 const at = (hours) => new Date(start + hours * 3600000).toISOString();
@@ -152,7 +152,7 @@ test("低中高云独立控制覆盖与透光，示意高度有序、云形可�
 });
 
 test("自动匹配的数据源按拍摄时刻前后连续一致的云量识别，平局按区域优先、ECMWF 先于北欧回落模型", async () => {
-  const { bestMatchSource, parseBestMatchSeries } = await import("../../src/domain/weather-source.ts");
+  const { bestMatchSource, parseBestMatchSeries } = await import("../../src/domain/environment/weather-source.ts");
   const hours = 168, base = Date.UTC(2026, 10, 10) / 1000;
   const time = Array.from({ length: hours }, (_, hour) => base + hour * 3600);
   const wave = (seed) => time.map((_, hour) => Math.round(50 + 45 * Math.sin(hour * 0.37 + seed)));

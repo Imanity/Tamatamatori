@@ -5,8 +5,8 @@ import { setTimeout as delay } from "node:timers/promises";
 import { readFileSync } from "node:fs";
 import { act } from "react";
 import { weatherResponse } from "../fixtures/weather.mjs";
-import { parseWeather, WEATHER_TTL } from "../../src/domain/weather.ts";
-import { ellipsoidalRay } from "../../src/domain/geodesy.ts";
+import { parseWeather, WEATHER_TTL } from "../../src/domain/environment/weather.ts";
+import { ellipsoidalRay } from "../../src/domain/core/geodesy.ts";
 import { stubs, TestCelestialLayer, TestStarfieldLayer, dom, weatherRequests, pollutionRequests, terrainSize, resizeObservers, groundRequests, settle, workspace, input, setShootingDateTime, value, button, setControl, geometry, waitUntil, terrainMap, readyTerrain } from "./harness.mjs";
 
 test('精简工作区：没有左栏，图层开关位于分组标题，光照与环境默认展开，分组随开关展开与折叠', async t => {

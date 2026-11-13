@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { Body, HelioVector, MakeTime } from 'astronomy-engine';
 import { updateComets, client, COBS_LIST, parseElements } from '../../scripts/update-comets.mjs';
-import { validateCometCatalog, assertCatalogProgress, catalogFreshness, COMET_REFRESH_MS, COMET_STALE_MS } from '../../src/domain/comet-catalog.ts';
-import { cometState, magnitudeLaw, totalMagnitude, C_AU_PER_DAY } from '../../src/domain/comet-orbit.ts';
+import { validateCometCatalog, assertCatalogProgress, catalogFreshness, COMET_REFRESH_MS, COMET_STALE_MS } from '../../src/domain/comets/comet-catalog.ts';
+import { cometState, magnitudeLaw, totalMagnitude, C_AU_PER_DAY } from '../../src/domain/comets/comet-orbit.ts';
 
 const DAY = 86_400_000;
 const seed = validateCometCatalog(JSON.parse(readFileSync(new URL('../../public/comets/catalog.json', import.meta.url), 'utf8')));

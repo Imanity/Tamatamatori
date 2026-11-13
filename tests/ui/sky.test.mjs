@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { setTimeout as delay } from "node:timers/promises";
 import { readFileSync } from "node:fs";
 import { act } from "react";
-import { skyReference } from "../../src/domain/starfield.ts";
+import { skyReference } from "../../src/domain/sky/starfield.ts";
 import { TestMap, TestStarfieldLayer, groundRequests, settle, workspace, shootingDateTime, setShootingDateTime, value, button, setControl, waitUntil, terrainMap, readyTerrain } from "./harness.mjs";
 
 test('星空与银河独立开关、朝向及实际相机反馈联动，不重载 DEM 或修改其他参数',async t=>{

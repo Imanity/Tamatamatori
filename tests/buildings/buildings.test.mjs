@@ -3,16 +3,16 @@ import assert from "node:assert/strict";
 import { PbfWriter } from "pbf";
 import { readFileSync } from "node:fs";
 import { stripTypeScriptTypes } from "node:module";
-import { initialPlan } from "../../src/domain/plan.ts";
-import { buildingTiles, buildingHeights, buildingGeometry, buildingCoordinates, buildingBounds, buildingCost, simplifyBuilding, selectBuildings, BUILDING_RADIUS, BUILDING_MAX_TILES, BUILDING_MAX_POINTS, BUILDING_MAX_TRIANGLES, emptyBuildings } from "../../src/domain/buildings.ts";
-import { decodeBuildings, loadBuildings, clearBuildingCache, extractBuildingTile } from "../../src/preview/buildings.ts";
-import { photoTileFrame, photoTileRay, photoFragmentDepth } from "../../src/preview/terrain-perspective-math.ts";
-import { ellipsoidalRay } from "../../src/domain/geodesy.ts";
-import { skyLabelKey, occlusionText } from "../../src/domain/visibility.ts";
-import { skytree, shanghaiTower, tokyoTower, landmarks, landmarkPart, landmarksInRange, skytreePart, skytreeInRange, skytreeDistance, LANDMARK_RADIUS, decodeLandmark, landmarkFrame } from "../../src/domain/landmarks.ts";
-import { loadLandmark, loadSkytree, clearLandmarkCache } from "../../src/preview/landmarks.ts";
+import { initialPlan } from "../../src/domain/core/plan.ts";
+import { buildingTiles, buildingHeights, buildingGeometry, buildingCoordinates, buildingBounds, buildingCost, simplifyBuilding, selectBuildings, BUILDING_RADIUS, BUILDING_MAX_TILES, BUILDING_MAX_POINTS, BUILDING_MAX_TRIANGLES, emptyBuildings } from "../../src/domain/buildings/buildings.ts";
+import { decodeBuildings, loadBuildings, clearBuildingCache, extractBuildingTile } from "../../src/io/buildings.ts";
+import { photoTileFrame, photoTileRay, photoFragmentDepth } from "../../src/domain/core/terrain-perspective-math.ts";
+import { ellipsoidalRay } from "../../src/domain/core/geodesy.ts";
+import { skyLabelKey, occlusionText } from "../../src/domain/core/visibility.ts";
+import { skytree, shanghaiTower, tokyoTower, landmarks, landmarkPart, landmarksInRange, skytreePart, skytreeInRange, skytreeDistance, LANDMARK_RADIUS, decodeLandmark, landmarkFrame } from "../../src/domain/buildings/landmarks.ts";
+import { loadLandmark, loadSkytree, clearLandmarkCache } from "../../src/io/landmarks.ts";
 import { gunzipSync } from "node:zlib";
-import { geodeticEcef } from "../../src/domain/geodesy.ts";
+import { geodeticEcef } from "../../src/domain/core/geodesy.ts";
 
 const point=(x,y)=>({x,y});
 const rectangle=(x,y,w,h)=>[point(x,y),point(x+w,y),point(x+w,y+h),point(x,y+h),point(x,y)];
@@ -263,10 +263,10 @@ test("有界请求复用版本瓦片、缺高程不以零替代，失败和取�
 });
 
 // Replace only Vite raw-file imports; execute the actual layer's logic.
-const layerUrl=new URL("../../src/preview/building-layer.ts",import.meta.url);
+const layerUrl=new URL("../../src/render/scene/building-layer.ts",import.meta.url);
 let source=readFileSync(layerUrl,"utf8");
 for(const [name,file] of [["projection","terrain-projection.glsl"],["depth","terrain-depth.glsl"]])
-  source=source.replace(new RegExp(`import ${name} from "[^"\\n]+";`),`const ${name}=${JSON.stringify(readFileSync(new URL("../../src/preview/"+file,import.meta.url),"utf8"))};`);
+  source=source.replace(new RegExp(`import ${name} from "[^"\\n]+";`),`const ${name}=${JSON.stringify(readFileSync(new URL("../../src/render/scene/"+file,import.meta.url),"utf8"))};`);
 source=stripTypeScriptTypes(source,{mode:"transform"}).replace(/from "(\.[^"]+)"/g,(_,path)=>`from "${new URL(path,layerUrl).href}"`);
 const {BuildingLayer}=await import("data:text/javascript,"+encodeURIComponent(source+"\n//# sourceURL=tamatamatori-building-layer-test.mjs"));
 const environment={building:"#a09080",sky:{"fog-color":"#b0c0d0"}};

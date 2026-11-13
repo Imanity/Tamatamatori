@@ -1,6 +1,6 @@
 // Offline replay of the recorded camera; no DEM/geoid requests or app changes.
 import { readFile, writeFile } from "node:fs/promises";
-import { compareEarthModels } from "../src/preview/calibration-math.ts";
+import { compareEarthModels } from "../src/render/scene/calibration-math.ts";
 
 const source = "docs/plan/curvature-evidence/measurements.json";
 const document = JSON.parse(await readFile(source, "utf8"));

@@ -1,15 +1,15 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { aimAt, frameDirection } from "../../src/domain/alignment.ts";
-import { findPositions, pointPlan } from "../../src/domain/position-alignment.ts";
-import { blockedMinutes, mergeCandidates, rangeCandidates } from "../../src/domain/range-alignment.ts";
-import { skyCondition } from "../../src/domain/alignment.ts";
-import { sunPosition } from "../../src/domain/ephemeris.ts";
-import { initialPlan } from "../../src/domain/plan.ts";
-import { parseSolve } from "../../src/domain/solve.ts";
-import { tilePixel, tileSampler } from "../../src/domain/terrain.ts";
-import { LINE_TILE_LIMIT, lineTiles } from "../../src/preview/elevation.ts";
-import { destination } from "../../src/domain/map.ts";
+import { aimAt, frameDirection } from "../../src/domain/solve/alignment.ts";
+import { findPositions, pointPlan } from "../../src/domain/solve/position-alignment.ts";
+import { blockedMinutes, mergeCandidates, rangeCandidates } from "../../src/domain/solve/range-alignment.ts";
+import { skyCondition } from "../../src/domain/solve/alignment.ts";
+import { sunPosition } from "../../src/domain/core/ephemeris.ts";
+import { initialPlan } from "../../src/domain/core/plan.ts";
+import { parseSolve } from "../../src/domain/solve/solve.ts";
+import { tilePixel, tileSampler } from "../../src/domain/core/terrain.ts";
+import { LINE_TILE_LIMIT, lineTiles } from "../../src/io/elevation.ts";
+import { destination } from "../../src/domain/core/map.ts";
 
 const rad = Math.PI / 180;
 const R = 6_371_008.8;

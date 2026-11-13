@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   NoSeaError, distanceKm, parseTides, tideAt, tideCovers, tideDates, tideExtremes, tideHeight, tideNow, tideProbes,
-} from "../../src/domain/tides.ts";
+} from "../../src/domain/environment/tides.ts";
 
 const HOUR = 3_600_000;
 const within = (actual, expected, tolerance, label = "") =>

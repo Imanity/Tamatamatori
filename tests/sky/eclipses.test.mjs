@@ -4,11 +4,11 @@ import { MakeTime } from "astronomy-engine";
 import {
   centralPath, eclipsesInSpan, greatCircle, lunarEclipseAfter, nextCentralEclipse, nextLunarEclipse, nextSolarEclipse, pathRelation,
   pathSample, umbraFootprint,
-} from "../../src/domain/eclipses.ts";
+} from "../../src/domain/sun-moon/eclipses.ts";
 import {
   TOTALITY_ELEVATION, discDifference, discIntersection, discOverlap, eclipseSkyElevation,
-} from "../../src/domain/eclipse-geometry.ts";
-import { celestialBodies } from "../../src/domain/ephemeris.ts";
+} from "../../src/domain/core/eclipse-geometry.ts";
+import { celestialBodies } from "../../src/domain/core/ephemeris.ts";
 
 const within = (actual, expected, tolerance, label = "") =>
   assert.ok(Math.abs(actual - expected) <= tolerance, `${label} ${actual} vs ${expected} (±${tolerance})`);

@@ -3,10 +3,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
   activeShowers, cameraLimitFor, meteorEstimate, meteorModel, meteorNight, meteorSample, meteorShowers, skyAlignment, skyBrightness, solarLongitude,
-} from "../../src/domain/meteor-showers.ts";
-import { projectDirection } from "../../src/domain/celestial-projection.ts";
-import { direction } from "../../src/domain/ephemeris.ts";
-import { dayEvents } from "../../src/domain/day-events.ts";
+} from "../../src/domain/sky/meteor-showers.ts";
+import { projectDirection } from "../../src/domain/core/celestial-projection.ts";
+import { direction } from "../../src/domain/core/ephemeris.ts";
+import { dayEvents } from "../../src/domain/time/day-events.ts";
 
 const data = JSON.parse(readFileSync(new URL("../../src/data/meteor-showers.json", import.meta.url), "utf8"));
 const rad = Math.PI / 180;

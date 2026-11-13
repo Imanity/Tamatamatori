@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { searchTargets } from "../../src/domain/target-search.ts";
-import { initialPlan } from "../../src/domain/plan.ts";
+import { searchTargets } from "../../src/domain/sky/target-search.ts";
+import { initialPlan } from "../../src/domain/core/plan.ts";
 const plan = { ...initialPlan, instant: "2026-11-08T16:00:00Z" };
 test("目标搜索匹配中文、英文别名、HIP、星座缩写及全角输入", () => {
   for (const q of ["织女星", "vega", " VEGA ", "HIP91262", "hip 91262"])

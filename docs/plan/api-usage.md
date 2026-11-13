@@ -13,7 +13,7 @@
 
 ## 用量显示
 
-- 本浏览器记账（`src/domain/api-usage.ts`、`src/preview/api-usage.ts`）：
+- 本浏览器记账（`src/domain/environment/api-usage.ts`、`src/io/api-usage.ts`）：
   - 每次 Open-Meteo 响应按 `X-RateLimit-Cost` 计；缺这个头时按上面的规则估算。
   - 按分钟累加，存入本机 localStorage，同一浏览器的各标签页共用；超过一天的记录丢弃，存储不可用时只记在本页内存。
 - 右栏“光照与环境”（开启天气或潮汐，或近 24 小时内有调用时）：

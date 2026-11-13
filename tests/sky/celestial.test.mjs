@@ -1,9 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { celestialBodies, direction, moonPhaseLabel, sunPosition } from "../../src/domain/ephemeris.ts";
-import { bodyPolygons, projectDirection, frameEdgeDirection } from "../../src/domain/celestial-projection.ts";
-import { initialPlan as defaultPlan, fieldOfView, signedAngle } from "../../src/domain/plan.ts";
+import { celestialBodies, direction, moonPhaseLabel, sunPosition } from "../../src/domain/core/ephemeris.ts";
+import { bodyPolygons, projectDirection, frameEdgeDirection } from "../../src/domain/core/celestial-projection.ts";
+import { initialPlan as defaultPlan, fieldOfView, signedAngle } from "../../src/domain/core/plan.ts";
 const initialPlan = { ...defaultPlan, refraction: "none" };
 
 const close = (actual, expected, tolerance = 1e-8) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} vs ${expected}`);
@@ -165,8 +165,8 @@ test("月相亮区面积符合比例，亮侧朝实际光源而非固定屏幕�
 });
 
 test("食时圆面：日面减去月面（月牙、光环、全食无日面），月面按本影分成亮区与地影区", async () => {
-  const { celestialBodies } = await import("../../src/domain/ephemeris.ts");
-  const { discOverlap } = await import("../../src/domain/eclipse-geometry.ts");
+  const { celestialBodies } = await import("../../src/domain/core/ephemeris.ts");
+  const { discOverlap } = await import("../../src/domain/core/eclipse-geometry.ts");
   const sumArea = (loops) => loops.reduce((sum, loop) => sum + area(loop), 0);
   const view = (body) => ({ ...initialPlan, azimuth: body.azimuth, pitch: body.elevation, focalLength: 1200, refraction: "none" });
   // Madrid, partial: the lit area is the uncovered share of the disc.

@@ -4,16 +4,16 @@ import { readFileSync } from 'node:fs';
 import {
   GM_SUN, propagate, perihelionState, cometState, magnitudeLaw, totalMagnitude, heliocentricMagnitude,
   tailLengthAu, comaDiameterKm, AU_KM, PERIHELION_BLEND_DAYS,
-} from '../../src/domain/comet-orbit.ts';
-import { cometScene as sceneOf, inWindow, visibleTailDegrees, TAIL_FADE_MAGNITUDES, COMET_LIST_LIMIT } from '../../src/domain/comets.ts';
-import { validateCometCatalog } from '../../src/domain/comet-catalog.ts';
+} from '../../src/domain/comets/comet-orbit.ts';
+import { cometScene as sceneOf, inWindow, visibleTailDegrees, TAIL_FADE_MAGNITUDES, COMET_LIST_LIMIT } from '../../src/domain/comets/comets.ts';
+import { validateCometCatalog } from '../../src/domain/comets/comet-catalog.ts';
 
 // The published seed catalogue; closed apparitions never change in later updates.
 const catalog = validateCometCatalog(JSON.parse(readFileSync(new URL('../../public/comets/catalog.json', import.meta.url), 'utf8')));
 const comets = catalog.comets;
 const cometScene = (plan, mcd = 0) => sceneOf(plan, catalog, mcd);
-import { cometMesh, COMET_ATTRIBUTES, COMET_STRIDE, tailOpacity, headOpacity, tailPeak } from '../../src/preview/comet-tails.ts';
-import { direction } from '../../src/domain/ephemeris.ts';
+import { cometMesh, COMET_ATTRIBUTES, COMET_STRIDE, tailOpacity, headOpacity, tailPeak } from '../../src/render/sky/comet-tails.ts';
+import { direction } from '../../src/domain/core/ephemeris.ts';
 
 const norm = (v) => Math.hypot(...v);
 const sub = (a, b) => a.map((x, i) => x - b[i]);

@@ -5,7 +5,7 @@ import { PbfReader } from "pbf";
 import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
-import { terrainTile, DEFAULT_TERRAIN_URL } from "../src/domain/terrain.ts";
+import { terrainTile, DEFAULT_TERRAIN_URL } from "../src/domain/core/terrain.ts";
 
 const upstreamCommit = "2c4195dd90b91a8dde5cfa3e27a1167f64808a41";
 const coverageUrl = "https://single-archive-tiles.mapterhorn.com/coverage.json";

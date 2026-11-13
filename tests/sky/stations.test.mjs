@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { initialPlan } from '../../src/domain/plan.ts';
-import { orbitEpoch, orbitWindow, stationElements, validateOrbitSnapshot, assertOrbitProgress, matchingStations, ORBIT_REFRESH_MS, ORBIT_SOURCE } from '../../src/domain/orbit-data.ts';
-import { stationPosition, stationScene } from '../../src/domain/stations.ts';
-import { cachedOrbits, loadOrbits, ORBIT_CACHE_KEY } from '../../src/preview/orbit-feed.ts';
+import { initialPlan } from '../../src/domain/core/plan.ts';
+import { orbitEpoch, orbitWindow, stationElements, validateOrbitSnapshot, assertOrbitProgress, matchingStations, ORBIT_REFRESH_MS, ORBIT_SOURCE } from '../../src/domain/stations/orbit-data.ts';
+import { stationPosition, stationScene } from '../../src/domain/stations/stations.ts';
+import { cachedOrbits, loadOrbits, ORBIT_CACHE_KEY } from '../../src/io/orbit-feed.ts';
 import { updateStations } from '../../scripts/update-stations.mjs';
 
 const reference = JSON.parse(await readFile(new URL('../fixtures/stations-reference.json', import.meta.url), 'utf8'));

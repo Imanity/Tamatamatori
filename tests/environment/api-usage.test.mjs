@@ -2,8 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   OPEN_METEO_LIMITS, addUsage, emptyUsage, estimateOpenMeteoCost, rateLimitMessage, readUsage, retryAfterSeconds, usageTotals,
-} from "../../src/domain/api-usage.ts";
-import { openMeteoUsage, recordOpenMeteo, subscribeUsage } from "../../src/preview/api-usage.ts";
+} from "../../src/domain/environment/api-usage.ts";
+import { openMeteoUsage, recordOpenMeteo, subscribeUsage } from "../../src/io/api-usage.ts";
 
 test("Open-Meteo 计费估算与实测响应头一致：天气 1.2、自动匹配来源 1.6、两坐标 2.0、潮汐 13", () => {
   // Measured X-RateLimit-Cost on 2026-11-11.

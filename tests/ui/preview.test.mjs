@@ -41,7 +41,7 @@ test("SDK 样式后加载时，预览容器仍显式填满取景框", async (t) 
   // jsdom does not calculate layout. Verify the explicit fill dimensions with
   // the real SDK stylesheet; actual pixel sizes still need browser verification.
   style.textContent = [
-    "../../src/preview/terrain.css",
+    "../../src/render/scene/terrain.css",
     "../../node_modules/maplibre-gl/dist/maplibre-gl.css",
   ].map((path) => readFileSync(new URL(path, import.meta.url), "utf8")).join("\n");
   document.head.append(style);

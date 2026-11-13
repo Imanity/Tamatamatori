@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { parsePlaces, searchPlaces } from "../../src/preview/geocode.ts";
+import { parsePlaces, searchPlaces } from "../../src/io/geocode.ts";
 
 test("地点搜索解析结果、跳过无效坐标，保留范围框", () => {
   const places = parsePlaces([

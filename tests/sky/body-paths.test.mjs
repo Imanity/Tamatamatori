@@ -1,11 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { Temporal } from "@js-temporal/polyfill";
-import { bodyPath, pathView, PATH_SEARCH_HOURS } from "../../src/domain/body-paths.ts";
-import { celestialBodies } from "../../src/domain/ephemeris.ts";
-import { refractDirection } from "../../src/domain/refraction.ts";
-import { instantFromLocal } from "../../src/domain/plan.ts";
-import { strokeRun } from "../../src/preview/celestial-layer.ts";
+import { bodyPath, pathView, PATH_SEARCH_HOURS } from "../../src/domain/sun-moon/body-paths.ts";
+import { celestialBodies } from "../../src/domain/core/ephemeris.ts";
+import { refractDirection } from "../../src/domain/core/refraction.ts";
+import { instantFromLocal } from "../../src/domain/core/plan.ts";
+import { strokeRun } from "../../src/render/sky/celestial-layer.ts";
 
 const rad = Math.PI / 180;
 const fuji = { latitude: 35.4172, longitude: 138.8729, timeZone: "Asia/Tokyo", refraction: "standard" };

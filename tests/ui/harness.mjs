@@ -8,13 +8,13 @@ import { readFileSync } from "node:fs";
 import { createElement, act } from "react";
 import { JSDOM } from "jsdom";
 import { createServer } from "vite";
-import { skyReference } from "../../src/domain/starfield.ts";
-import { constellationScene } from "../../src/domain/constellations.ts";
-import { deepSkyScene } from "../../src/domain/deep-sky.ts";
+import { skyReference } from "../../src/domain/sky/starfield.ts";
+import { constellationScene } from "../../src/domain/sky/constellations.ts";
+import { deepSkyScene } from "../../src/domain/sky/deep-sky.ts";
 import { weatherResponse } from "../fixtures/weather.mjs";
-import { parseWeather } from "../../src/domain/weather.ts";
-import { projectDirection } from "../../src/domain/celestial-projection.ts";
-import { activeShowers } from "../../src/domain/meteor-showers.ts";
+import { parseWeather } from "../../src/domain/environment/weather.ts";
+import { projectDirection } from "../../src/domain/core/celestial-projection.ts";
+import { activeShowers } from "../../src/domain/sky/meteor-showers.ts";
 
 // Exercise real React handlers and state with an SDK test double; no WebGL is
 // simulated, and these checks do not claim browser rendering verification.
@@ -342,31 +342,31 @@ before(async () => {
         name: "test-map-sdk",
         enforce: "pre",
         load(id) {
-          if (id.replaceAll("\\", "/").endsWith("/src/preview/starfield-layer.ts"))
+          if (id.replaceAll("\\", "/").endsWith("/src/render/sky/starfield-layer.ts"))
             return "export const StarfieldLayer = globalThis.__testStarfieldLayer;";
-          if (id.replaceAll("\\", "/").endsWith("/src/preview/building-layer.ts"))
+          if (id.replaceAll("\\", "/").endsWith("/src/render/scene/building-layer.ts"))
             return "export const BuildingLayer = globalThis.__testBuildingLayer;";
-          if (id.replaceAll("\\", "/").endsWith("/src/preview/celestial-layer.ts"))
+          if (id.replaceAll("\\", "/").endsWith("/src/render/sky/celestial-layer.ts"))
             return "export const CelestialLayer = globalThis.__testCelestialLayer;";
-          if (id.replaceAll("\\", "/").endsWith("/src/preview/light-pollution.ts"))
+          if (id.replaceAll("\\", "/").endsWith("/src/io/light-pollution.ts"))
             return "export const sampleLightPollution = (...args) => globalThis.__testPollutionLoader(...args);";
-          if (id.replaceAll("\\", "/").endsWith("/src/preview/weather.ts"))
+          if (id.replaceAll("\\", "/").endsWith("/src/io/weather.ts"))
             return "export const loadWeather = (...args) => globalThis.__testWeatherLoader(...args);\n" +
               "export const loadWeatherSource = (...args) => (globalThis.__testWeatherSourceLoader ?? (() => Promise.reject(new Error('no source'))))(...args);";
-          if (id.replaceAll("\\", "/").endsWith("/src/preview/tides.ts"))
+          if (id.replaceAll("\\", "/").endsWith("/src/io/tides.ts"))
             return "export const loadTides = (...args) => (globalThis.__testTideLoader ?? (() => Promise.reject(new Error('no tides'))))(...args);";
-          if (id.replaceAll("\\", "/").endsWith("/src/preview/aurora.ts"))
+          if (id.replaceAll("\\", "/").endsWith("/src/io/aurora.ts"))
             return "export const loadKp = (...args) => (globalThis.__testKpLoader ?? (() => Promise.reject(new Error('no kp'))))(...args);\n" +
               "export const loadOvation = (...args) => (globalThis.__testOvationLoader ?? (() => Promise.reject(new Error('no ovation'))))(...args);";
-          if (id.replaceAll("\\", "/").endsWith("/src/preview/geocode.ts"))
+          if (id.replaceAll("\\", "/").endsWith("/src/io/geocode.ts"))
             return "export const searchPlaces = (...args) => globalThis.__testPlaceSearch(...args);";
-          if (id.replaceAll("\\", "/").endsWith("/src/preview/elevation.ts"))
+          if (id.replaceAll("\\", "/").endsWith("/src/io/elevation.ts"))
             return "export const groundElevation = (...args) => globalThis.__testGroundLoader(...args);\n" +
               // Line sampling for 推算 · 找机位: flat ground at 0 m unless a test installs another.
               "export const elevationTiles = (...args) => (globalThis.__testElevationTiles ?? (async (points, url, signal, progress) => { progress?.(1, 1); return () => 0; }))(...args);";
-          if (id.replaceAll("\\", "/").endsWith("/src/preview/feasibility.ts"))
+          if (id.replaceAll("\\", "/").endsWith("/src/io/feasibility.ts"))
             return "export const loadFeatures = (...args) => (globalThis.__testFeatures ?? (async () => ({ features: { water: [], buildings: [] }, tiles: 0, fetched: 0 })))(...args);";
-          if (id.replaceAll("\\", "/").endsWith("/src/map/sdk.ts"))
+          if (id.replaceAll("\\", "/").endsWith("/src/ui/map/sdk.ts"))
             return "export const {Map, Marker, NavigationControl, ScaleControl} = globalThis.__testMapSDK;";
         },
       },

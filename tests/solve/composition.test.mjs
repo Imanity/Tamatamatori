@@ -3,19 +3,19 @@ import assert from "node:assert/strict";
 import {
   classify, conditionsAt, daySpans, extraGap, placeItem, filterResult, frameGap, frameSeparation, lineItems, ndc, nightSearch, pairGap, passes, prefilterOf, scanPair, shootingDay, templates,
   toleranceAngle, toleranceDiameters, tryPatch, windowItem, windowMark, zenithBrightness,
-} from "../../src/domain/composition.ts";
-import { aimAt, frameDirection, solveAlignment } from "../../src/domain/alignment.ts";
-import { projectDirection } from "../../src/domain/celestial-projection.ts";
-import { direction } from "../../src/domain/ephemeris.ts";
-import { findPositions, highestNear, lineOfSight, SKYLINE_RADIUS, skyAt, skylineTop, terrainGrid, toRay, travel } from "../../src/domain/position-alignment.ts";
-import { altitudeCeiling, rangeDays, rangeTrack, skySeparation, solveRangeDay } from "../../src/domain/range-alignment.ts";
-import { evaluatePair, pairSight, solveGroundPair } from "../../src/domain/ground-pair.ts";
-import { fixedBodies } from "../../src/domain/sky-targets.ts";
-import { compositionOf, parseAnySolve, requestOf, solveJson2, solvePlan2 } from "../../src/domain/solve.ts";
-import { describeSolve2, resultRows } from "../../src/domain/solve-report.ts";
-import { resultEvents } from "../../src/domain/solve-calendar.ts";
-import { initialPlan, localDateTime } from "../../src/domain/plan.ts";
-import { parseShotText } from "../../src/domain/shot.ts";
+} from "../../src/domain/solve/composition.ts";
+import { aimAt, frameDirection, solveAlignment } from "../../src/domain/solve/alignment.ts";
+import { projectDirection } from "../../src/domain/core/celestial-projection.ts";
+import { direction } from "../../src/domain/core/ephemeris.ts";
+import { findPositions, highestNear, lineOfSight, SKYLINE_RADIUS, skyAt, skylineTop, terrainGrid, toRay, travel } from "../../src/domain/solve/position-alignment.ts";
+import { altitudeCeiling, rangeDays, rangeTrack, skySeparation, solveRangeDay } from "../../src/domain/solve/range-alignment.ts";
+import { evaluatePair, pairSight, solveGroundPair } from "../../src/domain/solve/ground-pair.ts";
+import { fixedBodies } from "../../src/domain/sky/sky-targets.ts";
+import { compositionOf, parseAnySolve, requestOf, solveJson2, solvePlan2 } from "../../src/domain/solve/solve.ts";
+import { describeSolve2, resultRows } from "../../src/domain/solve/solve-report.ts";
+import { resultEvents } from "../../src/domain/solve/solve-calendar.ts";
+import { initialPlan, localDateTime } from "../../src/domain/core/plan.ts";
+import { parseShotText } from "../../src/domain/shots/shot.ts";
 
 const lens = { focalLength: 105, sensor: "full-frame", aspectRatio: "3:2", orientation: "portrait" };
 const fuji = { kind: "ground", id: "g", name: "富士山顶", latitude: 35.3606, longitude: 138.7274, height: 0, reference: "ground", frame: { x: 0.5, y: 2 / 3 }, base: null, tolerance: 0.03 };

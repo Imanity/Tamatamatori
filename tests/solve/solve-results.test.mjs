@@ -1,11 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { calendarText, foldLine, resultEvents, solveShotName, CALENDAR_LIMIT } from "../../src/domain/solve-calendar.ts";
-import { groundDistance, pointPlan, travel } from "../../src/domain/position-alignment.ts";
-import { mergeCandidates, rangeCandidates } from "../../src/domain/range-alignment.ts";
-import { lineItems, windowItem } from "../../src/domain/composition.ts";
-import { initialPlan } from "../../src/domain/plan.ts";
-import { parseShotText, SHOT_NAME_LIMIT } from "../../src/domain/shot.ts";
+import { calendarText, foldLine, resultEvents, solveShotName, CALENDAR_LIMIT } from "../../src/domain/solve/solve-calendar.ts";
+import { groundDistance, pointPlan, travel } from "../../src/domain/solve/position-alignment.ts";
+import { mergeCandidates, rangeCandidates } from "../../src/domain/solve/range-alignment.ts";
+import { lineItems, windowItem } from "../../src/domain/solve/composition.ts";
+import { initialPlan } from "../../src/domain/core/plan.ts";
+import { parseShotText, SHOT_NAME_LIMIT } from "../../src/domain/shots/shot.ts";
 
 const site = "https://imanity.github.io/Tamatamatori/";
 const plan = { ...initialPlan, timeZone: "Asia/Tokyo", layers: { ...initialPlan.layers, sun: false } };

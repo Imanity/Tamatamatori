@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const inputs = ["scripts/patch-maplibre.mjs", "scripts/patch-terrain-perspective.mjs", "scripts/patch-terrain-depth.mjs",
   "scripts/patch-terrain-range.mjs",
-  "src/preview/terrain-projection.glsl", "src/preview/terrain-depth.glsl"]
+  "src/render/scene/terrain-projection.glsl", "src/render/scene/terrain-depth.glsl"]
   .map(path => fileURLToPath(new URL(path, import.meta.url)));
 
 // Pulling a shader fix need not change package-lock or rerun postinstall.

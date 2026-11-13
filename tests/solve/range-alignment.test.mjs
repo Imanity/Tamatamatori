@@ -13,13 +13,13 @@ import {
   shareOf,
   solveRange,
   solveRangeDay,
-} from "../../src/domain/range-alignment.ts";
-import { bodyTrack } from "../../src/domain/position-alignment.ts";
-import { projectDirection } from "../../src/domain/celestial-projection.ts";
-import { direction } from "../../src/domain/ephemeris.ts";
-import { ellipsoidalRay } from "../../src/domain/geodesy.ts";
-import { terrainTile, tileKey } from "../../src/domain/terrain.ts";
-import { rangeWorker } from "../../src/preview/range-worker.ts";
+} from "../../src/domain/solve/range-alignment.ts";
+import { bodyTrack } from "../../src/domain/solve/position-alignment.ts";
+import { projectDirection } from "../../src/domain/core/celestial-projection.ts";
+import { direction } from "../../src/domain/core/ephemeris.ts";
+import { ellipsoidalRay } from "../../src/domain/core/geodesy.ts";
+import { terrainTile, tileKey } from "../../src/domain/core/terrain.ts";
+import { rangeWorker } from "../../src/io/range-worker.ts";
 
 const rad = Math.PI / 180, R = 6_371_008.8;
 const skytree = { latitude: 35.71004508243534, longitude: 139.81071889400482, height: 634 };

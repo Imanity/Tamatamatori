@@ -9,12 +9,12 @@ import {
   scanAlignment,
   skyCondition,
   solveAlignment,
-} from "../../src/domain/alignment.ts";
-import { celestialBodies, direction } from "../../src/domain/ephemeris.ts";
-import { apparentElevation } from "../../src/domain/refraction.ts";
-import { projectDirection } from "../../src/domain/celestial-projection.ts";
-import { ellipsoidalRay } from "../../src/domain/geodesy.ts";
-import { lightPeriodBounds } from "../../src/domain/timeline.ts";
+} from "../../src/domain/solve/alignment.ts";
+import { celestialBodies, direction } from "../../src/domain/core/ephemeris.ts";
+import { apparentElevation } from "../../src/domain/core/refraction.ts";
+import { projectDirection } from "../../src/domain/core/celestial-projection.ts";
+import { ellipsoidalRay } from "../../src/domain/core/geodesy.ts";
+import { lightPeriodBounds } from "../../src/domain/time/timeline.ts";
 
 const DAY = 86_400_000;
 const rad = Math.PI / 180;

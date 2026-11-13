@@ -2,21 +2,21 @@ import test, { before, after } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "vite";
 import { MercatorCoordinate } from "maplibre-gl";
-import { terrainCamera, terrainRenderOptions } from "../../src/preview/camera.ts";
-import { signedAngle } from "../../src/domain/plan.ts";
+import { terrainCamera, terrainRenderOptions } from "../../src/render/scene/camera.ts";
+import { signedAngle } from "../../src/domain/core/plan.ts";
 import { terrainScenes } from "../fixtures/terrain-scenes.mjs";
-import { projectDirection } from "../../src/domain/celestial-projection.ts";
-import { direction } from "../../src/domain/ephemeris.ts";
-import { compareEarthModels, matrixPixel, mercatorXY, mercatorMeter, referencePixel, referenceRay, rayAngles } from "../../src/preview/calibration-math.ts";
-import { ellipsoidalRay, geodeticEcef } from "../../src/domain/geodesy.ts";
-import { matrixEye } from "../../src/preview/rendered-camera.ts";
-import { terrainTileZoom, TERRAIN_MAX_MESH_ZOOM, LANDMARK_TERRAIN_RANGE, terrainCoverageRange } from "../../src/preview/terrain-detail.ts";
-import { skytree } from "../../src/domain/landmarks.ts";
+import { projectDirection } from "../../src/domain/core/celestial-projection.ts";
+import { direction } from "../../src/domain/core/ephemeris.ts";
+import { compareEarthModels, matrixPixel, mercatorXY, mercatorMeter, referencePixel, referenceRay, rayAngles } from "../../src/render/scene/calibration-math.ts";
+import { ellipsoidalRay, geodeticEcef } from "../../src/domain/core/geodesy.ts";
+import { matrixEye } from "../../src/render/scene/rendered-camera.ts";
+import { terrainTileZoom, TERRAIN_MAX_MESH_ZOOM, LANDMARK_TERRAIN_RANGE, terrainCoverageRange } from "../../src/render/scene/terrain-detail.ts";
+import { skytree } from "../../src/domain/buildings/landmarks.ts";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { TERRAIN_VISUAL_TILE_SIZE } from "../../src/domain/terrain.ts";
+import { TERRAIN_VISUAL_TILE_SIZE } from "../../src/domain/core/terrain.ts";
 import { readFileSync } from "node:fs";
-import { photoCameraMatrix, photoFragmentDepth, photoFogDepth, photoTileFrame, photoTileRay } from "../../src/preview/terrain-perspective-math.ts";
+import { photoCameraMatrix, photoFragmentDepth, photoFogDepth, photoTileFrame, photoTileRay } from "../../src/domain/core/terrain-perspective-math.ts";
 
 // Exercise the installed SDK's real CPU camera/transform, not the interaction
 // test double. No browser, GL context, image decoder or real DEM is simulated.
@@ -40,7 +40,7 @@ before(async () => {
   ({ Camera } = await server.ssrLoadModule("/node_modules/maplibre-gl/src/ui/camera.ts"));
   ({ coveringTiles } = await server.ssrLoadModule("/node_modules/maplibre-gl/src/geo/projection/covering_tiles.ts"));
   ({ TerrainTileManager } = await server.ssrLoadModule("/node_modules/maplibre-gl/src/tile/terrain_tile_manager.ts"));
-  ({ TerrainPerspective } = await server.ssrLoadModule("/src/preview/terrain-perspective.ts"));
+  ({ TerrainPerspective } = await server.ssrLoadModule("/src/render/scene/terrain-perspective.ts"));
 });
 after(async () => { await server?.close(); });
 
@@ -337,7 +337,7 @@ test("实际地形源码、生成着色器与 ESM 均安装同版本 ENU 桥接"
     assert.match(source,new RegExp(`${stage==='vertex'?'out':'in'} highp float v_photo_depth;`));
     assert.match(source,new RegExp(`${stage==='vertex'?'out':'in'} highp vec2 v_photo_fog;`));
     const generated=readFileSync(new URL(`../../node_modules/maplibre-gl/src/shaders/glsl/terrain.${stage}.glsl.g.ts`,import.meta.url),'utf8');
-    const shared=readFileSync(new URL(`../../src/preview/terrain-${stage==='vertex'?'projection':'depth'}.glsl`,import.meta.url),'utf8').replaceAll('\r\n','\n');
+    const shared=readFileSync(new URL(`../../src/render/scene/terrain-${stage==='vertex'?'projection':'depth'}.glsl`,import.meta.url),'utf8').replaceAll('\r\n','\n');
     const shader=JSON.parse(generated.slice(generated.indexOf('export default ')+15).trim().replace(/;$/,''));
     assert.ok(shader.includes(shared),'generated module contains the current shared kernel');
     const esm=readFileSync(new URL('../../node_modules/maplibre-gl/dist/maplibre-gl.mjs',import.meta.url),'utf8');

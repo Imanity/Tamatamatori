@@ -12,12 +12,12 @@ import {
   timelineWindow,
   visiblePasses,
   windowMinute,
-} from "../../src/domain/timeline.ts";
-import { dayEvents, limbAltitude } from "../../src/domain/day-events.ts";
-import { localTimeZone } from "../../src/domain/zone-lookup.ts";
-import { stationPosition } from "../../src/domain/stations.ts";
-import { sunPosition } from "../../src/domain/ephemeris.ts";
-import { initialPlan } from "../../src/domain/plan.ts";
+} from "../../src/domain/time/timeline.ts";
+import { dayEvents, limbAltitude } from "../../src/domain/time/day-events.ts";
+import { localTimeZone } from "../../src/domain/time/zone-lookup.ts";
+import { stationPosition } from "../../src/domain/stations/stations.ts";
+import { sunPosition } from "../../src/domain/core/ephemeris.ts";
+import { initialPlan } from "../../src/domain/core/plan.ts";
 
 // A fixed snapshot: CI refreshes public/orbits/stations.json before the tests, which would move these passes.
 const orbits = JSON.parse(readFileSync(new URL("../fixtures/stations-timeline.json", import.meta.url), "utf8"));
@@ -218,8 +218,8 @@ test("当地时区按坐标查询 IANA 时区，经度回绕，坐标无效时�
 });
 
 test("黄金时刻（−4°—6°）与蓝调时刻（−6°—−4°）的起止与独立逐分钟采样相差不超过 1 分钟", async () => {
-  const { lightPeriods } = await import("../../src/domain/timeline.ts");
-  const { sunPosition } = await import("../../src/domain/ephemeris.ts");
+  const { lightPeriods } = await import("../../src/domain/time/timeline.ts");
+  const { sunPosition } = await import("../../src/domain/core/ephemeris.ts");
   for (const [latitude, longitude, zone, instant, mode] of [
     [35.4172, 138.8729, "Asia/Tokyo", "2026-11-04T08:00:00Z", "day"],
     [35.4172, 138.8729, "Asia/Tokyo", "2026-11-04T08:00:00Z", "night"],
@@ -253,9 +253,9 @@ test("黄金时刻（−4°—6°）与蓝调时刻（−6°—−4°）的起�
 });
 
 test("地图方位线：日月与银心此刻方位来自同一星历，出没方位来自时间轴同一时段，并随图层开关", async () => {
-  const { bodyLines } = await import("../../src/domain/body-lines.ts");
-  const { celestialBodies } = await import("../../src/domain/ephemeris.ts");
-  const { fixedHorizontal, galacticCentre } = await import("../../src/domain/timeline.ts");
+  const { bodyLines } = await import("../../src/domain/sun-moon/body-lines.ts");
+  const { celestialBodies } = await import("../../src/domain/core/ephemeris.ts");
+  const { fixedHorizontal, galacticCentre } = await import("../../src/domain/time/timeline.ts");
   const layers = { ...noLayers, sun: true, moon: true, milkyWay: true };
   const subject = { latitude: 35.4172, longitude: 138.8729, instant: "2026-11-04T08:00:00Z", timeZone: "Asia/Tokyo", refraction: "standard", layers };
   const lines = bodyLines(subject);
@@ -277,7 +277,7 @@ test("地图方位线：日月与银心此刻方位来自同一星历，出没�
 });
 
 test("地图方位线标签：此刻线标天体名（地平线下注明），出没线标所选时区的时刻；同一圈 12° 内的标签合并", async () => {
-  const { bodyLines, lineLabels } = await import("../../src/domain/body-lines.ts");
+  const { bodyLines, lineLabels } = await import("../../src/domain/sun-moon/body-lines.ts");
   const line = (body, kind, azimuth, instant = "2026-11-04T07:40:00Z", above = true) => ({ body, kind, azimuth, above, instant });
   const labels = lineLabels([
     line("sun", "now", 200),
@@ -308,7 +308,7 @@ test("地图方位线标签：此刻线标天体名（地平线下注明），�
 });
 
 test("时间轴的食：日食接触随太阳图层，月食接触随月亮图层；偏食月食不标半影始末，地平线下的接触写明不可见", async () => {
-  const { timelineEvents: events, timelineWindow: span } = await import("../../src/domain/timeline.ts");
+  const { timelineEvents: events, timelineWindow: span } = await import("../../src/domain/time/timeline.ts");
   const layers = { ...initialPlan.layers, sun: true, moon: true };
   const luxor = { latitude: 25.687, longitude: 32.64, refraction: "standard", cameraHeight: 1.6, layers };
   const day = span("2027-08-02T10:00:00Z", "UTC", "day");

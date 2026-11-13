@@ -41,7 +41,7 @@
 
 ## 2. 机位格式 v1
 
-对外格式是语义分组的 JSON，与内部拍摄计划结构解耦。本地存储、刷新恢复、分享码和手写或 AI 生成的 JSON 共用同一套编解码（`src/domain/shot.ts`）。
+对外格式是语义分组的 JSON，与内部拍摄计划结构解耦。本地存储、刷新恢复、分享码和手写或 AI 生成的 JSON 共用同一套编解码（`src/domain/shots/shot.ts`）。
 
 ```json
 {
@@ -102,7 +102,7 @@
 | `tamatamatori.shots.v1` | `{ version: 1, shots: [{ id, createdAt, updatedAt, shot }] }`，最多 200 个 |
 | `tamatamatori.session.v1` | `{ version: 1, activeId, shot }`：当前工作状态与关联的已保存机位 |
 
-**机位库（`src/domain/shot-library.ts`）：**
+**机位库（`src/domain/shots/shot-library.ts`）：**
 
 - 本地存储不可用时，禁用保存，分享与“仅应用”照常可用。
 - 配额不足时明确报错，不做部分写入。

@@ -1,11 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { validateStyleMin } from "@maplibre/maplibre-gl-style-spec";
-import { solarPosition, daylightPhase } from "../../src/domain/solar.ts";
-import { celestialBodies } from "../../src/domain/ephemeris.ts";
-import { initialPlan, instantFromLocal } from "../../src/domain/plan.ts";
-import { terrainStyle } from "../../src/domain/terrain.ts";
-import { environmentForSky, applyEnvironment } from "../../src/preview/environment.ts";
+import { solarPosition, daylightPhase } from "../../src/domain/sun-moon/solar.ts";
+import { celestialBodies } from "../../src/domain/core/ephemeris.ts";
+import { initialPlan, instantFromLocal } from "../../src/domain/core/plan.ts";
+import { terrainStyle } from "../../src/domain/core/terrain.ts";
+import { environmentForSky, applyEnvironment } from "../../src/render/scene/environment.ts";
 
 const close = (actual, expected, tolerance = 1e-8) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} vs ${expected}`);
 const rgb = (color) => [1, 3, 5].map((index) => parseInt(color.slice(index, index + 2), 16));

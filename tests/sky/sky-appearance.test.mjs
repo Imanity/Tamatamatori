@@ -5,9 +5,9 @@ import {
   starOpacity,
   skyAppearanceLabel,
   STAR_LABEL_ALPHA,
-} from "../../src/domain/sky-appearance.ts";
-import { initialPlan, instantFromLocal } from "../../src/domain/plan.ts";
-import { skyReference } from "../../src/domain/starfield.ts";
+} from "../../src/domain/sky/sky-appearance.ts";
+import { initialPlan, instantFromLocal } from "../../src/domain/core/plan.ts";
+import { skyReference } from "../../src/domain/sky/starfield.ts";
 const moon = { elevation: -30, illuminatedFraction: 1 };
 const point = (magnitude) => ({ id: "star", magnitude });
 const at = (sun, phase = 1, height = -30) =>

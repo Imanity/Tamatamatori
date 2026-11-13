@@ -1,14 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { initialPlan } from "../../src/domain/plan.ts";
+import { initialPlan } from "../../src/domain/core/plan.ts";
 import {
   parseShot, parseShotText, planFromShot, shotFromPlan, shareCode, shotJson, planSignature, shotSignature, validTimeZone,
   SHARE_PREFIX, SHOT_TEXT_LIMIT,
-} from "../../src/domain/shot.ts";
+} from "../../src/domain/shots/shot.ts";
 import {
   readLibrary, writeLibrary, readSession, writeSession, SHOT_LIBRARY_KEY, SHOT_SESSION_KEY,
-} from "../../src/domain/shot-library.ts";
-import { searchTimeZones, zoneOffset, allTimeZones } from "../../src/domain/time-zones.ts";
+} from "../../src/domain/shots/shot-library.ts";
+import { searchTimeZones, zoneOffset, allTimeZones } from "../../src/domain/time/time-zones.ts";
 
 // Every field differs from the defaults so a dropped mapping cannot hide.
 const varied = {

@@ -6,8 +6,8 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ellipsoidalRay } from '../src/domain/geodesy.ts';
-import { bodyTrack, corridor, solvePositions } from '../src/domain/position-alignment.ts';
+import { ellipsoidalRay } from '../src/domain/core/geodesy.ts';
+import { bodyTrack, corridor, solvePositions } from '../src/domain/solve/position-alignment.ts';
 import { DAY, ZONE, afternoon, dayNumber, dayStart, local, minute, nearestRange, passesOf, round, seasons } from './lib/alignment-validation.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');

@@ -1,7 +1,7 @@
 // Workspace interaction tests: map and camera linkage. Setup lives in harness.mjs.
 import test from "node:test";
 import assert from "node:assert/strict";
-import { initialBearing } from "../../src/domain/map.ts";
+import { initialBearing } from "../../src/domain/core/map.ts";
 import { dom, settle, waitForMap, workspace, input, chooseTimeZone, shootingDateTime, setShootingDateTime, value, button, clickMap, setControl, camera, heading, geometry } from "./harness.mjs";
 
 test("默认空白点击不改变机位；明确放置只生效一次，且可取消", async (t) => {

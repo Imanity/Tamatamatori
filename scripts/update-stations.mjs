@@ -1,7 +1,7 @@
 import { readFile, writeFile, mkdir, rename } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { ORBIT_SOURCE, ORBIT_REFRESH_MS, orbitEpoch, stationCatalog, stationElements, validateOrbitSnapshot, assertOrbitProgress } from '../src/domain/orbit-data.ts';
+import { ORBIT_SOURCE, ORBIT_REFRESH_MS, orbitEpoch, stationCatalog, stationElements, validateOrbitSnapshot, assertOrbitProgress } from '../src/domain/stations/orbit-data.ts';
 import { overNetwork, TransportError } from './lib/transport.mjs';
 
 const HOST = new URL(ORBIT_SOURCE).host;

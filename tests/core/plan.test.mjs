@@ -18,7 +18,7 @@ import {
   cameraHeightSlider,
   focalSlider,
   parseCoordinatePair,
-} from "../../src/domain/plan.ts";
+} from "../../src/domain/core/plan.ts";
 
 test("日期编辑保留当地秒钟，拒绝越界及夏令时重复或跳过", () => {
   assert.equal(instantOnDate("2026-11-06T10:35:12Z", "Asia/Tokyo", "2026-11-07"), "2026-11-07T10:35:12Z");
@@ -264,7 +264,7 @@ test("粘贴“纬度, 经度”可识别逗号、中文逗号与空格，越界
 });
 
 test("自定义传感器按毫米尺寸计算视场与画幅裁切，缺尺寸时回落全画幅，缓存键随尺寸变化", async () => {
-  const { sensorSize, sensorKey } = await import("../../src/domain/plan.ts");
+  const { sensorSize, sensorKey } = await import("../../src/domain/core/plan.ts");
   // 44 × 33 mm medium format, 3:2 crop keeps the width: 44 × 29.33 mm.
   const medium = { ...initialPlan, focalLength: 50, sensor: "custom", customSensor: { width: 44, height: 33 } };
   const fov = fieldOfView(medium);

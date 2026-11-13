@@ -1,10 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { Temporal } from "@js-temporal/polyfill";
-import { dayEvents, localDay, sunElevationByMinute } from "../../src/domain/day-events.ts";
-import { celestialBodies } from "../../src/domain/ephemeris.ts";
-import { apparentElevation } from "../../src/domain/refraction.ts";
-import { instantFromLocal } from "../../src/domain/plan.ts";
+import { dayEvents, localDay, sunElevationByMinute } from "../../src/domain/time/day-events.ts";
+import { celestialBodies } from "../../src/domain/core/ephemeris.ts";
+import { apparentElevation } from "../../src/domain/core/refraction.ts";
+import { instantFromLocal } from "../../src/domain/core/plan.ts";
 
 const rad = Math.PI / 180;
 const byId = (events) => Object.fromEntries(events.map((event) => [event.id, event.instant]));

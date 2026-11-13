@@ -7,9 +7,9 @@ import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import decodeWebp, { init as initWebp } from '@jsquash/webp/decode.js';
-import { elevationTiles } from '../../src/preview/elevation.ts';
-import { sampleLightPollution } from '../../src/preview/light-pollution.ts';
-import { lightPollutionAtlas } from '../../src/domain/light-pollution.ts';
+import { elevationTiles } from '../../src/io/elevation.ts';
+import { sampleLightPollution } from '../../src/io/light-pollution.ts';
+import { lightPollutionAtlas } from '../../src/domain/environment/light-pollution.ts';
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const require = createRequire(import.meta.url);

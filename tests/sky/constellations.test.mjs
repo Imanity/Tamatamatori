@@ -5,11 +5,11 @@ import {
   constellationScene,
   constellationCount,
   greatCircleSamples,
-} from "../../src/domain/constellations.ts";
-import { initialPlan } from "../../src/domain/plan.ts";
-import { skyReference, skyPointView } from "../../src/domain/starfield.ts";
-import { refractDirection } from "../../src/domain/refraction.ts";
-import { direction, dot } from "../../src/domain/ephemeris.ts";
+} from "../../src/domain/sky/constellations.ts";
+import { initialPlan } from "../../src/domain/core/plan.ts";
+import { skyReference, skyPointView } from "../../src/domain/sky/starfield.ts";
+import { refractDirection } from "../../src/domain/core/refraction.ts";
+import { direction, dot } from "../../src/domain/core/ephemeris.ts";
 const json = (path) =>
   JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
 const catalog = json("../../src/data/bright-stars.json"),

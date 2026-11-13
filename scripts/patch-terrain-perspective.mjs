@@ -8,7 +8,7 @@ if (JSON.parse(readFileSync(join(root,"package.json"),"utf8")).version !== "6.16
   throw new Error("摄影地形桥接需要重新验证 MapLibre 版本");
 const marker = "TAMATAMATORI_TERRAIN_ENU_V1";
 const hook = "tamatamatori.terrain-enu.v1";
-const glsl = `// ${marker}\n${readFileSync(new URL("../src/preview/terrain-projection.glsl",import.meta.url),"utf8")}\n`;
+const glsl = `// ${marker}\n${readFileSync(new URL("../src/render/scene/terrain-projection.glsl",import.meta.url),"utf8")}\n`;
 const files = ["src/shaders/glsl/terrain.vertex.glsl","src/shaders/glsl/terrain.vertex.glsl.g.ts","src/webgl/draw/draw_terrain.ts","dist/maplibre-gl.mjs"];
 const contents = files.map(file => readFileSync(join(root,file),"utf8").replaceAll("\r\n","\n"));
 const sourceDepth = "const depthMode = frameRenderContext.getDepthModeFor3D();";

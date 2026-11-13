@@ -8,10 +8,10 @@ import {
   milkyWayMesh,
   starCount,
   primarySkyNames,
-} from "../../src/domain/starfield.ts";
-import { initialPlan, signedAngle } from "../../src/domain/plan.ts";
-import { direction, dot } from "../../src/domain/ephemeris.ts";
-import { photoCameraMatrix } from "../../src/preview/terrain-perspective-math.ts";
+} from "../../src/domain/sky/starfield.ts";
+import { initialPlan, signedAngle } from "../../src/domain/core/plan.ts";
+import { direction, dot } from "../../src/domain/core/ephemeris.ts";
+import { photoCameraMatrix } from "../../src/domain/core/terrain-perspective-math.ts";
 const catalog = JSON.parse(
   readFileSync(
     new URL("../../src/data/bright-stars.json", import.meta.url),

@@ -31,7 +31,7 @@ React 只叠加方向与名称，不添加相机操作。接近的双目标组�
 
 ## 运行轨迹
 
-轨迹开关是拍摄计划的 `layers.sunPath` / `layers.moonPath`，从属于对应天体图层。`src/domain/body-paths.ts` 复用圆面的 `topocentric` 测站坐标和所选折射：
+轨迹开关是拍摄计划的 `layers.sunPath` / `layers.moonPath`，从属于对应天体图层。`src/domain/sun-moon/body-paths.ts` 复用圆面的 `topocentric` 测站坐标和所选折射：
 
 - **取样**：按 UTC 对齐每 5 分钟取一点并缓存方向。在拍摄时刻前后 36 小时内选一次出没（本次，或前后最近的一次），超过 24 小时的只保留一圈。拍摄时刻本身作为顶点，保证轨迹穿过圆面中心。
 - **整点**：用 Temporal 取所选时区的整点。

@@ -4,13 +4,13 @@ import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import {
   SOLVE_FORMAT, SOLVE_VERSION, parseAnySolve, parseSolve, parseSolveText2, requestOf, solveJson2, solveLink2, solvePlan2,
-} from "../../src/domain/solve.ts";
-import { lensOf } from "../../src/domain/composition.ts";
-import { describeSolve2, resultRows, solveReport, REPORT_ROWS } from "../../src/domain/solve-report.ts";
-import { initialPlan, localDateTime } from "../../src/domain/plan.ts";
-import { parseShotText, shotFromPlan, shotJson, shotLink, SHARE_PREFIX } from "../../src/domain/shot.ts";
-import { PUBLIC_SITE, siteBase } from "../../src/domain/site.ts";
-import { landmarks } from "../../src/domain/landmarks.ts";
+} from "../../src/domain/solve/solve.ts";
+import { lensOf } from "../../src/domain/solve/composition.ts";
+import { describeSolve2, resultRows, solveReport, REPORT_ROWS } from "../../src/domain/solve/solve-report.ts";
+import { initialPlan, localDateTime } from "../../src/domain/core/plan.ts";
+import { parseShotText, shotFromPlan, shotJson, shotLink, SHARE_PREFIX } from "../../src/domain/shots/shot.ts";
+import { PUBLIC_SITE, siteBase } from "../../src/domain/core/site.ts";
+import { landmarks } from "../../src/domain/buildings/landmarks.ts";
 
 const base = { format: SOLVE_FORMAT, version: SOLVE_VERSION };
 const skytree = landmarks.find((landmark) => landmark.id === "tokyo-skytree");

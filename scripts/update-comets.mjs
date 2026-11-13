@@ -28,8 +28,8 @@ import { overNetwork, TransportError } from './lib/transport.mjs';
 import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { Body, HelioVector, MakeTime } from 'astronomy-engine';
-import { cometState, magnitudeLaw, totalMagnitude, C_AU_PER_DAY } from '../src/domain/comet-orbit.ts';
-import { COMET_CATALOG_VERSION, COMET_REFRESH_MS, assertCatalogProgress, validateCometCatalog } from '../src/domain/comet-catalog.ts';
+import { cometState, magnitudeLaw, totalMagnitude, C_AU_PER_DAY } from '../src/domain/comets/comet-orbit.ts';
+import { COMET_CATALOG_VERSION, COMET_REFRESH_MS, assertCatalogProgress, validateCometCatalog } from '../src/domain/comets/comet-catalog.ts';
 
 const DAY = 86_400_000, WINDOW_DAYS = 550, MARGIN_DAYS = 30, ONGOING_DAYS = 45;
 const MIN_NIGHTS = 8, PEAK_LIMIT = 10, CANDIDATE_PEAK = 12, FIT_MIN_NIGHTS = 5, FIT_MIN_SPAN = 0.08, DEFAULT_N = 4;

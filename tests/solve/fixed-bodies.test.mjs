@@ -1,12 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { DARK_SUN_ELEVATION, bodyKind, bodyLayer, bodyName, fixedBodies, fixedBody, isSolveBody, sizeWord } from "../../src/domain/sky-targets.ts";
-import { bodyRadius, solveAlignment, targetElevationRange } from "../../src/domain/alignment.ts";
-import { bodyTrack, pointPlan, restoredLayers, skyAt, triedLayers } from "../../src/domain/position-alignment.ts";
-import { skyReference } from "../../src/domain/starfield.ts";
-import { sunPosition } from "../../src/domain/ephemeris.ts";
-import { initialPlan } from "../../src/domain/plan.ts";
-import { parseSolve } from "../../src/domain/solve.ts";
+import { DARK_SUN_ELEVATION, bodyKind, bodyLayer, bodyName, fixedBodies, fixedBody, isSolveBody, sizeWord } from "../../src/domain/sky/sky-targets.ts";
+import { bodyRadius, solveAlignment, targetElevationRange } from "../../src/domain/solve/alignment.ts";
+import { bodyTrack, pointPlan, restoredLayers, skyAt, triedLayers } from "../../src/domain/solve/position-alignment.ts";
+import { skyReference } from "../../src/domain/sky/starfield.ts";
+import { sunPosition } from "../../src/domain/core/ephemeris.ts";
+import { initialPlan } from "../../src/domain/core/plan.ts";
+import { parseSolve } from "../../src/domain/solve/solve.ts";
 
 const fuji = { latitude: 35.4172, longitude: 138.8729 };
 const angle = (a, b) => {
@@ -94,8 +94,8 @@ test("推算请求：body 接受银心、亮星与深空 id；月相只用于月
 });
 
 test("两者都找的 Worker 只认消息带来的固定天体：没有目录也能规划；缺少时回报错误", async () => {
-  const { rangeWorker } = await import("../../src/preview/range-worker.ts");
-  const { rangeDays, rangeDistances } = await import("../../src/domain/range-alignment.ts");
+  const { rangeWorker } = await import("../../src/io/range-worker.ts");
+  const { rangeDays, rangeDistances } = await import("../../src/domain/solve/range-alignment.ts");
   const lens = { focalLength: 200, sensor: "full-frame", aspectRatio: "3:2", orientation: "landscape" };
   const tower = { latitude: 35.71, longitude: 139.81, height: 634 };
   const distances = rangeDistances(tower, 0.3, lens, 30_000);

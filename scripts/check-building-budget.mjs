@@ -2,8 +2,8 @@
 // Frozen Skytree-only asset set: only point/triangle caps differ, not later landmarks.
 // No network or GPU benchmark.
 import {readFile,writeFile,mkdir} from 'node:fs/promises';import {createHash} from 'node:crypto';import {stripTypeScriptTypes} from 'node:module';import {gunzipSync} from 'node:zlib';
-import {loadBuildings,clearBuildingCache,extractBuildingTile} from '../src/preview/buildings.ts';import {decodeLandmark,skytree} from '../src/domain/landmarks.ts';
-const loaderUrl=new URL('../src/preview/buildings.ts',import.meta.url);let code=await readFile(loaderUrl,'utf8');
+import {loadBuildings,clearBuildingCache,extractBuildingTile} from '../src/io/buildings.ts';import {decodeLandmark,skytree} from '../src/domain/buildings/landmarks.ts';
+const loaderUrl=new URL('../src/io/buildings.ts',import.meta.url);let code=await readFile(loaderUrl,'utf8');
 if(code.split('BUILDING_MAX_POINTS, BUILDING_MAX_TRIANGLES,').length!==2)throw Error('Budget import signature changed');
 code=code.replace('BUILDING_MAX_POINTS, BUILDING_MAX_TRIANGLES,','').replaceAll('BUILDING_MAX_POINTS','80000').replaceAll('BUILDING_MAX_TRIANGLES','120000');
 code=stripTypeScriptTypes(code,{mode:'transform'}).replace(/from "(\.[^"]+)"/g,(_,p)=>`from "${new URL(p,loaderUrl).href}"`);

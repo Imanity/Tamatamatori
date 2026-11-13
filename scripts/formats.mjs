@@ -9,20 +9,20 @@ import { fileURLToPath } from 'node:url';
 import {
   SHOT_FORMAT, SHOT_VERSION, SHOT_TEXT_LIMIT, SHOT_NAME_LIMIT, SHOT_NOTE_LIMIT, SHARE_PREFIX,
   shotLimits, shotLayerKeys, shotLayerNames, shotLayerRequires, parseShot, shotJson, shotLink,
-} from '../src/domain/shot.ts';
+} from '../src/domain/shots/shot.ts';
 import {
   SOLVE_FORMAT, SOLVE_VERSION, SOLVE_VERSION_2, SOLVE_TEXT_LIMIT, SOLVE_NAME_LIMIT, solveBodies,
   targetHeightLimits, seaHeightLimits, phaseChoices, toleranceLimits, nearLimits, parseAnySolve, solveJson2, solveLink2,
-} from '../src/domain/solve.ts';
-import { darkSkyChoices, dayChoices, dayLabel, DEFAULT_TOLERANCE, distanceChoices as cameraDistances, MAX_LINE_DAYS, nearestChoices, TARGET_LIMIT } from '../src/domain/composition.ts';
-import { PUBLIC_SITE, SHOT_SCHEMA_FILE, SOLVE_SCHEMA_FILE } from '../src/domain/site.ts';
-import { aspectRatios, customSensorLimits, initialPlan, sensors } from '../src/domain/plan.ts';
-import { lensOf } from '../src/domain/composition.ts';
-import { weatherModels } from '../src/domain/weather.ts';
-import { skyConditions, skyConditionNames } from '../src/domain/alignment.ts';
-import { landmarks } from '../src/domain/landmarks.ts';
-import { DARK_SUN_ELEVATION, fixedBodies } from '../src/domain/sky-targets.ts';
-import { SKYLINE_DROP, SKYLINE_RADIUS } from '../src/domain/position-alignment.ts';
+} from '../src/domain/solve/solve.ts';
+import { darkSkyChoices, dayChoices, dayLabel, DEFAULT_TOLERANCE, distanceChoices as cameraDistances, MAX_LINE_DAYS, nearestChoices, TARGET_LIMIT } from '../src/domain/solve/composition.ts';
+import { PUBLIC_SITE, SHOT_SCHEMA_FILE, SOLVE_SCHEMA_FILE } from '../src/domain/core/site.ts';
+import { aspectRatios, customSensorLimits, initialPlan, sensors } from '../src/domain/core/plan.ts';
+import { lensOf } from '../src/domain/solve/composition.ts';
+import { weatherModels } from '../src/domain/environment/weather.ts';
+import { skyConditions, skyConditionNames } from '../src/domain/solve/alignment.ts';
+import { landmarks } from '../src/domain/buildings/landmarks.ts';
+import { DARK_SUN_ELEVATION, fixedBodies } from '../src/domain/sky/sky-targets.ts';
+import { SKYLINE_DROP, SKYLINE_RADIUS } from '../src/domain/solve/position-alignment.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const REPOSITORY = 'https://github.com/Imanity/Tamatamatori';

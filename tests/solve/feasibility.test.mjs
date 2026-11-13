@@ -3,10 +3,10 @@ import assert from "node:assert/strict";
 import { PbfWriter } from "pbf";
 import {
   CHECK_LIMIT, CHECK_TILE_LIMIT, checkLabel, checkPlace, checkPoints, fitTargets, indexFeatures, insideRings, projector, rayCrossings, sightHeight,
-} from "../../src/domain/feasibility.ts";
-import { travel } from "../../src/domain/position-alignment.ts";
-import { terrainTile } from "../../src/domain/terrain.ts";
-import { decodeFeatures, featureTiles } from "../../src/preview/feasibility.ts";
+} from "../../src/domain/solve/feasibility.ts";
+import { travel } from "../../src/domain/solve/position-alignment.ts";
+import { terrainTile } from "../../src/domain/core/terrain.ts";
+import { decodeFeatures, featureTiles } from "../../src/io/feasibility.ts";
 
 const square = (x0, y0, x1, y1) => [{ x: x0, y: y0 }, { x: x1, y: y0 }, { x: x1, y: y1 }, { x: x0, y: y1 }];
 const camera = { latitude: 35.7, longitude: 139.8 };

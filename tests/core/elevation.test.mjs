@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { initialPlan } from "../../src/domain/plan.ts";
-import { groundElevation } from "../../src/preview/elevation.ts";
+import { initialPlan } from "../../src/domain/core/plan.ts";
+import { groundElevation } from "../../src/io/elevation.ts";
 
 function imageEnvironment(t, { transparent = false } = {}) {
   const pixels = new Uint8ClampedArray(512 * 512 * 4);

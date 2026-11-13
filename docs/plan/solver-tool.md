@@ -14,16 +14,16 @@
 ## 2. 现状
 
 - 已有：推算请求 v2 的公开格式、schema、`#solve=` 链接，以及结果的 Markdown 表格（AI 第一级）。
-- 搜索流程写在界面里：读地形、求解、筛选、视线、合并结果、计数，都在 `src/components/Composition.tsx` 的 `useComposition` 中（`searchLine`、`searchWindow`、`searchPair`、`searchGrounds`），依赖 React 状态。
+- 搜索流程写在界面里：读地形、求解、筛选、视线、合并结果、计数，都在 `src/ui/solve/Composition.tsx` 的 `useComposition` 中（`searchLine`、`searchWindow`、`searchPair`、`searchGrounds`），依赖 React 状态。
 - 求解器本身是纯函数，测试一直在 Node 中运行。
-- 地形读取在 `src/preview/elevation.ts`：Mapterhorn 瓦片是 512 px 的 WebP（terrarium 编码），用浏览器的 `createImageBitmap` 和画布解码。Node 22 不能直接解码 WebP。
+- 地形读取在 `src/io/elevation.ts`：Mapterhorn 瓦片是 512 px 的 WebP（terrarium 编码），用浏览器的 `createImageBitmap` 和画布解码。Node 22 不能直接解码 WebP。
 - 光污染分块在仓库的 `public/light-pollution/` 下，可直接读文件。
 
 ## 3. 方案
 
 ### 3.1 共享的搜索执行器（任何形式都需要）
 
-- 把四种搜索从界面移到一个不依赖 React 的执行器（暂名 `src/domain/composition-run.ts`）。
+- 把四种搜索从界面移到一个不依赖 React 的执行器（暂名 `src/domain/solve/composition-run.ts`）。
   - 输入：面板条件或推算请求 v2，以及镜头、离地高度、折射、时区、拍摄时刻。
   - 注入的读取函数：地形瓦片、光污染、进度、取消。
   - 输出：结果条目与各项计数，即现在的 `Run` 中与界面无关的部分。
@@ -107,8 +107,8 @@
 
 ### 范围
 
-- **执行器**：四种搜索（机位线、固定机位、两个天体、两个地面点）移到 `src/domain/composition-run.ts`，以注入的函数读取地形与光污染、汇报进度、响应取消。机位线的逐日求解可注入：界面注入现有的 Worker 分派，命令行用主线程逐日求解。界面改为调用执行器，结果与现在相同。
-- **地形读取**：`src/preview/elevation.ts` 的瓦片解码改为可注入。网页仍用 `createImageBitmap`，命令行用 `@jsquash/webp` 解码，其余逻辑（TileJSON、瓦片选择与降级、缓存、取样）共用。
+- **执行器**：四种搜索（机位线、固定机位、两个天体、两个地面点）移到 `src/domain/solve/composition-run.ts`，以注入的函数读取地形与光污染、汇报进度、响应取消。机位线的逐日求解可注入：界面注入现有的 Worker 分派，命令行用主线程逐日求解。界面改为调用执行器，结果与现在相同。
+- **地形读取**：`src/io/elevation.ts` 的瓦片解码改为可注入。网页仍用 `createImageBitmap`，命令行用 `@jsquash/webp` 解码，其余逻辑（TileJSON、瓦片选择与降级、缓存、取样）共用。
 - **光污染**：命令行直接读 `public/light-pollution/` 中的分块文件。
 - **命令行**：`npm run solve -- <请求文件|->`。
   - 选项：`--format json|markdown`、`--site URL`、`--shot 机位链接或 JSON`（作为当前计划）。
@@ -132,7 +132,7 @@
 
 #### 实现
 
-- **执行器**（`src/domain/composition-run.ts`）：
+- **执行器**（`src/domain/solve/composition-run.ts`）：
   - `runComposition(strategy, composition, plan, env, signal)`：四种搜索原样移入，返回结果条目与各项计数；取消时返回 null。
   - `env` 注入地形读取、光污染读取、机位线逐日求解（`solveDays`）与进度、早出结果（`report`）。
   - 主线程逐日求解为 `solveDaysHere`，Worker 分派（`solve-runner.ts` 的 `runRange`）失败时也用它。

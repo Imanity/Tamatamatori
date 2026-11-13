@@ -4,9 +4,9 @@ import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { gunzipSync } from "node:zlib";
 import { createServer } from "vite";
-import { lightPollutionAtlas as atlas, lightPollutionCells, decodePollutionValue, interpolatePollution } from "../../src/domain/light-pollution.ts";
-import { skyAppearance, starOpacity } from "../../src/domain/sky-appearance.ts";
-import { environmentForSky } from "../../src/preview/environment.ts";
+import { lightPollutionAtlas as atlas, lightPollutionCells, decodePollutionValue, interpolatePollution } from "../../src/domain/environment/light-pollution.ts";
+import { skyAppearance, starOpacity } from "../../src/domain/sky/sky-appearance.ts";
+import { environmentForSky } from "../../src/render/scene/environment.ts";
 
 const reference = JSON.parse(readFileSync(new URL("../fixtures/light-pollution-reference.json", import.meta.url), "utf8"));
 const tileData = new Map();
@@ -89,7 +89,7 @@ test("人工亮度线性叠加，暗星与银河单调减弱，白昼和地表�
 test("真实分块按需读取、缓存、校验、失败重试与取消，不请求上游", async t => {
   const server = await createServer({ server: { middlewareMode: true }, appType: "custom", optimizeDeps: { noDiscovery: true, include: [] } });
   t.after(() => server.close());
-  const { sampleLightPollution } = await server.ssrLoadModule("/src/preview/light-pollution.ts");
+  const { sampleLightPollution } = await server.ssrLoadModule("/src/io/light-pollution.ts");
   const calls = [];
   let failure = "", pending;
   const responseFor = url => new Response(readFileSync(new URL(`../../public/${url.split("?")[0].slice(1)}`, import.meta.url)));
