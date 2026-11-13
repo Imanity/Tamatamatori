@@ -7,7 +7,7 @@ import { MIN_SUBJECT, spanChoices as rangeSpans } from "./range-alignment.ts";
 import { distanceChoices } from "./position-alignment.ts";
 import { shotLimits, validTimeZone } from "./shot.ts";
 import { aspectRatios, customSensorLimits, fieldOfView, initialPlan, instantFromLocal, instantOnDate, localDateTime, sensors } from "./plan.ts";
-import { dayChoices, dayLabel, DEFAULT_TOLERANCE, MAX_LINE_DAYS, TARGET_LIMIT } from "./composition.ts";
+import { darkSkyChoices, dayChoices, dayLabel, DEFAULT_TOLERANCE, MAX_LINE_DAYS, TARGET_LIMIT } from "./composition.ts";
 import type { CameraRange, Composition, FilterSpec, FrameSpot, HeightReference, Lens, TargetSpec, TimeRange } from "./composition.ts";
 import type { ShootingPlan } from "./plan.ts";
 import { timelineMode, timelineWindow } from "./timeline.ts";
@@ -547,7 +547,12 @@ export function parseSolve2(value: Record<string, unknown>): SolveParse2 {
         if (!Array.isArray(range) || range.length !== 2 || !range.every((one) => phaseChoices.includes(one)) || range[0] > range[1])
           errors.push(`${path}.range：应为 [下限, 上限]，取值 ${phaseChoices.join(" / ")}，下限不大于上限，收到 ${shown(range)}`);
         else filters.push({ kind: "moonLit", range: [range[0], range[1]] });
-      } else errors.push(`${path}.type：应为 "sky" / "moonDown" / "moonLit" 之一，收到 ${shown(entry.type)}`);
+      } else if (entry.type === "darkSky") {
+        const item = object(entry, path, ["type", "limit"]);
+        const limits: readonly number[] = darkSkyChoices.map((choice) => choice.limit);
+        if (item && !limits.includes(item.limit as number)) errors.push(`${path}.limit：天顶天空亮度上限（mag/arcsec²），取值 ${limits.join(" / ")}，收到 ${shown(item.limit)}`);
+        else if (item) filters.push({ kind: "darkSky", limit: item.limit as number });
+      } else errors.push(`${path}.type：应为 "sky" / "moonDown" / "moonLit" / "darkSky" 之一，收到 ${shown(entry.type)}`);
     });
   }
   if (errors.length) return { ok: false, errors };
@@ -627,7 +632,7 @@ export function requestOf(composition: Composition, lens: Lens, extra: { name?: 
     lens: { focalLength: lens.focalLength, sensor: lens.sensor, ...sensorSize, aspectRatio: lens.aspectRatio, orientation: lens.orientation },
     targets, camera, time: { ...composition.time } as RequestTime,
     ...(extra.timeZone ? { timeZone: extra.timeZone } : {}),
-    filters: composition.filters.map((filter) => (filter.kind === "sky" ? { kind: "sky", sky: [...filter.sky] } : filter.kind === "moonLit" ? { kind: "moonLit", range: [...filter.range] as [number, number] } : { kind: "moonDown" })),
+    filters: composition.filters.map((filter): FilterSpec => (filter.kind === "sky" ? { kind: "sky", sky: [...filter.sky] } : filter.kind === "moonLit" ? { kind: "moonLit", range: [...filter.range] as [number, number] } : { ...filter })),
   };
 }
 
@@ -704,7 +709,7 @@ export function solveJson2(request: SolveRequest2, schema?: string) {
       const place = target.landmark ? { landmark: target.landmark } : { latitude: target.latitude, longitude: target.longitude, name: target.name };
       return { type: "ground", ...place, height: target.height, reference: target.reference, frame: target.frame, ...(target.base !== null ? { base: target.base } : {}), tolerance: target.tolerance };
     }),
-    filters: request.filters.map((filter) => (filter.kind === "sky" ? { type: "sky", sky: filter.sky } : filter.kind === "moonLit" ? { type: "moonLit", range: filter.range } : { type: "moonDown" })),
+    filters: request.filters.map((filter) => (filter.kind === "sky" ? { type: "sky", sky: filter.sky } : filter.kind === "moonLit" ? { type: "moonLit", range: filter.range } : filter.kind === "darkSky" ? { type: "darkSky", limit: filter.limit } : { type: "moonDown" })),
   };
   const ordered = Object.fromEntries(topKeys2.slice(1).filter((key) => written[key] !== undefined).map((key) => [key, written[key]]));
   return JSON.stringify(schema ? { $schema: schema, ...ordered } : ordered, null, 2);

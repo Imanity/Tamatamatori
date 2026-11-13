@@ -108,7 +108,7 @@ test("两者都找的 Worker 只认消息带来的固定天体：没有目录也
   assert.equal(failed[0].type, "error");
   assert.match(failed[0].message, /未知天体：hyg-999999/);
   const replies = [];
-  rangeWorker((reply) => replies.push(reply))({ type: "plan", id: 2, input, days, fixed: { id: "hyg-999999", kind: "core", ra: 17.7611, dec: -29.0078, radius: 1 } });
+  rangeWorker((reply) => replies.push(reply))({ type: "plan", id: 2, input, days, fixed: [{ id: "hyg-999999", kind: "core", ra: 17.7611, dec: -29.0078, radius: 1 }] });
   assert.equal(replies[0].type, "planned");
   assert.ok(replies[0].minutes > 0);
 });

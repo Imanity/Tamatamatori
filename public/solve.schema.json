@@ -89,8 +89,8 @@
     "targets": {
       "type": "array",
       "minItems": 1,
-      "maxItems": 2,
-      "description": "画面里的目标，目前最多 2 个：一个地面点加一个天体，或两个天体",
+      "maxItems": 4,
+      "description": "画面里的目标，最多 4 个：第一个地面点与第一个天体（没有地面点时为前两个天体）定机位与时刻，其余在每个候选分钟按容差检查",
       "items": {
         "oneOf": [
           {
@@ -630,6 +630,29 @@
                 "description": "月亮亮面比例 [下限, 上限]"
               }
             }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "limit"
+            ],
+            "properties": {
+              "type": {
+                "const": "darkSky"
+              },
+              "limit": {
+                "enum": [
+                  21.7,
+                  21.3,
+                  20.5,
+                  19.5
+                ],
+                "description": "天顶天空亮度上限，mag/arcsec²；只在天文夜（太阳低于 −18°）成立"
+              }
+            },
+            "description": "星空可见性"
           }
         ]
       }

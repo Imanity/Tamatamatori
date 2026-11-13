@@ -20,7 +20,8 @@
 | 一个地面点 + 一个天体，机位固定 | 天体经过画面位置的时刻（按容差） |
 | 一个天体，机位与朝向都固定 | 天体落到画面位置的时刻 |
 | 两个天体 | 两者到达设定相对位置的时刻；与机位基本无关 |
-| 只有一个目标（朝向不固定）、两个地面点、三个以上目标、机位与时刻都固定 | 不搜索，报出原因 |
+| 以上任一种再加第三、四个目标 | 第一个地面点与第一个天体（没有地面点时为前两个天体）定机位与时刻，其余目标在每个候选分钟按容差检查：天体须在地平线上，地面点的视线不被地形挡住 |
+| 只有一个目标（朝向不固定）、只有地面点、固定朝向时有地面点、机位与时刻都固定 | 不搜索，报出原因 |
 
 ## 顶层字段
 
@@ -29,7 +30,7 @@
 | `format` / `version` | `"tamatamatori.solve"` / `2` | 必填；更高版本拒绝读取；`1` 按下文转换 |
 | `name` | 文本，最多 40 字 | 空 |
 | `lens` | `{ "focalLength", "sensor", "sensorSize", "aspectRatio", "orientation" }`：焦距 8—1000 mm；传感器 `"full-frame"` / `"aps-c"` / `"micro-four-thirds"` / `"custom"`；画幅 `"3:2"` / `"16:9"` / `"1:1"`；`"landscape"` 横幅 / `"portrait"` 竖幅 | 沿用打开者当前镜头 |
-| `targets` | 1—2 个目标，见下 | 必填 |
+| `targets` | 1—4 个目标，见下 | 必填 |
 | `camera` | 机位的搜索范围，见下 | 不限，最远 30 km |
 | `time` | 时间的搜索范围，见下 | 打开者当前日期起 30 天 |
 | `timeZone` | IANA 时区；给出时按它解释日期，并改为该固定时区 | 沿用打开者当前时区 |
@@ -68,6 +69,7 @@
 | `"sky"` | `sky`：非空数组，`"day"` 白天、`"golden"` 黄金、`"blue"` 蓝调、`"twilight"` 暮光、`"night"` 暗夜 | 按太阳高度 |
 | `"moonDown"` | — | 月亮在地平线下；目标里有月亮时报错 |
 | `"moonLit"` | `range`：`[下限, 上限]`，取 `0` / `0.1` / `0.25` / `0.5` / `0.75` / `0.9` / `1` | 月亮亮面比例 |
+| `"darkSky"` | `limit`：`21.7` 很暗（银河结构清楚）、`21.3` 暗（银河明显）、`20.5` 郊外（银河可见）、`19.5` 郊区（以亮星为主） | 星空可见性：天顶天空亮度（mag/arcsec²，数值越大越暗）不亮于所选值。由自然天光、机位的光污染（World Atlas 2015，约 60°S—75°N）与月光合成，只在天文夜（太阳低于 −18°）成立；没有光污染数据的机位不算通过 |
 
 ## 固定方向天体
 
@@ -356,13 +358,82 @@
     },
     {
       "type": "moonDown"
+    },
+    {
+      "type": "darkSky",
+      "limit": 21.3
     }
   ]
 }
 ```
 
 ```text
-https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22name%22%3A%22M31%20%E4%B8%8E%E5%AF%8C%E5%A3%AB%E5%B1%B1%22%2C%22lens%22%3A%7B%22focalLength%22%3A105%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22portrait%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.67%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22dso-ngc0224%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.52%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A90%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%7B%22type%22%3A%22sky%22%2C%22sky%22%3A%5B%22night%22%5D%7D%2C%7B%22type%22%3A%22moonDown%22%7D%5D%7D
+https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22name%22%3A%22M31%20%E4%B8%8E%E5%AF%8C%E5%A3%AB%E5%B1%B1%22%2C%22lens%22%3A%7B%22focalLength%22%3A105%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22portrait%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.67%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22dso-ngc0224%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.52%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A90%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%7B%22type%22%3A%22sky%22%2C%22sky%22%3A%5B%22night%22%5D%7D%2C%7B%22type%22%3A%22moonDown%22%7D%2C%7B%22type%22%3A%22darkSky%22%2C%22limit%22%3A21.3%7D%5D%7D
+```
+
+### 三个目标：月亮在富士山顶右上方，昴星团在月亮左上方，135 mm 横幅，12 个月
+
+```json
+{
+  "$schema": "https://imanity.github.io/Tamatamatori/solve.schema.json",
+  "format": "tamatamatori.solve",
+  "version": 2,
+  "name": "月亮、昴星团与富士山",
+  "lens": {
+    "focalLength": 135,
+    "sensor": "full-frame",
+    "aspectRatio": "3:2",
+    "orientation": "landscape"
+  },
+  "targets": [
+    {
+      "type": "ground",
+      "latitude": 35.3606,
+      "longitude": 138.7274,
+      "name": "富士山顶",
+      "height": 0,
+      "reference": "ground",
+      "frame": {
+        "x": 0.5,
+        "y": 0.8
+      },
+      "tolerance": 0.03
+    },
+    {
+      "type": "body",
+      "body": "moon",
+      "frame": {
+        "x": 0.55,
+        "y": 0.55
+      },
+      "tolerance": 0.03
+    },
+    {
+      "type": "body",
+      "body": "dso-mel022",
+      "frame": {
+        "x": 0.46,
+        "y": 0.42
+      },
+      "tolerance": 0.05
+    }
+  ],
+  "camera": {
+    "mode": "free",
+    "maxDistance": 30000
+  },
+  "time": {
+    "mode": "range",
+    "date": "2026-11-13",
+    "days": 365
+  },
+  "timeZone": "Asia/Tokyo",
+  "filters": []
+}
+```
+
+```text
+https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22name%22%3A%22%E6%9C%88%E4%BA%AE%E3%80%81%E6%98%B4%E6%98%9F%E5%9B%A2%E4%B8%8E%E5%AF%8C%E5%A3%AB%E5%B1%B1%22%2C%22lens%22%3A%7B%22focalLength%22%3A135%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.8%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22moon%22%2C%22frame%22%3A%7B%22x%22%3A0.55%2C%22y%22%3A0.55%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22dso-mel022%22%2C%22frame%22%3A%7B%22x%22%3A0.46%2C%22y%22%3A0.42%7D%2C%22tolerance%22%3A0.05%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A365%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%5D%7D
 ```
 
 ### 钻石富士：太阳落在富士山顶正中，机位不限

@@ -6,9 +6,11 @@ import type { View } from "./celestial-projection.ts";
 import { direction } from "./ephemeris.ts";
 import { fieldOfView, frameAspectRatio } from "./plan.ts";
 import type { ShootingPlan } from "./plan.ts";
-import { pointPlan, skyAt } from "./position-alignment.ts";
-import type { PositionPoint } from "./position-alignment.ts";
-import { mergeCandidates, MIN_SUBJECT, rangeCandidates } from "./range-alignment.ts";
+import { lineOfSight, pointPlan, skyAt, toRay, topHeight } from "./position-alignment.ts";
+import type { GroundSampler, PositionPoint } from "./position-alignment.ts";
+import { skyBrightness } from "./meteor-showers.ts";
+import { mergeCandidates, MIN_SUBJECT, rangeCandidates, skySeparation } from "./range-alignment.ts";
+import type { Prefilter } from "./range-alignment.ts";
 import { bodyLayer, bodyName, DARK_SUN_ELEVATION, isFixedBody } from "./sky-targets.ts";
 import { landmarks } from "./landmarks.ts";
 
@@ -26,7 +28,7 @@ export interface FrameSpot {
   y: number;
 }
 export const DEFAULT_TOLERANCE = 0.03;
-export const TARGET_LIMIT = 2;
+export const TARGET_LIMIT = 4;
 export const toleranceChoices = [0.01, 0.02, 0.03, 0.05, 0.08] as const;
 
 export interface GroundSpec {
@@ -61,7 +63,8 @@ export type TimeRange = { mode: "range"; date: string; days: number } | { mode: 
 export type FilterSpec =
   | { kind: "sky"; sky: SkyCondition[] }
   | { kind: "moonDown" }
-  | { kind: "moonLit"; range: [number, number] };
+  | { kind: "moonLit"; range: [number, number] }
+  | { kind: "darkSky"; limit: number };
 
 export interface Composition {
   targets: TargetSpec[];
@@ -102,10 +105,14 @@ export function heightWords(target: GroundSpec) {
 
 // ---------------------------------------------------------------- 可解性
 
+/**
+ * The solver's pair (a ground point and a body, two bodies, or one body for
+ * a fixed aim) and the targets checked on top of it, minute by minute.
+ */
 export type Strategy =
-  | { kind: "line"; ground: GroundSpec; sky: SkySpec }
-  | { kind: "window"; ground: GroundSpec | null; sky: SkySpec }
-  | { kind: "pair"; first: SkySpec; second: SkySpec };
+  | { kind: "line"; ground: GroundSpec; sky: SkySpec; extras: TargetSpec[] }
+  | { kind: "window"; ground: GroundSpec | null; sky: SkySpec; extras: TargetSpec[] }
+  | { kind: "pair"; first: SkySpec; second: SkySpec; extras: TargetSpec[] };
 export type Shape = "lines" | "points" | "windows";
 export interface Solvability {
   strategy: Strategy | null;
@@ -121,37 +128,41 @@ export function classify(composition: Composition): Solvability {
   const skies = targets.filter((target): target is SkySpec => target.kind === "sky");
   const stop = (message: string): Solvability => ({ strategy: null, shape: null, message });
   if (!targets.length) return stop("先加目标：一个地面点和一个天体，或两个天体。");
-  if (targets.length > TARGET_LIMIT) return stop(`目前最多 ${TARGET_LIMIT} 个目标；更多目标将在下一步支持。`);
-  if (grounds.length > 1) return stop("两个地面点作主约束将在第三步支持；请保留一个地面点，另加一个天体。");
+  if (targets.length > TARGET_LIMIT) return stop(`最多 ${TARGET_LIMIT} 个目标。`);
+  if (!skies.length)
+    return stop(grounds.length > 1
+      ? "只有地面点：两个地面点作主约束将在第三步支持；请再加一个天体。"
+      : "只有一个地面点：任何机位都能对准它。再加一个天体。");
   if (skies.some((sky) => sky.body === "moon") && filters.some((filter) => filter.kind === "moonDown"))
     return stop("目标里有月亮，却要求“月亮在地平线下”：请删掉其中一个。");
-  const base = grounds.find((ground) => ground.base !== null);
-  if (base && (base.reference === "sea" || base.height < MIN_SUBJECT))
-    return stop(`“${base.name}”的底部位置只用于距地表至少 ${MIN_SUBJECT} m 的点（塔、楼）。`);
-  if (base && base.base! <= base.frame.y) return stop(`“${base.name}”的底部应在顶部下方。`);
+  for (const ground of grounds) {
+    if (ground.base === null) continue;
+    if (ground.reference === "sea" || ground.height < MIN_SUBJECT) return stop(`“${ground.name}”的底部位置只用于距地表至少 ${MIN_SUBJECT} m 的点（塔、楼）。`);
+    if (ground.base <= ground.frame.y) return stop(`“${ground.name}”的底部应在顶部下方。`);
+  }
   const fixed = camera.mode === "fixed";
   if (fixed && time.mode === "instant") return stop("机位与时刻都已固定，没有可搜索的量；直接看预览即可。");
+  const more = (extras: TargetSpec[]) => (extras.length ? `另有 ${extras.length} 个目标按容差逐分钟检查。` : "");
   if (fixed && camera.aim) {
     if (grounds.length) return stop("固定朝向时，地面点在画面中的位置由朝向决定：请删掉地面点，或不固定朝向。");
-    if (skies.length > 1) return stop("固定朝向时只支持一个天体。");
-    return { strategy: { kind: "window", ground: null, sky: skies[0] }, shape: "windows", message: `机位与朝向固定：求${bodyName(skies[0].body)}落到画面位置的时刻。` };
+    const extras = skies.slice(1);
+    return { strategy: { kind: "window", ground: null, sky: skies[0], extras }, shape: "windows", message: `机位与朝向固定：求${bodyName(skies[0].body)}落到画面位置的时刻。${more(extras)}` };
   }
-  if (targets.length === 1)
-    return stop(grounds.length
-      ? "只有一个地面点：任何机位都能对准它。再加一个天体。"
-      : "只有一个天体：只要它在地平线上，任何时刻都能对准。再加一个地面点或天体。");
-  if (grounds.length === 1) {
+  if (targets.length === 1) return stop("只有一个天体：只要它在地平线上，任何时刻都能对准。再加一个地面点或天体。");
+  if (grounds.length) {
     const [ground] = grounds, [sky] = skies;
-    if (fixed) return { strategy: { kind: "window", ground, sky }, shape: "windows", message: `机位固定：由“${ground.name}”定朝向，求${bodyName(sky.body)}经过画面位置的时刻。` };
+    const extras = targets.filter((target) => target !== ground && target !== sky);
+    if (fixed) return { strategy: { kind: "window", ground, sky, extras }, shape: "windows", message: `机位固定：由“${ground.name}”定朝向，求${bodyName(sky.body)}经过画面位置的时刻。${more(extras)}` };
     return time.mode === "instant"
-      ? { strategy: { kind: "line", ground, sky }, shape: "points", message: "时刻固定：结果为机位点。" }
-      : { strategy: { kind: "line", ground, sky }, shape: "lines", message: "结果为机位线：每个时刻一处机位，在地图上画成线。" };
+      ? { strategy: { kind: "line", ground, sky, extras }, shape: "points", message: `时刻固定：结果为机位点。${more(extras)}` }
+      : { strategy: { kind: "line", ground, sky, extras }, shape: "lines", message: `结果为机位线：每个时刻一处机位，在地图上画成线。${more(extras)}` };
   }
-  if (time.mode === "instant") return stop("两个天体的相对位置只随时间变化；时刻固定时无从搜索。");
+  if (time.mode === "instant") return stop("天体之间的相对位置只随时间变化；时刻固定时无从搜索。");
+  const extras = skies.slice(2);
   return {
-    strategy: { kind: "pair", first: skies[0], second: skies[1] },
+    strategy: { kind: "pair", first: skies[0], second: skies[1], extras },
     shape: "windows",
-    message: `结果为时刻：两个天体在画面中的相对位置与机位基本无关${skies.some((sky) => sky.body === "moon") ? "（月亮略有视差）" : ""}，按${fixed ? "固定" : "当前"}机位计算。`,
+    message: `结果为时刻：天体在画面中的相对位置与机位基本无关${skies.some((sky) => sky.body === "moon") ? "（月亮略有视差）" : ""}，按${fixed ? "固定" : "当前"}机位计算。${more(extras)}`,
   };
 }
 
@@ -160,24 +171,132 @@ export function classify(composition: Composition): Solvability {
 export interface Conditions {
   sunElevation: number;
   sky: SkyCondition;
+  moonAzimuth: number;
   moonElevation: number;
   moonLit: number;
 }
 /** Sun and Moon at an instant and place: geometric elevations, as the timeline's sky conditions. */
 export function conditionsAt(time: number, latitude: number, longitude: number): Conditions {
   const sun = skyAt("sun", time, latitude, longitude, "none").elevation;
-  const moon = skyAt("moon", time, latitude, longitude, "none").elevation;
-  return { sunElevation: sun, sky: skyCondition(sun), moonElevation: moon, moonLit: Illumination(Body.Moon, new Date(time)).phase_fraction };
+  const moon = skyAt("moon", time, latitude, longitude, "none");
+  return { sunElevation: sun, sky: skyCondition(sun), moonAzimuth: moon.azimuth, moonElevation: moon.elevation, moonLit: Illumination(Body.Moon, new Date(time)).phase_fraction };
 }
-export function passes(filters: readonly FilterSpec[], conditions: Conditions) {
-  return filters.every((filter) =>
-    filter.kind === "sky" ? filter.sky.includes(conditions.sky)
-      : filter.kind === "moonDown" ? conditions.moonElevation < 0
-        : conditions.moonLit >= filter.range[0] - 1e-9 && conditions.moonLit <= filter.range[1] + 1e-9);
+
+/** Sky brightness limits for 星空可见性 (zenith, mag/arcsec²), darkest first. */
+export const darkSkyChoices = [
+  { limit: 21.7, label: "很暗（银河结构清楚）" },
+  { limit: 21.3, label: "暗（银河明显）" },
+  { limit: 20.5, label: "郊外（银河可见）" },
+  { limit: 19.5, label: "郊区（以亮星为主）" },
+] as const;
+/** The Sun below this for 星空可见性: astronomical night (twilight is not modelled). */
+export const ASTRONOMICAL_NIGHT = -18;
+/** Luminance (mcd/m²) as a surface brightness in mag/arcsec² (1 cd/m² ≈ 12.58 mag/arcsec²). */
+export const surfaceMagnitude = (mcd: number) => -2.5 * Math.log10(mcd / 1.08e8);
+/**
+ * Zenith sky brightness from the natural sky, light pollution (`artificialMcd`,
+ * World Atlas) and moonlight (Krisciunas–Schaefer), mag/arcsec²; brighter is smaller.
+ */
+export function zenithBrightness(conditions: Conditions, artificialMcd: number) {
+  const moon = conditions.moonElevation > 0 ? { direction: direction(conditions.moonAzimuth, conditions.moonElevation), illuminatedFraction: conditions.moonLit } : null;
+  return surfaceMagnitude(skyBrightness([0, 0, 1], moon, artificialMcd));
 }
-export const filterNames: Record<FilterSpec["kind"], string> = { sky: "天空条件", moonDown: "月亮在地平线下", moonLit: "月亮亮面" };
+
+/**
+ * Whether a minute passes the filters. 星空可见性 needs the camera's light
+ * pollution: `undefined` when not read yet (not checked), null when there is no data ("missing").
+ */
+export function filterResult(filters: readonly FilterSpec[], conditions: Conditions, artificialMcd?: number | null): "pass" | "fail" | "missing" {
+  let missing = false;
+  for (const filter of filters) {
+    if (filter.kind === "sky" && !filter.sky.includes(conditions.sky)) return "fail";
+    if (filter.kind === "moonDown" && conditions.moonElevation >= 0) return "fail";
+    if (filter.kind === "moonLit" && (conditions.moonLit < filter.range[0] - 1e-9 || conditions.moonLit > filter.range[1] + 1e-9)) return "fail";
+    if (filter.kind === "darkSky") {
+      if (conditions.sunElevation >= ASTRONOMICAL_NIGHT) return "fail";
+      if (artificialMcd === null) missing = true;
+      else if (artificialMcd !== undefined && zenithBrightness(conditions, artificialMcd) < filter.limit) return "fail";
+    }
+  }
+  return missing ? "missing" : "pass";
+}
+export const passes = (filters: readonly FilterSpec[], conditions: Conditions, artificialMcd?: number | null) => filterResult(filters, conditions, artificialMcd) === "pass";
+export const filterNames: Record<FilterSpec["kind"], string> = { sky: "天空条件", moonDown: "月亮在地平线下", moonLit: "月亮亮面", darkSky: "星空可见性" };
+
+// ---------------------------------------------------------------- 其他目标
+
+/** What checking the extra targets needs besides the camera and the aim. */
+export interface ExtraContext {
+  lens: Lens;
+  refraction: ShootingPlan["refraction"];
+  cameraHeight: number;
+  /** Terrain for extra ground points (their height and the sight line). */
+  sampler?: GroundSampler | null;
+}
+/**
+ * The largest gap (share of the frame height) of the extra targets from their
+ * places, the camera aimed at `aim`; null when one is not there: outside its
+ * tolerance, below the horizon (or in daylight for a fixed body), hidden by
+ * the terrain or without terrain data.
+ */
+export function extraGap(extras: readonly TargetSpec[], camera: { latitude: number; longitude: number; ground?: number | null }, time: number, aim: { azimuth: number; pitch: number }, context: ExtraContext) {
+  const view = { ...context.lens, ...aim };
+  let worst = 0, sun: number | null = null;
+  for (const extra of extras) {
+    let ray: [number, number, number];
+    if (extra.kind === "sky") {
+      const seen = skyAt(extra.body, time, camera.latitude, camera.longitude, context.refraction);
+      if (isFixedBody(extra.body) && sun === null) sun = skyAt("sun", time, camera.latitude, camera.longitude, "none").elevation;
+      if (!visible(extra.body, seen.elevation, sun ?? -90)) return null;
+      ray = direction(seen.azimuth, seen.elevation) as [number, number, number];
+    } else {
+      const sampler = context.sampler;
+      const ground = sampler?.(extra.latitude, extra.longitude) ?? null;
+      const own = camera.ground ?? sampler?.(camera.latitude, camera.longitude) ?? null;
+      if (ground === null || own === null) return null;
+      const eye = { latitude: camera.latitude, longitude: camera.longitude, ellipsoidalHeight: own + context.cameraHeight };
+      const top = { latitude: extra.latitude, longitude: extra.longitude, ellipsoidalHeight: topHeight({ ...extra, absolute: extra.reference === "sea" }, ground) };
+      ray = toRay(eye, top).ray;
+      const placed = projectDirection(view, ray);
+      if (!placed || frameGap(placed, ndc(extra.frame), context.lens) > extra.tolerance) return null;
+      if (lineOfSight(eye, top, sampler!).sight === "blocked") return null;
+    }
+    const placed = projectDirection(view, ray);
+    if (!placed) return null;
+    const gap = frameGap(placed, ndc(extra.frame), context.lens);
+    if (gap > extra.tolerance) return null;
+    worst = Math.max(worst, gap);
+  }
+  return worst;
+}
 
 // ---------------------------------------------------------------- 时刻搜索
+
+/** The angle (degrees) between two frame places: the same wherever a level camera points. */
+export function frameSeparation(lens: Lens, a: FrameSpot, b: FrameSpot) {
+  const view = { ...lens, azimuth: 0, pitch: 0 };
+  const one = ndc(a), two = ndc(b);
+  return skySeparation(frameDirection(view, one.x, one.y), frameDirection(view, two.x, two.y));
+}
+
+/**
+ * What a line search can skip before solving: the filters, checked at the
+ * target with a margin (exactly afterwards), and further bodies whose angle
+ * from the searched body cannot fit their places. Null when nothing applies.
+ */
+export function prefilterOf(filters: readonly FilterSpec[], sky: SkySpec, extras: readonly TargetSpec[], lens: Lens): Prefilter | null {
+  const prefilter: Prefilter = {};
+  for (const filter of filters) {
+    if (filter.kind === "sky") prefilter.sky = filter.sky;
+    else if (filter.kind === "moonDown") prefilter.moonDown = true;
+    else if (filter.kind === "moonLit") prefilter.moonLit = filter.range;
+    else prefilter.night = true;
+  }
+  const separations = extras.filter((extra): extra is SkySpec => extra.kind === "sky")
+    .map((extra) => ({ body: extra.body, angle: frameSeparation(lens, extra.frame, sky.frame), tolerance: toleranceAngle(extra.tolerance, lens) }));
+  if (separations.length) prefilter.separations = separations;
+  return Object.keys(prefilter).length ? prefilter : null;
+}
 
 /** The body's direction for a fixed camera: through its frame place, the camera aimed at the ground point (or fixed). */
 export function windowMark(sky: SkySpec, lens: Lens, aim: { azimuth: number; pitch: number }) {
@@ -192,6 +311,8 @@ export const groundAim = (ground: GroundSpec, lens: Lens, ray: { azimuth: number
 export interface PairInput {
   first: SkySpec;
   second: SkySpec;
+  /** Further bodies checked at each minute. */
+  extras?: readonly SkySpec[];
   lens: Lens;
   latitude: number;
   longitude: number;
@@ -202,11 +323,11 @@ export interface PairWindow {
   end: number;
   /** Minute of the smallest gap. */
   best: number;
-  /** Gap between the second body and its place there, share of the frame height. */
+  /** Largest gap of a body from its place there, share of the frame height. */
   deviation: number;
 }
 const MINUTE = 60_000, COARSE = 10 * MINUTE;
-const visible = (body: AlignmentBody, elevation: number, sun: number) => elevation > -0.25 && (!isFixedBody(body) || sun <= DARK_SUN_ELEVATION);
+export const visible = (body: AlignmentBody, elevation: number, sun: number) => elevation > -0.25 && (!isFixedBody(body) || sun <= DARK_SUN_ELEVATION);
 
 /** Gap of the second body from its place with the first aimed at its own; null while either cannot be drawn. */
 export function pairGap(input: PairInput, time: number) {
@@ -238,8 +359,18 @@ export function scanPair(input: PairInput, from: number, to: number): PairWindow
   });
   const windows: PairWindow[] = [];
   let open: PairWindow | null = null;
-  for (const time of [...minutes].sort((a, b) => a - b)) {
+  const extras = input.extras ?? [];
+  const firstPlace = ndc(input.first.frame);
+  // The second body and the extras, the first aimed at its place.
+  const check = (time: number) => {
     const gap = pairGap(input, time);
+    if (gap === null || gap > limit || !extras.length) return gap;
+    const first = skyAt(input.first.body, time, input.latitude, input.longitude, input.refraction);
+    const other = extraGap(extras, input, time, aimAt(input.lens, first, firstPlace), { lens: input.lens, refraction: input.refraction, cameraHeight: 0 });
+    return other === null ? null : Math.max(gap, other);
+  };
+  for (const time of [...minutes].sort((a, b) => a - b)) {
+    const gap = check(time);
     if (gap !== null && gap <= limit) {
       if (open && time - open.end <= MINUTE) {
         open.end = time;
@@ -350,27 +481,34 @@ export function groupByDay(items: readonly ResultItem[]): DayGroup[] {
 }
 
 /**
- * Camera-line minutes (already free of blocked sight) into result rows:
- * minutes failing a filter are left out (counted), runs break where they
- * do and, on a single day, where the sky changes; nearly coincident runs once.
+ * Camera-line minutes (already free of blocked sight and checked against the
+ * extra targets, whose largest gap is `gap`) into result rows: minutes failing
+ * a filter are left out (counted; those without light pollution data
+ * separately), runs break where they do and, on a single day, where the sky
+ * changes; nearly coincident runs once.
  */
-export function lineItems(points: readonly (PositionPoint & { day: string; share: number | null })[], input: {
+export function lineItems(points: readonly (PositionPoint & { day: string; share: number | null; gap?: number })[], input: {
   body: AlignmentBody;
   filters: readonly FilterSpec[];
   splitSky: boolean;
   /** Wanted top-to-foot share, when a foot is placed. */
   share: number | null;
+  /** The camera's light pollution, for 星空可见性. */
+  artificial?: (point: { latitude: number; longitude: number }) => number | null | undefined;
 }) {
-  let filtered = 0;
+  let filtered = 0, missing = 0;
   const kept = input.filters.length ? points.filter((point) => {
-    const ok = point.sight === "blocked" || passes(input.filters, conditionsAt(point.time, point.latitude, point.longitude));
-    if (!ok) filtered++;
-    return ok;
+    if (point.sight === "blocked") return true;
+    const result = filterResult(input.filters, conditionsAt(point.time, point.latitude, point.longitude), input.artificial?.(point));
+    if (result === "fail") filtered++;
+    if (result === "missing") missing++;
+    return result === "pass";
   }) : [...points];
   const merged = mergeCandidates(rangeCandidates({ body: input.body }, kept, { splitSky: input.splitSky }));
   const items: ResultItem[] = merged.candidates.map((candidate) => {
     const middle = candidate.middle, conditions = conditionsAt(middle.time, middle.latitude, middle.longitude);
-    const deviation = input.share === null ? 0 : Math.max(...candidate.points.map((point) => Math.abs((point.share ?? input.share!) - input.share!)));
+    const deviation = Math.max(...candidate.points.map((point) =>
+      Math.max(input.share === null ? 0 : Math.abs((point.share ?? input.share) - input.share), point.gap ?? 0)));
     return {
       key: candidate.key, day: candidate.day, start: candidate.start, end: candidate.end, best: middle.time,
       points: candidate.points, camera: { latitude: middle.latitude, longitude: middle.longitude },
@@ -378,7 +516,7 @@ export function lineItems(points: readonly (PositionPoint & { day: string; share
       sky: candidate.sky, moonElevation: conditions.moonElevation, moonLit: conditions.moonLit, clear: candidate.clear, aim: null,
     };
   });
-  return { items, filtered, merged: merged.merged };
+  return { items, filtered, missing, merged: merged.merged };
 }
 
 /** A time window of a still camera as a result row (`day` in the plan's zone). */
@@ -409,7 +547,8 @@ const iso = (time: number) => new Date(time).toISOString().replace(".000Z", "Z")
 export function tryPatch(item: ResultItem, basis: SearchBasis, layers: ShootingPlan["layers"], time = item.best): Partial<ShootingPlan> {
   if (item.points && basis.ground) {
     const point = item.points.find((entry) => entry.time === time) ?? item.points.find((entry) => entry.time === item.best) ?? item.points[0];
-    return pointPlan(layers, point, basis.bodies[0], { frame: ndc(basis.ground.frame), lens: basis.lens });
+    const patch = pointPlan(layers, point, basis.bodies[0], { frame: ndc(basis.ground.frame), lens: basis.lens });
+    return { ...patch, layers: { ...patch.layers, ...Object.fromEntries(basis.bodies.map((body) => [bodyLayer(body), true])) } };
   }
   const round = (value: number, digits: number) => Math.round(value * 10 ** digits) / 10 ** digits;
   const aim = basis.follow

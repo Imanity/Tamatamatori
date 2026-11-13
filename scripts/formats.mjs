@@ -14,7 +14,7 @@ import {
   SOLVE_FORMAT, SOLVE_VERSION, SOLVE_VERSION_2, SOLVE_TEXT_LIMIT, SOLVE_NAME_LIMIT, solveBodies,
   targetHeightLimits, seaHeightLimits, phaseChoices, toleranceLimits, nearLimits, parseAnySolve, solveJson2, solveLink2,
 } from '../src/domain/solve.ts';
-import { dayChoices, dayLabel, DEFAULT_TOLERANCE, distanceChoices as cameraDistances, MAX_LINE_DAYS, TARGET_LIMIT } from '../src/domain/composition.ts';
+import { darkSkyChoices, dayChoices, dayLabel, DEFAULT_TOLERANCE, distanceChoices as cameraDistances, MAX_LINE_DAYS, TARGET_LIMIT } from '../src/domain/composition.ts';
 import { PUBLIC_SITE, SHOT_SCHEMA_FILE, SOLVE_SCHEMA_FILE } from '../src/domain/site.ts';
 import { aspectRatios, customSensorLimits, initialPlan, sensors } from '../src/domain/plan.ts';
 import { lensOf } from '../src/domain/composition.ts';
@@ -53,7 +53,13 @@ const solveExamples = [
     value: { format: SOLVE_FORMAT, version: SOLVE_VERSION_2, name: 'M31 与富士山', lens: lens105,
       targets: [{ ...fujiSummit, frame: { x: 0.5, y: 0.67 } }, { type: 'body', body: 'dso-ngc0224', frame: { x: 0.5, y: 0.52 } }],
       camera: { mode: 'free', maxDistance: 30000 }, time: { mode: 'range', date: '2026-11-13', days: 90 }, timeZone: 'Asia/Tokyo',
-      filters: [{ type: 'sky', sky: ['night'] }, { type: 'moonDown' }] },
+      filters: [{ type: 'sky', sky: ['night'] }, { type: 'moonDown' }, { type: 'darkSky', limit: 21.3 }] },
+  },
+  {
+    title: '三个目标：月亮在富士山顶右上方，昴星团在月亮左上方，135 mm 横幅，12 个月',
+    value: { format: SOLVE_FORMAT, version: SOLVE_VERSION_2, name: '月亮、昴星团与富士山', lens: { focalLength: 135, sensor: 'full-frame', aspectRatio: '3:2', orientation: 'landscape' },
+      targets: [{ ...fujiSummit, frame: { x: 0.5, y: 0.8 } }, { type: 'body', body: 'moon', frame: { x: 0.55, y: 0.55 } }, { type: 'body', body: 'dso-mel022', frame: { x: 0.46, y: 0.42 }, tolerance: 0.05 }],
+      camera: { mode: 'free', maxDistance: 30000 }, time: { mode: 'range', date: '2026-11-13', days: 365 }, timeZone: 'Asia/Tokyo' },
   },
   {
     title: '钻石富士：太阳落在富士山顶正中，机位不限',
@@ -199,7 +205,7 @@ const solveSchema = {
       },
     },
     targets: {
-      type: 'array', minItems: 1, maxItems: TARGET_LIMIT, description: `画面里的目标，目前最多 ${TARGET_LIMIT} 个：一个地面点加一个天体，或两个天体`,
+      type: 'array', minItems: 1, maxItems: TARGET_LIMIT, description: `画面里的目标，最多 ${TARGET_LIMIT} 个：第一个地面点与第一个天体（没有地面点时为前两个天体）定机位与时刻，其余在每个候选分钟按容差检查`,
       items: {
         oneOf: [
           {
@@ -259,6 +265,7 @@ const solveSchema = {
           { type: 'object', additionalProperties: false, required: ['type', 'sky'], properties: { type: { const: 'sky' }, sky: { type: 'array', minItems: 1, uniqueItems: true, items: { enum: [...skyConditions] }, description: '天空条件（按太阳高度）' } } },
           { type: 'object', additionalProperties: false, required: ['type'], properties: { type: { const: 'moonDown' } }, description: '月亮在地平线下' },
           { type: 'object', additionalProperties: false, required: ['type', 'range'], properties: { type: { const: 'moonLit' }, range: { type: 'array', minItems: 2, maxItems: 2, items: { enum: [...phaseChoices] }, description: '月亮亮面比例 [下限, 上限]' } } },
+          { type: 'object', additionalProperties: false, required: ['type', 'limit'], properties: { type: { const: 'darkSky' }, limit: { enum: darkSkyChoices.map((choice) => choice.limit), description: '天顶天空亮度上限，mag/arcsec²；只在天文夜（太阳低于 −18°）成立' } }, description: '星空可见性' },
         ],
       },
     },
@@ -351,7 +358,8 @@ const solveMarkdown = `# Tamatamatori 推算请求格式 v${SOLVE_VERSION_2}
 | 一个地面点 + 一个天体，机位固定 | 天体经过画面位置的时刻（按容差） |
 | 一个天体，机位与朝向都固定 | 天体落到画面位置的时刻 |
 | 两个天体 | 两者到达设定相对位置的时刻；与机位基本无关 |
-| 只有一个目标（朝向不固定）、两个地面点、三个以上目标、机位与时刻都固定 | 不搜索，报出原因 |
+| 以上任一种再加第三、四个目标 | 第一个地面点与第一个天体（没有地面点时为前两个天体）定机位与时刻，其余目标在每个候选分钟按容差检查：天体须在地平线上，地面点的视线不被地形挡住 |
+| 只有一个目标（朝向不固定）、只有地面点、固定朝向时有地面点、机位与时刻都固定 | 不搜索，报出原因 |
 
 ## 顶层字段
 
@@ -399,6 +407,7 @@ const solveMarkdown = `# Tamatamatori 推算请求格式 v${SOLVE_VERSION_2}
 | \`"sky"\` | \`sky\`：非空数组，${skyConditions.map((sky) => `\`"${sky}"\` ${skyConditionNames[sky]}`).join('、')} | 按太阳高度 |
 | \`"moonDown"\` | — | 月亮在地平线下；目标里有月亮时报错 |
 | \`"moonLit"\` | \`range\`：\`[下限, 上限]\`，取 ${list([...phaseChoices])} | 月亮亮面比例 |
+| \`"darkSky"\` | \`limit\`：${darkSkyChoices.map((choice) => `\`${choice.limit}\` ${choice.label}`).join('、')} | 星空可见性：天顶天空亮度（mag/arcsec²，数值越大越暗）不亮于所选值。由自然天光、机位的光污染（World Atlas 2015，约 60°S—75°N）与月光合成，只在天文夜（太阳低于 −18°）成立；没有光污染数据的机位不算通过 |
 
 ## 固定方向天体
 

@@ -1,6 +1,7 @@
 import { rangeTrack, rangeCorridor, reachableSectors, solveRangeDay } from "../domain/range-alignment";
 import type { RangeInput, RangePoint } from "../domain/range-alignment";
 import type { GroundSampler } from "../domain/position-alignment";
+import type { FixedPlace } from "../domain/sky-coordinates";
 import type { ElevationTile } from "../domain/terrain";
 import { fixedPlace, isFixedBody } from "../domain/sky-targets";
 import type { RangeDay, RangeMessage, RangeReply } from "../preview/range-worker";
@@ -45,7 +46,10 @@ export async function runRange(input: RangeInput, days: RangeDay[], signal: Abor
       return reply;
     };
     try {
-      active.postMessage({ type: "plan", id: 1, input, days, fixed: isFixedBody(input.body) ? fixedPlace(input.body) : null } satisfies RangeMessage);
+      // The searched body and any the separation pre-filter names.
+      const bodies = [input.body, ...(input.prefilter?.separations ?? []).map((other) => other.body)];
+      const fixed = [...new Set(bodies)].filter(isFixedBody).map(fixedPlace).filter((place): place is FixedPlace => !!place);
+      active.postMessage({ type: "plan", id: 1, input, days, fixed } satisfies RangeMessage);
       const plan = await next();
       if (plan.type !== "planned") throw new Error("推算线程回复异常");
       hooks.usingWorker(true);

@@ -104,7 +104,8 @@ export function describeSolve2(request: SolveRequest2): SolveRow[] {
 export function filterWords(filter: FilterSpec) {
   return filter.kind === "sky" ? `天空：${filter.sky.map((sky) => skyConditionNames[sky]).join("、")}`
     : filter.kind === "moonDown" ? "月亮在地平线下"
-      : `月亮亮面 ${percent(filter.range[0])}—${percent(filter.range[1])}`;
+      : filter.kind === "darkSky" ? `星空可见性：天顶不亮于 ${filter.limit} mag/arcsec²（天文夜）`
+        : `月亮亮面 ${percent(filter.range[0])}—${percent(filter.range[1])}`;
 }
 
 /** Result rows: one per stretch or window, the camera and the gap from the places. */

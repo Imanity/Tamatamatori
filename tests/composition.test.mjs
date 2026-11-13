@@ -1,13 +1,15 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  classify, conditionsAt, frameGap, lineItems, ndc, pairGap, passes, scanPair, toleranceDiameters, tryPatch, windowItem, windowMark,
+  classify, conditionsAt, extraGap, filterResult, frameGap, frameSeparation, lineItems, ndc, pairGap, passes, prefilterOf, scanPair, toleranceAngle, toleranceDiameters, tryPatch,
+  windowItem, windowMark, zenithBrightness,
 } from "../src/domain/composition.ts";
 import { aimAt, frameDirection, solveAlignment } from "../src/domain/alignment.ts";
 import { projectDirection } from "../src/domain/celestial-projection.ts";
 import { direction } from "../src/domain/ephemeris.ts";
 import { findPositions, skyAt, toRay } from "../src/domain/position-alignment.ts";
-import { rangeDays, rangeTrack, solveRangeDay } from "../src/domain/range-alignment.ts";
+import { rangeDays, rangeTrack, skySeparation, solveRangeDay } from "../src/domain/range-alignment.ts";
+import { fixedBodies } from "../src/domain/sky-targets.ts";
 import { compositionOf, parseAnySolve, requestOf, solveJson2, solvePlan2 } from "../src/domain/solve.ts";
 import { describeSolve2, resultRows } from "../src/domain/solve-report.ts";
 import { resultEvents } from "../src/domain/solve-calendar.ts";
@@ -33,7 +35,11 @@ test("可解性：每种目标、范围与筛选的组合给出结果形式或�
     [at([sky("sun")]), null, /只有一个天体/],
     [at([fuji]), null, /只有一个地面点/],
     [at([fuji, { ...skytree, id: "t" }]), null, /两个地面点作主约束将在第三步支持/],
-    [at([fuji, sky("sun"), sky("moon")]), null, /目前最多 2 个目标/],
+    [at([fuji, sky("sun"), sky("moon"), sky("dso-mel022"), sky("dso-ngc0224")]), null, /最多 4 个目标/],
+    [at([fuji, sky("moon"), sky("dso-mel022")]), "lines", /机位线.*另有 1 个目标按容差逐分钟检查/],
+    [at([fuji, { ...skytree, id: "t" }, sky("moon"), sky("dso-mel022")]), "lines", /另有 2 个目标/],
+    [at([fuji, sky("moon"), sky("dso-mel022")], { camera: fixed() }), "windows", /由“富士山顶”定朝向.*另有 1 个目标/],
+    [at([sky("dso-mel022"), sky("moon"), sky("dso-ngc0224")]), "windows", /另有 1 个目标/],
     [at([fuji, sky("moon")], { filters: [{ kind: "moonDown" }] }), null, /目标里有月亮/],
     [at([{ ...fuji, base: 0.9 }, sky("sun")]), null, /底部位置只用于距地表至少 10 m 的点/],
     [at([{ ...skytree, base: 0.3 }, sky("moon")]), null, /底部应在顶部下方/],
@@ -43,7 +49,7 @@ test("可解性：每种目标、范围与筛选的组合给出结果形式或�
     [at([fuji, sky("sun")], { camera: fixed(), time: { mode: "instant", instant: "2026-11-13T00:00:00Z" } }), null, /机位与时刻都已固定/],
     [at([sky("sun")], { camera: fixed({ azimuth: 200, pitch: 10 }) }), "windows", /机位与朝向固定/],
     [at([fuji, sky("sun")], { camera: fixed({ azimuth: 200, pitch: 10 }) }), null, /固定朝向时，地面点/],
-    [at([sky("sun"), sky("moon")], { camera: fixed({ azimuth: 200, pitch: 10 }) }), null, /固定朝向时只支持一个天体/],
+    [at([sky("sun"), sky("moon")], { camera: fixed({ azimuth: 200, pitch: 10 }) }), "windows", /机位与朝向固定.*另有 1 个目标/],
     [at([sky("dso-mel022"), sky("moon")]), "windows", /与机位基本无关（月亮略有视差）/],
     [at([sky("dso-mel022"), sky("moon")], { time: { mode: "instant", instant: "2026-11-13T00:00:00Z" } }), null, /时刻固定时无从搜索/],
   ];
@@ -54,6 +60,10 @@ test("可解性：每种目标、范围与筛选的组合给出结果形式或�
   }
   assert.equal(at([fuji, sky("sun")]).strategy.kind, "line");
   assert.equal(at([sky("dso-mel022"), sky("moon")]).strategy.kind, "pair");
+  // The first ground point and the first body lead; the rest, in their order, are checked.
+  const three = at([sky("dso-mel022"), fuji, sky("moon"), { ...skytree, id: "t" }]).strategy;
+  assert.deepEqual([three.ground.id, three.sky.id, three.extras.map((extra) => extra.id)], ["g", "dso-mel022", ["moon", "t"]]);
+  assert.deepEqual(at([sky("dso-mel022"), sky("moon"), sky("sun")]).strategy.extras.map((extra) => extra.id), ["sun"]);
 });
 
 test("推算请求 v2：缺省、往返与带路径的报错；v1 三种求法的转换", () => {
@@ -106,6 +116,19 @@ test("推算请求 v2：缺省、往返与带路径的报错；v1 三种求法�
   assert.deepEqual(rows.map((row) => row.label), ["镜头", "目标 1", "目标 2", "机位", "时间", "时区", "筛选"]);
   assert.match(rows[1].value, /晴空塔 · 35\.71005, 139\.81072 · 距地表 634 m · 画面中心 · 容差 ±3% · 底部自上 80% · 已接入地标（tokyo-skytree）/);
   assert.match(rows.at(-1).value, /月亮亮面 90%—100%/);
+  // Up to four targets; 星空可见性 with one of the listed limits, read, written and described.
+  const four = read({ ...base, targets: [{ type: "ground", landmark: "tokyo-skytree" }, { type: "body", body: "moon" }, { type: "body", body: "dso-mel022" }, { type: "ground", latitude: 35.6586, longitude: 139.7454, height: 333 }], filters: [{ type: "darkSky", limit: 21.3 }] });
+  assert.equal(four.ok, true, JSON.stringify(four.errors));
+  assert.deepEqual(four.request.filters, [{ kind: "darkSky", limit: 21.3 }]);
+  assert.deepEqual(read(JSON.parse(solveJson2(four.request))).request, four.request);
+  assert.deepEqual(JSON.parse(solveJson2(four.request)).filters, [{ type: "darkSky", limit: 21.3 }]);
+  assert.deepEqual(requestOf(compositionOf(four.request, initialPlan), lens, {}).filters, four.request.filters);
+  assert.match(describeSolve2(four.request).at(-1).value, /星空可见性：天顶不亮于 21\.3 mag\/arcsec²/);
+  assert.deepEqual(describeSolve2(four.request).map((row) => row.label).slice(1, 5), ["目标 1", "目标 2", "目标 3", "目标 4"]);
+  assert.match(errors({ ...base, targets: [...four.request.targets.map(() => ({ type: "body", body: "sun" })), { type: "body", body: "moon" }] }), /targets：目前最多 4 个目标，收到 5 个/);
+  assert.match(errors({ ...base, targets: [{ type: "body", body: "sun" }], filters: [{ type: "darkSky", limit: 21 }] }), /filters\[0\]\.limit：天顶天空亮度上限（mag\/arcsec²），取值 21\.7 \/ 21\.3 \/ 20\.5 \/ 19\.5，收到 21/);
+  assert.match(errors({ ...base, targets: [{ type: "body", body: "sun" }], filters: [{ type: "darkSky" }] }), /filters\[0\]\.limit/);
+  assert.match(errors({ ...base, targets: [{ type: "body", body: "sun" }], filters: [{ type: "glow" }] }), /"darkSky" 之一/);
 });
 
 test("固定机位：由地面点定朝向后，求天体经过画面位置的时刻，与直接按该方向的找时间一致", () => {
@@ -253,4 +276,114 @@ test("预筛：按目标处的天空与月亮条件先跳过分钟，精确筛�
     assert.deepEqual(fast.items.map(stretch), full.items.map(stretch), JSON.stringify(filters));
     assert.ok(quick.length < solve(base).length, "fewer minutes are solved");
   }
+});
+
+test("星空可见性：天顶亮度由自然天光、光污染与月光合成，只在天文夜成立；没有光污染数据单独计", () => {
+  const night = { sunElevation: -30, sky: "night", moonAzimuth: 0, moonElevation: -20, moonLit: 1 };
+  const natural = zenithBrightness(night, 0);
+  assert.ok(Math.abs(natural - 22.0) < 0.05, `${natural}`);
+  // Artificial light as bright as the natural sky makes it 0.75 mag brighter; a full Moon high up much brighter.
+  assert.ok(Math.abs(zenithBrightness(night, 0.174) - (natural - 2.5 * Math.log10(2))) < 0.01);
+  const moonlit = zenithBrightness({ ...night, moonElevation: 50, moonAzimuth: 180 }, 0);
+  assert.ok(moonlit < 20, `${moonlit}`);
+  assert.ok(zenithBrightness({ ...night, moonElevation: 50, moonAzimuth: 180, moonLit: 0.1 }, 0) > moonlit);
+  const filter = [{ kind: "darkSky", limit: 21.3 }];
+  assert.equal(filterResult(filter, night, 0), "pass");
+  assert.equal(filterResult(filter, night, 0.3), "fail");
+  assert.equal(filterResult(filter, { ...night, sunElevation: -15 }, 0), "fail", "astronomical twilight");
+  assert.equal(filterResult(filter, night, null), "missing");
+  assert.equal(filterResult([...filter, { kind: "moonDown" }], { ...night, moonElevation: 5 }, null), "fail", "a failing filter wins over missing data");
+  assert.equal(passes(filter, night), true, "not read yet: not checked");
+});
+
+// The Moon just above Skytree's top, 24 mm landscape, on flat ground for two nights.
+const wide = { focalLength: 24, sensor: "full-frame", aspectRatio: "3:2", orientation: "landscape" };
+const wideFrames = { lens: wide, target: ndc({ x: 0.5, y: 0.6 }), body: ndc({ x: 0.5, y: 0.5 }) };
+const wideInput = { body: "moon", target: { latitude: skytree.latitude, longitude: skytree.longitude, height: 634 }, refraction: "standard", cameraHeight: 1.6, lens: wide, share: null, minDistance: 200, maxDistance: 30_000, frames: wideFrames };
+const wideSolve = (input) => rangeDays("2026-11-27", 2, "Asia/Tokyo").flatMap((day) => solveRangeDay(input, day, rangeTrack(input, day), () => 0));
+const wideContext = { lens: wide, refraction: "standard", cameraHeight: 1.6, sampler: () => 0 };
+const wideAim = (point) => aimAt(wide, point, wideFrames.target);
+/** A third target where a named star stands at one dark minute: the frame place it has there. */
+function starInFrame(points) {
+  const dark = points.filter((point) => point.sight !== "blocked" && skyAt("sun", point.time, point.latitude, point.longitude, "none").elevation < -12);
+  const chosen = dark[Math.floor(dark.length / 2)];
+  const view = { ...wide, ...wideAim(chosen) };
+  for (const body of fixedBodies.filter((entry) => entry.kind === "star")) {
+    const seen = skyAt(body.id, chosen.time, chosen.latitude, chosen.longitude, "standard");
+    const place = seen.elevation > 5 ? projectDirection(view, direction(seen.azimuth, seen.elevation)) : null;
+    if (place && Math.abs(place.x) < 0.7 && Math.abs(place.y) < 0.7 && place.y < 0.3) return { dark, chosen, extra: sky(body.id, { x: (place.x + 1) / 2, y: (place.y + 1) / 2 }, 0.03) };
+  }
+  throw new Error("no named star in the frame");
+}
+const withExtra = (points, extra) => points.flatMap((point) => {
+  if (point.sight === "blocked") return [];
+  const gap = extraGap([extra], { latitude: point.latitude, longitude: point.longitude, ground: 0 }, point.time, wideAim(point), wideContext);
+  return gap === null ? [] : [{ ...point, gap }];
+});
+
+test("第三、四个目标：天体与地面点按试看朝向逐分钟检查，与独立投影一致；结果是两目标结果的子集", () => {
+  const points = wideSolve(wideInput).filter((point) => point.sight !== "blocked");
+  const { dark, chosen, extra } = starInFrame(points);
+  assert.ok(dark.length > 30, `${dark.length}`);
+  let kept = 0;
+  for (const point of points) {
+    const aim = wideAim(point);
+    const gap = extraGap([extra], { latitude: point.latitude, longitude: point.longitude, ground: 0 }, point.time, aim, wideContext);
+    // Independently: the star's angle from the ray through its frame place, against the tolerance as an angle.
+    const seen = skyAt(extra.body, point.time, point.latitude, point.longitude, "standard");
+    const sun = skyAt("sun", point.time, point.latitude, point.longitude, "none").elevation;
+    const angle = separation(frameDirection({ ...wide, ...aim }, 2 * extra.frame.x - 1, 2 * extra.frame.y - 1), seen);
+    if (gap === null) assert.ok(sun >= -6 || seen.elevation <= 0 || angle > toleranceAngle(0.03, wide) * 0.75, `${new Date(point.time).toISOString()} ${angle}`);
+    else {
+      kept++;
+      assert.ok(sun < -6 && angle <= toleranceAngle(gap, wide) + 1e-6, `${new Date(point.time).toISOString()} ${angle} ${gap}`);
+    }
+  }
+  assert.ok(kept > 0 && kept < points.length, `${kept} of ${points.length}`);
+  assert.ok(extraGap([extra], { latitude: chosen.latitude, longitude: chosen.longitude, ground: 0 }, chosen.time, wideAim(chosen), wideContext) < 1e-3);
+  // The list with the third target is a subset of the list without it, its deviation the larger of the two.
+  const two = lineItems(points, { body: "moon", filters: [], splitSky: false, share: null });
+  const three = lineItems(withExtra(points, extra), { body: "moon", filters: [], splitSky: false, share: null });
+  const minutes = (items) => new Set(items.flatMap((item) => item.points.map((point) => `${point.time}/${point.latitude.toFixed(6)}`)));
+  const all = minutes(two.items);
+  assert.ok(three.items.length > 0);
+  for (const minute of minutes(three.items)) assert.ok(all.has(minute), minute);
+  for (const item of three.items) assert.ok(item.deviation >= Math.max(...item.points.map((point) => point.gap)) - 1e-12);
+
+  // A ground point: in place with open ground, out of place when moved, hidden behind a ridge, unknown without terrain.
+  const tower = { kind: "ground", id: "tower", name: "东京塔", latitude: 35.6586, longitude: 139.7454, height: 333, reference: "ground", base: null, tolerance: 0.03 };
+  const eye = { latitude: 35.62, longitude: 139.70, ellipsoidalHeight: 1.6 };
+  const ray = toRay(eye, { latitude: tower.latitude, longitude: tower.longitude, ellipsoidalHeight: 333 }).ray;
+  const placed = { ...tower, frame: { x: 0.3, y: 0.4 } };
+  const aim = aimAt(wide, { azimuth: Math.atan2(ray[0], ray[1]) * 180 / Math.PI, elevation: Math.atan2(ray[2], Math.hypot(ray[0], ray[1])) * 180 / Math.PI }, ndc(placed.frame));
+  const camera = { latitude: eye.latitude, longitude: eye.longitude, ground: 0 };
+  const time = Date.parse("2026-11-27T12:00:00Z");
+  assert.ok(extraGap([placed], camera, time, aim, wideContext) < 1e-6);
+  assert.equal(extraGap([{ ...placed, frame: { x: 0.36, y: 0.4 } }], camera, time, aim, wideContext), null);
+  const ridge = (latitude, longitude) => (Math.abs(latitude - (eye.latitude + tower.latitude) / 2) < 0.003 && Math.abs(longitude - (eye.longitude + tower.longitude) / 2) < 0.003 ? 600 : 0);
+  assert.equal(extraGap([placed], camera, time, aim, { ...wideContext, sampler: ridge }), null);
+  assert.equal(extraGap([placed], camera, time, aim, { ...wideContext, sampler: () => null }), null);
+});
+
+test("第三个天体的预筛：按与主天体的角距跳过分钟，逐分钟检查后的结果与不预筛时相同", () => {
+  // The angle between two frame places does not depend on where the camera points.
+  const a = { x: 0.2, y: 0.3 }, b = { x: 0.7, y: 0.8 };
+  for (const aim of [{ azimuth: 0, pitch: 0 }, { azimuth: 123, pitch: 40 }, { azimuth: 300, pitch: -20 }]) {
+    const view = { ...wide, ...aim };
+    const one = frameDirection(view, 2 * a.x - 1, 2 * a.y - 1), two = frameDirection(view, 2 * b.x - 1, 2 * b.y - 1);
+    assert.ok(Math.abs(skySeparation(one, two) - frameSeparation(wide, a, b)) < 1e-9);
+  }
+  const full = wideSolve(wideInput);
+  const { extra } = starInFrame(full);
+  // The panel's pre-filter: a further body is enough, with or without filters; ground points add nothing.
+  const moon = sky("moon", { x: 0.5, y: 0.5 });
+  const prefilter = prefilterOf([], moon, [extra, { ...skytree, id: "t" }], wide);
+  assert.deepEqual(prefilter, { separations: [{ body: extra.body, angle: frameSeparation(wide, extra.frame, moon.frame), tolerance: toleranceAngle(extra.tolerance, wide) }] });
+  assert.equal(prefilterOf([], moon, [{ ...skytree, id: "t" }], wide), null);
+  assert.deepEqual(prefilterOf([{ kind: "darkSky", limit: 21.3 }, { kind: "moonLit", range: [0, 0.5] }], moon, [], wide), { night: true, moonLit: [0, 0.5] });
+  const quick = wideSolve({ ...wideInput, prefilter });
+  assert.ok(quick.length < full.length * 0.6, `${quick.length} of ${full.length}`);
+  const kept = (points) => withExtra(points, extra).map((point) => `${point.time}/${point.latitude.toFixed(6)}`);
+  assert.ok(kept(full).length > 0);
+  assert.deepEqual(kept(quick), kept(full));
 });

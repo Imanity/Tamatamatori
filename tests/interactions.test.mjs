@@ -2985,19 +2985,32 @@ test('推算：可解性提示随目标、范围与筛选变化；高纬度冬�
   assert.equal(layout.dataset.mobileTab, 'solve');
   assert.equal(document.querySelector('.rail-tabs'), null, 'the bottom tabs choose the content on narrow screens');
   assert.equal(document.querySelector('.solve-body').hidden, false);
-  // A ground point from the landmark list; one ground point at most.
+  // A ground point from the landmark list.
   await settle(() => button('+ 地面点').click());
   assert.match(document.querySelector('.composition-pending').textContent, /在地图上单击要拍的地方/);
   await settle(() => setControl(document.querySelector('.composition-pending select[aria-label="选择地标"]'), 'tokyo-skytree'));
   assert.ok(targetRow('晴空塔'));
   assert.match(targetRow('晴空塔').textContent, /距地表 634 m · 自左 50%、自上 67%/);
   assert.match(solvability(), /只有一个地面点：任何机位都能对准它/);
-  assert.equal(button('+ 地面点').disabled, true);
   await settle(() => button('+ 天体').click());
   assert.ok(targetRow('月亮'));
   assert.match(targetRow('月亮').textContent, /自左 50%、自上 67%/, 'a new body starts on the ground point');
   assert.match(solvability(), /结果为机位线/);
-  assert.equal(button('+ 天体').disabled, true, 'two targets at most');
+  assert.doesNotMatch(solvability(), /另有/);
+  // Up to four targets: the rest are checked minute by minute.
+  await settle(() => button('+ 天体').click());
+  assert.equal(document.querySelectorAll('.composition-target-list > li').length, 3);
+  assert.match(solvability(), /结果为机位线.*另有 1 个目标按容差逐分钟检查/);
+  assert.match(document.querySelector('.composition-targets .alignment-hint').textContent, /第三个起的目标在每个候选分钟按容差检查/);
+  await settle(() => button('+ 地面点').click());
+  await settle(() => setControl(document.querySelector('.composition-pending select[aria-label="选择地标"]'), 'tokyo-tower'));
+  assert.match(targetRow('东京塔').textContent, /自左 30%、自上 78%/, 'a second ground point lower left');
+  assert.match(solvability(), /另有 2 个目标/);
+  assert.equal(button('+ 天体').disabled, true, 'four targets at most');
+  assert.equal(button('+ 地面点').disabled, true);
+  for (const target of [...document.querySelectorAll('.composition-target-list > li')].slice(2))
+    await settle(() => target.querySelector('[aria-label^="删除目标"]').click());
+  assert.equal(document.querySelectorAll('.composition-target-list > li').length, 2);
   await settle(() => setControl(document.querySelector('select[aria-label="时间范围"]'), 'instant'));
   assert.match(solvability(), /时刻固定：结果为机位点/);
   await settle(() => setControl(document.querySelector('select[aria-label="机位范围"]'), 'fixed'));
@@ -3145,6 +3158,63 @@ test('推算·底部位置定主体大小：“月亮落在塔尖”模板，多
   assert.equal(targetRow('晴空塔').querySelector('.composition-check input').checked, false);
   assert.equal(targetRow('晴空塔').querySelector('.composition-check input').disabled, true);
   assert.equal(document.querySelector('.composition-foot-handle'), null);
+});
+
+test('推算·更多目标与星空可见性：第三个地面点随走廊读取地形并逐分钟检查，不在位置的分钟计数；星空可见性按机位读取光污染，没有数据的分钟单独计数', async t => {
+  await workspace(t); await readyTerrain();
+  const loads = [];
+  installGlobal('__testElevationTiles', async (points, url, signal, progress) => { loads.push(points); progress?.(2, 2); return () => 0; });
+  t.after(() => { delete globalThis.__testElevationTiles; });
+  await settle(() => document.querySelector('.solve-button').click());
+  // The Moon on Skytree's top with Tokyo Tower lower left: one day.
+  await settle(() => button('月亮落在塔尖').click());
+  await settle(() => setControl(document.querySelector('select[aria-label="跨度"]'), 1));
+  await setShootingDateTime('2026-11-25T12:00');
+  await searchNow(); await searched();
+  const alone = resultStatus().match(/共 (\d+) 分钟/);
+  assert.ok(alone && Number(alone[1]) > 0, resultStatus());
+  await settle(() => button('+ 地面点').click());
+  await settle(() => setControl(document.querySelector('.composition-pending select[aria-label="选择地标"]'), 'tokyo-tower'));
+  assert.match(solvability(), /另有 1 个目标按容差逐分钟检查/);
+  assert.match(document.querySelector('.composition-search').textContent, /条件已改/);
+  loads.length = 0;
+  await searchNow(); await searched();
+  assert.ok(loads.at(-1).some((point) => Math.abs(point.latitude - 35.6586) < 1e-3 && Math.abs(point.longitude - 139.7454) < 1e-3), 'the tower ground is read with the corridor');
+  assert.match(resultStatus(), /\d+ 分钟其他目标不在位置/);
+  assert.match(resultStatus(), /有 \d+ 分钟月亮与“晴空塔”对齐，但其他目标都不在设定位置/);
+
+  // 星空可见性 on the deep-sky template: light pollution read per camera, missing data counted apart.
+  await settle(() => button('深空天体在山顶上方').click());
+  await settle(() => setControl(document.querySelector('.composition-range input[aria-label="起始日期"]'), '2026-12-10'));
+  await settle(() => setControl(document.querySelector('select[aria-label="跨度"]'), 7));
+  await searchNow(); await searched();
+  assert.match(resultStatus(), /7 天内 \d+ 天/, 'dark, moonless nights before the filter');
+  await settle(() => setControl(document.querySelector('select[aria-label="添加筛选"]'), 'darkSky'));
+  const limit = document.querySelector('select[aria-label="星空可见性"]');
+  assert.equal(limit.value, '21.3');
+  assert.deepEqual([...limit.options].map((option) => option.value), ['21.7', '21.3', '20.5', '19.5']);
+  assert.match(document.querySelector('.composition-filters').textContent, /只在天文夜（太阳低于 −18°）判断/);
+  pollutionRequests.length = 0;
+  const before = resultStatus().match(/共 (\d+) 分钟/)[1];
+  // No data anywhere: every minute is counted apart, none listed.
+  pollutionResponse = async () => null;
+  await searchNow(); await searched();
+  assert.ok(pollutionRequests.length > 0, 'light pollution is read');
+  assert.ok(new Set(pollutionRequests.map((request) => `${request.point.latitude.toFixed(2)}/${request.point.longitude.toFixed(2)}`)).size === pollutionRequests.length, 'once per cell');
+  assert.match(resultStatus(), new RegExp(`都不满足筛选条件（其中 ${before} 分钟缺少光污染数据）`));
+  assert.match(resultStatus(), new RegExp(`，${before} 分钟缺少光污染数据）$`));
+  // A dark site keeps them all.
+  pollutionResponse = async () => ({ artificialMcd: 0.02 });
+  await searchNow(); await searched();
+  assert.match(resultStatus(), new RegExp(`共 ${before} 分钟`));
+  // A bright site fails it instead.
+  pollutionResponse = async () => ({ artificialMcd: 6.5 });
+  await settle(() => setControl(document.querySelector('select[aria-label="星空可见性"]'), '21.7'));
+  await searchNow(); await searched();
+  assert.doesNotMatch(resultStatus(), /缺少光污染数据/);
+  assert.match(resultStatus(), /不满足筛选条件|不满足筛选/);
+  await settle(() => document.querySelector('[aria-label="删除筛选 星空可见性"]').click());
+  assert.equal(document.querySelector('select[aria-label="星空可见性"]'), null);
 });
 
 test('机位链接：打开带 #shot= 的地址先预览，应用后清除 hash 并可撤销；关闭预览不改计划', async t => {
@@ -3382,7 +3452,7 @@ test('天体目标：银心在固定机位与朝向下只在天暗时给出结�
     time: { mode: 'range', date: '2026-11-13', days: 365 }, timeZone: 'Asia/Tokyo' });
   assert.match(document.querySelector('.solve-dialog .shot-summary').textContent, /只有天体时与机位基本无关/);
   await settle(() => button('载入并推算').click());
-  assert.match(solvability(), /结果为时刻：两个天体在画面中的相对位置与机位基本无关（月亮略有视差）/);
+  assert.match(solvability(), /结果为时刻：天体在画面中的相对位置与机位基本无关（月亮略有视差）/);
   await searched();
   assert.ok(dayRows().length >= 1, resultStatus());
   await settle(() => dayRows()[0].querySelector('.composition-day > button[aria-label^="试看"]').click());

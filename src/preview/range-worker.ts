@@ -17,7 +17,7 @@ export interface RangeDay {
  * tiles, structured-cloned once) solves day by day.
  */
 export type RangeMessage =
-  | { type: "plan"; id: number; input: RangeInput; days: RangeDay[]; fixed?: FixedPlace | null }
+  | { type: "plan"; id: number; input: RangeInput; days: RangeDay[]; fixed?: FixedPlace[] }
   | { type: "solve"; id: number; tiles: [string, ElevationTile][]; bounds?: number[] };
 export type RangeReply =
   | { id: number; type: "planned"; corridor: { latitude: number; longitude: number }[]; sectors: [number, number][]; minutes: number }
@@ -31,8 +31,8 @@ export function rangeWorker(post: (reply: RangeReply) => void) {
   return (message: RangeMessage) => {
     try {
       if (message.type === "plan") {
-        // A fixed body travels with the plan: the worker has no catalogue.
-        if (message.fixed) registerFixedBodies([message.fixed]);
+        // Fixed bodies travel with the plan: the worker has no catalogue.
+        if (message.fixed?.length) registerFixedBodies(message.fixed);
         const tracks = message.days.map((day) => rangeTrack(message.input, day));
         planned = { ...message, tracks };
         post({ id: message.id, type: "planned", corridor: rangeCorridor(message.input, tracks), sectors: reachableSectors(tracks, message.input.frames),
