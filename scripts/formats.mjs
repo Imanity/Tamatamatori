@@ -22,6 +22,7 @@ import { weatherModels } from '../src/domain/weather.ts';
 import { skyConditions, skyConditionNames } from '../src/domain/alignment.ts';
 import { landmarks } from '../src/domain/landmarks.ts';
 import { DARK_SUN_ELEVATION, fixedBodies } from '../src/domain/sky-targets.ts';
+import { SKYLINE_DROP, SKYLINE_RADIUS } from '../src/domain/position-alignment.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const REPOSITORY = 'https://github.com/Imanity/Tamatamatori';
@@ -46,7 +47,7 @@ function shotExample() {
   return parsed.shot;
 }
 const lens105 = { focalLength: 105, sensor: 'full-frame', aspectRatio: '3:2', orientation: 'portrait' };
-const fujiSummit = { type: 'ground', latitude: 35.3606, longitude: 138.7274, height: 0, reference: 'ground', name: '富士山顶' };
+const fujiSummit = { type: 'ground', latitude: 35.3606, longitude: 138.7274, height: 0, reference: 'ground', name: '富士山顶', skyline: true };
 const solveExamples = [
   {
     title: '深空天体在山顶上方：仙女座星系在富士山顶正上方，105 mm 竖幅，90 天内暗夜、月亮在地平线下',
@@ -219,6 +220,7 @@ const solveSchema = {
               name: targetName,
               frame: frameSpot,
               base: { type: 'number', minimum: 0, maximum: 1, description: '底部（点下方的地面）在画面中的纵坐标，用来定主体大小；只用于 reference 为 "ground" 且高度不低于 10 m，须大于 frame.y' },
+              skyline: { type: 'boolean', default: false, description: `对准看得见的山顶：从每个机位看点周围 ${SKYLINE_RADIUS} m 的地形轮廓，取比最高处低不到 ${SKYLINE_DROP} m 的平台的中点。只用于 reference 为 "ground" 且高度低于 10 m 的点` },
               tolerance,
             },
             oneOf: [
@@ -383,6 +385,7 @@ const solveMarkdown = `# Tamatamatori 推算请求格式 v${SOLVE_VERSION_2}
 | \`"ground"\` 地面点 | \`landmark\`（已接入地标 id），或 \`latitude\` 与 \`longitude\`；\`name\` | 坐标目标标为“未核实”，须在地图上确认 |
 | | \`height\` 与 \`reference\` | \`"ground"\`（缺省）：高出地面的米数（${range(targetHeightLimits)}），山顶为 0，塔顶为塔高；地标缺省为其高度。\`"sea"\`：海拔（${range(seaHeightLimits)}），与应用的地形高程同一套数值，基准未核定 |
 | | \`base\` | 可选：点下方地面在画面中的纵坐标（大于 \`frame.y\`），用来定主体大小；只用于 \`"ground"\` 且高度不低于 10 m |
+| | \`skyline\` | 可选，\`true\` 时对准看得见的山顶：从每个机位看点周围 ${SKYLINE_RADIUS} m 的地形轮廓，取比最高处低不到 ${SKYLINE_DROP} m 的平台的中点（照片里的山顶随方向而变，例如从东北看富士山，剑峰被更高的火口缘挡住，钻石富士时太阳落在平台中间）。只用于 \`"ground"\` 且高度低于 10 m 的点 |
 | \`"body"\` 天体 | \`body\` | \`"sun"\` / \`"moon"\`，或下面“固定方向天体”中的 id |
 
 ## 搜索范围

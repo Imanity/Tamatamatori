@@ -7,6 +7,7 @@ import {
   darkSkyChoices,
   dayChoices,
   dayLabel,
+  canSkyline,
   DEFAULT_NEAREST,
   DEFAULT_TOLERANCE,
   daySpans,
@@ -15,6 +16,7 @@ import {
   filterResult,
   filterNames,
   groundAim,
+  groundTarget,
   groupByDay,
   heightWords,
   lensOf,
@@ -58,7 +60,7 @@ import { aimAt, finishAlignment, scanAlignment, skyConditionNames, skyConditions
 import type { AlignmentBody, AlignmentInput, AlignmentScan, SkyCondition } from "../domain/alignment";
 import { blockedMinutes, baseDistances, rangeDays } from "../domain/range-alignment";
 import type { RangeInput, RangePoint } from "../domain/range-alignment";
-import { groundDistance, lineOfSight, MIN_DISTANCE, positionProfile, restoredLayers, skyAt, toRay, topHeight, travel, triedLayers } from "../domain/position-alignment";
+import { groundDistance, highestNear, lineOfSight, MIN_DISTANCE, positionProfile, restoredLayers, SKYLINE_DROP, SKYLINE_RADIUS, skyAt, toRay, topSeen, travel, triedLayers } from "../domain/position-alignment";
 import type { GroundSampler, GroundTarget, TriedLayers } from "../domain/position-alignment";
 import { bodyKind, bodyName, fixedBodies, isFixedBody, sizeWord } from "../domain/sky-targets";
 import { compassDirection, fieldOfView, localDateTime, normalizeLongitude } from "../domain/plan";
@@ -79,6 +81,8 @@ import { runRange } from "./solve-runner";
 
 type UpdatePlan = (patch: Partial<ShootingPlan>) => void;
 const terrainUrl = import.meta.env.VITE_TERRAIN_TILEJSON_URL?.trim() || DEFAULT_TERRAIN_URL;
+/** “移到附近最高点” looks this far around the point, metres. */
+const SNAP_RADIUS = 500;
 const DAY = 86_400_000, MINUTE = 60_000, SLICE = 30 * DAY;
 const iso = (time: number) => new Date(time).toISOString().replace(".000Z", "Z");
 const clock = (time: number, timeZone: string) => localDateTime(iso(time), timeZone).slice(11, 16);
@@ -187,6 +191,25 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
   }, [placing]);
 
   const change = (next: (current: Composition) => Composition) => setComposition((current) => next(current));
+  /** Moves a ground point to the highest terrain within SNAP_RADIUS; returns what happened, for the button. */
+  const snapToHighest = async (id: string): Promise<{ text: string; at: string } | null> => {
+    const target = composition.targets.find((entry): entry is GroundSpec => entry.id === id && entry.kind === "ground");
+    if (!target) return null;
+    const at = (point: { latitude: number; longitude: number }) => `${point.latitude}/${point.longitude}`;
+    const note = (text: string, point: { latitude: number; longitude: number } = target) => ({ text, at: at(point) });
+    try {
+      const elevation = await import("../preview/elevation");
+      const ring = [0, 45, 90, 135, 180, 225, 270, 315].map((bearing) => travel(target, bearing, SNAP_RADIUS));
+      const sampler = await elevation.elevationTiles([target, ...ring], terrainUrl, new AbortController().signal);
+      const found = highestNear(target, SNAP_RADIUS, sampler);
+      if (!found) return note("这里没有地形数据。");
+      if (found.offset < 1) return note(`已在 ${SNAP_RADIUS} m 内的最高处（${Math.round(found.ground)} m）。`);
+      updateTarget(id, { latitude: found.latitude, longitude: found.longitude, landmark: undefined, ...(target.reference === "sea" ? { height: Math.round(found.ground) } : {}) });
+      return note(`已移动 ${Math.round(found.offset)} m，到地形高程 ${Math.round(found.ground)} m 处。`, found);
+    } catch (error) {
+      return note(`读取地形失败：${error instanceof Error ? error.message : String(error)}`);
+    }
+  };
   const updateTarget = (id: string, patch: Partial<GroundSpec> | Partial<SkySpec>) =>
     change((current) => ({ ...current, targets: current.targets.map((target) => (target.id === id ? { ...target, ...patch } as TargetSpec : target)) }));
   const removeTarget = (id: string) => {
@@ -312,7 +335,9 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
 
   async function searchLine(id: number, strategy: Extract<Strategy, { kind: "line" }>, snapshot: Composition, now: ShootingPlan, lens: Lens, signal: AbortSignal) {
     const { ground, sky } = strategy;
-    const target: GroundTarget = { latitude: ground.latitude, longitude: ground.longitude, height: ground.height, absolute: ground.reference === "sea", name: ground.name };
+    const target: GroundTarget = groundTarget(ground);
+    // A skyline target needs the terrain all around its point.
+    const around = target.skyline ? [0, 45, 90, 135, 180, 225, 270, 315].map((bearing) => travel(target, bearing, target.skyline!)) : [];
     const frames = { lens, target: ndc(ground.frame), body: ndc(sky.frame) };
     let minDistance = MIN_DISTANCE, maxDistance = snapshot.camera.mode === "free" ? snapshot.camera.maxDistance : 30_000;
     const rings: Run["rings"] = [];
@@ -354,8 +379,10 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
     const elevation = await import("../preview/elevation");
     // The target's own ground first: the altitude pre-filter then allows cameras far below a summit.
     set(id, { stage: "读取地形中…" });
-    const own = (await elevation.elevationTiles([target], terrainUrl, signal))(target.latitude, target.longitude);
+    const near = await elevation.elevationTiles([target, ...around], terrainUrl, signal);
     if (signal.aborted) return;
+    // For a skyline target, its highest point bounds what any camera can see.
+    const own = target.skyline ? highestNear(target, target.skyline, near)?.ground ?? null : near(target.latitude, target.longitude);
     if (own !== null) input.targetGround = own;
     let sectors: [number, number][] = [];
     const sampler = await runRange(input, span.days, signal, {
@@ -366,7 +393,7 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
       },
       loadTiles: async (points) => {
         // Further ground points need their own ground too.
-        const loaded = await elevation.elevationTiles([...points, ...extraGrounds], terrainUrl, signal, (done, total) => set(id, { stage: `读取地形 ${done}/${total} 块…` }));
+        const loaded = await elevation.elevationTiles([...points, ...around, ...extraGrounds], terrainUrl, signal, (done, total) => set(id, { stage: `读取地形 ${done}/${total} 块…` }));
         set(id, { stage: "推算中…" });
         return loaded;
       },
@@ -424,17 +451,18 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
           longitude: normalizeLongitude(camera.longitude + ((target.longitude - camera.longitude) * index) / steps),
         }));
       });
+      const around = grounds.flatMap((target) => (target.skyline && canSkyline(target) ? [0, 90, 180, 270].map((bearing) => travel(target, bearing, SKYLINE_RADIUS)) : []));
       set(id, { stage: "读取地形中…" });
       const elevation = await import("../preview/elevation");
-      sampler = await elevation.elevationTiles(line, terrainUrl, signal, (done, total) => set(id, { stage: `读取地形 ${done}/${total} 块…` }));
+      sampler = await elevation.elevationTiles([...line, ...around], terrainUrl, signal, (done, total) => set(id, { stage: `读取地形 ${done}/${total} 块…` }));
     }
     if (strategy.ground && sampler) {
       const ground = strategy.ground;
-      const target: GroundTarget = { latitude: ground.latitude, longitude: ground.longitude, height: ground.height, absolute: ground.reference === "sea" };
-      const cameraGround = sampler(camera.latitude, camera.longitude), targetGround = sampler(target.latitude, target.longitude);
-      if (cameraGround === null || targetGround === null) throw new Error("机位或地面目标处没有地形数据。");
-      const eye = { ...camera, ellipsoidalHeight: cameraGround + now.cameraHeight };
-      const top = { latitude: target.latitude, longitude: target.longitude, ellipsoidalHeight: topHeight(target, targetGround) };
+      const target: GroundTarget = groundTarget(ground);
+      const cameraGround = sampler(camera.latitude, camera.longitude);
+      const eye = cameraGround === null ? null : { ...camera, ellipsoidalHeight: cameraGround + now.cameraHeight };
+      const top = eye && topSeen(target, eye, sampler);
+      if (!eye || !top) throw new Error("机位或地面目标处没有地形数据。");
       aim = groundAim(ground, lens, toRay(eye, top));
       const sight = lineOfSight(eye, top, sampler);
       if (sight.sight === "blocked") note = `从这个机位看，“${ground.name}”在距机位 ${km(sight.blockedAt ?? 0)} km 处被地形挡住。`;
@@ -591,7 +619,7 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
 
   return {
     active, composition, setComposition, solvability, selected, setSelected, editing, setEditing, placing, setPlacing,
-    updateTarget, removeTarget, addSky, setGroundPlace, moveTarget, applyTemplate,
+    updateTarget, removeTarget, addSky, setGroundPlace, moveTarget, applyTemplate, snapToHighest,
     setCamera: (camera: CameraRange) => change((state) => ({ ...state, camera })),
     setTime: (time: TimeRange) => change((state) => ({ ...state, time })),
     setFilters: (filters: FilterSpec[]) => change((state) => ({ ...state, filters })),
@@ -776,9 +804,33 @@ function GroundEditor({ state, target }: { state: CompositionState; target: Grou
         设定底部在画面中的位置（定主体大小）
       </label>
       {!sized && <p className="alignment-hint">只用于距地表 10 m 以上的点。</p>}
+      {canSkyline(target) && <label className="composition-check"
+        title={`照片里的“山顶”随机位方向而变（从东北看富士山，剑峰被更高的火口缘挡住）：从每个机位看 ${SKYLINE_RADIUS} m 内的地形轮廓，取比最高处低不到 ${SKYLINE_DROP} m 的平台的中点对准`}>
+        <input type="checkbox" checked={!!target.skyline} onChange={(event) => state.updateTarget(target.id, { skyline: event.target.checked })} />
+        对准看得见的山顶（轮廓平台的中点）
+      </label>}
+      <SnapButton state={state} target={target} />
       {target.base !== null && <p className="alignment-hint" title="在预览中拖动底部短横调整">底部自上 {percent(target.base)}，主体约 {percent(target.base - target.frame.y)}。</p>}
       <SpotFields spot={target.frame} label={target.name} onChange={(frame) => state.moveTarget(target.id, frame)} />
       <ToleranceField value={target.tolerance} onChange={(tolerance) => state.updateTarget(target.id, { tolerance })} />
+    </div>
+  );
+}
+
+/** “移到附近最高点”: reads the terrain within 500 m and moves the point to its highest place. */
+function SnapButton({ state, target }: { state: CompositionState; target: GroundSpec }) {
+  // The note belongs to where the point was left: it disappears once the point moves elsewhere.
+  const [note, setNote] = useState<{ text: string; at: string } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const here = `${target.latitude}/${target.longitude}`;
+  return (
+    <div className="alignment-actions composition-snap">
+      <button type="button" disabled={busy} onClick={async () => {
+        setBusy(true);
+        setNote(await state.snapToHighest(target.id));
+        setBusy(false);
+      }}>{busy ? "读取地形中…" : "移到附近最高点"}</button>
+      {note && note.at === here && <small className="alignment-hint" role="status">{note.text}</small>}
     </div>
   );
 }
@@ -985,9 +1037,10 @@ function itemFacts(item: ResultItem, timeZone: string, moonTarget: boolean) {
     ? `目标在${compassDirection(item.bearing)} · 距 ${item.near === item.far ? km(item.near) : `${km(item.near)}—${km(item.far!)}`} km`
     : `机位 ${item.camera.latitude.toFixed(4)}, ${item.camera.longitude.toFixed(4)}`;
   const moon = moonTarget ? `亮面 ${percent(item.moonLit)}` : item.moonElevation < 0 ? "月亮在地平线下" : `月亮高 ${item.moonElevation.toFixed(0)}° · 亮面 ${percent(item.moonLit)}`;
+  const top = item.points?.find((point) => point.time === item.best)?.top;
   return {
     span,
-    where: `${where}${item.share ? ` · 主体 ${percent(item.share[0])}—${percent(item.share[1])}` : ""}`,
+    where: `${where}${item.share ? ` · 主体 ${percent(item.share[0])}—${percent(item.share[1])}` : ""}${top && top.offset > 30 ? ` · 对准的山顶离设定点 ${km(top.offset)} km` : ""}`,
     sky: `${skyConditionNames[item.sky]} · ${moon}${item.deviation >= 0.001 ? ` · 偏差 ${(item.deviation * 100).toFixed(1)}%` : ""}${item.clear < 1 ? " · 部分地形数据不全" : ""}`,
   };
 }
@@ -1007,7 +1060,7 @@ function ResultsSection({ state, plan, occlusion, check }: {
   const profile = useMemo(() => {
     if (!ground || !run?.sampler || !current?.points) return null;
     try {
-      return positionProfile({ target: { latitude: ground.latitude, longitude: ground.longitude, height: ground.height, absolute: ground.reference === "sea" }, cameraHeight: plan.cameraHeight }, plan, run.sampler);
+      return positionProfile({ target: groundTarget(ground), cameraHeight: plan.cameraHeight }, plan, run.sampler);
     } catch {
       return null;
     }

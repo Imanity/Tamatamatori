@@ -7,7 +7,7 @@ import {
 import { aimAt, frameDirection, solveAlignment } from "../src/domain/alignment.ts";
 import { projectDirection } from "../src/domain/celestial-projection.ts";
 import { direction } from "../src/domain/ephemeris.ts";
-import { findPositions, skyAt, toRay } from "../src/domain/position-alignment.ts";
+import { findPositions, highestNear, lineOfSight, SKYLINE_RADIUS, skyAt, skylineTop, terrainGrid, toRay, travel } from "../src/domain/position-alignment.ts";
 import { altitudeCeiling, rangeDays, rangeTrack, skySeparation, solveRangeDay } from "../src/domain/range-alignment.ts";
 import { fixedBodies } from "../src/domain/sky-targets.ts";
 import { compositionOf, parseAnySolve, requestOf, solveJson2, solvePlan2 } from "../src/domain/solve.ts";
@@ -453,4 +453,118 @@ test("高度预筛：读到目标所在地形时按顶部海拔放宽，远处�
     assert.ok(point.distance >= 10_000 - 1 && point.distance <= 30_000 + 1, `${point.distance}`);
     assert.ok(point.elevation > 5 && point.elevation < 17.5, `${point.elevation}`);
   }
+});
+
+// A 3000 m cone with a crater rim 600 m to its north-east (bearings 0°–90°) rising to 2960 m:
+// from the north-east the rim, nearer, stands higher than the summit and hides it.
+const peak = { latitude: 35.36, longitude: 138.73 };
+const metres = (latitude, longitude) => ({ north: (latitude - peak.latitude) * 111_195, east: (longitude - peak.longitude) * 111_195 * Math.cos(peak.latitude * Math.PI / 180) });
+const rimmed = (latitude, longitude) => {
+  const { north, east } = metres(latitude, longitude);
+  const r = Math.hypot(north, east), bearing = (Math.atan2(east, north) * 180 / Math.PI + 360) % 360;
+  return Math.max(0, 3000 - 0.3 * r) + (bearing <= 90 ? 140 * Math.exp(-(((r - 600) / 60) ** 2)) : 0);
+};
+const summitTarget = { ...peak, height: 0 };
+
+/**
+ * The platform middle computed independently, the way the field comparison does it
+ * (scripts/alignment-validation.mjs): azimuth bins of 25 m at the target's distance,
+ * the highest point per bin, the unbroken run within 100 m (as an angle) of the peak.
+ */
+function platformMiddle(eye, grid, distance, look) {
+  const width = 25 / distance * 180 / Math.PI;
+  const bins = new Map();
+  for (const point of grid) {
+    const seen = toRay(eye, { ...point, ellipsoidalHeight: point.ground });
+    const across = ((seen.azimuth - look + 540) % 360) - 180, index = Math.round(across / width);
+    if (!bins.has(index) || seen.elevation > bins.get(index).elevation) bins.set(index, { across, elevation: seen.elevation });
+  }
+  const sorted = [...bins].sort((a, b) => a[0] - b[0]);
+  let peak = 0;
+  sorted.forEach(([, value], index) => { if (value.elevation > sorted[peak][1].elevation) peak = index; });
+  const floor = sorted[peak][1].elevation - 100 / distance * 180 / Math.PI;
+  // Over at most one bin below the floor.
+  const on = (at) => at >= 0 && at < sorted.length && sorted[at][1].elevation >= floor;
+  const next = (at, step) => (Math.abs(sorted[at + step]?.[0] - sorted[at][0]) === 1 && on(at + step) ? at + step
+    : Math.abs(sorted[at + 2 * step]?.[0] - sorted[at][0]) === 2 && on(at + 2 * step) ? at + 2 * step : null);
+  let first = peak, last = peak;
+  for (let step = next(first, -1); step !== null; step = next(first, -1)) first = step;
+  for (let step = next(last, 1); step !== null; step = next(last, 1)) last = step;
+  // A bin at either end of the run within 0.01° of the floor makes that end a coin toss: the middle is then not compared.
+  const ambiguous = [first - 2, first - 1, first, last, last + 1, last + 2].some((at) => sorted[at] && Math.abs(sorted[at][1].elevation - floor) < 0.01);
+  return { across: (sorted[first][1].across + sorted[last][1].across) / 2, floor, peak: sorted[peak][1].elevation, ambiguous };
+}
+
+test("看得见的山顶：每个方向选出平台中点，与独立的按方位分格计算一致；东北方向是更近的火口缘", () => {
+  const skyline = skylineTop({ ...summitTarget, skyline: SKYLINE_RADIUS }, rimmed);
+  const grid = terrainGrid(peak, SKYLINE_RADIUS, rimmed);
+  let ambiguous = 0; // cases further than 25 m from the middle
+  for (const bearing of [0, 30, 45, 60, 90, 135, 180, 225, 270, 315])
+    for (const distance of [5_000, 15_000, 30_000]) {
+      const place = travel(peak, bearing, distance);
+      const eye = { ...place, ellipsoidalHeight: rimmed(place.latitude, place.longitude) + 1.6 };
+      const chosen = skyline(eye);
+      const look = (bearing + 180) % 360;
+      const expected = platformMiddle(eye, grid, distance, look);
+      const seen = toRay(eye, chosen);
+      const across = ((seen.azimuth - look + 540) % 360) - 180;
+      // Across the line of sight within 40 m of the middle, and on the platform.
+      // Across the line of sight within 25 m of the middle; a run end on the floor may move it further.
+      const apart = Math.abs(across - expected.across) * Math.PI / 180 * distance;
+      if (apart > 25) {
+        assert.ok(expected.ambiguous && apart <= 100, `${bearing}° ${distance} m: ${apart.toFixed(1)} m from the middle`);
+        ambiguous++;
+      }
+      assert.ok(seen.elevation >= expected.floor - 1e-3 && seen.elevation <= expected.peak + 1e-6, `${bearing}° ${distance} m: ${seen.elevation} not in [${expected.floor}, ${expected.peak}]`);
+      if (bearing >= 30 && bearing <= 60 && distance >= 15_000) assert.ok(Math.abs(chosen.offset - 600) < 80, `rim from ${bearing}°: ${chosen.offset}`);
+    }
+  assert.ok(ambiguous <= 1, `${ambiguous} of 30 cases off the middle`);
+  // The highest point near a spot 300 m off the summit is the summit; near the rim with a small radius, the rim.
+  const off = travel(peak, 200, 300);
+  const top = highestNear(off, 500, rimmed);
+  assert.ok(Math.hypot(metres(top.latitude, top.longitude).north, metres(top.latitude, top.longitude).east) < 20 && top.ground > 2995, JSON.stringify(top));
+  const rim = highestNear(travel(peak, 45, 650), 120, rimmed);
+  assert.ok(rim.ground > 2955 && rim.ground < 2965, `${rim.ground}`);
+});
+
+test("看得见的最高处：东北的机位线不对准时视线都被火口缘挡住，对准后成立，太阳落在看得见的山顶上", () => {
+  // Winter afternoons: the Sun in the south-west, cameras north-east of the cone.
+  const input = { body: "sun", target: summitTarget, start: Date.parse("2026-12-15T13:00:00+09:00"), end: Date.parse("2026-12-15T16:30:00+09:00"), refraction: "standard", cameraHeight: 1.6, maxDistance: 30_000, minDistance: 10_000 };
+  const northEast = (point) => { const { north, east } = metres(point.latitude, point.longitude); const bearing = (Math.atan2(east, north) * 180 / Math.PI + 360) % 360; return bearing > 20 && bearing < 70; };
+  const plain = findPositions(input, rimmed).points.filter(northEast);
+  assert.ok(plain.length > 10, `${plain.length}`);
+  assert.ok(plain.every((point) => point.sight === "blocked"), "the summit hides behind the rim");
+  const aimed = findPositions({ ...input, target: { ...summitTarget, skyline: SKYLINE_RADIUS } }, rimmed).points.filter(northEast);
+  const clear = aimed.filter((point) => point.sight === "clear");
+  assert.ok(clear.length > 10, `${clear.length} of ${aimed.length}`);
+  for (const point of clear) {
+    assert.ok(Math.abs(point.top.offset - 600) < 60, `${point.top.offset}`);
+    const eye = { latitude: point.latitude, longitude: point.longitude, ellipsoidalHeight: point.cameraGround + 1.6 };
+    // Independently: the Sun's direction from the camera is the direction to the top, which no grid point outdoes.
+    const sun = skyAt("sun", point.time, point.latitude, point.longitude, "standard");
+    const seen = toRay(eye, point.top);
+    assert.ok(separation(seen, sun) < 0.01, `${separation(seen, sun)}`);
+    assert.equal(lineOfSight(eye, point.top, rimmed).sight, "clear");
+    assert.ok(point.distance >= 10_000 - 1);
+  }
+});
+
+test("看得见的最高处：请求的读取、往返与报错；钻石富士与深空模板默认对准", () => {
+  const read = (value) => parseAnySolve(value, lens);
+  const base = { format: "tamatamatori.solve", version: 2 };
+  const summit = read({ ...base, targets: [{ type: "ground", latitude: 35.3606, longitude: 138.7274, skyline: true }, { type: "body", body: "sun" }] });
+  assert.equal(summit.ok, true, JSON.stringify(summit.errors));
+  assert.equal(summit.request.targets[0].skyline, true);
+  assert.deepEqual(read(JSON.parse(solveJson2(summit.request))).request, summit.request);
+  assert.equal(JSON.parse(solveJson2(summit.request)).targets[0].skyline, true);
+  assert.equal(compositionOf(summit.request, initialPlan).targets[0].skyline, true);
+  assert.equal(requestOf(compositionOf(summit.request, initialPlan), lens, {}).targets[0].skyline, true);
+  assert.match(describeSolve2(summit.request)[1].value, /对准看得见的山顶/);
+  const errors = (value) => (read(value).ok ? "" : read(value).errors.join("\n"));
+  assert.match(errors({ ...base, targets: [{ type: "ground", landmark: "tokyo-skytree", skyline: true }] }), /targets\[0\]\.skyline：只用于距地表不到 10 m 的点/);
+  assert.match(errors({ ...base, targets: [{ type: "ground", latitude: 35.36, longitude: 138.73, height: 3776, reference: "sea", skyline: true }] }), /targets\[0\]\.skyline/);
+  assert.match(errors({ ...base, targets: [{ type: "ground", latitude: 35.36, longitude: 138.73, skyline: "yes" }] }), /targets\[0\]\.skyline：应为 true 或 false/);
+  assert.equal(read({ ...base, targets: [{ type: "ground", landmark: "tokyo-skytree" }] }).request.targets[0].skyline, undefined);
+  for (const id of ["diamond-fuji", "deep-sky-over-summit"]) assert.equal(templates.find((template) => template.id === id).build(initialPlan, "2026-11-13").targets[0].skyline, true, id);
+  assert.equal(templates.find((template) => template.id === "moon-on-tower").build(initialPlan, "2026-11-13").targets[0].skyline, undefined);
 });

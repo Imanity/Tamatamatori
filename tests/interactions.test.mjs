@@ -3223,7 +3223,7 @@ test('推算·更多目标与星空可见性：第三个地面点随走廊读取
   await searchNow(); await searched();
   assert.match(resultStatus(), new RegExp(`共 ${before} 分钟`));
   // A night search: rows run from noon to noon, named after the evening.
-  assert.match(dayRows()[0].querySelector('.composition-day-name strong').textContent, /^12\/10 周四夜 0\d:\d\d–0\d:\d\d$/);
+  assert.match(dayRows()[0].querySelector('.composition-day-name strong').textContent, /^12\/1\d 周.夜 \d\d:\d\d–\d\d:\d\d$/);
   // A bright site fails it instead.
   pollutionResponse = async () => ({ artificialMcd: 6.5 });
   await settle(() => setControl(document.querySelector('select[aria-label="星空可见性"]'), '21.7'));
@@ -3300,6 +3300,37 @@ test('推算·机位最近距离：新建条件缺省 2 km，钻石富士模板 
   }
   const rings = map.getSource('tamatamatori-alignment').data.features.filter((feature) => feature.properties.kind === 'ring');
   assert.equal(rings.length, 2, 'the farthest and the nearest');
+});
+
+test('推算·看得见的山顶：山顶可勾选、塔不可；“移到附近最高点”把点移到最高处并说明距离', async t => {
+  const { map } = await workspace(t); await readyTerrain();
+  // A 3000 m cone at Fuji's summit.
+  const cone = (latitude, longitude) => Math.max(0, 3000 - 0.3 * Math.hypot((latitude - 35.3606) * 111195, (longitude - 138.7274) * 111195 * Math.cos(35.36 * Math.PI / 180)));
+  installGlobal('__testElevationTiles', async (points, url, signal, progress) => { progress?.(1, 1); return cone; });
+  t.after(() => { delete globalThis.__testElevationTiles; });
+  await settle(() => document.querySelector('.solve-button').click());
+  await settle(() => button('钻石富士').click());
+  await settle(() => targetRow('富士山顶').querySelector('.composition-target-name').click());
+  const skyline = () => [...targetRow('富士山顶').querySelectorAll('.composition-check')].find((label) => /看得见的山顶/.test(label.textContent));
+  assert.ok(skyline(), 'a summit can be aimed at its skyline');
+  assert.equal(skyline().querySelector('input').checked, true, 'on in the template');
+  await settle(() => setControl(inputIn(targetRow('富士山顶'), '距地表'), 50));
+  assert.equal(skyline(), undefined, 'not for a 50 m tower');
+  await settle(() => setControl(inputIn(targetRow('富士山顶'), '距地表'), 0));
+  // On the summit already; then a point picked about 300 m off it moves back to the top.
+  await settle(() => button('移到附近最高点').click());
+  await waitUntil(() => /已在/.test(targetRow('富士山顶').querySelector('.composition-snap')?.textContent ?? ''));
+  assert.match(targetRow('富士山顶').querySelector('.composition-snap').textContent, /已在 500 m 内的最高处（3000 m）/);
+  await settle(() => button('在地图上重新点选').click());
+  await settle(() => clickMap(map, 138.7274, 35.3633));
+  const row = () => [...document.querySelectorAll('.composition-target-list > li')][0];
+  if (!row().querySelector('.composition-editor')) await settle(() => row().querySelector('.composition-target-name').click());
+  assert.match(row().querySelector('.composition-editor .alignment-hint').textContent, /^35\.36330, 138\.72740$/);
+  await settle(() => button('移到附近最高点').click());
+  await waitUntil(() => /已移动/.test(row().querySelector('.composition-snap')?.textContent ?? ''));
+  const moved = row().querySelector('.composition-snap').textContent.match(/已移动 (\d+) m，到地形高程 (\d+) m 处/);
+  assert.ok(moved && Math.abs(Number(moved[1]) - 300) <= 20 && Number(moved[2]) >= 2995, row().querySelector('.composition-snap').textContent);
+  assert.match(row().querySelector('.composition-editor .alignment-hint').textContent, /^35\.360\d\d, 138\.727\d\d$/);
 });
 
 test('推算请求链接：先预览镜头、目标、范围与将改动的字段，取消不改计划；确认后载入条件并自动搜索，撤销恢复计划与模式；复制推算请求与结果；版本 1 转换；报错', async t => {

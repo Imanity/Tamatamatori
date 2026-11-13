@@ -186,6 +186,11 @@
                 "maximum": 1,
                 "description": "底部（点下方的地面）在画面中的纵坐标，用来定主体大小；只用于 reference 为 \"ground\" 且高度不低于 10 m，须大于 frame.y"
               },
+              "skyline": {
+                "type": "boolean",
+                "default": false,
+                "description": "对准看得见的山顶：从每个机位看点周围 800 m 的地形轮廓，取比最高处低不到 100 m 的平台的中点。只用于 reference 为 \"ground\" 且高度低于 10 m 的点"
+              },
               "tolerance": {
                 "type": "number",
                 "minimum": 0.005,

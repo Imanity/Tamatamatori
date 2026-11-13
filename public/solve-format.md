@@ -45,6 +45,7 @@
 | `"ground"` 地面点 | `landmark`（已接入地标 id），或 `latitude` 与 `longitude`；`name` | 坐标目标标为“未核实”，须在地图上确认 |
 | | `height` 与 `reference` | `"ground"`（缺省）：高出地面的米数（0—1000），山顶为 0，塔顶为塔高；地标缺省为其高度。`"sea"`：海拔（-500—9000），与应用的地形高程同一套数值，基准未核定 |
 | | `base` | 可选：点下方地面在画面中的纵坐标（大于 `frame.y`），用来定主体大小；只用于 `"ground"` 且高度不低于 10 m |
+| | `skyline` | 可选，`true` 时对准看得见的山顶：从每个机位看点周围 800 m 的地形轮廓，取比最高处低不到 100 m 的平台的中点（照片里的山顶随方向而变，例如从东北看富士山，剑峰被更高的火口缘挡住，钻石富士时太阳落在平台中间）。只用于 `"ground"` 且高度低于 10 m 的点 |
 | `"body"` 天体 | `body` | `"sun"` / `"moon"`，或下面“固定方向天体”中的 id |
 
 ## 搜索范围
@@ -327,7 +328,8 @@
         "x": 0.5,
         "y": 0.67
       },
-      "tolerance": 0.03
+      "tolerance": 0.03,
+      "skyline": true
     },
     {
       "type": "body",
@@ -368,7 +370,7 @@
 ```
 
 ```text
-https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22name%22%3A%22M31%20%E4%B8%8E%E5%AF%8C%E5%A3%AB%E5%B1%B1%22%2C%22lens%22%3A%7B%22focalLength%22%3A105%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22portrait%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.67%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22dso-ngc0224%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.52%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A90%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%7B%22type%22%3A%22sky%22%2C%22sky%22%3A%5B%22night%22%5D%7D%2C%7B%22type%22%3A%22moonDown%22%7D%2C%7B%22type%22%3A%22darkSky%22%2C%22limit%22%3A21.3%7D%5D%7D
+https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22name%22%3A%22M31%20%E4%B8%8E%E5%AF%8C%E5%A3%AB%E5%B1%B1%22%2C%22lens%22%3A%7B%22focalLength%22%3A105%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22portrait%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.67%7D%2C%22tolerance%22%3A0.03%2C%22skyline%22%3Atrue%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22dso-ngc0224%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.52%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A90%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%7B%22type%22%3A%22sky%22%2C%22sky%22%3A%5B%22night%22%5D%7D%2C%7B%22type%22%3A%22moonDown%22%7D%2C%7B%22type%22%3A%22darkSky%22%2C%22limit%22%3A21.3%7D%5D%7D
 ```
 
 ### 三个目标：月亮在富士山顶右上方，昴星团在月亮左上方，135 mm 横幅，12 个月
@@ -397,7 +399,8 @@ https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatama
         "x": 0.5,
         "y": 0.8
       },
-      "tolerance": 0.03
+      "tolerance": 0.03,
+      "skyline": true
     },
     {
       "type": "body",
@@ -433,7 +436,7 @@ https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatama
 ```
 
 ```text
-https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22name%22%3A%22%E6%9C%88%E4%BA%AE%E3%80%81%E6%98%B4%E6%98%9F%E5%9B%A2%E4%B8%8E%E5%AF%8C%E5%A3%AB%E5%B1%B1%22%2C%22lens%22%3A%7B%22focalLength%22%3A135%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.8%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22moon%22%2C%22frame%22%3A%7B%22x%22%3A0.55%2C%22y%22%3A0.55%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22dso-mel022%22%2C%22frame%22%3A%7B%22x%22%3A0.46%2C%22y%22%3A0.42%7D%2C%22tolerance%22%3A0.05%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A365%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%5D%7D
+https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22name%22%3A%22%E6%9C%88%E4%BA%AE%E3%80%81%E6%98%B4%E6%98%9F%E5%9B%A2%E4%B8%8E%E5%AF%8C%E5%A3%AB%E5%B1%B1%22%2C%22lens%22%3A%7B%22focalLength%22%3A135%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.8%7D%2C%22tolerance%22%3A0.03%2C%22skyline%22%3Atrue%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22moon%22%2C%22frame%22%3A%7B%22x%22%3A0.55%2C%22y%22%3A0.55%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22dso-mel022%22%2C%22frame%22%3A%7B%22x%22%3A0.46%2C%22y%22%3A0.42%7D%2C%22tolerance%22%3A0.05%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A365%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%5D%7D
 ```
 
 ### 钻石富士：太阳落在富士山顶正中，机位离山顶 10—30 km
@@ -461,7 +464,8 @@ https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatama
         "x": 0.5,
         "y": 0.6
       },
-      "tolerance": 0.03
+      "tolerance": 0.03,
+      "skyline": true
     },
     {
       "type": "body",
@@ -489,7 +493,7 @@ https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatama
 ```
 
 ```text
-https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22lens%22%3A%7B%22focalLength%22%3A400%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22sun%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%2C%22minDistance%22%3A10000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222027-01-01%22%2C%22days%22%3A90%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%5D%7D
+https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22lens%22%3A%7B%22focalLength%22%3A400%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.03%2C%22skyline%22%3Atrue%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22sun%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%2C%22minDistance%22%3A10000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222027-01-01%22%2C%22days%22%3A90%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%5D%7D
 ```
 
 ### 月亮落在晴空塔塔尖，塔身占画面约 35%（塔顶加底部）
@@ -579,7 +583,8 @@ https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatama
         "x": 0.45,
         "y": 0.6
       },
-      "tolerance": 0.03
+      "tolerance": 0.03,
+      "skyline": true
     },
     {
       "type": "body",
@@ -608,7 +613,7 @@ https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatama
 ```
 
 ```text
-https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22lens%22%3A%7B%22focalLength%22%3A200%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.45%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22moon%22%2C%22frame%22%3A%7B%22x%22%3A0.58%2C%22y%22%3A0.42%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22fixed%22%2C%22latitude%22%3A35.4172%2C%22longitude%22%3A138.8729%2C%22heightAboveGround%22%3A1.6%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A1096%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%5D%7D
+https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22lens%22%3A%7B%22focalLength%22%3A200%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.45%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.03%2C%22skyline%22%3Atrue%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22moon%22%2C%22frame%22%3A%7B%22x%22%3A0.58%2C%22y%22%3A0.42%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22fixed%22%2C%22latitude%22%3A35.4172%2C%22longitude%22%3A138.8729%2C%22heightAboveGround%22%3A1.6%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A1096%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%5D%7D
 ```
 
 ### 两个天体：月亮在昴星团左下方（与机位基本无关）

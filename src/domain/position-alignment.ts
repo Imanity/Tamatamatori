@@ -28,6 +28,12 @@ export interface GroundTarget {
   /** The height is the point's elevation (the terrain's own numbers), not a height above the ground. */
   absolute?: boolean;
   name?: string;
+  /**
+   * Aim at the top of the skyline within this many metres instead of the point
+   * itself: from each camera, the terrain point seen highest (a summit whose
+   * highest point hides behind a nearer crater rim).
+   */
+  skyline?: number;
 }
 
 /**
@@ -99,6 +105,8 @@ export interface PositionPoint {
   sight: Sight;
   /** Distance from the camera to the first DEM obstruction, metres. */
   blockedAt?: number;
+  /** The skyline top aimed at (a target with `skyline`), and how far it lies from the target point. */
+  top?: { latitude: number; longitude: number; ellipsoidalHeight: number; offset: number };
   branch: number;
 }
 export interface PositionSlice {
@@ -244,6 +252,153 @@ export function lineOfSight(eye: EllipsoidalPoint, top: EllipsoidalPoint, sample
   return { sight, blockedAt, profile, length };
 }
 
+/** Radius of the skyline a summit target is aimed at, and the spacing of its terrain samples, metres. */
+export const SKYLINE_RADIUS = 800;
+const SKYLINE_STEP = 25;
+const METRES_PER_DEGREE = EARTH * degrees;
+type SkylinePoint = EllipsoidalPoint & { east: number; north: number; offset: number };
+
+/** Terrain samples on a grid within `radius` of a point (east and north offsets in metres), skipping gaps. */
+export function terrainGrid(center: { latitude: number; longitude: number }, radius: number, sampler: GroundSampler, step = SKYLINE_STEP) {
+  const across = METRES_PER_DEGREE * Math.cos(center.latitude * degrees);
+  const points: { latitude: number; longitude: number; ground: number; east: number; north: number }[] = [];
+  for (let north = -radius; north <= radius + 1e-9; north += step)
+    for (let east = -radius; east <= radius + 1e-9; east += step) {
+      if (Math.hypot(east, north) > radius + 1e-9) continue;
+      const latitude = center.latitude + north / METRES_PER_DEGREE, longitude = normalizeLongitude(center.longitude + east / across);
+      const ground = sampler(latitude, longitude);
+      if (ground !== null) points.push({ latitude, longitude, ground, east, north });
+    }
+  return points;
+}
+/** The highest terrain point within `radius` (for “移到附近最高点” and the altitude pre-filter), or null without data. */
+export function highestNear(center: { latitude: number; longitude: number }, radius: number, sampler: GroundSampler, step = SKYLINE_STEP) {
+  let best: ReturnType<typeof terrainGrid>[number] | null = null;
+  for (const point of terrainGrid(center, radius, sampler, step)) if (!best || point.ground > best.ground) best = point;
+  return best ? { latitude: best.latitude, longitude: best.longitude, ground: best.ground, offset: Math.hypot(best.east, best.north) } : null;
+}
+
+const skylines = new WeakMap<GroundSampler, Map<string, ((eye: EllipsoidalPoint) => SkylinePoint) | null>>();
+/**
+ * The summit platform of the skyline counts this far (metres of height) below
+ * its highest point, as in the field comparison (alignment-validation.md).
+ */
+export const SKYLINE_DROP = 100;
+// Degrees; about a tenth of the Sun's diameter.
+const SKYLINE_SETTLED = 0.05;
+const SKYLINE_REUSE = 1000;
+// Times a bracket is solved again with the top its solution sees.
+const SKYLINE_ROUNDS = 4;
+/**
+ * The top of a summit target as seen from an eye: the middle of its platform.
+ * Of the terrain within `target.skyline` metres, the skyline is, for every
+ * strip across the line of sight, the point at the largest elevation angle;
+ * the platform is the unbroken run of strips around the highest one that stay
+ * within SKYLINE_DROP (as an angle at that distance) of it, and the aimed
+ * point is the skyline in its middle strip. From a far side a flat summit's
+ * highest point may lie at one end of a wide platform, while photographs (a
+ * Diamond Fuji) put the Sun in its middle.
+ *
+ * For each 1° of bearing from the target and each reference distance (steps
+ * of 1.1×), the samples are grouped by the direction they are seen in from
+ * there (25 m wide at that distance); only the upper hull of a group (offset
+ * toward the eye against height) can form the skyline. An eye takes the
+ * groups of its nearest reference distance, bins their points by the
+ * direction it sees them in (25 m at the target's distance, as the comparison
+ * does) and keeps the highest per bin. An eye inside or near the area takes
+ * the highest point seen.
+ */
+export function skylineTop(target: GroundTarget, sampler: GroundSampler) {
+  const key = `${target.latitude}/${target.longitude}/${target.height}/${target.skyline}`;
+  const cached = skylines.get(sampler)?.get(key);
+  if (cached !== undefined) return cached;
+  const radius = target.skyline ?? SKYLINE_RADIUS;
+  const samples: SkylinePoint[] = terrainGrid(target, radius, sampler).map((point) => ({
+    latitude: point.latitude, longitude: point.longitude, ellipsoidalHeight: point.ground + target.height,
+    east: point.east, north: point.north, offset: Math.hypot(point.east, point.north),
+  }));
+  const across = METRES_PER_DEGREE * Math.cos(target.latitude * degrees);
+  type Candidate = { point: SkylinePoint; along: number; side: number };
+  type Fan = { index: number; candidates: Candidate[] };
+  const fans = new Map<string, Fan[]>();
+  const fansOf = (bin: number, reference: number) => {
+    const key = `${bin}/${reference}`, found = fans.get(key);
+    if (found) return found;
+    const east = Math.sin(bin * degrees), north = Math.cos(bin * degrees);
+    const width = SKYLINE_STEP / reference;
+    const groups = new Map<number, Candidate[]>();
+    for (const point of samples) {
+      const side = point.east * north - point.north * east, along = point.east * east + point.north * north;
+      const index = Math.round(side / (reference - along) / width);
+      const list = groups.get(index) ?? [];
+      list.push({ point, along, side });
+      groups.set(index, list);
+    }
+    const result: Fan[] = [...groups].sort((a, b) => a[0] - b[0]).map(([index, list]) => {
+      // Upper hull from the far side to the near side; only its part from the highest point toward the eye can be on top.
+      const sorted = list.sort((a, b) => a.along - b.along);
+      const upper: typeof sorted = [];
+      for (const item of sorted) {
+        while (upper.length >= 2) {
+          const [o, a] = [upper[upper.length - 2], upper[upper.length - 1]];
+          if ((a.along - o.along) * (item.point.ellipsoidalHeight - o.point.ellipsoidalHeight) - (a.point.ellipsoidalHeight - o.point.ellipsoidalHeight) * (item.along - o.along) >= 0) upper.pop();
+          else break;
+        }
+        upper.push(item);
+      }
+      const peak = upper.reduce((best, item, at) => (item.point.ellipsoidalHeight > upper[best].point.ellipsoidalHeight ? at : best), 0);
+      return { index, candidates: upper.slice(peak) };
+    });
+    fans.set(key, result);
+    return result;
+  };
+  // Reference distances 1.1× apart, all beyond the area.
+  const referenceFor = (distance: number) => {
+    const step = Math.log(1.1), lowest = Math.ceil(Math.log((radius + 250) / 1000) / step);
+    return 1000 * 1.1 ** Math.max(lowest, Math.round(Math.log(distance / 1000) / step));
+  };
+  const angle = (eye: EllipsoidalPoint, point: SkylinePoint) => toRay(eye, point).elevation;
+  const result = samples.length ? (eye: EllipsoidalPoint) => {
+    const east = (eye.longitude - target.longitude) * across, north = (eye.latitude - target.latitude) * METRES_PER_DEGREE;
+    const distance = Math.hypot(east, north);
+    if (distance < radius + 300) return samples.reduce((best, point) => (angle(eye, point) > angle(eye, best) ? point : best));
+    const bin = ((Math.round(Math.atan2(east, north) / degrees) % 360) + 360) % 360;
+    // Each group is one direction: its skyline point by the planar slope (with the Earth's curvature) and
+    // where it is seen across the line of sight; the caller measures the aimed point exactly.
+    const groups = fansOf(bin, referenceFor(distance));
+    const slopes = new Float64Array(groups.length), picks: Candidate[] = new Array(groups.length);
+    let highest = 0;
+    for (let at = 0; at < groups.length; at++) {
+      let best = -Infinity, pick = groups[at].candidates[0];
+      for (const candidate of groups[at].candidates) {
+        const length = distance - candidate.along;
+        const value = (candidate.point.ellipsoidalHeight - eye.ellipsoidalHeight) / length - length / (2 * EARTH);
+        if (value > best) { best = value; pick = candidate; }
+      }
+      slopes[at] = best;
+      picks[at] = pick;
+      if (best > slopes[highest]) highest = at;
+    }
+    const line = groups.map((group, at) => ({ index: group.index, slope: slopes[at] }));
+    const floor = slopes[highest] - SKYLINE_DROP / distance;
+    let first = highest, last = highest;
+    // The run goes on over a single direction below the floor (a 25 m sample missing a narrow crest).
+    const on = (at: number) => at >= 0 && at < line.length && line[at].slope >= floor;
+    const next = (at: number, step: number) => (Math.abs(line[at + step]?.index - line[at].index) === 1 && on(at + step) ? at + step
+      : Math.abs(line[at + 2 * step]?.index - line[at].index) === 2 && on(at + 2 * step) ? at + 2 * step : null);
+    for (let step = next(first, -1); step !== null; step = next(first, -1)) first = step;
+    for (let step = next(last, 1); step !== null; step = next(last, 1)) last = step;
+    const sideways = (at: number) => picks[at].side / (distance - picks[at].along);
+    const middle = (sideways(first) + sideways(last)) / 2;
+    let chosen = first;
+    for (let at = first + 1; at <= last; at++) if (Math.abs(sideways(at) - middle) < Math.abs(sideways(chosen) - middle)) chosen = at;
+    return picks[chosen].point;
+  } : null;
+  if (!skylines.has(sampler)) skylines.set(sampler, new Map());
+  skylines.get(sampler)!.set(key, result);
+  return result;
+}
+
 /** Solves a run of minutes; slices of one span are merged by `finishPositions`. */
 export function solvePositions(input: PositionInput, track: readonly SkySample[], sampler: GroundSampler): PositionSlice {
   const targetGround = sampler(input.target.latitude, input.target.longitude);
@@ -251,7 +406,10 @@ export function solvePositions(input: PositionInput, track: readonly SkySample[]
   const angles = { min: Infinity, max: -Infinity };
   let gaps = 0;
   if (targetGround === null) return { points, angles, gaps: track.length };
-  const top = { latitude: input.target.latitude, longitude: input.target.longitude, ellipsoidalHeight: topHeight(input.target, targetGround) };
+  const fixed = { latitude: input.target.latitude, longitude: input.target.longitude, ellipsoidalHeight: topHeight(input.target, targetGround) };
+  const skyline = input.target.skyline ? skylineTop(input.target, sampler) : null;
+  // The top this eye sees: the target point, or the highest point of the skyline toward it.
+  const topFor = (eye: EllipsoidalPoint): EllipsoidalPoint => (skyline ? skyline(eye) : fixed);
   const want = (ray: { azimuth: number; elevation: number }) => wantedDirection(ray, input.frames);
   const minimum = input.minDistance ?? MIN_DISTANCE;
   const eyeAt = (bearing: number, distance: number) => {
@@ -261,10 +419,12 @@ export function solvePositions(input: PositionInput, track: readonly SkySample[]
   };
   for (const sample of track) {
     const sky = skyField(input.body, sample.time, input.target, input.refraction);
+    // While solving one bracket the top is held fixed (for a skyline, the point last seen as its top).
+    let held: EllipsoidalPoint = fixed;
     // Elevation where the body should be (from the top seen at a point of the line), minus the body's there.
     const offset = (bearing: number, distance: number) => {
       const eye = eyeAt(bearing, distance);
-      return eye ? want(toRay(eye.eye, top)).elevation - sky(eye.latitude, eye.longitude).elevation : null;
+      return eye ? want(toRay(eye.eye, held)).elevation - sky(eye.latitude, eye.longitude).elevation : null;
     };
     const root = (bearing: number, low: number, high: number) => {
       let a = low, b = high, fa = offset(bearing, a);
@@ -280,10 +440,13 @@ export function solvePositions(input: PositionInput, track: readonly SkySample[]
     const start = cameraBearing(sample, input.frames);
     let previous: number | null = null, gap = false;
     const brackets: [number, number][] = [];
+    // The skyline top moves slowly along one line: the scan reuses it within a kilometre (it only brackets roots).
+    let scanTop: EllipsoidalPoint = fixed, scanTopAt = -Infinity;
     for (let distance = minimum; distance <= input.maxDistance + 1e-6; distance += SCAN_STEP) {
       const eye = eyeAt(start, distance);
       if (!eye) { gap = true; previous = null; continue; }
-      const ray = toRay(eye.eye, top);
+      if (skyline && distance - scanTopAt >= SKYLINE_REUSE) { scanTop = topFor(eye.eye); scanTopAt = distance; }
+      const ray = toRay(eye.eye, skyline ? scanTop : fixed);
       angles.min = Math.min(angles.min, ray.elevation);
       angles.max = Math.max(angles.max, ray.elevation);
       const value = want(ray).elevation - sky(eye.latitude, eye.longitude).elevation;
@@ -293,20 +456,37 @@ export function solvePositions(input: PositionInput, track: readonly SkySample[]
     }
     if (gap) gaps++;
     for (const [low, high] of brackets) {
-      let bearing = start, distance = root(bearing, low, high);
-      // Meridians converge (and an offset depends on the pitch): turn the line until the wanted azimuth matches the body's.
-      for (let pass = 0; pass < 6 && distance !== null; pass++) {
-        const eye = eyeAt(bearing, distance);
-        if (!eye) { distance = null; break; }
-        const turn = signedAngle(sky(eye.latitude, eye.longitude).azimuth - want(toRay(eye.eye, top)).azimuth);
-        if (Math.abs(turn) < 1e-7) break;
-        bearing += turn;
-        const near = distance;
-        distance = null;
-        for (const span of [200, 800, 3200]) {
-          distance = root(bearing, Math.max(minimum, near - span), Math.min(input.maxDistance, near + span));
+      // A skyline top: solve with the top held, then hold the top the solution sees, until it stays the same.
+      const first = skyline ? eyeAt(start, (low + high) / 2) : null;
+      held = first ? topFor(first.eye) : fixed;
+      let bearing = start, distance: number | null = null;
+      for (let round = 0; round < (skyline ? SKYLINE_ROUNDS : 1); round++) {
+        const near: number | null = distance;
+        distance = near === null ? root(bearing, low, high) : null;
+        for (const span of near === null ? [] : [200, 800, 3200]) {
+          distance = root(bearing, Math.max(minimum, near! - span), Math.min(input.maxDistance, near! + span));
           if (distance !== null) break;
         }
+        // Meridians converge (and an offset depends on the pitch): turn the line until the wanted azimuth matches the body's.
+        for (let pass = 0; pass < 6 && distance !== null; pass++) {
+          const eye = eyeAt(bearing, distance);
+          if (!eye) { distance = null; break; }
+          const turn = signedAngle(sky(eye.latitude, eye.longitude).azimuth - want(toRay(eye.eye, held)).azimuth);
+          if (Math.abs(turn) < 1e-7) break;
+          bearing += turn;
+          const from = distance;
+          distance = null;
+          for (const span of [200, 800, 3200]) {
+            distance = root(bearing, Math.max(minimum, from - span), Math.min(input.maxDistance, from + span));
+            if (distance !== null) break;
+          }
+        }
+        if (distance === null || !skyline) break;
+        const eye = eyeAt(bearing, distance);
+        if (!eye) { distance = null; break; }
+        const seen = topFor(eye.eye);
+        if (seen.latitude === held.latitude && seen.longitude === held.longitude) break;
+        held = seen;
       }
       if (distance === null) continue;
       const eye = eyeAt(bearing, distance);
@@ -314,15 +494,19 @@ export function solvePositions(input: PositionInput, track: readonly SkySample[]
       // The disc is drawn only above the camera's own sea-level horizon.
       const wanted = skyAt(input.body, sample.time, eye.latitude, eye.longitude, input.refraction);
       if (wanted.elevation < targetElevationRange[0]) continue;
+      const top = topFor(eye.eye);
       const seen = toRay(eye.eye, top);
       const aimed = want(seen);
       const body = direction(wanted.azimuth, wanted.elevation);
       const residual = Math.acos(Math.max(-1, Math.min(1, dot(direction(aimed.azimuth, aimed.elevation), body)))) / degrees;
+      // A skyline top may jump between minutes of the line search's own loop: keep only settled solutions.
+      if (skyline && residual > SKYLINE_SETTLED) continue;
       const sight = lineOfSight(eye.eye, top, sampler);
       points.push({
         time: sample.time, latitude: eye.latitude, longitude: eye.longitude, distance,
         azimuth: seen.azimuth, elevation: seen.elevation, cameraGround: eye.ground, residual,
         sight: sight.sight, ...(sight.blockedAt !== undefined ? { blockedAt: sight.blockedAt } : {}),
+        ...(skyline ? { top: { latitude: top.latitude, longitude: top.longitude, ellipsoidalHeight: top.ellipsoidalHeight, offset: (top as SkylinePoint).offset } } : {}),
       });
     }
   }
@@ -378,16 +562,23 @@ export function findPositions(input: PositionInput, sampler: GroundSampler) {
   return finishPositions(track, slices, sampler(input.target.latitude, input.target.longitude));
 }
 
-/** Profile from a camera point to the target's top, for the panel's chart. */
+/** The top an eye sees of a target: the point itself, or its skyline top. Null without terrain data. */
+export function topSeen(target: GroundTarget, eye: EllipsoidalPoint, sampler: GroundSampler): (EllipsoidalPoint & { offset?: number }) | null {
+  if (target.skyline) {
+    const skyline = skylineTop(target, sampler);
+    if (skyline) return skyline(eye);
+  }
+  const ground = sampler(target.latitude, target.longitude);
+  return ground === null ? null : { latitude: target.latitude, longitude: target.longitude, ellipsoidalHeight: topHeight(target, ground) };
+}
+
+/** Profile from a camera point to the target's top (its skyline top when aimed so), for the panel's chart. */
 export function positionProfile(input: Pick<PositionInput, "target" | "cameraHeight">, camera: { latitude: number; longitude: number }, sampler: GroundSampler) {
-  const targetGround = sampler(input.target.latitude, input.target.longitude);
   const cameraGround = sampler(camera.latitude, camera.longitude);
-  if (targetGround === null || cameraGround === null) return null;
-  return lineOfSight(
-    { ...camera, ellipsoidalHeight: cameraGround + input.cameraHeight },
-    { latitude: input.target.latitude, longitude: input.target.longitude, ellipsoidalHeight: topHeight(input.target, targetGround) },
-    sampler,
-  );
+  if (cameraGround === null) return null;
+  const eye = { ...camera, ellipsoidalHeight: cameraGround + input.cameraHeight };
+  const top = topSeen(input.target, eye, sampler);
+  return top ? lineOfSight(eye, top, sampler) : null;
 }
 
 /** Where the target's top (and the body on it) should sit in the frame, and the lens that frames it. */

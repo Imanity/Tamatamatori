@@ -84,7 +84,7 @@ export function describeSolve2(request: SolveRequest2): SolveRow[] {
       value: target.type === "body"
         ? `${bodyName(target.body)} · ${place}`
         : `${target.name} · ${coordinate(target.latitude, target.longitude)} · ${heightWords({ ...target, kind: "ground", id: "", base: target.base } as GroundSpec)} · ${place}`
-          + `${target.base !== null ? ` · 底部自上 ${percent(target.base)}` : ""} · ${target.landmark ? `已接入地标（${target.landmark}）` : "来自请求中的坐标，未核实"}`,
+          + `${target.base !== null ? ` · 底部自上 ${percent(target.base)}` : ""}${target.skyline ? " · 对准看得见的山顶" : ""} · ${target.landmark ? `已接入地标（${target.landmark}）` : "来自请求中的坐标，未核实"}`,
     });
   });
   const camera = request.camera;

@@ -7,7 +7,7 @@ import { MIN_SUBJECT, spanChoices as rangeSpans } from "./range-alignment.ts";
 import { distanceChoices } from "./position-alignment.ts";
 import { shotLimits, validTimeZone } from "./shot.ts";
 import { aspectRatios, customSensorLimits, fieldOfView, initialPlan, instantFromLocal, instantOnDate, localDateTime, sensors } from "./plan.ts";
-import { darkSkyChoices, dayChoices, dayLabel, DEFAULT_TOLERANCE, MAX_LINE_DAYS, nearestChoices, TARGET_LIMIT } from "./composition.ts";
+import { canSkyline, darkSkyChoices, dayChoices, dayLabel, DEFAULT_TOLERANCE, MAX_LINE_DAYS, nearestChoices, TARGET_LIMIT } from "./composition.ts";
 import { MIN_DISTANCE } from "./position-alignment.ts";
 import type { CameraRange, Composition, FilterSpec, FrameSpot, HeightReference, Lens, TargetSpec, TimeRange } from "./composition.ts";
 import type { ShootingPlan } from "./plan.ts";
@@ -291,7 +291,7 @@ export interface RequestLens {
   orientation: ShootingPlan["orientation"];
 }
 export type RequestTarget =
-  | { type: "ground"; landmark?: string; latitude: number; longitude: number; height: number; reference: HeightReference; name: string; frame: FrameSpot; base: number | null; tolerance: number }
+  | { type: "ground"; landmark?: string; latitude: number; longitude: number; height: number; reference: HeightReference; name: string; frame: FrameSpot; base: number | null; tolerance: number; skyline?: boolean }
   | { type: "body"; body: AlignmentBody; frame: FrameSpot; tolerance: number };
 export type RequestCamera =
   | { mode: "free"; maxDistance: number; minDistance?: number; heightAboveGround?: number }
@@ -409,7 +409,7 @@ export function parseSolve2(value: Record<string, unknown>): SolveParse2 {
       errors.push(`${path}.type：应为 "ground" 或 "body"，收到 ${shown(entry.type)}`);
       return;
     }
-    const item = object(entry, path, ["type", "landmark", "latitude", "longitude", "height", "reference", "name", "frame", "base", "tolerance"]);
+    const item = object(entry, path, ["type", "landmark", "latitude", "longitude", "height", "reference", "name", "frame", "base", "tolerance", "skyline"]);
     if (!item) return;
     const reference = item.reference === undefined ? "ground" : item.reference === "ground" || item.reference === "sea" ? item.reference : null;
     if (reference === null) errors.push(`${path}.reference：应为 "ground"（距地表）或 "sea"（海拔），收到 ${shown(item.reference)}`);
@@ -445,8 +445,18 @@ export function parseSolve2(value: Record<string, unknown>): SolveParse2 {
       if (latitude !== null && longitude !== null && height !== null)
         place = { latitude, longitude: normalizeLongitude(longitude), height: height ?? 0, name: label ?? "链接中的目标" };
     }
-    if (place && reference && frame && allowed !== null && baseOk)
-      targets.push({ type: "ground", ...place, reference, frame, base, tolerance: allowed });
+    let skyline = false, skylineOk = true;
+    if (item.skyline !== undefined) {
+      if (typeof item.skyline !== "boolean") {
+        errors.push(`${path}.skyline：应为 true 或 false，收到 ${shown(item.skyline)}`);
+        skylineOk = false;
+      } else if (item.skyline && place && reference && !canSkyline({ reference, height: place.height })) {
+        errors.push(`${path}.skyline：只用于距地表不到 ${MIN_SUBJECT} m 的点（山顶），不用于塔、楼或海拔高度`);
+        skylineOk = false;
+      } else skyline = item.skyline;
+    }
+    if (place && reference && frame && allowed !== null && baseOk && skylineOk)
+      targets.push({ type: "ground", ...place, reference, frame, base, tolerance: allowed, ...(skyline ? { skyline } : {}) });
   });
 
   let camera: RequestCamera = { mode: "free", maxDistance: 30_000 };
@@ -629,7 +639,7 @@ export function parseSolveText2(text: string, lens: Lens): SolveParse2 {
 export function requestOf(composition: Composition, lens: Lens, extra: { name?: string; timeZone?: string; cameraHeight?: number } = {}): SolveRequest2 {
   const targets: RequestTarget[] = composition.targets.map((target) => target.kind === "sky"
     ? { type: "body", body: target.body, frame: { ...target.frame }, tolerance: target.tolerance }
-    : { type: "ground", ...(target.landmark ? { landmark: target.landmark } : {}), latitude: target.latitude, longitude: target.longitude, height: target.height, reference: target.reference, name: target.name, frame: { ...target.frame }, base: target.base, tolerance: target.tolerance });
+    : { type: "ground", ...(target.landmark ? { landmark: target.landmark } : {}), latitude: target.latitude, longitude: target.longitude, height: target.height, reference: target.reference, name: target.name, frame: { ...target.frame }, base: target.base, tolerance: target.tolerance, ...(target.skyline && canSkyline(target) ? { skyline: true } : {}) });
   const height = extra.cameraHeight === undefined ? {} : { heightAboveGround: extra.cameraHeight };
   const camera: RequestCamera = composition.camera.mode === "free" ? { mode: "free", maxDistance: composition.camera.maxDistance, minDistance: composition.camera.minDistance, ...height }
     : composition.camera.mode === "near" ? { mode: "near", latitude: composition.camera.latitude, longitude: composition.camera.longitude, radius: composition.camera.radius, ...height }
@@ -649,7 +659,7 @@ export function compositionOf(request: SolveRequest2, plan: ShootingPlan): Compo
   let id = 0;
   const targets: TargetSpec[] = request.targets.map((target) => target.type === "body"
     ? { kind: "sky", id: `link${++id}`, body: target.body, frame: { ...target.frame }, tolerance: target.tolerance }
-    : { kind: "ground", id: `link${++id}`, name: target.name, ...(target.landmark ? { landmark: target.landmark } : {}), latitude: target.latitude, longitude: target.longitude, height: target.height, reference: target.reference, frame: { ...target.frame }, base: target.base, tolerance: target.tolerance });
+    : { kind: "ground", id: `link${++id}`, name: target.name, ...(target.landmark ? { landmark: target.landmark } : {}), latitude: target.latitude, longitude: target.longitude, height: target.height, reference: target.reference, frame: { ...target.frame }, base: target.base, tolerance: target.tolerance, ...(target.skyline ? { skyline: true } : {}) });
   const camera: CameraRange = request.camera.mode === "free" ? { mode: "free", maxDistance: request.camera.maxDistance, minDistance: request.camera.minDistance ?? MIN_DISTANCE }
     : request.camera.mode === "near" ? { mode: "near", latitude: request.camera.latitude, longitude: request.camera.longitude, radius: request.camera.radius }
       : { mode: "fixed", latitude: request.camera.latitude ?? plan.latitude, longitude: request.camera.longitude ?? plan.longitude, aim: request.camera.aim ? { ...request.camera.aim } : null };
@@ -715,7 +725,7 @@ export function solveJson2(request: SolveRequest2, schema?: string) {
     targets: request.targets.map((target) => {
       if (target.type === "body") return { type: "body", body: target.body, frame: target.frame, tolerance: target.tolerance };
       const place = target.landmark ? { landmark: target.landmark } : { latitude: target.latitude, longitude: target.longitude, name: target.name };
-      return { type: "ground", ...place, height: target.height, reference: target.reference, frame: target.frame, ...(target.base !== null ? { base: target.base } : {}), tolerance: target.tolerance };
+      return { type: "ground", ...place, height: target.height, reference: target.reference, frame: target.frame, ...(target.base !== null ? { base: target.base } : {}), tolerance: target.tolerance, ...(target.skyline ? { skyline: true } : {}) };
     }),
     filters: request.filters.map((filter) => (filter.kind === "sky" ? { type: "sky", sky: filter.sky } : filter.kind === "moonLit" ? { type: "moonLit", range: filter.range } : filter.kind === "darkSky" ? { type: "darkSky", limit: filter.limit } : { type: "moonDown" })),
   };

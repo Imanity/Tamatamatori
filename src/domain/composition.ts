@@ -7,8 +7,8 @@ import type { View } from "./celestial-projection.ts";
 import { direction } from "./ephemeris.ts";
 import { fieldOfView, frameAspectRatio } from "./plan.ts";
 import type { ShootingPlan } from "./plan.ts";
-import { lineOfSight, pointPlan, skyAt, toRay, topHeight } from "./position-alignment.ts";
-import type { GroundSampler, PositionPoint } from "./position-alignment.ts";
+import { lineOfSight, pointPlan, SKYLINE_RADIUS, skyAt, toRay, topHeight } from "./position-alignment.ts";
+import type { GroundSampler, GroundTarget, PositionPoint } from "./position-alignment.ts";
 import { skyBrightness } from "./meteor-showers.ts";
 import { mergeCandidates, MIN_SUBJECT, rangeCandidates, skySeparation } from "./range-alignment.ts";
 import type { Prefilter } from "./range-alignment.ts";
@@ -46,7 +46,16 @@ export interface GroundSpec {
   /** Frame y (0—1) of the ground under the point: fixes how tall it looks. Heights above the ground only. */
   base: number | null;
   tolerance: number;
+  /** A summit: aim at the highest point seen of the skyline nearby (heights under 10 m above the ground only). */
+  skyline?: boolean;
 }
+/** Whether a ground point can be aimed at its skyline top: natural ground, not a tower or a sea-level height. */
+export const canSkyline = (target: Pick<GroundSpec, "reference" | "height">) => target.reference === "ground" && target.height < MIN_SUBJECT;
+/** The solver's target for a ground point. */
+export const groundTarget = (ground: GroundSpec): GroundTarget => ({
+  latitude: ground.latitude, longitude: ground.longitude, height: ground.height, absolute: ground.reference === "sea", name: ground.name,
+  ...(ground.skyline && canSkyline(ground) ? { skyline: SKYLINE_RADIUS } : {}),
+});
 export interface SkySpec {
   kind: "sky";
   id: string;
@@ -260,7 +269,7 @@ export function extraGap(extras: readonly TargetSpec[], camera: { latitude: numb
       const own = camera.ground ?? sampler?.(camera.latitude, camera.longitude) ?? null;
       if (ground === null || own === null) return null;
       const eye = { latitude: camera.latitude, longitude: camera.longitude, ellipsoidalHeight: own + context.cameraHeight };
-      const top = { latitude: extra.latitude, longitude: extra.longitude, ellipsoidalHeight: topHeight({ ...extra, absolute: extra.reference === "sea" }, ground) };
+      const top = { latitude: extra.latitude, longitude: extra.longitude, ellipsoidalHeight: topHeight({ latitude: extra.latitude, longitude: extra.longitude, height: extra.height, absolute: extra.reference === "sea" }, ground) };
       ray = toRay(eye, top).ray;
       const placed = projectDirection(view, ray);
       if (!placed || frameGap(placed, ndc(extra.frame), context.lens) > extra.tolerance) return null;
@@ -405,7 +414,7 @@ export interface Template {
 let serial = 0;
 export const newId = () => `t${++serial}`;
 const summit = (frame: FrameSpot): GroundSpec =>
-  ({ kind: "ground", id: newId(), name: "富士山顶", ...fuji, height: 0, reference: "ground", frame, base: null, tolerance: DEFAULT_TOLERANCE });
+  ({ kind: "ground", id: newId(), name: "富士山顶", ...fuji, height: 0, reference: "ground", frame, base: null, tolerance: DEFAULT_TOLERANCE, skyline: true });
 export const templates: readonly Template[] = [
   {
     id: "diamond-fuji",
