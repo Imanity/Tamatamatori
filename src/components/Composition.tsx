@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Temporal } from "@js-temporal/polyfill";
 import {
   classify,
-  conditionsAt,
   darkSkyChoices,
   dayChoices,
   dayLabel,
@@ -12,35 +11,23 @@ import {
   DEFAULT_TOLERANCE,
   daySpans,
   distanceChoices,
-  extraGap,
-  placeItem,
-  filterResult,
   filterNames,
-  groundAim,
   groundTarget,
   groupByDay,
   heightWords,
   lensOf,
-  lineItems,
   MAX_LINE_DAYS,
-  ndc,
   nearChoices,
   nearestChoices,
   nearestLabel,
   newId,
   nightSearch,
-  shootingDay,
-  prefilterOf,
-  scanPair,
   spotWords,
   TARGET_LIMIT,
   targetName,
   templates,
   toleranceChoices,
-  toleranceDiameters,
   tryPatch,
-  windowItem,
-  windowMark,
 } from "../domain/composition";
 import type {
   CameraRange,
@@ -48,7 +35,6 @@ import type {
   FilterSpec,
   FrameSpot,
   GroundSpec,
-  Lens,
   ResultItem,
   SearchBasis,
   Shape,
@@ -57,16 +43,14 @@ import type {
   TargetSpec,
   TimeRange,
 } from "../domain/composition";
-import { aimAt, finishAlignment, scanAlignment, skyConditionNames, skyConditions } from "../domain/alignment";
-import type { AlignmentBody, AlignmentInput, AlignmentScan, SkyCondition } from "../domain/alignment";
-import { blockedMinutes, baseDistances, rangeDays } from "../domain/range-alignment";
-import type { RangeInput, RangePoint } from "../domain/range-alignment";
-import { clearSpot, refinePlace, sightPoints, solveGroundPair } from "../domain/ground-pair";
-import type { GroundPairInput } from "../domain/ground-pair";
-import { groundDistance, highestNear, lineOfSight, MIN_DISTANCE, positionProfile, restoredLayers, SKYLINE_DROP, SKYLINE_RADIUS, skyAt, toRay, topSeen, travel, triedLayers } from "../domain/position-alignment";
-import type { GroundSampler, GroundTarget, TriedLayers } from "../domain/position-alignment";
+import { skyConditionNames, skyConditions } from "../domain/alignment";
+import type { AlignmentBody, SkyCondition } from "../domain/alignment";
+import { runComposition, searchBasis } from "../domain/composition-run";
+import type { LoadedSampler } from "../domain/composition-run";
+import { highestNear, MIN_DISTANCE, positionProfile, restoredLayers, SKYLINE_DROP, SKYLINE_RADIUS, travel, triedLayers } from "../domain/position-alignment";
+import type { TriedLayers } from "../domain/position-alignment";
 import { bodyKind, bodyName, fixedBodies, isFixedBody, sizeWord } from "../domain/sky-targets";
-import { compassDirection, fieldOfView, localDateTime, normalizeLongitude } from "../domain/plan";
+import { compassDirection, localDateTime, normalizeLongitude } from "../domain/plan";
 import type { ShootingPlan } from "../domain/plan";
 import { DEFAULT_TERRAIN_URL, TERRAIN_ZOOM, tilePixel } from "../domain/terrain";
 import type { TimelineEvent } from "../domain/timeline";
@@ -86,16 +70,15 @@ type UpdatePlan = (patch: Partial<ShootingPlan>) => void;
 const terrainUrl = import.meta.env.VITE_TERRAIN_TILEJSON_URL?.trim() || DEFAULT_TERRAIN_URL;
 /** “移到附近最高点” looks this far around the point, metres. */
 const SNAP_RADIUS = 500;
-const DAY = 86_400_000, MINUTE = 60_000, SLICE = 30 * DAY;
+const MINUTE = 60_000;
 const iso = (time: number) => new Date(time).toISOString().replace(".000Z", "Z");
 const clock = (time: number, timeZone: string) => localDateTime(iso(time), timeZone).slice(11, 16);
 const km = (meters: number) => (meters / 1000).toFixed(meters < 10_000 ? 2 : 1);
 const percent = (value: number) => `${Math.round(value * 100)}%`;
 const weekdays = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
-const yieldNow = () => new Promise((resolve) => setTimeout(resolve, 0));
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
 
-export type LoadedSampler = GroundSampler & { zoom?: number };
+export type { LoadedSampler };
 
 /** "11/13 周五", with the year when it is not `year` (a search crossing into another year). */
 function dayWords(day: string, year?: number) {
@@ -155,9 +138,6 @@ function searchKey(composition: Composition, plan: ShootingPlan) {
   return JSON.stringify([composition, lensOf(plan), plan.timeZone, plan.cameraHeight, plan.refraction, pairCamera, terrainUrl]);
 }
 
-function linePoints(day: string, start: number, end: number) {
-  return { day, start, end };
-}
 
 /**
  * State of the 推算 panel (构图约束搜索): the targets and where they go in the
@@ -282,21 +262,21 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
     const abort = new AbortController();
     controller.current = abort;
     const id = ++token.current;
-    const now = latest.current, lens = lensOf(now), snapshot = composition;
-    const bodies = snapshot.targets.filter((target): target is SkySpec => target.kind === "sky").map((target) => target.body);
-    const basis: SearchBasis = {
-      lens, ground: strategy.kind === "pair" ? null : strategy.kind === "grounds" ? strategy.first : strategy.ground, bodies,
-      ...(strategy.kind === "pair" ? { follow: { body: strategy.first.body, frame: strategy.first.frame, refraction: now.refraction } } : {}),
-    };
+    const now = latest.current, snapshot = composition;
+    const basis = searchBasis(strategy, snapshot, now);
     setRun({
       id, key: searchKey(snapshot, now), phase: "running", stage: "准备中…", shape: solvability.shape, strategy, basis, composition: snapshot, timeZone: now.timeZone, night: nightSearch(snapshot, strategy),
       items: [], blocked: 0, filtered: 0, merged: 0, extraMissed: 0, missing: 0, sectors: [], rings: [], sampler: null, note: "", message: "", worker: false,
     });
     try {
-      if (strategy.kind === "line") await searchLine(id, strategy, snapshot, now, lens, abort.signal);
-      else if (strategy.kind === "window") await searchWindow(id, strategy, snapshot, now, lens, abort.signal);
-      else if (strategy.kind === "grounds") await searchGrounds(id, strategy, snapshot, now, lens, abort.signal);
-      else await searchPair(id, strategy, snapshot, now, lens, abort.signal);
+      // The search itself (src/domain/composition-run.ts), with the browser's terrain and light pollution and the worker.
+      const outcome = await runComposition(strategy, snapshot, now, {
+        terrain: async (points, signal, progress) => (await import("../preview/elevation")).elevationTiles(points, terrainUrl, signal, progress),
+        lightPollution: async (place, signal) => (await import("../preview/light-pollution")).sampleLightPollution(place, signal),
+        solveDays: runRange,
+        report: (patch) => set(id, patch),
+      }, abort.signal);
+      if (outcome) set(id, { phase: "done", ...outcome });
     } catch (error) {
       if (abort.signal.aborted) return;
       set(id, { phase: "error", message: error instanceof Error ? error.message : String(error) });
@@ -306,301 +286,6 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
     controller.current?.abort();
     setRun((state) => (state && state.phase === "running" ? { ...state, phase: "error", message: "已取消" } : state));
   };
-
-  const range = (time: TimeRange, timeZone: string, night: boolean) => {
-    if (time.mode === "instant") {
-      const start = Math.floor(Date.parse(time.instant) / MINUTE) * MINUTE;
-      return { from: start, to: start + 1, days: [linePoints(shootingDay(start, timeZone, night), start, start + 1)] };
-    }
-    const days = rangeDays(time.date, time.days, timeZone, night ? "noon" : "midnight");
-    return { from: days[0].start, to: days.at(-1)!.end, days };
-  };
-
-  /** The cameras' light pollution for 星空可见性, read per ~1 km cell; null where the atlas has none. */
-  async function pollutionAt(id: number, places: readonly { latitude: number; longitude: number }[], signal: AbortSignal) {
-    const cell = (place: { latitude: number; longitude: number }) => `${Math.round(place.latitude * 100)}/${Math.round(place.longitude * 100)}`;
-    const cells = new Map<string, { latitude: number; longitude: number }>();
-    for (const place of places) cells.set(cell(place), place);
-    const loader = await import("../preview/light-pollution");
-    const values = new Map<string, number | null>();
-    let done = 0;
-    for (const [key, place] of cells) {
-      try {
-        values.set(key, (await loader.sampleLightPollution(place, signal))?.artificialMcd ?? null);
-      } catch (error) {
-        if (signal.aborted) throw error;
-        values.set(key, null);
-      }
-      if (++done % 25 === 0) set(id, { stage: `读取光污染 ${done}/${cells.size}…` });
-    }
-    return (place: { latitude: number; longitude: number }) => values.get(cell(place)) ?? null;
-  }
-  const darkSky = (snapshot: Composition) => snapshot.filters.some((filter) => filter.kind === "darkSky");
-
-  /** Two ground points: camera places over the range (the grid on the main thread), then the sight lines. */
-  async function searchGrounds(id: number, strategy: Extract<Strategy, { kind: "grounds" }>, snapshot: Composition, now: ShootingPlan, lens: Lens, signal: AbortSignal) {
-    const { first, second } = strategy;
-    const camera = snapshot.camera;
-    const center = camera.mode === "near" ? { latitude: camera.latitude, longitude: camera.longitude } : { latitude: first.latitude, longitude: first.longitude };
-    const minDistance = camera.mode === "free" ? Math.max(MIN_DISTANCE, camera.minDistance) : 0;
-    const maxDistance = camera.mode === "free" ? camera.maxDistance : camera.mode === "near" ? camera.radius : 30_000;
-    const rings: Run["rings"] = [{ ...center, radius: maxDistance }, ...(minDistance > MIN_DISTANCE ? [{ ...center, radius: minDistance }] : [])];
-    const input: GroundPairInput = {
-      first: groundTarget(first), firstFrame: ndc(first.frame), second: groundTarget(second), secondFrame: ndc(second.frame),
-      tolerance: second.tolerance, lens, cameraHeight: now.cameraHeight, center, minDistance, maxDistance,
-    };
-    const skylineRing = (target: GroundSpec) => (target.skyline && canSkyline(target) ? [0, 90, 180, 270].map((bearing) => travel(target, bearing, SKYLINE_RADIUS)) : []);
-    // The terrain over the whole range, and around each ground point.
-    const area = [center, ...Array.from({ length: 24 }, (_, index) => [0.25, 0.5, 0.75, 1].map((share) => travel(center, index * 15, maxDistance * share))).flat()];
-    const grounds = [first, second, ...strategy.extras.filter((extra): extra is GroundSpec => extra.kind === "ground")];
-    set(id, { rings, stage: "读取地形中…" });
-    const elevation = await import("../preview/elevation");
-    const sampler = await elevation.elevationTiles([...area, ...grounds.flatMap((ground) => [ground, ...skylineRing(ground)])], terrainUrl, signal,
-      (done, total) => set(id, { stage: `读取地形 ${done}/${total} 块…` }));
-    if (signal.aborted) return;
-    set(id, { stage: "推算中…" });
-    await yieldNow();
-    const solved = solveGroundPair(input, sampler);
-    if (signal.aborted) return;
-    // The sight lines of each place, with the terrain all along them.
-    let blocked = 0, extraMissed = 0;
-    const items: ResultItem[] = [];
-    let lines: LoadedSampler | null = null;
-    if (solved.places.length) {
-      set(id, { stage: "检查视线…" });
-      lines = await elevation.elevationTiles([...solved.places.flatMap((place) => sightPoints(place)), ...grounds.flatMap((ground) => [ground, ...skylineRing(ground)])], terrainUrl, signal,
-        (done, total) => set(id, { stage: `读取视线上的地形 ${done}/${total} 块…` }));
-      if (signal.aborted) return;
-      const instant = Date.parse(now.instant);
-      for (const coarse of solved.places) {
-        // Settled again on the sight lines' finer terrain.
-        const refined = refinePlace(input, coarse, lines);
-        if (!refined) continue;
-        // The exact place, or the clear spot within its tolerance that lands the second point nearest.
-        const clear = clearSpot(input, refined, lines);
-        if (!clear) { blocked++; continue; }
-        const { place, sight, moved } = clear;
-        const other = strategy.extras.length ? extraGap(strategy.extras, { latitude: place.latitude, longitude: place.longitude, ground: place.ground }, instant, place.aim,
-          { lens, refraction: now.refraction, cameraHeight: now.cameraHeight, sampler: lines }) : 0;
-        if (other === null) { extraMissed++; continue; }
-        const item = placeItem(place, instant, sight.first === "unknown" || sight.second === "unknown", moved);
-        items.push(other > item.deviation ? { ...item, deviation: other } : item);
-      }
-    }
-    const note = items.length ? ""
-      : blocked ? `有 ${blocked} 个机位能让两点落在设定位置，但视线被地形挡住。`
-        : extraMissed ? `有 ${extraMissed} 个机位能让两点落在设定位置，但其他地面点不在设定位置。`
-          : `所选范围内没有机位能让“${second.name}”落在设定位置（容差 ±${percent(second.tolerance)}）。`;
-    set(id, { phase: "done", items, blocked, extraMissed, sampler: lines ?? sampler, rings, note });
-  }
-
-  async function searchLine(id: number, strategy: Extract<Strategy, { kind: "line" }>, snapshot: Composition, now: ShootingPlan, lens: Lens, signal: AbortSignal) {
-    const { ground, sky } = strategy;
-    const target: GroundTarget = groundTarget(ground);
-    // A skyline target needs the terrain all around its point.
-    const around = target.skyline ? [0, 45, 90, 135, 180, 225, 270, 315].map((bearing) => travel(target, bearing, target.skyline!)) : [];
-    const frames = { lens, target: ndc(ground.frame), body: ndc(sky.frame) };
-    let minDistance = MIN_DISTANCE, maxDistance = snapshot.camera.mode === "free" ? snapshot.camera.maxDistance : 30_000;
-    const rings: Run["rings"] = [];
-    let centre: { latitude: number; longitude: number; radius: number } | null = null;
-    if (snapshot.camera.mode === "near") {
-      const distance = groundDistance(target, snapshot.camera);
-      if (distance - snapshot.camera.radius > 30_000) throw new Error("机位范围离地面目标超过 30 km：请换一处，或改用“不限”。");
-      minDistance = Math.max(MIN_DISTANCE, distance - snapshot.camera.radius);
-      maxDistance = Math.min(30_000, distance + snapshot.camera.radius);
-      centre = { latitude: snapshot.camera.latitude, longitude: snapshot.camera.longitude, radius: snapshot.camera.radius };
-      rings.push(centre);
-    } else {
-      minDistance = Math.max(MIN_DISTANCE, snapshot.camera.mode === "free" ? snapshot.camera.minDistance : MIN_DISTANCE);
-      rings.push({ latitude: target.latitude, longitude: target.longitude, radius: maxDistance });
-      if (minDistance > MIN_DISTANCE) rings.push({ latitude: target.latitude, longitude: target.longitude, radius: minDistance });
-    }
-    let base: RangeInput["base"];
-    let share: number | null = null;
-    if (ground.base !== null) {
-      const band = baseDistances(target, frames.target.y, ground.base * 2 - 1, lens, maxDistance);
-      if (!band) throw new Error("底部位置只用于距地表至少 10 m 的点。");
-      minDistance = Math.max(minDistance, band.minDistance);
-      maxDistance = Math.min(maxDistance, band.maxDistance);
-      base = { y: ground.base * 2 - 1, tolerance: ground.tolerance };
-      share = ground.base - ground.frame.y;
-    }
-    if (minDistance >= maxDistance) {
-      set(id, { phase: "done", rings, note: "按设定的主体大小，机位应在所选范围之外：请放宽范围，或调整底部位置。" });
-      return;
-    }
-    const span = range(snapshot.time, now.timeZone, nightSearch(snapshot, strategy));
-    const prefilter = prefilterOf(snapshot.filters, sky, strategy.extras, lens);
-    const extraGrounds = strategy.extras.filter((extra): extra is GroundSpec => extra.kind === "ground");
-    const input: RangeInput = {
-      body: sky.body, target, refraction: now.refraction, cameraHeight: now.cameraHeight, lens,
-      share: null, minDistance, maxDistance, frames, ...(base ? { base } : {}), ...(prefilter ? { prefilter } : {}),
-    };
-    const collected: RangePoint[] = [];
-    const elevation = await import("../preview/elevation");
-    // The target's own ground first: the altitude pre-filter then allows cameras far below a summit.
-    set(id, { stage: "读取地形中…" });
-    const near = await elevation.elevationTiles([target, ...around], terrainUrl, signal);
-    if (signal.aborted) return;
-    // For a skyline target, its highest point bounds what any camera can see.
-    const own = target.skyline ? highestNear(target, target.skyline, near)?.ground ?? null : near(target.latitude, target.longitude);
-    if (own !== null) input.targetGround = own;
-    let sectors: [number, number][] = [];
-    const sampler = await runRange(input, span.days, signal, {
-      usingWorker: (worker) => set(id, { worker }),
-      planned: (found) => {
-        sectors = found;
-        set(id, { sectors: found, stage: "读取地形中…" });
-      },
-      loadTiles: async (points) => {
-        // Further ground points need their own ground too.
-        const loaded = await elevation.elevationTiles([...points, ...around, ...extraGrounds], terrainUrl, signal, (done, total) => set(id, { stage: `读取地形 ${done}/${total} 块…` }));
-        set(id, { stage: "推算中…" });
-        return loaded;
-      },
-      day: (index, points) => {
-        collected.push(...points);
-        set(id, { stage: `推算中 ${index + 1}/${span.days.length} 天…` });
-      },
-    });
-    if (signal.aborted) return;
-    const inRange = centre ? collected.filter((point) => groundDistance(point, centre) <= centre.radius) : collected;
-    const blocked = blockedMinutes(inRange);
-    // Further targets: each unblocked minute, the camera aimed at the ground point's place.
-    let extraMissed = 0;
-    const points = strategy.extras.length ? inRange.flatMap((point) => {
-      if (point.sight === "blocked") return [point];
-      const gap = extraGap(strategy.extras, { latitude: point.latitude, longitude: point.longitude, ground: point.cameraGround }, point.time, aimAt(lens, point, frames.target),
-        { lens, refraction: now.refraction, cameraHeight: now.cameraHeight, sampler });
-      if (gap === null) {
-        extraMissed++;
-        return [];
-      }
-      return [{ ...point, gap }];
-    }) : inRange;
-    let artificial: ((place: { latitude: number; longitude: number }) => number | null) | undefined;
-    if (darkSky(snapshot)) {
-      set(id, { stage: "读取光污染…" });
-      const night = points.filter((point) => point.sight !== "blocked" && skyAt("sun", point.time, point.latitude, point.longitude, "none").elevation < -17.5);
-      artificial = await pollutionAt(id, night, signal);
-      if (signal.aborted) return;
-    }
-    const listed = lineItems(points, { body: sky.body, filters: snapshot.filters, splitSky: span.days.length === 1, share, artificial });
-    const note = listed.items.length ? ""
-      : extraMissed > 0 && !(listed.filtered + listed.missing) ? `有 ${extraMissed} 分钟${bodyName(sky.body)}与“${ground.name}”对齐，但其他目标都不在设定位置。`
-        : blocked > 0 && !(listed.filtered + listed.missing) ? `有 ${blocked} 分钟几何上对齐，但视线都被地形挡住。可以换日期、放宽机位范围或提高离地高度。`
-          : listed.filtered + listed.missing > 0 ? `有 ${listed.filtered + listed.missing} 分钟对齐，但都不满足筛选条件${listed.missing ? `（其中 ${listed.missing} 分钟缺少光污染数据）` : ""}。`
-            : !sectors.length ? `这段时间${bodyName(sky.body)}达不到所需的高度。`
-              : "所选范围内没有解。";
-    set(id, { phase: "done", items: listed.items, blocked, filtered: listed.filtered, missing: listed.missing, merged: listed.merged, extraMissed, sampler, rings, note });
-  }
-
-  async function searchWindow(id: number, strategy: Extract<Strategy, { kind: "window" }>, snapshot: Composition, now: ShootingPlan, lens: Lens, signal: AbortSignal) {
-    if (snapshot.camera.mode !== "fixed") throw new Error("时刻搜索需要固定机位");
-    const camera = { latitude: snapshot.camera.latitude, longitude: snapshot.camera.longitude };
-    let aim = snapshot.camera.aim;
-    let note = "", sampler: LoadedSampler | null = null;
-    const grounds = [strategy.ground, ...strategy.extras].filter((target): target is GroundSpec => !!target && target.kind === "ground");
-    if (grounds.length) {
-      // The terrain along the sight line to each ground point.
-      const line = grounds.flatMap((target) => {
-        const length = groundDistance(camera, target);
-        if (length > 120_000) throw new Error(`固定机位离“${target.name}”超过 120 km。`);
-        const steps = Math.max(2, Math.ceil(length / 400));
-        return Array.from({ length: steps + 1 }, (_, index) => ({
-          latitude: camera.latitude + ((target.latitude - camera.latitude) * index) / steps,
-          longitude: normalizeLongitude(camera.longitude + ((target.longitude - camera.longitude) * index) / steps),
-        }));
-      });
-      const around = grounds.flatMap((target) => (target.skyline && canSkyline(target) ? [0, 90, 180, 270].map((bearing) => travel(target, bearing, SKYLINE_RADIUS)) : []));
-      set(id, { stage: "读取地形中…" });
-      const elevation = await import("../preview/elevation");
-      sampler = await elevation.elevationTiles([...line, ...around], terrainUrl, signal, (done, total) => set(id, { stage: `读取地形 ${done}/${total} 块…` }));
-    }
-    if (strategy.ground && sampler) {
-      const ground = strategy.ground;
-      const target: GroundTarget = groundTarget(ground);
-      const cameraGround = sampler(camera.latitude, camera.longitude);
-      const eye = cameraGround === null ? null : { ...camera, ellipsoidalHeight: cameraGround + now.cameraHeight };
-      const top = eye && topSeen(target, eye, sampler);
-      if (!eye || !top) throw new Error("机位或地面目标处没有地形数据。");
-      aim = groundAim(ground, lens, toRay(eye, top));
-      const sight = lineOfSight(eye, top, sampler);
-      if (sight.sight === "blocked") note = `从这个机位看，“${ground.name}”在距机位 ${km(sight.blockedAt ?? 0)} km 处被地形挡住。`;
-    }
-    if (!aim) throw new Error("缺少朝向");
-    const sky = strategy.sky;
-    const mark = windowMark(sky, lens, aim);
-    const input: AlignmentInput = { latitude: camera.latitude, longitude: camera.longitude, refraction: now.refraction, target: { body: sky.body, ...mark }, tolerance: toleranceDiameters(sky, lens) };
-    const night = nightSearch(snapshot, strategy);
-    const span = range(snapshot.time, now.timeZone, night);
-    const scans: AlignmentScan[] = [];
-    for (let cursor = span.from; cursor < span.to; cursor += SLICE) {
-      await yieldNow();
-      if (signal.aborted) return;
-      scans.push(scanAlignment(input, cursor, Math.min(span.to, cursor + SLICE)));
-      set(id, { stage: `推算中 ${Math.round((Math.min(1, (cursor + SLICE - span.from) / (span.to - span.from))) * 100)}%…` });
-    }
-    const result = finishAlignment(input, scans, span.from, span.to);
-    const vertical = fieldOfView(lens).vertical;
-    const artificial = darkSky(snapshot) ? (await pollutionAt(id, [camera], signal))(camera) : undefined;
-    let filtered = 0, missing = 0, extraMissed = 0;
-    const cameraGround = sampler?.(camera.latitude, camera.longitude) ?? null;
-    const items = result.alignments.flatMap((found) => {
-      const best = Date.parse(found.instant);
-      const verdict = filterResult(snapshot.filters, conditionsAt(best, camera.latitude, camera.longitude), artificial);
-      if (verdict !== "pass") {
-        if (verdict === "fail") filtered++;
-        else missing++;
-        return [];
-      }
-      const other = strategy.extras.length ? extraGap(strategy.extras, { ...camera, ground: cameraGround }, best, aim!, { lens, refraction: now.refraction, cameraHeight: now.cameraHeight, sampler }) : 0;
-      if (other === null) {
-        extraMissed++;
-        return [];
-      }
-      return [windowItem({ start: Date.parse(found.from), end: Date.parse(found.to), best, deviation: Math.max(found.separation / vertical, other) }, camera, aim!, shootingDay(best, now.timeZone, night))];
-    });
-    if (!items.length) {
-      const name = bodyName(sky.body);
-      note = [note, result.reason === "too-high" ? `${name}达不到画面位置对应的高度（${mark.elevation.toFixed(1)}°）。`
-        : result.reason === "too-low" ? `${name}始终高于画面位置对应的高度（${mark.elevation.toFixed(1)}°）。`
-          : extraMissed ? `有 ${extraMissed} 次${name}经过画面位置，但其他目标都不在设定位置。`
-            : filtered || missing || result.reason === "filtered" ? `有 ${filtered + missing + result.filtered.phase + result.filtered.sky} 次对齐，但都不满足筛选条件${isFixedBody(sky.body) ? "或天色不够暗（太阳须低于 −6°）" : ""}${missing ? `（其中 ${missing} 次缺少光污染数据）` : ""}。`
-              : `${name}没有经过画面位置（容差 ±${percent(sky.tolerance)}）。`].filter(Boolean).join(" ");
-    }
-    set(id, { phase: "done", items, filtered, missing, extraMissed, sampler, note });
-  }
-
-  async function searchPair(id: number, strategy: Extract<Strategy, { kind: "pair" }>, snapshot: Composition, now: ShootingPlan, lens: Lens, signal: AbortSignal) {
-    const camera = snapshot.camera.mode === "free" ? { latitude: now.latitude, longitude: now.longitude } : { latitude: snapshot.camera.latitude, longitude: snapshot.camera.longitude };
-    const night = nightSearch(snapshot, strategy);
-    const span = range(snapshot.time, now.timeZone, night);
-    const extras = strategy.extras.filter((extra): extra is SkySpec => extra.kind === "sky");
-    const input = { first: strategy.first, second: strategy.second, extras, lens, ...camera, refraction: now.refraction };
-    const windows = [];
-    for (let cursor = span.from; cursor < span.to; cursor += SLICE) {
-      await yieldNow();
-      if (signal.aborted) return;
-      windows.push(...scanPair(input, cursor, Math.min(span.to, cursor + SLICE)));
-      set(id, { stage: `推算中 ${Math.round((Math.min(1, (cursor + SLICE - span.from) / (span.to - span.from))) * 100)}%…` });
-    }
-    const artificial = darkSky(snapshot) ? (await pollutionAt(id, [camera], signal))(camera) : undefined;
-    let filtered = 0, missing = 0;
-    const items = windows.flatMap((window) => {
-      const verdict = filterResult(snapshot.filters, conditionsAt(window.best, camera.latitude, camera.longitude), artificial);
-      if (verdict !== "pass") {
-        if (verdict === "fail") filtered++;
-        else missing++;
-        return [];
-      }
-      const aim = aimAt(lens, skyAt(strategy.first.body, window.best, camera.latitude, camera.longitude, now.refraction), ndc(strategy.first.frame));
-      return [windowItem(window, camera, aim, shootingDay(window.best, now.timeZone, night))];
-    });
-    const note = items.length ? "" : filtered + missing ? `有 ${filtered + missing} 次到达相对位置，但都不满足筛选条件${missing ? `（其中 ${missing} 次缺少光污染数据）` : ""}。`
-      : `${strategy.extras.length ? "这些天体" : `${bodyName(strategy.first.body)}与${bodyName(strategy.second.body)}`}在所选日期内没有到达设定的相对位置。`;
-    set(id, { phase: "done", items, filtered, missing, note });
-  }
 
   // ------------------------------------------------------------ 试看
   const done = run?.phase === "done" ? run : null;

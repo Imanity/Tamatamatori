@@ -68,6 +68,9 @@ function metadata(url: string) {
   return pending;
 }
 
+/** Turns a fetched terrain tile into RGBA pixels: the browser's own decoder here, a WebP decoder on the command line. */
+export type TileDecoder = (blob: Blob) => Promise<ElevationTile>;
+
 async function decodeImage(blob: Blob): Promise<ElevationTile> {
   let bitmap: ImageBitmap;
   try {
@@ -170,6 +173,7 @@ export async function elevationTiles(
   url: string,
   signal: AbortSignal,
   onProgress?: (done: number, total: number) => void,
+  decode: TileDecoder = decodeImage,
 ) {
   checkAbort(signal);
   const info = await metadata(url);
@@ -188,7 +192,7 @@ export async function elevationTiles(
       let decoded = lineCache.get(tileUrl);
       if (!decoded) {
         const blob = await request(tileUrl, (response) => response.blob(), signal);
-        decoded = await decodeImage(blob);
+        decoded = await decode(blob);
         checkAbort(signal);
         lineCache.set(tileUrl, decoded);
         if (lineCache.size > LINE_TILE_LIMIT + 8) lineCache.delete(lineCache.keys().next().value!);

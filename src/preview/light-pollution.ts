@@ -13,21 +13,23 @@ const checkAbort = (signal: AbortSignal) => {
   if (signal.aborted) throw new DOMException("光污染请求已取消", "AbortError");
 };
 
-async function loadTile(id: string, signal: AbortSignal) {
+/** Reads one compressed atlas file (`file` inside the atlas directory). */
+export type PollutionReader = (file: string, version: string, signal: AbortSignal) => Promise<ArrayBuffer>;
+const fetchTile: PollutionReader = async (file, version, signal) => {
+  const response = await fetch(`${import.meta.env.BASE_URL}${atlas.directory}${file}?v=${version}`, { signal });
+  if (!response.ok) throw new Error(`光污染数据请求失败（${response.status}）`);
+  return response.arrayBuffer();
+};
+
+async function loadTile(id: string, signal: AbortSignal, read: PollutionReader) {
   checkAbort(signal);
   const entry = entries.get(id);
   if (!entry) throw new Error("光污染分块索引缺失");
   let bytes = tiles.get(id);
   if (!bytes) {
-    const response = await fetch(
-      `${import.meta.env.BASE_URL}${atlas.directory}${entry.file}?v=${entry.sha256.slice(0, 12)}`,
-      { signal },
-    );
-    if (!response.ok)
-      throw new Error(`光污染数据请求失败（${response.status}）`);
     if (typeof DecompressionStream === "undefined")
       throw new Error("浏览器无法解码光污染数据");
-    const compressed = await response.arrayBuffer();
+    const compressed = await read(entry.file, entry.sha256.slice(0, 12), signal);
     if (compressed.byteLength !== entry.bytes)
       throw new Error("光污染分块下载不完整");
     const digest = await crypto.subtle.digest("SHA-256", compressed);
@@ -52,6 +54,7 @@ async function loadTile(id: string, signal: AbortSignal) {
 export async function sampleLightPollution(
   point: MapPoint,
   signal: AbortSignal,
+  read: PollutionReader = fetchTile,
 ) {
   checkAbort(signal);
   const cells = lightPollutionCells(point);
@@ -61,7 +64,7 @@ export async function sampleLightPollution(
   const ids = [...new Set(cells.map((cell) => tileId(cell.x, cell.y)))];
   const loaded = new Map(
     await Promise.all(
-      ids.map(async (id) => [id, await loadTile(id, signal)] as const),
+      ids.map(async (id) => [id, await loadTile(id, signal, read)] as const),
     ),
   );
   checkAbort(signal);

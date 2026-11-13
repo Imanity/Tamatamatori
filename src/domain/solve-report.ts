@@ -3,7 +3,8 @@ import { bodyName } from "./sky-targets.ts";
 import { compassDirection, localDateTime, sensors } from "./plan.ts";
 import type { SolveRequest2 } from "./solve.ts";
 import { dayLabel, heightWords, spotWords } from "./composition.ts";
-import type { FilterSpec, GroundSpec, ResultItem } from "./composition.ts";
+import type { Composition, FilterSpec, GroundSpec, ResultItem, Strategy } from "./composition.ts";
+import type { ShootingPlan } from "./plan.ts";
 
 /**
  * Plain-text wording of a 推算 request and its results, shared by the link
@@ -45,6 +46,30 @@ export interface SolveReportInput {
   status: string;
   header: string[];
   rows: string[][];
+  /** Where the numbers came from: "在浏览器中本地计算" unless given. */
+  computedBy?: string;
+}
+
+/** A finished search as the Markdown that "复制结果" and the command line give. */
+export function outcomeReport(input: {
+  request: SolveRequest2;
+  link: string;
+  plan: Pick<ShootingPlan, "cameraHeight" | "refraction" | "timeZone">;
+  composition: Pick<Composition, "time">;
+  strategy: Pick<Strategy, "kind">;
+  outcome: { items: readonly ResultItem[]; blocked: number; filtered: number; note: string };
+  computedBy?: string;
+}) {
+  const { plan, outcome } = input;
+  const basis = `机位离地 ${plan.cameraHeight} m，按${plan.refraction === "standard" ? "标准折射" : "无折射"}与海平面地平计算。`;
+  const places = input.strategy.kind === "grounds";
+  const span = places ? "" : input.composition.time.mode === "instant" ? "所选时刻 " : `${dayLabel(input.composition.time.days)}内 `;
+  const hidden = [
+    outcome.blocked && (places ? `${outcome.blocked} 个机位视线被地形挡住` : `另有 ${outcome.blocked} 分钟视线被地形挡住`),
+    outcome.filtered && `${outcome.filtered} ${input.strategy.kind === "line" ? "分钟" : "次"}不满足筛选`,
+  ].filter(Boolean).join("，");
+  const status = outcome.items.length ? `${span}${outcome.items.length} ${places ? "个机位" : "段"}${hidden ? `；${hidden}` : ""}。` : outcome.note || "没有结果。";
+  return solveReport({ request: input.request, link: input.link, timeZone: plan.timeZone, basis, status, ...resultRows(outcome.items, plan.timeZone), computedBy: input.computedBy });
 }
 
 /** Markdown: request rows, link, status, results table and the limits that always apply. */
@@ -59,7 +84,7 @@ export function solveReport(input: SolveReportInput) {
     "",
     ...(input.rows.length ? [table(input.header, input.rows), ""] : []),
     `时刻按 ${input.timeZone}。${input.basis}`,
-    "数值由 Tamatamatori 在浏览器中本地计算，是基于地理与天文数据的构图模拟，不含天气；遮挡只看地形起伏，不含建筑与树木，不代表实景一定可见。",
+    `数值由 Tamatamatori ${input.computedBy ?? "在浏览器中本地计算"}，是基于地理与天文数据的构图模拟，不含天气；遮挡只看地形起伏，不含建筑与树木，不代表实景一定可见。`,
     "",
   ].join("\n");
 }

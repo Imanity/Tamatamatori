@@ -3,10 +3,10 @@ import { localDateTime } from "../domain/plan";
 import type { ShootingPlan } from "../domain/plan";
 import { solveLink2, solvePlan2 } from "../domain/solve";
 import type { SolveParse2, SolveRequest2 } from "../domain/solve";
-import { describeSolve2, resultRows, solveReport } from "../domain/solve-report";
+import { describeSolve2, outcomeReport } from "../domain/solve-report";
 import { siteBase } from "../domain/site";
 import { SHOT_NAME_LIMIT, shotFromPlan } from "../domain/shot";
-import { dayLabel, targetName } from "../domain/composition";
+import { targetName } from "../domain/composition";
 import { CALENDAR_LIMIT, calendarText, resultEvents, solveShotName } from "../domain/solve-calendar";
 import { bodyName } from "../domain/sky-targets";
 import { copyText, suggestShotName } from "./ShotMenu";
@@ -113,11 +113,7 @@ export function SolveLinkDialog({ link, plan, onLoad, onClose }: {
 function report(state: CompositionState, plan: ShootingPlan, request: SolveRequest2, link: string) {
   const run = state.run;
   if (!run || run.phase !== "done") return null;
-  const basis = `机位离地 ${plan.cameraHeight} m，按${plan.refraction === "standard" ? "标准折射" : "无折射"}与海平面地平计算。`;
-  const span = run.composition.time.mode === "instant" ? "所选时刻" : `${dayLabel(run.composition.time.days)}内`;
-  const hidden = [run.blocked && `另有 ${run.blocked} 分钟视线被地形挡住`, run.filtered && `${run.filtered} ${run.strategy.kind === "line" ? "分钟" : "次"}不满足筛选`].filter(Boolean).join("，");
-  const status = run.items.length ? `${span} ${run.items.length} 段${hidden ? `；${hidden}` : ""}。` : run.note || "没有结果。";
-  return solveReport({ request, link, timeZone: run.timeZone, basis, status, ...resultRows(run.items, run.timeZone) });
+  return outcomeReport({ request, link, plan: { ...plan, timeZone: run.timeZone }, composition: run.composition, strategy: run.strategy, outcome: run });
 }
 
 /** "存为机位" from the 推算 panel, provided by the workspace. */

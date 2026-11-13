@@ -1,22 +1,16 @@
-import { rangeTrack, rangeCorridor, reachableSectors, solveRangeDay } from "../domain/range-alignment";
-import type { RangeInput, RangePoint } from "../domain/range-alignment";
-import type { GroundSampler } from "../domain/position-alignment";
+import { rangeTrack, solveRangeDay } from "../domain/range-alignment";
+import { solveDaysHere } from "../domain/composition-run";
+import type { SolveDays } from "../domain/composition-run";
 import type { FixedPlace } from "../domain/sky-coordinates";
-import type { ElevationTile } from "../domain/terrain";
 import { fixedPlace, isFixedBody } from "../domain/sky-targets";
-import type { RangeDay, RangeMessage, RangeReply } from "../preview/range-worker";
+import type { RangeMessage, RangeReply } from "../preview/range-worker";
 
 /**
  * Runs a range search: the day plan (usable minutes, corridor), the terrain tiles,
  * then the days. A module worker does the heavy parts when the browser has one;
  * otherwise (or if the worker fails to start) the main thread does them day by day.
  */
-export async function runRange(input: RangeInput, days: RangeDay[], signal: AbortSignal, hooks: {
-  loadTiles: (points: { latitude: number; longitude: number }[]) => Promise<GroundSampler & { tiles?: ReadonlyMap<string, ElevationTile>; bounds?: number[] }>;
-  planned: (sectors: [number, number][]) => void;
-  day: (index: number, points: RangePoint[]) => void;
-  usingWorker: (worker: boolean) => void;
-}) {
+export const runRange: SolveDays = async (input, days, signal, hooks) => {
   const yieldNow = () => new Promise((resolve) => setTimeout(resolve, 0));
   let worker: Worker | null = null;
   if (typeof Worker !== "undefined") {
@@ -74,20 +68,6 @@ export async function runRange(input: RangeInput, days: RangeDay[], signal: Abor
       active.terminate();
     }
   }
-  hooks.usingWorker(false);
-  const tracks = [];
-  for (let index = 0; index < days.length; index++) {
-    if (index % 15 === 0) await yieldNow();
-    if (signal.aborted) throw new DOMException("已取消", "AbortError");
-    tracks.push(rangeTrack(input, days[index]));
-  }
-  hooks.planned(reachableSectors(tracks, input.frames));
-  const sampler = await hooks.loadTiles(rangeCorridor(input, tracks));
-  for (let index = 0; index < days.length; index++) {
-    await yieldNow();
-    if (signal.aborted) throw new DOMException("已取消", "AbortError");
-    hooks.day(index, solveRangeDay(input, days[index], tracks[index], sampler));
-  }
-  return sampler;
-}
+  return solveDaysHere(input, days, signal, hooks);
+};
 
