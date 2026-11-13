@@ -53,6 +53,7 @@ flowchart TD
 | `src/render/` | MapLibre 自定义图层、着色器与纹理：`scene`（地形、相机、建筑）、`sky`（星空、日月、天体与天气效果） | 以上与 `render` |
 | `src/ui/` | React 组件与数据钩子：`common`、`map`、`preview`、`workspace` 与各分组 | 全部 |
 | `src/data/` | 静态数据 | — |
+| `src/styles/` | 全局样式，按区域分文件，由 `index.css` 按层叠顺序引入 | — |
 
 - 依赖方向由 `tests/core/boundaries.test.mjs` 检查，它同时要求领域、绘制与界面层的文件都放在功能子目录中。
 - 领域层要能在浏览器、Worker、命令行与 Node 测试中直接加载，因此不引用加载、绘制与界面。
@@ -70,7 +71,7 @@ flowchart TD
 
 第十轮起三种求法统一为构图约束搜索（`src/domain/solve/composition.ts`）：目标（地面点或天体，各带画面位置与容差）、搜索范围与筛选组成条件，`classify` 判断能求出什么并选择求解器——地面点加天体且机位不固定时用找机位的求解器（`PairFrames` 把两者的画面位置差按俯仰换算成方位差与高度差，底部位置按实际投影检查），机位固定时由地面点或固定朝向定出天体方向后用找时间的求解器，两个天体时按分钟扫描相对画面位置。`aimAt` 是 `frameDirection` 的逆，求出把某方向放到画面某处的相机朝向；`tryPatch` 统一写出试看字段。筛选先在目标处带余量预筛分钟（`Prefilter`），求解后逐分钟精确检查。第十一轮起最多 4 个目标：主约束以外的目标由 `extraGap` 按试看朝向逐分钟检查；画面两点的夹角与朝向无关，机位线搜索前按其余天体与主天体的角距预筛（`prefilterOf`）。星空可见性在求解后按机位读取光污染，与月光、自然天光合成天顶亮度（`zenithBrightness`）。第十五轮起两个地面点（没有天体）由 `src/domain/solve/ground-pair.ts` 求机位：在搜索圆环上铺网格算第二个点的画面偏差，局部极小处用高斯—牛顿法收敛，再在视线经过的较细地形上重新收敛并检查视线；结果条目带 `place`（与时间无关），试看只写机位与朝向。推算请求 v2 在 `solve.ts`，v1 读入时按打开者镜头转换。第十六轮起，搜索流程在 `src/domain/solve/composition-run.ts`（`runComposition`）中，地形、光污染与机位线逐日求解以函数注入：面板注入浏览器的读取与 Worker；命令行 `scripts/solve.mjs` 注入 Node 的读取，其中 WebP 用 `@jsquash/webp` 解码，光污染读仓库文件。
 
-推算状态由 App 中的 `useComposition`（`src/ui/solve/Composition.tsx`）保存，地图、预览标记（`CompositionMarks.tsx`）、时间轴与面板共用；不进入拍摄计划、机位与会话。搜索显式触发，结果属于发起搜索时的条件快照，条件改变只标为过期。多日机位线经 `solve-runner.ts` 交给模块 Worker。面板经 portal 输出到右栏，时间轴通过 `extraEvents` 接收“对齐”刻度，地图用独立 GeoJSON 源画地面点、范围与结果线。试看只经同一 `update` 修改拍摄计划。详见[构图约束搜索](../plan/composition-search.md)。
+推算状态由 App 中的 `useComposition`（`src/ui/solve/useComposition.ts`）保存，地图、预览标记（`CompositionMarks.tsx`）、时间轴与面板共用；不进入拍摄计划、机位与会话。搜索显式触发，结果属于发起搜索时的条件快照，条件改变只标为过期。多日机位线经 `solve-runner.ts` 交给模块 Worker。面板经 portal 输出到右栏，时间轴通过 `extraEvents` 接收“对齐”刻度，地图用独立 GeoJSON 源画地面点、范围与结果线。试看只经同一 `update` 修改拍摄计划。详见[构图约束搜索](../plan/composition-search.md)。
 
 推算请求是推算条件的对外表示（`src/domain/solve/solve.ts`，格式 `tamatamatori.solve` v1），与机位格式并列：请求只描述意图，数值总在本机求解，求出的结果经试看成为普通机位，因此机位格式不加意图字段。`solvePlan` 给出载入后的计划，`solveRequestOf` 把面板状态写回请求，`useAlignment.load` 写入面板状态。App 在载入与 hash 改变时读取 `#shot=`、`#solve=`，经预览确认后才改计划，关闭预览即以 `history.replaceState` 清除 hash；hash 不发送给服务器。链接与 `$schema` 按页面自身地址生成（`src/domain/core/site.ts`）。对外说明 `public/llms.txt`、两份格式说明与 JSON Schema 由 `scripts/formats.mjs` 按代码常量生成，构建时校验不漂移；应用解析器仍是格式的权威，schema 只镜像其规则。
 

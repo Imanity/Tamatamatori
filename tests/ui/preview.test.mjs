@@ -191,7 +191,10 @@ test("月光随日期变化，隐藏月亮保留环境及夜间参考，不重�
 
 test("日月开关、主动朝向与状态联动，关闭太阳不改变光照、机位或镜头", async (t) => {
   const style = document.createElement("style");
-  style.textContent = readFileSync(new URL("../../src/styles.css", import.meta.url), "utf8");
+  // The global styles in cascade order, as src/styles/index.css imports them.
+  const index = new URL("../../src/styles/index.css", import.meta.url);
+  style.textContent = [...readFileSync(index, "utf8").matchAll(/@import "(.+?)";/g)]
+    .map(([, file]) => readFileSync(new URL(file, index), "utf8")).join("\n");
   document.head.append(style);
   t.after(() => style.remove());
   await workspace(t);

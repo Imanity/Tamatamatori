@@ -25,8 +25,8 @@ import type { MapMode, MapViewport } from "../../domain/core/map";
 import { Icon } from "../common/Icon";
 import { MapSearch } from "./MapSearch";
 import type { MapTarget } from "./MapSearch";
-import { compositionGeometry } from "../solve/Composition";
-import type { CompositionState } from "../solve/Composition";
+import { compositionGeometry } from "../solve/useComposition";
+import type { CompositionState } from "../solve/useComposition";
 
 const styleUrl =
   import.meta.env.VITE_MAP_STYLE_URL?.trim() ||

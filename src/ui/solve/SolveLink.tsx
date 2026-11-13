@@ -10,7 +10,7 @@ import { targetName } from "../../domain/solve/composition";
 import { CALENDAR_LIMIT, calendarText, resultEvents, solveShotName } from "../../domain/solve/solve-calendar";
 import { bodyName } from "../../domain/sky/sky-targets";
 import { copyText, suggestShotName } from "../shots/ShotMenu";
-import type { CompositionState } from "./Composition";
+import type { CompositionState } from "./useComposition";
 
 const coordinate = (latitude: number, longitude: number) => `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
 const local = (plan: ShootingPlan) => `${localDateTime(plan.instant, plan.timeZone).replace("T", " ")}（${plan.timeZone}）`;

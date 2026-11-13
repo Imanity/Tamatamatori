@@ -58,7 +58,7 @@ import { layerGroups } from "../common/layers";
 import type { LayerGroupId } from "../common/layers";
 import { Detail, pollutionLevel } from "../common/readout";
 import { CompositionPanel } from "../solve/Composition";
-import type { CompositionState } from "../solve/Composition";
+import type { CompositionState } from "../solve/useComposition";
 import { CompositionMarks } from "../solve/CompositionMarks";
 import type { ShotSaving } from "../solve/SolveLink";
 

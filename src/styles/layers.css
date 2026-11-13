@@ -1,0 +1,43 @@
+/* Eclipses, aurora, tides and Open-Meteo usage. */
+/* Eclipses */
+.map-legend .map-legend-band { height: 8px; box-sizing: border-box; background: #4a356640; border: 1px solid #5b3f80; }
+.eclipse-readout { display: grid; gap: 4px; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #d8dfcf; font-size: 12px; }
+.eclipse-readout p { margin: 0; }
+.eclipse-readout button { margin-left: 6px; }
+.eclipse-now { color: #9a4e2c; font-weight: 600; }
+.eclipse-summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; }
+.eclipse-summary strong { color: #7c3f22; }
+.eclipse-summary > span { color: #5d7055; }
+.eclipse-times { display: flex; flex-wrap: wrap; gap: 2px 8px; color: #3f513c; }
+.eclipse-times .is-below { color: #a3ab98; text-decoration: line-through; }
+.eclipse-times .info-detail { flex-basis: 100%; }
+.eclipse-next, .eclipse-path { color: #5d7055; }
+.eclipse-path span { margin-left: 6px; color: #8a9680; font-size: 11px; }
+.eclipse-safety { color: #aa6847; font-size: 11px; }
+.eclipse-fact { color: #9a4e2c; }
+
+/* Aurora and tides */
+.map-legend .map-legend-aurora { background: #1f8a52; }
+.map-legend .map-legend-tide { width: 8px; height: 8px; border-radius: 50%; background: #2f6fae; }
+.tide-readout, .aurora-readout { display: grid; gap: 4px; font-size: 12px; }
+.tide-readout p, .aurora-readout p { margin: 0; }
+.tide-now strong, .aurora-verdict strong { color: #2f4d33; }
+.tide-next { display: flex; flex-wrap: wrap; gap: 2px 10px; color: #3f513c; }
+.tide-note, .aurora-source, .aurora-need { color: #6f7d68; font-size: 11px; }
+.tide-status button, .aurora-status button { margin-left: 6px; }
+.aurora-dark { color: #aa6847; font-size: 11px; }
+.tide-chart { width: 100%; height: 60px; display: block; background: #f4f7f1; border-radius: 4px; }
+.tide-chart .tide-msl { stroke: #c6d0bd; stroke-width: 0.4; stroke-dasharray: 1.5 1.5; }
+.tide-chart .tide-curve { fill: none; stroke: #2f6fae; stroke-width: 1.5; }
+.tide-chart .tide-extreme { fill: #2f6fae; }
+.tide-chart .tide-low { fill: #fff; stroke: #2f6fae; stroke-width: 0.6; }
+.tide-chart .tide-now-line { stroke: var(--accent); stroke-width: 1.2; }
+.time-marker[data-event^="tide-"] { color: #2f6fae; }
+.time-marker[data-event="aurora"] { color: #1f8a52; font-weight: 600; }
+.tide-fact { color: #2f6fae; }
+.aurora-fact { color: #1f8a52; }
+
+/* Open-Meteo usage */
+.api-usage { margin: 6px 0 0; color: #6f7d68; font-size: 11px; }
+.api-usage[data-usage="near"] { color: #aa6847; }
+.api-usage[data-usage="limited"] { color: #a2452c; font-weight: 600; }

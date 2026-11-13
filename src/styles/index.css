@@ -1,0 +1,14 @@
+/* Global styles, split by area. The order is the cascade order: later files
+   override earlier ones, so keep it when adding rules. */
+@import "./base.css";
+@import "./dialogs.css";
+@import "./panels.css";
+@import "./fields.css";
+@import "./responsive.css";
+@import "./sidebar.css";
+@import "./controls.css";
+@import "./shots.css";
+@import "./compact.css";
+@import "./info.css";
+@import "./layers.css";
+@import "./solve.css";

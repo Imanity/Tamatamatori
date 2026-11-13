@@ -1,0 +1,39 @@
+/* Narrow and short screens: compact rows around the frame (after the general rules above). */
+/* Narrow screens: compact rows around the frame (after the general rules above). */
+@media (max-width: 1099px) {
+  .time-actions { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .time-actions::-webkit-scrollbar { display: none; }
+  .time-actions .time-steps { flex: none; display: flex; gap: 4px; }
+  .time-actions .time-steps button { width: 46px; }
+  .timeline .time-row { flex-wrap: nowrap; }
+  .timezone-field { flex: 1 1 64px; min-width: 64px; }
+  .position-bar { padding: 8px 10px 10px; gap: 6px 12px; }
+}
+@media (max-width: 599px) {
+  .timeline .timezone-trigger small:not(.timezone-local) { display: none; }
+  .date-stepper input[type="date"] { font-size: 11px; padding-inline: 2px; }
+  .position-coordinates .number-wrap { width: 96px; }
+  .position-height .number-wrap { width: 62px; }
+  .height-scale .height-ticks { display: none; }
+}
+/* Landscape phones: the page must fit the short viewport, so the header shrinks. */
+@media (max-width: 1099px) and (orientation: landscape) {
+  .app-shell { min-height: 300px; }
+}
+@media (max-width: 1099px) and (orientation: landscape) and (max-height: 520px) {
+  .topbar { height: 44px; }
+  .brand { font-size: 17px; gap: 8px; }
+  .brand-mark { width: 28px; height: 28px; border-radius: 7px; }
+  .brand small { display: none; }
+  .app-layout { padding-top: 6px; padding-bottom: 6px; gap: 6px; }
+  .preview-meta { padding: 4px 0; }
+}
+/* Short portrait screens: a lower cap on the frame keeps the position row reachable. */
+@media (max-width: 1099px) {
+  .map-stack > .real-map { min-height: 80px; }
+  .panel-map .panel-body { overflow-y: auto; }
+}
+@media (max-width: 1099px) and (orientation: portrait) and (max-height: 700px) {
+  .viewfinder-wrap { height: min(calc((100vw - 42px) / var(--frame-ratio)), 26dvh); }
+  .preview-meta { padding: 4px 0; }
+}

@@ -1,0 +1,150 @@
+/* Colour tokens, form elements, focus rings and the page header. */
+:root {
+  font-family:
+    "Noto Sans SC",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  color: #303f36;
+  background: #f4f5f1;
+  font-synthesis: none;
+  font-size: 13px;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+  --green: #456a54;
+  --muted: #859087;
+  --line: #e5e8df;
+  --accent: #c7754d;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-width: 360px;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+button,
+a,
+input,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  cursor: pointer;
+}
+button {
+  color: inherit;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button,
+select,
+input {
+  outline-offset: 3px;
+}
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #558063;
+}
+button:disabled {
+  cursor: default;
+}
+svg {
+  flex-shrink: 0;
+}
+h1,
+h2,
+p {
+  margin: 0;
+}
+.app-shell {
+  height: 100dvh;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+.topbar {
+  height: 74px;
+  flex-shrink: 0;
+  background: #fcfcf8;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  gap: 26px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  letter-spacing: -0.65px;
+}
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #f5f5ed;
+  background: var(--green);
+  border-radius: 11px;
+}
+.brand small {
+  display: block;
+  margin-top: 3px;
+  font-family: "Noto Sans SC", sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #7c877d;
+  font-weight: 400;
+}
+.topbar-end {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.about-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  border: 1px solid #dce4d5;
+  border-radius: 5px;
+  background: #f7f9f2;
+  padding: 8px 11px;
+  font-size: 11px;
+  color: var(--green);
+}
+.about-button:hover {
+  background: #edf1e9;
+}
+.reset-button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #dce2d3;
+  background: #fafbf6;
+  padding: 8px 11px;
+  border-radius: 5px;
+  font-size: 10px;
+  color: #6e7b65;
+}
+.reset-button:hover {
+  background: #eaf0e3;
+  border-color: #bccbb0;
+}

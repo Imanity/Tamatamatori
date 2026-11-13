@@ -1,0 +1,216 @@
+/* Breakpoints for the workspace layout. The narrow layout (max-width: 1099px) must match useNarrowLayout in src/ui/workspace/Layout.tsx. */
+
+@media (min-width: 1600px) {
+  .workgrid {
+    padding-left: 34px;
+    padding-right: 34px;
+  }
+  .panel-header {
+    height: 53px;
+    padding: 0 16px;
+  }
+  .panel-title h2 {
+    font-size: 12px;
+  }
+  .preview-content {
+    padding: 0 20px 14px;
+  }
+  .preview-meta {
+    height: 42px;
+  }
+  .preview-readout {
+    margin-top: 13px;
+  }
+  .preview-note {
+    margin-top: 10px;
+  }
+}
+@media (max-width: 1199px) and (min-width: 1100px) {
+  .workgrid {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .panel-header {
+    padding: 0 9px;
+  }
+  .panel-title {
+    gap: 5px;
+  }
+  .panel-tag {
+    font-size: 7px;
+  }
+}
+@media (max-width: 1099px) {
+  .app-shell {
+    min-height: 520px;
+  }
+  .topbar {
+    height: 56px;
+    padding: 0 16px;
+    gap: 16px;
+  }
+  .brand {
+    font-size: 19px;
+  }
+  .brand small {
+    font-size: 8px;
+  }
+  /* One column: preview (with time) on top, tabs, then the chosen section. */
+  .app-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-areas: "preview" "tabs" "content";
+    gap: 8px;
+    padding: 8px 10px 10px;
+  }
+  .workgrid {
+    display: contents;
+  }
+  .divider,
+  .panel-header,
+  .info-reopen,
+  .info-close-desktop {
+    display: none;
+  }
+  .panel-preview {
+    grid-area: preview;
+  }
+  .panel-map,
+  .info-sidebar,
+  .mobile-camera {
+    grid-area: content;
+    min-height: 0;
+  }
+  .app-layout:not([data-mobile-tab="map"]) .panel-map,
+  .app-layout:not([data-mobile-tab="camera"]) .mobile-camera,
+  .app-layout:not([data-mobile-tab="layers"]):not([data-mobile-tab="solve"]) .info-sidebar {
+    display: none;
+  }
+  .app-layout[data-mobile-tab="layers"] .info-sidebar.is-collapsed {
+    display: flex;
+  }
+  .info-sidebar,
+  .mobile-camera {
+    width: auto;
+    border: 1px solid #dfe4d7;
+    border-radius: 8px;
+    background: #fdfdf9;
+    overflow-y: auto;
+  }
+  .mobile-camera {
+    display: block;
+    padding: 6px 14px 14px;
+  }
+  .mobile-camera .camera-bar {
+    border-top: 0;
+    margin-top: 0;
+  }
+  .mobile-tabs {
+    grid-area: tabs;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #e9ede2;
+    border-radius: 6px;
+    padding: 3px;
+  }
+  .mobile-tabs button {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-width: 0;
+    border: 0;
+    padding: 7px 4px;
+    background: transparent;
+    font-size: 11px;
+    color: #7c8b72;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .mobile-tabs button[aria-selected="true"] {
+    background: #fbfcf6;
+    color: #4f6c43;
+    box-shadow: 0 1px 3px #637b4b15;
+  }
+  .preview-content {
+    height: auto;
+    padding: 0 10px 10px;
+  }
+  /* The frame takes the full width, capped so the tab section keeps room. */
+  .viewfinder-wrap {
+    flex: none;
+    height: min(calc((100vw - 42px) / var(--frame-ratio)), 34dvh);
+  }
+  .time-actions {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .time-actions > * {
+    flex: none;
+  }
+}
+/* Landscape phones and tablets: preview on the left, tabs on the right. */
+@media (max-width: 1099px) and (orientation: landscape) {
+  .app-layout {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas: "preview tabs" "preview content";
+  }
+  .panel-preview .panel-body,
+  .preview-content {
+    height: 100%;
+  }
+  .viewfinder-wrap {
+    flex: 1;
+    min-height: 120px;
+    height: auto;
+  }
+}
+@media (max-width: 599px) {
+  .topbar {
+    height: 52px;
+    padding: 0 12px;
+  }
+  .brand {
+    font-size: 19px;
+    gap: 9px;
+  }
+  .brand-mark {
+    height: 34px;
+    width: 34px;
+    border-radius: 9px;
+  }
+  .brand small {
+    font-size: 7px;
+    letter-spacing: 1.6px;
+  }
+  .topbar-end {
+    gap: 8px;
+  }
+  .about-button {
+    padding: 7px 9px;
+  }
+  .about-header {
+    padding: 16px;
+  }
+  .about-body {
+    padding: 16px;
+  }
+  .viewfinder-wrap {
+    align-items: center;
+  }
+  .layer-row {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

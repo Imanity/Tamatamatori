@@ -7,7 +7,7 @@ import { ndc, spotWords, targetName } from "../../domain/solve/composition";
 import type { FrameSpot, TargetSpec } from "../../domain/solve/composition";
 import { frameAspectRatio } from "../../domain/core/plan";
 import { bodyKind } from "../../domain/sky/sky-targets";
-import type { CompositionState } from "./Composition";
+import type { CompositionState } from "./useComposition";
 
 /** Frame place (0—1 from the top-left) of a pointer inside the frame. */
 function spotAt(element: HTMLElement, event: { clientX: number; clientY: number }): FrameSpot | null {
