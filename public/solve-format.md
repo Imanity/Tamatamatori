@@ -51,7 +51,7 @@
 
 | `camera.mode` | 字段 | 说明 |
 | --- | --- | --- |
-| `"free"` | `maxDistance`：`10000` / `20000` / `30000` 米 | 以地面点为中心 |
+| `"free"` | `maxDistance`：`10000` / `20000` / `30000` 米；`minDistance`（可选）：`200` / `1000` / `2000` / `5000` / `10000` 米，缺省 200（不限），须小于 `maxDistance` | 以地面点为中心；`minDistance` 排除贴近地面点的机位（如站在山顶上） |
 | `"near"` | `latitude`、`longitude`、`radius`（500—30000 米） | 只列这个范围内的机位 |
 | `"fixed"` | `latitude`、`longitude`（缺省为打开者当前机位）、`aim`（`{ "azimuth", "pitch" }`，可选） | 给出 `aim` 时同时固定朝向，只能有一个天体目标 |
 
@@ -436,7 +436,7 @@ https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatama
 https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22name%22%3A%22%E6%9C%88%E4%BA%AE%E3%80%81%E6%98%B4%E6%98%9F%E5%9B%A2%E4%B8%8E%E5%AF%8C%E5%A3%AB%E5%B1%B1%22%2C%22lens%22%3A%7B%22focalLength%22%3A135%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.8%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22moon%22%2C%22frame%22%3A%7B%22x%22%3A0.55%2C%22y%22%3A0.55%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22dso-mel022%22%2C%22frame%22%3A%7B%22x%22%3A0.46%2C%22y%22%3A0.42%7D%2C%22tolerance%22%3A0.05%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222026-11-13%22%2C%22days%22%3A365%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%5D%7D
 ```
 
-### 钻石富士：太阳落在富士山顶正中，机位不限
+### 钻石富士：太阳落在富士山顶正中，机位离山顶 10—30 km
 
 ```json
 {
@@ -475,7 +475,8 @@ https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatama
   ],
   "camera": {
     "mode": "free",
-    "maxDistance": 30000
+    "maxDistance": 30000,
+    "minDistance": 10000
   },
   "time": {
     "mode": "range",
@@ -488,7 +489,7 @@ https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatama
 ```
 
 ```text
-https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22lens%22%3A%7B%22focalLength%22%3A400%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22sun%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222027-01-01%22%2C%22days%22%3A90%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%5D%7D
+https://imanity.github.io/Tamatamatori/#solve=json:%7B%22format%22%3A%22tamatamatori.solve%22%2C%22version%22%3A2%2C%22lens%22%3A%7B%22focalLength%22%3A400%2C%22sensor%22%3A%22full-frame%22%2C%22aspectRatio%22%3A%223%3A2%22%2C%22orientation%22%3A%22landscape%22%7D%2C%22targets%22%3A%5B%7B%22type%22%3A%22ground%22%2C%22latitude%22%3A35.3606%2C%22longitude%22%3A138.7274%2C%22name%22%3A%22%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A1%B6%22%2C%22height%22%3A0%2C%22reference%22%3A%22ground%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.03%7D%2C%7B%22type%22%3A%22body%22%2C%22body%22%3A%22sun%22%2C%22frame%22%3A%7B%22x%22%3A0.5%2C%22y%22%3A0.6%7D%2C%22tolerance%22%3A0.03%7D%5D%2C%22camera%22%3A%7B%22mode%22%3A%22free%22%2C%22maxDistance%22%3A30000%2C%22minDistance%22%3A10000%7D%2C%22time%22%3A%7B%22mode%22%3A%22range%22%2C%22date%22%3A%222027-01-01%22%2C%22days%22%3A90%7D%2C%22timeZone%22%3A%22Asia%2FTokyo%22%2C%22filters%22%3A%5B%5D%7D
 ```
 
 ### 月亮落在晴空塔塔尖，塔身占画面约 35%（塔顶加底部）

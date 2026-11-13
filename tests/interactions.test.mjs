@@ -3076,7 +3076,8 @@ test('推算·地面点与天体（机位线）：地标与太阳各在画面位
   await settle(() => setControl(document.querySelector('select[aria-label="跨度"]'), 1));
   await searchNow();
   await waitUntil(() => /当天 1 天、\d+ 段，共 \d+ 分钟/.test(resultStatus()));
-  assert.ok(tiles.length === 1 && tiles[0] > 100, 'the terrain corridor is read once before solving');
+  // The target's own ground first (for the altitude pre-filter), then the corridor once.
+  assert.ok(tiles.length === 2 && tiles[0] === 1 && tiles[1] > 100, `the terrain corridor is read once before solving: ${tiles}`);
   assert.doesNotMatch(panel().textContent, /DEM|通视/);
   const kinds = new Set(features().map((feature) => feature.properties.kind));
   assert.ok(['target', 'ring', 'segment', 'label'].every((kind) => kinds.has(kind)), [...kinds].join());
@@ -3145,7 +3146,7 @@ test('推算·底部位置定主体大小：“月亮落在塔尖”模板，多
   await settle(() => setControl(document.querySelector('select[aria-label="跨度"]'), 7));
   await searchNow();
   await waitUntil(() => /7 天内 \d+ 天、\d+ 段/.test(resultStatus()));
-  assert.equal(loads.length, 1, 'the terrain corridor is read once for all days');
+  assert.equal(loads.filter((count) => count > 1).length, 1, 'the terrain corridor is read once for all days');
   assert.ok(['target', 'ring', 'sector', 'segment', 'label'].every((kind) => kinds().has(kind)), [...kinds()].join());
   assert.ok(dayRows().length >= 5);
   // Expand a day: every stretch keeps the tower's share within ±3% of 35%.
@@ -3221,6 +3222,8 @@ test('推算·更多目标与星空可见性：第三个地面点随走廊读取
   pollutionResponse = async () => ({ artificialMcd: 0.02 });
   await searchNow(); await searched();
   assert.match(resultStatus(), new RegExp(`共 ${before} 分钟`));
+  // A night search: rows run from noon to noon, named after the evening.
+  assert.match(dayRows()[0].querySelector('.composition-day-name strong').textContent, /^12\/10 周四夜 0\d:\d\d–0\d:\d\d$/);
   // A bright site fails it instead.
   pollutionResponse = async () => ({ artificialMcd: 6.5 });
   await settle(() => setControl(document.querySelector('select[aria-label="星空可见性"]'), '21.7'));
@@ -3269,6 +3272,35 @@ async function openSolveLink(value) {
   await waitUntil(() => document.querySelector('.solve-dialog')?.open);
   return document.querySelector('.solve-dialog');
 }
+
+test('推算·机位最近距离：新建条件缺省 2 km，钻石富士模板 10 km 且不加筛选；结果都在最近距离之外，地图画出内圈', async t => {
+  const { map } = await workspace(t); await readyTerrain();
+  // A 3000 m cone on flat ground at Fuji's summit.
+  const cone = (latitude, longitude) => Math.max(0, 3000 - 0.3 * Math.hypot((latitude - 35.3606) * 111000, (longitude - 138.7274) * 111000 * Math.cos(35.36 * Math.PI / 180)));
+  installGlobal('__testElevationTiles', async (points, url, signal, progress) => { progress?.(1, 1); return cone; });
+  t.after(() => { delete globalThis.__testElevationTiles; });
+  await settle(() => document.querySelector('.solve-button').click());
+  const nearest = () => document.querySelector('select[aria-label="机位最近距离"]');
+  assert.equal(nearest().value, '2000');
+  assert.deepEqual([...nearest().options].map((option) => option.textContent), ['不限', '1 km', '2 km', '5 km', '10 km']);
+  await settle(() => setControl(document.querySelector('select[aria-label="机位最远距离"]'), 10000));
+  assert.deepEqual([...nearest().options].map((option) => option.value), ['200', '1000', '2000', '5000'], 'nearer than the farthest');
+  await settle(() => button('钻石富士').click());
+  assert.equal(nearest().value, '10000');
+  assert.equal(document.querySelector('select[aria-label="机位最远距离"]').value, '30000');
+  assert.equal(document.querySelectorAll('.composition-filters .composition-remove').length, 0, 'no golden-hour filter');
+  await settle(() => setControl(document.querySelector('.composition-range input[aria-label="起始日期"]'), '2026-11-25'));
+  await settle(() => setControl(document.querySelector('select[aria-label="跨度"]'), 1));
+  await searchNow(); await searched();
+  assert.match(resultStatus(), /当天 1 天、\d+ 段/);
+  await settle(() => dayRows()[0]?.querySelector('.composition-day-name')?.click());
+  for (const row of rowItems()) {
+    const range = row.textContent.match(/距 ([\d.]+)(?:—([\d.]+))? km/);
+    assert.ok(range && Number(range[1]) >= 10, row.textContent);
+  }
+  const rings = map.getSource('tamatamatori-alignment').data.features.filter((feature) => feature.properties.kind === 'ring');
+  assert.equal(rings.length, 2, 'the farthest and the nearest');
+});
 
 test('推算请求链接：先预览镜头、目标、范围与将改动的字段，取消不改计划；确认后载入条件并自动搜索，撤销恢复计划与模式；复制推算请求与结果；版本 1 转换；报错', async t => {
   await workspace(t); await readyTerrain();
@@ -3451,7 +3483,8 @@ test('天体目标：银心在固定机位与朝向下只在天暗时给出结�
   await settle(() => button('载入并推算').click());
   await searched();
   assert.ok(targetRow('银心'));
-  const august15 = dayRows().find((row) => /^8\/15 周六 (20:5\d|21:0\d)–21:0\d$/.test(row.querySelector('.composition-day-name strong').textContent));
+  // A fixed body: a night search, its rows named after the evening.
+  const august15 = dayRows().find((row) => /^8\/15 周六夜 (20:5\d|21:0\d)–21:0\d$/.test(row.querySelector('.composition-day-name strong').textContent));
   assert.ok(august15, dayRows().map((row) => row.textContent).join(' | '));
   assert.ok(dayRows().every((row) => /暮光|暗夜/.test(row.textContent)), 'only dark skies');
   const milkyWay = () => document.querySelector('[aria-label="显示银河"]');

@@ -247,6 +247,7 @@ test("公开格式：生成文件与代码常量一致，schema 接受应用写�
     v2({ targets: [] }),
     v2({ targets: ["sun", "moon", "galactic-center", "dso-mel022", "dso-ngc0224"].map((body) => ({ type: "body", body })) }),
     v2({ filters: [{ type: "darkSky", limit: 21 }] }),
+    v2({ camera: { mode: "free", minDistance: 3000 } }),
     v2({ filters: [{ type: "darkSky" }] }),
     v2({ targets: [{ type: "ground", landmark: "tokyo-skytree", latitude: 1, longitude: 2 }] }),
     v2({ targets: [{ type: "ground", landmark: "fuji" }] }),

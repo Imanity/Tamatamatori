@@ -407,6 +407,17 @@
               "default": 30000,
               "description": "离地面点最远，米"
             },
+            "minDistance": {
+              "enum": [
+                200,
+                1000,
+                2000,
+                5000,
+                10000
+              ],
+              "default": 200,
+              "description": "离地面点最近，米；须小于 maxDistance。200 即不限"
+            },
             "heightAboveGround": {
               "type": "number",
               "minimum": 0.1,

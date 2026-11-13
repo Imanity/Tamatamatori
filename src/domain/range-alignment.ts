@@ -26,6 +26,8 @@ export const MIN_SUBJECT = 10;
 export const spanChoices = [7, 30, 90, 365] as const;
 // Camera ground may lie this far below the target's ground before the altitude pre-filter could miss a solution.
 const BELOW_TARGET = 300;
+// Camera ground no lower than this below sea level, when the target's own ground is known.
+const LOWEST_CAMERA = 500;
 
 type Lens = Pick<ShootingPlan, "focalLength" | "sensor" | "aspectRatio" | "orientation"> & Partial<Pick<ShootingPlan, "customSensor">>;
 
@@ -60,6 +62,12 @@ export interface RangeInput {
   share: number | null;
   /** Searched distances: the share band widened, or MIN_DISTANCE to the chosen maximum. */
   minDistance: number;
+  /**
+   * The target's ground elevation (m), read before the search: the altitude
+   * pre-filter then allows cameras far below it (a summit). Without it,
+   * cameras are assumed no more than BELOW_TARGET under that ground.
+   */
+  targetGround?: number;
   maxDistance: number;
   /** Where the top and the body sit in the frame (the body on the top at the centre when absent). */
   frames?: PairFrames;
@@ -143,15 +151,16 @@ export function rangeDistances(target: GroundTarget, share: number | null, lens:
 }
 
 /** Local calendar days from `start` (a date in `timeZone`), as epoch-millisecond spans. */
-export function rangeDays(start: string, days: number, timeZone: string) {
+/**
+ * The days of a search. At night (`seam` "noon") a day runs from local noon to
+ * the next noon and is named after its evening, so a night is never cut.
+ */
+export function rangeDays(start: string, days: number, timeZone: string, seam: "midnight" | "noon" = "midnight") {
   const first = Temporal.PlainDate.from(start);
+  const at = (date: Temporal.PlainDate) => date.toZonedDateTime({ timeZone, plainTime: seam === "noon" ? "12:00" : undefined }).epochMilliseconds;
   return Array.from({ length: days }, (_, index) => {
     const date = first.add({ days: index });
-    return {
-      day: date.toString(),
-      start: date.toZonedDateTime({ timeZone }).epochMilliseconds,
-      end: date.add({ days: 1 }).toZonedDateTime({ timeZone }).epochMilliseconds,
-    };
+    return { day: date.toString(), start: at(date), end: at(date.add({ days: 1 })) };
   });
 }
 
@@ -160,9 +169,12 @@ export function rangeDays(start: string, days: number, timeZone: string) {
  * band: the top seen from the nearest searched distance, from ground as low
  * as BELOW_TARGET under the target's own ground.
  */
-export function altitudeCeiling(input: Pick<RangeInput, "target" | "minDistance" | "frames">) {
-  // An absolute top is compared with camera ground near sea level at the lowest.
-  const rise = input.target.absolute ? input.target.height + 50 : input.target.height + BELOW_TARGET;
+export function altitudeCeiling(input: Pick<RangeInput, "target" | "minDistance" | "frames" | "targetGround">) {
+  // With the target's ground known, the top's own elevation over camera ground down to 500 m below sea level;
+  // otherwise an absolute top over ground near sea level, a top over ground at most BELOW_TARGET lower.
+  const rise = input.targetGround !== undefined
+    ? (input.target.absolute ? input.target.height : input.targetGround + input.target.height) + LOWEST_CAMERA
+    : input.target.absolute ? input.target.height + 50 : input.target.height + BELOW_TARGET;
   const top = Math.atan(rise / input.minDistance) / degrees;
   if (!input.frames) return top;
   // The body may sit above the top in the frame: add that much, generously (it is only a pre-filter).

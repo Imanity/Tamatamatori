@@ -7,7 +7,9 @@ import {
   darkSkyChoices,
   dayChoices,
   dayLabel,
+  DEFAULT_NEAREST,
   DEFAULT_TOLERANCE,
+  daySpans,
   distanceChoices,
   extraGap,
   filterResult,
@@ -20,7 +22,11 @@ import {
   MAX_LINE_DAYS,
   ndc,
   nearChoices,
+  nearestChoices,
+  nearestLabel,
   newId,
+  nightSearch,
+  shootingDay,
   prefilterOf,
   scanPair,
   spotWords,
@@ -101,6 +107,8 @@ interface Run {
   basis: SearchBasis;
   composition: Composition;
   timeZone: string;
+  /** A night search: days run from noon to noon and are named after their evening. */
+  night: boolean;
   items: ResultItem[];
   blocked: number;
   filtered: number;
@@ -129,7 +137,7 @@ interface Before {
 
 const initialComposition = (plan: ShootingPlan): Composition => ({
   targets: [],
-  camera: { mode: "free", maxDistance: 30_000 },
+  camera: { mode: "free", maxDistance: 30_000, minDistance: DEFAULT_NEAREST },
   time: { mode: "range", date: localDateTime(plan.instant, plan.timeZone).slice(0, 10), days: 30 },
   filters: [],
 });
@@ -255,7 +263,7 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
       ...(strategy.kind === "pair" ? { follow: { body: strategy.first.body, frame: strategy.first.frame, refraction: now.refraction } } : {}),
     };
     setRun({
-      id, key: searchKey(snapshot, now), phase: "running", stage: "准备中…", shape: solvability.shape, strategy, basis, composition: snapshot, timeZone: now.timeZone,
+      id, key: searchKey(snapshot, now), phase: "running", stage: "准备中…", shape: solvability.shape, strategy, basis, composition: snapshot, timeZone: now.timeZone, night: nightSearch(snapshot, strategy),
       items: [], blocked: 0, filtered: 0, merged: 0, extraMissed: 0, missing: 0, sectors: [], rings: [], sampler: null, note: "", message: "", worker: false,
     });
     try {
@@ -272,12 +280,12 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
     setRun((state) => (state && state.phase === "running" ? { ...state, phase: "error", message: "已取消" } : state));
   };
 
-  const range = (time: TimeRange, timeZone: string) => {
+  const range = (time: TimeRange, timeZone: string, night: boolean) => {
     if (time.mode === "instant") {
       const start = Math.floor(Date.parse(time.instant) / MINUTE) * MINUTE;
-      return { from: start, to: start + 1, days: [linePoints(localDay(start, timeZone), start, start + 1)] };
+      return { from: start, to: start + 1, days: [linePoints(shootingDay(start, timeZone, night), start, start + 1)] };
     }
-    const days = rangeDays(time.date, time.days, timeZone);
+    const days = rangeDays(time.date, time.days, timeZone, night ? "noon" : "midnight");
     return { from: days[0].start, to: days.at(-1)!.end, days };
   };
 
@@ -316,7 +324,11 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
       maxDistance = Math.min(30_000, distance + snapshot.camera.radius);
       centre = { latitude: snapshot.camera.latitude, longitude: snapshot.camera.longitude, radius: snapshot.camera.radius };
       rings.push(centre);
-    } else rings.push({ latitude: target.latitude, longitude: target.longitude, radius: maxDistance });
+    } else {
+      minDistance = Math.max(MIN_DISTANCE, snapshot.camera.mode === "free" ? snapshot.camera.minDistance : MIN_DISTANCE);
+      rings.push({ latitude: target.latitude, longitude: target.longitude, radius: maxDistance });
+      if (minDistance > MIN_DISTANCE) rings.push({ latitude: target.latitude, longitude: target.longitude, radius: minDistance });
+    }
     let base: RangeInput["base"];
     let share: number | null = null;
     if (ground.base !== null) {
@@ -331,7 +343,7 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
       set(id, { phase: "done", rings, note: "按设定的主体大小，机位应在所选范围之外：请放宽范围，或调整底部位置。" });
       return;
     }
-    const span = range(snapshot.time, now.timeZone);
+    const span = range(snapshot.time, now.timeZone, nightSearch(snapshot, strategy));
     const prefilter = prefilterOf(snapshot.filters, sky, strategy.extras, lens);
     const extraGrounds = strategy.extras.filter((extra): extra is GroundSpec => extra.kind === "ground");
     const input: RangeInput = {
@@ -340,6 +352,11 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
     };
     const collected: RangePoint[] = [];
     const elevation = await import("../preview/elevation");
+    // The target's own ground first: the altitude pre-filter then allows cameras far below a summit.
+    set(id, { stage: "读取地形中…" });
+    const own = (await elevation.elevationTiles([target], terrainUrl, signal))(target.latitude, target.longitude);
+    if (signal.aborted) return;
+    if (own !== null) input.targetGround = own;
     let sectors: [number, number][] = [];
     const sampler = await runRange(input, span.days, signal, {
       usingWorker: (worker) => set(id, { worker }),
@@ -426,7 +443,8 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
     const sky = strategy.sky;
     const mark = windowMark(sky, lens, aim);
     const input: AlignmentInput = { latitude: camera.latitude, longitude: camera.longitude, refraction: now.refraction, target: { body: sky.body, ...mark }, tolerance: toleranceDiameters(sky, lens) };
-    const span = range(snapshot.time, now.timeZone);
+    const night = nightSearch(snapshot, strategy);
+    const span = range(snapshot.time, now.timeZone, night);
     const scans: AlignmentScan[] = [];
     for (let cursor = span.from; cursor < span.to; cursor += SLICE) {
       await yieldNow();
@@ -452,7 +470,7 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
         extraMissed++;
         return [];
       }
-      return [windowItem({ start: Date.parse(found.from), end: Date.parse(found.to), best, deviation: Math.max(found.separation / vertical, other) }, camera, aim!, localDay(best, now.timeZone))];
+      return [windowItem({ start: Date.parse(found.from), end: Date.parse(found.to), best, deviation: Math.max(found.separation / vertical, other) }, camera, aim!, shootingDay(best, now.timeZone, night))];
     });
     if (!items.length) {
       const name = bodyName(sky.body);
@@ -467,7 +485,8 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
 
   async function searchPair(id: number, strategy: Extract<Strategy, { kind: "pair" }>, snapshot: Composition, now: ShootingPlan, lens: Lens, signal: AbortSignal) {
     const camera = snapshot.camera.mode === "free" ? { latitude: now.latitude, longitude: now.longitude } : { latitude: snapshot.camera.latitude, longitude: snapshot.camera.longitude };
-    const span = range(snapshot.time, now.timeZone);
+    const night = nightSearch(snapshot, strategy);
+    const span = range(snapshot.time, now.timeZone, night);
     const extras = strategy.extras.filter((extra): extra is SkySpec => extra.kind === "sky");
     const input = { first: strategy.first, second: strategy.second, extras, lens, ...camera, refraction: now.refraction };
     const windows = [];
@@ -487,7 +506,7 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
         return [];
       }
       const aim = aimAt(lens, skyAt(strategy.first.body, window.best, camera.latitude, camera.longitude, now.refraction), ndc(strategy.first.frame));
-      return [windowItem(window, camera, aim, localDay(window.best, now.timeZone))];
+      return [windowItem(window, camera, aim, shootingDay(window.best, now.timeZone, night))];
     });
     const note = items.length ? "" : filtered + missing ? `有 ${filtered + missing} 次到达相对位置，但都不满足筛选条件${missing ? `（其中 ${missing} 次缺少光污染数据）` : ""}。`
       : `${strategy.extras.length ? "这些天体" : `${bodyName(strategy.first.body)}与${bodyName(strategy.second.body)}`}在所选日期内没有到达设定的相对位置。`;
@@ -634,7 +653,7 @@ export function compositionGeometry(state: CompositionState | null, timeZone: st
       if (points.length > 1) label(points.at(-1)!, clock(points.at(-1)!.time, timeZone));
     } else {
       const middle = points[Math.floor(points.length / 2)];
-      label(middle, `${dayWords(item.day).split(" ")[0]} ${clock(middle.time, timeZone)}`);
+      label(middle, `${dayWords(localDay(middle.time, timeZone)).split(" ")[0]} ${clock(middle.time, timeZone)}`);
     }
   });
   return { type: "FeatureCollection", features };
@@ -832,7 +851,7 @@ function RangeSection({ state, plan }: { state: CompositionState; plan: Shooting
         <span className="field-label">机位</span>
         <select aria-label="机位范围" value={camera.mode} onChange={(event) => {
           const mode = event.target.value as CameraRange["mode"];
-          state.setCamera(mode === "free" ? { mode, maxDistance: 30_000 } : mode === "near" ? { mode, ...here, radius: 3_000 } : { mode, ...here, aim: null });
+          state.setCamera(mode === "free" ? { mode, maxDistance: 30_000, minDistance: DEFAULT_NEAREST } : mode === "near" ? { mode, ...here, radius: 3_000 } : { mode, ...here, aim: null });
           if (mode !== "fixed" && time.mode === "range" && time.days > MAX_LINE_DAYS) state.setTime({ ...time, days: MAX_LINE_DAYS });
         }}>
           <option value="free">不限（以地面目标为中心）</option>
@@ -840,12 +859,21 @@ function RangeSection({ state, plan }: { state: CompositionState; plan: Shooting
           <option value="fixed">固定为当前机位</option>
         </select>
       </label>
-      {camera.mode === "free" && <label className="field">
-        <span className="field-label">离地面目标最远</span>
-        <select aria-label="机位最远距离" value={camera.maxDistance} onChange={(event) => state.setCamera({ mode: "free", maxDistance: Number(event.target.value) })}>
-          {distanceChoices.map((value) => <option key={value} value={value}>{value / 1000} km</option>)}
-        </select>
-      </label>}
+      {camera.mode === "free" && <div className="alignment-fields">
+        <label className="field">
+          <span className="field-label">离地面目标最近</span>
+          <select aria-label="机位最近距离" value={camera.minDistance} onChange={(event) => state.setCamera({ ...camera, minDistance: Number(event.target.value) })}
+            title="排除贴近地面目标的机位（如站在山顶上）">
+            {nearestChoices.filter((value) => value < camera.maxDistance).map((value) => <option key={value} value={value}>{nearestLabel(value)}</option>)}
+          </select>
+        </label>
+        <label className="field">
+          <span className="field-label">最远</span>
+          <select aria-label="机位最远距离" value={camera.maxDistance} onChange={(event) => state.setCamera({ ...camera, maxDistance: Number(event.target.value) })}>
+            {distanceChoices.filter((value) => value > camera.minDistance).map((value) => <option key={value} value={value}>{value / 1000} km</option>)}
+          </select>
+        </label>
+      </div>}
       {camera.mode === "near" && <>
         <label className="field">
           <span className="field-label">半径</span>
@@ -1034,7 +1062,6 @@ function ResultsSection({ state, plan, occlusion, check }: {
       {groups.length > 0 && <ol className="composition-days">
         {groups.map((group) => {
           const expanded = single || open.has(group.day);
-          const first = group.items[0], last = group.items.at(-1)!;
           const near = group.items.flatMap((item) => (item.near === null ? [] : [item.near])), far = group.items.flatMap((item) => (item.far === null ? [] : [item.far]));
           const skies = [...new Set(group.items.map((item) => skyConditionNames[item.sky]))].join("、");
           const moonDown = group.items.every((item) => item.moonElevation < 0);
@@ -1045,7 +1072,7 @@ function ResultsSection({ state, plan, occlusion, check }: {
               <div className="composition-day">
                 <button type="button" className="composition-day-name" aria-expanded={expanded} disabled={single}
                   onClick={() => setOpen((set) => { const next = new Set(set); if (next.has(group.day)) next.delete(group.day); else next.add(group.day); return next; })}>
-                  <strong>{words(group.day)} {clock(first.start, run.timeZone)}–{clock(last.end, run.timeZone)}</strong>
+                  <strong>{words(group.day)}{run.night ? "夜" : ""} {daySpans(group.items).map((span) => `${clock(span.start, run.timeZone)}–${clock(span.end, run.timeZone)}`).join("、")}</strong>
                   <small>{group.items.length} 段{near.length ? ` · 距 ${km(Math.min(...near))}—${km(Math.max(...far))} km` : ""} · {skies}{moonTarget ? "" : ` · ${moonDown ? "月亮在地平线下" : "月亮在天上"}`}</small>
                 </button>
                 <button type="button" aria-label={`试看 ${words(group.day)}`} aria-pressed={isCurrent} onClick={() => state.tryOut(best)}>试看</button>

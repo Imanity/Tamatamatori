@@ -1,14 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  classify, conditionsAt, extraGap, filterResult, frameGap, frameSeparation, lineItems, ndc, pairGap, passes, prefilterOf, scanPair, toleranceAngle, toleranceDiameters, tryPatch,
-  windowItem, windowMark, zenithBrightness,
+  classify, conditionsAt, daySpans, extraGap, filterResult, frameGap, frameSeparation, lineItems, ndc, nightSearch, pairGap, passes, prefilterOf, scanPair, shootingDay, templates,
+  toleranceAngle, toleranceDiameters, tryPatch, windowItem, windowMark, zenithBrightness,
 } from "../src/domain/composition.ts";
 import { aimAt, frameDirection, solveAlignment } from "../src/domain/alignment.ts";
 import { projectDirection } from "../src/domain/celestial-projection.ts";
 import { direction } from "../src/domain/ephemeris.ts";
 import { findPositions, skyAt, toRay } from "../src/domain/position-alignment.ts";
-import { rangeDays, rangeTrack, skySeparation, solveRangeDay } from "../src/domain/range-alignment.ts";
+import { altitudeCeiling, rangeDays, rangeTrack, skySeparation, solveRangeDay } from "../src/domain/range-alignment.ts";
 import { fixedBodies } from "../src/domain/sky-targets.ts";
 import { compositionOf, parseAnySolve, requestOf, solveJson2, solvePlan2 } from "../src/domain/solve.ts";
 import { describeSolve2, resultRows } from "../src/domain/solve-report.ts";
@@ -386,4 +386,71 @@ test("第三个天体的预筛：按与主天体的角距跳过分钟，逐分�
   const kept = (points) => withExtra(points, extra).map((point) => `${point.time}/${point.latitude.toFixed(6)}`);
   assert.ok(kept(full).length > 0);
   assert.deepEqual(kept(quick), kept(full));
+});
+
+test("夜间搜索按夜分段：中午到次日中午、以傍晚命名；日期行相隔 3 小时以上的时段分开", () => {
+  const tokyo = (local) => Date.parse(`${local}+09:00`);
+  const nights = rangeDays("2027-01-09", 2, "Asia/Tokyo", "noon");
+  assert.deepEqual(nights.map((day) => [day.day, day.start, day.end]), [
+    ["2027-01-09", tokyo("2027-01-09T12:00:00"), tokyo("2027-01-10T12:00:00")],
+    ["2027-01-10", tokyo("2027-01-10T12:00:00"), tokyo("2027-01-11T12:00:00")],
+  ]);
+  assert.equal(rangeDays("2027-01-09", 1, "Asia/Tokyo")[0].start, tokyo("2027-01-09T00:00:00"));
+  // Which searches are about the night.
+  const strategy = (targets, filters = []) => classify({ targets, camera: free, time: days(), filters }).strategy;
+  const night = (targets, filters = []) => nightSearch({ filters }, strategy(targets, filters));
+  assert.equal(night([fuji, sky("dso-ngc0224")]), true, "a fixed body");
+  assert.equal(night([fuji, sky("sun")]), false);
+  assert.equal(night([fuji, sky("moon")]), false);
+  assert.equal(night([fuji, sky("moon")], [{ kind: "sky", sky: ["twilight", "night"] }]), true);
+  assert.equal(night([fuji, sky("moon")], [{ kind: "sky", sky: ["golden", "night"] }]), false);
+  assert.equal(night([fuji, sky("moon")], [{ kind: "darkSky", limit: 21.3 }]), true);
+  assert.equal(night([sky("dso-mel022"), sky("moon")]), false, "a pair with the Moon");
+  assert.equal(night([sky("dso-mel022"), sky("hyg-21368")]), true);
+  assert.equal(shootingDay(tokyo("2027-01-10T00:20:00"), "Asia/Tokyo", true), "2027-01-09");
+  assert.equal(shootingDay(tokyo("2027-01-10T00:20:00"), "Asia/Tokyo", false), "2027-01-10");
+  assert.equal(shootingDay(tokyo("2027-01-10T13:00:00"), "Asia/Tokyo", true), "2027-01-10");
+  // A row's spans: an early run and a late one stay apart, near runs join.
+  const at = (from, to) => ({ start: tokyo(`2027-01-10T${from}:00`), end: tokyo(`2027-01-10T${to}:00`) });
+  assert.deepEqual(daySpans([at("23:30", "23:59"), at("00:00", "00:20"), at("00:40", "01:00")]), [{ start: tokyo("2027-01-10T00:00:00"), end: tokyo("2027-01-10T01:00:00") }, at("23:30", "23:59")]);
+});
+
+test("机位最近距离：请求的读取、往返与报错；钻石富士模板最近 10 km、不加黄金时刻", () => {
+  const read = (value) => parseAnySolve(value, lens);
+  const base = { format: "tamatamatori.solve", version: 2, targets: [{ type: "ground", landmark: "tokyo-skytree" }, { type: "body", body: "moon" }] };
+  const near = read({ ...base, camera: { mode: "free", maxDistance: 30000, minDistance: 10000 } });
+  assert.equal(near.ok, true, JSON.stringify(near.errors));
+  assert.deepEqual(near.request.camera, { mode: "free", maxDistance: 30000, minDistance: 10000 });
+  assert.deepEqual(read(JSON.parse(solveJson2(near.request))).request, near.request);
+  assert.match(describeSolve2(near.request)[3].value, /不限，离地面目标 10—30 km/);
+  // Absent, it stays absent and means no limit (200 m), as before.
+  const plain = read({ ...base, camera: { mode: "free", maxDistance: 20000 } });
+  assert.deepEqual(plain.request.camera, { mode: "free", maxDistance: 20000 });
+  assert.deepEqual(compositionOf(plain.request, initialPlan).camera, { mode: "free", maxDistance: 20000, minDistance: 200 });
+  assert.equal(requestOf(compositionOf(near.request, initialPlan), lens, {}).camera.minDistance, 10000);
+  const errors = (value) => (read(value).ok ? "" : read(value).errors.join("\n"));
+  assert.match(errors({ ...base, camera: { mode: "free", maxDistance: 10000, minDistance: 10000 } }), /camera\.minDistance：应小于 maxDistance（10000），收到 10000/);
+  assert.match(errors({ ...base, camera: { mode: "free", minDistance: 3000 } }), /camera\.minDistance：应为 200 \/ 1000 \/ 2000 \/ 5000 \/ 10000 之一/);
+  const diamond = templates.find((template) => template.id === "diamond-fuji").build(initialPlan, "2026-11-13");
+  assert.deepEqual(diamond.camera, { mode: "free", maxDistance: 30000, minDistance: 10000 });
+  assert.deepEqual(diamond.filters, []);
+});
+
+test("高度预筛：读到目标所在地形时按顶部海拔放宽，远处看山顶的解不再被当作“天体太高”跳过", () => {
+  // A cone 3000 m high on flat ground; the Sun on its summit seen from 10–30 km stands 5.7°–16.7° high.
+  const summit = { latitude: 35.36, longitude: 138.73, height: 0 };
+  const cone = (latitude, longitude) => Math.max(0, 3000 - 0.3 * Math.hypot((latitude - summit.latitude) * 111_000, (longitude - summit.longitude) * 111_000 * Math.cos(summit.latitude * Math.PI / 180)));
+  const frames = { lens, target: { x: 0, y: 0 }, body: { x: 0, y: 0 } };
+  const input = { body: "sun", target: summit, refraction: "standard", cameraHeight: 1.6, lens, share: null, minDistance: 10_000, maxDistance: 30_000, frames };
+  assert.ok(altitudeCeiling(input) < 3, "the old guess: ground at most 300 m under the target");
+  assert.ok(altitudeCeiling({ ...input, targetGround: 3000 }) > 19);
+  const day = rangeDays("2026-12-01", 1, "Asia/Tokyo")[0];
+  const solve = (extra) => solveRangeDay({ ...input, ...extra }, day, rangeTrack({ ...input, ...extra }, day), cone).filter((point) => point.sight !== "blocked");
+  assert.equal(solve({}).length, 0, "every minute skipped before");
+  const found = solve({ targetGround: 3000 });
+  assert.ok(found.length > 20, `${found.length}`);
+  for (const point of found) {
+    assert.ok(point.distance >= 10_000 - 1 && point.distance <= 30_000 + 1, `${point.distance}`);
+    assert.ok(point.elevation > 5 && point.elevation < 17.5, `${point.elevation}`);
+  }
 });

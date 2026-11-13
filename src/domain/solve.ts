@@ -7,7 +7,8 @@ import { MIN_SUBJECT, spanChoices as rangeSpans } from "./range-alignment.ts";
 import { distanceChoices } from "./position-alignment.ts";
 import { shotLimits, validTimeZone } from "./shot.ts";
 import { aspectRatios, customSensorLimits, fieldOfView, initialPlan, instantFromLocal, instantOnDate, localDateTime, sensors } from "./plan.ts";
-import { darkSkyChoices, dayChoices, dayLabel, DEFAULT_TOLERANCE, MAX_LINE_DAYS, TARGET_LIMIT } from "./composition.ts";
+import { darkSkyChoices, dayChoices, dayLabel, DEFAULT_TOLERANCE, MAX_LINE_DAYS, nearestChoices, TARGET_LIMIT } from "./composition.ts";
+import { MIN_DISTANCE } from "./position-alignment.ts";
 import type { CameraRange, Composition, FilterSpec, FrameSpot, HeightReference, Lens, TargetSpec, TimeRange } from "./composition.ts";
 import type { ShootingPlan } from "./plan.ts";
 import { timelineMode, timelineWindow } from "./timeline.ts";
@@ -293,7 +294,7 @@ export type RequestTarget =
   | { type: "ground"; landmark?: string; latitude: number; longitude: number; height: number; reference: HeightReference; name: string; frame: FrameSpot; base: number | null; tolerance: number }
   | { type: "body"; body: AlignmentBody; frame: FrameSpot; tolerance: number };
 export type RequestCamera =
-  | { mode: "free"; maxDistance: number; heightAboveGround?: number }
+  | { mode: "free"; maxDistance: number; minDistance?: number; heightAboveGround?: number }
   | { mode: "near"; latitude: number; longitude: number; radius: number; heightAboveGround?: number }
   | { mode: "fixed"; latitude?: number; longitude?: number; aim?: { azimuth: number; pitch: number }; heightAboveGround?: number };
 export type RequestTime = { mode: "range"; date?: string; days: number } | { mode: "instant"; instant: string };
@@ -455,12 +456,19 @@ export function parseSolve2(value: Record<string, unknown>): SolveParse2 {
     const path = "camera";
     const height = (item: Record<string, unknown>) => (item.heightAboveGround === undefined ? undefined : number(item, "heightAboveGround", "camera.heightAboveGround", shotLimits.heightAboveGround));
     if (mode === "free") {
-      const item = object(value.camera, path, ["mode", "maxDistance", "heightAboveGround"]);
+      const item = object(value.camera, path, ["mode", "maxDistance", "minDistance", "heightAboveGround"]);
       if (item) {
         const maxDistance = item.maxDistance === undefined ? 30_000 : (distanceChoices as readonly number[]).includes(item.maxDistance as number) ? item.maxDistance as number : null;
         if (maxDistance === null) errors.push(`camera.maxDistance：应为 ${distanceChoices.join(" / ")} 之一，收到 ${shown(item.maxDistance)}`);
+        let minDistance = item.minDistance === undefined ? undefined : (nearestChoices as readonly number[]).includes(item.minDistance as number) ? item.minDistance as number : null;
+        if (minDistance === null) errors.push(`camera.minDistance：应为 ${nearestChoices.join(" / ")} 之一，收到 ${shown(item.minDistance)}`);
+        else if (minDistance !== undefined && maxDistance !== null && minDistance >= maxDistance) {
+          errors.push(`camera.minDistance：应小于 maxDistance（${maxDistance}），收到 ${minDistance}`);
+          minDistance = null;
+        }
         const eye = height(item);
-        if (maxDistance !== null && eye !== null) camera = { mode, maxDistance, ...(eye === undefined ? {} : { heightAboveGround: eye }) };
+        if (maxDistance !== null && minDistance !== null && eye !== null)
+          camera = { mode, maxDistance, ...(minDistance === undefined ? {} : { minDistance }), ...(eye === undefined ? {} : { heightAboveGround: eye }) };
       }
     } else if (mode === "near") {
       const item = object(value.camera, path, ["mode", "latitude", "longitude", "radius", "heightAboveGround"]);
@@ -623,7 +631,7 @@ export function requestOf(composition: Composition, lens: Lens, extra: { name?: 
     ? { type: "body", body: target.body, frame: { ...target.frame }, tolerance: target.tolerance }
     : { type: "ground", ...(target.landmark ? { landmark: target.landmark } : {}), latitude: target.latitude, longitude: target.longitude, height: target.height, reference: target.reference, name: target.name, frame: { ...target.frame }, base: target.base, tolerance: target.tolerance });
   const height = extra.cameraHeight === undefined ? {} : { heightAboveGround: extra.cameraHeight };
-  const camera: RequestCamera = composition.camera.mode === "free" ? { mode: "free", maxDistance: composition.camera.maxDistance, ...height }
+  const camera: RequestCamera = composition.camera.mode === "free" ? { mode: "free", maxDistance: composition.camera.maxDistance, minDistance: composition.camera.minDistance, ...height }
     : composition.camera.mode === "near" ? { mode: "near", latitude: composition.camera.latitude, longitude: composition.camera.longitude, radius: composition.camera.radius, ...height }
       : { mode: "fixed", latitude: composition.camera.latitude, longitude: composition.camera.longitude, ...(composition.camera.aim ? { aim: { ...composition.camera.aim } } : {}), ...height };
   const sensorSize = lens.sensor === "custom" && lens.customSensor ? { sensorSize: { ...lens.customSensor } } : {};
@@ -642,7 +650,7 @@ export function compositionOf(request: SolveRequest2, plan: ShootingPlan): Compo
   const targets: TargetSpec[] = request.targets.map((target) => target.type === "body"
     ? { kind: "sky", id: `link${++id}`, body: target.body, frame: { ...target.frame }, tolerance: target.tolerance }
     : { kind: "ground", id: `link${++id}`, name: target.name, ...(target.landmark ? { landmark: target.landmark } : {}), latitude: target.latitude, longitude: target.longitude, height: target.height, reference: target.reference, frame: { ...target.frame }, base: target.base, tolerance: target.tolerance });
-  const camera: CameraRange = request.camera.mode === "free" ? { mode: "free", maxDistance: request.camera.maxDistance }
+  const camera: CameraRange = request.camera.mode === "free" ? { mode: "free", maxDistance: request.camera.maxDistance, minDistance: request.camera.minDistance ?? MIN_DISTANCE }
     : request.camera.mode === "near" ? { mode: "near", latitude: request.camera.latitude, longitude: request.camera.longitude, radius: request.camera.radius }
       : { mode: "fixed", latitude: request.camera.latitude ?? plan.latitude, longitude: request.camera.longitude ?? plan.longitude, aim: request.camera.aim ? { ...request.camera.aim } : null };
   const time: TimeRange = request.time.mode === "instant" ? { mode: "instant", instant: request.time.instant }

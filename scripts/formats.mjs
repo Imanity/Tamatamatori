@@ -14,7 +14,7 @@ import {
   SOLVE_FORMAT, SOLVE_VERSION, SOLVE_VERSION_2, SOLVE_TEXT_LIMIT, SOLVE_NAME_LIMIT, solveBodies,
   targetHeightLimits, seaHeightLimits, phaseChoices, toleranceLimits, nearLimits, parseAnySolve, solveJson2, solveLink2,
 } from '../src/domain/solve.ts';
-import { darkSkyChoices, dayChoices, dayLabel, DEFAULT_TOLERANCE, distanceChoices as cameraDistances, MAX_LINE_DAYS, TARGET_LIMIT } from '../src/domain/composition.ts';
+import { darkSkyChoices, dayChoices, dayLabel, DEFAULT_TOLERANCE, distanceChoices as cameraDistances, MAX_LINE_DAYS, nearestChoices, TARGET_LIMIT } from '../src/domain/composition.ts';
 import { PUBLIC_SITE, SHOT_SCHEMA_FILE, SOLVE_SCHEMA_FILE } from '../src/domain/site.ts';
 import { aspectRatios, customSensorLimits, initialPlan, sensors } from '../src/domain/plan.ts';
 import { lensOf } from '../src/domain/composition.ts';
@@ -62,10 +62,10 @@ const solveExamples = [
       camera: { mode: 'free', maxDistance: 30000 }, time: { mode: 'range', date: '2026-11-13', days: 365 }, timeZone: 'Asia/Tokyo' },
   },
   {
-    title: '钻石富士：太阳落在富士山顶正中，机位不限',
+    title: '钻石富士：太阳落在富士山顶正中，机位离山顶 10—30 km',
     value: { format: SOLVE_FORMAT, version: SOLVE_VERSION_2, lens: { focalLength: 400, sensor: 'full-frame', aspectRatio: '3:2', orientation: 'landscape' },
       targets: [{ ...fujiSummit, frame: { x: 0.5, y: 0.6 } }, { type: 'body', body: 'sun', frame: { x: 0.5, y: 0.6 } }],
-      camera: { mode: 'free', maxDistance: 30000 }, time: { mode: 'range', date: '2027-01-01', days: 90 }, timeZone: 'Asia/Tokyo' },
+      camera: { mode: 'free', maxDistance: 30000, minDistance: 10000 }, time: { mode: 'range', date: '2027-01-01', days: 90 }, timeZone: 'Asia/Tokyo' },
   },
   {
     title: '月亮落在晴空塔塔尖，塔身占画面约 35%（塔顶加底部）',
@@ -241,7 +241,7 @@ const solveSchema = {
     camera: {
       description: '机位的搜索范围；缺省为不限（以地面点为中心，最远 30 km）',
       oneOf: [
-        { type: 'object', additionalProperties: false, required: ['mode'], properties: { mode: { const: 'free' }, maxDistance: { enum: [...cameraDistances], default: 30000, description: '离地面点最远，米' }, heightAboveGround: eyeHeight } },
+        { type: 'object', additionalProperties: false, required: ['mode'], properties: { mode: { const: 'free' }, maxDistance: { enum: [...cameraDistances], default: 30000, description: '离地面点最远，米' }, minDistance: { enum: [...nearestChoices], default: 200, description: '离地面点最近，米；须小于 maxDistance。200 即不限' }, heightAboveGround: eyeHeight } },
         { type: 'object', additionalProperties: false, required: ['mode', 'latitude', 'longitude', 'radius'], properties: { mode: { const: 'near' }, latitude, longitude, radius: { type: 'number', minimum: nearLimits[0], maximum: nearLimits[1], description: '以该点为中心的半径，米' }, heightAboveGround: eyeHeight } },
         { type: 'object', additionalProperties: false, required: ['mode'], properties: {
           mode: { const: 'fixed' }, latitude, longitude,
@@ -389,7 +389,7 @@ const solveMarkdown = `# Tamatamatori 推算请求格式 v${SOLVE_VERSION_2}
 
 | \`camera.mode\` | 字段 | 说明 |
 | --- | --- | --- |
-| \`"free"\` | \`maxDistance\`：${list([...cameraDistances])} 米 | 以地面点为中心 |
+| \`"free"\` | \`maxDistance\`：${list([...cameraDistances])} 米；\`minDistance\`（可选）：${list([...nearestChoices])} 米，缺省 200（不限），须小于 \`maxDistance\` | 以地面点为中心；\`minDistance\` 排除贴近地面点的机位（如站在山顶上） |
 | \`"near"\` | \`latitude\`、\`longitude\`、\`radius\`（${range(nearLimits)} 米） | 只列这个范围内的机位 |
 | \`"fixed"\` | \`latitude\`、\`longitude\`（缺省为打开者当前机位）、\`aim\`（\`{ "azimuth", "pitch" }\`，可选） | 给出 \`aim\` 时同时固定朝向，只能有一个天体目标 |
 

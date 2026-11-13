@@ -1,3 +1,4 @@
+import { Temporal } from "@js-temporal/polyfill";
 import { Body, Illumination } from "astronomy-engine";
 import { aimAt, bodyRadius, frameDirection, skyCondition } from "./alignment.ts";
 import type { AlignmentBody, FramePoint, SkyCondition } from "./alignment.ts";
@@ -56,7 +57,7 @@ export interface SkySpec {
 export type TargetSpec = GroundSpec | SkySpec;
 
 export type CameraRange =
-  | { mode: "free"; maxDistance: number }
+  | { mode: "free"; maxDistance: number; minDistance: number }
   | { mode: "near"; latitude: number; longitude: number; radius: number }
   | { mode: "fixed"; latitude: number; longitude: number; aim: { azimuth: number; pitch: number } | null };
 export type TimeRange = { mode: "range"; date: string; days: number } | { mode: "instant"; instant: string };
@@ -78,6 +79,10 @@ export const lensOf = (plan: ShootingPlan): Lens =>
 
 export const distanceChoices = [10_000, 20_000, 30_000] as const;
 export const nearChoices = [1_000, 3_000, 10_000] as const;
+/** Nearest camera distance from the ground point when the camera is free; the first is the solver's own floor. */
+export const nearestChoices = [200, 1_000, 2_000, 5_000, 10_000] as const;
+export const DEFAULT_NEAREST = 2_000;
+export const nearestLabel = (distance: number) => (distance <= 200 ? "不限" : `${distance / 1000} km`);
 export const dayChoices = [1, 7, 30, 90, 365, 1096] as const;
 /** 3 years only with a fixed camera (a time search per day is cheap; a line search is not). */
 export const dayLabel = (days: number) => (days === 1 ? "当天" : days === 365 ? "12 个月" : days === 1096 ? "3 年" : `${days} 天`);
@@ -408,7 +413,8 @@ export const templates: readonly Template[] = [
     hint: "日出、日落时太阳落在富士山顶正中；90 天内，机位不限。",
     build: (_plan, date) => ({
       targets: [summit({ x: 0.5, y: 0.6 }), { kind: "sky", id: newId(), body: "sun", frame: { x: 0.5, y: 0.6 }, tolerance: DEFAULT_TOLERANCE }],
-      camera: { mode: "free", maxDistance: 30_000 }, time: { mode: "range", date, days: 90 }, filters: [{ kind: "sky", sky: ["golden"] }],
+      // Seen from 10–30 km the summit stands 5°–15° high: no golden-hour filter, and not from the mountain itself.
+      camera: { mode: "free", maxDistance: 30_000, minDistance: 10_000 }, time: { mode: "range", date, days: 90 }, filters: [],
     }),
   },
   {
@@ -422,7 +428,7 @@ export const templates: readonly Template[] = [
           { kind: "ground", id: newId(), name: tower.name, landmark: tower.id, latitude: tower.latitude, longitude: tower.longitude, height: tower.bounds.height, reference: "ground", frame: { x: 0.5, y: 0.35 }, base: 0.7, tolerance: DEFAULT_TOLERANCE },
           { kind: "sky", id: newId(), body: "moon", frame: { x: 0.5, y: 0.35 }, tolerance: DEFAULT_TOLERANCE },
         ],
-        camera: { mode: "free", maxDistance: 30_000 }, time: { mode: "range", date, days: 30 }, filters: [],
+        camera: { mode: "free", maxDistance: 30_000, minDistance: 200 }, time: { mode: "range", date, days: 30 }, filters: [],
       };
     },
   },
@@ -432,7 +438,7 @@ export const templates: readonly Template[] = [
     hint: "仙女座星系在富士山顶正上方，山顶在下三分线；暗夜、月亮在地平线下，90 天内。",
     build: (_plan, date) => ({
       targets: [summit({ x: 0.5, y: 2 / 3 }), { kind: "sky", id: newId(), body: "dso-ngc0224", frame: { x: 0.5, y: 0.52 }, tolerance: DEFAULT_TOLERANCE }],
-      camera: { mode: "free", maxDistance: 30_000 }, time: { mode: "range", date, days: 90 }, filters: [{ kind: "sky", sky: ["night"] }, { kind: "moonDown" }],
+      camera: { mode: "free", maxDistance: 30_000, minDistance: DEFAULT_NEAREST }, time: { mode: "range", date, days: 90 }, filters: [{ kind: "sky", sky: ["night"] }, { kind: "moonDown" }],
     }),
   },
 ];
@@ -472,6 +478,32 @@ export interface ResultItem {
 export interface DayGroup {
   day: string;
   items: ResultItem[];
+}
+
+/**
+ * Whether a search is about the night: its leading body is a fixed one (searched
+ * only in the dark), or the filters allow only the dark. Its days then run
+ * from noon to noon and are named after their evening.
+ */
+export function nightSearch(composition: Pick<Composition, "filters">, strategy: Strategy) {
+  const lead = strategy.kind === "pair" ? [strategy.first, strategy.second] : [strategy.sky];
+  if (lead.every((sky) => isFixedBody(sky.body))) return true;
+  return composition.filters.some((filter) => filter.kind === "darkSky"
+    || (filter.kind === "sky" && filter.sky.every((sky) => sky === "twilight" || sky === "night")));
+}
+/** The day a time belongs to: its local date, or at night the date of the evening before. */
+export function shootingDay(time: number, timeZone: string, night: boolean) {
+  return Temporal.Instant.fromEpochMilliseconds(night ? time - 12 * 3_600_000 : time).toZonedDateTimeISO(timeZone).toPlainDate().toString();
+}
+/** A day's stretches as spans for its row: those less than `gap` apart run together. */
+export function daySpans(items: readonly { start: number; end: number }[], gap = 3 * 3_600_000) {
+  const spans: { start: number; end: number }[] = [];
+  for (const item of [...items].sort((a, b) => a.start - b.start)) {
+    const last = spans.at(-1);
+    if (last && item.start - last.end < gap) last.end = Math.max(last.end, item.end);
+    else spans.push({ start: item.start, end: item.end });
+  }
+  return spans;
 }
 
 export function groupByDay(items: readonly ResultItem[]): DayGroup[] {

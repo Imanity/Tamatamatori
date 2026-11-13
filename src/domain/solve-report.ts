@@ -92,7 +92,9 @@ export function describeSolve2(request: SolveRequest2): SolveRow[] {
   rows.push({
     label: "机位",
     value: camera.mode === "free"
-      ? (request.targets.some((target) => target.type === "ground") ? `不限，离地面目标最远 ${camera.maxDistance / 1000} km${eye}` : `不限（只有天体时与机位基本无关，按打开者当前机位计算）${eye}`)
+      ? (request.targets.some((target) => target.type === "ground")
+        ? `不限，离地面目标${camera.minDistance && camera.minDistance > 200 ? ` ${camera.minDistance / 1000}—${camera.maxDistance / 1000} km` : `最远 ${camera.maxDistance / 1000} km`}${eye}`
+        : `不限（只有天体时与机位基本无关，按打开者当前机位计算）${eye}`)
       : camera.mode === "near" ? `${coordinate(camera.latitude, camera.longitude)} 周围 ${camera.radius / 1000} km${eye}`
         : `${camera.latitude !== undefined && camera.longitude !== undefined ? `固定于 ${coordinate(camera.latitude, camera.longitude)}` : "固定为当前机位"}${camera.aim ? `，朝向固定（方位 ${camera.aim.azimuth.toFixed(2)}°，俯仰 ${camera.aim.pitch.toFixed(2)}°）` : ""}${eye}`,
   });
@@ -112,7 +114,8 @@ export function filterWords(filter: FilterSpec) {
 export function resultRows(items: readonly ResultItem[], timeZone: string) {
   const header = ["日期", "时段", "机位（试看处）", "目标方向与距离", "最大偏差", "天空", "月亮"];
   const rows = items.map((item) => [
-    item.day,
+    // The date the stretch starts on (a night's rows may begin after midnight).
+    localDateTime(iso(item.start), timeZone).slice(0, 10),
     item.start === item.end ? clock(iso(item.start), timeZone) : `${clock(iso(item.start), timeZone)}–${clock(iso(item.end), timeZone)}`,
     coordinate(item.camera.latitude, item.camera.longitude),
     item.bearing === null ? "—" : `${compassDirection(item.bearing)} ${item.near === item.far ? km(item.near!) : `${km(item.near!)}—${km(item.far!)}`} km`,
