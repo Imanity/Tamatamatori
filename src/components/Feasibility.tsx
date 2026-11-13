@@ -75,7 +75,8 @@ export function CheckControls({ check, single }: { check: Feasibility; single?: 
   return (
     <div className="feasibility" aria-label="检查机位">
       <div className="alignment-actions">
-        <button type="button" disabled={run?.phase === "loading"} onClick={check.start}>
+        <button type="button" disabled={run?.phase === "loading"} onClick={check.start}
+          title={`读取 OpenFreeMap 的水体与建筑轮廓（OpenStreetMap 贡献者），只查机位本身与视线前 ${CHECK_RADIUS / 1000} km；建筑高度可能由层数推算，资料不一定完整，不含树木、桥梁与可达性。`}>
           {run?.phase === "loading" ? `检查中 ${run.progress[0]}/${run.progress[1] || "…"}` : run?.phase === "done" ? "重新检查机位" : run?.phase === "error" ? "重试检查" : "检查机位（水面、建筑）"}
         </button>
       </div>
@@ -88,9 +89,6 @@ export function CheckControls({ check, single }: { check: Feasibility; single?: 
           {count((item) => item.unknown) > 0 && `、地形数据不全 ${count((item) => item.unknown)}`}。读取 {run.tiles} 块矢量瓦片（新下载 {run.fetched} 块）。
           {run.checked < run.total && ` 只检查了前 ${run.checked} 个（单次最多 ${CHECK_LIMIT} 个机位、${CHECK_TILE_LIMIT} 块瓦片）。`}
         </p>)}
-      <p className="alignment-hint">
-        按需读取 OpenFreeMap 的水体与建筑轮廓（OpenStreetMap 贡献者），只查机位本身与视线前 {CHECK_RADIUS / 1000} km。建筑高度可能由层数推算，资料不一定完整；不含树木、桥梁与可达性。
-      </p>
     </div>
   );
 }

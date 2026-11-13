@@ -645,7 +645,7 @@ export function compositionGeometry(state: CompositionState | null, timeZone: st
 /** Wind and terrain notes shared by results: a coarser terrain read for a wide search. */
 function CoarseNote({ sampler, latitude }: { sampler: LoadedSampler | null | undefined; latitude: number }) {
   if (!sampler?.zoom || sampler.zoom >= TERRAIN_ZOOM) return null;
-  return <p className="alignment-hint">范围较大，地形按较粗一级读取（像元约 {Math.round(tilePixel(sampler.zoom, latitude))} m）。</p>;
+  return <p className="alignment-hint">范围较大，地形按约 {Math.round(tilePixel(sampler.zoom, latitude))} m 像元读取。</p>;
 }
 
 function ProfileChart({ profile }: { profile: NonNullable<ReturnType<typeof positionProfile>> }) {
@@ -694,7 +694,7 @@ function BodyPicker({ body, onChange, name }: { body: AlignmentBody; onChange: (
           <optgroup label="亮星">{stars.map((item) => <option key={item.id} value={item.id}>{item.name}{item.magnitude !== null ? ` · ${item.magnitude.toFixed(1)} 等` : ""}</option>)}</optgroup>
         </select>
       </label>}
-      {isFixedBody(body) && <p className="alignment-hint">{bodyName(body)}方向相对恒星固定，标记按{sizeWord(body)}画出；只在太阳低于 −6° 时搜索。</p>}
+      {isFixedBody(body) && <p className="alignment-hint" title={`${bodyName(body)}方向相对恒星固定，标记按${sizeWord(body)}画出。`}>只在太阳低于 −6° 时搜索。</p>}
     </div>
   );
 }
@@ -750,14 +750,14 @@ function GroundEditor({ state, target }: { state: CompositionState; target: Grou
         <NumberField label={target.reference === "sea" ? "海拔" : "距地表"} unit="m" min={target.reference === "sea" ? -500 : 0} max={target.reference === "sea" ? 9000 : 1000} step={1} value={target.height}
           onChange={(height) => state.updateTarget(target.id, { height, ...(target.reference === "ground" && height < 10 ? { base: null } : {}) })} />
       </fieldset>
-      {target.reference === "sea" && <p className="alignment-hint">海拔与应用的地形高程用同一套数值，基准未核定。</p>}
+      {target.reference === "sea" && <p className="alignment-hint" title="与应用的地形高程用同一套数值">海拔基准未核定。</p>}
       <label className="composition-check">
         <input type="checkbox" disabled={!sized} checked={target.base !== null}
           onChange={(event) => state.updateTarget(target.id, { base: event.target.checked ? Math.min(0.97, target.frame.y + 0.3) : null })} />
         设定底部在画面中的位置（定主体大小）
       </label>
-      {!sized && <p className="alignment-hint">底部位置只用于距地表至少 10 m 的点（塔、楼）。</p>}
-      {target.base !== null && <p className="alignment-hint">底部自上 {percent(target.base)}：主体占画面高度约 {percent(target.base - target.frame.y)}。在预览中拖动底部短横调整。</p>}
+      {!sized && <p className="alignment-hint">只用于距地表 10 m 以上的点。</p>}
+      {target.base !== null && <p className="alignment-hint" title="在预览中拖动底部短横调整">底部自上 {percent(target.base)}，主体约 {percent(target.base - target.frame.y)}。</p>}
       <SpotFields spot={target.frame} label={target.name} onChange={(frame) => state.moveTarget(target.id, frame)} />
       <ToleranceField value={target.tolerance} onChange={(tolerance) => state.updateTarget(target.id, { tolerance })} />
     </div>
@@ -813,9 +813,7 @@ function TargetsSection({ state }: { state: CompositionState }) {
         <button type="button" disabled={full || state.placing === "new"} onClick={() => state.setPlacing("new")}>+ 地面点</button>
         <button type="button" disabled={full} onClick={() => state.addSky()}>+ 天体</button>
       </div>
-      <p className="alignment-hint">{targets.length
-        ? `拖动预览中的标记，决定各目标在画面中的位置；点目标名可修改。${targets.length > 2 ? "第三个起的目标在每个候选分钟按容差检查。" : ""}`
-        : `先加一个地面点（山顶、塔）和一个天体，或两个天体；最多 ${TARGET_LIMIT} 个。也可以从上方模板开始。`}</p>
+      {!targets.length && <p className="alignment-hint">加一个地面点和一个天体，或两个天体，再在预览中拖动标记。</p>}
     </div>
   );
 }
@@ -920,11 +918,11 @@ function FiltersSection({ state }: { state: CompositionState }) {
           </fieldset>}
           {filter.kind === "moonDown" && <span>月亮在地平线下</span>}
           {filter.kind === "darkSky" && <label className="field">
-            <span className="field-label">星空可见性（天顶天空亮度）</span>
-            <select aria-label="星空可见性" value={filter.limit} onChange={(event) => replace(index, { kind: "darkSky", limit: Number(event.target.value) })}>
-              {darkSkyChoices.map((choice) => <option key={choice.limit} value={choice.limit}>不亮于 {choice.limit} mag/arcsec² · {choice.label}</option>)}
+            <span className="field-label">星空可见性</span>
+            <select aria-label="星空可见性" value={filter.limit} onChange={(event) => replace(index, { kind: "darkSky", limit: Number(event.target.value) })}
+              title="天顶天空亮度不亮于所选值（mag/arcsec²）：按自然天光、机位的光污染（World Atlas 2015）与月光合成，只在天文夜（太阳低于 −18°）判断。">
+              {darkSkyChoices.map((choice) => <option key={choice.limit} value={choice.limit}>{choice.label} · {choice.limit}</option>)}
             </select>
-            <small className="alignment-hint">按自然天光、机位的光污染（World Atlas 2015）与月光合成，只在天文夜（太阳低于 −18°）判断。</small>
           </label>}
           {filter.kind === "moonLit" && <div className="field alignment-phase" role="group" aria-label="月亮亮面范围">
             <span className="field-label">月亮亮面</span>
@@ -1072,13 +1070,10 @@ function ResultsSection({ state, plan, occlusion, check }: {
           );
         })}
       </ol>}
-      <p className="alignment-note">
-        {run.strategy.kind === "line" && "地图上每段线上的机位，在标注的时刻看到天体与地面目标落在设定的画面位置；“试看”跳到一段的中间。"}
-        {run.strategy.kind === "window" && "机位固定，列出天体经过画面位置的时刻（容差内）。"}
-        {run.strategy.kind === "pair" && "两个天体的相对位置与机位基本无关；试看时让第一个天体落在它的画面位置。"}
-        {" "}机位眼睛高度为地面加离地 {plan.cameraHeight} m，天体按{plan.refraction === "standard" ? "标准折射" : "无折射"}与海平面地平计算；遮挡只看地形，不含建筑、树木与天气，不代表实景一定可见。
-        {run.worker ? " 在后台线程计算。" : ""}
-      </p>
+      {done && <p className="alignment-note"
+        title={`机位眼睛高度为地面加离地 ${plan.cameraHeight} m，天体按${plan.refraction === "standard" ? "标准折射" : "无折射"}与海平面地平计算${run.worker ? "；在后台线程计算" : ""}。`}>
+        遮挡只看地形，不含建筑、树木与天气。
+      </p>}
     </div>
   );
 }
@@ -1095,9 +1090,8 @@ export function CompositionPanel({ state, plan, occlusion, saving }: {
   return (
     <section className="alignment-panel composition-panel" aria-label="推算">
       <header className="alignment-header">
-        <p>先定画面里要有什么、各在哪里，再搜索在哪里、什么时候能拍到。按星历与地形计算，不含天气。</p>
         <div className="composition-templates" role="group" aria-label="模板">
-          <span>从模板开始：</span>
+          <span>模板：</span>
           {templates.map((template) => <button key={template.id} type="button" title={template.hint} onClick={() => state.applyTemplate(template.id)}>{template.name}</button>)}
         </div>
       </header>
@@ -1110,7 +1104,7 @@ export function CompositionPanel({ state, plan, occlusion, saving }: {
           <button type="button" className="composition-search-button" disabled={!solvability.strategy || state.running} onClick={state.search}>{state.run?.phase === "done" && !state.stale ? "重新搜索" : "搜索"}</button>
           {state.running && <button type="button" onClick={state.cancel}>取消</button>}
         </div>
-        {state.stale && state.run?.phase === "done" && <p className="alignment-hint is-warning" role="status">条件已改：下面的结果按改动前的条件，请重新搜索。</p>}
+        {state.stale && state.run?.phase === "done" && <p className="alignment-hint is-warning" role="status">条件已改，请重新搜索。</p>}
       </div>
       <ResultsSection state={state} plan={plan} occlusion={occlusion} check={check} />
       <SolveExport state={state} plan={plan} saving={saving} />

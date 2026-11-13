@@ -195,16 +195,12 @@ export function SolveExport({ state, plan, saving }: { state: CompositionState; 
       <div className="alignment-actions">
         <button type="button" disabled={!saving?.writable || !trial} onClick={save}
           title={!trial ? "先试看一个结果" : !saving?.writable ? "本机存储不可用" : "把正在试看的结果存为机位"}>存为机位</button>
-        <button type="button" disabled={!ready} onClick={exportCalendar}>导出日历</button>
-        <button type="button" disabled={!request} onClick={() => copy(link, "已复制推算请求链接")}>复制推算请求</button>
-        <button type="button" disabled={!markdown} onClick={() => markdown && copy(markdown, "已复制结果（Markdown）")}>复制结果</button>
+        <button type="button" disabled={!ready} onClick={exportCalendar} title="下载 .ics：每个结果一个事件，附打开该机位的链接">导出日历</button>
+        <button type="button" disabled={!request} onClick={() => copy(link, "已复制推算请求链接")} title="链接：对方打开后先预览，确认才在其本机推算">复制推算请求</button>
+        <button type="button" disabled={!markdown} onClick={() => markdown && copy(markdown, "已复制结果（Markdown）")} title="Markdown 表格，可贴给人或 AI 阅读">复制结果</button>
       </div>
       <span className="alignment-copied" role="status">{copied}</span>
       <textarea ref={field} className="shot-copy-source" readOnly value={text} aria-hidden="true" tabIndex={-1} />
-      <p className="alignment-hint">
-        {trial ? "存为机位保存正在试看的结果。" : "试看一个结果后可存为机位。"}
-        日历（.ics）每个结果一个事件，附打开机位的链接。推算请求是一个链接，打开后先预览、确认才会在对方本机推算；结果为 Markdown 表格，可贴给人或 AI 阅读。
-      </p>
     </div>
   );
 }

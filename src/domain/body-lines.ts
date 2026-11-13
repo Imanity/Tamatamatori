@@ -49,3 +49,41 @@ export function bodyLines(plan: LinePlan): BodyLine[] {
   }
   return lines;
 }
+
+export interface LineLabel {
+  /** Where it sits: the end of a shooting-instant line, or of a rise or set line. */
+  ring: "now" | "event";
+  azimuth: number;
+  text: string;
+  /** The body named, or null when labels of several bodies were merged. */
+  body: LineBody | null;
+}
+const nowNames: Record<LineBody, string> = { sun: "太阳", moon: "月亮", core: "银心" };
+const eventNames: Record<LineBody, Record<"rise" | "set", string>> = {
+  sun: { rise: "日出", set: "日落" },
+  moon: { rise: "月出", set: "月落" },
+  core: { rise: "银心升起", set: "银心落下" },
+};
+/** Labels at the same ring closer than this (degrees of azimuth) are merged into one. */
+export const LABEL_MERGE_ANGLE = 12;
+
+/**
+ * Names for the map's lines: the body at the shooting instant (noting when it
+ * is below the horizon) and its rises and sets with the local time. Labels
+ * that would sit on top of each other are merged, in the lines' order.
+ */
+export function lineLabels(lines: readonly BodyLine[], timeZone: string): LineLabel[] {
+  const labels: LineLabel[] = [];
+  for (const line of lines) {
+    const text = line.kind === "now"
+      ? `${nowNames[line.body]}${line.above ? "" : " · 地平线下"}`
+      : `${eventNames[line.body][line.kind]} ${Temporal.Instant.from(line.instant).toZonedDateTimeISO(timeZone).toPlainTime().toString({ smallestUnit: "minute" })}`;
+    const ring = line.kind === "now" ? "now" : "event";
+    const near = labels.find((label) => label.ring === ring && Math.abs(((line.azimuth - label.azimuth + 540) % 360) - 180) <= LABEL_MERGE_ANGLE);
+    if (near) {
+      near.text = `${near.text} · ${text}`;
+      if (near.body !== line.body) near.body = null;
+    } else labels.push({ ring, azimuth: line.azimuth, text, body: line.body });
+  }
+  return labels;
+}

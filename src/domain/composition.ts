@@ -155,7 +155,7 @@ export function classify(composition: Composition): Solvability {
     if (fixed) return { strategy: { kind: "window", ground, sky, extras }, shape: "windows", message: `机位固定：由“${ground.name}”定朝向，求${bodyName(sky.body)}经过画面位置的时刻。${more(extras)}` };
     return time.mode === "instant"
       ? { strategy: { kind: "line", ground, sky, extras }, shape: "points", message: `时刻固定：结果为机位点。${more(extras)}` }
-      : { strategy: { kind: "line", ground, sky, extras }, shape: "lines", message: `结果为机位线：每个时刻一处机位，在地图上画成线。${more(extras)}` };
+      : { strategy: { kind: "line", ground, sky, extras }, shape: "lines", message: `结果为机位线：每个时刻一处机位。${more(extras)}` };
   }
   if (time.mode === "instant") return stop("天体之间的相对位置只随时间变化；时刻固定时无从搜索。");
   const extras = skies.slice(2);

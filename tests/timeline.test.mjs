@@ -276,6 +276,37 @@ test("地图方位线：日月与银心此刻方位来自同一星历，出没�
   assert.deepEqual([...new Set(bodyLines({ ...subject, layers: { ...noLayers, moon: true } }).map((line) => line.body))], ["moon"]);
 });
 
+test("地图方位线标签：此刻线标天体名（地平线下注明），出没线标所选时区的时刻；同一圈 12° 内的标签合并", async () => {
+  const { bodyLines, lineLabels } = await import("../src/domain/body-lines.ts");
+  const line = (body, kind, azimuth, instant = "2026-11-04T07:40:00Z", above = true) => ({ body, kind, azimuth, above, instant });
+  const labels = lineLabels([
+    line("sun", "now", 200),
+    line("moon", "now", 80, undefined, false),
+    line("moon", "rise", 75, "2026-11-04T09:12:30Z"),
+    line("sun", "set", 245),
+    line("sun", "rise", 110, "2026-11-04T21:05:00Z"),
+    line("core", "rise", 118, "2026-11-05T00:41:00Z"),
+    line("core", "set", 355, "2026-11-04T12:00:00Z"),
+    line("moon", "set", 4, "2026-11-04T23:59:00Z"),
+  ], "Asia/Tokyo");
+  assert.deepEqual(labels, [
+    { ring: "now", azimuth: 200, text: "太阳", body: "sun" },
+    { ring: "now", azimuth: 80, text: "月亮 · 地平线下", body: "moon" },
+    { ring: "event", azimuth: 75, text: "月出 18:12", body: "moon" },
+    { ring: "event", azimuth: 245, text: "日落 16:40", body: "sun" },
+    { ring: "event", azimuth: 110, text: "日出 06:05 · 银心升起 09:41", body: null },
+    { ring: "event", azimuth: 355, text: "银心落下 21:00 · 月落 08:59", body: null },
+  ]);
+  // The time follows the chosen zone.
+  assert.equal(lineLabels([line("sun", "set", 245)], "UTC")[0].text, "日落 07:40");
+  // Real lines: each one is named once.
+  const subject = { latitude: 35.4172, longitude: 138.8729, instant: "2026-11-04T08:00:00Z", timeZone: "Asia/Tokyo", refraction: "standard", layers: { ...noLayers, sun: true, moon: true, milkyWay: true } };
+  const lines = bodyLines(subject);
+  const named = lineLabels(lines, subject.timeZone).flatMap((label) => label.text.split(" · ").filter((part) => part !== "地平线下"));
+  assert.equal(named.length, lines.length);
+  assert.ok(named.includes("太阳") && named.includes("月亮") && named.includes("银心"), named.join());
+});
+
 test("时间轴的食：日食接触随太阳图层，月食接触随月亮图层；偏食月食不标半影始末，地平线下的接触写明不可见", async () => {
   const { timelineEvents: events, timelineWindow: span } = await import("../src/domain/timeline.ts");
   const layers = { ...initialPlan.layers, sun: true, moon: true };

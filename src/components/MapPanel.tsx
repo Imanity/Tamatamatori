@@ -5,7 +5,7 @@ import type { RefObject } from "react";
 import type { Map as MapLibreMap, Marker, GeoJSONSource } from "maplibre-gl";
 import type { ShootingPlan } from "../domain/plan";
 import { normalizeLongitude, sensorKey } from "../domain/plan";
-import { bodyLines } from "../domain/body-lines";
+import { bodyLines, lineLabels } from "../domain/body-lines";
 import type { BodyLine } from "../domain/body-lines";
 import { timelineMode, timelineWindow } from "../domain/timeline";
 import { centralEclipseInSpan, centralPath, umbraFootprint, unwrap } from "../domain/eclipses";
@@ -33,6 +33,7 @@ const styleUrl =
   "https://tiles.openfreemap.org/styles/liberty";
 const viewSourceId = "tamatamatori-view";
 const linesSourceId = "tamatamatori-body-lines";
+const labelSourceId = "tamatamatori-line-labels";
 const eclipseSourceId = "tamatamatori-eclipse";
 const environmentSourceId = "tamatamatori-environment";
 const alignmentSourceId = "tamatamatori-alignment";
@@ -76,6 +77,33 @@ function lineGeometry(plan: ShootingPlan, lines: BodyLine[], zoom: number): GeoJ
         geometry: { type: "LineString", coordinates: [[plan.longitude, plan.latitude], [nearbyLongitude(end.longitude, plan.longitude), end.latitude]] },
       };
     }),
+  };
+}
+/** The text anchor that puts a label outside the end of a line pointing `angle` (degrees clockwise from screen up). */
+function outward(angle: number) {
+  const anchors = ["bottom", "bottom-left", "left", "top-left", "top", "top-right", "right", "bottom-right"] as const;
+  return anchors[Math.round((((angle % 360) + 360) % 360) / 45) % 8];
+}
+/** Names at the ends of the body lines (rises and sets with their times) and of the shooting direction. */
+function labelGeometry(plan: ShootingPlan, lines: BodyLine[], zoom: number, bearing: number): GeoJSON.FeatureCollection {
+  const radius = viewRadiusMeters(plan, zoom);
+  if (radius < 1 || !isMapPosition(plan)) return { type: "FeatureCollection", features: [] };
+  const point = (azimuth: number, distance: number, properties: { text: string; color: string; offset: number }): GeoJSON.Feature => {
+    const end = destination(plan, azimuth, distance);
+    return {
+      type: "Feature",
+      properties: { ...properties, anchor: outward(azimuth - bearing) },
+      geometry: { type: "Point", coordinates: [nearbyLongitude(end.longitude, plan.longitude), end.latitude] },
+    };
+  };
+  return {
+    type: "FeatureCollection",
+    features: [
+      ...lineLabels(lines, plan.timeZone).map((label) =>
+        point(label.azimuth, radius * (label.ring === "now" ? 1.4 : 1.15), { text: label.text, color: label.body ? bodyColors[label.body] : "#2f3b30", offset: 0.4 })),
+      // Clear of the direction handle at the end of that line.
+      point(plan.azimuth, radius, { text: "拍摄方向", color: "#326d51", offset: 1.4 }),
+    ],
   };
 }
 type LoadStatus = {
@@ -277,6 +305,7 @@ export function MapPanel({
     let activeDrag: "camera" | "direction" | null = null;
     let geometryKey = "";
     let linesKey = "";
+    let labelsKey = "";
     let drawnEclipse: EclipseMap | undefined;
     let drawnEnvironment: GeoJSON.FeatureCollection | undefined;
     let drawnAlignment: GeoJSON.FeatureCollection | undefined;
@@ -339,6 +368,13 @@ export function MapPanel({
       if (lineSource && nextLinesKey !== linesKey) {
         lineSource.setData(lineGeometry(current, latest.current.lines, map.getZoom()));
         linesKey = nextLinesKey;
+      }
+      // Labels turn with the map so they stay outside the line ends.
+      const labelSource = map.getSource(labelSourceId) as GeoJSONSource | undefined;
+      const nextLabelsKey = `${nextLinesKey}/${current.timeZone}/${Math.round(map.getBearing() / 15)}`;
+      if (labelSource && nextLabelsKey !== labelsKey) {
+        labelSource.setData(labelGeometry(current, latest.current.lines, map.getZoom(), map.getBearing()));
+        labelsKey = nextLabelsKey;
       }
       const eclipseSource = map.getSource(eclipseSourceId) as GeoJSONSource | undefined;
       if (eclipseSource && latest.current.eclipse !== drawnEclipse) {
@@ -744,6 +780,17 @@ export function MapPanel({
                 "line-width": 2,
                 "line-dasharray": [3, 2],
               },
+            });
+            // What each line from the camera is: on top, ahead of the base map's labels.
+            map.addSource(labelSourceId, { type: "geojson", data: labelGeometry(latest.current.plan, latest.current.lines, map.getZoom(), map.getBearing()) });
+            map.addLayer({
+              id: "tamatamatori-line-labels", type: "symbol", source: labelSourceId,
+              layout: {
+                "text-field": ["get", "text"], "text-font": ["Noto Sans Regular"], "text-size": 12,
+                "text-anchor": ["get", "anchor"], "text-radial-offset": ["get", "offset"],
+                "text-allow-overlap": true,
+              },
+              paint: { "text-color": ["get", "color"], "text-halo-color": "#ffffff", "text-halo-width": 1.8 },
             });
             scheduleDraw(true);
           } catch {

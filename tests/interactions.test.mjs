@@ -2548,7 +2548,20 @@ test('地图方位线：日月默认画出，随图层开关增减，银心跟�
   assert.equal(sunNow.properties.above, false, '17:00 in Tokyo: below the horizon, drawn dotted');
   assert.deepEqual(sunNow.geometry.coordinates[0], [value('经度'), value('纬度')]);
   assert.deepEqual([...document.querySelectorAll('.map-legend span:not(.map-legend-note)')].map((item) => item.textContent), ['太阳', '月亮']);
+  // Each line is named at its end; the shooting direction too, its label outside the end whatever the map's rotation.
+  const labels = () => map.getSource('tamatamatori-line-labels').data.features;
+  const texts = () => labels().map((feature) => feature.properties.text);
+  assert.ok(texts().includes('太阳 · 地平线下'), texts().join());
+  assert.ok(texts().some((text) => /^月亮/.test(text)));
+  assert.ok(texts().some((text) => /日落 \d\d:\d\d/.test(text)), texts().join());
+  const aim = labels().find((feature) => feature.properties.text === '拍摄方向');
+  assert.ok(aim);
+  await settle(() => setControl(input('方位角'), 90));
+  assert.equal(labels().find((feature) => feature.properties.text === '拍摄方向').properties.anchor, 'left', 'pointing east: the text to the right of the end');
+  await settle(() => setControl(input('方位角'), 180));
+  assert.equal(labels().find((feature) => feature.properties.text === '拍摄方向').properties.anchor, 'top');
   await settle(() => document.querySelector('[aria-label="显示月亮"]').click());
+  assert.ok(!texts().some((text) => /月/.test(text)), 'labels follow the layers');
   assert.deepEqual(bodies(), ['sun']);
   await settle(() => document.querySelector('[aria-label="显示银河"]').click());
   assert.deepEqual(bodies(), ['core', 'sun']);
@@ -2557,6 +2570,7 @@ test('地图方位线：日月默认画出，随图层开关增减，银心跟�
   await settle(() => document.querySelector('[aria-label="显示太阳"]').click());
   await settle(() => document.querySelector('[aria-label="显示银河"]').click());
   assert.deepEqual(features(), []);
+  assert.deepEqual(texts(), ['拍摄方向']);
   assert.equal(document.querySelector('.map-legend'), null);
 });
 
@@ -3001,7 +3015,7 @@ test('推算：可解性提示随目标、范围与筛选变化；高纬度冬�
   await settle(() => button('+ 天体').click());
   assert.equal(document.querySelectorAll('.composition-target-list > li').length, 3);
   assert.match(solvability(), /结果为机位线.*另有 1 个目标按容差逐分钟检查/);
-  assert.match(document.querySelector('.composition-targets .alignment-hint').textContent, /第三个起的目标在每个候选分钟按容差检查/);
+  assert.equal(document.querySelector('.composition-targets .alignment-hint'), null, 'no how-to once there are targets');
   await settle(() => button('+ 地面点').click());
   await settle(() => setControl(document.querySelector('.composition-pending select[aria-label="选择地标"]'), 'tokyo-tower'));
   assert.match(targetRow('东京塔').textContent, /自左 30%、自上 78%/, 'a second ground point lower left');
@@ -3193,7 +3207,7 @@ test('推算·更多目标与星空可见性：第三个地面点随走廊读取
   const limit = document.querySelector('select[aria-label="星空可见性"]');
   assert.equal(limit.value, '21.3');
   assert.deepEqual([...limit.options].map((option) => option.value), ['21.7', '21.3', '20.5', '19.5']);
-  assert.match(document.querySelector('.composition-filters').textContent, /只在天文夜（太阳低于 −18°）判断/);
+  assert.match(limit.title, /只在天文夜（太阳低于 −18°）判断/, 'how it is computed, on hover');
   pollutionRequests.length = 0;
   const before = resultStatus().match(/共 (\d+) 分钟/)[1];
   // No data anywhere: every minute is counted apart, none listed.
@@ -3342,7 +3356,8 @@ test('推算结果落地：试看后一键存为机位并成为当前机位，�
   const status = () => document.querySelector('.alignment-copied').textContent;
   assert.match(document.querySelector('.alignment-export h3').textContent, /保存与导出/);
   assert.equal(button('存为机位').disabled, true, 'nothing tried out yet');
-  assert.match(document.querySelector('.alignment-export .alignment-hint').textContent, /试看一个结果后可存为机位/);
+  assert.equal(button('存为机位').title, '先试看一个结果');
+  assert.equal(document.querySelector('.alignment-export .alignment-hint'), null, 'the buttons carry their own notes');
   // Try the first one and keep it.
   await settle(() => dayRows()[0].querySelector('.composition-day > button[aria-label^="试看"]').click());
   assert.equal(shootingDateTime(), '2027-02-12T16:22');
