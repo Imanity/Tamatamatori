@@ -104,12 +104,17 @@ export function skySeparation(a: { azimuth: number; elevation: number }, b: { az
   const one = unitOf(a), two = unitOf(b);
   return Math.acos(Math.max(-1, Math.min(1, one[0] * two[0] + one[1] * two[1] + one[2] * two[2]))) / degrees;
 }
-// Cameras stand within about 30 km: the Sun and Moon there differ by under 0.3° from the target.
+// Within 30 km of the target the Sun and Moon differ by under 0.3° from it; the
+// margin grows with the farthest camera beyond that (0.9° at 100 km, docs/plan/limits.md).
 const PREFILTER_MARGIN = 0.5;
 // Refraction near the horizon squeezes a separation by up to about 0.2°.
 const SEPARATION_MARGIN = 0.3;
-/** Whether a minute can pass the filters somewhere near the target (`body`: the searched body, for separations). */
-export function prefilterPasses(filter: Prefilter, time: number, latitude: number, longitude: number, body?: AlignmentBody) {
+/**
+ * Whether a minute can pass the filters somewhere within `reach` metres of the
+ * target (`body`: the searched body, for separations).
+ */
+export function prefilterPasses(filter: Prefilter, time: number, latitude: number, longitude: number, body?: AlignmentBody, reach = 30_000) {
+  const margin = PREFILTER_MARGIN * Math.max(1, reach / 30_000);
   if (filter.separations?.length && body) {
     const own = skyAt(body, time, latitude, longitude, "none");
     for (const other of filter.separations) {
@@ -119,10 +124,10 @@ export function prefilterPasses(filter: Prefilter, time: number, latitude: numbe
   }
   if (filter.sky || filter.night) {
     const sun = skyAt("sun", time, latitude, longitude, "none").elevation;
-    if (filter.sky && ![sun - PREFILTER_MARGIN, sun, sun + PREFILTER_MARGIN].some((elevation) => filter.sky!.includes(skyCondition(elevation)))) return false;
-    if (filter.night && sun - PREFILTER_MARGIN >= -18) return false;
+    if (filter.sky && ![sun - margin, sun, sun + margin].some((elevation) => filter.sky!.includes(skyCondition(elevation)))) return false;
+    if (filter.night && sun - margin >= -18) return false;
   }
-  if (filter.moonDown && skyAt("moon", time, latitude, longitude, "none").elevation > PREFILTER_MARGIN) return false;
+  if (filter.moonDown && skyAt("moon", time, latitude, longitude, "none").elevation > margin) return false;
   if (filter.moonLit) {
     const lit = Illumination(Body.Moon, new Date(time)).phase_fraction;
     if (lit < filter.moonLit[0] - 0.01 || lit > filter.moonLit[1] + 0.01) return false;
@@ -187,7 +192,7 @@ export function rangeTrack(input: RangeInput, span: { start: number; end: number
   const ceiling = altitudeCeiling(input);
   const { prefilter, target } = input;
   return bodyTrack({ ...input, start: span.start, end: span.end }).filter((sample) => sample.elevation <= ceiling
-    && (!prefilter || prefilterPasses(prefilter, sample.time, target.latitude, target.longitude, input.body)));
+    && (!prefilter || prefilterPasses(prefilter, sample.time, target.latitude, target.longitude, input.body, input.maxDistance)));
 }
 
 /** Points from the target out to the band's far edge along every bearing used, for loading DEM tiles. */

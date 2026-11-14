@@ -87,7 +87,10 @@ export type Lens = Omit<View, "azimuth" | "pitch" | "refraction"> & Partial<Pick
 export const lensOf = (plan: ShootingPlan): Lens =>
   ({ focalLength: plan.focalLength, sensor: plan.sensor, customSensor: plan.customSensor, aspectRatio: plan.aspectRatio, orientation: plan.orientation });
 
-export const distanceChoices = [10_000, 20_000, 30_000] as const;
+/** Farthest camera from the ground point, metres; 50 and 100 km since round 21 (docs/plan/limits.md). */
+export const distanceChoices = [10_000, 20_000, 30_000, 50_000, 100_000] as const;
+/** No camera is searched farther from the ground point. */
+export const MAX_SEARCH_DISTANCE = 100_000;
 export const nearChoices = [1_000, 3_000, 10_000] as const;
 /** Nearest camera distance from the ground point when the camera is free; the first is the solver's own floor. */
 export const nearestChoices = [200, 1_000, 2_000, 5_000, 10_000] as const;

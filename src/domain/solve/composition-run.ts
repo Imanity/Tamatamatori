@@ -1,6 +1,6 @@
 import { aimAt, finishAlignment, scanAlignment } from "./alignment.ts";
 import type { AlignmentInput, AlignmentScan } from "./alignment.ts";
-import {
+import { MAX_SEARCH_DISTANCE,
   canSkyline, conditionsAt, extraGap, filterResult, groundAim, groundTarget, lensOf, lineItems, ndc, nightSearch, placeItem, prefilterOf, scanPair,
   shootingDay, toleranceDiameters, windowItem, windowMark,
 } from "./composition.ts";
@@ -25,7 +25,8 @@ import type { ElevationTile } from "../core/terrain.ts";
  */
 
 /** Terrain tiles under points, as the solvers sample them. */
-export type LoadedSampler = GroundSampler & { zoom?: number; tiles?: ReadonlyMap<string, ElevationTile>; bounds?: number[] };
+/** `zoom`: the finest zoom read; `zooms`: all of them (finer near the ground target in a wide search). */
+export type LoadedSampler = GroundSampler & { zoom?: number; zooms?: number[]; tiles?: ReadonlyMap<string, ElevationTile>; bounds?: number[] };
 export interface RangeDay {
   day: string;
   start: number;
@@ -42,7 +43,8 @@ export type SolveDays = (input: RangeInput, days: RangeDay[], signal: AbortSigna
 
 export interface RunEnvironment {
   /** Terrain under the points; `progress` reports tiles read. */
-  terrain: (points: { latitude: number; longitude: number }[], signal: AbortSignal, progress?: (done: number, total: number) => void) => Promise<LoadedSampler>;
+  /** `focus`: the ground target, near which a wide read keeps the finer terrain. */
+  terrain: (points: { latitude: number; longitude: number }[], signal: AbortSignal, progress?: (done: number, total: number) => void, focus?: { latitude: number; longitude: number }) => Promise<LoadedSampler>;
   /** Artificial zenith brightness at a place, or null where the atlas has none. */
   lightPollution: (place: { latitude: number; longitude: number }, signal: AbortSignal) => Promise<{ artificialMcd: number } | null>;
   /** The camera line's days; the main thread when absent (the panel passes its worker). */
@@ -129,8 +131,8 @@ export async function runComposition(strategy: Strategy, composition: Compositio
     env.report?.(patch);
   };
   const lens = lensOf(plan);
-  const terrain = (points: { latitude: number; longitude: number }[], label = "读取地形") =>
-    env.terrain(points, signal, (done, total) => report({ stage: `${label} ${done}/${total} 块…` }));
+  const terrain = (points: { latitude: number; longitude: number }[], label = "读取地形", focus?: { latitude: number; longitude: number }) =>
+    env.terrain(points, signal, (done, total) => report({ stage: `${label} ${done}/${total} 块…` }), focus);
 
   /** The cameras' light pollution for 星空可见性, read per ~1 km cell. */
   const pollutionAt = async (places: readonly { latitude: number; longitude: number }[]) => {
@@ -178,7 +180,7 @@ export async function runComposition(strategy: Strategy, composition: Compositio
     const area = [center, ...Array.from({ length: 24 }, (_, index) => [0.25, 0.5, 0.75, 1].map((share) => travel(center, index * 15, maxDistance * share))).flat()];
     const grounds = [first, second, ...strategy.extras.filter((extra): extra is GroundSpec => extra.kind === "ground")];
     report({ rings, stage: "读取地形中…" });
-    const sampler = await terrain([...area, ...grounds.flatMap((ground) => [ground, ...skylineRing(ground)])]);
+    const sampler = await terrain([...area, ...grounds.flatMap((ground) => [ground, ...skylineRing(ground)])], "读取地形", center);
     if (signal.aborted) return;
     report({ stage: "推算中…" });
     await yieldNow();
@@ -190,7 +192,7 @@ export async function runComposition(strategy: Strategy, composition: Compositio
     let lines: LoadedSampler | null = null;
     if (solved.places.length) {
       report({ stage: "检查视线…" });
-      lines = await terrain([...solved.places.flatMap((place) => sightPoints(place)), ...grounds.flatMap((ground) => [ground, ...skylineRing(ground)])], "读取视线上的地形");
+      lines = await terrain([...solved.places.flatMap((place) => sightPoints(place)), ...grounds.flatMap((ground) => [ground, ...skylineRing(ground)])], "读取视线上的地形", center);
       if (signal.aborted) return;
       const instant = Date.parse(plan.instant);
       for (const coarse of solved.places) {
@@ -226,9 +228,9 @@ export async function runComposition(strategy: Strategy, composition: Compositio
     let centre: { latitude: number; longitude: number; radius: number } | null = null;
     if (composition.camera.mode === "near") {
       const distance = groundDistance(target, composition.camera);
-      if (distance - composition.camera.radius > 30_000) throw new Error("机位范围离地面目标超过 30 km：请换一处，或改用“不限”。");
+      if (distance - composition.camera.radius > MAX_SEARCH_DISTANCE) throw new Error(`机位范围离地面目标超过 ${MAX_SEARCH_DISTANCE / 1000} km：请换一处，或改用“不限”。`);
       minDistance = Math.max(MIN_DISTANCE, distance - composition.camera.radius);
-      maxDistance = Math.min(30_000, distance + composition.camera.radius);
+      maxDistance = Math.min(MAX_SEARCH_DISTANCE, distance + composition.camera.radius);
       centre = { latitude: composition.camera.latitude, longitude: composition.camera.longitude, radius: composition.camera.radius };
       rings.push(centre);
     } else {
@@ -274,7 +276,7 @@ export async function runComposition(strategy: Strategy, composition: Compositio
       },
       loadTiles: async (points) => {
         // Further ground points need their own ground too.
-        const loaded = await terrain([...points, ...around, ...extraGrounds]);
+        const loaded = await terrain([...points, ...around, ...extraGrounds], "读取地形", target);
         report({ stage: "推算中…" });
         return loaded;
       },

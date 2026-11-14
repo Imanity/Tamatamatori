@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { aimAt, frameDirection } from "../../src/domain/solve/alignment.ts";
-import { findPositions, pointPlan } from "../../src/domain/solve/position-alignment.ts";
+import { findPositions, pointPlan, travel } from "../../src/domain/solve/position-alignment.ts";
 import { blockedMinutes, mergeCandidates, rangeCandidates } from "../../src/domain/solve/range-alignment.ts";
 import { skyCondition } from "../../src/domain/solve/alignment.ts";
 import { sunPosition } from "../../src/domain/core/ephemeris.ts";
@@ -146,4 +146,31 @@ test("推算请求的画面位置：只用于找机位与两者都找，x、y �
   assert.match(errors({ ...range, frame: { x: 0.5, y: 0.5, z: 1 } }), /frame\.z：未知字段/);
   assert.match(errors({ ...range, frame: [0.5, 0.5] }), /frame：应为对象/);
   assert.match(errors({ format: "tamatamatori.solve", version: 1, kind: "time", body: "sun", mark: { azimuth: 1, elevation: 1 }, frame: { x: 0.5, y: 0.5 } }), /frame：kind 为 "time" 时不使用该字段/);
+});
+
+test("分层读取：有地面目标且范围超出 z12 时，30 km 内仍按只搜 30 km 时的瓦片读取，30 km 外另降级；取样用覆盖该点的最细瓦片（docs/plan/limits.md）", () => {
+  // Points placed as the solver places them (travel), out to 30 and to 100 km.
+  const disc = (radius) => Array.from({ length: 360 }, (_, bearing) => Array.from({ length: Math.ceil(radius / 500) }, (_, step) => travel(skytree, bearing, (step + 1) * 500))).flat();
+  const thirty = lineTiles(disc(30_000));
+  // Within 30 km a focus changes nothing.
+  assert.deepEqual([...lineTiles(disc(30_000), () => true, skytree).keys.keys()], [...thirty.keys.keys()]);
+  const tiered = lineTiles(disc(100_000), () => true, skytree);
+  assert.equal(tiered.zoom, thirty.zoom);
+  assert.ok(tiered.zooms.length === 2 && tiered.zooms[1] < tiered.zoom, JSON.stringify(tiered.zooms));
+  for (const key of thirty.keys.keys()) assert.ok(tiered.keys.has(key), key);
+  const coarse = [...tiered.keys.keys()].filter((key) => key.startsWith(`${tiered.zooms[1]}/`));
+  assert.ok(coarse.length <= LINE_TILE_LIMIT && tiered.keys.size - coarse.length === thirty.keys.size, `${coarse.length} + ${thirty.keys.size}`);
+  // Without a focus the whole 100 km disc is too wide even at z10, as before.
+  assert.throws(() => lineTiles(disc(100_000)), /超过单次 40 块的上限/);
+  // Several zooms: a point takes the finest tile over it.
+  const flat = (height) => {
+    const pixels = new Uint8ClampedArray(512 * 512 * 4);
+    for (let index = 0; index < pixels.length; index += 4) pixels.set([128, height, 0, 255], index);
+    return { width: 512, height: 512, pixels };
+  };
+  const tiles = new Map([...tiered.keys.keys()].map((key) => [key, flat(key.startsWith(`${tiered.zoom}/`) ? 100 : 200)]));
+  const sampler = tileSampler(tiles);
+  assert.equal(sampler(skytree.latitude, skytree.longitude), 100);
+  const far = destination(skytree, 45, 80_000);
+  assert.equal(sampler(far.latitude, far.longitude), 200);
 });

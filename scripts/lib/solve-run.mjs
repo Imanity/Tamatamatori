@@ -72,15 +72,16 @@ export function prepare(input, { shotPlan = null, now = Date.now(), labels = com
  * outcome, reads, seconds }, { status: 'cancelled' } or { status: 'failed', message }.
  */
 export async function search(prepared, { terrain = DEFAULT_TERRAIN_URL, environment = null, signal = new AbortController().signal, report = () => {} } = {}) {
-  // Each terrain read: its zoom and how many tiles it took.
+  // Each terrain read: its (finest) zoom and how many tiles it took.
   const reads = [];
   const loaders = environment ?? nodeEnvironment(terrain);
   const env = {
     ...loaders, report,
-    terrain: async (points, abort, progress) => {
+    terrain: async (points, abort, progress, focus) => {
       let tiles = 0;
-      const sampler = await loaders.terrain(points, abort, (done, total) => { tiles = total; progress?.(done, total); });
-      reads.push({ zoom: sampler.zoom ?? null, tiles });
+      const sampler = await loaders.terrain(points, abort, (done, total) => { tiles = total; progress?.(done, total); }, focus);
+      // A wide read keeps finer terrain near the ground target: all zooms then.
+      reads.push({ zoom: sampler.zoom ?? null, tiles, ...(sampler.zooms?.length > 1 ? { zooms: sampler.zooms } : {}) });
       return sampler;
     },
   };

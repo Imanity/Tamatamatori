@@ -43,7 +43,7 @@ export async function decodeTile(blob) {
 /** The executor's environment on Node: terrain from `terrainUrl`, light pollution from the repository. */
 export function nodeEnvironment(terrainUrl) {
   return {
-    terrain: (points, signal, progress) => elevationTiles(points, terrainUrl, signal, progress, decodeTile),
+    terrain: (points, signal, progress, focus) => elevationTiles(points, terrainUrl, signal, progress, decodeTile, focus),
     lightPollution: (place, signal) => sampleLightPollution(place, signal, async (file) => {
       const bytes = await readFile(join(ROOT, 'public', lightPollutionAtlas.directory, file));
       return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);

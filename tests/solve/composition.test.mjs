@@ -625,3 +625,23 @@ test("两个地面点：中间有山时第二个点的视线被挡；结果行�
   assert.equal(rows[0][1], "与时间无关");
   assert.match(rows[0][3], /^[东南西北]+ [\d.]+ km；[东南西北]+ [\d.]+ km$/);
 });
+
+test("最远距离可选 50 km 与 100 km：版本 2 请求读取、往返与报错列出全部选项；版本 1 仍为 10/20/30 km（docs/plan/limits.md）", () => {
+  const read = (value) => parseAnySolve(value, lens);
+  const base = { format: "tamatamatori.solve", version: 2, targets: [{ type: "ground", landmark: "tokyo-skytree" }, { type: "body", body: "moon" }] };
+  for (const maxDistance of [50000, 100000]) {
+    const far = read({ ...base, camera: { mode: "free", maxDistance, minDistance: 10000 } });
+    assert.equal(far.ok, true, JSON.stringify(far.errors));
+    assert.deepEqual(far.request.camera, { mode: "free", maxDistance, minDistance: 10000 });
+    assert.deepEqual(read(JSON.parse(solveJson2(far.request))).request, far.request);
+    assert.equal(compositionOf(far.request, initialPlan).camera.maxDistance, maxDistance);
+  }
+  assert.match(describeSolve2(read({ ...base, camera: { mode: "free", maxDistance: 100000 } }).request)[3].value, /最远 100 km/);
+  const bad = read({ ...base, camera: { mode: "free", maxDistance: 40000 } });
+  assert.equal(bad.ok, false);
+  assert.match(bad.errors.join("\n"), /camera\.maxDistance：应为 10000 \/ 20000 \/ 30000 \/ 50000 \/ 100000 之一，收到 40000/);
+  // Version 1 is read only to be converted: its choices stay as they were.
+  const v1 = read({ format: "tamatamatori.solve", version: 1, kind: "position", body: "moon", target: { landmark: "tokyo-skytree" }, maxDistance: 50000 });
+  assert.equal(v1.ok, false);
+  assert.match(v1.errors.join("\n"), /maxDistance/);
+});

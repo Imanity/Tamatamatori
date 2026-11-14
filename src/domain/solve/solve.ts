@@ -4,10 +4,11 @@ import { fixedBodies, isSolveBody } from "../sky/sky-targets.ts";
 import { bodyRadius, skyConditions, spanChoices as timeSpans, targetElevationRange, toleranceChoices } from "./alignment.ts";
 import type { AlignmentBody, SkyCondition } from "./alignment.ts";
 import { MIN_SUBJECT, spanChoices as rangeSpans } from "./range-alignment.ts";
-import { distanceChoices } from "./position-alignment.ts";
+// Version 1 keeps its own choices (10, 20, 30 km); version 2 uses the 推算 panel's.
+import { distanceChoices as v1DistanceChoices } from "./position-alignment.ts";
 import { shotLimits, validTimeZone } from "../shots/shot.ts";
 import { aspectRatios, customSensorLimits, fieldOfView, initialPlan, instantFromLocal, instantOnDate, localDateTime, sensors } from "../core/plan.ts";
-import { canSkyline, darkSkyChoices, dayChoices, dayLabel, DEFAULT_TOLERANCE, MAX_LINE_DAYS, nearestChoices, TARGET_LIMIT } from "./composition.ts";
+import { canSkyline, darkSkyChoices, dayChoices, dayLabel, DEFAULT_TOLERANCE, distanceChoices, MAX_LINE_DAYS, nearestChoices, TARGET_LIMIT } from "./composition.ts";
 import { MIN_DISTANCE } from "./position-alignment.ts";
 import type { CameraRange, Composition, FilterSpec, FrameSpot, HeightReference, Lens, TargetSpec, TimeRange } from "./composition.ts";
 import type { ShootingPlan } from "../core/plan.ts";
@@ -238,7 +239,7 @@ export function parseSolve(value: unknown): SolveParse {
   if (kind === "time") request.days = pick("days", timeDays, 365);
   if (kind === "range") request.days = pick("days", rangeDays, 30);
   if (kind === "time") request.tolerance = pick("tolerance", toleranceChoices, 0.25);
-  if (kind === "position" || kind === "range") request.maxDistance = pick("maxDistance", distanceChoices, 30_000);
+  if (kind === "position" || kind === "range") request.maxDistance = pick("maxDistance", v1DistanceChoices, 30_000);
   if (kind === "range") {
     if (value.share === undefined) {
       defaults.push("share");

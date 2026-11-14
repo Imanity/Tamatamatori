@@ -250,14 +250,20 @@ export function shiftDate(instant: string, timeZone: string, days: number) {
   return instantOnDate(instant, timeZone, date.toString());
 }
 
+/** Camera height above the ground, metres (docs/plan/limits.md: up to 200 m since round 21). */
+export const cameraHeightLimits = [0.1, 200] as const;
+const [lowestHeight, highestHeight] = cameraHeightLimits;
 const roundHeight = (value: number) =>
-  Math.max(0.1, Math.min(100, value < 10 ? Math.round(value * 10) / 10 : Math.round(value)));
+  Math.max(lowestHeight, Math.min(highestHeight, value < 10 ? Math.round(value * 10) / 10 : Math.round(value)));
+/** Slider positions per tenfold height. */
+const HEIGHT_DECADE = 200;
+const heightPositions = Math.round(Math.log10(highestHeight / lowestHeight) * HEIGHT_DECADE);
 
-/** Camera height slider: logarithmic 0.1–100 m, 0.1 m below 10 m and whole metres above. */
+/** Camera height slider: logarithmic 0.1–200 m, 0.1 m below 10 m and whole metres above. */
 export const cameraHeightSlider = {
-  max: 600,
-  toPosition: (height: number) => Math.round((Math.log10(Math.max(0.1, Math.min(100, height)) / 0.1) * 600) / 3),
-  fromPosition: (position: number) => roundHeight(0.1 * 10 ** ((Math.max(0, Math.min(600, position)) * 3) / 600)),
+  max: heightPositions,
+  toPosition: (height: number) => Math.round(Math.log10(Math.max(lowestHeight, Math.min(highestHeight, height)) / lowestHeight) * HEIGHT_DECADE),
+  fromPosition: (position: number) => roundHeight(lowestHeight * 10 ** (Math.max(0, Math.min(heightPositions, position)) / HEIGHT_DECADE)),
   /** Arrow keys: one unit per press, since one slider position can be smaller than the rounding unit. */
   step(current: number, direction: 1 | -1) {
     const unit = current < 10 || (current === 10 && direction < 0) ? 0.1 : 1;

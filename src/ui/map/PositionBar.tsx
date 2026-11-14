@@ -1,5 +1,5 @@
 import type { ClipboardEvent } from "react";
-import { cameraHeightSlider, compassDirection, normalizeLongitude, parseCoordinatePair } from "../../domain/core/plan";
+import { cameraHeightLimits, cameraHeightSlider, compassDirection, normalizeLongitude, parseCoordinatePair } from "../../domain/core/plan";
 import type { ShootingPlan } from "../../domain/core/plan";
 import { NumberField } from "../common/NumberField";
 
@@ -89,8 +89,8 @@ export function PositionBar({
         <NumberField
           label="离地高度"
           value={plan.cameraHeight}
-          min={0.1}
-          max={100}
+          min={cameraHeightLimits[0]}
+          max={cameraHeightLimits[1]}
           step={0.1}
           unit="m"
           onChange={(cameraHeight) => update({ cameraHeight })}
@@ -116,9 +116,9 @@ export function PositionBar({
             }}
           />
           <span className="height-ticks" aria-hidden="true">
-            {["0.1", "1", "10", "100 m"].map((label, index) => (
-              <span key={label} style={{ left: `${(index / 3) * 100}%` }}>
-                {label}
+            {[0.1, 1, 10, cameraHeightLimits[1]].map((height, index, all) => (
+              <span key={height} style={{ left: `${(cameraHeightSlider.toPosition(height) / cameraHeightSlider.max) * 100}%` }}>
+                {index === all.length - 1 ? `${height} m` : height}
               </span>
             ))}
           </span>

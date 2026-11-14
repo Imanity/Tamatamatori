@@ -407,7 +407,9 @@
               "enum": [
                 10000,
                 20000,
-                30000
+                30000,
+                50000,
+                100000
               ],
               "default": 30000,
               "description": "离地面点最远，米"
@@ -426,7 +428,7 @@
             "heightAboveGround": {
               "type": "number",
               "minimum": 0.1,
-              "maximum": 100,
+              "maximum": 200,
               "description": "相机离地高度，米；缺省沿用打开者当前值"
             }
           }
@@ -463,7 +465,7 @@
             "heightAboveGround": {
               "type": "number",
               "minimum": 0.1,
-              "maximum": 100,
+              "maximum": 200,
               "description": "相机离地高度，米；缺省沿用打开者当前值"
             }
           }
@@ -510,7 +512,7 @@
             "heightAboveGround": {
               "type": "number",
               "minimum": 0.1,
-              "maximum": 100,
+              "maximum": 200,
               "description": "相机离地高度，米；缺省沿用打开者当前值"
             }
           }

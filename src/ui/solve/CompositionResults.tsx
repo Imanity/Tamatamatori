@@ -17,8 +17,11 @@ import type { CompositionState } from "./useComposition";
 
 /** Wind and terrain notes shared by results: a coarser terrain read for a wide search. */
 function CoarseNote({ sampler, latitude }: { sampler: LoadedSampler | null | undefined; latitude: number }) {
-  if (!sampler?.zoom || sampler.zoom >= TERRAIN_ZOOM) return null;
-  return <p className="alignment-hint">范围较大，地形按约 {Math.round(tilePixel(sampler.zoom, latitude))} m 像元读取。</p>;
+  if (!sampler?.zoom) return null;
+  const coarsest = Math.min(...(sampler.zooms ?? [sampler.zoom]));
+  if (sampler.zoom < TERRAIN_ZOOM) return <p className="alignment-hint">范围较大，地形按约 {Math.round(tilePixel(sampler.zoom, latitude))} m 像元读取。</p>;
+  if (coarsest < TERRAIN_ZOOM) return <p className="alignment-hint">离地面目标 30 km 外的地形按约 {Math.round(tilePixel(coarsest, latitude))} m 像元读取。</p>;
+  return null;
 }
 function ProfileChart({ profile }: { profile: NonNullable<ReturnType<typeof positionProfile>> }) {
   const samples = profile.profile;

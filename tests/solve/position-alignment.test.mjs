@@ -136,3 +136,22 @@ test("经纬高与地心坐标互逆；一次星历的天球位置换到 30 km �
     }
   }
 });
+
+test("找机位：最远 100 km 时，合成平地上 30 km 外的解与直接星历一致，30 km 以内的解不变（docs/plan/limits.md）", () => {
+  const near = findPositions(base("moon", "2026-11-25"), flat);
+  const far = findPositions(base("moon", "2026-11-25", { maxDistance: 100_000 }), flat);
+  assert.equal(far.reason, null);
+  const beyond = far.points.filter((point) => point.distance > 30_000);
+  // The margins grow with the distance: low minutes far out are not filtered away. Beyond
+  // 30 km the top stands only 0.1°—0.6° high, which the rising or setting Moon crosses in minutes.
+  assert.ok(beyond.length >= 4 && beyond.some((point) => point.distance > 60_000), `${beyond.length}, ${Math.max(...far.points.map((point) => point.distance))}`);
+  for (const point of beyond) {
+    const ray = ellipsoidalRay({ latitude: point.latitude, longitude: point.longitude, ellipsoidalHeight: 1.6 }, { ...skytree, ellipsoidalHeight: 634 });
+    const sky = apparent("moon", point.time, point.latitude, point.longitude);
+    assert.ok(angle(ray, direction(sky.azimuth, sky.elevation)) < 0.005, new Date(point.time).toISOString());
+  }
+  for (const point of near.points) {
+    const same = far.points.find((other) => other.time === point.time && Math.abs(other.distance - point.distance) < 1);
+    assert.ok(same, `${new Date(point.time).toISOString()} at ${point.distance}`);
+  }
+});

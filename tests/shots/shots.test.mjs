@@ -244,3 +244,14 @@ test("时区列表覆盖常用城市，中文城市、英文、IANA 与 UTC 偏�
   assert.equal(zoneOffset("UTC", summer), "UTC+0"); assert.equal(zoneOffset("Asia/Kathmandu", summer), "UTC+5:45");
   assert.deepEqual(searchTimeZones("zzzz", summer), []);
 });
+
+test("离地高度上限 200 m：200 m 读写往返，201 m 与 0 m 报错并给出范围（docs/plan/limits.md）", () => {
+  const high = parseShot(minimal({ position: { latitude: 35, longitude: 139, heightAboveGround: 200 } }));
+  assert.equal(high.ok, true);
+  assert.equal(high.plan.cameraHeight, 200);
+  const again = parseShot(JSON.parse(shotJson(shotFromPlan(high.plan, "展望台"))));
+  assert.equal(again.ok, true);
+  assert.equal(again.plan.cameraHeight, 200);
+  assert.match(errorsOf(minimal({ position: { latitude: 35, longitude: 139, heightAboveGround: 201 } })), /position\.heightAboveGround.*0\.1.*200/);
+  assert.match(errorsOf(minimal({ position: { latitude: 35, longitude: 139, heightAboveGround: 0 } })), /position\.heightAboveGround/);
+});

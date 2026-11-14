@@ -1,5 +1,5 @@
 import { Temporal } from "@js-temporal/polyfill";
-import { aspectRatios, customSensorLimits, initialPlan, sensorSize, sensors } from "../core/plan.ts";
+import { aspectRatios, cameraHeightLimits, customSensorLimits, initialPlan, sensorSize, sensors } from "../core/plan.ts";
 import type { SensorSize } from "../core/plan.ts";
 import type { ShootingPlan } from "../core/plan.ts";
 import { retiredWeatherModels, weatherModels } from "../environment/weather.ts";
@@ -21,7 +21,7 @@ export const SHARE_PREFIX = "tmt1:";
 export const shotLimits = {
   latitude: [-90, 90],
   pitch: [-90, 90],
-  heightAboveGround: [0.1, 100],
+  heightAboveGround: cameraHeightLimits,
   focalLength: [8, 1000],
   milkyWayContrast: [25, 200],
   year: [1900, 2100],

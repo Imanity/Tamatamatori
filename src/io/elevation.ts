@@ -1,6 +1,7 @@
 import { sampleElevationTile, terrainTile, tileSampler, TERRAIN_ZOOM } from "../domain/core/terrain.ts";
 import type { ElevationTile } from "../domain/core/terrain.ts";
 import type { MapPoint } from "../domain/core/map.ts";
+import { groundDistance } from "../domain/solve/position-alignment.ts";
 
 interface Metadata {
   tiles: string[];
@@ -144,23 +145,54 @@ export async function groundElevation(
 
 // Decoded tiles kept for line sampling (推算 · 找机位); each is 1 MiB of RGBA.
 const lineCache = new Map<string, ElevationTile>();
+/** Tiles of one tier: the whole read, or the near or far part around a focus. */
 export const LINE_TILE_LIMIT = 40;
 /** Coarsest zoom a wide search may fall back to. */
 export const LINE_MIN_ZOOM = 10;
+/** Beyond LINE_NEAR_DISTANCE of the focus, one zoom coarser still (about 120 m pixels at 35°): a whole 100 km disc fits. */
+export const LINE_FAR_MIN_ZOOM = 9;
+/**
+ * Around a focus (the ground target), points within this distance keep the
+ * terrain a 30 km search reads; the rest is read coarser (docs/plan/limits.md).
+ */
+export const LINE_NEAR_DISTANCE = 30_000;
 
-/** The tiles under the points at the finest zoom (z12 down to z10) that stays within LINE_TILE_LIMIT. */
-export function lineTiles(points: readonly MapPoint[], inside: (point: MapPoint) => boolean = () => true) {
-  let keys = new Map<string, { z: number; x: number; y: number }>();
-  for (let zoom = TERRAIN_ZOOM; zoom >= LINE_MIN_ZOOM; zoom--) {
+type TileKeys = Map<string, { z: number; x: number; y: number }>;
+/** The finest zoom (z12 down to `lowest`) whose tiles under the points stay within LINE_TILE_LIMIT, or the count at `lowest`. */
+function tier(points: readonly MapPoint[], lowest = LINE_MIN_ZOOM): { zoom: number; keys: TileKeys } | { over: number } {
+  let keys: TileKeys = new Map();
+  for (let zoom = TERRAIN_ZOOM; zoom >= lowest; zoom--) {
     keys = new Map();
     for (const point of points) {
-      if (!inside(point)) continue;
       const tile = terrainTile(point, zoom);
       keys.set(`${tile.z}/${tile.x}/${tile.y}`, tile);
     }
     if (keys.size <= LINE_TILE_LIMIT) return { zoom, keys };
   }
-  throw new RangeError(`推算范围经过 ${keys.size} 块地形瓦片，超过单次 ${LINE_TILE_LIMIT} 块的上限，请缩小最远距离。`);
+  return { over: keys.size };
+}
+
+/**
+ * The tiles under the points: z12 when they fit within LINE_TILE_LIMIT, else
+ * a coarser zoom down to z10. With a `focus` and a read wider than z12 allows,
+ * the points within LINE_NEAR_DISTANCE of it keep their own tier (as fine as a
+ * 30 km search) and the rest gets another; `zoom` is the finest of `zooms`.
+ */
+export function lineTiles(points: readonly MapPoint[], inside: (point: MapPoint) => boolean = () => true, focus?: MapPoint) {
+  const usable = points.filter(inside);
+  const whole = tier(usable);
+  // The solver's own distance (it places the points with the same sphere), with 1 m for rounding:
+  // a search within 30 km has no far points and reads exactly as before.
+  const isNear = (point: MapPoint) => !focus || groundDistance(point, focus) <= LINE_NEAR_DISTANCE + 1;
+  const far = focus ? usable.filter((point) => !isNear(point)) : [];
+  if ("zoom" in whole && (whole.zoom === TERRAIN_ZOOM || !far.length)) return { ...whole, zooms: [whole.zoom] };
+  if (far.length) {
+    const fine = tier(usable.filter(isNear)), coarse = tier(far, LINE_FAR_MIN_ZOOM);
+    if ("zoom" in fine && "zoom" in coarse)
+      return { zoom: fine.zoom, zooms: [...new Set([fine.zoom, coarse.zoom])], keys: new Map([...coarse.keys, ...fine.keys]) };
+  }
+  if ("zoom" in whole) return { ...whole, zooms: [whole.zoom] };
+  throw new RangeError(`推算范围经过 ${whole.over} 块地形瓦片，超过单次 ${LINE_TILE_LIMIT} 块的上限，请缩小最远距离。`);
 }
 
 /**
@@ -174,13 +206,15 @@ export async function elevationTiles(
   signal: AbortSignal,
   onProgress?: (done: number, total: number) => void,
   decode: TileDecoder = decodeImage,
+  /** The ground target: the terrain within LINE_NEAR_DISTANCE of it stays fine in a wide read. */
+  focus?: MapPoint,
 ) {
   checkAbort(signal);
   const info = await metadata(url);
   checkAbort(signal);
   const inside = (point: MapPoint) =>
     !info.bounds || (point.latitude >= info.bounds[1] && point.latitude <= info.bounds[3]);
-  const { zoom, keys } = lineTiles(points, inside);
+  const { zoom, zooms, keys } = lineTiles(points, inside, focus);
   const loaded = new Map<string, ElevationTile>();
   let done = 0;
   onProgress?.(0, keys.size);
@@ -195,7 +229,7 @@ export async function elevationTiles(
         decoded = await decode(blob);
         checkAbort(signal);
         lineCache.set(tileUrl, decoded);
-        if (lineCache.size > LINE_TILE_LIMIT + 8) lineCache.delete(lineCache.keys().next().value!);
+        if (lineCache.size > 2 * LINE_TILE_LIMIT + 8) lineCache.delete(lineCache.keys().next().value!);
       }
       loaded.set(key, decoded);
       onProgress?.(++done, keys.size);
@@ -203,5 +237,5 @@ export async function elevationTiles(
   };
   await Promise.all([worker(), worker(), worker(), worker()]);
   // The tiles travel with the sampler so a worker can rebuild it (structured clone).
-  return Object.assign(tileSampler(loaded, info.bounds), { tiles: loaded as ReadonlyMap<string, ElevationTile>, bounds: info.bounds, zoom });
+  return Object.assign(tileSampler(loaded, info.bounds), { tiles: loaded as ReadonlyMap<string, ElevationTile>, bounds: info.bounds, zoom, zooms });
 }

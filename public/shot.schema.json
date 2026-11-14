@@ -54,7 +54,7 @@
         "heightAboveGround": {
           "type": "number",
           "minimum": 0.1,
-          "maximum": 100,
+          "maximum": 200,
           "description": "相机离地高度，米",
           "default": 1.6
         }

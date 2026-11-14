@@ -108,24 +108,32 @@ export const tileKey = (tile: { z: number; x: number; y: number }) => `${tile.z}
  * outside the source's latitude bounds or on invalid pixels. Shared by the
  * main thread and the 推算 worker.
  */
+/**
+ * A synchronous sampler over loaded tiles. The tiles may be of several zooms
+ * (a search reads the ground near its target finer than far out): each point
+ * uses the finest tile that covers it.
+ */
 export function tileSampler(tiles: ReadonlyMap<string, ElevationTile>, bounds?: readonly number[]) {
-  const first = tiles.keys().next().value;
-  const zoom = first === undefined ? TERRAIN_ZOOM : Number(first.split("/")[0]);
+  const zooms = [...new Set([...tiles.keys()].map((key) => Number(key.split("/")[0])))].sort((a, b) => b - a);
+  if (!zooms.length) zooms.push(TERRAIN_ZOOM);
   return (latitude: number, longitude: number) => {
     if (bounds && (latitude < bounds[1] || latitude > bounds[3])) return null;
-    let position;
-    try {
-      position = terrainTile({ latitude, longitude }, zoom);
-    } catch {
-      return null;
+    for (const zoom of zooms) {
+      let position;
+      try {
+        position = terrainTile({ latitude, longitude }, zoom);
+      } catch {
+        return null;
+      }
+      const tile = tiles.get(tileKey(position));
+      if (!tile) continue;
+      try {
+        return sampleElevationTile(tile, position.u, position.v);
+      } catch {
+        return null;
+      }
     }
-    const tile = tiles.get(tileKey(position));
-    if (!tile) return null;
-    try {
-      return sampleElevationTile(tile, position.u, position.v);
-    } catch {
-      return null;
-    }
+    return null;
   };
 }
 

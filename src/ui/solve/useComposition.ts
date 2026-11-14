@@ -232,7 +232,7 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
     try {
       // The search itself (src/domain/solve/composition-run.ts), with the browser's terrain and light pollution and the worker.
       const outcome = await runComposition(strategy, snapshot, now, {
-        terrain: async (points, signal, progress) => (await import("../../io/elevation")).elevationTiles(points, terrainUrl, signal, progress),
+        terrain: async (points, signal, progress, focus) => (await import("../../io/elevation")).elevationTiles(points, terrainUrl, signal, progress, undefined, focus),
         lightPollution: async (place, signal) => (await import("../../io/light-pollution")).sampleLightPollution(place, signal),
         solveDays: runRange,
         report: (patch) => set(id, patch),

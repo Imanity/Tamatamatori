@@ -53,11 +53,11 @@
 
 | `camera.mode` | 字段 | 说明 |
 | --- | --- | --- |
-| `"free"` | `maxDistance`：`10000` / `20000` / `30000` 米；`minDistance`（可选）：`200` / `1000` / `2000` / `5000` / `10000` 米，缺省 200（不限），须小于 `maxDistance` | 以地面点为中心；`minDistance` 排除贴近地面点的机位（如站在山顶上） |
+| `"free"` | `maxDistance`：`10000` / `20000` / `30000` / `50000` / `100000` 米；`minDistance`（可选）：`200` / `1000` / `2000` / `5000` / `10000` 米，缺省 200（不限），须小于 `maxDistance` | 以地面点为中心；`minDistance` 排除贴近地面点的机位（如站在山顶上） |
 | `"near"` | `latitude`、`longitude`、`radius`（500—30000 米） | 只列这个范围内的机位 |
 | `"fixed"` | `latitude`、`longitude`（缺省为打开者当前机位）、`aim`（`{ "azimuth", "pitch" }`，可选） | 给出 `aim` 时同时固定朝向，只能有一个天体目标 |
 
-三种机位都可带 `heightAboveGround`（0.1—100 m），打开后改为该离地高度。
+三种机位都可带 `heightAboveGround`（0.1—200 m），打开后改为该离地高度。
 
 | `time.mode` | 字段 |
 | --- | --- |

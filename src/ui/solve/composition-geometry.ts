@@ -1,6 +1,6 @@
 // The 推算 map geometry: ground targets, the search range, sectors and result
 // lines. Part of the 推算 module (solve-module.ts).
-import { MIN_DISTANCE, travel } from "../../domain/solve/position-alignment";
+import { groundDistance, MIN_DISTANCE, travel } from "../../domain/solve/position-alignment";
 import type { CompositionState } from "./useComposition";
 import { clock, dayWords, localDay } from "./composition-format";
 
@@ -28,7 +28,9 @@ export function compositionGeometry(state: CompositionState | null, timeZone: st
         const point = travel(ground, from + ((to - from) * index) / steps, radius);
         return [point.longitude, point.latitude];
       });
-      const far = arc(run.composition.camera.mode === "near" ? 30_000 : outer), near = arc(MIN_DISTANCE).reverse();
+      // Near a place: out to the far side of its circle (the search stays within 100 km of the target).
+      const camera = run.composition.camera;
+      const far = arc(camera.mode === "near" ? groundDistance(ground, camera) + camera.radius : outer), near = arc(MIN_DISTANCE).reverse();
       features.push({ type: "Feature", properties: { kind: "sector" }, geometry: { type: "Polygon", coordinates: [[...far, ...near, far[0]]] } });
     }
   run.items.filter((item) => item.place).forEach((item, index) => {

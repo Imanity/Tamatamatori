@@ -204,13 +204,15 @@ test("时间微调按绝对分钟跨午夜与夏令时，前后一天保留当�
   assert.throws(() => shiftDate(instantFromLocal("2026-03-07T02:30", "America/New_York"), "America/New_York", 1), RangeError);
 });
 
-test("离地高度滑条按对数映射 0.1—100 m，10 m 以下精确到 0.1 m，键盘每步至少改变一个单位", () => {
+test("离地高度滑条按对数映射 0.1—200 m，10 m 以下精确到 0.1 m，键盘每步至少改变一个单位", () => {
   const { toPosition, fromPosition, max } = cameraHeightSlider;
   assert.equal(toPosition(0.1), 0);
   assert.equal(toPosition(1), 200);
   assert.equal(toPosition(10), 400);
-  assert.equal(toPosition(100), max);
-  for (const height of [0.1, 0.5, 1.6, 5, 10, 30, 100]) assert.equal(fromPosition(toPosition(height)), height, `${height}`);
+  assert.equal(toPosition(100), 600);
+  assert.equal(toPosition(200), max);
+  assert.equal(max, 660);
+  for (const height of [0.1, 0.5, 1.6, 5, 10, 30, 100, 150, 200]) assert.equal(fromPosition(toPosition(height)), height, `${height}`);
   let previous = 0;
   for (let position = 0; position <= max; position += 1) {
     const height = fromPosition(position);
@@ -218,7 +220,7 @@ test("离地高度滑条按对数映射 0.1—100 m，10 m 以下精确到 0.1 m
     assert.ok(height < 10 ? Math.abs(height * 10 - Math.round(height * 10)) < 1e-9 : Number.isInteger(height), `${height}`);
     previous = height;
   }
-  assert.equal(fromPosition(max + 1), 100);
+  assert.equal(fromPosition(max + 1), 200);
   assert.equal(fromPosition(-1), 0.1);
   // Arrow keys move by one unit even where one slider position is smaller than the unit.
   assert.equal(cameraHeightSlider.step(1.5, 1), 1.6);
@@ -226,7 +228,8 @@ test("离地高度滑条按对数映射 0.1—100 m，10 m 以下精确到 0.1 m
   assert.equal(cameraHeightSlider.step(9.9, 1), 10);
   assert.equal(cameraHeightSlider.step(10, -1), 9.9);
   assert.equal(cameraHeightSlider.step(50, 1), 51);
-  assert.equal(cameraHeightSlider.step(100, 1), 100);
+  assert.equal(cameraHeightSlider.step(100, 1), 101);
+  assert.equal(cameraHeightSlider.step(200, 1), 200);
   assert.equal(cameraHeightSlider.step(0.1, -1), 0.1);
 });
 

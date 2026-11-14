@@ -145,13 +145,14 @@ export function skyAt(body: AlignmentBody, time: number, latitude: number, longi
 }
 
 // The local horizon tilts by about 0.27° over 30 km, so a camera far from the
-// target may still see the body above its horizon.
+// target may still see the body above its horizon: the margin per 30 km of the
+// farthest camera (0.9° at 100 km, docs/plan/limits.md).
 const HORIZON_MARGIN = 0.4;
 
 /** The body for every whole minute of the span while its disc can be drawn near the target. */
 export function bodyTrack(input: PositionInput): SkySample[] {
   const samples: SkySample[] = [];
-  const lowest = targetElevationRange[0] - HORIZON_MARGIN * Math.min(1, input.maxDistance / 30_000);
+  const lowest = targetElevationRange[0] - HORIZON_MARGIN * (input.maxDistance / 30_000);
   for (let time = Math.ceil(input.start / 60_000) * 60_000; time < input.end; time += 60_000) {
     const sky = skyAt(input.body, time, input.target.latitude, input.target.longitude, input.refraction);
     if (sky.elevation < lowest) continue;

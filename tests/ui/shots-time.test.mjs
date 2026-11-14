@@ -292,9 +292,13 @@ test('离地高度滑条按对数刻度同步数值框，方向键按 0.1 m / 1 
   await settle(() => keydown(slider, 'ArrowLeft'));
   assert.equal(value('离地高度'), 9.9);
   await settle(() => setControl(slider, cameraHeightSlider.max));
-  assert.equal(value('离地高度'), 100);
+  assert.equal(value('离地高度'), 200);
   await settle(() => keydown(slider, 'ArrowUp'));
-  assert.equal(value('离地高度'), 100);
+  assert.equal(value('离地高度'), 200);
+  // The number field takes the same range (up to 200 m).
+  await settle(() => setControl(input('离地高度'), 150));
+  assert.equal(value('离地高度'), 150);
+  assert.equal(slider.value, String(cameraHeightSlider.toPosition(150)));
   await settle(() => setControl(input('离地高度'), 1.5));
   assert.equal(slider.value, String(cameraHeightSlider.toPosition(1.5)));
   await settle(() => keydown(slider, 'ArrowRight'));
