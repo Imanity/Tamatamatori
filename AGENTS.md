@@ -152,7 +152,7 @@ Tamatamatori 是摄影规划 Web App。用户通过地图确定机位与拍摄�
   - 拆分前后的右栏 HTML 与地图图层快照逐字节相同。
   - `MapPanel` 1037 → 657 行，`ScenePanels` 873 → 532 行。
 
-用户说“整理收尾”后进入[按需加载](docs/plan/lazy-loading.md)（2026-11-14），分三步：推算模式与 About、目录数据、真机与跨浏览器检查。第十八轮（推算模式与 About）已完成本地验收，已按用户授权提交，尚未推送：
+用户说“整理收尾”后进入[按需加载](docs/plan/lazy-loading.md)（2026-11-14），分三步：推算模式与 About、目录数据、真机与跨浏览器检查。第十八轮（推算模式与 About）已完成本地验收，并按用户授权提交推送为 `3f4f9c8`：
 
 - 推算的计算、面板、预览标记、链接对话框与地图几何合为推算模块（`src/ui/solve/solve-module.ts`），首次进入推算或打开 `#solve=` 链接时读取；`useComposition` 只持有状态。About 来源列表（`AboutSources.tsx`）在首次打开时读取。读取中与失败分别提示，可重试。
 - 首屏静态 JS 由 1,266 KiB（gzip 445 KiB）降到 1,122 KiB（gzip 398 KiB），入口包由 623 KiB 降到 385 KiB。
