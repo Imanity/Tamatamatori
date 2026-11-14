@@ -84,10 +84,23 @@ export default function App() {
   const [mapShare, setMapShare] = useState(defaultMapShare);
   const [resizing, setResizing] = useState(false);
   const [mobileTab, setMobileTab] = useState<MobileTab>("map");
+  // On a portrait phone the page scrolls when the frame and the section do not
+  // both fit: a chosen tab brings its section into view.
+  const [revealTab, setRevealTab] = useState(0);
+  const chooseMobileTab = (id: MobileTab) => {
+    setMobileTab(id);
+    setRevealTab((value) => value + 1);
+  };
   const [infoCollapsed, setInfoCollapsed] = useState(false);
   // DEM elevation under the camera, reported by the preview for the position bar.
   const [ground, setGround] = useState<number | null>(null);
   const narrow = useNarrowLayout();
+  useEffect(() => {
+    if (!revealTab || !narrow) return;
+    // After the commit the section is laid out; "nearest" leaves a section already in view where it is.
+    const section = mobileTab === "map" ? ".panel-map" : mobileTab === "camera" ? ".mobile-camera" : ".info-sidebar";
+    document.querySelector<HTMLElement>(`.app-layout ${section}`)?.scrollIntoView?.({ block: "nearest" });
+  }, [revealTab]);
   const [showDetails, setShowDetails] = useState(readDetails);
   const toggleDetails = () =>
     setShowDetails((current) => {
@@ -109,7 +122,7 @@ export default function App() {
     if (entering) {
       setRailView("solve");
       setInfoCollapsed(false);
-      if (narrow) setMobileTab("solve");
+      if (narrow) chooseMobileTab("solve");
     } else if (mobileTab === "solve") setMobileTab("map");
     setAnnouncement(entering ? "已进入推算模式" : "已退出推算模式");
   };
@@ -401,7 +414,7 @@ export default function App() {
               role="tab"
               key={id}
               aria-selected={mobileTab === id}
-              onClick={() => setMobileTab(id)}
+              onClick={() => chooseMobileTab(id)}
             >
               <Icon name={icon} size={15} />
               {title}

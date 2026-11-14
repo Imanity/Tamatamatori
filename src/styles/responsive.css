@@ -115,25 +115,33 @@
     border-radius: 6px;
     padding: 3px;
   }
+  /* Finger-sized tabs: at least 44 px, darker words (docs/plan/workspace-redesign.md, 2026-11-15). */
   .mobile-tabs button {
     flex: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 6px;
     min-width: 0;
+    min-height: 44px;
     border: 0;
-    padding: 7px 4px;
+    padding: 6px 4px;
     background: transparent;
-    font-size: 11px;
-    color: #7c8b72;
-    border-radius: 4px;
+    font-size: 13px;
+    color: #5d6e55;
+    border-radius: 6px;
     white-space: nowrap;
+    touch-action: manipulation;
+  }
+  .mobile-tabs button svg {
+    width: 18px;
+    height: 18px;
   }
   .mobile-tabs button[aria-selected="true"] {
     background: #fbfcf6;
-    color: #4f6c43;
-    box-shadow: 0 1px 3px #637b4b15;
+    color: #2f4d33;
+    font-weight: 600;
+    box-shadow: 0 1px 3px #637b4b24;
   }
   .preview-content {
     height: auto;
@@ -168,6 +176,55 @@
     flex: 1;
     min-height: 120px;
     height: auto;
+  }
+}
+/*
+ * Portrait phones: the tabs sit at the bottom of the screen, where a thumb
+ * reaches, and stay there while the page scrolls. The chosen section keeps a
+ * usable height (the map about half the screen); when it and the frame do not
+ * both fit, the page scrolls instead of squeezing the section.
+ */
+@media (max-width: 1099px) and (orientation: portrait) {
+  .app-layout {
+    /* The frame keeps its full height (an auto row would shrink to fit and hide the timeline). */
+    grid-template-rows: max-content minmax(var(--section-min, 0px), 1fr) auto;
+    grid-template-areas: "preview" "content" "tabs";
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    padding-bottom: 0;
+  }
+  .app-layout[data-mobile-tab="map"] {
+    --section-min: max(300px, 52dvh);
+  }
+  .app-layout[data-mobile-tab="layers"],
+  .app-layout[data-mobile-tab="solve"] {
+    --section-min: max(320px, 60dvh);
+  }
+  .panel-map,
+  .info-sidebar,
+  .mobile-camera {
+    scroll-margin-bottom: 76px;
+  }
+  .mobile-tabs {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    margin: 0 -10px;
+    padding: 4px 8px calc(4px + env(safe-area-inset-bottom, 0px));
+    border-radius: 0;
+    border-top: 1px solid #dfe4d7;
+    background: #f6f8f1;
+    box-shadow: 0 -2px 8px #4b5d3c12;
+  }
+  .mobile-tabs button {
+    flex-direction: column;
+    gap: 3px;
+    min-height: 52px;
+    font-size: 12px;
+  }
+  .mobile-tabs button svg {
+    width: 20px;
+    height: 20px;
   }
 }
 @media (max-width: 599px) {

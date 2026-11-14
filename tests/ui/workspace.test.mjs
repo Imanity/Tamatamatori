@@ -417,3 +417,28 @@ test('环境分组保留关闭时的模型选择，切换模型取消旧数据�
   assert.match(document.querySelector('.weather-readout').textContent, /能见度 模型未提供/);
   assert.equal(terrainMap(), map); assert.equal(groundRequests.length, ground);
 });
+
+test('窄屏：点击底部标签切换内容并把该内容滚进视野（docs/plan/workspace-redesign.md 手机端底部标签）', async (t) => {
+  const listeners = new Set();
+  const narrow = { matches: true, addEventListener: (_, listener) => listeners.add(listener), removeEventListener: (_, listener) => listeners.delete(listener) };
+  const original = window.matchMedia;
+  window.matchMedia = (query) => query === '(max-width: 1099px)' ? narrow : { matches: false, addEventListener() {}, removeEventListener() {} };
+  t.after(() => { window.matchMedia = original; });
+  // jsdom has no scrolling: record which element is asked to come into view.
+  const shown = [];
+  const had = Object.getOwnPropertyDescriptor(dom.window.Element.prototype, 'scrollIntoView');
+  dom.window.Element.prototype.scrollIntoView = function (options) { shown.push({ section: this.className, options }); };
+  t.after(() => { if (had) Object.defineProperty(dom.window.Element.prototype, 'scrollIntoView', had); else delete dom.window.Element.prototype.scrollIntoView; });
+  await workspace(t); await readyTerrain();
+  const layout = document.querySelector('.app-layout');
+  const tab = (name) => [...document.querySelectorAll('.mobile-tabs [role="tab"]')].find((element) => element.textContent.trim() === name);
+  assert.equal(shown.length, 0, 'nothing scrolls before a tab is chosen');
+  for (const [name, id, section] of [['图层', 'layers', 'info-sidebar'], ['相机', 'camera', 'mobile-camera'], ['地图', 'map', 'panel-map']]) {
+    await settle(() => tab(name).click());
+    assert.equal(layout.dataset.mobileTab, id);
+    assert.equal(tab(name).getAttribute('aria-selected'), 'true');
+    assert.match(shown.at(-1).section, new RegExp(section));
+    assert.deepEqual(shown.at(-1).options, { block: 'nearest' });
+  }
+  assert.equal(shown.length, 3);
+});
