@@ -153,6 +153,31 @@ npm run solve -- request.json
 
 地形从 Mapterhorn 公开瓦片在线读取，用 `@jsquash/webp` 在本机解码，与浏览器解码逐像素一致；光污染读取仓库中的分块。只在仓库中运行，不发布 npm 包。[推算工具](docs/plan/solver-tool.md)
 
+## 推算工具（MCP）
+
+同一套推算也以 MCP 服务器提供，接入客户端后由 AI 直接调用。服务器在本机运行，用 stdio 传输：
+
+- `solve`：推算。输入推算请求（对象、JSON 文本或 `#solve=` 链接），可选当前机位 `shot` 与最多返回的结果数 `maxResults`（缺省 20）。输出与命令行的 JSON 相同，超出部分只计数。
+- `validate_request`：校验请求而不搜索，不联网。
+- `describe_format`：返回推算请求或机位格式的说明，或 JSON Schema。
+
+在本仓库中使用 Claude Code 时，根目录的 `.mcp.json` 已登记服务器，启用前客户端会询问。其他客户端（如 Claude Desktop）在配置中写绝对路径：
+
+```json
+{
+  "mcpServers": {
+    "tamatamatori": {
+      "command": "node",
+      "args": ["--experimental-strip-types", "--disable-warning=ExperimentalWarning", "D:/路径/Tamatamatori/scripts/mcp.mjs"]
+    }
+  }
+}
+```
+
+- 客户端配置须直接调用 `node`，不能用 `npm run mcp`：npm 会往标准输出多写一行，破坏协议。`npm run mcp` 只用于手动试运行。
+- 需要 Node 22.18 以上与 `npm install`。可选参数 `--site` 改链接的站点，`--terrain` 改地形 TileJSON。
+- 与命令行相同：地形从 Mapterhorn 在线读取，不读天气，不检查水面与建筑。[推算工具](docs/plan/solver-tool.md#9-第十七轮mcp-服务器)
+
 ## 空间站与轨道更新
 
 开启“空间站”后显示 ISS 与天宫的拍摄时刻位置及前后各三分钟轨迹点。支持搜索、主动朝向、±1 秒与 ±10 秒调整，标记和轨迹接受实际地形深度遮挡。右侧列出日照参考、轨道历元、上游成功检查与网页检查时间。

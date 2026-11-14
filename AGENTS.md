@@ -128,6 +128,13 @@ Tamatamatori 是摄影规划 Web App。用户通过地图确定机位与拍摄�
 - `npm run solve -- 请求` 输出 JSON（每个结果附 `#shot=` 试看链接）或 Markdown。
 - 484 项检查与子路径构建通过；Node 与浏览器解码同一地形瓦片逐像素一致。真实网络下钻石富士与晴空塔、富士山的结果与浏览器相同。
 
+用户说“继续”后完成第十七轮 MCP 服务器的本地验收（2026-11-14，见[第 9 节](docs/plan/solver-tool.md#9-第十七轮mcp-服务器)），已按用户授权提交推送，尚未在桌面客户端中接入：
+
+- `scripts/mcp.mjs`（stdio，协议自行实现，不加依赖）提供三个工具：`solve`、`validate_request`、`describe_format`。
+- 与命令行共用 `scripts/lib/solve-run.mjs`；MCP 缺省只列 20 个结果，其余计数。
+- 根目录 `.mcp.json` 登记服务器。
+- 491 项检查通过；真实网络下钻石富士经服务器与命令行结果相同。
+
 用户随后认为代码文件全部平铺，确认先提交第十六轮（`cb60407`）再整理（2026-11-14，见[代码结构整理](docs/plan/code-structure.md)）。原则：只移动、不改文件名，行为不变，`scripts/` 不移动。分三步：
 
 1. 测试分组，并拆分交互测试；
