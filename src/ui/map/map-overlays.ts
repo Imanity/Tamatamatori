@@ -3,8 +3,6 @@
 // the 推算 targets and results. MapPanel adds them once the style loads and
 // updates them on every draw.
 import type { Map as MapLibreMap, GeoJSONSource } from "maplibre-gl";
-import { bodyKind } from "../../domain/sky/sky-targets";
-import type { SolveBodyId } from "../../domain/sky/sky-targets";
 import type { ShootingPlan } from "../../domain/core/plan";
 import { lineLabels } from "../../domain/sun-moon/body-lines";
 import type { BodyLine } from "../../domain/sun-moon/body-lines";
@@ -38,11 +36,9 @@ function eclipseGeometry(eclipse: EclipseMap): GeoJSON.FeatureCollection {
 }
 export const bodyNames = { sun: "太阳", moon: "月亮", core: "银心" } as const;
 export const bodyColors = { sun: "#e0892c", moon: "#5f7fc4", core: "#8b5fc4" } as const;
-/** Alignment lines: the Sun and the Moon as their azimuth lines; fixed bodies by kind. */
-const alignmentColor = (body: string) => {
-  const kind = bodyKind(body as SolveBodyId);
-  return kind === "sun" || kind === "moon" || kind === "core" ? bodyColors[kind] : kind === "deepSky" ? "#a0568a" : "#3f7f8f";
-};
+/** Alignment lines by the kind of body: the Sun and the Moon as their azimuth lines; fixed bodies by kind. */
+const alignmentColor = (kind: string) =>
+  kind === "sun" || kind === "moon" || kind === "core" ? bodyColors[kind] : kind === "deepSky" ? "#a0568a" : "#3f7f8f";
 
 /** Body azimuth lines from the camera, as long as the view cone at this zoom. */
 function lineGeometry(plan: ShootingPlan, lines: BodyLine[], zoom: number): GeoJSON.FeatureCollection {
@@ -95,7 +91,8 @@ export type OverlayData = {
   eclipse: EclipseMap;
   environment: GeoJSON.FeatureCollection;
   alignmentFeatures: GeoJSON.FeatureCollection;
-  alignmentBody: string;
+  /** The kind of the 推算 body (sun, moon, core, star, deepSky), for the line colour. */
+  alignmentKind: string;
 };
 /** What was last written to the map, so that unchanged data is not written again. */
 export type DrawnOverlays = {
@@ -104,9 +101,9 @@ export type DrawnOverlays = {
   eclipse?: EclipseMap;
   environment?: GeoJSON.FeatureCollection;
   alignment?: GeoJSON.FeatureCollection;
-  body: string;
+  kind: string;
 };
-export const drawnOverlays = (): DrawnOverlays => ({ lines: "", labels: "", body: "" });
+export const drawnOverlays = (): DrawnOverlays => ({ lines: "", labels: "", kind: "" });
 
 /** Adds the sources and layers, in drawing order, with the current data. */
 export function addOverlays(map: MapLibreMap, data: OverlayData, drawn: DrawnOverlays) {
@@ -198,8 +195,8 @@ export function addOverlays(map: MapLibreMap, data: OverlayData, drawn: DrawnOve
   // 推算 · 找机位: the stretches of line where the body sits on the target (sight not cut by the terrain).
   map.addSource(alignmentSourceId, { type: "geojson", data: data.alignmentFeatures });
   drawn.alignment = data.alignmentFeatures;
-  drawn.body = data.alignmentBody;
-  const lineColor_ = alignmentColor(drawn.body);
+  drawn.kind = data.alignmentKind;
+  const lineColor_ = alignmentColor(drawn.kind);
   map.addLayer({
     id: "tamatamatori-alignment-sector", type: "fill", source: alignmentSourceId,
     filter: ["==", ["get", "kind"], "sector"],
@@ -322,9 +319,9 @@ export function updateOverlays(map: MapLibreMap, data: OverlayData, drawn: Drawn
     alignmentSource.setData(data.alignmentFeatures);
     drawn.alignment = data.alignmentFeatures;
   }
-  if (alignmentSource && data.alignmentBody !== drawn.body) {
-    drawn.body = data.alignmentBody;
-    const color = alignmentColor(drawn.body);
+  if (alignmentSource && data.alignmentKind !== drawn.kind) {
+    drawn.kind = data.alignmentKind;
+    const color = alignmentColor(drawn.kind);
     for (const id of ["tamatamatori-alignment-clear", "tamatamatori-alignment-blocked", "tamatamatori-alignment-dot", "tamatamatori-alignment-sector"])
       map.setPaintProperty(id, id.endsWith("dot") ? "circle-color" : id.endsWith("sector") ? "fill-color" : "line-color", color);
   }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { initialPlan } from "./domain/core/plan";
 import type { ShootingPlan } from "./domain/core/plan";
@@ -16,13 +16,11 @@ import type { MapViewport } from "./domain/core/map";
 import type { InfoGroupId, InfoNavigation } from "./ui/common/InfoGroup";
 import { ShotMenu, ShotToast } from "./ui/shots/ShotMenu";
 import { browserStorage, readSession, writeSession } from "./domain/shots/shot-library";
-import { useComposition } from "./ui/solve/useComposition";
-import { SolveLinkDialog } from "./ui/solve/SolveLink";
+import { solveModule, useComposition } from "./ui/solve/useComposition";
+import { useLazyModule } from "./ui/common/lazy-module";
 import { useShotLibrary } from "./ui/shots/useShotLibrary";
 import { shotFromPlan } from "./domain/shots/shot";
-import { parseSolveText2, solvePlan2 } from "./domain/solve/solve";
 import type { SolveParse2, SolveRequest2 } from "./domain/solve/solve";
-import { lensOf } from "./domain/solve/composition";
 import { useNarrowLayout, Divider, Panel } from "./ui/workspace/Layout";
 
 type MobileTab = "map" | "camera" | "layers" | "solve";
@@ -61,8 +59,8 @@ export default function App() {
   } | null>(null);
   // `#shot=` and `#solve=` links open a preview; nothing changes until it is confirmed.
   const [shotLink, setShotLink] = useState<{ text: string; serial: number } | null>(null);
-  const [solveLink, setSolveLink] = useState<{ parse: SolveParse2; serial: number } | null>(null);
-  // A version 1 request is read with the opener's lens (its tolerance becomes a share of that frame).
+  // A #solve= link waits for the 推算 module, which reads it.
+  const [solveLink, setSolveLink] = useState<{ text: string; serial: number } | null>(null);
   const planRef = useRef(plan);
   planRef.current = plan;
   useEffect(() => {
@@ -71,7 +69,7 @@ export default function App() {
       if (hash.startsWith("#shot="))
         setShotLink((current) => ({ text: hash, serial: (current?.serial ?? 0) + 1 }));
       else if (hash.startsWith("#solve="))
-        setSolveLink((current) => ({ parse: parseSolveText2(hash, lensOf(planRef.current)), serial: (current?.serial ?? 0) + 1 }));
+        setSolveLink((current) => ({ text: hash, serial: (current?.serial ?? 0) + 1 }));
     };
     read();
     window.addEventListener("hashchange", read);
@@ -115,6 +113,26 @@ export default function App() {
     } else if (mobileTab === "solve") setMobileTab("map");
     setAnnouncement(entering ? "已进入推算模式" : "已退出推算模式");
   };
+  // The 推算 module is read when the mode is first entered or a #solve= link opened (docs/plan/lazy-loading.md).
+  const solveLoad = useLazyModule(solveModule, solveMode || !!solveLink);
+  const solve = solveLoad.module;
+  // A version 1 request is read with the opener's lens (its tolerance becomes a share of that frame).
+  const solveParse = useMemo<{ parse: SolveParse2; serial: number } | null>(
+    () => (solveLink && solve ? { parse: solve.parseSolveText2(solveLink.text, solve.lensOf(planRef.current)), serial: solveLink.serial } : null),
+    [solveLink, solve],
+  );
+  // A link that cannot be read is dropped with a notice; a new link after a failed read reads again.
+  const pendingLink = useRef(solveLink);
+  pendingLink.current = solveLink;
+  useEffect(() => {
+    if (!pendingLink.current || solveLoad.phase !== "failed") return;
+    setShotNotice({ text: `无法打开推算链接：推算模块读取失败（${solveLoad.message || "未知原因"}）` });
+    setSolveLink(null);
+    clearLinkHash();
+  }, [solveLoad.phase]);
+  useEffect(() => {
+    if (solveLink && solveLoad.phase === "failed") solveLoad.retry();
+  }, [solveLink?.serial]);
   // Narrow screens pick the rail's content with the bottom tabs instead.
   const showSolve = solveMode && (narrow ? mobileTab === "solve" : railView === "solve");
   const [infoQuery, setInfoQuery] = useState("");
@@ -181,7 +199,7 @@ export default function App() {
     replacePlan(next, id);
   };
   // The 推算 mode is shared by its panel, the preview marks, the timeline and the map.
-  const alignment = useComposition(plan, updatePlan, solveMode, planGeneration);
+  const alignment = useComposition(plan, updatePlan, solveMode, planGeneration, solve);
   // "存为机位" from the 推算 panel; the shot menu sees the new entry at once (one library per page).
   const shotLibrary = useShotLibrary();
   const saveShot = (name: string) => {
@@ -191,14 +209,16 @@ export default function App() {
     setShotNotice({ text: `已存为机位「${name}」` });
     return true;
   };
+  // Called from the link dialog, which is part of the module.
   const loadSolve = (request: SolveRequest2) => {
-    const next = solvePlan2(request, plan);
+    if (!solve) return;
+    const next = solve.solvePlan2(request, plan);
     setShotNotice({
       text: `已载入推算请求${request.name ? `「${request.name}」` : ""}`,
       undo: { plan, activeId: activeShotId, solveMode },
     });
     replacePlan(next, activeShotId);
-    alignment.load(request, next);
+    alignment?.load(request, next);
     if (!solveMode) {
       setSolveMode(true);
       setAnnouncement("已进入推算模式");
@@ -284,15 +304,17 @@ export default function App() {
           <About />
         </div>
       </header>
-      <SolveLinkDialog
-        link={solveLink}
-        plan={plan}
-        onLoad={loadSolve}
-        onClose={() => {
-          setSolveLink(null);
-          clearLinkHash();
-        }}
-      />
+      {solve && (
+        <solve.SolveLinkDialog
+          link={solveParse}
+          plan={plan}
+          onLoad={loadSolve}
+          onClose={() => {
+            setSolveLink(null);
+            clearLinkHash();
+          }}
+        />
+      )}
       {shotNotice && (
         <ShotToast
           text={shotNotice.text}
@@ -360,6 +382,8 @@ export default function App() {
               tides={tides}
               aurora={aurora}
               alignment={alignment}
+              solveActive={solveMode}
+              solveLoad={solveLoad}
               solveHost={solveHost}
               shotSaving={{ save: saveShot, error: shotLibrary.error, writable: shotLibrary.library.phase === "ready" }}
             />

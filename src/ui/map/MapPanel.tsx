@@ -37,18 +37,18 @@ export function MapPanel({
   tides?: TideFeed;
   aurora?: AuroraFeed;
   /** 推算: ground targets, result lines and placing a ground target. */
-  alignment?: CompositionState;
+  alignment?: CompositionState | null;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const instance = useRef<MapLibreMap | null>(null);
   const synchronize = useRef<((followPosition?: boolean) => void) | null>(null);
   const [mode, setMode] = useState<MapMode>("browse");
   // What the overlays show: body lines, eclipse, aurora and tides, 推算 results.
-  const { lines, eclipse, environment, tideCell, auroraKp, solve, placingTarget, alignmentFeatures, alignmentBody } =
+  const { lines, eclipse, environment, tideCell, auroraKp, solve, placingTarget, alignmentFeatures, alignmentKind } =
     useMapOverlays(plan, tides, aurora, alignment);
   const solveRef = useRef({ placing: placingTarget, place: solve?.placeTarget, cancel: () => solve?.setPlacing(null) });
   solveRef.current = { placing: placingTarget, place: solve?.placeTarget, cancel: () => solve?.setPlacing(null) };
-  const latest = useRef({ plan, update, mode, lines, eclipse, environment, alignmentFeatures, alignmentBody });
+  const latest = useRef({ plan, update, mode, lines, eclipse, environment, alignmentFeatures, alignmentKind });
   const [searchOpen, setSearchOpen] = useState(false);
   const [target, setTarget] = useState<MapTarget | null>(null);
   const [locating, setLocating] = useState(false);
@@ -63,9 +63,9 @@ export function MapPanel({
   const coverage = isMapPosition(plan);
 
   useEffect(() => {
-    latest.current = { plan, update, mode, lines, eclipse, environment, alignmentFeatures, alignmentBody };
+    latest.current = { plan, update, mode, lines, eclipse, environment, alignmentFeatures, alignmentKind };
     synchronize.current?.(true);
-  }, [plan, update, mode, lines, eclipse, environment, alignmentFeatures, alignmentBody]);
+  }, [plan, update, mode, lines, eclipse, environment, alignmentFeatures, alignmentKind]);
   // A finished search: show its ground target, range and lines once.
   const fittedResult = useRef<unknown>(null);
   const finished = solve?.run?.phase === "done" ? solve.run : null;

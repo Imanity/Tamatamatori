@@ -148,3 +148,15 @@ p {
   background: #eaf0e3;
   border-color: #bccbb0;
 }
+/* A part read on first use (推算, About sources): loading, or failed with a retry. */
+.module-status {
+  margin: 12px 0;
+  line-height: 1.7;
+  color: #5d6e55;
+}
+.module-status.is-error {
+  color: #9a4e2c;
+}
+.module-status button {
+  margin-left: 8px;
+}

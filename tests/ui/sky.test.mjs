@@ -5,7 +5,7 @@ import { setTimeout as delay } from "node:timers/promises";
 import { readFileSync } from "node:fs";
 import { act } from "react";
 import { skyReference } from "../../src/domain/sky/starfield.ts";
-import { TestMap, TestStarfieldLayer, groundRequests, settle, workspace, shootingDateTime, setShootingDateTime, value, button, setControl, waitUntil, terrainMap, readyTerrain } from "./harness.mjs";
+import { openAbout, TestMap, TestStarfieldLayer, groundRequests, settle, workspace, shootingDateTime, setShootingDateTime, value, button, setControl, waitUntil, terrainMap, readyTerrain } from "./harness.mjs";
 
 test('星空与银河独立开关、朝向及实际相机反馈联动，不重载 DEM 或修改其他参数',async t=>{
   await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
@@ -109,7 +109,9 @@ test('银河纹理状态与遮挡分开，搜索时也显示失败，地形与�
   assert.match(document.querySelector('.sky-texture-feedback').textContent,/加载失败/);
   assert.equal(document.querySelector('.terrain-feedback-error'),null);assert.equal(terrainMap(),map);assert.equal(groundRequests.length,requests);
   assert.equal(document.querySelector('[aria-label="显示星空"]').checked,true);assert.ok(document.querySelector('[data-search-target="galactic-center"]'));
-  assert.ok(document.querySelector('.about-dialog a[href="https://www.eso.org/public/images/eso0932a/"]'));
+  const about = await openAbout();
+  assert.ok(about.querySelector('a[href="https://www.eso.org/public/images/eso0932a/"]'));
+  await settle(() => about.querySelector('button').click());
   await settle(()=>document.querySelector('[aria-label="显示银河"]').click());assert.equal(document.querySelector('.sky-texture-feedback'),null);
   await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
   await settle(()=>layer.report({planKey:layer.frame.planKey,ready:true,view:null,states:{},milkyWay:{phase:'ready'}}));
@@ -188,6 +190,9 @@ test('About 汇集所有署名与下载，开关图层和弹窗不重建地图�
   assert.equal(trigger.getAttribute('aria-haspopup'), 'dialog');
   assert.equal(browserMap.options.attributionControl.compact, true);
   assert.equal(document.querySelector('.preview-attribution'), null);
+  // The sources list is read on the first opening.
+  assert.equal(dialog.querySelector('[data-credit-source]') === null, true);
+  await openAbout();
   const catalog = JSON.parse(readFileSync(new URL('../../src/data/deep-sky.json', import.meta.url), 'utf8'));
   assert.equal(dialog.querySelectorAll('[data-credit-source]').length, catalog.imageSources.length);
   for (const source of catalog.imageSources) {
@@ -218,6 +223,8 @@ test('About 汇集所有署名与下载，开关图层和弹窗不重建地图�
   assert.ok(landmarkCatalog.some(target=>target.credit.use),'catalogue carries at least one non-commercial landmark');
   assert.match(landmarkSection.textContent,/NanoRay.*CC BY 4.0/);
   assert.equal(new Set(downloads.map((link) => link.getAttribute('href'))).size, downloads.length);
+  await settle(() => dialog.querySelector('button').click());
+  assert.equal(dialog.open, false);
   const fields = ['经度', '纬度', '焦距', '离地高度', '方位角', '俯仰角'];
   const before = fields.map(value), time = shootingDateTime();
   const requests = groundRequests.length, maps = TestMap.instances.length;

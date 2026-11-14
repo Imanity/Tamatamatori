@@ -2,7 +2,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { stubs, TestCelestialLayer, dom, terrainSize, resizeObservers, groundRequests, settle, workspace, input, chooseTimeZone, shootingDateTime, setShootingDateTime, value, button, setControl, waitUntil, terrainMap, readyTerrain } from "./harness.mjs";
+import { openAbout, stubs, TestCelestialLayer, dom, terrainSize, resizeObservers, groundRequests, settle, workspace, input, chooseTimeZone, shootingDateTime, setShootingDateTime, value, button, setControl, waitUntil, terrainMap, readyTerrain } from "./harness.mjs";
 
 test("三维预览启用真实地形与水体；缺失 DEM 返回的零值不覆盖独立高程", async (t) => {
   await workspace(t);
@@ -24,11 +24,9 @@ test("三维预览启用真实地形与水体；缺失 DEM 返回的零值不覆
   assert.ok(
     document.querySelector(".ground-elevation").textContent.includes("1000.0"),
   );
-  assert.ok(
-    document
-      .querySelector(".about-dialog")
-      .textContent.includes("Mapterhorn"),
-  );
+  const about = await openAbout();
+  assert.ok(about.textContent.includes("Mapterhorn"));
+  await settle(() => about.querySelector("button").click());
   await settle(() => {
     map.renderedHeight = 1012;
     map.emit("sourcedata");

@@ -532,6 +532,20 @@ export async function waitUntil(predicate) {
   }
   throw new Error("Terrain state did not settle");
 }
+/** Enters the 推算 mode and waits for its panel (the module is read on the first entry). */
+export async function enterSolve() {
+  await settle(() => document.querySelector(".solve-button").click());
+  await waitUntil(() => document.querySelector(".composition-templates"));
+}
+/** A source module as the App sees it: the same instance in the Vite SSR module graph. */
+export const appModule = (path) => server.ssrLoadModule(path);
+/** Opens About and waits for its sources list, read on the first opening. */
+export async function openAbout() {
+  const dialog = document.querySelector("#about-dialog");
+  await settle(() => document.querySelector('.topbar [aria-controls="about-dialog"]').click());
+  await waitUntil(() => dialog.querySelector('[aria-labelledby="about-software-title"]'));
+  return dialog;
+}
 export function terrainMap() {
   return TestMap.instances
     .filter((map) => !map.removed && typeof map.options.style === "object")

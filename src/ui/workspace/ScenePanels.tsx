@@ -47,15 +47,17 @@ import { CameraBar } from "../preview/CameraBar";
 import { Timeline } from "./Timeline";
 import { layerGroups } from "../common/layers";
 import type { LayerGroupId } from "../common/layers";
-import { CompositionPanel } from "../solve/Composition";
-import type { CompositionState } from "../solve/useComposition";
-import { CompositionMarks } from "../solve/CompositionMarks";
+import type { CompositionState, SolveModule } from "../solve/useComposition";
 import type { ShotSaving } from "../solve/SolveLink";
+import type { ModuleLoad } from "../common/lazy-module";
+import { ModuleStatus } from "../common/ModuleStatus";
+import type { TimelineEvent } from "../../domain/time/timeline";
 import { usePreviewGestures } from "../preview/usePreviewGestures";
 import { FrameGuides } from "../preview/FrameGuides";
 import { LightingGroup } from "../environment/LightingGroup";
 import { CameraResponseSelect, ConstellationSwitch, GalaxyContrast } from "../sky/SkySettings";
 
+const noEvents: TimelineEvent[] = [];
 
 export function PreviewPanel({
   plan,
@@ -70,13 +72,21 @@ export function PreviewPanel({
   tides,
   aurora,
   alignment,
+  solveActive = false,
+  solveLoad,
   solveHost,
   shotSaving,
 }: {
   plan: ShootingPlan;
   update: (patch: Partial<ShootingPlan>) => void;
-  /** The "推算" mode state (owned by the workspace, shared with the map) and where its panel goes. */
-  alignment: CompositionState;
+  /**
+   * The "推算" mode state (owned by the workspace, shared with the map; null
+   * until its module is read), whether the mode is on, the module's read and
+   * where its panel goes.
+   */
+  alignment: CompositionState | null;
+  solveActive?: boolean;
+  solveLoad?: ModuleLoad<SolveModule>;
   solveHost?: HTMLElement | null;
   /** "存为机位" from the 推算 panel: saves the current plan under a name and binds it. */
   shotSaving?: ShotSaving;
@@ -202,7 +212,7 @@ export function PreviewPanel({
       : plan;
   const celestialScene = useCelestialScene(plan, visibility, view);
   // The try-out's first body (the Sun or the Moon has an occlusion reading).
-  const triedBody = alignment.run?.basis.bodies.find((body) => body === "sun" || body === "moon") ?? null;
+  const triedBody = alignment?.run?.basis.bodies.find((body) => body === "sun" || body === "moon") ?? null;
   const alignedBody = triedBody ? celestialScene.views.find((entry) => entry.body.id === triedBody) : undefined;
   const eclipses = useEclipses(plan);
   const obscuration = celestialScene.bodies?.sun.obscuration ?? 0;
@@ -330,7 +340,7 @@ export function PreviewPanel({
             scene={stations}
             visibility={skyVisibility}
           />
-          <CompositionMarks state={alignment} view={view} frame={viewfinder} />
+          {alignment && <alignment.module.CompositionMarks state={alignment} view={view} frame={viewfinder} />}
           <FrameGuides grid={grid} azimuth={view.azimuth} fov={fov} />
         </div>
       </div>
@@ -344,18 +354,24 @@ export function PreviewPanel({
         forecast={plan.weather ? weatherFeed.forecast ?? null : null}
         tides={plan.layers.tides && tides?.phase === "ready" ? tides.series ?? null : null}
         aurora={plan.layers.aurora && aurora?.phase === "ready" ? auroraInputs : null}
-        extraEvents={alignment.events}
+        extraEvents={alignment?.events ?? noEvents}
       />
-      {solveHost && alignment.active &&
+      {solveHost && solveActive &&
         createPortal(
-          <CompositionPanel
-            state={alignment}
-            plan={plan}
-            saving={shotSaving}
-            occlusion={alignedBody && triedBody && plan.layers[triedBody]
-              ? { state: alignedBody.state, occlusion: alignedBody.occlusion }
-              : null}
-          />,
+          alignment ? (
+            <alignment.module.CompositionPanel
+              state={alignment}
+              plan={plan}
+              saving={shotSaving}
+              occlusion={alignedBody && triedBody && plan.layers[triedBody]
+                ? { state: alignedBody.state, occlusion: alignedBody.occlusion }
+                : null}
+            />
+          ) : (
+            <section className="alignment-panel" aria-label="推算">
+              {solveLoad && <ModuleStatus load={solveLoad} name="推算模块" />}
+            </section>
+          ),
           solveHost,
         )}
       {infoHost &&

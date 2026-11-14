@@ -44,3 +44,47 @@ test("源码分层：领域、绘制与界面的文件都在功能子目录中�
     assert.deepEqual(loose, [], layer);
   }
 });
+
+// The page's first load (docs/plan/lazy-loading.md): the files reached from
+// src/main.tsx through static imports. Type-only imports and import() are not
+// followed, nor assets (?url, ?raw, CSS, JSON) and packages.
+function staticGraph(entry) {
+  const seen = new Set();
+  const visit = (file) => {
+    if (seen.has(file)) return;
+    seen.add(file);
+    const text = readFileSync(file, "utf8");
+    const found = [
+      ...[...text.matchAll(/^(?:import|export)\s+(type\s)?[^;()]*?\bfrom\s*["']([^"']+)["']/gm)].filter((match) => !match[1]).map((match) => match[2]),
+      ...[...text.matchAll(/^import\s*["']([^"']+)["']/gm)].map((match) => match[1]),
+    ];
+    for (const spec of found) {
+      if (!spec.startsWith(".") || spec.includes("?")) continue;
+      const base = resolve(dirname(file), spec);
+      const target = [base, `${base}.ts`, `${base}.tsx`, resolve(base, "index.ts")].find((path) => /\.tsx?$/.test(path) && source.includes(path));
+      if (target) visit(target);
+    }
+  };
+  visit(entry);
+  return [...seen].map((path) => relative(src, path).replaceAll(sep, "/"));
+}
+
+test("首屏静态引用不含推算的计算与界面、天体目录与 About 来源列表，它们在用到时才读取", () => {
+  const first = staticGraph(resolve(src, "main.tsx"));
+  // Not vacuous: the workspace, the 推算 state and its words are there.
+  for (const file of ["App.tsx", "ui/map/MapPanel.tsx", "ui/workspace/ScenePanels.tsx", "ui/solve/useComposition.ts", "ui/solve/composition-format.ts", "ui/workspace/About.tsx"])
+    assert.ok(first.includes(file), file);
+  const late = first.filter((file) =>
+    file.startsWith("domain/solve/")
+    || (file.startsWith("ui/solve/") && !["ui/solve/useComposition.ts", "ui/solve/composition-format.ts"].includes(file))
+    || file === "domain/sky/sky-targets.ts"
+    || file === "ui/workspace/AboutSources.tsx");
+  assert.deepEqual(late, []);
+  // Both are still read, with import().
+  assert.match(readFileSync(resolve(src, "ui/solve/useComposition.ts"), "utf8"), /import\("\.\/solve-module"\)/);
+  assert.match(readFileSync(resolve(src, "ui/workspace/About.tsx"), "utf8"), /import\("\.\/AboutSources"\)/);
+  // The module side reaches what the first load leaves out.
+  const module = staticGraph(resolve(src, "ui/solve/solve-module.ts"));
+  for (const file of ["domain/solve/composition.ts", "domain/solve/composition-run.ts", "domain/solve/solve.ts", "domain/sky/sky-targets.ts", "ui/solve/Composition.tsx", "ui/solve/SolveLink.tsx"])
+    assert.ok(module.includes(file), file);
+});

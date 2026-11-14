@@ -10,12 +10,11 @@ import { centralEclipseInSpan, centralPath, umbraFootprint } from "../../domain/
 import { auroraLines, kpAt, ovationApplies, ovationCells } from "../../domain/environment/aurora";
 import type { TideFeed } from "../environment/TideScene";
 import type { AuroraFeed } from "../environment/AuroraScene";
-import { compositionGeometry } from "../solve/useComposition";
 import type { CompositionState } from "../solve/useComposition";
 import { emptyFeatures } from "./map-overlays";
 import type { EclipseMap } from "./map-overlays";
 
-export function useMapOverlays(plan: ShootingPlan, tides: TideFeed | undefined, aurora: AuroraFeed | undefined, alignment: CompositionState | undefined) {
+export function useMapOverlays(plan: ShootingPlan, tides: TideFeed | undefined, aurora: AuroraFeed | undefined, alignment: CompositionState | null | undefined) {
   const layers = plan.layers;
   // Sun, Moon and Milky Way core directions for the shooting instant and their
   // rises and sets in the timeline's span; each follows its layer.
@@ -64,13 +63,14 @@ export function useMapOverlays(plan: ShootingPlan, tides: TideFeed | undefined, 
     if (tideCell) features.push({ type: "Feature", properties: { kind: "tide-cell" }, geometry: { type: "Point", coordinates: [tideCell.longitude, tideCell.latitude] } });
     return { type: "FeatureCollection", features };
   }, [tideCell?.latitude, tideCell?.longitude, auroraKp, nowcast, auroraKp === null ? "" : plan.instant]);
-  // 推算: ground targets placed by a click, and the results drawn as lines.
+  // 推算: ground targets placed by a click, and the results drawn as lines (geometry and body kinds from its module).
   const solve = alignment?.active ? alignment : null;
   const placingTarget = !!solve?.placing;
   const alignmentFeatures = useMemo(
-    () => (solve ? compositionGeometry(solve, plan.timeZone) : emptyFeatures),
+    () => (solve ? solve.module.compositionGeometry(solve, plan.timeZone) : emptyFeatures),
     [solve, solve?.composition.targets, solve?.run, solve?.current, plan.timeZone],
   );
   const alignmentBody = solve?.run?.basis.bodies[0] ?? solve?.composition.targets.find((target) => target.kind === "sky")?.body ?? "sun";
-  return { lines, eclipse, environment, tideCell, auroraKp, solve, placingTarget, alignmentFeatures, alignmentBody };
+  const alignmentKind = solve ? solve.module.bodyKind(alignmentBody) : "sun";
+  return { lines, eclipse, environment, tideCell, auroraKp, solve, placingTarget, alignmentFeatures, alignmentKind };
 }

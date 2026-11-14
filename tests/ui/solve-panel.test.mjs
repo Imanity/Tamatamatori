@@ -6,7 +6,7 @@ import { parseSolveText2 } from "../../src/domain/solve/solve.ts";
 import { skyAt, toRay, travel } from "../../src/domain/solve/position-alignment.ts";
 import { direction } from "../../src/domain/core/ephemeris.ts";
 import { initialPlan } from "../../src/domain/core/plan.ts";
-import { stubs, dom, pollutionRequests, installGlobal, settle, workspace, input, inputIn, shootingDateTime, setShootingDateTime, value, button, clickMap, setControl, waitUntil, readyTerrain, shotButton, openShots, savedShots, panel, solvability, resultStatus, dayRows, rowItems, targetRow, searchNow, searched, tokyoTime, placed, fujiRequest, openSolveLink } from "./harness.mjs";
+import { stubs, dom, pollutionRequests, installGlobal, settle, workspace, input, inputIn, shootingDateTime, setShootingDateTime, value, button, clickMap, setControl, waitUntil, readyTerrain, shotButton, openShots, savedShots, panel, solvability, resultStatus, dayRows, rowItems, targetRow, searchNow, searched, tokyoTime, placed, fujiRequest, openSolveLink, enterSolve, appModule } from "./harness.mjs";
 
 test('推算·固定机位与朝向：加天体、固定机位与朝向后搜索，结果按天列出并标在时间轴；试看只改时刻与图层，返回推算前只恢复这两类字段；改动条件后结果标为过期', async t => {
   await workspace(t); await readyTerrain();
@@ -19,7 +19,7 @@ test('推算·固定机位与朝向：加天体、固定机位与朝向后搜索
   await settle(() => setControl(input('方位角'), 244.63));
   await settle(() => setControl(input('俯仰角'), 10.74));
   await settle(() => setControl(input('焦距'), 400));
-  await settle(() => solveButton().click());
+  await enterSolve();
   assert.equal(solveButton().getAttribute('aria-pressed'), 'true');
   assert.ok(panel());
   assert.equal(document.querySelector('.info-sidebar').getAttribute('aria-label'), '推算');
@@ -102,7 +102,7 @@ test('推算：可解性提示随目标、范围与筛选变化；高纬度冬�
   await settle(() => setControl(input('方位角'), 180));
   await settle(() => setControl(input('俯仰角'), 10));
   await setShootingDateTime('2026-11-25T12:00');
-  await settle(() => document.querySelector('.solve-button').click());
+  await enterSolve();
   assert.deepEqual(tabs(), ['地图', '相机', '图层', '推算']);
   assert.equal(layout.dataset.mobileTab, 'solve');
   assert.equal(document.querySelector('.rail-tabs'), null, 'the bottom tabs choose the content on narrow screens');
@@ -171,7 +171,7 @@ test('推算·地面点与天体（机位线）：地标与太阳各在画面位
   // Labels can fold into dots next to sunrise or sunset; the accessible name always names them.
   const markers = () => [...document.querySelectorAll('.time-marker[data-event="alignment"]')].map((marker) => marker.getAttribute('aria-label').replace(/^跳到(\S+) .*$/, '$1'));
   const before = { latitude: value('纬度'), longitude: value('经度'), time: shootingDateTime(), azimuth: value('方位角'), pitch: value('俯仰角') };
-  await settle(() => document.querySelector('.solve-button').click());
+  await enterSolve();
   await settle(() => button('+ 地面点').click());
   await settle(() => setControl(document.querySelector('.composition-pending select[aria-label="选择地标"]'), 'tokyo-skytree'));
   assert.equal(Number(inputIn(targetRow('晴空塔'), '距地表').value), 634);
@@ -245,7 +245,7 @@ test('推算·底部位置定主体大小：“月亮落在塔尖”模板，多
   installGlobal('__testElevationTiles', async (points, url, signal, progress) => { loads.push(points.length); progress?.(2, 2); return () => 0; });
   t.after(() => { delete globalThis.__testElevationTiles; });
   const kinds = () => new Set(map.getSource('tamatamatori-alignment').data.features.map((feature) => feature.properties.kind));
-  await settle(() => document.querySelector('.solve-button').click());
+  await enterSolve();
   await settle(() => button('月亮落在塔尖').click());
   assert.match(targetRow('晴空塔').textContent, /距地表 634 m · 自左 50%、自上 35% · ±3% · 主体约 35%/);
   assert.ok(targetRow('月亮'));
@@ -288,7 +288,7 @@ test('推算·更多目标与星空可见性：第三个地面点随走廊读取
   const loads = [];
   installGlobal('__testElevationTiles', async (points, url, signal, progress) => { loads.push(points); progress?.(2, 2); return () => 0; });
   t.after(() => { delete globalThis.__testElevationTiles; });
-  await settle(() => document.querySelector('.solve-button').click());
+  await enterSolve();
   // The Moon on Skytree's top with Tokyo Tower lower left: one day.
   await settle(() => button('月亮落在塔尖').click());
   await settle(() => setControl(document.querySelector('select[aria-label="跨度"]'), 1));
@@ -379,7 +379,7 @@ test('推算·机位最近距离：新建条件缺省 2 km，钻石富士模板 
   const cone = (latitude, longitude) => Math.max(0, 3000 - 0.3 * Math.hypot((latitude - 35.3606) * 111000, (longitude - 138.7274) * 111000 * Math.cos(35.36 * Math.PI / 180)));
   installGlobal('__testElevationTiles', async (points, url, signal, progress) => { progress?.(1, 1); return cone; });
   t.after(() => { delete globalThis.__testElevationTiles; });
-  await settle(() => document.querySelector('.solve-button').click());
+  await enterSolve();
   const nearest = () => document.querySelector('select[aria-label="机位最近距离"]');
   assert.equal(nearest().value, '2000');
   assert.deepEqual([...nearest().options].map((option) => option.textContent), ['不限', '1 km', '2 km', '5 km', '10 km']);
@@ -408,7 +408,7 @@ test('推算·看得见的山顶：山顶可勾选、塔不可；“移到附近
   const cone = (latitude, longitude) => Math.max(0, 3000 - 0.3 * Math.hypot((latitude - 35.3606) * 111195, (longitude - 138.7274) * 111195 * Math.cos(35.36 * Math.PI / 180)));
   installGlobal('__testElevationTiles', async (points, url, signal, progress) => { progress?.(1, 1); return cone; });
   t.after(() => { delete globalThis.__testElevationTiles; });
-  await settle(() => document.querySelector('.solve-button').click());
+  await enterSolve();
   await settle(() => button('钻石富士').click());
   await settle(() => targetRow('富士山顶').querySelector('.composition-target-name').click());
   const skyline = () => [...targetRow('富士山顶').querySelectorAll('.composition-check')].find((label) => /看得见的山顶/.test(label.textContent));
@@ -437,7 +437,7 @@ test('推算·两个地面点：结果为与时间无关的机位，地图画出
   const { map } = await workspace(t); await readyTerrain();
   installGlobal('__testElevationTiles', async (points, url, signal, progress) => { progress?.(1, 1); return () => 0; });
   t.after(() => { delete globalThis.__testElevationTiles; });
-  await settle(() => document.querySelector('.solve-button').click());
+  await enterSolve();
   // Skytree's top upper left, Tokyo Tower's top lower right.
   await settle(() => button('+ 地面点').click());
   await settle(() => setControl(document.querySelector('.composition-pending select[aria-label="选择地标"]'), 'tokyo-skytree'));
@@ -606,7 +606,7 @@ test('检查机位：按需读取水体与建筑，每段的试看机位标出�
     return { features: { water: [{ rings: [around(points[0], 60)] }], buildings: [{ rings: [around(points[10], 40)], height: 500, base: 0 }] }, tiles: 3, fetched: 3 };
   });
   t.after(() => { delete globalThis.__testElevationTiles; delete globalThis.__testFeatures; });
-  await settle(() => document.querySelector('.solve-button').click());
+  await enterSolve();
   await settle(() => button('+ 地面点').click());
   await settle(() => setControl(document.querySelector('.composition-pending select[aria-label="选择地标"]'), 'tokyo-skytree'));
   await settle(() => button('+ 天体').click());
@@ -690,4 +690,65 @@ test('天体目标：银心在固定机位与朝向下只在天暗时给出结�
   assert.match(document.querySelector('[data-composition-marks] .alignment-mark-star .alignment-handle').getAttribute('aria-label'), /^织女星在画面中的位置/);
   await settle(() => targetRow('织女星').querySelector('input[value="moon"]').click());
   assert.equal(document.querySelector('select[aria-label="恒星或深空目标"]'), null);
+});
+
+test('推算模块按需读取：进入推算才读取，读取中与失败分别提示，重试后可用；条件从进入时的拍摄日期开始', async (t) => {
+  const { solveModule } = await appModule('/src/ui/solve/useComposition.ts');
+  const real = solveModule.get;
+  let pending = null;
+  t.mock.method(solveModule, 'loaded', () => null);
+  const get = t.mock.method(solveModule, 'get', () => new Promise((resolve, reject) => { pending = { resolve, reject }; }));
+  await workspace(t); await readyTerrain();
+  await setShootingDateTime('2026-12-01T12:00');
+  assert.equal(get.mock.callCount(), 0, 'not read before the mode is entered');
+  await settle(() => document.querySelector('.solve-button').click());
+  assert.equal(get.mock.callCount(), 1);
+  assert.match(document.querySelector('.solve-body .module-status').textContent, /^推算模块读取中…$/);
+  assert.equal(panel(), null);
+  // The map and the timeline draw nothing of the mode yet.
+  assert.equal(document.querySelector('.time-marker[data-event="alignment"]'), null);
+  await settle(() => pending.reject(new Error('网络中断')));
+  const failed = document.querySelector('.solve-body .module-status.is-error');
+  assert.match(failed.textContent, /推算模块读取失败：网络中断/);
+  assert.equal(failed.getAttribute('role'), 'alert');
+  // Retrying reads it again.
+  get.mock.mockImplementation(() => real());
+  await settle(() => button('重试').click());
+  await waitUntil(() => document.querySelector('.composition-templates'));
+  assert.equal(get.mock.callCount(), 2);
+  assert.equal(document.querySelector('.module-status'), null);
+  assert.equal(document.querySelector('input[aria-label="起始日期"]').value, '2026-12-01');
+  // Leaving and entering again keeps the module: no further read.
+  await settle(() => document.querySelector('.solve-button').click());
+  await settle(() => document.querySelector('.solve-button').click());
+  assert.ok(panel());
+  assert.equal(get.mock.callCount(), 2);
+});
+
+test('#solve= 链接等推算模块读到后才打开预览；模块读取失败时提示并清除链接，再开链接重新读取', async (t) => {
+  const { solveModule } = await appModule('/src/ui/solve/useComposition.ts');
+  const real = solveModule.get;
+  let pending = null;
+  t.mock.method(solveModule, 'loaded', () => null);
+  t.mock.method(solveModule, 'get', () => new Promise((resolve, reject) => { pending = { resolve, reject }; }));
+  await workspace(t); await readyTerrain();
+  const link = `solve=json:${encodeURIComponent(JSON.stringify(fujiRequest))}`;
+  await settle(() => { dom.window.location.hash = link; });
+  await waitUntil(() => pending);
+  assert.equal(document.querySelector('.solve-dialog'), null);
+  await settle(() => pending.reject(new Error('网络中断')));
+  assert.match(document.querySelector('.shot-toast').textContent, /无法打开推算链接：推算模块读取失败（网络中断）/);
+  assert.equal(dom.window.location.hash, '');
+  assert.equal(document.querySelector('.solve-button').getAttribute('aria-pressed'), 'false');
+  // The same link again reads the module again and opens the preview; nothing changes until it is confirmed.
+  pending = null;
+  await settle(() => { dom.window.location.hash = link; });
+  await waitUntil(() => pending);
+  const module = await real();
+  await settle(() => pending.resolve(module));
+  await waitUntil(() => document.querySelector('.solve-dialog')?.open);
+  assert.match(document.querySelector('.solve-dialog .shot-summary').textContent, /太阳/);
+  assert.equal(document.querySelector('.solve-button').getAttribute('aria-pressed'), 'false');
+  await settle(() => button('取消').click());
+  assert.equal(dom.window.location.hash, '');
 });
