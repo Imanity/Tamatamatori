@@ -7,7 +7,7 @@ import { act } from "react";
 import { weatherResponse } from "../fixtures/weather.mjs";
 import { parseWeather, WEATHER_TTL } from "../../src/domain/environment/weather.ts";
 import { ellipsoidalRay } from "../../src/domain/core/geodesy.ts";
-import { stubs, TestCelestialLayer, TestStarfieldLayer, dom, weatherRequests, pollutionRequests, terrainSize, resizeObservers, groundRequests, settle, workspace, input, setShootingDateTime, value, button, setControl, geometry, waitUntil, terrainMap, readyTerrain } from "./harness.mjs";
+import { starfieldLayer, stubs, TestCelestialLayer, TestStarfieldLayer, dom, weatherRequests, pollutionRequests, terrainSize, resizeObservers, groundRequests, settle, workspace, input, setShootingDateTime, value, button, setControl, geometry, waitUntil, terrainMap, readyTerrain } from "./harness.mjs";
 
 test('精简工作区：没有左栏，图层开关位于分组标题，光照与环境默认展开，分组随开关展开与折叠', async t => {
   await workspace(t); const map = await readyTerrain(), requests = groundRequests.length;
@@ -293,6 +293,8 @@ test('光污染取消过期位置与关闭请求，无覆盖、失败和重试�
   assert.equal(document.querySelector('.pollution-status'), null);
   assert.match(document.querySelector('.pollution-readout').textContent, /2015.*1\.000/);
   await settle(() => setControl(input('纬度'), 80));
+  // Coverage is known once the index is read with the loader.
+  await waitUntil(() => document.querySelector('.pollution-unavailable'));
   assert.match(document.querySelector('.pollution-unavailable').textContent, /超出.*覆盖/);
   assert.equal(pending.length, 4); assert.equal(toggle.checked, true);
   await settle(() => toggle.click()); assert.equal(document.querySelector('.pollution-status'), null);
@@ -301,7 +303,10 @@ test('光污染取消过期位置与关闭请求，无覆盖、失败和重试�
 
 test('已加载预览隐藏后恢复同一尺寸时重新提交星空帧', async t => {
   await workspace(t); const map = await readyTerrain();
-  const layer = map.customLayers.find(l => l instanceof TestStarfieldLayer);
+  // Only the Sun and the Moon: the star layer is not read until a sky layer is on.
+  assert.equal(map.customLayers.some(l => l instanceof TestStarfieldLayer), false);
+  await settle(() => document.querySelector('[aria-label="显示星空"]').click());
+  const layer = await starfieldLayer(map);
   const old = layer.frame.key;
   const observer = resizeObservers.find(o => o.target === document.querySelector('.terrain-canvas'));
   await settle(() => observer.callback([{ contentRect: { width: 0, height: 0 } }]));

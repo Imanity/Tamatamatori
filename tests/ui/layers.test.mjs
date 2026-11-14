@@ -1,4 +1,5 @@
 // Workspace interaction tests: paths, meteors, comets, eclipses, tides, aurora, map lines and place search. Setup lives in harness.mjs.
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { setTimeout as delay } from "node:timers/promises";
@@ -7,7 +8,7 @@ import { bodyPath } from "../../src/domain/sun-moon/body-paths.ts";
 import { meteorEstimate } from "../../src/domain/sky/meteor-showers.ts";
 import { cometScene } from "../../src/domain/comets/comets.ts";
 import { validateCometCatalog } from "../../src/domain/comets/comet-catalog.ts";
-import { stubs, TestCelestialLayer, TestStarfieldLayer, TestMarker, server, dom, groundRequests, installGlobal, settle, workspace, input, chooseTimeZone, shootingDateTime, setShootingDateTime, value, setControl, waitUntil, terrainMap, readyTerrain, cometCatalogAt } from "./harness.mjs";
+import { appModule, starfieldLayer, stubs, TestCelestialLayer, TestStarfieldLayer, TestMarker, server, dom, groundRequests, installGlobal, settle, workspace, input, chooseTimeZone, shootingDateTime, setShootingDateTime, value, setControl, waitUntil, terrainMap, readyTerrain, cometCatalogAt } from "./harness.mjs";
 
 test('太阳、月亮分组各有运行轨迹开关：从属于天体图层，开启后预览得到轨迹线与整点标注', async t => {
   await workspace(t); const map = await readyTerrain();
@@ -63,6 +64,8 @@ test('流星雨图层：左栏开启后列出拍摄日期的活动流星雨与�
   await setShootingDateTime('2026-08-13T00:30');
   const requests = groundRequests.length, poses = map.cameraSolutions.length;
   await settle(() => layerSwitch().click());
+  await starfieldLayer(map);
+  await waitUntil(() => document.querySelector('[data-meteor-status]'));
   assert.equal(document.getElementById('info-meteors').getAttribute('aria-expanded'), 'true');
   const rows = [...document.querySelectorAll('[data-meteor-status]')].map((row) => row.dataset.meteorStatus);
   assert.equal(rows[0], 'PER', 'strongest shower first');
@@ -200,6 +203,7 @@ test('右栏先给结论：详细数值默认隐藏，开启后显示并在本�
   assert.match(pollution.querySelector('.info-detail').textContent, /天顶人工亮度 ≈ 6\.500 mcd\/m²/);
   // Deep sky: targets below the horizon are folded under one line.
   await settle(() => document.querySelector('[aria-label="显示深空天体"]').click());
+  await waitUntil(() => document.querySelector('#info-deepSky-body [data-dso-status]'));
   const below = [...document.querySelectorAll('.sky-below [data-dso-status]')];
   const shown = [...document.querySelectorAll('#info-deepSky-body [data-dso-status]')].filter((row) => !row.closest('.sky-below'));
   assert.equal(below.length + shown.length, 15);
@@ -592,4 +596,57 @@ test('Open-Meteo 用量：开启天气或潮汐时在光照与环境中显示本
   // Still listed while weather is off, because calls were made today.
   await settle(() => document.querySelector('[aria-label="天气效果"]').click());
   assert.ok(line());
+});
+
+test('流星雨模块按需读取：开启流星雨才读取，读取中与失败分别提示，重试后列出流星雨，时间轴随之给出辐射点升落', async (t) => {
+  const { meteorModule } = await appModule('/src/ui/sky/layer-modules.ts');
+  const real = meteorModule.get;
+  let pending = null;
+  t.mock.method(meteorModule, 'loaded', () => null);
+  const get = t.mock.method(meteorModule, 'get', () => new Promise((resolve, reject) => { pending = { resolve, reject }; }));
+  await workspace(t); await readyTerrain();
+  await setShootingDateTime('2026-08-13T00:30');
+  assert.equal(get.mock.callCount(), 0, 'not read with the meteor layer off');
+  await settle(() => document.querySelector('input[aria-label="显示流星雨"]').click());
+  assert.equal(get.mock.callCount(), 1);
+  const status = () => document.querySelector('[data-info-group="meteors"] .module-status');
+  assert.match(status().textContent, /^流星雨目录读取中…$/);
+  assert.equal(document.querySelector('[data-meteor-status]') === null, true);
+  assert.equal(document.querySelector('.time-marker[data-event^="radiant"]') === null, true);
+  assert.doesNotMatch(document.querySelector('.time-missing')?.title ?? '', /英仙座/);
+  await settle(() => pending.reject(new Error('网络中断')));
+  assert.match(status().textContent, /流星雨目录读取失败：网络中断/);
+  get.mock.mockImplementation(() => real());
+  await settle(() => status().querySelector('button').click());
+  await waitUntil(() => document.querySelector('[data-meteor-status="PER"]'));
+  assert.equal(status() === null, true);
+  // The timeline gets the model too: here the Perseid radiant stays up all night, which it says instead of marking.
+  await waitUntil(() => /英仙座.*全程在地平线上/.test(document.querySelector('.time-missing')?.title ?? ''));
+  assert.equal(get.mock.callCount(), 2);
+});
+
+test('空间站计算按需读取：开启空间站才读取 SGP4，读取中与失败分别提示，重试后给出位置', async (t) => {
+  const fixture = JSON.parse(readFileSync(new URL('../fixtures/stations-reference.json', import.meta.url), 'utf8'));
+  const feed = { version: 1, source: 'https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=json', fetchedAt: null, attemptedAt: null, status: 'seed', error: null, blocked: false, objects: fixture.elements };
+  t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify(feed)));
+  const { stationModule } = await appModule('/src/ui/sky/layer-modules.ts');
+  const real = stationModule.get;
+  let pending = null;
+  t.mock.method(stationModule, 'loaded', () => null);
+  const get = t.mock.method(stationModule, 'get', () => new Promise((resolve, reject) => { pending = { resolve, reject }; }));
+  await workspace(t); await readyTerrain();
+  await setShootingDateTime('2026-11-06T19:35');
+  assert.equal(get.mock.callCount(), 0, 'not read with the station layer off');
+  await settle(() => document.querySelector('[aria-label="显示空间站"]').click());
+  assert.equal(get.mock.callCount(), 1);
+  const status = () => document.querySelector('.station-readout .module-status');
+  await waitUntil(() => status());
+  assert.match(status().textContent, /^轨道计算读取中…$/);
+  assert.match(document.querySelector('.station-readout').textContent, /等待轨道计算/);
+  await settle(() => pending.reject(new Error('网络中断')));
+  assert.match(status().textContent, /轨道计算读取失败：网络中断/);
+  get.mock.mockImplementation(() => real());
+  await settle(() => status().querySelector('button').click());
+  await waitUntil(() => status() === null && !/等待轨道计算/.test(document.querySelector('.station-readout').textContent));
+  assert.equal(get.mock.callCount(), 2);
 });

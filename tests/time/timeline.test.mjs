@@ -10,9 +10,10 @@ import {
   timelineEvents,
   timelineMode,
   timelineWindow,
-  visiblePasses,
   windowMinute,
 } from "../../src/domain/time/timeline.ts";
+import { visiblePasses } from "../../src/domain/stations/station-passes.ts";
+import { activeShowers } from "../../src/domain/sky/meteor-showers.ts";
 import { dayEvents, limbAltitude } from "../../src/domain/time/day-events.ts";
 import { localTimeZone } from "../../src/domain/time/zone-lookup.ts";
 import { stationPosition } from "../../src/domain/stations/stations.ts";
@@ -136,20 +137,25 @@ test("银心出没与独立岁差、恒星时逐 15 秒采样相差不超过 1 �
   }
 });
 
-test("流星雨取时段中点 ZHR 最高的活动流星雨辐射点；拱极或没有活动流星雨时分别说明", () => {
+test("流星雨取时段中点 ZHR 最高的活动流星雨辐射点；拱极或没有活动流星雨时分别说明；流星雨模块未读到时不推断", () => {
   const perseids = timelineWindow("2026-08-12T12:00:00Z", "Asia/Singapore", "night");
-  const result = timelineEvents(plan(1.35, 103.82, { meteors: true }), perseids);
+  // The meteor model comes in once its module is read (docs/plan/lazy-loading.md).
+  const showers = { showers: activeShowers };
+  const unread = timelineEvents(plan(1.35, 103.82, { meteors: true }), perseids);
+  assert.equal(unread.events.some((event) => event.kind.startsWith("radiant")), false);
+  assert.deepEqual(unread.missing, []);
+  const result = timelineEvents(plan(1.35, 103.82, { meteors: true }), perseids, showers);
   const radiant = result.events.filter((event) => event.kind.startsWith("radiant"));
   assert.deepEqual(radiant.map((event) => event.kind).sort(), ["radiant-rise", "radiant-set"]);
   assert.ok(radiant.every((event) => event.detail.startsWith("英仙座")), radiant.map((event) => event.detail).join());
   // From Tokyo the Perseid radiant (Dec ≈ +58°) never sets.
-  const tokyo = timelineEvents(plan(35.68, 139.76, { meteors: true }), timelineWindow("2026-08-12T12:00:00Z", "Asia/Tokyo", "night"));
+  const tokyo = timelineEvents(plan(35.68, 139.76, { meteors: true }), timelineWindow("2026-08-12T12:00:00Z", "Asia/Tokyo", "night"), showers);
   assert.equal(tokyo.events.some((event) => event.kind.startsWith("radiant")), false);
   assert.ok(tokyo.missing.some((item) => item.startsWith("英仙座") && item.endsWith("（全程在地平线上）")), tokyo.missing.join());
   // The Milky Way core never rises from Svalbard.
   const north = timelineEvents(plan(78.22, 15.65, { milkyWay: true }), timelineWindow("2026-12-15T11:00:00Z", "Arctic/Longyearbyen", "night"));
   assert.ok(north.missing.includes("银心升落（全程在地平线下）"), north.missing.join());
-  const quiet = timelineEvents(plan(35.68, 139.76, { meteors: true }), timelineWindow("2026-03-01T12:00:00Z", "Asia/Tokyo", "night"));
+  const quiet = timelineEvents(plan(35.68, 139.76, { meteors: true }), timelineWindow("2026-03-01T12:00:00Z", "Asia/Tokyo", "night"), showers);
   if (!quiet.events.some((event) => event.kind.startsWith("radiant"))) assert.ok(quiet.missing.some((item) => /流星雨|辐射点/.test(item)));
 });
 
@@ -183,13 +189,14 @@ test("空间站可见过境满足高于 10°、受照、太阳低于 −6°，�
     }
     assert.ok(pass.peak >= 10 && pass.to >= pass.from);
   }
-  const events = timelineEvents(subject, window, { orbits }).events;
+  const events = timelineEvents(subject, window, { orbits, passes: visiblePasses }).events;
   assert.deepEqual(events.map((event) => event.kind), passes.map(() => "station-pass"));
   assert.ok(events.every((event) => /^(ISS|天宫)$/.test(event.label) && /可见过境/.test(event.detail)));
-  const stale = timelineEvents(subject, timelineWindow("2026-10-01T12:00:00Z", "Asia/Shanghai", "night"), { orbits });
+  const stale = timelineEvents(subject, timelineWindow("2026-10-01T12:00:00Z", "Asia/Shanghai", "night"), { orbits, passes: visiblePasses });
   assert.deepEqual(stale.events, []);
   assert.deepEqual(stale.missing, ["空间站过境（轨道数据不覆盖本时段）"]);
   assert.deepEqual(timelineEvents(subject, window).missing, [], "orbits not loaded: nothing is claimed");
+  assert.deepEqual(timelineEvents(subject, window, { orbits }), { events: [], missing: [] }, "SGP4 not read: nothing is claimed");
 });
 
 test("上一/下一事件严格早于或晚于当前时刻，时刻本身的事件不算", () => {

@@ -27,9 +27,10 @@ import {
 } from "../sky/StarScene";
 import { TargetSearchResults } from "../sky/TargetSearch";
 import { useOrbits } from "../sky/useOrbits";
-import { StationLabels, StationReadout } from "../sky/StationScene";
+import { StationLabels, StationReadout, waitingStations } from "../sky/StationScene";
 import { matchingStations } from "../../domain/stations/orbit-data";
-import { stationScene } from "../../domain/stations/stations";
+import { meteorModule, stationModule } from "../sky/layer-modules";
+import { useLazyModule } from "../common/lazy-module";
 import { useLightPollution } from "../environment/useLightPollution";
 import { useWeather } from "../environment/useWeather";
 import { WeatherActions, weatherMessage } from "../environment/WeatherReadout";
@@ -189,12 +190,15 @@ export function PreviewPanel({
     ? buildings : {...emptyBuildings,key:buildingKey(plan),phase:"loading" as const};
   const stationMatches = matchingStations(infoQuery);
   const orbits = useOrbits(!!plan.layers.stations || stationMatches.length > 0);
+  // SGP4 and the meteor model are read when their layer is first turned on (docs/plan/lazy-loading.md).
+  const stationLoad = useLazyModule(stationModule, !!plan.layers.stations || stationMatches.length > 0);
+  const meteorLoad = useLazyModule(meteorModule, !!plan.layers.meteors);
   const observerAltitude =
     camera?.planKey === celestialPlanKey(plan)
       ? Math.round(camera.altitude * 1000) / 1000
       : undefined;
   const stations = useMemo(
-    () => stationScene(plan, orbits.snapshot, observerAltitude),
+    () => (stationLoad.module ? stationLoad.module.stationScene(plan, orbits.snapshot, observerAltitude) : waitingStations),
     [
       plan.latitude,
       plan.longitude,
@@ -202,6 +206,7 @@ export function PreviewPanel({
       plan.cameraHeight,
       orbits.snapshot,
       observerAltitude,
+      stationLoad.module,
     ],
   );
   const fov = fieldOfView(plan);
@@ -233,7 +238,7 @@ export function PreviewPanel({
     note: !plan.lightPollution ? "光污染未开启，按自然天空"
       : pollution.phase === "ready" ? `已计光污染 ${artificialMcd!.toFixed(2)} mcd/m²`
       : pollution.phase === "loading" ? "光污染读取中，暂按自然天空" : "光污染不可用，按自然天空",
-  });
+  }, meteorLoad);
   const meteorNote = meteorFact(meteorScene);
   const cometFeed = useCometCatalog(!!plan.layers.comets);
   const comets = useCometScene(plan, cometFeed, artificialMcd ?? 0);
@@ -355,6 +360,8 @@ export function PreviewPanel({
         tides={plan.layers.tides && tides?.phase === "ready" ? tides.series ?? null : null}
         aurora={plan.layers.aurora && aurora?.phase === "ready" ? auroraInputs : null}
         extraEvents={alignment?.events ?? noEvents}
+        showers={meteorLoad.module?.activeShowers ?? null}
+        passes={stationLoad.module?.visiblePasses ?? null}
       />
       {solveHost && solveActive &&
         createPortal(
@@ -392,6 +399,7 @@ export function PreviewPanel({
             )}
             {infoQuery.trim() && stationMatches.length > 0 && (
               <StationReadout
+                load={stationLoad}
                 plan={plan}
                 scene={stations}
                 visibility={skyVisibility}
@@ -518,6 +526,7 @@ export function PreviewPanel({
                     <p className="info-empty">空间站已关闭</p>
                   ) : (
                     <StationReadout
+                load={stationLoad}
                       plan={plan}
                       scene={stations}
                       visibility={skyVisibility}

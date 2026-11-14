@@ -1,11 +1,10 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { Body, DefineStar, Equator, HelioVector, Horizon, MakeTime, Observer, SearchAltitude } from "astronomy-engine";
-import { eciToEcf, ecfToLookAngles, gstime, jday, json2satrec, propagate, shadowFraction, sunPos } from "satellite.js";
 import type { ShootingPlan } from "../core/plan.ts";
 import { instantFromLocal } from "../core/plan.ts";
 import { limbAltitude, sunMoonEvents } from "./day-events.ts";
 import { sunPosition } from "../core/ephemeris.ts";
-import { activeShowers } from "../sky/meteor-showers.ts";
+import type { activeShowers } from "../sky/meteor-showers.ts";
 import { eclipsesInSpan, lunarKindNames, solarKindNames } from "../sun-moon/eclipses.ts";
 import { tideCovers, tideExtremes, tideHeight } from "../environment/tides.ts";
 import type { TideSeries } from "../environment/tides.ts";
@@ -14,8 +13,8 @@ import type { KpBlock } from "../environment/aurora.ts";
 import { cometScene } from "../comets/comets.ts";
 import { cometState } from "../comets/comet-orbit.ts";
 import type { CometCatalog } from "../comets/comet-catalog.ts";
-import { orbitEpoch, stationCatalog } from "../stations/orbit-data.ts";
 import type { OrbitSnapshot } from "../stations/orbit-data.ts";
+import type { visiblePasses } from "../stations/station-passes.ts";
 
 /**
  * The time slider covers one 24-hour span of local wall-clock time: the
@@ -99,7 +98,7 @@ export interface TimelineEvents {
   missing: string[];
 }
 
-type EventPlan = Pick<ShootingPlan, "latitude" | "longitude" | "refraction" | "cameraHeight" | "layers">;
+export type EventPlan = Pick<ShootingPlan, "latitude" | "longitude" | "refraction" | "cameraHeight" | "layers">;
 const horizonNote = (refraction: ShootingPlan["refraction"]) =>
   `${refraction === "standard" ? "海平面地平（标准折射）" : "几何地平（无折射）"}，不含地形遮挡`;
 const round = (time: number) => Temporal.Instant.fromEpochMilliseconds(Math.round(time / 1000) * 1000).toString();
@@ -154,62 +153,6 @@ function raDec(vector: readonly [number, number, number]) {
   return { ra, dec: (Math.asin(vector[2] / length) * 180) / Math.PI };
 }
 
-/**
- * Passes of each station above 10°, sunlit, while the Sun is below −6°;
- * minute steps. `covered` is false when no station has usable elements for
- * any minute of the span (published elements are used for 72 hours around
- * their epoch, as for the station markers).
- */
-export function visiblePasses(plan: EventPlan, window: TimelineWindow, snapshot: OrbitSnapshot) {
-  const start = Date.parse(window.start), end = Date.parse(window.end);
-  const sun = new Map<number, number>();
-  const sunAt = (time: number) => {
-    // Sun elevation every 10 minutes, interpolated in between.
-    const a = Math.floor((time - start) / 600_000) * 600_000 + start, b = a + 600_000;
-    const value = (at: number) => {
-      if (!sun.has(at)) sun.set(at, sunPosition({ latitude: plan.latitude, longitude: plan.longitude, instant: new Date(at).toISOString() }).elevation);
-      return sun.get(at)!;
-    };
-    return value(a) + ((value(b) - value(a)) * (time - a)) / 600_000;
-  };
-  const observer = { latitude: (plan.latitude * Math.PI) / 180, longitude: (plan.longitude * Math.PI) / 180, height: plan.cameraHeight / 1000 };
-  const passes: { station: (typeof stationCatalog)[number]; from: number; to: number; peak: number }[] = [];
-  let covered = false;
-  for (const station of stationCatalog) {
-    const element = snapshot.objects.find((entry) => entry.NORAD_CAT_ID === station.noradId);
-    if (!element) continue;
-    let epoch: number, satellite;
-    try {
-      epoch = orbitEpoch(element.EPOCH);
-      satellite = json2satrec(element);
-    } catch {
-      continue;
-    }
-    let current: { from: number; to: number; peak: number } | null = null;
-    for (let time = start; time < end; time += 60_000) {
-      let visible = false, elevation = -90;
-      if (Math.abs(time - epoch) <= 72 * 3_600_000) {
-        const date = new Date(time), state = propagate(satellite, date);
-        if (state && state.position && !satellite.error) {
-          covered = true;
-          elevation = (ecfToLookAngles(observer, eciToEcf(state.position, gstime(date))).elevation * 180) / Math.PI;
-          visible = elevation >= 10 && sunAt(time) < -6 && shadowFraction(sunPos(jday(date)).rsun, state.position) < 1;
-        }
-      }
-      if (visible) {
-        if (!current) current = { from: time, to: time, peak: elevation };
-        current.to = time;
-        current.peak = Math.max(current.peak, elevation);
-      } else if (current) {
-        passes.push({ station, ...current });
-        current = null;
-      }
-    }
-    if (current) passes.push({ station, ...current });
-  }
-  return { passes: passes.sort((a, b) => a.from - b.from), covered };
-}
-
 const stationLabel = (noradId: number) => (noradId === 25544 ? "ISS" : "天宫");
 
 /**
@@ -223,6 +166,13 @@ export function timelineEvents(
   inputs: {
     comets?: CometCatalog | null; orbits?: OrbitSnapshot | null; tides?: TideSeries | null;
     aurora?: { kp: KpBlock[] | null; outlook: KpBlock[] | null } | null;
+    /**
+     * The meteor model (meteor-showers.ts) and the station passes
+     * (station-passes.ts), given once their modules are read; until then the
+     * layer adds no instants (docs/plan/lazy-loading.md).
+     */
+    showers?: typeof activeShowers | null;
+    passes?: typeof visiblePasses | null;
   } = {},
 ): TimelineEvents {
   const events: TimelineEvent[] = [], missing: string[] = [];
@@ -279,8 +229,8 @@ export function timelineEvents(
     if (!pairs(found, "core", ["银心升", "银心落"], (rise) => `银心${rise ? "升起" : "落下"}：${horizon}`)) missing.push(`银心升落${allSpan(found)}`);
   }
   const middle = new Date((Date.parse(window.start) + Date.parse(window.end)) / 2).toISOString();
-  if (plan.layers.meteors) {
-    const strongest = activeShowers({ latitude: plan.latitude, longitude: plan.longitude, instant: middle })
+  if (plan.layers.meteors && inputs.showers) {
+    const strongest = inputs.showers({ latitude: plan.latitude, longitude: plan.longitude, instant: middle })
       .filter((shower) => shower.zhr !== null)
       .sort((a, b) => b.zhr! - a.zhr!)[0];
     if (!strongest) missing.push("活动流星雨");
@@ -302,8 +252,8 @@ export function timelineEvents(
         missing.push(`${brightest.comet.name}升落${allSpan(found)}`);
     }
   }
-  if (plan.layers.stations && inputs.orbits) {
-    const { passes, covered } = visiblePasses(plan, window, inputs.orbits);
+  if (plan.layers.stations && inputs.orbits && inputs.passes) {
+    const { passes, covered } = inputs.passes(plan, window, inputs.orbits);
     if (!covered) missing.push("空间站过境（轨道数据不覆盖本时段）");
     else if (!passes.length) missing.push("空间站可见过境");
     for (const pass of passes)

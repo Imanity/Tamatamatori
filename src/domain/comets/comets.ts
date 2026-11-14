@@ -1,8 +1,8 @@
 import { Body, HelioVector, ObserverVector } from "astronomy-engine";
 import type { ShootingPlan } from "../core/plan.ts";
 import { observerContext } from "../core/ephemeris.ts";
-import { skyReference } from "../sky/starfield.ts";
-import type { SkyPoint } from "../sky/starfield.ts";
+import { skyFrame } from "../sky/sky-frame.ts";
+import type { SkyPoint } from "../sky/sky-frame.ts";
 import { DARK_SKY_MAGNITUDE, skyAppearance } from "../sky/sky-appearance.ts";
 import {
   AU_KM, C_AU_PER_DAY, GM_SUN, cometState, comaDiameterKm, heliocentricMagnitude, magnitudeLaw, propagate,
@@ -105,7 +105,7 @@ let cachedKey = "", cached: CometScene | undefined, cachedCatalog: CometCatalog 
 export function cometScene(plan: Pick<ShootingPlan, "latitude" | "longitude" | "instant">, catalog: CometCatalog, artificialMcd = 0): CometScene {
   const key = [plan.latitude, plan.longitude, plan.instant, artificialMcd, catalog.fetchedAt, catalog.comets.length].join("/");
   if (cached && key === cachedKey && catalog === cachedCatalog) return cached;
-  const sky = skyReference(plan), { observer } = observerContext(plan), time = sky.time;
+  const sky = skyFrame(plan), { observer } = observerContext(plan), time = sky.time;
   const appearance = skyAppearance(sky.sunElevation, sky.moon, artificialMcd);
   const skyFade = Math.max(0, DARK_SKY_MAGNITUDE - appearance.displayMagnitude);
   const earth = HelioVector(Body.Earth, time), site = ObserverVector(time, observer, false);

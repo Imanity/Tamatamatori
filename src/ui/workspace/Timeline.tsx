@@ -72,6 +72,8 @@ export function Timeline({
   forecast = null,
   tides = null,
   aurora = null,
+  showers = null,
+  passes = null,
   extraEvents,
 }: {
   plan: ShootingPlan;
@@ -86,6 +88,9 @@ export function Timeline({
   tides?: TideSeries | null;
   /** Kp forecast and outlook while the aurora layer is on. */
   aurora?: { kp: KpBlock[] | null; outlook: KpBlock[] | null } | null;
+  /** The meteor model and the station passes, once their modules are read (timelineEvents). */
+  showers?: NonNullable<Parameters<typeof timelineEvents>[2]>["showers"];
+  passes?: NonNullable<Parameters<typeof timelineEvents>[2]>["passes"];
 }) {
   const dateId = useId();
   const [date, setDate] = useState(
@@ -146,11 +151,11 @@ export function Timeline({
   }, [axis.start, axis.mode, latitude, longitude, timeZone]);
   const layerEvents = useMemo(() => {
     try {
-      return timelineEvents({ latitude, longitude, refraction, cameraHeight, layers }, axis, { comets, orbits, tides, aurora });
+      return timelineEvents({ latitude, longitude, refraction, cameraHeight, layers }, axis, { comets, orbits, tides, aurora, showers, passes });
     } catch {
       return { events: [] as TimelineEvent[], missing: [] as string[] };
     }
-  }, [axis.start, axis.mode, latitude, longitude, refraction, cameraHeight, layerKey, comets, orbits, tides, aurora]);
+  }, [axis.start, axis.mode, latitude, longitude, refraction, cameraHeight, layerKey, comets, orbits, tides, aurora, showers, passes]);
   const { events, missing } = useMemo(() => {
     const start = Date.parse(axis.start), end = Date.parse(axis.end);
     const inside = (extraEvents ?? []).filter((event) => Date.parse(event.instant) >= start && Date.parse(event.instant) < end);

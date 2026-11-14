@@ -1,12 +1,14 @@
 import type { ShootingPlan } from "../../domain/core/plan";
 import { where } from "../common/readout";
 import type { StationScene } from "../../domain/stations/stations";
-import type { SkyVisibility } from "../../domain/sky/starfield";
+import type { SkyVisibility } from "../../domain/sky/sky-frame";
 import type { OrbitFeed } from "./useOrbits";
-import { skyPointView } from "../../domain/sky/starfield";
+import { skyPointView } from "../../domain/sky/sky-frame";
 import { celestialPlanKey, skyLabelKey, occlusionText } from "../../domain/core/visibility";
 import { apparentElevation } from "../../domain/core/refraction";
-import { matchingStations } from "../../domain/stations/orbit-data";
+import { matchingStations, stationCatalog } from "../../domain/stations/orbit-data";
+import type { ModuleLoad } from "../common/lazy-module";
+import { ModuleStatus } from "../common/ModuleStatus";
 import type { WeatherSample } from "../../domain/environment/weather";
 import { cloudOpacity, weatherClouds } from "../../domain/environment/weather-appearance";
 import { refractDirection } from "../../domain/core/refraction";
@@ -43,9 +45,14 @@ export function StationLabels({ plan, scene, visibility, weather }: { plan: Shoo
   });
 }
 
-export function StationReadout({ plan, scene, visibility, feed, query, update }: {
+/** The stations before the SGP4 module is read: no positions yet. */
+export const waitingStations: StationScene = { key: "", points: [], trail: [], rows: stationCatalog.map((station) => ({ ...station, message: "等待轨道计算" })) };
+
+export function StationReadout({ plan, scene, visibility, feed, query, update, load }: {
   plan: ShootingPlan; scene: StationScene; visibility: SkyVisibility; feed: OrbitFeed;
   query: string; update: (patch: Partial<ShootingPlan>) => void;
+  /** The SGP4 module (layer-modules.ts): its loading or failure is shown above the rows. */
+  load?: ModuleLoad<unknown>;
 }) {
   const matches = matchingStations(query);
   if (!plan.layers.stations && !matches.length) return null;
@@ -68,6 +75,7 @@ export function StationReadout({ plan, scene, visibility, feed, query, update }:
         <button type="button" onClick={() => update({ instant: new Date(Math.floor(Date.now() / 1000) * 1000).toISOString() })}>使用当前时刻</button>
       </div>
       <p className="station-instant">拍摄时刻 {utc(plan.instant)}</p>
+      {load && (load.phase === "loading" || load.phase === "failed") && <ModuleStatus load={load} name="轨道计算" />}
       <div className="station-actions" aria-label="空间站时间微调">
         {[-10, -1, 1, 10].map((seconds) => (
           <button key={seconds} type="button" onClick={() => update({ instant: new Date(Date.parse(plan.instant) + seconds * 1000).toISOString() })}>

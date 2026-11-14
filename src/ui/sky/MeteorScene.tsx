@@ -3,10 +3,12 @@ import { Detail, where } from "../common/readout";
 import { Temporal } from "@js-temporal/polyfill";
 import type { ShootingPlan } from "../../domain/core/plan";
 import { sensorKey } from "../../domain/core/plan";
-import { activeShowers, meteorEstimate, meteorModel, meteorSample } from "../../domain/sky/meteor-showers";
 import type { ActiveShower } from "../../domain/sky/meteor-showers";
-import { skyPointView } from "../../domain/sky/starfield";
-import type { SkyVisibility } from "../../domain/sky/starfield";
+import type { ModuleLoad } from "../common/lazy-module";
+import { ModuleStatus } from "../common/ModuleStatus";
+import type { MeteorModule } from "./layer-modules";
+import { skyPointView } from "../../domain/sky/sky-frame";
+import type { SkyVisibility } from "../../domain/sky/sky-frame";
 import { celestialPlanKey, occlusionText, skyLabelKey } from "../../domain/core/visibility";
 import type { Occlusion } from "../../domain/core/visibility";
 import { apparentElevation } from "../../domain/core/refraction";
@@ -36,23 +38,25 @@ function darkRange(dark: { from: number; to: number }, timeZone: string) {
   return `${day(from)} ${clock(from)}—${sameDay ? "" : `${day(to)} `}${clock(to)}`;
 }
 
-export function useMeteorScene(plan: ShootingPlan, view: View, pollution: MeteorPollution) {
+/** The meteor layer; `load` is the meteor module (layer-modules.ts), read when the layer is first turned on. */
+export function useMeteorScene(plan: ShootingPlan, view: View, pollution: MeteorPollution, load: ModuleLoad<MeteorModule>) {
   const on = !!plan.layers.meteors, density = on && !!plan.layers.meteorDensity;
+  const model = load.module;
   const actives = useMemo(() => {
-    if (!on) return { list: [] as ActiveShower[], error: "" };
+    if (!on || !model) return { list: [] as ActiveShower[], error: "" };
     // Strongest first; variable showers (no ZHR) last.
-    try { return { list: activeShowers(plan).sort((a, b) => (b.zhr ?? -1) - (a.zhr ?? -1)), error: "" }; }
+    try { return { list: model.activeShowers(plan).sort((a, b) => (b.zhr ?? -1) - (a.zhr ?? -1)), error: "" }; }
     catch { return { list: [] as ActiveShower[], error: "流星雨计算失败，请检查机位与拍摄时刻。" }; }
-  }, [on, plan.latitude, plan.longitude, plan.instant]);
+  }, [on, model, plan.latitude, plan.longitude, plan.instant]);
   const estimate = useMemo(() => {
-    if (!density || actives.error) return null;
+    if (!density || !model || actives.error) return null;
     try {
-      const value = meteorEstimate(view, pollution.artificialMcd);
-      return { ...value, thinning: meteorSample(view, pollution.artificialMcd).thinning };
+      const value = model.meteorEstimate(view, pollution.artificialMcd);
+      return { ...value, thinning: model.meteorSample(view, pollution.artificialMcd).thinning };
     } catch { return null; }
-  }, [density, actives.error, plan.latitude, plan.longitude, plan.instant, view.azimuth, view.pitch,
+  }, [density, model, actives.error, plan.latitude, plan.longitude, plan.instant, view.azimuth, view.pitch,
     plan.focalLength, sensorKey(plan), plan.aspectRatio, plan.orientation, pollution.artificialMcd]);
-  return { on, density, actives: actives.list, error: actives.error, estimate, pollution };
+  return { on, density, actives: actives.list, error: actives.error, estimate, pollution, load };
 }
 type MeteorScene = ReturnType<typeof useMeteorScene>;
 
@@ -100,7 +104,8 @@ export function MeteorReadout({ plan, scene, visibility, update }: {
         <input type="checkbox" role="switch" aria-label="显示流星雨预估密度" checked={scene.density} disabled={!scene.on}
           onChange={() => update({ layers: { ...plan.layers, meteorDensity: !scene.density } })} />
       </label>
-      {scene.density && (
+      {scene.on && !scene.load.module && <ModuleStatus load={scene.load} name="流星雨目录" />}
+      {scene.density && scene.load.module && (
         <div className="meteor-estimate" data-meteor-estimate role="status">
           {!estimable ? <p>拍摄日期没有可估算的流星雨</p>
             : !estimate ? <p>流星密度估算失败</p>
@@ -110,7 +115,7 @@ export function MeteorReadout({ plan, scene, visibility, update }: {
               <p data-meteor-night>暗夜 {darkRange(estimate.dark, plan.timeZone)} · {hours(estimate.darkHours)} 小时</p>
               {estimate.byShower.length > 0 && <p>{breakdown(estimate.byShower)}</p>}
               <p className="meteor-basis info-detail">
-                亮于约 +{meteorModel.cameraLimit} 等 · 固定机位整晚连拍，按拍摄时刻星空对齐叠加 · 已计月光 · {scene.pollution.note}
+                亮于约 +{scene.load.module.meteorModel.cameraLimit} 等 · 固定机位整晚连拍，按拍摄时刻星空对齐叠加 · 已计月光 · {scene.pollution.note}
                 {estimate.thinning < 1 ? ` · 示意轨迹按 ${Math.round(estimate.thinning * 100)}% 抽样` : ""}
               </p>
             </>}
@@ -118,7 +123,7 @@ export function MeteorReadout({ plan, scene, visibility, update }: {
       )}
       {!scene.on && <p className="info-empty">流星雨已关闭</p>}
       {scene.error && <p className="celestial-error" role="status">{scene.error}</p>}
-      {scene.on && !scene.error && !scene.actives.length && <p className="info-empty">拍摄日期没有工作表中的流星雨处于活动期</p>}
+      {scene.on && scene.load.module && !scene.error && !scene.actives.length && <p className="info-empty">拍摄日期没有工作表中的流星雨处于活动期</p>}
       {scene.actives.map((active) => {
         const state = radiantState(plan, visibility, active);
         const elevation = apparentElevation(active.point.elevation, plan.refraction);

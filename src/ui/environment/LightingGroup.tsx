@@ -1,7 +1,6 @@
 // The "光照与环境" group: lighting phase and moonlight, the light pollution and
 // weather settings with their readouts, and the framing values.
 import type { ShootingPlan } from "../../domain/core/plan";
-import { lightPollutionAtlas } from "../../domain/environment/light-pollution";
 import { Detail, pollutionLevel } from "../common/readout";
 import { EnvironmentSettings } from "./EnvironmentSettings";
 import { WeatherReadout } from "./WeatherReadout";
@@ -57,7 +56,7 @@ export function LightingGroup({ plan, update, phase, skyNote, sunElevation, moon
                     : pollution.phase === "ready"
                       ? <>
                           {pollutionLevel(artificialMcd!)}
-                          <Detail>{lightPollutionAtlas.year} 天顶人工亮度 ≈ {artificialMcd!.toFixed(3)} mcd/m²</Detail>
+                          <Detail>{pollution.year} 天顶人工亮度 ≈ {artificialMcd!.toFixed(3)} mcd/m²</Detail>
                         </>
                       : pollution.phase === "loading"
                         ? "正在读取当地光污染，效果待应用"

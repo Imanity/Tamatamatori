@@ -22,7 +22,7 @@ import type { VisibilitySnapshot } from "../../domain/core/visibility";
 import type { CalibrationSnapshot } from "../../render/scene/calibration";
 import type { StarfieldLayer } from "../../render/sky/starfield-layer";
 import type { WeatherSample } from "../../domain/environment/weather";
-import type { SkyVisibility } from "../../domain/sky/starfield";
+import type { SkyVisibility } from "../../domain/sky/sky-frame";
 import type { RenderedCamera } from "../../render/scene/rendered-camera";
 import { applyTerrainDetail, terrainCoverageRange } from "../../render/scene/terrain-detail";
 import type { TerrainPerspective } from "../../render/scene/terrain-perspective";
@@ -31,6 +31,12 @@ import type { CometScene } from "../../domain/comets/comets";
 import type { BuildingLayer } from "../../render/scene/building-layer";
 import { emptyBuildings } from "../../domain/buildings/buildings";
 import type { BuildingStatus } from "../../domain/buildings/buildings";
+
+/** The layers the star layer draws; it is read when one of them is first turned on (docs/plan/lazy-loading.md). */
+export const skyLayerOn = (plan: ShootingPlan) => {
+  const layers = plan.layers;
+  return !!(layers.stars || layers.milkyWay || layers.constellations || layers.deepSky || layers.meteors || layers.comets || layers.stations);
+};
 
 const calibrationName = import.meta.env.DEV ? new URLSearchParams(window.location.search).get("calibration") : null;
 const calibrationEnabled = calibrationName === "fuji" || calibrationName === "skytree";
@@ -140,6 +146,7 @@ export function TerrainScene({ plan, stations, comets, onVisibilityChange, onCam
     let map: MapLibreMap | undefined;
     let celestialLayer: CelestialLayer | undefined;
     let starfield: StarfieldLayer | undefined;
+    let starfieldLoading = false;
     let perspective: TerrainPerspective | undefined;
     let buildings: BuildingLayer | undefined;
     let buildingState: BuildingStatus = emptyBuildings;
@@ -220,6 +227,25 @@ export function TerrainScene({ plan, stations, comets, onVisibilityChange, onCam
         );
       }
     };
+    // Under the Sun and Moon layer, as when it was added with the others; kept once added.
+    const ensureStarfield = () => {
+      if (starfield || starfieldLoading || disposed || failed || !map || !skyLayerOn(latest.current.plan)) return;
+      starfieldLoading = true;
+      void import("../../render/sky/starfield-layer").then((starfieldModule) => {
+        if (disposed || failed || !map) return;
+        const layer = new starfieldModule.StarfieldLayer((snapshot)=>{
+          if(disposed)return;
+          const unavailable=!!latest.current.plan.layers.buildings&&buildingState.phase==="error";
+          latest.current.onSkyChange?.(unavailable?{...snapshot,ready:false,occlusionUnavailable:true,labelStates:{}}:snapshot);
+          if(snapshot.message)fail(snapshot.message);
+        });
+        try { map.addLayer(layer, celestialLayer?.id); }
+        catch { fail('星空与银河图层无法启动，请重试预览。');return; }
+        starfield = layer;
+        lastCelestialFrame = "";
+        schedule();
+      }, () => fail("星空图层未能加载，请检查网络后重试。"));
+    };
     const applyCamera = () => {
       if (
         disposed ||
@@ -230,6 +256,7 @@ export function TerrainScene({ plan, stations, comets, onVisibilityChange, onCam
         !container.current
       )
         return;
+      ensureStarfield();
       const current = latest.current;
       buildings?.setVisible(hasSize()&&current.ground.key===current.key&&current.ground.phase==="ready");
       try {
@@ -354,12 +381,11 @@ export function TerrainScene({ plan, stations, comets, onVisibilityChange, onCam
 
     void (async () => {
       try {
-        const [sdk, cameraModule, celestialModule, perspectiveModule, starfieldModule, buildingModule] = await Promise.all([
+        const [sdk, cameraModule, celestialModule, perspectiveModule, buildingModule] = await Promise.all([
           import("../map/sdk"),
           import("../../render/scene/camera"),
           import("../../render/sky/celestial-layer"),
           import("../../render/scene/terrain-perspective"),
-          import("../../render/sky/starfield-layer"),
           import("../../render/scene/building-layer"),
         ]);
         createCamera = cameraModule.terrainCamera;
@@ -405,14 +431,7 @@ export function TerrainScene({ plan, stations, comets, onVisibilityChange, onCam
           },waterUrl,terrainUrl);
           try { map.addLayer(buildings); }
           catch { fail("建筑图层无法启动，请重试预览。");return; }
-          starfield = new starfieldModule.StarfieldLayer((snapshot)=>{
-            if(disposed)return;
-            const unavailable=!!latest.current.plan.layers.buildings&&buildingState.phase==="error";
-            latest.current.onSkyChange?.(unavailable?{...snapshot,ready:false,occlusionUnavailable:true,labelStates:{}}:snapshot);
-            if(snapshot.message)fail(snapshot.message);
-          });
-          try { map.addLayer(starfield); }
-          catch { fail('星空与银河图层无法启动，请重试预览。');return; }
+          // The star layer goes in between when a sky layer is on (ensureStarfield).
           celestialLayer = new celestialModule.CelestialLayer((snapshot) => {
             if (disposed) return;
             const unavailable=!!latest.current.plan.layers.buildings&&buildingState.phase==="error";

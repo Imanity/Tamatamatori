@@ -349,7 +349,8 @@ before(async () => {
           if (id.replaceAll("\\", "/").endsWith("/src/render/sky/celestial-layer.ts"))
             return "export const CelestialLayer = globalThis.__testCelestialLayer;";
           if (id.replaceAll("\\", "/").endsWith("/src/io/light-pollution.ts"))
-            return "export const sampleLightPollution = (...args) => globalThis.__testPollutionLoader(...args);";
+            return "export { lightPollutionAtlas, lightPollutionCells } from '/src/domain/environment/light-pollution.ts';\n" +
+              "export const sampleLightPollution = (...args) => globalThis.__testPollutionLoader(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/io/weather.ts"))
             return "export const loadWeather = (...args) => globalThis.__testWeatherLoader(...args);\n" +
               "export const loadWeatherSource = (...args) => (globalThis.__testWeatherSourceLoader ?? (() => Promise.reject(new Error('no source'))))(...args);";
@@ -531,6 +532,10 @@ export async function waitUntil(predicate) {
     if (result) return result;
   }
   throw new Error("Terrain state did not settle");
+}
+/** The star layer once it has a frame: it is read and added when a sky layer is first turned on. */
+export async function starfieldLayer(map) {
+  return waitUntil(() => map.customLayers.find((layer) => layer instanceof TestStarfieldLayer && layer.frame));
 }
 /** Enters the 推算 mode and waits for its panel (the module is read on the first entry). */
 export async function enterSolve() {

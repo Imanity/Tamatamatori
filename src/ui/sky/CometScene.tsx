@@ -5,8 +5,8 @@ import { COMET_LIST_LIMIT, cometScene, visibleTailDegrees } from "../../domain/c
 import type { CometScene as Scene, CometView } from "../../domain/comets/comets";
 import { catalogFreshness } from "../../domain/comets/comet-catalog";
 import type { CometFeed } from "./useCometCatalog";
-import { skyPointView } from "../../domain/sky/starfield";
-import type { SkyVisibility } from "../../domain/sky/starfield";
+import { skyPointView } from "../../domain/sky/sky-frame";
+import type { SkyVisibility } from "../../domain/sky/sky-frame";
 import { celestialPlanKey, occlusionText, skyLabelKey } from "../../domain/core/visibility";
 import type { Occlusion } from "../../domain/core/visibility";
 import { apparentElevation } from "../../domain/core/refraction";

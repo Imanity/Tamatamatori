@@ -5,7 +5,7 @@ import { setTimeout as delay } from "node:timers/promises";
 import { readFileSync } from "node:fs";
 import { act } from "react";
 import { skyReference } from "../../src/domain/sky/starfield.ts";
-import { openAbout, TestMap, TestStarfieldLayer, groundRequests, settle, workspace, shootingDateTime, setShootingDateTime, value, button, setControl, waitUntil, terrainMap, readyTerrain } from "./harness.mjs";
+import { appModule, starfieldLayer, openAbout, TestMap, TestStarfieldLayer, groundRequests, settle, workspace, shootingDateTime, setShootingDateTime, value, button, setControl, waitUntil, terrainMap, readyTerrain } from "./harness.mjs";
 
 test('星空与银河独立开关、朝向及实际相机反馈联动，不重载 DEM 或修改其他参数',async t=>{
   await workspace(t);const map=await readyTerrain(),requests=groundRequests.length;
@@ -16,6 +16,7 @@ test('星空与银河独立开关、朝向及实际相机反馈联动，不重�
   await settle(()=>document.querySelector('[aria-label="显示星空"]').click());
   await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
   assert.equal(map.cameraSolutions.length,poses);assert.equal(map.environments.length,environments);
+  await waitUntil(()=>document.querySelector('[data-sky-status="银心"]'));await starfieldLayer(map);
   assert.doesNotMatch(document.querySelector('#info-stars-body').textContent,/亮星目录|定位符号|按当前 DEM 遮挡/);
   assert.doesNotMatch(document.querySelector('#info-milkyWay-body').textContent,/银河细节|全景衍生/);
   assert.ok(document.querySelector('[data-sky-status="银心"]'));
@@ -390,4 +391,49 @@ test('侧栏收起、面板交换保留搜索，地平线下的未开启目标�
   assert.equal(document.querySelector('#target-search').value,'Vega');
   await settle(()=>document.querySelector('[aria-label="对调地图与预览位置"]').click());await readyTerrain();
   assert.equal(document.querySelector('#target-search').value,'Vega');assert.ok(document.querySelector('[data-search-target]'));
+});
+
+test('星表按需读取：只开日月时不读取星表与星空图层；开启星空后读取，读取中与失败分别提示，重试后可用', async (t) => {
+  const { starCatalogs } = await appModule('/src/ui/sky/star-catalog-source.ts');
+  const real = starCatalogs.get;
+  let pending = null;
+  t.mock.method(starCatalogs, 'loaded', () => null);
+  const get = t.mock.method(starCatalogs, 'get', () => new Promise((resolve, reject) => { pending = { resolve, reject }; }));
+  await workspace(t); const map = await readyTerrain();
+  assert.equal(get.mock.callCount(), 0, 'not read with only the Sun and the Moon');
+  assert.equal(map.customLayers.some((layer) => layer instanceof TestStarfieldLayer), false);
+  await settle(() => document.querySelector('[aria-label="显示星空"]').click());
+  assert.equal(get.mock.callCount(), 1);
+  const status = () => document.querySelector('#info-stars-body .module-status');
+  assert.match(status().textContent, /^星表读取中…$/);
+  assert.equal(document.querySelector('[data-sky-status]') === null, true);
+  await settle(() => pending.reject(new Error('网络中断')));
+  assert.match(status().textContent, /星表读取失败：网络中断/);
+  assert.equal(status().getAttribute('role'), 'alert');
+  // The star layer is there all the same; retrying reads the catalogues.
+  await starfieldLayer(map);
+  get.mock.mockImplementation(() => real());
+  await settle(() => status().querySelector('button').click());
+  await waitUntil(() => document.querySelector('[data-sky-status="北极星"]'));
+  assert.equal(status() === null, true);
+  assert.equal(get.mock.callCount(), 2);
+});
+
+test('目标搜索：输入后才读取星表，读取中写明，读到后列出结果', async (t) => {
+  const { starCatalogs } = await appModule('/src/ui/sky/star-catalog-source.ts');
+  const real = starCatalogs.get;
+  let pending = null;
+  t.mock.method(starCatalogs, 'loaded', () => null);
+  const get = t.mock.method(starCatalogs, 'get', () => new Promise((resolve, reject) => { pending = { resolve, reject }; }));
+  await workspace(t); await readyTerrain();
+  assert.equal(get.mock.callCount(), 0);
+  await settle(() => setControl(document.querySelector('#target-search'), '织女星'));
+  assert.equal(get.mock.callCount(), 1);
+  assert.match(document.querySelector('.target-search-results .module-status').textContent, /^星表读取中…$/);
+  const module = await real();
+  await settle(() => pending.resolve(module));
+  await waitUntil(() => document.querySelector('.search-result-count'));
+  assert.match(document.querySelector('.search-result-count').textContent, /找到 \d+ 个目标/);
+  assert.ok(document.querySelector('[data-search-target]'));
+  assert.equal(document.querySelector('.target-search-results .module-status') === null, true);
 });

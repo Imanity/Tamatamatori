@@ -1,20 +1,21 @@
 import { useMemo } from "react";
 import type { ShootingPlan } from "../../domain/core/plan";
-import { searchTargets } from "../../domain/sky/target-search";
-import { skyPointView, skyReference } from "../../domain/sky/starfield";
-import type { SkyVisibility } from "../../domain/sky/starfield";
+import { skyPointView } from "../../domain/sky/sky-frame";
+import type { SkyVisibility } from "../../domain/sky/sky-frame";
 import { bodyPolygons } from "../../domain/core/celestial-projection";
 import { celestialPlanKey, occlusionText } from "../../domain/core/visibility";
 import type { VisibilitySnapshot } from "../../domain/core/visibility";
 import type { WeatherSample } from "../../domain/environment/weather";
 import { cloudOpacity, weatherClouds } from "../../domain/environment/weather-appearance";
 import { refractDirection } from "../../domain/core/refraction";
-import { deepSkyView, deepSkyImageSource, deepSkySourceNote } from "../../domain/sky/deep-sky";
 import {
   skyAppearance,
   starOpacity,
   STAR_LABEL_ALPHA,
 } from "../../domain/sky/sky-appearance";
+import { useLazyModule } from "../common/lazy-module";
+import { ModuleStatus } from "../common/ModuleStatus";
+import { starCatalogs } from "./star-catalog-source";
 
 export function TargetSearchResults({
   plan,
@@ -37,14 +38,24 @@ export function TargetSearchResults({
   artificialMcd?: number;
   weather?: WeatherSample;
 }) {
+  // The catalogues are read when a search is first typed (docs/plan/lazy-loading.md).
+  const load = useLazyModule(starCatalogs, true);
+  const catalogs = load.module;
   const result = useMemo(() => {
+    if (!catalogs) return null;
     try {
-      return { targets: searchTargets(plan, query), error: "" };
+      return { targets: catalogs.searchTargets(plan, query), error: "" };
     } catch {
       return { targets: [], error: "目标位置计算失败，请检查机位与拍摄时刻。" };
     }
-  }, [plan.latitude, plan.longitude, plan.instant, plan.refraction, query]);
+  }, [plan.latitude, plan.longitude, plan.instant, plan.refraction, query, catalogs]);
   const key = celestialPlanKey(plan);
+  if (!catalogs || !result)
+    return (
+      <section className="target-search-results" aria-label="目标搜索结果">
+        <ModuleStatus load={load} name="星表" />
+      </section>
+    );
   return (
     <section className="target-search-results" aria-label="目标搜索结果">
       <p className="search-result-count" role="status">
@@ -59,12 +70,12 @@ export function TargetSearchResults({
       {result.targets.map((target) => {
         const deepEntry = target.deep?.entry;
         const structureLabel = deepEntry
-          ? deepSkyImageSource(deepEntry.catalogId)
+          ? catalogs.deepSkyImageSource(deepEntry.catalogId)
             ? "影像结构参考"
             : "目录轮廓"
           : null;
         const projected = target.deep
-            ? deepSkyView(view, target.deep)
+            ? catalogs.deepSkyView(view, target.deep)
             : skyPointView(view, target),
           bodyView = target.body ? bodyPolygons(view, target.body) : null;
         const state = bodyView?.state ?? projected.state,
@@ -96,7 +107,7 @@ export function TargetSearchResults({
             status = "深空轮廓加载失败";
           else if (resource?.phase === "loading") status = "正在加载影像";
           else if (occlusion === "clear" || occlusion === "partial") {
-            const sky = skyReference(plan);
+            const sky = catalogs.skyReference(plan);
             if (
               skyAppearance(sky.sunElevation, sky.moon, artificialMcd).galaxyStrength <
               STAR_LABEL_ALPHA
@@ -108,7 +119,7 @@ export function TargetSearchResults({
           state === "画面内" &&
           occlusion === "clear"
         ) {
-          const sky = skyReference(plan);
+          const sky = catalogs.skyReference(plan);
           if (
             starOpacity(target, skyAppearance(sky.sunElevation, sky.moon, artificialMcd)) <
             STAR_LABEL_ALPHA
@@ -116,7 +127,7 @@ export function TargetSearchResults({
             status = "天空较亮 · 星点隐藏";
         }
         if (enabled && state === "画面内" && (occlusion === "clear" || occlusion === "partial") && weather) {
-          const sky = skyReference(plan), appearance = skyAppearance(sky.sunElevation, sky.moon, artificialMcd);
+          const sky = catalogs.skyReference(plan), appearance = skyAppearance(sky.sunElevation, sky.moon, artificialMcd);
           const baseOpacity = target.body || target.layer === "constellations" ? 1
             : target.deep ? appearance.galaxyStrength : starOpacity(target, appearance);
           const transmission = 1 - cloudOpacity(refractDirection(target.direction, plan.refraction), weatherClouds(weather, plan));
@@ -135,7 +146,7 @@ export function TargetSearchResults({
               <small>
                 {target.kind}
                 {structureLabel && ` · ${structureLabel}`}
-                {deepEntry && deepSkySourceNote(deepEntry.catalogId) && ` · ${deepSkySourceNote(deepEntry.catalogId)}`}
+                {deepEntry && catalogs.deepSkySourceNote(deepEntry.catalogId) && ` · ${catalogs.deepSkySourceNote(deepEntry.catalogId)}`}
               </small>
             </span>
             <span>{status}</span>

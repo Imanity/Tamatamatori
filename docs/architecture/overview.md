@@ -73,7 +73,7 @@ flowchart TD
 
 推算状态由 App 中的 `useComposition`（`src/ui/solve/useComposition.ts`）保存，地图、预览标记（`CompositionMarks.tsx`）、时间轴与面板共用；不进入拍摄计划、机位与会话。搜索显式触发，结果属于发起搜索时的条件快照，条件改变只标为过期。多日机位线经 `solve-runner.ts` 交给模块 Worker。面板经 portal 输出到右栏，时间轴通过 `extraEvents` 接收“对齐”刻度，地图用独立 GeoJSON 源画地面点、范围与结果线。试看只经同一 `update` 修改拍摄计划。详见[构图约束搜索](../plan/composition-search.md)。
 
-第十八轮起，推算的计算、面板、预览标记、链接对话框与地图几何合为推算模块（`src/ui/solve/solve-module.ts`），在首次进入推算或打开 `#solve=` 链接时用 `import()` 读取。`useComposition` 只持有状态，并接收这个模块，模块读到前返回空。About 的来源列表同样在首次打开时读取。读取与重试由 `src/ui/common/lazy-module.ts` 负责。首屏不含这些文件，由 `tests/core/boundaries.test.mjs` 沿静态引用检查。见[按需加载](../plan/lazy-loading.md)。
+第十八轮起，推算的计算、面板、预览标记、链接对话框与地图几何合为推算模块（`src/ui/solve/solve-module.ts`），在首次进入推算或打开 `#solve=` 链接时用 `import()` 读取。`useComposition` 只持有状态，并接收这个模块，模块读到前返回空。About 的来源列表同样在首次打开时读取。读取与重试由 `src/ui/common/lazy-module.ts` 负责。首屏不含这些文件，由 `tests/core/boundaries.test.mjs` 沿静态引用检查。第十九轮起，不含目录的天球坐标框架在 `src/domain/sky/sky-frame.ts`，亮星目录 `starfield.ts` 建在它上面；星表（亮星、星座、深空、目标搜索）经 `src/ui/sky/star-catalogs.ts` 在星空类图层开启或搜索时读取，星空 WebGL 图层在任一星空类图层开启时才由 `TerrainScene` 读取并加到日月图层之下。第二十轮起，流星雨模块与空间站计算（SGP4、`src/domain/stations/station-passes.ts` 的过境）经 `src/ui/sky/layer-modules.ts` 在开启对应图层时读取，`timelineEvents` 由 `showers`、`passes` 输入接收它们；光污染索引随加载器读取。见[按需加载](../plan/lazy-loading.md)。
 
 推算请求是推算条件的对外表示（`src/domain/solve/solve.ts`，格式 `tamatamatori.solve` v1），与机位格式并列：请求只描述意图，数值总在本机求解，求出的结果经试看成为普通机位，因此机位格式不加意图字段。`solvePlan` 给出载入后的计划，`solveRequestOf` 把面板状态写回请求，`useAlignment.load` 写入面板状态。App 在载入与 hash 改变时读取 `#shot=`、`#solve=`，经预览确认后才改计划，关闭预览即以 `history.replaceState` 清除 hash；hash 不发送给服务器。链接与 `$schema` 按页面自身地址生成（`src/domain/core/site.ts`）。对外说明 `public/llms.txt`、两份格式说明与 JSON Schema 由 `scripts/formats.mjs` 按代码常量生成，构建时校验不漂移；应用解析器仍是格式的权威，schema 只镜像其规则。
 

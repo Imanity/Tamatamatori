@@ -1,39 +1,30 @@
 import { useEffect, useMemo, useState } from "react";
 import { Detail, where } from "../common/readout";
 import type { ShootingPlan } from "../../domain/core/plan";
-import {
-  emptySkyVisibility,
-  skyPointView,
-  skyReference,
-} from "../../domain/sky/starfield";
-import type { SkyVisibility } from "../../domain/sky/starfield";
-import type { SkyPoint } from "../../domain/sky/starfield";
+import { emptySkyVisibility, skyPointView } from "../../domain/sky/sky-frame";
+import type { SkyPoint, SkyVisibility } from "../../domain/sky/sky-frame";
 import type { WeatherSample } from "../../domain/environment/weather";
 import { cloudOpacity, weatherClouds } from "../../domain/environment/weather-appearance";
 import { refractDirection } from "../../domain/core/refraction";
-import {
-  deepSkyScene,
-  deepSkyView,
-  deepSkyKinds,
-} from "../../domain/sky/deep-sky";
 import type { DeepSkyTarget } from "../../domain/sky/deep-sky";
-import { constellationScene } from "../../domain/sky/constellations";
 import { celestialPlanKey, skyLabelKey, occlusionText } from "../../domain/core/visibility";
 import {
   skyAppearance,
   starOpacity,
   STAR_LABEL_ALPHA,
 } from "../../domain/sky/sky-appearance";
+import { useLazyModule } from "../common/lazy-module";
+import { ModuleStatus } from "../common/ModuleStatus";
+import { starCatalogs } from "./star-catalog-source";
 
 export { emptySkyVisibility };
 export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, artificialMcd?: number, weather?: WeatherSample, renderView?: { azimuth: number; pitch: number }) {
+  // The catalogues are read when a star layer is first turned on (docs/plan/lazy-loading.md).
+  const starLayers = !!(plan.layers.stars || plan.layers.milkyWay || plan.layers.constellations || plan.layers.deepSky);
+  const catalogLoad = useLazyModule(starCatalogs, starLayers);
+  const catalogs = catalogLoad.module;
   const result = useMemo(() => {
-    if (
-      !plan.layers.stars &&
-      !plan.layers.milkyWay &&
-      !plan.layers.constellations &&
-      !plan.layers.deepSky
-    )
+    if (!starLayers || !catalogs)
       return {
         model: null,
         appearance: null,
@@ -42,14 +33,14 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, arti
         error: "",
       };
     try {
-      const model = skyReference(plan);
+      const model = catalogs.skyReference(plan);
       return {
         model,
         appearance: skyAppearance(model.sunElevation, model.moon, artificialMcd),
         figures: plan.layers.constellations
-          ? constellationScene(plan).anchors
+          ? catalogs.constellationScene(plan).anchors
           : [],
-        deep: plan.layers.deepSky ? deepSkyScene(plan).objects : [],
+        deep: plan.layers.deepSky ? catalogs.deepSkyScene(plan).objects : [],
         error: "",
       };
     } catch {
@@ -71,6 +62,7 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, arti
     plan.layers.deepSky,
     plan.refraction,
     artificialMcd,
+    catalogs,
   ]);
   const current = visibility.planKey === celestialPlanKey(plan),
     view = { ...plan, ...((current && visibility.ready ? visibility.view : null) ?? renderView) };
@@ -88,8 +80,9 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, arti
   const project = (point: SkyPoint, reference = false) => {
     const isDeep = point.id.startsWith("dso-");
     const resource = visibility.deepSkyTargets?.[point.id] ?? visibility.deepSky;
-    const projected = isDeep
-        ? deepSkyView(view, point as DeepSkyTarget)
+    // Deep-sky points exist only once the catalogues are read.
+    const projected = isDeep && catalogs
+        ? catalogs.deepSkyView(view, point as DeepSkyTarget)
         : skyPointView(view, point),
       occlusion =
         current &&
@@ -117,6 +110,7 @@ export function useStarScene(plan: ShootingPlan, visibility: SkyVisibility, arti
     };
   };
   return {
+    catalogs: catalogLoad,
     appearance: result.appearance,
     milkyWay: !plan.layers.milkyWay
       ? { phase: "off" as const }
@@ -241,7 +235,7 @@ export function StarReadout({
                   <span>
                     {point.name}
                     <small>
-                      {entry.aliases[0]} · {deepSkyKinds[entry.model]}
+                      {entry.aliases[0]} · {scene.catalogs.module?.deepSkyKinds[entry.model]}
                     </small>
                   </span>
                   <span>
@@ -292,6 +286,7 @@ export function StarReadout({
           {scene.error}
         </p>
       )}
+      {(scene.catalogs.phase === "loading" || scene.catalogs.phase === "failed") && <ModuleStatus load={scene.catalogs} name="星表" />}
       {deep && plan.layers.deepSky && (
         <>
           <details open>

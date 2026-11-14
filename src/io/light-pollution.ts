@@ -14,6 +14,7 @@ const checkAbort = (signal: AbortSignal) => {
 };
 
 /** Reads one compressed atlas file (`file` inside the atlas directory). */
+export { lightPollutionAtlas, lightPollutionCells } from "../domain/environment/light-pollution.ts";
 export type PollutionReader = (file: string, version: string, signal: AbortSignal) => Promise<ArrayBuffer>;
 const fetchTile: PollutionReader = async (file, version, signal) => {
   const response = await fetch(`${import.meta.env.BASE_URL}${atlas.directory}${file}?v=${version}`, { signal });

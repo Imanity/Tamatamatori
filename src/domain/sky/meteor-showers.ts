@@ -7,7 +7,7 @@ import type { Vector3 } from "../core/ephemeris.ts";
 import { add, celestialBodies, degrees, dot, observerContext, scale, unit } from "../core/ephemeris.ts";
 import type { View } from "../core/celestial-projection.ts";
 import { cameraBasis } from "../core/celestial-projection.ts";
-import type { SkyPoint } from "./starfield.ts";
+import type { SkyPoint } from "./sky-frame.ts";
 
 type PlanInput = Pick<ShootingPlan, "latitude" | "longitude" | "instant">;
 

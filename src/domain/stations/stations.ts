@@ -1,7 +1,7 @@
 import { json2satrec, propagate, gstime, eciToEcf, ecfToLookAngles, eciToGeodetic, sunPos, shadowFraction, jday } from "satellite.js";
 import type { OMMJsonObject } from "satellite.js";
 import type { ShootingPlan } from "../core/plan.ts";
-import type { SkyPoint } from "../sky/starfield.ts";
+import type { SkyPoint } from "../sky/sky-frame.ts";
 import { degrees, direction } from "../core/ephemeris.ts";
 import { orbitEpoch, orbitWindow, stationCatalog } from "./orbit-data.ts";
 import type { OrbitSnapshot } from "./orbit-data.ts";
