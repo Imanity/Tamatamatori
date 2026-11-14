@@ -442,3 +442,34 @@ test('窄屏：点击底部标签切换内容并把该内容滚进视野（docs/
   }
   assert.equal(shown.length, 3);
 });
+
+test('手机竖屏：预览与时间轴独立成“预览”标签并默认选中，可在各标签间切换；推算模式加“推算”，退出回到预览；转为横屏时改选地图（docs/plan/workspace-redesign.md 手机端预览标签）', async (t) => {
+  // A phone held upright: both the narrow and the phone queries match; turning it sideways ends the phone one.
+  const phone = { matches: true, listeners: new Set() };
+  const query = (state) => ({ get matches() { return state.matches; }, addEventListener: (_, listener) => state.listeners?.add(listener), removeEventListener: (_, listener) => state.listeners?.delete(listener) });
+  const original = window.matchMedia;
+  window.matchMedia = (text) => text === '(max-width: 1099px)' ? query({ matches: true }) : text === '(max-width: 599px) and (orientation: portrait)' ? query(phone) : query({ matches: false });
+  t.after(() => { window.matchMedia = original; });
+  await workspace(t); await readyTerrain();
+  const layout = document.querySelector('.app-layout');
+  const tabs = () => [...document.querySelectorAll('.mobile-tabs [role="tab"]')].map((tab) => tab.textContent.trim());
+  const tab = (name) => [...document.querySelectorAll('.mobile-tabs [role="tab"]')].find((element) => element.textContent.trim() === name);
+  assert.deepEqual(tabs(), ['预览', '地图', '相机', '图层']);
+  assert.equal(layout.dataset.mobileTab, 'preview');
+  assert.equal(tab('预览').getAttribute('aria-selected'), 'true');
+  await settle(() => tab('地图').click());
+  assert.equal(layout.dataset.mobileTab, 'map');
+  await settle(() => tab('预览').click());
+  assert.equal(layout.dataset.mobileTab, 'preview');
+  // 推算 adds its tab and chooses it; leaving goes back to the preview.
+  await settle(() => document.querySelector('.solve-button').click());
+  await waitUntil(() => document.querySelector('.composition-templates'));
+  assert.deepEqual(tabs(), ['预览', '地图', '相机', '图层', '推算']);
+  assert.equal(layout.dataset.mobileTab, 'solve');
+  await settle(() => document.querySelector('.solve-button').click());
+  assert.equal(layout.dataset.mobileTab, 'preview');
+  // Turned sideways: the preview is beside the tabs again, so the map is chosen.
+  await settle(() => { phone.matches = false; for (const listener of phone.listeners) listener(); });
+  assert.deepEqual(tabs(), ['地图', '相机', '图层']);
+  assert.equal(layout.dataset.mobileTab, 'map');
+});

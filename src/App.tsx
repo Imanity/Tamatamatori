@@ -21,9 +21,11 @@ import { useLazyModule } from "./ui/common/lazy-module";
 import { useShotLibrary } from "./ui/shots/useShotLibrary";
 import { shotFromPlan } from "./domain/shots/shot";
 import type { SolveParse2, SolveRequest2 } from "./domain/solve/solve";
-import { useNarrowLayout, Divider, Panel } from "./ui/workspace/Layout";
+import { useNarrowLayout, usePhonePortrait, Divider, Panel } from "./ui/workspace/Layout";
 
-type MobileTab = "map" | "camera" | "layers" | "solve";
+type MobileTab = "preview" | "map" | "camera" | "layers" | "solve";
+/** On a phone held upright the preview and timeline are a tab of their own, chosen first. */
+const previewTab = { id: "preview" as const, title: "预览", icon: "frame" as const };
 const mobileTabs: { id: MobileTab; title: string; icon: IconName }[] = [
   { id: "map", title: "地图", icon: "map" },
   { id: "camera", title: "相机", icon: "camera" },
@@ -83,7 +85,13 @@ export default function App() {
   const [previewFirst, setPreviewFirst] = useState(false);
   const [mapShare, setMapShare] = useState(defaultMapShare);
   const [resizing, setResizing] = useState(false);
-  const [mobileTab, setMobileTab] = useState<MobileTab>("map");
+  const phone = usePhonePortrait();
+  const [mobileTab, setMobileTab] = useState<MobileTab>(phone ? "preview" : "map");
+  // Turned sideways (or wider), the preview is beside the tabs again.
+  useEffect(() => {
+    if (!phone && mobileTab === "preview") setMobileTab("map");
+  }, [phone]);
+  const homeTab: MobileTab = phone ? "preview" : "map";
   // On a portrait phone the page scrolls when the frame and the section do not
   // both fit: a chosen tab brings its section into view.
   const [revealTab, setRevealTab] = useState(0);
@@ -98,7 +106,7 @@ export default function App() {
   useEffect(() => {
     if (!revealTab || !narrow) return;
     // After the commit the section is laid out; "nearest" leaves a section already in view where it is.
-    const section = mobileTab === "map" ? ".panel-map" : mobileTab === "camera" ? ".mobile-camera" : ".info-sidebar";
+    const section = mobileTab === "preview" ? ".panel-preview" : mobileTab === "map" ? ".panel-map" : mobileTab === "camera" ? ".mobile-camera" : ".info-sidebar";
     document.querySelector<HTMLElement>(`.app-layout ${section}`)?.scrollIntoView?.({ block: "nearest" });
   }, [revealTab]);
   const [showDetails, setShowDetails] = useState(readDetails);
@@ -123,7 +131,7 @@ export default function App() {
       setRailView("solve");
       setInfoCollapsed(false);
       if (narrow) chooseMobileTab("solve");
-    } else if (mobileTab === "solve") setMobileTab("map");
+    } else if (mobileTab === "solve") setMobileTab(homeTab);
     setAnnouncement(entering ? "已进入推算模式" : "已退出推算模式");
   };
   // The 推算 module is read when the mode is first entered or a #solve= link opened (docs/plan/lazy-loading.md).
@@ -336,7 +344,7 @@ export default function App() {
             replacePlan(undo.plan, undo.activeId);
             if (undo.solveMode === false) {
               setSolveMode(false);
-              if (mobileTab === "solve") setMobileTab("map");
+              if (mobileTab === "solve") setMobileTab(homeTab);
               setAnnouncement("已退出推算模式");
             }
             setShotNotice(null);
@@ -408,7 +416,7 @@ export default function App() {
           </section>
         )}
         <div className="mobile-tabs" role="tablist" aria-label="工作区分区">
-          {[...mobileTabs, ...(solveMode ? [{ id: "solve" as const, title: "推算", icon: "compass" as const }] : [])].map(({ id, title, icon }) => (
+          {[...(phone ? [previewTab] : []), ...mobileTabs, ...(solveMode ? [{ id: "solve" as const, title: "推算", icon: "compass" as const }] : [])].map(({ id, title, icon }) => (
             <button
               type="button"
               role="tab"

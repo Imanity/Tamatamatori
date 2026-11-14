@@ -37,3 +37,23 @@
   .viewfinder-wrap { height: min(calc((100vw - 42px) / var(--frame-ratio)), 26dvh); }
   .preview-meta { padding: 4px 0; }
 }
+/*
+ * Phones held upright: the preview and timeline are a tab of their own
+ * ("预览"), so each tab fills the space above the bar and the page does not
+ * scroll; the frame takes the height the timeline leaves
+ * (docs/plan/workspace-redesign.md, 手机端预览标签). Keep the query in step
+ * with usePhonePortrait in src/ui/workspace/Layout.tsx.
+ */
+@media (max-width: 599px) and (orientation: portrait) {
+  .app-layout {
+    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-areas: "content" "tabs";
+    overflow-y: hidden;
+  }
+  .panel-preview { grid-area: content; min-height: 0; }
+  .app-layout:not([data-mobile-tab="preview"]) .panel-preview { display: none; }
+  .panel-preview .panel-body,
+  .preview-content { height: 100%; }
+  /* As tall as the frame at full width (a portrait frame may take the whole height), shrinking to fit; the timeline follows. */
+  .viewfinder-wrap { flex: 0 1 auto; min-height: 120px; height: calc((100vw - 42px) / var(--frame-ratio)); }
+}

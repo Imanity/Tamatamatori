@@ -15,21 +15,26 @@ const panelInfo: Record<
 };
 // Must match the narrow-layout media queries (max-width: 1099px) in src/styles/.
 const narrowQuery = "(max-width: 1099px)";
-/** True on narrow screens, where the lens controls move to their own tab. */
-export function useNarrowLayout() {
-  const [narrow, setNarrow] = useState(
-    () => typeof window !== "undefined" && !!window.matchMedia?.(narrowQuery).matches,
+// Must match the phone portrait media query in src/styles/compact.css.
+const phoneQuery = "(max-width: 599px) and (orientation: portrait)";
+function useMediaQuery(text: string) {
+  const [matches, setMatches] = useState(
+    () => typeof window !== "undefined" && !!window.matchMedia?.(text).matches,
   );
   useEffect(() => {
-    const query = window.matchMedia?.(narrowQuery);
+    const query = window.matchMedia?.(text);
     if (!query) return;
-    const sync = () => setNarrow(query.matches);
+    const sync = () => setMatches(query.matches);
     sync();
     query.addEventListener("change", sync);
     return () => query.removeEventListener("change", sync);
-  }, []);
-  return narrow;
+  }, [text]);
+  return matches;
 }
+/** True on narrow screens, where the lens controls move to their own tab. */
+export const useNarrowLayout = () => useMediaQuery(narrowQuery);
+/** True on a phone held upright, where the preview and timeline become a tab of their own. */
+export const usePhonePortrait = () => useMediaQuery(phoneQuery);
 export function Divider({
   axis,
   value,

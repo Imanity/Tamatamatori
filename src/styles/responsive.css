@@ -203,28 +203,31 @@
   .panel-map,
   .info-sidebar,
   .mobile-camera {
-    scroll-margin-bottom: 76px;
+    scroll-margin-bottom: 56px;
   }
   .mobile-tabs {
     position: sticky;
     bottom: 0;
     z-index: 20;
     margin: 0 -10px;
-    padding: 4px 8px calc(4px + env(safe-area-inset-bottom, 0px));
+    padding: 2px 8px calc(2px + env(safe-area-inset-bottom, 0px));
     border-radius: 0;
     border-top: 1px solid #dfe4d7;
     background: #f6f8f1;
     box-shadow: 0 -2px 8px #4b5d3c12;
   }
+  /* A low bar (about 48 px) that still gives 44 px targets. */
   .mobile-tabs button {
     flex-direction: column;
-    gap: 3px;
-    min-height: 52px;
-    font-size: 12px;
+    gap: 1px;
+    min-height: 44px;
+    padding: 3px 4px;
+    font-size: 11px;
+    line-height: 1.2;
   }
   .mobile-tabs button svg {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 }
 @media (max-width: 599px) {
