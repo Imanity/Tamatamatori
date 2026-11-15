@@ -52,9 +52,6 @@
   .brand {
     font-size: 19px;
   }
-  .brand small {
-    font-size: 8px;
-  }
   /* One column: preview (with time) on top, tabs, then the chosen section. */
   .app-layout {
     display: grid;
@@ -243,10 +240,6 @@
     height: 34px;
     width: 34px;
     border-radius: 9px;
-  }
-  .brand small {
-    font-size: 7px;
-    letter-spacing: 1.6px;
   }
   .topbar-end {
     gap: 8px;

@@ -32,6 +32,7 @@ import type { WeatherForecast } from "../../domain/environment/weather";
 import { localTimeZone } from "../../domain/time/zone-lookup";
 import { zoneCity, zoneOffset } from "../../domain/time/time-zones";
 import { TimeZoneField } from "./TimeZoneField";
+import { currentMinute } from "../common/clock";
 
 type UpdatePlan = (patch: Partial<ShootingPlan>) => void;
 
@@ -416,9 +417,7 @@ export function Timeline({
             type="button"
             className="time-now"
             title="设为此刻（精确到分钟）"
-            onClick={() =>
-              attempt(() => Temporal.Now.instant().round({ smallestUnit: "minute", roundingMode: "floor" }).toString())
-            }
+            onClick={() => attempt(currentMinute)}
           >
             现在
           </button>

@@ -367,6 +367,9 @@ before(async () => {
               "export const elevationTiles = (...args) => (globalThis.__testElevationTiles ?? (async (points, url, signal, progress) => { progress?.(1, 1); return () => 0; }))(...args);";
           if (id.replaceAll("\\", "/").endsWith("/src/io/feasibility.ts"))
             return "export const loadFeatures = (...args) => (globalThis.__testFeatures ?? (async () => ({ features: { water: [], buildings: [] }, tiles: 0, fetched: 0 })))(...args);";
+          // The page clock: the default plan's instant unless a test sets another.
+          if (id.replaceAll("\\", "/").endsWith("/src/ui/common/clock.ts"))
+            return "export const currentMinute = () => globalThis.__testNow ?? '2026-11-04T08:00:00Z';";
           if (id.replaceAll("\\", "/").endsWith("/src/ui/map/sdk.ts"))
             return "export const {Map, Marker, NavigationControl, ScaleControl} = globalThis.__testMapSDK;";
         },

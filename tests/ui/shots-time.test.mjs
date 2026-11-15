@@ -6,12 +6,12 @@ import { act } from "react";
 import { parseShotText } from "../../src/domain/shots/shot.ts";
 import { dayEvents } from "../../src/domain/time/day-events.ts";
 import { cameraHeightSlider } from "../../src/domain/core/plan.ts";
-import { dom, settle, waitForMap, workspace, input, chooseTimeZone, shootingDateTime, setShootingDateTime, value, setControl, terrainMap, readyTerrain, shotButton, panelButton, openShots, saveShotAs, savedShots, keydown } from "./harness.mjs";
+import { dom, settle, waitForMap, workspace, TestMarker, input, chooseTimeZone, shootingDateTime, setShootingDateTime, value, setControl, terrainMap, readyTerrain, shotButton, panelButton, openShots, saveShotAs, savedShots, keydown } from "./harness.mjs";
 
 test('页头删去调试文本；机位保存、修改标记、切换应用与撤销，参数、图层与右栏同步', async t => {
   await workspace(t); const map = await readyTerrain();
   const header = document.querySelector('.topbar').textContent;
-  for (const removed of ['工作区原型', 'P3', '天文构图', '摄影规划']) assert.ok(!header.includes(removed), removed);
+  for (const removed of ['工作区原型', 'P3', '天文构图', '摄影规划', '光影之间']) assert.ok(!header.includes(removed), removed);
   assert.equal(shotButton().textContent.trim(), '未保存的机位');
   await openShots();
   assert.match(document.querySelector('.shot-current').textContent, /尚未保存/);
@@ -135,6 +135,73 @@ test('时区选择：常用分组标出当前时区，中文城市搜索与键�
   await settle(() => trigger.click());
   await settle(() => setControl(document.querySelector('[aria-label="搜索时区"]'), 'zzzz'));
   assert.match(document.querySelector('.timezone-note').textContent, /没有匹配的时区/);
+});
+
+test('新会话的拍摄时刻取打开页面的那一分钟，按机位时区显示；刷新恢复的会话保持原时刻', async t => {
+  globalThis.__testNow = '2026-12-01T10:23:00Z';
+  t.after(() => { delete globalThis.__testNow; });
+  const first = await workspace(t); await readyTerrain();
+  assert.equal(shootingDateTime(), '2026-12-01T19:23');
+  assert.match(document.querySelector('.timezone-trigger').textContent, /东京/);
+  await act(async () => { await delay(350); });
+  await first.unmount();
+  globalThis.__testNow = '2027-01-05T00:00:00Z';
+  await workspace(t, undefined, { keepStorage: true }); await readyTerrain();
+  assert.equal(shootingDateTime(), '2026-12-01T19:23', 'the restored session keeps its instant');
+});
+
+test('地图显示已保存机位：名称标签与当前机位，单击打开卡片，应用可撤销，改名、删除随之更新，地图范围外不显示', async t => {
+  await workspace(t); const map = await readyTerrain();
+  const markers = () => TestMarker.instances.filter((marker) => marker.getElement().isConnected && marker.getElement().classList.contains('map-shot-marker'));
+  const marker = (name) => markers().find((item) => item.getElement().textContent === name);
+  assert.equal(markers().length, 0);
+  await saveShotAs('富士 A');
+  assert.equal(markers().length, 1);
+  assert.deepEqual(marker('富士 A').getLngLat(), { lng: value('经度'), lat: value('纬度') });
+  assert.ok(marker('富士 A').getElement().classList.contains('is-active'));
+  await settle(() => setControl(input('纬度'), 35.5));
+  await settle(() => setControl(input('经度'), 139));
+  await settle(() => setControl(input('焦距'), 200));
+  await saveShotAs('富士 B');
+  assert.equal(markers().length, 2);
+  assert.ok(marker('富士 B').getElement().classList.contains('is-active'));
+  assert.ok(!marker('富士 A').getElement().classList.contains('is-active'));
+  assert.match(marker('富士 B').getElement().getAttribute('aria-label'), /已保存机位：富士 B，当前机位/);
+  // A click opens the card; nothing changes until "应用".
+  await settle(() => marker('富士 A').getElement().click());
+  const card = () => document.querySelector('.map-shot-card');
+  assert.match(card().textContent, /富士 A.*2026-11-04 17:00 · Asia\/Tokyo（当地）.*35 mm · 全画幅 · 横幅 3:2 · 方位 247°/s);
+  assert.equal(value('焦距'), 200);
+  await settle(() => card().querySelector('.map-target-apply').click());
+  assert.ok(!card(), 'card closed');
+  assert.equal(value('焦距'), 35); assert.equal(value('纬度'), savedShots()[1].shot.position.latitude);
+  assert.equal(shotButton().textContent.trim(), '富士 A');
+  assert.ok(marker('富士 A').getElement().classList.contains('is-active'));
+  assert.match(document.querySelector('.shot-toast').textContent, /已应用「富士 A」/);
+  await settle(() => [...document.querySelectorAll('.shot-toast button')].find((b) => b.textContent === '撤销').click());
+  assert.equal(value('焦距'), 200); assert.equal(shotButton().textContent.trim(), '富士 B');
+  // The close button dismisses the card.
+  await settle(() => marker('富士 B').getElement().click());
+  assert.match(card().textContent, /富士 B.*当前/s);
+  await settle(() => card().querySelector('[aria-label="关闭机位卡片"]').click());
+  assert.ok(!card(), 'card closed');
+  // Rename and delete in the shot menu: the markers follow.
+  const second = savedShots()[0];
+  await openShots();
+  await settle(() => document.querySelector(`[data-shot-id="${second.id}"] .shot-more`).click());
+  await settle(() => panelButton('重命名').click());
+  await settle(() => setControl(document.querySelector('[aria-label="新名称"]'), '山中湖'));
+  await settle(() => panelButton('确定').click());
+  assert.ok(marker('山中湖')); assert.ok(!marker('富士 B'));
+  await settle(() => document.querySelector(`[data-shot-id="${second.id}"] .shot-more`).click());
+  await settle(() => panelButton('删除').click());
+  assert.equal(markers().length, 1); assert.ok(!marker('山中湖'));
+  await settle(() => keydown(document.querySelector('.shot-panel'), 'Escape'));
+  assert.ok(terrainMap() === map, 'the preview was not rebuilt');
+  // Beyond the map's latitude range the shot is kept but not drawn.
+  await settle(() => setControl(input('纬度'), 88));
+  await saveShotAs('北极');
+  assert.equal(savedShots().length, 2); assert.equal(markers().length, 1);
 });
 
 test('刷新后恢复上次工作状态与关联机位，损坏的会话安静回退到默认机位', async t => {

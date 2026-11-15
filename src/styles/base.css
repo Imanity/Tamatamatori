@@ -102,15 +102,6 @@ p {
   background: var(--green);
   border-radius: 11px;
 }
-.brand small {
-  display: block;
-  margin-top: 3px;
-  font-family: "Noto Sans SC", sans-serif;
-  font-size: 9px;
-  letter-spacing: 2px;
-  color: #7c877d;
-  font-weight: 400;
-}
 .topbar-end {
   margin-left: auto;
   display: flex;

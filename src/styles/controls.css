@@ -126,5 +126,4 @@
   .clock-field input[type="time"] { width: 86px; padding-inline: 4px; }
   .timeline .timezone-trigger { padding-inline: 6px 4px; }
   .time-slider-ticks { font-size: 7px; }
-  .brand small { display: none; }
 }

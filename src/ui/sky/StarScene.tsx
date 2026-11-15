@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Detail, where } from "../common/readout";
+import { compassDirection } from "../../domain/core/plan";
 import type { ShootingPlan } from "../../domain/core/plan";
+import { milkyWayArch } from "../../domain/sky/milky-way-arch";
 import { emptySkyVisibility, skyPointView } from "../../domain/sky/sky-frame";
 import type { SkyPoint, SkyVisibility } from "../../domain/sky/sky-frame";
 import type { WeatherSample } from "../../domain/environment/weather";
@@ -225,6 +227,8 @@ export function StarReadout({
   const stars = !section || section === "stars";
   const galaxy = !section || section === "milkyWay";
   const deep = !section || section === "deepSky";
+  // The arch needs no catalogue: only the sky frame (docs/plan/review.md §6).
+  const arch = galaxy && plan.layers.milkyWay ? milkyWayArch(plan) : null;
   const deepRows = (targets: Scene["deep"]) =>
     targets.map(({ point, entry, state, occlusion, partialFrame, opacity, cloudHidden, resource }) => (
                 <div
@@ -301,7 +305,7 @@ export function StarReadout({
           </details>
         </>
       )}
-      {scene.targets.some(t => t.point.id === "galactic-center" ? galaxy : stars) && (
+      {(arch || scene.targets.some(t => t.point.id === "galactic-center" ? galaxy : stars)) && (
         <details>
           <summary>星空目标与朝向</summary>
           {scene.targets.filter(t => t.point.id === "galactic-center" ? galaxy : stars).map(({ point, state, occlusion, opacity, cloudHidden }) => (
@@ -342,6 +346,37 @@ export function StarReadout({
               </button>
             </div>
           ))}
+          {arch && (
+            <div
+              className="celestial-row"
+              data-sky-status="银拱"
+              title="朝向银拱的拍摄中心：方位为银拱最高点的方向，俯仰为最高点高度的一半。银拱两端相隔 180°，需全景拼接。"
+            >
+              <span>
+                银拱
+                <small>拍摄中心</small>
+              </span>
+              <span>
+                {arch.flat
+                  ? "银河贴近地平线"
+                  : `最高 ${Math.round(arch.apex.elevation)}° · 两端${compassDirection(arch.ends[0])}、${compassDirection(arch.ends[1])}`}
+              </span>
+              <span>
+                {where(arch.center.azimuth, arch.center.pitch)}
+                <Detail>
+                  最高点 {arch.apex.azimuth.toFixed(1)}° / {arch.apex.elevation.toFixed(1)}° · 两端{" "}
+                  {arch.ends[0].toFixed(1)}° / {arch.ends[1].toFixed(1)}°
+                </Detail>
+              </span>
+              <button
+                aria-label="朝向银拱拍摄中心"
+                disabled={arch.flat}
+                onClick={() => update({ azimuth: arch.center.azimuth, pitch: arch.center.pitch })}
+              >
+                朝向
+              </button>
+            </div>
+          )}
         </details>
       )}
       {stars && plan.layers.constellations && (

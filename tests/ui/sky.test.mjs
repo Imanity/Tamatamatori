@@ -5,6 +5,8 @@ import { setTimeout as delay } from "node:timers/promises";
 import { readFileSync } from "node:fs";
 import { act } from "react";
 import { skyReference } from "../../src/domain/sky/starfield.ts";
+import { milkyWayArch } from "../../src/domain/sky/milky-way-arch.ts";
+import { initialPlan } from "../../src/domain/core/plan.ts";
 import { appModule, starfieldLayer, openAbout, TestMap, TestStarfieldLayer, groundRequests, settle, workspace, shootingDateTime, setShootingDateTime, value, button, setControl, waitUntil, terrainMap, readyTerrain } from "./harness.mjs";
 
 test('星空与银河独立开关、朝向及实际相机反馈联动，不重载 DEM 或修改其他参数',async t=>{
@@ -31,6 +33,23 @@ test('星空与银河独立开关、朝向及实际相机反馈联动，不重�
   assert.equal(document.querySelector('[aria-label="显示银河"]').checked,true);
   assert.equal(groundRequests.length,requests);assert.equal(terrainMap(),map);
   assert.deepEqual(['经度','纬度','焦距','离地高度'].map(value),fields);assert.equal(shootingDateTime(),time);
+});
+
+test('银河分组的银拱一行：写出最高点与两端，“朝向”对准银拱的拍摄中心（最高点方位、一半高度）',async t=>{
+  await workspace(t);await readyTerrain();
+  assert.equal(document.querySelector('[data-sky-status="银拱"]'),null);
+  await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
+  const row=await waitUntil(()=>document.querySelector('#info-milkyWay-body [data-sky-status="银拱"]'));
+  const arch=milkyWayArch(initialPlan);
+  assert.equal(arch.flat,false);
+  assert.match(row.textContent,new RegExp(`银拱拍摄中心最高 ${Math.round(arch.apex.elevation)}° · 两端`));
+  assert.match(row.getAttribute('title'),/两端相隔 180°，需全景拼接/);
+  await settle(()=>row.querySelector('[aria-label="朝向银拱拍摄中心"]').click());
+  assert.ok(Math.abs(value('方位角')-arch.center.azimuth)<0.06,`${value('方位角')} vs ${arch.center.azimuth}`);
+  assert.ok(Math.abs(value('俯仰角')-arch.center.pitch)<0.06,`${value('俯仰角')} vs ${arch.center.pitch}`);
+  // The arch follows the Milky Way layer, not the star catalogue.
+  await settle(()=>document.querySelector('[aria-label="显示银河"]').click());
+  assert.equal(document.querySelector('[data-sky-status="银拱"]'),null);
 });
 
 test('银河对比度滑杆即时联动，重置/关闭重开/布局保留正确，未重载地形或作废几何状态',async t=>{

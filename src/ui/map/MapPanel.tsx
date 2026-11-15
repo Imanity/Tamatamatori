@@ -14,7 +14,12 @@ import type { CompositionState } from "../solve/useComposition";
 import { addOverlays, drawnOverlays, updateOverlays, viewSourceId } from "./map-overlays";
 import { useMapOverlays } from "./useMapOverlays";
 import { MapLegend } from "./MapLegend";
+import type { SavedShot } from "../../domain/shots/shot-library";
+import { shotLensText, shotTimeText } from "../shots/shot-text";
+import { useSavedShotMarkers } from "./useSavedShotMarkers";
+import type { MarkerFactory } from "./useSavedShotMarkers";
 
+const noShots: readonly SavedShot[] = [];
 const styleUrl =
   import.meta.env.VITE_MAP_STYLE_URL?.trim() ||
   "https://tiles.openfreemap.org/styles/liberty";
@@ -30,6 +35,7 @@ export function MapPanel({
   tides,
   aurora,
   alignment,
+  shots,
 }: {
   plan: ShootingPlan;
   update: (patch: Partial<ShootingPlan>) => void;
@@ -38,6 +44,8 @@ export function MapPanel({
   aurora?: AuroraFeed;
   /** 推算: ground targets, result lines and placing a ground target. */
   alignment?: CompositionState | null;
+  /** Saved shots of this browser, shown on the map; "应用" works as in the shot menu. */
+  shots?: { entries: readonly SavedShot[]; activeId: string | null; apply: (entry: SavedShot) => void };
 }) {
   const container = useRef<HTMLDivElement>(null);
   const instance = useRef<MapLibreMap | null>(null);
@@ -61,6 +69,19 @@ export function MapPanel({
     message: "正在加载地图与底图…",
   });
   const coverage = isMapPosition(plan);
+  // Saved shots: markers on the current map and the card of the one clicked.
+  const [markerFactory, setMarkerFactory] = useState<MarkerFactory | null>(null);
+  const [openShotId, setOpenShotId] = useState<string | null>(null);
+  const shotEntries = shots?.entries ?? noShots;
+  useSavedShotMarkers(markerFactory, shotEntries, shots?.activeId ?? null, (id) => {
+    setTarget(null);
+    setOpenShotId(id);
+  });
+  const openShot = shotEntries.find((entry) => entry.id === openShotId) ?? null;
+  // One card at a time: a searched place or the device position replaces it.
+  useEffect(() => {
+    if (target) setOpenShotId(null);
+  }, [target]);
 
   useEffect(() => {
     latest.current = { plan, update, mode, lines, eclipse, environment, alignmentFeatures, alignmentKind };
@@ -465,6 +486,9 @@ export function MapPanel({
           }
         });
         observer.observe(container.current);
+        const owner = map;
+        setMarkerFactory(() => (element: HTMLElement) =>
+          new sdk.Marker({ element, anchor: "center" }).setLngLat([0, 0]).addTo(owner));
         setAvailable(true);
       } catch {
         reportFailure("地图模块未能加载，请检查网络后重试。拍摄参数仍可编辑。");
@@ -477,6 +501,7 @@ export function MapPanel({
       cancelAnimationFrame(frame);
       observer?.disconnect();
       synchronize.current = null;
+      setMarkerFactory(null);
       if (map) {
         const center = map.getCenter();
         viewport.current = {
@@ -650,6 +675,29 @@ export function MapPanel({
             设为机位
           </button>
           <button type="button" className="map-target-close" aria-label="移除地图标记" onClick={() => setTarget(null)}>×</button>
+        </div>
+      )}
+      {openShot && (
+        <div className="map-target-card map-shot-card" role="group" aria-label={`已保存机位：${openShot.shot.name || "未命名机位"}`}>
+          <span>
+            <strong>
+              {openShot.shot.name || "未命名机位"}
+              {openShot.id === shots?.activeId && <em>当前</em>}
+            </strong>
+            <small>{shotTimeText(openShot.shot)}</small>
+            <small>{shotLensText(openShot.shot)} · 方位 {Math.round(openShot.shot.view.azimuth)}°</small>
+          </span>
+          <button
+            type="button"
+            className="map-target-apply"
+            onClick={() => {
+              shots?.apply(openShot);
+              setOpenShotId(null);
+            }}
+          >
+            应用
+          </button>
+          <button type="button" className="map-target-close" aria-label="关闭机位卡片" onClick={() => setOpenShotId(null)}>×</button>
         </div>
       )}
     </div>

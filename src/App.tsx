@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { initialPlan } from "./domain/core/plan";
+import { currentMinute } from "./ui/common/clock";
 import type { ShootingPlan } from "./domain/core/plan";
 import { Icon } from "./ui/common/Icon";
 import type { IconName } from "./ui/common/Icon";
@@ -19,7 +20,7 @@ import { browserStorage, readSession, writeSession } from "./domain/shots/shot-l
 import { solveModule, useComposition } from "./ui/solve/useComposition";
 import { useLazyModule } from "./ui/common/lazy-module";
 import { useShotLibrary } from "./ui/shots/useShotLibrary";
-import { shotFromPlan } from "./domain/shots/shot";
+import { planFromShot, shotFromPlan } from "./domain/shots/shot";
 import type { SolveParse2, SolveRequest2 } from "./domain/solve/solve";
 import { useNarrowLayout, usePhonePortrait, Divider, Panel } from "./ui/workspace/Layout";
 
@@ -47,7 +48,8 @@ function readDetails() {
 export default function App() {
   // The last working state is restored after a reload (see shot-library).
   const [restored] = useState(() => readSession(browserStorage()));
-  const [plan, setPlan] = useState<ShootingPlan>(restored?.plan ?? initialPlan);
+  // A new session starts at the current minute (docs/plan/review.md §6).
+  const [plan, setPlan] = useState<ShootingPlan>(() => restored?.plan ?? { ...initialPlan, instant: currentMinute() });
   const [activeShotId, setActiveShotId] = useState<string | null>(
     restored?.activeId ?? null,
   );
@@ -296,9 +298,7 @@ export default function App() {
           <span className="brand-mark">
             <Icon name="camera" size={23} />
           </span>
-          <span>
-            Tamatamatori<small>光影之间，自有方向</small>
-          </span>
+          <span>Tamatamatori</span>
         </a>
         <div className="topbar-end">
           <button
@@ -369,7 +369,19 @@ export default function App() {
         >
           <Panel id="map" onSwap={swapPanels}>
             <div className="map-stack">
-              <MapPanel plan={plan} update={updatePlan} viewport={mapViewport} tides={tides} aurora={aurora} alignment={alignment} />
+              <MapPanel
+                plan={plan}
+                update={updatePlan}
+                viewport={mapViewport}
+                tides={tides}
+                aurora={aurora}
+                alignment={alignment}
+                shots={{
+                  entries: shotLibrary.library.shots,
+                  activeId: activeShotId,
+                  apply: (entry) => applyShot(planFromShot(entry.shot), entry.id, entry.shot.name),
+                }}
+              />
               <PositionBar
                 key={planGeneration}
                 plan={plan}

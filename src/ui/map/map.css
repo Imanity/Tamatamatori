@@ -108,6 +108,7 @@
   line-height: 1.8;
 }
 .camera-position-marker {
+  z-index: 1;
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -129,6 +130,7 @@
   left: 6px;
 }
 .camera-direction-marker {
+  z-index: 1;
   width: 27px;
   height: 27px;
   text-align: center;
@@ -218,7 +220,7 @@
 .map-search-credit { margin: 6px 2px 0; font-size: 9px; line-height: 1.5; color: #8a947f; }
 .map-search-credit a { text-decoration: underline; }
 /* Searched place or device position, separate from the camera marker. */
-.map-target-marker { width: 16px; height: 16px; border: 3px solid #fffef9; border-radius: 50%; box-shadow: 0 1px 5px #2d462c55; }
+.map-target-marker { z-index: 1; width: 16px; height: 16px; border: 3px solid #fffef9; border-radius: 50%; box-shadow: 0 1px 5px #2d462c55; }
 .map-target-marker.map-target-place { background: #c2453a; }
 .map-target-marker.map-target-device { background: #2f7ae5; box-shadow: 0 0 0 6px #2f7ae533, 0 1px 5px #2d462c55; }
 .map-target-card {
@@ -237,6 +239,13 @@
   background: #fcfdf7f8;
   box-shadow: 0 4px 14px #2d462c22;
 }
+/* Saved shots (docs/plan/review.md §6): a dot on the position, the name beside
+   it, below the camera and target markers. */
+.map-shot-marker { width: 12px; height: 12px; padding: 0; border: 2px solid #4c7045; border-radius: 50%; background: #f7fbee; box-shadow: 0 1px 4px #2d462c44; cursor: pointer; }
+.map-shot-marker.is-active { background: #4c7045; border-color: #fffef9; }
+.map-shot-marker span { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); max-width: 10em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 1px 5px; border-radius: 3px; background: #fcfdf7d9; color: #3f5a46; font-size: 11px; line-height: 1.4; }
+.map-shot-marker:hover span, .map-shot-marker:focus-visible span { max-width: 18em; background: #fcfdf7; }
+.map-shot-card em { margin-left: 6px; padding: 0 4px; border-radius: 3px; background: #e6eedf; color: #4c7045; font-size: 10px; font-style: normal; font-weight: 500; }
 .map-target-card > span { flex: 1; min-width: 0; display: grid; gap: 1px; }
 .map-target-card strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: #3f5a46; }
 .map-target-card small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; color: #8a947f; }

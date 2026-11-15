@@ -24,7 +24,6 @@
   .topbar { height: 44px; }
   .brand { font-size: 17px; gap: 8px; }
   .brand-mark { width: 28px; height: 28px; border-radius: 7px; }
-  .brand small { display: none; }
   .app-layout { padding-top: 6px; padding-bottom: 6px; gap: 6px; }
   .preview-meta { padding: 4px 0; }
 }
