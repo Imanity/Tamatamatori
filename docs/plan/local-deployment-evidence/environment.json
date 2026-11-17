@@ -1,0 +1,31 @@
+{
+  "checkedOn": "2026-11-17",
+  "scope": "Read-only project inspection, CLI help, login status and offline protocol schema generation. No model turn or new deployment was started.",
+  "codex": {
+    "foundOnPath": true,
+    "version": "0.169.0-alpha.11.1",
+    "loginStatus": "Logged in using ChatGPT",
+    "appServerAvailable": true,
+    "defaultAppServerTransport": "stdio",
+    "offlineSchemasGenerated": true,
+    "schemaFilesChecked": [
+      "v2/ThreadStartParams.json",
+      "v2/ThreadResumeParams.json",
+      "v2/TurnStartParams.json",
+      "v2/TurnInterruptParams.json",
+      "ToolRequestUserInputParams.json",
+      "DynamicToolCallParams.json"
+    ],
+    "modelTurnTested": false
+  },
+  "claude": {
+    "foundOnPath": false,
+    "otherInstallLocationsOrWslChecked": false,
+    "modelTurnTested": false
+  },
+  "credentials": "Credential files and token values were not read or copied; authentication state was not changed.",
+  "dependenciesInstalled": false,
+  "applicationCodeChanged": false,
+  "localBackendImplemented": false,
+  "endToEndVerified": false
+}

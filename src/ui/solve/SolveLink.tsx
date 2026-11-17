@@ -118,7 +118,7 @@ function report(state: CompositionState, plan: ShootingPlan, request: SolveReque
 
 /** "存为机位" from the 推算 panel, provided by the workspace. */
 export interface ShotSaving {
-  save: (name: string) => boolean;
+  save: (name: string) => Promise<boolean>;
   error: string;
   writable: boolean;
 }
@@ -173,13 +173,13 @@ export function SolveExport({ state, plan, saving }: { state: CompositionState; 
     const status = await copyText(value, field.current);
     setCopied(status === "已复制" ? done : status);
   };
-  const save = () => {
+  const save = async () => {
     if (!saving) return;
     const run = state.run;
     const name = run?.strategy.kind === "grounds"
       ? [...`${run.strategy.first.name} · ${run.strategy.second.name} 机位 ${run.items.indexOf(state.current!) + 1}`].slice(0, SHOT_NAME_LIMIT).join("")
       : solveShotName(place, run?.basis.bodies[0] ?? "sun", plan.instant, plan.timeZone);
-    if (saving.save(name)) setCopied(`已存为机位「${name}」，可在“机位”中改名`);
+    if (await saving.save(name)) setCopied(`已存为机位「${name}」，可在“机位”中改名`);
     else setCopied(`无法保存机位${saving.error ? `：${saving.error}` : ""}`);
   };
   const exportCalendar = () => {

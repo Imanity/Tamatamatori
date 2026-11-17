@@ -10,7 +10,7 @@
 
 当前具备 P2 地形与时间天空，P3 已接入日月、亮星、金木星、银河及 15 个深空目标构图辅助，使用 React + TypeScript + Vite + MapLibre GL JS + Astronomy Engine。
 
-页头“机位”按钮保存、切换、分享与导入机位：机位包含位置、方向、镜头、时间、时区、图层与环境设置，应用后画面与保存时相同（天气、空间站按当时数据）；分享以站点链接为主（`#shot=`，打开后先预览、确认才应用），也可复制 `tmt1:` 分享码，刷新页面恢复上次工作状态，数据只存于本浏览器。[机位保存与分享](docs/plan/shot-presets.md)
+页头“机位”按钮保存、切换、分享与导入机位：机位包含位置、方向、镜头、时间、时区、图层与环境设置，应用后画面与保存时相同（天气、空间站按当时数据）；分享以站点链接为主（`#shot=`，打开后先预览、确认才应用），也可复制 `tmt1:` 分享码，刷新页面恢复上次工作状态。Pages 机位存于本浏览器，本地版已保存机位由本机文件库管理。[机位保存与分享](docs/plan/shot-presets.md)
 
 地图上有太阳、月亮、银心的方位线（此刻与出没），工具栏可搜索地点（OpenStreetMap Nominatim，按回车才查询）或定位到“我的位置”，二者都需点“设为机位”才改变机位；时间轴标出黄金时刻与蓝调时刻；传感器可自定义尺寸。[规划辅助增强](docs/plan/planning-aids.md)
 
@@ -28,14 +28,28 @@
 
 ## 本地运行
 
-需要 Node.js 22.18 或更新版本。首次安装及启动：
+需要 Node.js 22.18 或更新版本。首次安装及启动带机位库与聊天的本地版：
 
 ```sh
 npm ci
-npm run dev
+npm run local
 ```
 
-打开终端输出的 Local 地址；默认端口为 5173，已占用时 Vite 会自动选择其他端口。
+打开 [http://127.0.0.1:8787/](http://127.0.0.1:8787/)，终端保持运行，按 Ctrl+C 关闭。此命令先构建到 `dist-local/`，再启动仅监听本机的 Node 服务。可自定义端口与数据目录：
+
+```sh
+npm run local -- --port 8788 --data-dir "D:/Tamatamatori-data"
+```
+
+Windows 默认数据目录是 `%LOCALAPPDATA%/Tamatamatori/`；其他系统为 `$XDG_DATA_HOME/tamatamatori/` 或 `~/.local/share/tamatamatori/`。`shots.json` 保存机位，`shots.json.bak` 保留上次有效写入，`chats/` 保存对话。数据不放进仓库；未保存的工作状态与界面偏好仍在浏览器。后端出错时提示重试，不自动转存另一份浏览器机位库。损坏文件请停服后保留原件，再用备份恢复。
+
+页头“对话”可选用户安装的官方 **Codex（ChatGPT）** 或 **Claude Code**。先在终端安装并登录所需的官方程序：Codex 用 `codex login`，Claude Code 用 `claude auth login`。网页不索取账号密码或 API 密钥。Codex 需支持 `app-server` 与命名权限配置，本机已核对 `0.169.0-alpha.11.1` 的初始化；Claude Code 需支持 `--restricted`（2.1.248+），本机尚未安装验证。可用 `TMT_CODEX_PATH`、`TMT_CLAUDE_PATH` 指定可执行文件绝对路径；Windows 使用原生 `.exe`，不通过 shell 执行 `.cmd` 包装器。
+
+官方程序沿用自己的登录与计费配置。ChatGPT 登录走相应 Codex 计划额度；继承 API 环境变量或 API 配置时可能按 API 计费，页面会提示检测到的环境变量。对话和被使用的机位会发送给模型服务。助手通过现有数值工具推算，候选由用户点“应用试看”或“保存机位”后才生效。地图、天气和模型服务仍需网络。
+
+GitHub Pages 与默认 `npm run build` 保持纯前端：无聊天入口，机位继续用 localStorage。两种部署间通过机位菜单的“导出机位库 / 导入机位库”手动迁移，导入先预览、合并且保留已有相同 id。部署方式、验证范围与 Agent 限制见[双部署模式](docs/plan/local-deployment.md#9-实施记录2026-11-17)。
+
+只调试原静态前端可用 `npm run dev`，默认端口 5173；已占用时 Vite 自动选其他端口。已构建的本地版可直接用 `node --experimental-strip-types server/local.mjs` 启动，单独重建用 `npm run build:local`。
 
 MapLibre 固定为 6.16.0，`npm ci` 自动应用地形 LOD、空间投影与深度补丁。Vite 启动和构建时会再次校验并同步补丁；开发期间修改补丁或共享着色器会自动重启服务、切换预构建缓存，避免继续使用旧版 SDK。升级 SDK 时必须重新验证补丁与覆盖回归，详见[远山地形细节](docs/architecture/terrain-detail.md)和[空间投影](docs/architecture/terrain-perspective.md)。
 

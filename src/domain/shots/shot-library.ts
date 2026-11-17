@@ -45,7 +45,7 @@ export function newShotId() {
   return globalThis.crypto?.randomUUID?.() ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-export function readLibrary(storage: Storage | null): ShotLibrary {
+export function readLibrary(storage: Pick<Storage, "getItem"> | null): ShotLibrary {
   const empty = (phase: ShotLibrary["phase"]): ShotLibrary => ({ phase, shots: [], broken: [] });
   if (!storage) return empty("unavailable");
   let text: string | null;

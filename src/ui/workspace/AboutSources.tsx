@@ -1,6 +1,7 @@
 // The About dialog's sources: data, imagery, models and software with their
 // licences. Read when the dialog is first opened (About.tsx, docs/plan/lazy-loading.md).
 import { landmarks } from "../../domain/buildings/landmarks";
+import { LOCAL_MODE } from "../../io/local-client";
 import starCatalogUrl from "../../data/bright-stars.json?url";
 import constellationCatalogUrl from "../../data/constellations.json?url";
 import constellationStarsUrl from "../../data/constellation-stars.json?url";
@@ -274,7 +275,10 @@ export function AboutSources() {
 
       <section aria-labelledby="about-storage-title">
         <h3 id="about-storage-title">本地保存</h3>
-        <p>保存的机位和上次的工作状态只存放在此浏览器的本地存储中，不上传、不跨设备同步，清除网站数据即删除。GitHub Pages 上同一域名下的其他页面与本应用共用这份本地存储。</p>
+        {LOCAL_MODE ? <>
+          <p>已保存机位与对话由本机服务写入用户数据目录；上次工作状态和界面偏好仍在此浏览器。清除网站数据不会删除本机文件库。跨部署可手动导入导出机位库。</p>
+          <p>聊天会通过所选官方 Agent 把对话与必要机位发送给模型服务，用量按其登录与配置计算。网页不保存模型登录凭证。</p>
+        </> : <p>保存的机位和上次的工作状态只存放在此浏览器的本地存储中，不上传、不跨设备同步，清除网站数据即删除。GitHub Pages 上同一域名下的其他页面与本应用共用这份本地存储。</p>}
       </section>
 
       <section aria-labelledby="about-software-title">

@@ -40,8 +40,8 @@
 .shot-item .shot-item-actions, .shot-item .shot-name-form { margin: 0 8px 8px; }
 .shot-panel .shot-danger, .shot-dialog .shot-danger { color: #a14a2a; }
 .shot-empty { color: #8a947f; line-height: 1.7; padding: 4px 0 8px; }
-.shot-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 16px 14px; border-top: 1px solid var(--line); }
-.shot-footer small { color: #a0aa93; font-size: 10px; }
+.shot-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 16px 14px; border-top: 1px solid var(--line); }
+.shot-footer small { flex-basis: 100%; color: #a0aa93; font-size: 10px; }
 .shot-dialog { width: min(560px, calc(100% - 32px)); }
 .shot-dialog-body { display: grid; gap: 12px; }
 .shot-dialog textarea { width: 100%; min-width: 0; resize: vertical; border: 1px solid #e1e7d7; border-radius: 4px; padding: 8px 9px; background: #fcfdf8; color: #506347; font: 11px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; word-break: break-all; }

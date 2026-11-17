@@ -1,0 +1,45 @@
+{
+  "checkedOn": "2026-11-17",
+  "implemented": ["dual builds", "file-backed shot library", "library import/export", "local HTTP/SSE chat", "official Codex app-server adapter", "official Claude Code CLI adapter", "per-turn photography MCP bridge", "solver Worker", "candidate apply/save"],
+  "tests": {
+    "fullSuite": { "passed": 522, "failed": 0 },
+    "newLocalTests": { "passed": 12, "failed": 0 },
+    "utf8PipeFragmentation": true,
+    "realNumericalWorker": true,
+    "agentResponsesUseDoubles": true
+  },
+  "builds": { "pagesSubpath": "/Tamatamatori/", "pagesPassed": true, "localPassed": true, "pagesExcludesLocalChat": true },
+  "launcher": {
+    "help": true,
+    "customPortAndDataDirectory": true,
+    "homeHttpStatus": 200,
+    "storage": "file",
+    "authenticatedCapabilitiesAndLibrary": true,
+    "nativeAgentStatus": { "codexAvailable": true, "codexLoggedIn": true, "claudeAvailable": false },
+    "stalePidLockReclaimedOnRestart": true,
+    "gracefulInteractiveConsoleShutdown": "not verified; automation stopped the process forcibly"
+  },
+  "codexNativeProbe": {
+    "version": "0.169.0-alpha.11.1",
+    "initialized": true,
+    "ephemeralThreadCreated": true,
+    "photographyMcpToolsDiscovered": 7,
+    "builtInNodeReplStillRegistered": true,
+    "modelTurnSent": false,
+    "windowsPermissionBoundary": "root read-only plus explicit credential-directory exclusions; not workspace-only read isolation"
+  },
+  "browser": {
+    "surface": "in-app browser",
+    "phoneAndDesktop": true,
+    "agent": "explicitly labelled UI test double",
+    "verified": ["streamed text", "candidate card", "save shot", "apply shot", "file library menu", "reload persistence", "resume chat display"],
+    "screenshots": ["chat-desktop.jpg", "chat-phone.jpg"],
+    "screenshotsPrecedeLocationVerificationNote": true
+  },
+  "modelRequestsSent": 0,
+  "providerCredentialsReadOrCopied": false,
+  "nativeClaudeValidated": false,
+  "realAgentModelToolRoundTripValidated": false,
+  "snapshotStage": "pre-commit local validation",
+  "publicationVerified": false
+}

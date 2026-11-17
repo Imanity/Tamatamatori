@@ -1,0 +1,156 @@
+{
+  "checkedOn": "2026-11-17",
+  "origin": "https://imanity.github.io",
+  "client": "Node fetch; explicit Origin; not a browser end-to-end test",
+  "credentials": "Only deliberately invalid placeholder keys. No user credential was read or used.",
+  "results": [
+    {
+      "name": "anthropic-messages-preflight",
+      "url": "https://api.anthropic.com/v1/messages",
+      "method": "OPTIONS",
+      "status": 200,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-headers": "anthropic-dangerous-direct-browser-access,anthropic-version,content-type,x-api-key",
+        "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
+        "access-control-allow-origin": "*",
+        "access-control-max-age": "600",
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "OK",
+      "ms": 228
+    },
+    {
+      "name": "anthropic-messages-invalid-key",
+      "url": "https://api.anthropic.com/v1/messages",
+      "method": "POST",
+      "status": 401,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "access-control-expose-headers": "*",
+        "content-type": "application/json"
+      },
+      "body": {
+        "type": "error",
+        "error": {
+          "type": "authentication_error",
+          "message": "invalid x-api-key"
+        }
+      },
+      "ms": 179
+    },
+    {
+      "name": "openrouter-chat-preflight",
+      "url": "https://openrouter.ai/api/v1/chat/completions",
+      "method": "OPTIONS",
+      "status": 204,
+      "headers": {
+        "access-control-allow-headers": "Authorization,User-Agent,X-Api-Key,X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-Encoding,Content-MD5,Content-Type,Date,X-Api-Version,HTTP-Referer,X-Windowai-Title,X-Openrouter-Title,X-Title,X-Openrouter-Categories,X-Openrouter-App-Visibility,X-Session-Id,X-Openrouter-Trace,X-Stainless-Lang,X-Stainless-Package-Version,X-Stainless-OS,X-Stainless-Arch,X-Stainless-Runtime,X-Stainless-Runtime-Version,X-Stainless-Retry-Count,X-Stainless-Timeout,X-Stainless-Helper-Method,Protection-Key,Idempotency-Key,Payment-Authorization,PAYMENT-SIGNATURE,traceparent,tracestate,b3",
+        "access-control-allow-methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+        "access-control-allow-origin": "*",
+        "access-control-expose-headers": "WWW-Authenticate,PAYMENT-REQUIRED,Payment-Receipt,PAYMENT-RESPONSE,Location,X-Generation-Id,x-openrouter-error-origin,x-openrouter-error-tool,X-Provider-Name,request-id,cf-ray"
+      },
+      "body": "",
+      "ms": 38
+    },
+    {
+      "name": "openrouter-chat-invalid-key",
+      "url": "https://openrouter.ai/api/v1/chat/completions",
+      "method": "POST",
+      "status": 401,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "access-control-expose-headers": "WWW-Authenticate,PAYMENT-REQUIRED,Payment-Receipt,PAYMENT-RESPONSE,Location,X-Generation-Id,x-openrouter-error-origin,x-openrouter-error-tool,X-Provider-Name,request-id,cf-ray",
+        "content-type": "application/json"
+      },
+      "body": {
+        "error": {
+          "message": "Missing Authentication header",
+          "code": 401
+        }
+      },
+      "ms": 39
+    },
+    {
+      "name": "openrouter-pkce-preflight",
+      "url": "https://openrouter.ai/api/v1/auth/keys",
+      "method": "OPTIONS",
+      "status": 204,
+      "headers": {
+        "access-control-allow-headers": "Authorization,User-Agent,X-Api-Key,X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-Encoding,Content-MD5,Content-Type,Date,X-Api-Version,HTTP-Referer,X-Windowai-Title,X-Openrouter-Title,X-Title,X-Openrouter-Categories,X-Openrouter-App-Visibility,X-Session-Id,X-Openrouter-Trace,X-Stainless-Lang,X-Stainless-Package-Version,X-Stainless-OS,X-Stainless-Arch,X-Stainless-Runtime,X-Stainless-Runtime-Version,X-Stainless-Retry-Count,X-Stainless-Timeout,X-Stainless-Helper-Method,Protection-Key,Idempotency-Key,Payment-Authorization,PAYMENT-SIGNATURE,traceparent,tracestate,b3",
+        "access-control-allow-methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+        "access-control-allow-origin": "*",
+        "access-control-expose-headers": "WWW-Authenticate,PAYMENT-REQUIRED,Payment-Receipt,PAYMENT-RESPONSE,Location,X-Generation-Id,x-openrouter-error-origin,x-openrouter-error-tool,X-Provider-Name,request-id,cf-ray"
+      },
+      "body": "",
+      "ms": 29
+    },
+    {
+      "name": "openai-responses-preflight",
+      "url": "https://api.openai.com/v1/responses",
+      "method": "OPTIONS",
+      "status": 200,
+      "headers": {
+        "access-control-allow-headers": "authorization,content-type",
+        "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
+        "access-control-allow-origin": "*",
+        "access-control-expose-headers": "X-Request-ID, Server-Timing-Total, X-OpenAI-Inference-Capacity-Reason, CF-Ray, CF-Ray",
+        "access-control-max-age": "600",
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "OK"
+    },
+    {
+      "name": "openai-responses-invalid-key",
+      "url": "https://api.openai.com/v1/responses",
+      "method": "POST",
+      "status": 401,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "access-control-expose-headers": "X-Request-ID, Server-Timing-Total, X-OpenAI-Inference-Capacity-Reason, CF-Ray, CF-Ray",
+        "content-type": "application/json"
+      },
+      "body": {
+        "error": {
+          "code": "invalid_api_key",
+          "message": "Incorrect API key provided: tamatama***************************heck. You can find your API key at https://platform.openai.com/account/api-keys.",
+          "param": null,
+          "type": "invalid_request_error"
+        }
+      }
+    },
+    {
+      "name": "openai-chat-preflight",
+      "url": "https://api.openai.com/v1/chat/completions",
+      "method": "OPTIONS",
+      "status": 200,
+      "headers": {
+        "access-control-allow-headers": "authorization,content-type",
+        "access-control-allow-methods": "GET, OPTIONS, POST",
+        "access-control-allow-origin": "https://imanity.github.io",
+        "access-control-expose-headers": "CF-Ray, CF-Ray",
+        "access-control-max-age": "86400"
+      },
+      "body": ""
+    },
+    {
+      "name": "openai-chat-invalid-key",
+      "url": "https://api.openai.com/v1/chat/completions",
+      "method": "POST",
+      "status": 401,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "access-control-expose-headers": "CF-Ray, CF-Ray",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "error": {
+          "message": "Incorrect API key provided: tamatama***************************heck. You can find your API key at https://platform.openai.com/account/api-keys.",
+          "type": "invalid_request_error",
+          "param": null,
+          "code": "invalid_api_key"
+        }
+      }
+    }
+  ]
+}

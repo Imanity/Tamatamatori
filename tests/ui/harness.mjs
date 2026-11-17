@@ -333,6 +333,7 @@ before(async () => {
   });
   ({ createRoot } = await import("react-dom/client"));
   server = await createServer({
+    mode: process.env.TMT_UI_MODE || "development",
     cacheDir: "node_modules/.vite-tests",
     optimizeDeps: { noDiscovery: true, include: [] },
     server: { middlewareMode: true },

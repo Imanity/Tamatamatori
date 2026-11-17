@@ -14,6 +14,8 @@
     "test": "node --experimental-strip-types --test \"tests/**/*.test.mjs\"",
     "test:terrain": "node --experimental-strip-types --test tests/core/terrain.test.mjs tests/core/camera-calibration.test.mjs",
     "preview": "vite preview --host 127.0.0.1",
+    "build:local": "npm run build -- --mode desktop --outDir dist-local",
+    "local": "npm run build:local && node --experimental-strip-types server/local.mjs",
     "update:orbits": "node --experimental-strip-types scripts/update-stations.mjs",
     "update:comets": "node --experimental-strip-types scripts/update-comets.mjs",
     "landmarks": "node scripts/landmarks.mjs",

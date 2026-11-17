@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { initialPlan } from "./domain/core/plan";
 import { currentMinute } from "./ui/common/clock";
@@ -23,6 +23,8 @@ import { useShotLibrary } from "./ui/shots/useShotLibrary";
 import { planFromShot, shotFromPlan } from "./domain/shots/shot";
 import type { SolveParse2, SolveRequest2 } from "./domain/solve/solve";
 import { useNarrowLayout, usePhonePortrait, Divider, Panel } from "./ui/workspace/Layout";
+// Keep the build-time condition at the import site so the Pages graph excludes the module.
+const LocalChat = import.meta.env.MODE === "desktop" ? lazy(() => import("./ui/local/LocalChat")) : null;
 
 type MobileTab = "preview" | "map" | "camera" | "layers" | "solve";
 /** On a phone held upright the preview and timeline are a tab of their own, chosen first. */
@@ -223,10 +225,10 @@ export default function App() {
   };
   // The 推算 mode is shared by its panel, the preview marks, the timeline and the map.
   const alignment = useComposition(plan, updatePlan, solveMode, planGeneration, solve);
-  // "存为机位" from the 推算 panel; the shot menu sees the new entry at once (one library per page).
+  // "存为机位" from the 推算 panel; the shot menu re-reads after a successful write.
   const shotLibrary = useShotLibrary();
-  const saveShot = (name: string) => {
-    const entry = shotLibrary.saveNew(shotFromPlan(plan, name));
+  const saveShot = async (name: string) => {
+    const entry = await shotLibrary.saveNew(shotFromPlan(plan, name));
     if (!entry) return false;
     setActiveShotId(entry.id);
     setShotNotice({ text: `已存为机位「${name}」` });
@@ -301,6 +303,16 @@ export default function App() {
           <span>Tamatamatori</span>
         </a>
         <div className="topbar-end">
+          {LocalChat && <Suspense fallback={<span role="status">本地功能读取中…</span>}><LocalChat
+            plan={plan}
+            onApply={(shot) => applyShot(planFromShot(shot), null, shot.name || "对话机位")}
+            onSave={async (shot) => {
+              const entry = await shotLibrary.saveNew(shot);
+              if (!entry) return false;
+              setShotNotice({ text: `已保存「${shot.name}」` });
+              return true;
+            }}
+          /></Suspense>}
           <button
             type="button"
             className={`solve-button ${solveMode ? "is-active" : ""}`}
@@ -418,7 +430,7 @@ export default function App() {
               solveActive={solveMode}
               solveLoad={solveLoad}
               solveHost={solveHost}
-              shotSaving={{ save: saveShot, error: shotLibrary.error, writable: shotLibrary.library.phase === "ready" }}
+              shotSaving={{ save: saveShot, error: shotLibrary.error, writable: shotLibrary.writable }}
             />
           </Panel>
         </div>

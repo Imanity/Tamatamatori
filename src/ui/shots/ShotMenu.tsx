@@ -20,6 +20,7 @@ import type { ShootingPlan } from "../../domain/core/plan";
 import { landmarkDistance, landmarks } from "../../domain/buildings/landmarks";
 import type { SavedShot } from "../../domain/shots/shot-library";
 import { shotLensText, shotTimeText } from "./shot-text";
+import { LibraryTransfer } from "./LibraryTransfer";
 
 const layerNames = shotLayerNames;
 
@@ -69,7 +70,7 @@ export function ShotMenu({
 }) {
   const shots = useShotLibrary();
   const { library } = shots;
-  const writable = library.phase === "ready";
+  const writable = shots.writable;
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [draft, setDraft] = useState("");
@@ -119,40 +120,40 @@ export function ShotMenu({
   }, [open]);
 
   const current = (name = active?.shot.name ?? "") => shotFromPlan(plan, name || suggestShotName(shotFromPlan(plan)), active?.shot.note ?? "");
-  const save = (event: FormEvent) => {
+  const save = async (event: FormEvent) => {
     event.preventDefault();
     const shot = shotFromPlan(plan, draft.trim() || suggestShotName(shotFromPlan(plan)));
-    const entry = shots.saveNew(shot);
+    const entry = await shots.saveNew(shot);
     if (!entry) return;
     onActiveChange(entry.id);
     setSaving(false);
     setNotice({ text: `已保存「${shot.name}」` });
   };
-  const saveChanges = () => {
-    if (active && shots.update(active.id, current())) setNotice({ text: `已更新「${active.shot.name}」` });
+  const saveChanges = async () => {
+    if (active && await shots.update(active.id, current())) setNotice({ text: `已更新「${active.shot.name}」` });
   };
   const apply = (entry: SavedShot) => {
     onApply(planFromShot(entry.shot), entry.id, entry.shot.name);
     close();
   };
-  const remove = (entry: SavedShot) => {
-    const removed = shots.remove(entry.id);
+  const remove = async (entry: SavedShot) => {
+    const removed = await shots.remove(entry.id);
     if (!removed) return;
     const wasActive = entry.id === activeId;
     if (wasActive) onActiveChange(null);
     setExpanded(null);
     setNotice({
       text: `已删除「${entry.shot.name}」`,
-      undo: () => {
-        if (shots.restore(removed.entry, removed.index) && wasActive) onActiveChange(entry.id);
+      undo: async () => {
+        if (await shots.restore(removed.entry, removed.index) && wasActive) onActiveChange(entry.id);
         setNotice(null);
       },
     });
   };
-  const rename = (event: FormEvent<HTMLFormElement>, entry: SavedShot) => {
+  const rename = async (event: FormEvent<HTMLFormElement>, entry: SavedShot) => {
     event.preventDefault();
     const name = (event.currentTarget.elements.namedItem("name") as HTMLInputElement).value.trim();
-    if (name && shots.rename(entry.id, name.slice(0, SHOT_NAME_LIMIT))) {
+    if (name && await shots.rename(entry.id, name.slice(0, SHOT_NAME_LIMIT))) {
       setRenaming(null);
       setExpanded(null);
     }
@@ -161,10 +162,10 @@ export function ShotMenu({
     setSharing(shot);
     close(false);
   };
-  const imported = (parsed: Extract<ShotParse, { ok: true }>, name: string, keep: boolean) => {
+  const imported = async (parsed: Extract<ShotParse, { ok: true }>, name: string, keep: boolean) => {
     const shot = { ...parsed.shot, name: name.trim().slice(0, SHOT_NAME_LIMIT) || suggestShotName(parsed.shot) };
     if (keep) {
-      const entry = shots.saveNew(shot);
+      const entry = await shots.saveNew(shot);
       if (!entry) return false;
       onApply(planFromShot(shot), entry.id, shot.name);
     } else onApply(planFromShot(shot), null, shot.name);
@@ -240,7 +241,9 @@ export function ShotMenu({
               </div>
             )}
           </section>
-          {library.phase === "unavailable" && (
+          {shots.loading && <p role="status">正在读取本地机位库…</p>}
+          {shots.local && <button type="button" onClick={shots.refresh}>重新读取机位库</button>}
+          {!shots.local && library.phase === "unavailable" && (
             <p className="shot-warning">此浏览器无法使用本地存储，机位不能保存；仍可通过分享码导入与分享。</p>
           )}
           {library.phase === "corrupt" && (
@@ -319,6 +322,7 @@ export function ShotMenu({
             ))}
           </section>
           <footer className="shot-footer">
+            <LibraryTransfer store={shots} />
             <button
               type="button"
               onClick={() => {
@@ -329,11 +333,11 @@ export function ShotMenu({
             >
               导入机位
             </button>
-            <small>机位只保存在此浏览器</small>
+            <small>{shots.local ? "机位保存在本机文件库" : "机位只保存在此浏览器"}</small>
           </footer>
         </div>
       )}
-      <ImportDialog open={importing} initialText={importText} canSave={writable} onImport={imported} onClose={() => {
+      <ImportDialog open={importing} initialText={importText} canSave={writable} error={shots.error} onImport={imported} onClose={() => {
         setImporting(false);
         if (fromLink.current) {
           fromLink.current = false;
@@ -367,14 +371,16 @@ function ImportDialog({
   open,
   initialText = "",
   canSave,
+  error,
   onClose,
   onImport,
 }: {
   open: boolean;
   initialText?: string;
   canSave: boolean;
+  error: string;
   onClose: () => void;
-  onImport: (parsed: Extract<ShotParse, { ok: true }>, name: string, keep: boolean) => boolean;
+  onImport: (parsed: Extract<ShotParse, { ok: true }>, name: string, keep: boolean) => Promise<boolean>;
 }) {
   const dialog = useRef<HTMLDialogElement>(null), errors = useRef<HTMLTextAreaElement>(null);
   const [text, setText] = useState("");
@@ -391,8 +397,8 @@ function ImportDialog({
   useEffect(() => {
     if (parsed?.ok) setName(parsed.shot.name || suggestShotName(parsed.shot));
   }, [parsed]);
-  const run = (keep: boolean) => {
-    if (parsed?.ok && onImport(parsed, name, keep)) dialog.current?.close();
+  const run = async (keep: boolean) => {
+    if (parsed?.ok && await onImport(parsed, name, keep)) dialog.current?.close();
   };
   return (
     <dialog ref={dialog} className="shot-dialog" aria-labelledby="shot-import-title" onClose={onClose}>
@@ -406,6 +412,7 @@ function ImportDialog({
         </button>
       </header>
       <div className="about-body shot-dialog-body">
+        {error && <p role="alert">{error}</p>}
         <label className="field">
           <span className="field-label">粘贴分享码</span>
           <textarea

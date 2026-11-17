@@ -96,10 +96,14 @@ jobs:
         run: npm run build -- --base "/${GITHUB_REPOSITORY#*/}/"
 
       - name: 上传 Pages 构建产物
+        # dist-local is validated separately and never enters the Pages artifact.
         if: matrix.node-version == '24' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:
           path: dist
+
+      - name: 构建本地版（不发布）
+        run: npm run build:local
 
   deploy:
     name: 发布 GitHub Pages

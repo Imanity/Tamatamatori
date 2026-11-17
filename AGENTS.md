@@ -10,6 +10,8 @@ Tamatamatori 是摄影规划 Web App。用户通过地图确定机位与拍摄�
 
 当前已有 P2 山体、静态水体与时间天空，按用户要求推进 P3 天文构图辅助。沿用独立 MapLibre 预览实例，使用 Mapterhorn DEM 和 OpenFreeMap 水体边界；相机由真实高程、离地高度与现有镜头视场共同驱动。水面高程暂按 DEM 近似并明确标注；不加入倒影、波纹或真实水位。地图浏览状态和拍摄计划继续分开；用户已明确授权公开仓库并启用 GitHub Pages 静态部署，只发布构建产物、不增加后端。
 
+2026-11-17 用户确认实施[双部署模式](docs/plan/local-deployment.md#9-实施记录2026-11-17)：Pages 仍保持上述纯前端边界且不带 AI 聊天、机位用 localStorage；`npm run local` 构建本地版并启动 Node 后端，以文件管理机位并调用官方 Codex app-server／Claude Code。流式聊天、会话恢复、停止、摄影 MCP、候选卡片与整库迁移已接入；后端故障显式报错，不静默切换另一份机位库。原浏览器自带密钥方案保留为历史。自动检查与测试替身浏览器链路已通过；真实 Codex 仅做初始化与工具发现，没有模型 turn，Claude 原生链路未验。不要把这些记录写成两家真实对话验收通过。
+
 地形预览验收与相机校准的固定场景和既有执行结果见 [验收记录](docs/plan/terrain-validation.md)。合成高程、SDK CPU 数值验证和真实 GPU 画面验收分别记录；浏览器连接不可用时不得把画面待验项标记为通过。
 
 地形、时间天空、日月与实际相机姿态已有基础验收；既有校准见[相机校准](docs/plan/camera-calibration.md)、[远山 DEM 验收](docs/plan/terrain-detail.md)及[曲率对照](docs/plan/curvature-validation.md)。既有空间投影修正已使地形、水体、相机和日月共享一致的方向与深度，提供继续接入其他天体的基础，见[空间投影修正](docs/plan/terrain-perspective.md)。允许扩展已固定 SDK 的安装补丁，必须校验源码与 ESM 签名、保持幂等、测试原始地图未受影响；应用不读取 SDK 运行时私有字段。高程数据仍沿用同源数值，未知基准见[核查记录](docs/plan/elevation-datum-audit.md)，不自动套 geoid 常数，不把几何误差修正宣称为实景精度校准。独立计算、SDK 数值和真实 GPU 分开验收；开发诊断不进入正常流程。
@@ -193,6 +195,15 @@ Tamatamatori 是摄影规划 Web App。用户通过地图确定机位与拍摄�
 - 新会话的拍摄时刻取当前分钟（`src/ui/common/clock.ts`，界面测试固定为原默认时刻）；刷新恢复的会话、机位与链接不变。
 - 地图显示本浏览器保存的机位（`useSavedShotMarkers.ts`）：名称标签，当前机位实心；单击打开卡片，“应用”可撤销；地图纬度范围外不画。
 - 510 项检查与子路径构建通过；内置浏览器核对了数值与真实 MapLibre 下的标记。面板隐藏，GPU 画面待验。
+
+按用户要求评估页面内对话（AI 第三级）在不部署服务端、用户自带凭证时能否实现（2026-11-16，见[页面内对话评估](docs/plan/ai-chat.md)，仅评估，未实施）：
+
+- 可行的只有用户自己的 API 密钥。Anthropic API 允许浏览器直连（请求头 `anthropic-dangerous-direct-browser-access`），工具在页面里执行，复用推算模块与 MCP 的工具形状；OpenRouter 的 PKCE 登录可作第二选项。
+- Claude 订阅（Free / Pro / Max / Ultra）的登录凭证按 Anthropic 条款不能用于第三方应用；订阅用户走已有的 MCP 服务器。
+- 风险：本站与 `imanity.github.io`、`suumoviz` 同源，密钥缺省只放内存；另需 CSP、用量显示、专用工作区与月度上限，并说明对话与机位会发给提供方。
+- 待用户决定：密钥保存方式、首批提供方、默认模型与入口位置。
+
+2026-11-17 按用户要求复核纯前端 Pages 链路（仍仅评估，见该文第 8 节）：Anthropic Messages 与 OpenRouter 的实际预检、无效密钥鉴权响应均带跨域头；Node HTTP 检查不当作浏览器或有效密钥验收。页面复用求解器，不启动 stdio MCP；首版建议只存内存，暂缓加密持久化，补充同源与 CSP 边界、PKCE 子路径回调及费用控制。未调用收费模型、未修改应用代码。
 
 按用户要求核实外部服务用量并显示 Open-Meteo 用量（2026-11-11，见[外部服务用量](docs/plan/api-usage.md)）。
 

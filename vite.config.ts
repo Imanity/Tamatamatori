@@ -15,7 +15,7 @@ const inputs = ["scripts/patch-maplibre.mjs", "scripts/patch-terrain-perspective
 execFileSync(process.execPath, [inputs[0]], { stdio: "inherit" });
 const signature = createHash("sha256");
 for (const path of inputs) signature.update(readFileSync(path));
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   worker: { format: "es" },
   plugins: [react(), {
     name: "terrain-sdk-inputs",
@@ -24,6 +24,13 @@ export default defineConfig({
       // running server also reapplies patches and selects a fresh prebundle.
       config.configFileDependencies.push(...inputs.map(normalizePath));
     },
+    generateBundle(_options, bundle) {
+      if (mode === "desktop") return;
+      for (const output of Object.values(bundle)) {
+        if (/LocalChat|local-chat/.test(output.fileName) || (output.type === "chunk" && output.code.includes("/api/chat")))
+          this.error(`Pages 构建包含本地聊天模块：${output.fileName}`);
+      }
+    },
   }],
   cacheDir: `node_modules/.vite-terrain-${signature.digest("hex").slice(0,12)}`,
-});
+}));
