@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-11-17T11:24:12.352Z",
+  "client": "Node fetch using the implemented loadWeather function",
+  "location": "Public test coordinates near Fuji; not user location",
+  "retries": [
+    {
+      "attempt": 2,
+      "elapsedMs": 10634
+    }
+  ],
+  "outcome": "error",
+  "message": "暂时无法连接 Open-Meteo（已自动重试），请检查网络或稍后重试",
+  "elapsedMs": 22338,
+  "liveSuccessVerified": false,
+  "automatedChecks": {
+    "fullSuitePassed": 529,
+    "fullSuiteFailed": 0,
+    "newRequestTests": 6,
+    "newUiFlowTests": 1,
+    "pagesSubpathBuild": "passed",
+    "localBuild": "passed"
+  }
+}

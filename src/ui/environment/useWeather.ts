@@ -22,6 +22,9 @@ export function useWeather(plan: ShootingPlan) {
   const [source, setSource] = useState<{ key: string; phase: "loading" | "ready" | "error"; series?: BestMatchSeries }>({ key: "", phase: "loading" });
   const sourceWanted = enabled && model === "best_match";
   const [clock, setClock] = useState(Date.now);
+  const now = Math.max(clock, Date.now());
+  const expired = !!state.forecast && (now < state.forecast.fetchedAt || now - state.forecast.fetchedAt >= WEATHER_TTL);
+  const sourceEnabled = sourceWanted && state.key === key && state.phase === "ready" && !expired;
   useEffect(() => {
     if (!enabled) return;
     const update = () => setClock(Date.now());
@@ -40,41 +43,39 @@ export function useWeather(plan: ShootingPlan) {
     const controller = new AbortController();
     let disposed = false;
     setState(previous => ({ key, phase: "loading", forecast: previous.key === key ? previous.forecast : undefined }));
-    const timeout = setTimeout(() => controller.abort(), 20_000);
     const timer = setTimeout(() => {
-      void loadWeather(plan, controller.signal, Date.now(), model)
+      void loadWeather(plan, controller.signal, Date.now(), model, (attempt) => {
+        if (!disposed) setState(previous => ({ ...previous, message: `天气连接暂时失败，正在自动重试（${attempt}/2）` }));
+      })
         .then(forecast => {
           if (!disposed) setState({ key, phase: "ready", forecast });
         })
         .catch((cause: unknown) => {
           if (!disposed) setState({ key, phase: "error", message:
             cause instanceof Error && cause.name !== "AbortError" ? cause.message : "天气数据读取超时" });
-        })
-        .finally(() => clearTimeout(timeout));
+        });
     }, 250);
-    return () => { disposed = true; clearTimeout(timer); clearTimeout(timeout); controller.abort(); };
+    return () => { disposed = true; clearTimeout(timer); controller.abort(); };
   }, [enabled, key, attempt]);
   useEffect(() => {
-    if (!sourceWanted) return;
+    if (!sourceEnabled) return;
     const controller = new AbortController();
     let disposed = false;
-    setSource((previous) => previous.key === key && previous.series ? previous : { key, phase: "loading" });
+    setSource({ key, phase: "loading" });
     const timer = setTimeout(() => {
       void loadWeatherSource(plan, controller.signal, Date.now())
         .then((series) => { if (!disposed) setSource({ key, phase: "ready", series }); })
         .catch(() => { if (!disposed) setSource({ key, phase: "error" }); });
     }, 300);
     return () => { disposed = true; clearTimeout(timer); controller.abort(); };
-  }, [sourceWanted, key, attempt]);
-  const sourceSeries = sourceWanted && source.key === key ? source.series : undefined;
+  }, [sourceEnabled, key, attempt, state.forecast?.fetchedAt]);
+  const sourceSeries = sourceEnabled && source.key === key ? source.series : undefined;
   const autoSource = useMemo(() => {
     if (!sourceWanted) return null;
     if (!sourceSeries) return { phase: source.key === key && source.phase === "error" ? "error" as const : "loading" as const, label: null };
     const found = bestMatchSource(sourceSeries, plan.instant);
     return { phase: "ready" as const, label: found?.label ?? null };
   }, [sourceWanted, sourceSeries, source.key, source.phase, key, plan.instant]);
-  const now = Math.max(clock, Date.now());
-  const expired = !!state.forecast && (now < state.forecast.fetchedAt || now - state.forecast.fetchedAt >= WEATHER_TTL);
   useEffect(() => {
     if (enabled && expired && state.phase === "ready") setAttempt(value => value + 1);
   }, [enabled, expired, state.phase]);

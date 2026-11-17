@@ -249,7 +249,7 @@ export function installGlobal(name, value) {
 }
 
 before(async () => {
-  installGlobal("__testWeatherLoader", (point, signal, now, model) => { weatherRequests.push({ point, signal, model }); return stubs.weatherLoader(point, signal, now, model); });
+  installGlobal("__testWeatherLoader", (point, signal, now, model, onRetry) => { weatherRequests.push({ point, signal, model }); return stubs.weatherLoader(point, signal, now, model, onRetry); });
   installGlobal("__testCelestialLayer", TestCelestialLayer);
   installGlobal("__testStarfieldLayer", TestStarfieldLayer);
   installGlobal("__testBuildingLayer", TestBuildingLayer);

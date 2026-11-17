@@ -7,7 +7,7 @@ import { act } from "react";
 import { weatherResponse } from "../fixtures/weather.mjs";
 import { parseWeather, WEATHER_TTL } from "../../src/domain/environment/weather.ts";
 import { ellipsoidalRay } from "../../src/domain/core/geodesy.ts";
-import { starfieldLayer, stubs, TestCelestialLayer, TestStarfieldLayer, dom, weatherRequests, pollutionRequests, terrainSize, resizeObservers, groundRequests, settle, workspace, input, setShootingDateTime, value, button, setControl, geometry, waitUntil, terrainMap, readyTerrain } from "./harness.mjs";
+import { starfieldLayer, stubs, TestCelestialLayer, TestStarfieldLayer, dom, weatherRequests, pollutionRequests, terrainSize, resizeObservers, groundRequests, settle, workspace, input, setShootingDateTime, value, button, setControl, geometry, waitUntil, terrainMap, readyTerrain, installGlobal } from "./harness.mjs";
 
 test('精简工作区：没有左栏，图层开关位于分组标题，光照与环境默认展开，分组随开关展开与折叠', async t => {
   await workspace(t); const map = await readyTerrain(), requests = groundRequests.length;
@@ -372,6 +372,41 @@ test('天气机位请求取消、错误重试、超范围与缺值分别反馈�
   assert.equal(document.querySelector('.weather-status button').textContent, '使用当前时间');
   assert.equal(weatherRequests.length, 3);
   await settle(() => button.click()); assert.equal(document.querySelector('.weather-status'), null);
+});
+
+test('天气先读取主预报、显示自动重试，成功后才识别来源；来源失败与迟到响应不影响天气', async t => {
+  await workspace(t); await readyTerrain();
+  const main = [], sources = [];
+  stubs.weatherLoader = (point, signal, now, model, onRetry) => new Promise((resolve, reject) => main.push({ signal, onRetry, resolve, reject }));
+  installGlobal('__testWeatherSourceLoader', (point, signal) => new Promise((resolve, reject) => sources.push({ signal, resolve, reject })));
+  t.after(() => { delete globalThis.__testWeatherSourceLoader; });
+  await settle(() => document.querySelector('[aria-label="天气效果"]').click());
+  await waitUntil(() => main.length === 1);
+  await delay(350); assert.equal(sources.length, 0, '主预报等待期间不发送多模型请求');
+  await settle(() => main[0].reject(new Error('天气暂时失败')));
+  assert.ok(document.querySelector('[data-weather-phase="error"]')); assert.equal(sources.length, 0);
+  await settle(() => document.querySelector('.weather-status button').click());
+  await waitUntil(() => main.length === 2);
+  await settle(() => main[1].onRetry(2));
+  assert.match(document.querySelector('.weather-readout [role="status"]').textContent, /自动重试（2\/2）/);
+  await settle(() => main[1].resolve(parseWeather(weatherResponse(), Date.now())));
+  await waitUntil(() => sources.length === 1);
+  assert.ok(document.querySelector('[data-weather-phase="ready"]'));
+  await settle(() => setControl(input('经度'), 139));
+  assert.equal(sources[0].signal.aborted, true);
+  await waitUntil(() => main.length === 3);
+  const raw = weatherResponse();
+  const { parseBestMatchSeries } = await import('../../src/domain/environment/weather-source.ts');
+  const oldSource = parseBestMatchSeries({ hourly: { time: raw.hourly.time,
+    cloud_cover_best_match: raw.hourly.cloud_cover, cloud_cover_jma_seamless: raw.hourly.cloud_cover } });
+  await settle(() => sources[0].resolve(oldSource));
+  assert.ok(document.querySelector('[data-weather-phase="loading"]'));
+  assert.doesNotMatch(document.querySelector('[aria-label="天气预测模型"]').selectedOptions[0].textContent, /JMA/);
+  await settle(() => main[2].resolve(parseWeather(weatherResponse(), Date.now())));
+  await waitUntil(() => sources.length === 2);
+  await settle(() => sources[1].reject(new Error('来源读取超时')));
+  assert.match(document.querySelector('[aria-label="天气预测模型"]').selectedOptions[0].textContent, /来源未知/);
+  assert.ok(document.querySelector('[data-weather-phase="ready"]'));
 });
 
 test('天气返回页面核对缓存年龄，过期时暂停效果并自动刷新', async t => {

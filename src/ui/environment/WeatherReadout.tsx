@@ -4,8 +4,8 @@ import { cloudLevel } from "../common/readout";
 
 export function weatherMessage(feed: WeatherFeed) {
   if (feed.phase === "off") return "天气效果已关闭";
-  if (feed.phase === "loading") return "正在读取天气数据";
-  if (feed.phase === "stale") return "天气数据已过期，正在更新";
+  if (feed.phase === "loading") return feed.message ?? "正在读取天气数据";
+  if (feed.phase === "stale") return feed.message ? `天气数据已过期；${feed.message}` : "天气数据已过期，正在更新";
   if (feed.phase === "outside") return "拍摄时间超出天气预报范围";
   if (feed.phase === "missing") return "拍摄时刻缺少有效天气数据";
   if (feed.phase === "error") return feed.message ?? "天气数据读取失败";
