@@ -98,6 +98,14 @@ export function useShotLibrary() {
     local: LOCAL_MODE,
     refresh: () => { setError(""); window.dispatchEvent(new Event(LOCAL_CHANGE)); },
     clearError: () => setError(""),
+    async saveMany(shots: Shot[]): Promise<SavedShot[] | null> {
+      const current = latest.current;
+      if (!shots.length || current.shots.length + shots.length > SHOT_LIBRARY_LIMIT) {
+        setError(`最多保存 ${SHOT_LIBRARY_LIMIT} 个机位，请先整理机位库`); return null;
+      }
+      const entries = shots.map(shot => ({ id: newShotId(), createdAt: now(), updatedAt: now(), shot }));
+      return await commit({ ...current, shots: [...entries, ...current.shots] }) ? entries : null;
+    },
     async importLibrary(text: string) {
       try {
         const value = JSON.parse(text);

@@ -22,6 +22,7 @@ import { useLazyModule } from "./ui/common/lazy-module";
 import { useShotLibrary } from "./ui/shots/useShotLibrary";
 import { planFromShot, shotFromPlan } from "./domain/shots/shot";
 import type { SolveParse2, SolveRequest2 } from "./domain/solve/solve";
+import type { ChatSolve } from "./domain/solve/chat-results";
 import { useNarrowLayout, usePhonePortrait, Divider, Panel } from "./ui/workspace/Layout";
 // Keep the build-time condition at the import site so the Pages graph excludes the module.
 const LocalChat = import.meta.env.MODE === "desktop" ? lazy(() => import("./ui/local/LocalChat")) : null;
@@ -225,6 +226,15 @@ export default function App() {
   };
   // The 推算 mode is shared by its panel, the preview marks, the timeline and the map.
   const alignment = useComposition(plan, updatePlan, solveMode, planGeneration, solve);
+  const [chatResult, setChatResult] = useState<ChatSolve | null>(null);
+  useEffect(() => {
+    if (!chatResult || !alignment) return;
+    const opened = planFromShot(chatResult.base);
+    setShotNotice({ text: "已载入聊天推算结果", undo: { plan, activeId: activeShotId } });
+    replacePlan(opened, null);
+    alignment.loadResults(chatResult, opened);
+    setChatResult(null);
+  }, [chatResult, solve]);
   // "存为机位" from the 推算 panel; the shot menu re-reads after a successful write.
   const shotLibrary = useShotLibrary();
   const saveShot = async (name: string) => {
@@ -311,6 +321,15 @@ export default function App() {
               if (!entry) return false;
               setShotNotice({ text: `已保存「${shot.name}」` });
               return true;
+            }}
+            onSaveMany={async shots => {
+              const entries = await shotLibrary.saveMany(shots);
+              if (!entries) return false;
+              setShotNotice({ text: `已保存 ${entries.length} 个机位` }); return true;
+            }}
+            onOpen={result => {
+              setChatResult(result); setSolveMode(true); setRailView("solve"); setInfoCollapsed(false);
+              if (narrow) setMobileTab("solve");
             }}
           /></Suspense>}
           <button

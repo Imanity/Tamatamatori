@@ -4,6 +4,8 @@ import { prepare, validation } from '../scripts/lib/solve-run.mjs';
 import { parseShotText } from '../src/domain/shots/shot.ts';
 import { checkLibrary } from './shot-store.mjs';
 import { LOCAL_TOOLS } from './tool-bridge.mjs';
+import { randomUUID } from 'node:crypto';
+import { limitChatResult, resultSize } from '../src/domain/solve/chat-results.ts';
 
 const structured = (value) => ({ content: [{ type: 'text', text: JSON.stringify(value) }], structuredContent: value });
 export async function executeTool({ name, arguments: args = {} }, chat, store, emit, signal) {
@@ -23,10 +25,17 @@ export async function executeTool({ name, arguments: args = {} }, chat, store, e
     return { content: [{ type: 'text', text: await readFile(new URL(`../public/${file}`, import.meta.url), 'utf8') }] };
   }
   if (name === 'propose') {
-    const parsed = parseShotText(typeof args.shot === 'string' ? args.shot : JSON.stringify(args.shot));
-    if (!parsed.ok) throw new Error(parsed.errors.join('\n'));
-    emit({ type: 'proposal', shot: parsed.shot });
-    return structured({ proposed: true, name: parsed.shot.name, applied: false });
+    if ((args.shot === undefined) === (args.shots === undefined)) throw new Error('请提供 shot 或 shots，两者选一个');
+    const input = args.shots ?? [args.shot];
+    if (!Array.isArray(input) || !input.length || input.length > 200) throw new Error('一次可提供 1—200 个独立机位');
+    const shots = input.map((shot, index) => {
+      const parsed = parseShotText(typeof shot === 'string' ? shot : JSON.stringify(shot));
+      if (!parsed.ok) throw new Error(`shots[${index}]：${parsed.errors.join('\n')}`);
+      return parsed.shot;
+    });
+    const result = { kind: 'shots', id: randomUUID(), shots, total: shots.length };
+    const shown = emit({ type: 'result', result });
+    return structured({ proposed: shots.length, shown: shown?.shown ?? shots.length, applied: false, message: '网页已显示机位卡片，不必重复提出。' });
   }
   if (name === 'validate_request') {
     const shot = parseShotText(args.shot ?? JSON.stringify(chat.plan));
@@ -39,7 +48,7 @@ export async function executeTool({ name, arguments: args = {} }, chat, store, e
     const maxResults = args.maxResults ?? 20;
     if (!Number.isInteger(maxResults) || maxResults < 1 || maxResults > 200) throw new Error('maxResults 应为 1—200');
     const result = await new Promise((resolve, reject) => {
-      const worker = new Worker(new URL('./solve-worker.mjs', import.meta.url), { workerData: { request: args.request, shot: parsedShot.shot, maxResults } });
+      const worker = new Worker(new URL('./solve-worker.mjs', import.meta.url), { workerData: { request: args.request, shot: parsedShot.shot, maxResults, id: randomUUID() } });
       let finished = false;
       const done = (error, value) => {
         if (finished) return; finished = true;
@@ -52,15 +61,14 @@ export async function executeTool({ name, arguments: args = {} }, chat, store, e
       worker.on('message', (message) => {
         if (message.progress) emit({ type: 'status', text: message.progress });
         else if (message.error) done(new Error(message.error));
-        else if (message.result) done(null, message.result);
+        else if (message.result) done(null, message);
       });
       worker.on('error', (error) => done(error));
       worker.on('exit', (code) => { if (!finished) done(new Error(`推算线程提前退出（${code}）`)); });
     });
-    for (const item of result.results) {
-      const parsed = parseShotText(item.link);
-      if (parsed.ok) emit({ type: 'proposal', shot: parsed.shot });
-    }
-    return structured(result);
+    const preview = limitChatResult(result.preview);
+    const shown = emit({ type: 'result', result: preview });
+    return structured({ ...result.result, ui: { shown: shown?.shown ?? resultSize(preview), total: preview.total,
+      message: '网页已显示推算结果及区间控件，不必为相同结果再次调用 propose。' } });
   }
 }

@@ -45,7 +45,7 @@ Windows 默认数据目录是 `%LOCALAPPDATA%/Tamatamatori/`；其他系统为 `
 
 页头“对话”可选用户安装的官方 **Codex（ChatGPT）** 或 **Claude Code**。先在终端安装并登录所需的官方程序：Codex 用 `codex login`，Claude Code 用 `claude auth login`。网页不索取账号密码或 API 密钥。Codex 需支持 `app-server` 与命名权限配置，本机已核对 `0.169.0-alpha.11.1` 的初始化；Claude Code 需支持 `--restricted`（2.1.248+），本机尚未安装验证。可用 `TMT_CODEX_PATH`、`TMT_CLAUDE_PATH` 指定可执行文件绝对路径；Windows 使用原生 `.exe`，不通过 shell 执行 `.cmd` 包装器。
 
-官方程序沿用自己的登录与计费配置。ChatGPT 登录走相应 Codex 计划额度；继承 API 环境变量或 API 配置时可能按 API 计费，页面会提示检测到的环境变量。对话和被使用的机位会发送给模型服务。助手通过现有数值工具推算，候选由用户点“应用试看”或“保存机位”后才生效。地图、天气和模型服务仍需网络。
+官方程序沿用自己的登录与计费配置。ChatGPT 登录走相应 Codex 计划额度；继承 API 环境变量或 API 配置时可能按 API 计费，页面会提示检测到的环境变量。对话和被使用的机位会发送给模型服务。助手通过现有数值工具推算：单个机位有应用／保存卡片，多个独立机位可勾选批量保存，区间可选点、保存并直接载入地图与时间轴；超出展示上限时说明数量。2026-11-18 已完成 Codex 的三类真实输出验收，详见[验收记录](docs/plan/local-deployment.md#10-三类聊天结果与-codex-真实验收2026-11-18)。地图、天气和模型服务仍需网络。
 
 GitHub Pages 与默认 `npm run build` 保持纯前端：无聊天入口，机位继续用 localStorage。两种部署间通过机位菜单的“导出机位库 / 导入机位库”手动迁移，导入先预览、合并且保留已有相同 id。部署方式、验证范围与 Agent 限制见[双部署模式](docs/plan/local-deployment.md#9-实施记录2026-11-17)。
 

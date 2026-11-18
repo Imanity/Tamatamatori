@@ -12,6 +12,13 @@
 .local-message p { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65; font-size: 13px; }
 .local-proposal { padding: 10px; margin: 8px 0; border: 1px solid #bbc8b7; border-radius: 6px; }
 .local-proposal button { margin-right: 8px; }
+.local-results { margin: 12px 0; border-top: 1px solid #ccd2c8; padding-top: 10px; }
+.local-results h3 { font-size: 14px; margin: 0 0 8px; }
+.local-results-truncated { color: #80541c; }
+.local-results nav, .local-result-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.local-interval-slider { display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
+.local-interval-slider input { width: 100%; }
+.local-proposal > label { display: block; font-size: 12px; margin-top: 6px; }
 .local-chat-compose { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #ccd2c8; }
 .local-chat-compose textarea { flex: 1; min-width: 0; min-height: 64px; resize: vertical; font: inherit; padding: 8px; }
 .local-chat-compose button { align-self: flex-end; min-height: 40px; }

@@ -1,0 +1,68 @@
+{
+  "checkedAt": "2026-11-18T02:25:09.269Z",
+  "provider": "Official Codex app-server using ChatGPT login",
+  "version": "0.169.0-alpha.11.1",
+  "genuineModelTurns": 4,
+  "initialPermissionFailure": 1,
+  "successfulTurns": 3,
+  "conversationResumed": true,
+  "credentialsRead": false,
+  "single": {
+    "cards": 1,
+    "unchangedExceptName": true,
+    "saved": true
+  },
+  "multiple": {
+    "cards": 2,
+    "positionsAndLensesVerified": true,
+    "atomicBatchSave": true
+  },
+  "intervals": {
+    "total": 7,
+    "shown": 3,
+    "points": [
+      27,
+      10,
+      46
+    ],
+    "startEnd": [
+      {
+        "start": "2026-11-24T20:32:00.000Z",
+        "end": "2026-11-24T20:58:00.000Z"
+      },
+      {
+        "start": "2026-11-24T20:59:00.000Z",
+        "end": "2026-11-24T21:08:00.000Z"
+      },
+      {
+        "start": "2026-11-24T21:09:00.000Z",
+        "end": "2026-11-24T21:54:00.000Z"
+      }
+    ],
+    "separateRunOfSameSolverMatchesExactly": true,
+    "mapAndTimelineLoaded": true,
+    "sliderEnd": {
+      "instant": "2026-11-24T20:58:00Z",
+      "latitude": 35.699211,
+      "longitude": 139.840264,
+      "heightAboveGround": 100
+    },
+    "savedSelectedPoint": true,
+    "historyReload": {
+      "groups": 3,
+      "intervals": 3,
+      "sliders": 3
+    }
+  },
+  "library": {
+    "count": 4,
+    "revision": 3
+  },
+  "screenshots": [
+    "codex-intervals.jpg",
+    "codex-multiple.jpg",
+    "codex-map.jpg"
+  ],
+  "claudeNativeTested": false,
+  "gpuCompositionPrecisionTested": false
+}

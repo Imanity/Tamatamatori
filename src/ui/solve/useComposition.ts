@@ -13,6 +13,7 @@ import { DEFAULT_TERRAIN_URL } from "../../domain/core/terrain";
 import type { TimelineEvent } from "../../domain/time/timeline";
 import type { SolveRequest2 } from "../../domain/solve/solve";
 import type { CheckTarget } from "../../domain/solve/feasibility";
+import type { ChatSolve } from "../../domain/solve/chat-results";
 import { lazyModule } from "../common/lazy-module";
 import { MINUTE, iso, km } from "./composition-format";
 
@@ -311,6 +312,20 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
     const now = latest.current;
     return requestOf(composition, lensOf(now), { timeZone: now.timeZone, cameraHeight: now.cameraHeight });
   };
+  const loadResults = (result: ChatSolve, opened: ShootingPlan) => {
+    controller.current?.abort();
+    const next = compositionOf(result.request, opened), found = classify(next);
+    if (!found.strategy || !found.shape) throw new Error("无法载入这组推算结果");
+    setComposition(next); setSelected(null); setEditing(null); setPlacing(null); setBefore(null);
+    setRun({
+      id: ++token.current, key: searchKey(next, opened, lensOf), phase: "done", stage: "", shape: found.shape,
+      strategy: found.strategy, basis: searchBasis(found.strategy, next, opened), composition: next,
+      timeZone: opened.timeZone, night: nightSearch(next, found.strategy), items: result.items,
+      blocked: result.blocked, filtered: result.filtered, missing: result.missing, merged: result.merged, extraMissed: result.extraMissed,
+      sectors: result.sectors, rings: result.rings, sampler: null, worker: false, message: "",
+      note: [result.note, result.items.length < result.total ? `聊天显示 ${result.items.length} / ${result.total} 个结果；可重新搜索全部。` : ""].filter(Boolean).join(" "),
+    });
+  };
 
   return {
     module: solve, active, composition, setComposition, solvability, selected, setSelected, editing, setEditing, placing, setPlacing,
@@ -318,7 +333,7 @@ export function useComposition(plan: ShootingPlan, update: UpdatePlan, active: b
     setCamera: (camera: CameraRange) => change((state) => ({ ...state, camera })),
     setTime: (time: TimeRange) => change((state) => ({ ...state, time })),
     setFilters: (filters: FilterSpec[]) => change((state) => ({ ...state, filters })),
-    run, stale, running, search, cancel, items, current, tryOut, restore, canRestore: !!before, events, checkTargets, load, request,
+    run, stale, running, search, cancel, items, current, tryOut, restore, canRestore: !!before, events, checkTargets, load, loadResults, request,
     placeTarget: (longitude: number, latitude: number) => setGroundPlace({ latitude, longitude: normalizeLongitude(longitude), name: "地图上选的点" }),
   };
 }

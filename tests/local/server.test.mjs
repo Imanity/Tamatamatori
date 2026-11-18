@@ -86,11 +86,12 @@ test('本地聊天完整替身链路：工具读取计划、提出机位、流�
   const response = await app.request('/api/chat', { provider: 'codex', message: '月亮在山顶', plan: shot() });
   const events = (await response.text()).split('\n\n').filter((line) => line.startsWith('data: ')).map((line) => JSON.parse(line.slice(6)));
   const id = events.find((event) => event.type === 'session').id;
-  assert.ok(events.some((event) => event.type === 'proposal'));
+  assert.ok(events.some((event) => event.type === 'result' && event.result.kind === 'shots'));
   assert.ok(events.some((event) => event.type === 'done'));
   assert.equal((await app.store.read()).shots.length, 0, '工具提案不直接写机位库');
   const chat = await (await app.request('/api/chats/' + id)).json();
   assert.equal(chat.nativeId, 'native-test-session'); assert.equal(chat.messages[1].text, '找到一个候选');
+  assert.equal(chat.messages[1].results[0].shots[0].name, '富士山');
   assert.equal((await app.request('/api/chat', { provider: 'claude', id, message: '继续', plan: shot() })).status, 400);
   const continued = await app.request('/api/chat', { provider: 'codex', id, message: '继续', plan: shot() });
   assert.equal(continued.status, 200); await continued.text();
@@ -115,12 +116,33 @@ test('本地摄影工具拒绝未知工具、错误机位和读取不存在条�
 test('本地推算 Worker 运行真实求解器并生成可校验候选（固定朝向，不读取地形）', async (t) => {
   const app = await fixture(t), events = [];
   const request = { format: 'tamatamatori.solve', version: 2,
-    lens: { focalLength: 400, sensor: 'full-frame', aspectRatio: '3:2', orientation: 'landscape' },
+    lens: { focalLength: 100, sensor: 'full-frame', aspectRatio: '3:2', orientation: 'landscape' },
     targets: [{ type: 'body', body: 'sun' }], camera: { mode: 'fixed', aim: { azimuth: 244.63, pitch: 10.74 } },
     time: { mode: 'range', date: '2026-11-04', days: 365 }, timeZone: 'Asia/Tokyo' };
-  const result = await executeTool({ name: 'solve', arguments: { request, maxResults: 1 } }, { plan: shot() }, app.store, (event) => events.push(event), new AbortController().signal);
+  const result = await executeTool({ name: 'solve', arguments: { request, maxResults: 3 } }, { plan: shot() }, app.store, (event) => events.push(event), new AbortController().signal);
   assert.equal(result.structuredContent.format, 'tamatamatori.solve-result');
   assert.ok(result.structuredContent.results.length > 0);
   assert.equal(result.structuredContent.terrainReads.length, 0);
-  assert.equal(events.filter((event) => event.type === 'proposal').length, 1);
+  const shown = events.find(event => event.type === 'result').result;
+  assert.equal(shown.items.length, 3); assert.ok(shown.total > shown.items.length);
+  assert.ok(shown.items.some(item => item.end > item.start));
+  assert.equal(shown.items[0].start, Date.parse(result.structuredContent.results[0].start.utc));
+  assert.equal(shown.items[0].end, Date.parse(result.structuredContent.results[0].end.utc));
+});
+
+test('多机位分组完整校验；单条无效时不发出部分卡片；每轮展示上限明确记录', async t => {
+  const app = await fixture(t, { agent: async ({ session, emit, signal }) => {
+    const call = shots => executeTool({ name: 'propose', arguments: { shots } }, session, app.store, emit, signal);
+    await assert.rejects(call([shot(), {}]));
+    await call(Array.from({ length: 150 }, (_, index) => ({ ...shot(), name: `第一组 ${index}` })));
+    const value = await call(Array.from({ length: 100 }, (_, index) => ({ ...shot(), name: `第二组 ${index}` })));
+    assert.equal(value.structuredContent.shown, 50);
+  } });
+  const events = (await (await app.request('/api/chat', { provider: 'codex', message: '多组机位', plan: shot() })).text())
+    .split('\n\n').filter(line => line.startsWith('data: ')).map(line => JSON.parse(line.slice(6)));
+  const groups = events.filter(event => event.type === 'result').map(event => event.result);
+  assert.equal(groups.length, 2); assert.equal(groups[0].shots.length, 150);
+  assert.equal(groups[1].shots.length, 50); assert.equal(groups[1].total, 100);
+  const chat = await (await app.request('/api/chats/' + events.find(event => event.type === 'session').id)).json();
+  assert.equal(chat.messages[1].results[1].shots.length, 50);
 });

@@ -6,7 +6,10 @@ export const LOCAL_TOOLS = [
   { name: 'current_plan', description: '读取本次聊天附带的当前拍摄计划快照。', inputSchema: { type: 'object', properties: {} } },
   { name: 'list_shots', description: '列出本机保存的机位摘要，不修改机位。', inputSchema: { type: 'object', properties: {} } },
   { name: 'get_shot', description: '按 id 读取已保存的一个机位。', inputSchema: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] } },
-  { name: 'propose', description: '提供一个机位（机位 JSON 对象或 #shot 链接），在网页显示候选卡片。不会自动修改计划或保存。', inputSchema: { type: 'object', properties: { shot: { anyOf: [{ type: 'object' }, { type: 'string' }] } }, required: ['shot'] } },
+  { name: 'propose', description: '提供一个独立机位（shot）或一组独立机位（shots，1—200 个），显示可应用、保存的卡片。推算区间用 solve，solve 会自动显示完整区间 UI，不要再重复 propose。不会自动修改计划或保存。', inputSchema: { type: 'object', properties: {
+    shot: { anyOf: [{ type: 'object' }, { type: 'string' }] },
+    shots: { type: 'array', minItems: 1, maxItems: 200, items: { anyOf: [{ type: 'object' }, { type: 'string' }] } },
+  }, oneOf: [{ required: ['shot'], not: { required: ['shots'] } }, { required: ['shots'], not: { required: ['shot'] } }] } },
 ];
 
 if (process.env.TMT_CHAT_ID) {

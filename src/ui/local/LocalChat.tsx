@@ -4,14 +4,16 @@ import { parseShot, shotFromPlan } from "../../domain/shots/shot";
 import type { Shot } from "../../domain/shots/shot";
 import { localJson } from "../../io/local-client";
 import "./local-chat.css";
+import { ChatResults } from "./ChatResults";
+import type { ResultActions } from "./ChatResults";
+import { isChatResult } from "../../domain/solve/chat-results";
+import type { ChatResult } from "../../domain/solve/chat-results";
 
 type Agent = { id: string; available: boolean; loggedIn?: boolean; version?: string; message: string };
-type Message = { role: string; text: string; proposals?: Shot[]; error?: string };
+type Message = { role: string; text: string; proposals?: Shot[]; results?: ChatResult[]; error?: string };
 type Chat = { id: string; provider: string; title: string; messages?: Message[] };
 
-export default function LocalChat({ plan, onApply, onSave }: {
-  plan: ShootingPlan; onApply: (shot: Shot) => void; onSave: (shot: Shot) => Promise<boolean>;
-}) {
+export default function LocalChat({ plan, onApply, onSave, onSaveMany, onOpen }: { plan: ShootingPlan } & ResultActions) {
   const dialog = useRef<HTMLDialogElement>(null), messagesEnd = useRef<HTMLDivElement>(null);
   const controller = useRef<AbortController | null>(null);
   const [agents, setAgents] = useState<Agent[]>([]), [chats, setChats] = useState<Chat[]>([]);
@@ -20,7 +22,6 @@ export default function LocalChat({ plan, onApply, onSave }: {
   const [messages, setMessages] = useState<Message[]>([]);
   const [draft, setDraft] = useState(""), [error, setError] = useState("");
   const [status, setStatus] = useState(""), [running, setRunning] = useState(false);
-  const [saving, setSaving] = useState(false);
   const refresh = async () => {
     try { const [nextAgents, nextChats] = await Promise.all([localJson<Agent[]>("/api/agents"), localJson<Chat[]>("/api/chats")]); setAgents(nextAgents); setChats(nextChats); }
     catch (cause) { setError((cause as Error).message); }
@@ -31,7 +32,7 @@ export default function LocalChat({ plan, onApply, onSave }: {
   const send = async () => {
     if (!draft.trim() || running) return;
     const text = draft; setDraft(""); setError(""); setStatus("正在启动 Agent…"); setRunning(true);
-    setMessages((current) => [...current, { role: "user", text }, { role: "assistant", text: "", proposals: [] }]);
+    setMessages((current) => [...current, { role: "user", text }, { role: "assistant", text: "", proposals: [], results: [] }]);
     const abort = new AbortController(); controller.current = abort;
     const updateLast = (update: (value: Message) => Message) => setMessages((current) => current.map((value, index) => index === current.length - 1 ? update(value) : value));
     try {
@@ -53,6 +54,10 @@ export default function LocalChat({ plan, onApply, onSave }: {
           if (event.type === "proposal") {
             const parsed = parseShot(event.shot);
             if (parsed.ok) updateLast((value) => ({ ...value, proposals: [...(value.proposals ?? []), parsed.shot] }));
+          }
+          if (event.type === "result") {
+            if (!isChatResult(event.result)) throw new Error("本地服务返回的结果格式无效");
+            updateLast(value => ({ ...value, results: [...(value.results ?? []), event.result] }));
           }
           if (event.type === "done") finished = true;
           if (event.type === "error") { finished = true; setError(event.text); }
@@ -82,11 +87,9 @@ export default function LocalChat({ plan, onApply, onSave }: {
         {!messages.length && <p>描述想拍的构图，例如“找接下来一个月月亮落在晴空塔尖的机位”。当前镜头和机位会作为参考。</p>}
         {messages.map((message, index) => <article key={index} className={`local-message ${message.role}`}><strong>{message.role === "user" ? "你" : "助手"}</strong><p>{message.text}</p>
           {message.error && <p role="alert">{message.error}</p>}
-          {message.proposals?.map((shot, number) => <div className="local-proposal" key={number}><strong>{shot.name || "候选机位"}</strong><p>{shot.time.local} · {shot.camera.focalLength} mm<br />{shot.position.latitude.toFixed(5)}, {shot.position.longitude.toFixed(5)}</p>
-            <p>位置与可达性请在地图核实。</p>
-            <button type="button" onClick={() => { onApply(shot); dialog.current?.close(); }}>应用试看</button>
-            <button type="button" disabled={saving} onClick={async () => { setSaving(true); try { if (await onSave(shot)) setStatus("机位已保存"); else setError("保存失败，请在机位菜单查看原因并重试"); } finally { setSaving(false); } }}>保存机位</button>
-          </div>)}
+          {[...(message.proposals?.length ? [{ kind: "shots" as const, id: "legacy", shots: message.proposals, total: message.proposals.length }] : []), ...(message.results ?? []).filter(isChatResult)].map(result =>
+            <ChatResults key={result.id} result={result} onApply={shot => { onApply(shot); dialog.current?.close(); }} onSave={onSave} onSaveMany={onSaveMany}
+              onOpen={onOpen ? result => { onOpen(result); dialog.current?.close(); } : undefined} />)}
         </article>)}<div ref={messagesEnd} />
       </div>
       {status && <p role="status" className="local-chat-note">{status}</p>}

@@ -37,6 +37,10 @@ test('Codex 适配：初始化、原生 thread、流式文本与恢复参数；�
   assert.ok(invocations.every((value) => !value.args.includes(options.message)));
   assert.ok(invocations[0].args.includes('default_permissions="tamatamatori"'));
   assert.ok(invocations[0].args.includes('features.plugins=false'));
+  const mcp = invocations[0].args.find(value => value.startsWith('mcp_servers='));
+  assert.match(mcp,/current_plan=\{approval_mode="approve"\}/);
+  assert.match(mcp,/enabled_tools=\[/);
+  assert.doesNotMatch(mcp,/shell|filesystem/);
 });
 
 test('Claude 适配：结构化文本、工具进度、session 恢复与 CLI 工具约束', async () => {

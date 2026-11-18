@@ -6,6 +6,7 @@ import { ShotStore, StoreError } from './shot-store.mjs';
 import { parseShotText } from '../src/domain/shots/shot.ts';
 import { runAgent, agentStatus } from './agents.mjs';
 import { executeTool } from './tools.mjs';
+import { CHAT_CANDIDATES, CHAT_TRACK_POINTS, isChatResult, limitChatResult, resultSize, trackSize } from '../src/domain/solve/chat-results.ts';
 
 const uuid = /^[a-f0-9-]{36}$/;
 const cleanError = (error) => String(error.message || error).replace(/sk-[\w-]+/g, '[密钥]').slice(0, 1000);
@@ -107,7 +108,7 @@ export function createLocalApp({ dataDir, distDir, agent = runAgent, status = ag
         if (running.size >= 2) throw new StoreError('同时最多运行两个对话', 429);
         chat.plan = parsed.shot; chat.updatedAt = new Date().toISOString();
         chat.messages.push({ role: 'user', text: input.message });
-        const assistant = { role: 'assistant', text: '', proposals: [] };
+        const assistant = { role: 'assistant', text: '', proposals: [], results: [] };
         chat.messages.push(assistant);
         response.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-store', Connection: 'keep-alive' });
         const emit = (event) => {
@@ -116,8 +117,20 @@ export function createLocalApp({ dataDir, distDir, agent = runAgent, status = ag
             assistant.text += event.text;
           }
           if (event.type === 'proposal') {
-            if (assistant.proposals.length >= 40) return;
+            if (assistant.proposals.length >= 40) {
+              if (!response.destroyed) response.write(`data: ${JSON.stringify({ type: 'status', text: '旧格式机位卡片最多 40 个，请改用分组结果或缩小范围。' })}\n\n`);
+              return;
+            }
             assistant.proposals.push(event.shot);
+          }
+          if (event.type === 'result') {
+            if (!isChatResult(event.result)) throw new Error('聊天结果格式无效');
+            const used = assistant.results.reduce((count, result) => count + resultSize(result), 0);
+            const points = assistant.results.reduce((count, result) => count + trackSize(result), 0);
+            const result = limitChatResult(event.result, Math.max(0, CHAT_CANDIDATES - used), Math.max(0, CHAT_TRACK_POINTS - points));
+            assistant.results.push(result);
+            if (!response.destroyed) response.write(`data: ${JSON.stringify({ type: 'result', result })}\n\n`);
+            return { shown: resultSize(result), total: result.total };
           }
           if (!response.destroyed) response.write(`data: ${JSON.stringify(event)}\n\n`);
         };

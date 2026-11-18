@@ -1,8 +1,9 @@
 import { fileURLToPath } from 'node:url';
 import { startProcess, stopProcess, capture, agentCommand, agentEnvironment } from './process.mjs';
+import { LOCAL_TOOLS } from './tool-bridge.mjs';
 
 const bridge = fileURLToPath(new URL('./tool-bridge.mjs', import.meta.url));
-const instructions = `你是 Tamatamatori 摄影规划助手，用中文回答。先用摄影工具读取格式、校验条件和推算，数值以工具为准，不估算天体方位、时间或机位。坐标未经核实时明确说明。可以读取当前计划和用户指定的机位，不能直接写文件或运行命令。用 propose 提供机位卡片，由用户选择应用或保存。条件不足时直接提问。推算不保证天气、树木、建筑与道路可达性。`;
+const instructions = `你是 Tamatamatori 摄影规划助手，用中文回答。先用摄影工具读取当前计划、格式、校验条件和推算，数值以工具为准，不估算天体方位、时间或机位。坐标未经核实时明确说明。可以读取当前计划和用户指定的机位，不能直接写文件或运行命令。单个独立机位用 propose.shot，多机位用 propose.shots 一次提供；区间用 solve。solve 自动显示完整区间、代表机位和地图入口，不再用 propose 重复相同结果，不把一段区间当作一个确定时刻。只要工具提供了结果就简要解释，由用户选择应用或保存。条件不足时直接提问。推算不保证天气、树木、建筑与道路可达性。`;
 
 export async function agentStatus(provider) {
   const command = agentCommand(provider);
@@ -39,7 +40,9 @@ function lines(child, onMessage, reject) {
 
 export function runCodex({ session, message, cwd, mcp, signal, emit, spawn = startProcess }) {
   return new Promise((resolve, reject) => {
-    const connection = `{tamatamatori={command=${JSON.stringify(mcp.command)},args=${JSON.stringify(mcp.args)},env_vars=["TMT_LOCAL_URL","TMT_TOOL_TOKEN","TMT_CHAT_ID"],required=true}}`;
+    const names = LOCAL_TOOLS.map(tool => tool.name);
+    const approvals = names.map(name => `${name}={approval_mode="approve"}`).join(',');
+    const connection = `{tamatamatori={command=${JSON.stringify(mcp.command)},args=${JSON.stringify(mcp.args)},env_vars=["TMT_LOCAL_URL","TMT_TOOL_TOKEN","TMT_CHAT_ID"],required=true,enabled_tools=${JSON.stringify(names)},tools={${approvals}},tool_timeout_sec=240}}`;
     const child = spawn(agentCommand('codex'), ['app-server', '-c', `mcp_servers=${connection}`, '-c', 'plugins={}',
       '-c', 'default_permissions="tamatamatori"',
       '-c', 'permissions.tamatamatori={filesystem={":root"="read","~/.codex"="deny","~/.claude"="deny","~/.ssh"="deny"},network={enabled=false}}',
